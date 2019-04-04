@@ -1,0 +1,77 @@
+Arguments: 
+  /Users/baransu/.nvm/versions/node/v8.11.4/bin/node /usr/local/Cellar/yarn/1.15.2/libexec/bin/yarn.js add yargs --dev
+
+PATH: 
+  /Users/baransu/.opam/4.02.3/bin:/Users/baransu/.kiex/elixirs/elixir-1.7.3/bin:/Users/baransu/.kiex/bin:/Users/baransu/.nvm/versions/node/v8.11.4/bin:/Users/baransu/.fastlane/bin:/Users/baransu/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/baransu/Library/Android/sdk/:/Users/baransu/Library/Android/sdk//tools:/Users/baransu/Library/Android/sdk//platform-tools:/Users/baransu/.fzf/bin
+
+Yarn version: 
+  1.15.2
+
+Node version: 
+  8.11.4
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.npmjs.org/@opam%2fmenhir: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:66058:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:129541:22)
+      at emitTwo (events.js:126:13)
+      at Request.emit (events.js:214:7)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:130513:10)
+      at emitOne (events.js:116:13)
+      at Request.emit (events.js:211:7)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:130435:12)
+      at Object.onceWrapper (events.js:313:30)
+      at emitNone (events.js:111:20)
+
+npm manifest: 
+  {
+    "name": "graphql_ppx",
+    "version": "0.1.0",
+    "description": "Reason workflow with Esy",
+    "license": "MIT",
+    "esy": {
+      "build": "refmterr dune build -p graphql_ppx",
+      "NOTE": "Optional release Section. Customizes result of `esy release`",
+      "release": {
+        "releasedBinaries": [
+          "graphql_ppx.exe"
+        ],
+        "deleteFromBinaryRelease": [
+          "*esy_ocaml_*",
+          "*refmterr-*",
+          "ocaml-*"
+        ]
+      }
+    },
+    "dependencies": {
+      "@opam/dune": "*",
+      "@opam/result": "*",
+      "@opam/yojson": "*",
+      "@opam/ocaml-migrate-parsetree": "*",
+      "@opam/ppx_tools_versioned": "*",
+      "@esy-ocaml/reason": "*",
+      "refmterr": "*",
+      "ocaml": "~4.2.3"
+    },
+    "resolutions": {
+      "@esy-ocaml/esy-installer": "0.0.1",
+      "@opam/menhir": "20171013",
+      "@opam/re": "1.8.0"
+    },
+    "devDependencies": {
+      "@esy-ocaml/merlin": "*",
+      "ocaml": "~4.2.3"
+    },
+    "peerDependencies": {
+      "ocaml": " >= 4.2.1  < 4.7.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
