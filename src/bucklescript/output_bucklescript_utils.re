@@ -25,3 +25,7 @@ let conv_loc_from_ast = loc => {
   Source_pos.loc_end: conv_pos_from_ast(loc.Location.loc_end),
   Source_pos.loc_ghost: loc.Location.loc_ghost,
 };
+
+let filter_out_null_values = [%expr
+  Js.Array.filter(((_, value)) => value != Js.Json.null)
+];

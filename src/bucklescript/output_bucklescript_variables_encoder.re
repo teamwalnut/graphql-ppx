@@ -110,10 +110,6 @@ let rec parser_for_type = (schema, loc, type_ref) => {
   };
 };
 
-let filter_out_null_values = [%expr
-  Js.Array.filter(((_, value)) => value != Js.Json.null)
-];
-
 let json_of_fields = (schema, loc, expr, fields) => {
   let field_array_exprs =
     fields
@@ -138,6 +134,7 @@ let json_of_fields = (schema, loc, expr, fields) => {
     )
   ];
 };
+
 let generate_encoder = (config, (spanning, x)) => {
   let loc = config.map_loc(spanning.span);
   let body =
@@ -154,15 +151,14 @@ let generate_encoder = (config, (spanning, x)) => {
     | Union(_) =>
       raise @@ Invalid_argument("Unsupported variable type: Union")
     | Enum({em_values, _}) =>
-      let match_arms =
-        em_values
-        |> List.map(({evm_name, _}) => {
-             let pattern = Ast_helper.Pat.variant(evm_name, None);
-             let expr =
-               Ast_helper.Exp.constant(Const_string(evm_name, None));
-             Ast_helper.Exp.case(pattern, [%expr Js.Json.string([%e expr])]);
-           });
-      Ast_helper.Exp.match([%expr value], match_arms);
+      em_values
+      |> List.map(({evm_name, _}) => {
+           let pattern = Ast_helper.Pat.variant(evm_name, None);
+           let expr = Ast_helper.Exp.constant(Const_string(evm_name, None));
+           Ast_helper.Exp.case(pattern, [%expr Js.Json.string([%e expr])]);
+         })
+      |> Ast_helper.Exp.match([%expr value])
+
     | InputObject({iom_input_fields, _}) =>
       json_of_fields(config.schema, loc, [%expr value], iom_input_fields)
     };
@@ -175,19 +171,22 @@ let generate_encoder = (config, (spanning, x)) => {
   );
 };
 
-let generate_encoders = (config, _loc) =>
-  fun
+let generate_encoders = (config, _loc, structure) =>
+  switch (structure) {
   | Some({item, _}) =>
-    item
-    |> List.map(((span, {vd_type: variable_type, _})) =>
-         (span, to_schema_type_ref(variable_type.item))
-       )
-    |> sort_variable_types(config.schema)
-    |> (
-      ((is_recursive, types)) => (
-        if (is_recursive) {Recursive} else {Nonrecursive},
-        Array.map(generate_encoder(config), types),
-      )
-    )
+    let (is_recursive, types) =
+      item
+      |> List.map(((span, {vd_type: variable_type, _})) =>
+           (span, to_schema_type_ref(variable_type.item))
+         )
+      |> sort_variable_types(config.schema);
 
-  | None => (Nonrecursive, [||]);
+    let rec_flag = if (is_recursive) {Recursive} else {Nonrecursive};
+
+    (
+      rec_flag,
+      types |> Array.map(generate_encoder(config)) |> Array.to_list,
+    );
+
+  | None => (Nonrecursive, [])
+  };

@@ -164,43 +164,53 @@ let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
+
   if (has_error) {
     [[%stri let parse = value => [%e parse_fn]]];
   } else {
     let (rec_flag, encoders) =
-      Output_bucklescript_encoder.generate_encoders(
+      Output_bucklescript_variables_encoder.generate_encoders(
         config,
         Result_structure.res_loc(res_structure),
         variable_defs,
       );
+
     let (make_fn, make_with_variables_fn) =
       Output_bucklescript_unifier.make_make_fun(config, variable_defs);
+
+    let serialize_fn =
+      Output_bucklescript_query_encoder.generate_encoders(
+        config,
+        res_structure,
+      );
+
+    let encoders =
+      if (rec_flag == Recursive) {
+        [
+          {
+            pstr_desc: Pstr_value(rec_flag, encoders),
+            pstr_loc: Location.none,
+          },
+        ];
+      } else {
+        encoders
+        |> List.map(encoder =>
+             {
+               pstr_desc: Pstr_value(Nonrecursive, [encoder]),
+               pstr_loc: Location.none,
+             }
+           );
+      };
+
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
-      List.concat([
-        [[%stri let parse = value => [%e parse_fn]]],
-        if (rec_flag == Recursive) {
-          [
-            {
-              pstr_desc: Pstr_value(rec_flag, encoders |> Array.to_list),
-              pstr_loc: Location.none,
-            },
-          ];
-        } else {
-          encoders
-          |> Array.map(encoder =>
-               {
-                 pstr_desc: Pstr_value(Nonrecursive, [encoder]),
-                 pstr_loc: Location.none,
-               }
-             )
-          |> Array.to_list;
-        },
-        [
-          [%stri let make = [%e make_fn]],
-          [%stri let makeWithVariables = [%e make_with_variables_fn]],
-        ],
-      ]),
+      [[%stri let parse = value => [%e parse_fn]]],
+      [[%stri let serialize = value => [%e serialize_fn]]],
+      encoders,
+      [
+        [%stri let make = [%e make_fn]],
+        [%stri let makeWithVariables = [%e make_with_variables_fn]],
+      ],
       ret_type_magic,
     ]);
   };
@@ -210,9 +220,11 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
+
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
     |> StringSet.elements;
+
   let variable_fields =
     variable_names
     |> List.map(name =>
@@ -225,11 +237,13 @@ let generate_fragment_module =
            ),
          )
        );
+
   let variable_obj_type =
     Ast_helper.Typ.constr(
       {txt: Longident.parse("Js.t"), loc: Location.none},
       [Ast_helper.Typ.object_(variable_fields, Open)],
     );
+
   let contents =
     if (has_error) {
       [
@@ -250,7 +264,7 @@ let generate_fragment_module =
       ]);
     };
 
-  let m =
+  let pstr_desc =
     Pstr_module({
       pmb_name: {
         txt: Generator_utils.capitalize_ascii(name),
@@ -261,7 +275,7 @@ let generate_fragment_module =
       pmb_loc: Location.none,
     });
 
-  [{pstr_desc: m, pstr_loc: Location.none}];
+  [{pstr_desc, pstr_loc: Location.none}];
 };
 
 let generate_operation = config =>

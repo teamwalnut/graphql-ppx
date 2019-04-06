@@ -87,7 +87,7 @@ let make_make_fun = (config, variable_defs) => {
       defs
       |> List.map(((name, def)) => {
            let parser_ =
-             Output_bucklescript_encoder.parser_for_type(
+             Output_bucklescript_variables_encoder.parser_for_type(
                config.schema,
                config.map_loc(name.span),
                to_native_type_ref(to_schema_type_ref(def.vd_type.item)),
@@ -111,13 +111,14 @@ let make_make_fun = (config, variable_defs) => {
            ];
          })
       |> Ast_helper.Exp.array;
+
     let loc = config.map_loc(span) |> conv_loc;
     let variable_ctor_body =
       [@metaloc loc]
       [%expr
         Js.Json.object_(
           [%e make_var_ctor(item)]
-          |> [%e Output_bucklescript_encoder.filter_out_null_values]
+          |> [%e filter_out_null_values]
           |> Js.Dict.fromArray,
         )
       ];
