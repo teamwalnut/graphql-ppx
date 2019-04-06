@@ -56,13 +56,7 @@ let emit_printed_query = parts => {
             Location.txt: Longident.parse("^"),
             loc: Location.none,
           }),
-          [
-            ("", acc),
-            (
-              "",
-              Exp.constant([@implicit_arity] Asttypes.Const_string(s, None)),
-            ),
-          ],
+          [("", acc), ("", Exp.constant(Asttypes.Const_string(s, None)))],
         )
       )
     | FragmentNameRef(f) =>
@@ -106,11 +100,7 @@ let emit_printed_query = parts => {
 
   Array.fold_left(
     generate_expr,
-    Ast_402.(
-      Ast_helper.Exp.constant(
-        [@implicit_arity] Asttypes.Const_string("", None),
-      )
-    ),
+    Ast_402.(Ast_helper.Exp.constant(Asttypes.Const_string("", None))),
     parts,
   );
 };
@@ -125,7 +115,7 @@ let rec emit_json =
               vs
               |> List.map(((key, value)) =>
                    Exp.tuple([
-                     Exp.constant([@implicit_arity] Const_string(key, None)),
+                     Exp.constant(Const_string(key, None)),
                      emit_json(value),
                    ])
                  ),
@@ -139,21 +129,11 @@ let rec emit_json =
         %expr
         Js.Json.array([%e values]);
       }
-    | `Bool(b) =>
-      if (b) {
-        %expr
-        Js.Json.boolean(true);
-      } else {
-        %expr
-        Js.Json.boolean(false);
-      }
+    | `Bool(true) => [%expr Js.Json.boolean(true)]
+    | `Bool(false) => [%expr Js.Json.boolean(false)]
     | `Null => [%expr Obj.magic(Js.Undefined.empty)]
     | `String(s) => [%expr
-        Js.Json.string(
-          [%e
-            Ast_helper.Exp.constant([@implicit_arity] Const_string(s, None))
-          ],
-        )
+        Js.Json.string([%e Ast_helper.Exp.constant(Const_string(s, None))])
       ]
     | `Int(i) => [%expr
         Js.Json.number(
@@ -202,9 +182,7 @@ let generate_default_operation =
         if (rec_flag == Recursive) {
           [
             {
-              pstr_desc:
-                [@implicit_arity]
-                Pstr_value(rec_flag, encoders |> Array.to_list),
+              pstr_desc: Pstr_value(rec_flag, encoders |> Array.to_list),
               pstr_loc: Location.none,
             },
           ];
@@ -212,8 +190,7 @@ let generate_default_operation =
           encoders
           |> Array.map(encoder =>
                {
-                 pstr_desc:
-                   [@implicit_arity] Pstr_value(Nonrecursive, [encoder]),
+                 pstr_desc: Pstr_value(Nonrecursive, [encoder]),
                  pstr_loc: Location.none,
                }
              )
@@ -266,11 +243,7 @@ let generate_fragment_module =
         [
           [%stri let parse = value => [%e parse_fn]],
           [%stri
-            let name = [%e
-              Ast_helper.Exp.constant(
-                [@implicit_arity] Const_string(name, None),
-              )
-            ]
+            let name = [%e Ast_helper.Exp.constant(Const_string(name, None))]
           ],
         ],
         ret_type_magic,
@@ -287,16 +260,15 @@ let generate_fragment_module =
       pmb_attributes: [],
       pmb_loc: Location.none,
     });
+
   [{pstr_desc: m, pstr_loc: Location.none}];
 };
 
 let generate_operation = config =>
   fun
-  | [@implicit_arity]
-    Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Mod_default_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | [@implicit_arity]
-    Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,

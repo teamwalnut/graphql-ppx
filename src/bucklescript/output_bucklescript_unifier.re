@@ -97,10 +97,7 @@ let make_make_fun = (config, variable_defs) => {
            [%expr
              (
                [%e
-                 Ast_helper.Exp.constant(
-                   ~loc,
-                   [@implicit_arity] Const_string(name.item, None),
-                 )
+                 Ast_helper.Exp.constant(~loc, Const_string(name.item, None))
                ],
                [%e parser_](
                  [%e

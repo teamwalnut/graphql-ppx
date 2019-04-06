@@ -196,23 +196,15 @@ let mapper = argv => {
 
   let module_expr = (mapper, mexpr) =>
     switch (mexpr) {
-    | {
-        pmod_desc:
-          [@implicit_arity] Pmod_extension({txt: "graphql", loc}, pstr),
-        _,
-      } =>
+    | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
       switch (pstr) {
       | PStr([
           {
             pstr_desc:
-              [@implicit_arity]
               Pstr_eval(
                 {
                   pexp_loc: loc,
-                  pexp_desc:
-                    Pexp_constant(
-                      [@implicit_arity] Const_string(query, delim),
-                    ),
+                  pexp_desc: Pexp_constant(Const_string(query, delim)),
                   _,
                 },
                 _,

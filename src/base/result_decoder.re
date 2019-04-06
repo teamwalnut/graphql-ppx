@@ -10,7 +10,7 @@ exception Unimplemented(string);
 
 let make_error = (error_marker, map_loc, span, message) => {
   let () = error_marker.has_error = true;
-  [@implicit_arity] Res_error(map_loc(span), message);
+  Res_error(map_loc(span), message);
 };
 
 let has_directive = (name, directives) =>
@@ -55,13 +55,11 @@ let rec unify_type =
         ) =>
   switch (ty) {
   | Ntr_nullable(t) =>
-    [@implicit_arity]
     Res_nullable(
       config.map_loc(span),
       unify_type(error_marker, as_record, config, span, t, selection_set),
     )
   | Ntr_list(t) =>
-    [@implicit_arity]
     Res_array(
       config.map_loc(span),
       unify_type(error_marker, as_record, config, span, t, selection_set),
@@ -88,7 +86,7 @@ let rec unify_type =
         selection_set,
       )
     | Some(Enum(enum_meta)) =>
-      [@implicit_arity] Res_poly_enum(config.map_loc(span), enum_meta)
+      Res_poly_enum(config.map_loc(span), enum_meta)
     | Some(Interface(im) as ty) =>
       unify_interface(
         error_marker,
@@ -146,7 +144,6 @@ and unify_interface =
 
     let generate_case = (selection, ty, name) => (
       name,
-      [@implicit_arity]
       Res_object(
         config.map_loc(span),
         name,
@@ -172,7 +169,7 @@ and unify_interface =
     let fragment_cases = List.map(generate_fragment_case, fragments);
     let base_case =
       generate_case(base_selection_set, ty, interface_meta.im_name);
-    [@implicit_arity]
+
     Res_poly_variant_interface(
       config.map_loc(span),
       interface_meta.im_name,
@@ -247,7 +244,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
     let covered_cases =
       List.map(type_cond_name, fragments) |> List.sort(compare);
     let possible_cases = List.sort(compare, union_meta.um_of_types);
-    [@implicit_arity]
+
     Res_poly_variant_union(
       config.map_loc(span),
       union_meta.um_name,
@@ -262,13 +259,11 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
 and unify_variant = (error_marker, config, span, ty, selection_set) =>
   switch (ty) {
   | Ntr_nullable(t) =>
-    [@implicit_arity]
     Res_nullable(
       config.map_loc(span),
       unify_variant(error_marker, config, span, t, selection_set),
     )
   | Ntr_list(t) =>
-    [@implicit_arity]
     Res_array(
       config.map_loc(span),
       unify_variant(error_marker, config, span, t, selection_set),
@@ -378,7 +373,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                  )
                }
              );
-        [@implicit_arity]
+
         Res_poly_variant_selection_set(config.map_loc(span), n, fields);
       }
     }
@@ -418,7 +413,6 @@ and unify_field = (error_marker, config, field_span, ty) => {
           ast_field.fd_selection_set,
         );
       if (has_skip && !is_nullable(field_ty)) {
-        [@implicit_arity]
         Res_nullable(config.map_loc(field_span.span), sub_unifier);
       } else {
         sub_unifier;
@@ -427,11 +421,10 @@ and unify_field = (error_marker, config, field_span, ty) => {
 
   let loc = config.map_loc(field_span.span);
   switch (ast_field.fd_directives |> find_directive("bsDecoder")) {
-  | None => [@implicit_arity] Fr_named_field(key, loc, parser_expr)
+  | None => Fr_named_field(key, loc, parser_expr)
   | Some({item: {d_arguments, _}, span}) =>
     switch (find_argument("fn", d_arguments)) {
     | None =>
-      [@implicit_arity]
       Fr_named_field(
         key,
         loc,
@@ -443,15 +436,12 @@ and unify_field = (error_marker, config, field_span, ty) => {
         ),
       )
     | Some((_, {item: Iv_string(fn_name), span})) =>
-      [@implicit_arity]
       Fr_named_field(
         key,
         loc,
-        [@implicit_arity]
         Res_custom_decoder(config.map_loc(span), fn_name, parser_expr),
       )
     | Some((_, {span, _})) =>
-      [@implicit_arity]
       Fr_named_field(
         key,
         loc,
@@ -485,7 +475,6 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "bsField must be given 'name' argument",
         )
       | Some((_, {item: Iv_string(key), span})) =>
-        [@implicit_arity]
         Fr_fragment_spread(key, config.map_loc(span), fs_name.item)
       | Some(_) =>
         raise_error(
@@ -521,18 +510,15 @@ and unify_selection_set =
         "@bsRecord can not be used with fragment spreads, place @bsRecord on the fragment definition instead",
       );
     } else {
-      [@implicit_arity]
       Res_solo_fragment_spread(config.map_loc(span), item.fs_name.item);
     }
   | Some({item, _}) when as_record =>
-    [@implicit_arity]
     Res_record(
       config.map_loc(span),
       type_name(ty),
       List.map(unify_selection(error_marker, config, ty), item),
     )
   | Some({item, _}) =>
-    [@implicit_arity]
     Res_object(
       config.map_loc(span),
       type_name(ty),
@@ -596,7 +582,6 @@ let rec unify_document_schema = (config, document) => {
   | [Operation({item: {o_variable_definitions, _}, _} as op)] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      [@implicit_arity]
       Mod_default_operation(
         o_variable_definitions,
         error_marker.has_error,
@@ -617,7 +602,6 @@ let rec unify_document_schema = (config, document) => {
         let is_record = has_directive("bsRecord", fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
-          [@implicit_arity]
           Mod_fragment(
             fg_name.item,
             [],
@@ -640,7 +624,7 @@ let rec unify_document_schema = (config, document) => {
               ty,
               Some(fg_selection_set),
             );
-          [@implicit_arity]
+
           Mod_fragment(
             fg_name.item,
             [],

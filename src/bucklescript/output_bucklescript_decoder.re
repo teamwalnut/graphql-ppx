@@ -9,8 +9,7 @@ open Parsetree;
 open Generator_utils;
 open Output_bucklescript_utils;
 
-let const_str_expr = s =>
-  Ast_helper.(Exp.constant([@implicit_arity] Const_string(s, None)));
+let const_str_expr = s => Ast_helper.(Exp.constant(Const_string(s, None)));
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -81,7 +80,7 @@ let generate_poly_enum_decoder = (_loc, enum_meta) => {
       List.map(
         ({evm_name, _}) =>
           Exp.case(
-            Pat.constant([@implicit_arity] Const_string(evm_name, None)),
+            Pat.constant(Const_string(evm_name, None)),
             Exp.variant(evm_name, None),
           ),
         enum_meta.em_values,
@@ -113,7 +112,7 @@ let generate_poly_enum_decoder = (_loc, enum_meta) => {
     Ast_helper.(
       Typ.variant(
         List.map(
-          ({evm_name, _}) => [@implicit_arity] Rtag(evm_name, [], true, []),
+          ({evm_name, _}) => Rtag(evm_name, [], true, []),
           enum_meta.em_values,
         ),
         Closed,
@@ -250,7 +249,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | [@implicit_arity] Fr_named_field(field, _, _) =>
+           | Fr_named_field(field, _, _) =>
              Some(Pat.var({loc, txt: "field_" ++ field}))
            | Fr_fragment_spread(_) => None,
          )
@@ -262,7 +261,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | [@implicit_arity] Fr_named_field(field, loc, inner) => {
+           | Fr_named_field(field, loc, inner) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
@@ -298,7 +297,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> List.map(
            fun
-           | [@implicit_arity] Fr_named_field(field, loc, _) => {
+           | Fr_named_field(field, loc, _) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -308,7 +307,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | [@implicit_arity] Fr_fragment_spread(field, loc, name) => {
+           | Fr_fragment_spread(field, loc, name) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -344,11 +343,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
 and generate_object_decoder = (config, loc, name, fields) => {
   let ctor_result_type =
     List.mapi(
-      (
-        i,
-        [@implicit_arity] Fr_named_field(key, _, _) |
-        [@implicit_arity] Fr_fragment_spread(key, _, _),
-      ) =>
+      (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
         (key, [], Ast_helper.Typ.var("a" ++ string_of_int(i))),
       fields,
     );
@@ -367,8 +362,8 @@ and generate_object_decoder = (config, loc, name, fields) => {
           [Ast_helper.Typ.object_(ctor_result_type, Closed)],
         ),
       )
-    | [[@implicit_arity] Fr_fragment_spread(key, _, _), ...next]
-    | [[@implicit_arity] Fr_named_field(key, _, _), ...next] =>
+    | [Fr_fragment_spread(key, _, _), ...next]
+    | [Fr_named_field(key, _, _), ...next] =>
       Ast_helper.Typ.arrow(
         key,
         Ast_helper.Typ.var("a" ++ string_of_int(i)),
@@ -406,7 +401,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
           List.append(
             List.map(
               fun
-              | [@implicit_arity] Fr_named_field(key, _, inner) => (
+              | Fr_named_field(key, _, inner) => (
                   key,
                   switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
                   | Some(value) =>
@@ -429,7 +424,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                     }
                   },
                 )
-              | [@implicit_arity] Fr_fragment_spread(key, loc, name) => {
+              | Fr_fragment_spread(key, loc, name) => {
                   let loc = conv_loc(loc);
                   (
                     key,
@@ -505,7 +500,6 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
       Typ.variant(
         List.map(
           ((name, _)) =>
-            [@implicit_arity]
             Rtag(
               Compat.capitalize_ascii(name),
               [],
@@ -549,14 +543,12 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
 
   let map_case = ((type_name, inner)) => {
     open Ast_helper;
-    let name_pattern =
-      Pat.constant([@implicit_arity] Const_string(type_name, None));
+    let name_pattern = Pat.constant(Const_string(type_name, None));
     let variant =
       Exp.variant(type_name, Some(generate_decoder(config, inner)));
     Exp.case(name_pattern, variant);
   };
   let map_case_ty = ((name, _)) =>
-    [@implicit_arity]
     Rtag(
       name,
       [],
@@ -627,8 +619,7 @@ and generate_poly_variant_union =
     Ast_helper.(
       fragments
       |> List.map(((type_name, inner)) => {
-           let name_pattern =
-             Pat.constant([@implicit_arity] Const_string(type_name, None));
+           let name_pattern = Pat.constant(Const_string(type_name, None));
            let variant =
              Ast_helper.(
                Exp.variant(type_name, Some(generate_decoder(config, inner)))
@@ -655,14 +646,13 @@ and generate_poly_variant_union =
         )
       | Nonexhaustive => (
           Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [[@implicit_arity] Rtag("Nonexhaustive", [], true, [])],
+          [Rtag("Nonexhaustive", [], true, [])],
         )
       }
     );
   let fragment_case_tys =
     List.map(
       ((name, _)) =>
-        [@implicit_arity]
         Rtag(
           name,
           [],

@@ -449,7 +449,7 @@ let parse_fragment_definition = parser =>
                Unexpected_token(Graphql_lexer.Name("on")),
              ),
            )
-         | _ => [@implicit_arity] Ok(start_pos, name)
+         | _ => Ok((start_pos, name))
          }
        )
     |> flat_map(v =>

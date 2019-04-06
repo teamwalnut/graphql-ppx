@@ -24,7 +24,7 @@ module Visitor: Traversal_utils.VisitorSig = {
           arg_name,
           dir_name,
         )
-      | [@implicit_arity] Field(field_name, type_name) =>
+      | Field(field_name, type_name) =>
         Printf.sprintf(
           "Unknown argument \"%s\" on field \"%s\" of type \"%s\"",
           arg_name,
@@ -61,7 +61,6 @@ module Visitor: Traversal_utils.VisitorSig = {
           Schema.lookup_field(parent_type, field_name)
           |> Option.map(f =>
                (
-                 [@implicit_arity]
                  Field(field_name, Schema.type_name(parent_type)),
                  f.fm_arguments,
                )

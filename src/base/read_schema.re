@@ -311,11 +311,11 @@ let create_dir_if_not_exist = abs_path =>
     let () = Log.log("[make_cache_dir]" ++ abs_path);
     switch (Unix.mkdir(abs_path, 493)) {
     | () => ()
-    | exception ([@implicit_arity] Unix.Unix_error(error, cmd, msg)) =>
+    | exception (Unix.Unix_error(error, cmd, msg)) =>
       Log.must_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
       switch (error) {
       | Unix.EEXIST => () /* It's Ok since the build tool e.g. BuckleScript could be multi-threading */
-      | error => raise([@implicit_arity] Unix.Unix_error(error, cmd, msg))
+      | error => raise(Unix.Unix_error(error, cmd, msg))
       };
     };
   };

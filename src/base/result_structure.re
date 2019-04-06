@@ -43,23 +43,23 @@ type mod_ =
 
 let res_loc =
   fun
-  | [@implicit_arity] Res_nullable(loc, _)
-  | [@implicit_arity] Res_array(loc, _)
+  | Res_nullable(loc, _)
+  | Res_array(loc, _)
   | Res_id(loc)
   | Res_string(loc)
   | Res_int(loc)
   | Res_float(loc)
   | Res_boolean(loc)
   | Res_raw_scalar(loc)
-  | [@implicit_arity] Res_poly_enum(loc, _)
-  | [@implicit_arity] Res_custom_decoder(loc, _, _)
-  | [@implicit_arity] Res_record(loc, _, _)
-  | [@implicit_arity] Res_object(loc, _, _)
-  | [@implicit_arity] Res_poly_variant_selection_set(loc, _, _)
-  | [@implicit_arity] Res_poly_variant_union(loc, _, _, _)
-  | [@implicit_arity] Res_poly_variant_interface(loc, _, _, _)
-  | [@implicit_arity] Res_solo_fragment_spread(loc, _)
-  | [@implicit_arity] Res_error(loc, _) => loc;
+  | Res_poly_enum(loc, _)
+  | Res_custom_decoder(loc, _, _)
+  | Res_record(loc, _, _)
+  | Res_object(loc, _, _)
+  | Res_poly_variant_selection_set(loc, _, _)
+  | Res_poly_variant_union(loc, _, _, _)
+  | Res_poly_variant_interface(loc, _, _, _)
+  | Res_solo_fragment_spread(loc, _)
+  | Res_error(loc, _) => loc;
 
 let can_be_absent_as_field =
   fun
