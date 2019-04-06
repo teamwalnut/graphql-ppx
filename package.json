@@ -4,7 +4,7 @@
   "description": "Reason workflow with Esy",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p graphql_ppx",
+    "build": "refmterr dune build src/bucklescript/graphql_ppx.exe",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "releasedBinaries": [
@@ -25,16 +25,11 @@
     "@opam/ppx_tools_versioned": "*",
     "@esy-ocaml/reason": "*",
     "refmterr": "*",
-    "ocaml": "~4.2.3"
-  },
-  "resolutions": {
-    "@esy-ocaml/esy-installer": "0.0.1",
-    "@opam/menhir": "20171013",
-    "@opam/re": "1.8.0"
+    "ocaml": "~4.2.1"
   },
   "devDependencies": {
     "@esy-ocaml/merlin": "*",
-    "ocaml": "~4.2.3"
+    "ocaml": "~4.2.1"
   },
   "peerDependencies": {
     "ocaml": " >= 4.2.1  < 4.7.0"

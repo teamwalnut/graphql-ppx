@@ -1,0 +1,13 @@
+{
+  "name": "ppx_example",
+  "reason": {
+    "react-jsx": 2
+  },
+  "sources": ["__tests__"],
+  "ppx-flags": [
+    "../_esy/default/build/default/src/bucklescript/graphql_ppx.exe -apollo-mode"
+  ],
+  "bs-dependencies": ["@glennsl/bs-jest"],
+  "refmt": 3,
+  "bsc-flags": ["-bs-super-errors"]
+}

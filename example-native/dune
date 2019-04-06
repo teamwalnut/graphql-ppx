@@ -1,5 +1,0 @@
-(executable
-  (name Hello)
-  (public_name Hello.exe)
-  (preprocess (pps graphql_ppx))
-)

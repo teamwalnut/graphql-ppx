@@ -7,3 +7,4 @@ _release
 *.native
 *.install
 .graphql_ppx_cache
+graphql_ppx.exe
