@@ -277,34 +277,10 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
         span,
         "Could not find type " ++ n,
       )
-    | Some(Scalar(_)) =>
-      make_error(
-        error_marker,
-        config.map_loc,
-        span,
-        "Variant fields can only be applied to object types",
-      )
-    | Some(Enum(_)) =>
-      make_error(
-        error_marker,
-        config.map_loc,
-        span,
-        "Variant fields can only be applied to object types",
-      )
-    | Some(Interface(_)) =>
-      make_error(
-        error_marker,
-        config.map_loc,
-        span,
-        "Variant fields can only be applied to object types",
-      )
-    | Some(Union(_)) =>
-      make_error(
-        error_marker,
-        config.map_loc,
-        span,
-        "Variant fields can only be applied to object types",
-      )
+    | Some(Scalar(_))
+    | Some(Enum(_))
+    | Some(Interface(_))
+    | Some(Union(_))
     | Some(InputObject(_)) =>
       make_error(
         error_marker,

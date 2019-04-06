@@ -77,14 +77,13 @@ let boolean_decoder = loc =>
 let generate_poly_enum_decoder = (_loc, enum_meta) => {
   let enum_match_arms =
     Ast_helper.(
-      List.map(
-        ({evm_name, _}) =>
-          Exp.case(
-            Pat.constant(Const_string(evm_name, None)),
-            Exp.variant(evm_name, None),
-          ),
-        enum_meta.em_values,
-      )
+      enum_meta.em_values
+      |> List.map(({evm_name, _}) =>
+           Exp.case(
+             Pat.constant(Const_string(evm_name, None)),
+             Exp.variant(evm_name, None),
+           )
+         )
     );
   let fallback_arm =
     Ast_helper.(
@@ -111,10 +110,8 @@ let generate_poly_enum_decoder = (_loc, enum_meta) => {
     [@metaloc loc]
     Ast_helper.(
       Typ.variant(
-        List.map(
-          ({evm_name, _}) => Rtag(evm_name, [], true, []),
-          enum_meta.em_values,
-        ),
+        enum_meta.em_values
+        |> List.map(({evm_name, _}) => Rtag(evm_name, [], true, [])),
         Closed,
         None,
       )
@@ -209,7 +206,7 @@ and generate_array_decoder = (config, loc, inner) =>
         [%expr "Expected array, got " ++ Js.Json.stringify(value)],
       )
     | Some(value) =>
-      Array.map(
+      Js.Array.map(
         value => {
           let _ = ();
           %e
@@ -342,11 +339,11 @@ and generate_record_decoder = (config, loc, name, fields) => {
 }
 and generate_object_decoder = (config, loc, name, fields) => {
   let ctor_result_type =
-    List.mapi(
-      (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
-        (key, [], Ast_helper.Typ.var("a" ++ string_of_int(i))),
-      fields,
-    );
+    fields
+    |> List.mapi(
+         (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
+         (key, [], Ast_helper.Typ.var("a" ++ string_of_int(i)))
+       );
 
   let rec make_obj_constructor_fn = i =>
     fun
@@ -399,44 +396,46 @@ and generate_object_decoder = (config, loc, name, fields) => {
             loc: Location.none,
           }),
           List.append(
-            List.map(
-              fun
-              | Fr_named_field(key, _, inner) => (
-                  key,
-                  switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
-                  | Some(value) =>
-                    %e
-                    generate_decoder(config, inner)
-                  | None =>
-                    if%e (can_be_absent_as_field(inner)) {
-                      %expr
-                      None;
-                    } else {
-                      make_error_raiser(
-                        [%expr
-                          "Field "
-                          ++ [%e const_str_expr(key)]
-                          ++ " on type "
-                          ++ [%e const_str_expr(name)]
-                          ++ " is missing"
-                        ],
-                      );
-                    }
-                  },
-                )
-              | Fr_fragment_spread(key, loc, name) => {
-                  let loc = conv_loc(loc);
-                  (
-                    key,
-                    {
-                      let%expr value = Js.Json.object_(value);
-                      %e
-                      generate_solo_fragment_spread(loc, name);
-                    },
-                  );
-                },
-              fields,
-            ),
+            fields
+            |> List.map(
+                 fun
+                 | Fr_named_field(key, _, inner) => (
+                     key,
+                     switch%expr (
+                       Js.Dict.get(value, [%e const_str_expr(key)])
+                     ) {
+                     | Some(value) =>
+                       %e
+                       generate_decoder(config, inner)
+                     | None =>
+                       if%e (can_be_absent_as_field(inner)) {
+                         %expr
+                         None;
+                       } else {
+                         make_error_raiser(
+                           [%expr
+                             "Field "
+                             ++ [%e const_str_expr(key)]
+                             ++ " on type "
+                             ++ [%e const_str_expr(name)]
+                             ++ " is missing"
+                           ],
+                         );
+                       }
+                     },
+                   )
+                 | Fr_fragment_spread(key, loc, name) => {
+                     let loc = conv_loc(loc);
+                     (
+                       key,
+                       {
+                         let%expr value = Js.Json.object_(value);
+                         %e
+                         generate_solo_fragment_spread(loc, name);
+                       },
+                     );
+                   },
+               ),
             [
               (
                 "",
@@ -498,22 +497,21 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let variant_type =
     Ast_helper.(
       Typ.variant(
-        List.map(
-          ((name, _)) =>
-            Rtag(
-              Compat.capitalize_ascii(name),
-              [],
-              false,
-              [
-                {
-                  ptyp_desc: Ptyp_any,
-                  ptyp_attributes: [],
-                  ptyp_loc: Location.none,
-                },
-              ],
-            ),
-          fields,
-        ),
+        fields
+        |> List.map(((name, _)) =>
+             Rtag(
+               Compat.capitalize_ascii(name),
+               [],
+               false,
+               [
+                 {
+                   ptyp_desc: Ptyp_any,
+                   ptyp_attributes: [],
+                   ptyp_loc: Location.none,
+                 },
+               ],
+             )
+           ),
         Closed,
         None,
       )
@@ -536,17 +534,17 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
   let map_fallback_case = ((type_name, inner)) => {
     open Ast_helper;
     let name_pattern = Pat.any();
-    let variant =
-      Exp.variant(type_name, Some(generate_decoder(config, inner)));
-    Exp.case(name_pattern, variant);
+
+    Exp.variant(type_name, Some(generate_decoder(config, inner)))
+    |> Exp.case(name_pattern);
   };
 
   let map_case = ((type_name, inner)) => {
     open Ast_helper;
     let name_pattern = Pat.constant(Const_string(type_name, None));
-    let variant =
-      Exp.variant(type_name, Some(generate_decoder(config, inner)));
-    Exp.case(name_pattern, variant);
+
+    Exp.variant(type_name, Some(generate_decoder(config, inner)))
+    |> Exp.case(name_pattern);
   };
   let map_case_ty = ((name, _)) =>
     Rtag(
@@ -620,11 +618,10 @@ and generate_poly_variant_union =
       fragments
       |> List.map(((type_name, inner)) => {
            let name_pattern = Pat.constant(Const_string(type_name, None));
-           let variant =
-             Ast_helper.(
-               Exp.variant(type_name, Some(generate_decoder(config, inner)))
-             );
-           Exp.case(name_pattern, variant);
+           Ast_helper.(
+             Exp.variant(type_name, Some(generate_decoder(config, inner)))
+           )
+           |> Exp.case(name_pattern);
          })
     );
   let (fallback_case, fallback_case_ty) =
@@ -651,22 +648,22 @@ and generate_poly_variant_union =
       }
     );
   let fragment_case_tys =
-    List.map(
-      ((name, _)) =>
-        Rtag(
-          name,
-          [],
-          false,
-          [
-            {
-              ptyp_desc: Ptyp_any,
-              ptyp_attributes: [],
-              ptyp_loc: Location.none,
-            },
-          ],
-        ),
-      fragments,
-    );
+    fragments
+    |> List.map(((name, _)) =>
+         Rtag(
+           name,
+           [],
+           false,
+           [
+             {
+               ptyp_desc: Ptyp_any,
+               ptyp_attributes: [],
+               ptyp_loc: Location.none,
+             },
+           ],
+         )
+       );
+
   let union_ty =
     Ast_helper.(
       Typ.variant(

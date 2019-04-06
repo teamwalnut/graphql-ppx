@@ -63,9 +63,10 @@ let fmt_parse_err = err =>
   );
 
 let make_error_expr = (loc, message) => {
-  open Ast_402;
-  let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
-  Ast_helper.Exp.extension(~loc, ext);
+  Ast_402.(
+    Ast_mapper.extension_of_error(Location.error(~loc, message))
+    |> Ast_helper.Exp.extension(~loc)
+  );
 };
 
 let is_prefixed = (prefix, str) => {
@@ -129,19 +130,17 @@ let rewrite_query = (loc, delim, query) => {
       | Some(errs) =>
         Mod.mk(
           Pmod_structure(
-            List.map(
-              ((loc, msg)) => {
-                let loc = conv_loc(loc);
-                %stri
-                [%e make_error_expr(loc, msg)];
-              },
-              errs,
-            ),
+            errs
+            |> List.map(((loc, msg)) => {
+                 let loc = conv_loc(loc);
+                 %stri
+                 [%e make_error_expr(loc, msg)];
+               }),
           ),
         )
       | None =>
-        let parts = Result_decoder.unify_document_schema(config, document);
-        Output_bucklescript_module.generate_modules(config, parts);
+        Result_decoder.unify_document_schema(config, document)
+        |> Output_bucklescript_module.generate_modules(config)
       };
     };
   };

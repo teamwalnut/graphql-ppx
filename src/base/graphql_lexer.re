@@ -2,12 +2,6 @@ open Result;
 
 open Source_pos;
 
-let map_some = (f, o) =>
-  switch (o) {
-  | Some(v) => Some(f(v))
-  | None => None
-  };
-
 type lexer = {
   source: string,
   length: int,
@@ -82,11 +76,7 @@ let peek_char = lexer =>
     Some((lexer.position.index, lexer.source.[lexer.position.index]));
   };
 
-let peek_char_only = lexer =>
-  switch (peek_char(lexer)) {
-  | Some((_, ch)) => Some(ch)
-  | None => None
-  };
+let peek_char_only = lexer => lexer |> peek_char |> Option.map(snd);
 
 let next_char = lexer => {
   let next = peek_char(lexer);
@@ -263,22 +253,25 @@ let scan_number = lexer => {
   let build_number = (int_part, frac_part, exp_part) => {
     let mantissa =
       frac_part
-      |> map_some(float_of_int)
-      |> map_some(frac =>
+      |> Option.map(float_of_int)
+      |> Option.map(frac =>
            if (frac > 0.0) {
              frac /. 10.0 ** (frac |> log10 |> floor);
            } else {
              0.0;
            }
          )
-      |> map_some(m =>
+      |> Option.map(m =>
            if (int_part < 0) {
              (-1.0) *. m;
            } else {
              m;
            }
          );
-    let exp = exp_part |> map_some(float_of_int) |> map_some(e => 10.0 ** e);
+
+    let exp =
+      exp_part |> Option.map(float_of_int) |> Option.map(e => 10.0 ** e);
+
     let num_token =
       switch (mantissa, exp) {
       | (None, None) => Int(int_part)

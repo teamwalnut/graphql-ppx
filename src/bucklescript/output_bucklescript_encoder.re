@@ -38,10 +38,8 @@ let sort_variable_types = (schema, variables) => {
             let () =
               loop(
                 StringSet.add(type_name, visit_stack),
-                List.map(
-                  ({am_arg_type, _}) => (span, am_arg_type),
-                  io.iom_input_fields,
-                ),
+                io.iom_input_fields
+                |> List.map(({am_arg_type, _}) => (span, am_arg_type)),
               );
             Queue.push((span, type_name), ordered_nodes);
           | Some(_) => ()
@@ -191,4 +189,5 @@ let generate_encoders = (config, _loc) =>
         Array.map(generate_encoder(config), types),
       )
     )
+
   | None => (Nonrecursive, [||]);
