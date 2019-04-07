@@ -10,7 +10,7 @@ module To_current =
     Migrate_parsetree.OCaml_current,
   );
 
-open Graphql_ppx_base;
+open Base;
 open Source_pos;
 
 open Output_bucklescript_utils;
@@ -107,8 +107,10 @@ let rewrite_query = (loc, delim, query) => {
       ),
     )
   | Result.Ok(tokens) =>
-    let parser = Graphql_parser.make(tokens);
-    switch (Graphql_parser_document.parse_document(parser)) {
+    let result =
+      tokens |> Graphql_parser.make |> Graphql_parser_document.parse_document;
+
+    switch (result) {
     | Result.Error(e) =>
       raise(
         Location.Error(

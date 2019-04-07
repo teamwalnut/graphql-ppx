@@ -11,27 +11,45 @@ module MyQuery = [%graphql
 |}
 ];
 
+let json = {|
+{
+  "lists": {
+    "nullableOfNullable": [null, "123"],
+    "nullableOfNonNullable": null,
+    "nonNullableOfNullable": [null, "123"],
+    "nonNullableOfNonNullable": ["a", "b"]
+  }
+}
+|};
+
 Jest.(
   describe("Lists", () => {
     open Expect;
-    open! Expect.Operators;
 
     test("Null in nullable lists", () =>
-      expect(
-        MyQuery.parse(
-          Js.Json.parseExn(
-            {|{"lists": {"nullableOfNullable": [null, "123"], "nonNullableOfNullable": [null, "123"], "nonNullableOfNonNullable": ["a", "b"]}}|},
-          ),
-        ),
-      )
-      == {
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> expect
+      |> toEqual({
            "lists": {
              "nullableOfNullable": Some([|None, Some("123")|]),
              "nullableOfNonNullable": None,
              "nonNullableOfNullable": [|None, Some("123")|],
              "nonNullableOfNonNullable": [|"a", "b"|],
            },
-         }
+         })
+    );
+
+    test("Serializes correctly", () =>
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> MyQuery.serialize
+      |> Js.Json.stringify
+      |> Utils.whitespaceAgnostic
+      |> expect
+      |> toEqual(json |> Utils.whitespaceAgnostic)
     );
   })
 );

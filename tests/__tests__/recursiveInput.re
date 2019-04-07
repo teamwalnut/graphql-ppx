@@ -9,11 +9,9 @@ module MyQuery = [%graphql
 Jest.(
   describe("Recursive input types", () => {
     open Expect;
-    open! Expect.Operators;
 
     test("Constructing a recursive input type", () =>
-      expect(
-        MyQuery.make(
+        (MyQuery.make(
           ~arg={
             "otherField": Some("test"),
             "enum": None,
@@ -25,9 +23,9 @@ Jest.(
               }),
           },
           (),
-        )##variables,
-      )
-      == Js.Json.parseExn(
+        )##variables)
+        |> expect |> toEqual(
+      Js.Json.parseExn(
            {| {
         "arg": {
           "otherField": "test",
@@ -36,8 +34,8 @@ Jest.(
             "enum": "SECOND"
           }
         }
-      } |},
-         )
+      } |}
+         ))
     );
   })
 );

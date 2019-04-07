@@ -1,4 +1,4 @@
-open Graphql_ppx_base;
+open Base;
 open Result_structure;
 open Generator_utils;
 
@@ -179,7 +179,7 @@ let generate_default_operation =
       Output_bucklescript_unifier.make_make_fun(config, variable_defs);
 
     let serialize_fn =
-      Output_bucklescript_query_encoder.generate_encoders(
+      Output_bucklescript_query_encoder.generate_encoder(
         config,
         res_structure,
       );
@@ -205,7 +205,7 @@ let generate_default_operation =
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       [[%stri let parse = value => [%e parse_fn]]],
-      [[%stri let serialize = value => [%e serialize_fn]]],
+      [[%stri let serialize = [%e serialize_fn]]],
       encoders,
       [
         [%stri let make = [%e make_fn]],

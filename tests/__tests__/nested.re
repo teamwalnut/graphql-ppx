@@ -36,7 +36,6 @@ let json = {|
 Jest.(
   describe("Nested", () => {
     open Expect;
-    open! Expect.Operators;
 
     test("Decodes recursively", () =>
       json
@@ -53,14 +52,15 @@ Jest.(
          })
     );
 
-    test("Serializes recursively", () =>
+    test("Serializes correctly", () =>
       json
       |> Js.Json.parseExn
       |> MyQuery.parse
       |> MyQuery.serialize
       |> Js.Json.stringify
+      |> Utils.whitespaceAgnostic
       |> expect
-      |> toEqual(json)
+      |> toEqual(json |> Utils.whitespaceAgnostic)
     );
   })
 );

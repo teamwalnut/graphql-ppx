@@ -1,4 +1,4 @@
-open Graphql_ppx_base;
+open Base;
 open Graphql_ast;
 open Source_pos;
 open Generator_utils;

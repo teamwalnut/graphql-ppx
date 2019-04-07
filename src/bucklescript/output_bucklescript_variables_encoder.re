@@ -1,4 +1,4 @@
-open Graphql_ppx_base;
+open Base;
 open Graphql_ast;
 open Source_pos;
 open Schema;
@@ -105,7 +105,7 @@ let rec parser_for_type = (schema, loc, type_ref) => {
       %expr
       (v => v)
     | Some(ty) =>
-      function_name_string(ty) |> ident_from_string(conv_loc(loc))
+      ty |> function_name_string |> ident_from_string(conv_loc(loc))
     }
   };
 };

@@ -1,4 +1,4 @@
-open Graphql_ppx_base;
+open Base;
 open Result_structure;
 open Schema;
 
