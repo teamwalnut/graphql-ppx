@@ -71,7 +71,7 @@ let rec generate_encoder = (config, structure) =>
     [%expr
       (
         v => [%e
-          generate_record_fields_encoder(config, loc, fields, [%expr v])
+          generate_record_fields_encoder(config, loc, fields, None, [%expr v])
         ]
       )
     ]
@@ -80,7 +80,7 @@ let rec generate_encoder = (config, structure) =>
     [%expr
       (
         v => [%e
-          generate_object_fields_encoder(config, loc, fields, [%expr v])
+          generate_object_fields_encoder(config, loc, fields, None, [%expr v])
         ]
       )
     ]
@@ -89,25 +89,14 @@ let rec generate_encoder = (config, structure) =>
     (v => v)
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     %expr
-    (v => v)
+    (v => [%e generage_poly_variant_decoder(config, loc, fragments)])
   | Res_poly_variant_interface(loc, name, base, fragments) =>
-    // let encoder = v =>
-    //   [base, ...fragments]
-    //   |> List.map(((name, structure)) => {
-    //        let pattern = Ast_helper.Pat.variant(name, Ptyp_var("v"));
-    //        print_endline(name);
-    //        Ast_helper.Exp.case(
-    //          pattern,
-    //          [%expr [%e generate_encoder(config, structure)]],
-    //        );
-    //      })
-    //   |> Ast_helper.Exp.match([%expr v]);
-
-    // %expr
-    // (v => [%e encoder([%expr v])]);
     %expr
-    (v => v)
-
+    (
+      v => [%e
+        generage_poly_variant_decoder(config, loc, [base, ...fragments])
+      ]
+    )
   | Res_solo_fragment_spread(loc, name) =>
     %expr
     (v => v)
@@ -120,7 +109,7 @@ let rec generate_encoder = (config, structure) =>
     %expr
     (_v => [%e ext]);
   }
-and generate_object_fields_encoder = (config, loc, fields, expr) => {
+and generate_object_fields_encoder = (config, loc, fields, typename, expr) => {
   let field_array_exprs =
     fields
     |> List.map(
@@ -145,11 +134,28 @@ and generate_object_fields_encoder = (config, loc, fields, expr) => {
          | Fr_fragment_spread(_name, _loc, _string) => [%expr [%e expr]],
        );
 
-  let field_array = Ast_helper.Exp.array(field_array_exprs);
+  let field_array =
+    Ast_helper.Exp.array(
+      switch (typename) {
+      | Some(typename) => [
+          [@metaloc conv_loc(loc)]
+          [%expr
+            (
+              [%e Ast_helper.Exp.constant(Const_string("__typename", None))],
+              Js.Json.string(
+                [%e Ast_helper.Exp.constant(Const_string(typename, None))],
+              ),
+            )
+          ],
+          ...field_array_exprs,
+        ]
+      | _ => field_array_exprs
+      },
+    );
   [@metaloc conv_loc(loc)]
   [%expr Js.Json.object_([%e field_array] |> Js.Dict.fromArray)];
 }
-and generate_record_fields_encoder = (config, loc, fields, expr) => {
+and generate_record_fields_encoder = (config, loc, fields, typename, expr) => {
   let field_array_exprs =
     fields
     |> List.map(
@@ -174,7 +180,75 @@ and generate_record_fields_encoder = (config, loc, fields, expr) => {
          | Fr_fragment_spread(_name, _loc, _string) => [%expr [%e expr]],
        );
 
-  let field_array = Ast_helper.Exp.array(field_array_exprs);
+  let field_array =
+    Ast_helper.Exp.array(
+      switch (typename) {
+      | Some(typename) => [
+          [@metaloc conv_loc(loc)]
+          [%expr
+            (
+              [%e Ast_helper.Exp.constant(Const_string("__typename", None))],
+              Js.Json.string(
+                [%e Ast_helper.Exp.constant(Const_string(typename, None))],
+              ),
+            )
+          ],
+          ...field_array_exprs,
+        ]
+      | _ => field_array_exprs
+      },
+    );
   [@metaloc conv_loc(loc)]
   [%expr Js.Json.object_([%e field_array] |> Js.Dict.fromArray)];
-};
+}
+and generage_poly_variant_decoder = (config, loc, fragments) =>
+  fragments
+  |> List.map(({poly_variant_name, res_structure, typename}) => {
+       let pattern =
+         Ast_helper.Pat.variant(
+           poly_variant_name,
+           Some({
+             ppat_desc: Ppat_var({txt: "v", loc: conv_loc(loc)}),
+             ppat_loc: conv_loc(loc),
+             ppat_attributes: [],
+           }),
+         );
+
+       let encoder =
+         switch (res_structure) {
+         | Res_record(loc, name, fields) =>
+           [@metaloc conv_loc(loc)]
+           [%expr
+             (
+               v => [%e
+                 generate_record_fields_encoder(
+                   config,
+                   loc,
+                   fields,
+                   Some(typename),
+                   [%expr v],
+                 )
+               ]
+             )
+           ]
+         | Res_object(loc, name, fields) =>
+           [@metaloc conv_loc(loc)]
+           [%expr
+             (
+               v => [%e
+                 generate_object_fields_encoder(
+                   config,
+                   loc,
+                   fields,
+                   Some(typename),
+                   [%expr v],
+                 )
+               ]
+             )
+           ]
+         | ty => generate_encoder(config, ty)
+         };
+
+       Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);
+     })
+  |> Ast_helper.Exp.match([%expr v]);

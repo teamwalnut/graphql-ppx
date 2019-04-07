@@ -15,26 +15,34 @@ module MyQuery = [%graphql
 |}
 ];
 
+let json = {| {
+  "dogOrHuman": {
+    "__typename": "Dog",
+    "name": "Fido",
+    "barkVolume": 123
+  }
+} |};
+
 Jest.(
   describe("Union types", () => {
     open Expect;
-    open! Expect.Operators;
 
     test("Decodes exhaustive query", () =>
-      expect(
-        MyQuery.parse(
-          Js.Json.parseExn(
-            {| {
-      "dogOrHuman": {
-        "__typename": "Dog",
-        "name": "Fido",
-        "barkVolume": 123
-      }
-    } |},
-          ),
-        ),
-      )
-      == {"dogOrHuman": `Dog({"name": "Fido", "barkVolume": 123.0})}
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> expect
+      |> toEqual({"dogOrHuman": `Dog({"name": "Fido", "barkVolume": 123.0})})
+    );
+
+    test("Serializes", () =>
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> MyQuery.serialize
+      |> Js.Json.stringify
+      |> expect
+      |> toEqual(json |> Utils.whitespaceAgnostic)
     );
   })
 );

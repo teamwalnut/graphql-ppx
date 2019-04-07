@@ -454,7 +454,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [{poly_variant_name: field, res_structure: inner, _}, ...next] => {
         let variant_decoder =
           Ast_helper.(
             Exp.variant(
@@ -498,9 +498,9 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     Ast_helper.(
       Typ.variant(
         fields
-        |> List.map(((name, _)) =>
+        |> List.map(({poly_variant_name, _}) =>
              Rtag(
-               Compat.capitalize_ascii(name),
+               Compat.capitalize_ascii(poly_variant_name),
                [],
                false,
                [
@@ -531,7 +531,8 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   );
 }
 and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
-  let map_fallback_case = ((type_name, inner)) => {
+  let map_fallback_case =
+      ({poly_variant_name: type_name, res_structure: inner, _}) => {
     open Ast_helper;
     let name_pattern = Pat.any();
 
@@ -539,14 +540,15 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
     |> Exp.case(name_pattern);
   };
 
-  let map_case = ((type_name, inner)) => {
+  let map_case = ({poly_variant_name: type_name, res_structure: inner, _}) => {
     open Ast_helper;
     let name_pattern = Pat.constant(Const_string(type_name, None));
 
     Exp.variant(type_name, Some(generate_decoder(config, inner)))
     |> Exp.case(name_pattern);
   };
-  let map_case_ty = ((name, _)) =>
+
+  let map_case_ty = ({poly_variant_name: name, _}) =>
     Rtag(
       name,
       [],
@@ -616,7 +618,7 @@ and generate_poly_variant_union =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map(({poly_variant_name: type_name, res_structure: inner, _}) => {
            let name_pattern = Pat.constant(Const_string(type_name, None));
            Ast_helper.(
              Exp.variant(type_name, Some(generate_decoder(config, inner)))
@@ -649,7 +651,7 @@ and generate_poly_variant_union =
     );
   let fragment_case_tys =
     fragments
-    |> List.map(((name, _)) =>
+    |> List.map(({poly_variant_name: name, _}) =>
          Rtag(
            name,
            [],

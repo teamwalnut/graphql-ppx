@@ -7,6 +7,11 @@ type loc = Source_pos.ast_location;
 type field_result =
   | Fr_named_field(string, loc, t)
   | Fr_fragment_spread(string, loc, string)
+and typename_set = {
+  res_structure: t,
+  poly_variant_name: string,
+  typename: string,
+}
 and t =
   | Res_nullable(loc, t)
   | Res_array(loc, t)
@@ -20,9 +25,9 @@ and t =
   | Res_custom_decoder(loc, string, t)
   | Res_record(loc, string, list(field_result))
   | Res_object(loc, string, list(field_result))
-  | Res_poly_variant_selection_set(loc, string, list((string, t)))
-  | Res_poly_variant_union(loc, string, list((string, t)), exhaustive_flag)
-  | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
+  | Res_poly_variant_selection_set(loc, string, list(typename_set))
+  | Res_poly_variant_union(loc, string, list(typename_set), exhaustive_flag)
+  | Res_poly_variant_interface(loc, string, typename_set, list(typename_set))
   | Res_solo_fragment_spread(loc, string)
   | Res_error(loc, string);
 

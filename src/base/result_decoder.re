@@ -142,14 +142,16 @@ and unify_interface =
     let (base_selection_set, fragments) =
       List.fold_left(unwrap_type_conds, ([], []), selection_set.item);
 
-    let generate_case = (selection, ty, name) => (
-      name,
-      Res_object(
-        config.map_loc(span),
-        name,
-        List.map(unify_selection(error_marker, config, ty), selection),
-      ),
-    );
+    let generate_case = (selection, ty, name) => {
+      poly_variant_name: name,
+      typename: name,
+      res_structure:
+        Res_object(
+          config.map_loc(span),
+          name,
+          List.map(unify_selection(error_marker, config, ty), selection),
+        ),
+    };
     let generate_fragment_case =
         ({item: {if_type_condition, if_selection_set, _}, _}) =>
       switch (if_type_condition) {
@@ -227,7 +229,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
           };
 
         let is_record = has_directive("bsRecord", if_directives);
-        let result_decoder =
+        let res_structure =
           unify_selection_set(
             error_marker,
             is_record,
@@ -236,7 +238,12 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
             type_cond_ty,
             Some(if_selection_set),
           );
-        (if_type_condition.item, result_decoder);
+
+        {
+          poly_variant_name: if_type_condition.item,
+          typename: if_type_condition.item,
+          res_structure,
+        };
       | None => assert(false)
       };
 
@@ -323,8 +330,8 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                        )
                      | Ntr_nullable(i) => i
                      };
-                   (
-                     key,
+
+                   let res_structure =
                      unify_type(
                        error_marker,
                        false,
@@ -332,8 +339,9 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                        span,
                        inner_type,
                        item.fd_selection_set,
-                     ),
-                   );
+                     );
+
+                   {poly_variant_name: key, typename: key, res_structure};
                  }
                | FragmentSpread({span, _}) =>
                  raise_error(

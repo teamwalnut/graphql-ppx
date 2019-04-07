@@ -58,7 +58,6 @@ Jest.(
       |> MyQuery.parse
       |> MyQuery.serialize
       |> Js.Json.stringify
-      |> Utils.whitespaceAgnostic
       |> expect
       |> toEqual(json |> Utils.whitespaceAgnostic)
     );
