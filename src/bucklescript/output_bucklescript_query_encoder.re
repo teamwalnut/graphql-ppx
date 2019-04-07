@@ -50,9 +50,20 @@ let rec generate_encoder = (config, structure) =>
     %expr
     (v => v)
   | Res_poly_enum(loc, enum_meta) =>
+    let encoder =
+      enum_meta.em_values
+      |> List.map(({evm_name, _}) => {
+           let pattern = Ast_helper.Pat.variant(evm_name, None);
+           let expr = Ast_helper.Exp.constant(Const_string(evm_name, None));
+           Ast_helper.Exp.case(pattern, [%expr Js.Json.string([%e expr])]);
+         })
+      |> Ast_helper.Exp.match([%expr v]);
+
     %expr
-    (v => v)
+    (v => [%e encoder]);
   | Res_custom_decoder(loc, ident, inner) =>
+    // TODO: this one is problematic because we should provide both decode and encode
+    // probably requires changes to the custom decoder result type to support two way serialization
     %expr
     (v => v)
   | Res_record(loc, name, fields) =>

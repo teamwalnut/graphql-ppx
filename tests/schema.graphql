@@ -91,6 +91,7 @@ type VariousScalars {
   boolean: Boolean!
   nullableID: ID
   id: ID!
+  enum: SampleField!
 }
 
 type Lists {

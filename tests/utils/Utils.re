@@ -1,4 +1,4 @@
 let whitespaceAgnostic = str => {
-  let re = [%bs.re {|/\s/g|}];
+  let re = [%bs.re {|/\s(?=([^"]*"[^"]*")*[^"]*$)/g|}];
   Js.String.replaceByRe(re, "", str);
 };
