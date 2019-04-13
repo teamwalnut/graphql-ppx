@@ -534,10 +534,16 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
   let map_fallback_case =
       ({poly_variant_name: type_name, res_structure: inner, _}) => {
     open Ast_helper;
-    let name_pattern = Pat.any();
+    let name_pattern = {
+      ppat_desc: Ppat_var({txt: "typename", loc}),
+      ppat_loc: loc,
+      ppat_attributes: [],
+    };
 
-    Exp.variant(type_name, Some(generate_decoder(config, inner)))
-    |> Exp.case(name_pattern);
+    Exp.case(
+      name_pattern,
+      Exp.variant(type_name, Some(generate_decoder(config, inner))),
+    );
   };
 
   let map_case = ({poly_variant_name: type_name, res_structure: inner, _}) => {
