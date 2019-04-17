@@ -542,7 +542,12 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
 
     Exp.case(
       name_pattern,
-      Exp.variant(type_name, Some(generate_decoder(config, inner))),
+      Exp.variant(
+        type_name,
+        Some(
+          Exp.tuple([[%expr typename], generate_decoder(config, inner)]),
+        ),
+      ),
     );
   };
 

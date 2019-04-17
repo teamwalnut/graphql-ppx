@@ -152,6 +152,7 @@ and unify_interface =
           List.map(unify_selection(error_marker, config, ty), selection),
         ),
     };
+    
     let generate_fragment_case =
         ({item: {if_type_condition, if_selection_set, _}, _}) =>
       switch (if_type_condition) {

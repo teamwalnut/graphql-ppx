@@ -44,7 +44,7 @@ Jest.(
            "users": [|
              `AdminUser({"id": "1", "name": "bob"}),
              `AnonymousUser({"id": "2", "anonymousId": 1}),
-             `User({"id": "3"}),
+             `User("OtherUser", {"id": "3"}),
            |],
          })
     );
@@ -55,9 +55,9 @@ Jest.(
       |> QueryWithoutFragments.parse |> expect |> toEqual(
        {
            "users": [|
-             `User({"id": "1"}),
-             `User({"id": "2"}),
-             `User({"id": "3"}),
+             `User("AdminUser", {"id": "1"}),
+             `User("AnonymousUser", {"id": "2"}),
+             `User("OtherUser", {"id": "3"}),
            |],
          })
     );

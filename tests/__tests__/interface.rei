@@ -4,7 +4,7 @@ module QueryWithFragments: {
     "users":
       array(
         [
-          | `User({. "id": string})
+          | `User(Js.String.t, {. "id": string})
           | `AdminUser(
               {
                 .
@@ -43,7 +43,7 @@ module QueryWithFragments: {
 };
 
 module QueryWithoutFragments: {
-  type t = {. "users": array([ | `User({. "id": string})])};
+  type t = {. "users": array([ | `User(Js.String.t, {. "id": string})])};
 
   let make:
     unit =>
