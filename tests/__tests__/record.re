@@ -69,7 +69,7 @@ Jest.(
     open Expect;
     open! Expect.Operators;
 
-    test("Decodes a record in a selection", () => {
+    test("Decodes a record in a Selection", () => {
       let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
       let expected = {string: "a string", int: 123};
       json
@@ -109,6 +109,18 @@ Jest.(
       |> UnionExternalFragmentQuery.parse
       |> expect
       |> toEqual({"dogOrHuman": expected});
+    });
+
+    test("Serializes correctly", () => {
+      let json = {|{"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}}|};
+
+      json
+      |> Js.Json.parseExn
+      |> UnionExternalFragmentQuery.parse
+      |> UnionExternalFragmentQuery.serialize
+      |> Js.Json.stringify
+      |> expect
+      |> toEqual(json |> Utils.whitespaceAgnostic);
     });
   })
 );

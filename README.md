@@ -17,3 +17,10 @@ cd tests
 yarn install # npm install
 yarn test # npm test
 ```
+
+## TODO
+
+- [ ] unions with fragments support
+- [ ] handle @bsDecode somehow
+- [ ] tests on fragments
+- [ ] rewite to OCaml and contribute to original graphql_ppx repo
