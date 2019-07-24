@@ -11,10 +11,10 @@
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.5",
-    "bs-platform": "4.0.18",
+    "bs-platform": "5.0.6",
+    "gql-tools": "^0.0.15",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.6.1",
-    "graphql-tools": "^4.0.3",
-    "gql-tools": "^0.0.15"
+    "graphql-tools": "^4.0.3"
   }
 }
