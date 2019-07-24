@@ -7,11 +7,20 @@ module MyQuery = [%graphql
 ];
 
 Jest.(
-  describe("Recursive input types", () => {
-    open Expect;
+  describe("Recursive input types", () =>
+    Expect.(
+      test("Constructing a recursive input type", () => {
+        let json = {| {
+        "arg": {
+          "otherField": "test",
+          "inner": {
+            "otherField": "inner",
+            "enum": "SECOND"
+          }
+        }
+      } |};
 
-    test("Constructing a recursive input type", () =>
-        (MyQuery.make(
+        MyQuery.make(
           ~arg={
             "otherField": Some("test"),
             "enum": None,
@@ -23,19 +32,10 @@ Jest.(
               }),
           },
           (),
-        )##variables)
-        |> expect |> toEqual(
-      Js.Json.parseExn(
-           {| {
-        "arg": {
-          "otherField": "test",
-          "inner": {
-            "otherField": "inner",
-            "enum": "SECOND"
-          }
-        }
-      } |}
-         ))
-    );
-  })
+        )##variables
+        |> expect
+        |> toEqual(Js.Json.parseExn(json));
+      })
+    )
+  )
 );

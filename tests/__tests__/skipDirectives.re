@@ -18,29 +18,14 @@ Jest.(
     open Expect;
     open! Expect.Operators;
 
-    test("Responds with None to nulled fields", () =>
-      expect(
-        MyQuery.parse(
-          Js.Json.parseExn(
-            {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|},
-          ),
-        ),
-      )
-      == {
-           "v1": {
-             "nullableString": None,
-             "string": None,
-           },
-           "v2": {
-             "nullableString": None,
-             "string": None,
-           },
-         }
-    );
+    test("Responds with None to nulled fields", () => {
+      let json = {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|};
 
-    test("Responds with None to omitted fields", () =>
-      expect(MyQuery.parse(Js.Json.parseExn({|{"v1": {}, "v2": {}}|})))
-      == {
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> expect
+      |> toEqual({
            "v1": {
              "nullableString": None,
              "string": None,
@@ -49,7 +34,39 @@ Jest.(
              "nullableString": None,
              "string": None,
            },
-         }
-    );
+         });
+    });
+
+
+    test("Correct serialization", () => {
+      let json = {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|};
+
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> MyQuery.serialize
+      |> Js.Json.stringify
+      |> expect
+      |> toEqual(json |> Utils.whitespaceAgnostic);
+    });
+
+    test("Responds with None to omitted fields", () => {
+      let json = {|{"v1": {}, "v2": {}}|};
+
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> expect
+      |> toEqual({
+           "v1": {
+             "nullableString": None,
+             "string": None,
+           },
+           "v2": {
+             "nullableString": None,
+             "string": None,
+           },
+         });
+    });
   })
 );

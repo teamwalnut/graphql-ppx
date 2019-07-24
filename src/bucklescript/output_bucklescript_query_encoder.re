@@ -109,7 +109,7 @@ let rec generate_encoder = (config, structure) =>
     (v => [%e generage_poly_variant_decoder(config, loc, fragments)])
   | Res_poly_variant_interface(loc, name, base, fragments) =>
     %expr
-    (v => [%e generage_interface_decoder(config, loc, base, fragments)])
+    (v => [%e generate_interface_decoder(config, loc, base, fragments)])
   | Res_solo_fragment_spread(loc, name) =>
     %expr
     (v => v)
@@ -205,7 +205,7 @@ and generage_poly_variant_decoder = (config, loc, fragments) =>
        Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);
      })
   |> Ast_helper.Exp.match([%expr v])
-and generage_interface_decoder = (config, loc, base, fragments) => {
+and generate_interface_decoder = (config, loc, base, fragments) => {
   let fragment_cases =
     fragments
     |> List.map(({poly_variant_name, res_structure, typename}) => {

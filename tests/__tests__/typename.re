@@ -18,24 +18,22 @@ module MyQuery = [%graphql
 Jest.(
   describe("Typename as implicit field", () => {
     open Expect;
-    open! Expect.Operators;
 
-    test("Decodes typename as a non-nullable string", () =>
-      expect(
-        MyQuery.parse(
-          Js.Json.parseExn(
-            {|
-      {"first": {"__typename": "NestedObject", "inner": null}}
-    |},
-          ),
-        ),
-      )
-      == {
-           "first": {
+    test("Decodes typename as a non-nullable string", () => {
+      let json = {|{"first": {"__typename": "NestedObject", "inner": null}}|};
+
+      json
+      |> Js.Json.parseExn
+      |> MyQuery.parse
+      |> expect
+      |> toEqual({
+                   "first": {
              "__typename": "NestedObject",
              "inner": None,
            },
-         }
-    );
+
+      });
+
+     } );
   })
 );
