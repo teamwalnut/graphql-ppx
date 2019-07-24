@@ -3,7 +3,7 @@ open Graphql_ast;
 open Source_pos;
 open Generator_utils;
 
-open Ast_402;
+open Ast_406;
 open Parsetree;
 open Asttypes;
 
@@ -37,12 +37,14 @@ let make_make_fun = (config, variable_defs) => {
         Ast_helper.(
           Exp.fun_(
             ~loc=name_loc,
-            switch (def.vd_type.item) {
-            | Tr_non_null_list(_)
-            | Tr_non_null_named(_) => name.item
-            | Tr_list(_)
-            | Tr_named(_) => "?" ++ name.item
-            },
+            Labelled(
+              switch (def.vd_type.item) {
+              | Tr_non_null_list(_)
+              | Tr_non_null_named(_) => name.item
+              | Tr_list(_)
+              | Tr_named(_) => "?" ++ name.item
+              },
+            ),
             None,
             Pat.var(~loc=name_loc, {txt: name.item, loc: name_loc}),
             make_labelled_function(tl, body),
@@ -97,7 +99,10 @@ let make_make_fun = (config, variable_defs) => {
            [%expr
              (
                [%e
-                 Ast_helper.Exp.constant(~loc, Const_string(name.item, None))
+                 Ast_helper.Exp.constant(
+                   ~loc,
+                   Pconst_string(name.item, None),
+                 )
                ],
                [%e parser_](
                  [%e

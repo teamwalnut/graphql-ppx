@@ -3,7 +3,7 @@ open Graphql_ast;
 open Source_pos;
 open Schema;
 
-open Ast_402;
+open Ast_406;
 open Asttypes;
 
 open Type_utils;
@@ -123,7 +123,11 @@ let json_of_fields = (schema, loc, expr, fields) => {
          [@metaloc conv_loc(loc)]
          [%expr
            (
-             [%e Ast_helper.Exp.constant(Const_string(am_name, None))],
+             [%e
+               Ast_helper.Exp.constant(
+                 Parsetree.Pconst_string(am_name, None),
+               )
+             ],
              [%e parser](
                [%e expr]##[%e ident_from_string(conv_loc(loc), am_name)],
              ),
@@ -159,7 +163,9 @@ let generate_encoder = (config, (spanning, x)) => {
         |> List.map(({evm_name, _}) => {
              let pattern = Ast_helper.Pat.variant(evm_name, None);
              let expr =
-               Ast_helper.Exp.constant(Const_string(evm_name, None));
+               Ast_helper.Exp.constant(
+                 Parsetree.Pconst_string(evm_name, None),
+               );
              Ast_helper.Exp.case(pattern, [%expr Js.Json.string([%e expr])]);
            });
       Ast_helper.Exp.match([%expr value], match_arms);
