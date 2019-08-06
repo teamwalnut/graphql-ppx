@@ -13,13 +13,12 @@ before_install:
 
 before_script:
   - export IS_GRAPHQL_PPX_CI=true
-  - yarn
+  - cd tests && yarn && cd ../
   - "./.ci/before_script_$TRAVIS_OS_NAME.sh"
 
 script:
   - "./.ci/build_script_$TRAVIS_OS_NAME.sh"
-  - make only-test TARGET_BUCKLESCRIPT=1
-  - NODE_ENV=production make only-test TARGET_BUCKLESCRIPT=1
+  - cd tests && yarn test
   - mv graphql_ppx.exe graphql_ppx-$TARGET_NAME.exe
 
 deploy:
