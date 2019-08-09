@@ -1,6 +1,8 @@
 # graphql_ppx_re
 
-> Experiments with [graphql_ppx](https://github.com/mhallin/graphql_ppx) in Reason
+This project builds upon [graphql_ppx](https://github.com/mhallin/graphql_ppx). At this points it's basiclly original OCaml code reformated to Reason with small adjustments to build process.
+
+Right now I don't focus on Native Reason. If you want to help, PRs welcome.
 
 ## Developing
 
@@ -28,4 +30,4 @@ Tells graphql_ppx to add \_\_typename to every object in a query. Usefull in cas
 
 #### GRAPHQL_PPX_SCHEMA
 
-By default graphql_ppx uses `graphlq_schema.json` filed from your root directory. You can override it by provind env variable ovverriding it
+By default graphql_ppx uses `graphql_schema.json` filed from your root directory. You can override it by provind env variable overriding it

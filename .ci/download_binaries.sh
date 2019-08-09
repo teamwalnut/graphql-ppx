@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_TAG" ]; then
     exit 0
 fi
 
-BASE_URL=https://github.com/baransu/graphql_ppx_re/releases/download/$TRAVIS_TAG/graphql_ppx-
+BASE_URL=https://github.com/baransu/graphql_ppx_re/releases/download/$TRAVIS_TAG/graphql_ppx_re-
 
 mkdir -p bin
 

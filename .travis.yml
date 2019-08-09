@@ -6,20 +6,22 @@ sudo: required
 services:
   - docker
 
-before_install:
-  - bash -e .ci/travis_before_install.sh
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export TARGET_NAME=darwin-x64; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export TARGET_NAME=linux-x64; fi
+# before_install:
+#   - bash -e .ci/travis_before_install.sh
+#   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export TARGET_NAME=darwin-x64; fi
+#   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export TARGET_NAME=linux-x64; fi
 
 before_script:
-  - export IS_GRAPHQL_PPX_CI=true
+  - esy install
+  # - export IS_GRAPHQL_PPX_CI=true
   - cd tests && yarn && cd ../
-  - "./.ci/before_script_$TRAVIS_OS_NAME.sh"
+  # - "./.ci/before_script_$TRAVIS_OS_NAME.sh"
 
 script:
-  - "./.ci/build_script_$TRAVIS_OS_NAME.sh"
-  - cd tests && yarn test
-  - mv graphql_ppx.exe graphql_ppx-$TARGET_NAME.exe
+  # - "./.ci/build_script_$TRAVIS_OS_NAME.sh"
+  - esy build
+  - cd tests && yarn test && cd ../
+  - mv _build/install/default/bin/graphql_ppx graphql_ppx-$TARGET_NAME.exe
 
 deploy:
   provider: releases
@@ -35,15 +37,15 @@ deploy:
 
 jobs:
   include:
-    - stage: Wait for Windows binaries to become available
-      addons:
-        apt:
-          sources: []
-          packages: []
-      before_install: skip
-      before_script: skip
-      deploy: []
-      script: bash -e .ci/wait_for_builds.sh
+    # - stage: Wait for Windows binaries to become available
+    #   addons:
+    #     apt:
+    #       sources: []
+    #       packages: []
+    #   before_install: skip
+    #   before_script: skip
+    #   deploy: []
+    #   script: bash -e .ci/wait_for_builds.sh
     - stage: Deploy to npmjs
       addons:
         apt:

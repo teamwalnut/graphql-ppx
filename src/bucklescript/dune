@@ -3,5 +3,4 @@
  (libraries reason
             ocaml-migrate-parsetree
             graphql_ppx.base)
- (flags (:include ../../discover/dune.flags))
  (preprocess (pps ppx_tools_versioned.metaquot_406)))
