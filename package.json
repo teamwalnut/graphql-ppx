@@ -1,5 +1,5 @@
 {
-  "name": "graphql_ppx_re",
+  "name": "@baransu/graphql_ppx_re",
   "version": "0.0.1",
   "description": "Reason workflow with Esy",
   "license": "MIT",
