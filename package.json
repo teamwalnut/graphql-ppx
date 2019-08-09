@@ -1,7 +1,9 @@
 {
   "name": "@baransu/graphql_ppx_re",
   "version": "0.0.1",
-  "description": "Reason workflow with Esy",
+  "description": "GraphQL PPX rewriter for Bucklescript/ReasonML",
+  "repository": "https://github.com/baransu/graphql_ppx_re",
+  "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
   "license": "MIT",
   "esy": {
     "build": "dune build -p graphql_ppx",

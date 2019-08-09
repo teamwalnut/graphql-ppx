@@ -1,4 +1,5 @@
 language: generic
+
 os:
   - linux
   - osx
@@ -38,15 +39,6 @@ deploy:
 
 jobs:
   include:
-    # - stage: Wait for Windows binaries to become available
-    #   addons:
-    #     apt:
-    #       sources: []
-    #       packages: []
-    #   before_install: skip
-    #   before_script: skip
-    #   deploy: []
-    #   script: bash -e .ci/wait_for_builds.sh
     - stage: Deploy to npmjs
       addons:
         apt:
@@ -65,4 +57,4 @@ jobs:
         on:
           tags: true
           repo: baransu/graphql_ppx_ppx
-          branch: master
+          branch: release
