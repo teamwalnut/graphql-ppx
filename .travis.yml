@@ -12,13 +12,13 @@ before_install:
 before_script:
   - esy install
   # - export IS_GRAPHQL_PPX_CI=true
-  - cd tests && yarn && cd ../
+  - cd tests && npm install && cd ../
   # - "./.ci/before_script_$TRAVIS_OS_NAME.sh"
 
 script:
   # - "./.ci/build_script_$TRAVIS_OS_NAME.sh"
   - esy build
-  - cd tests && yarn test && cd ../
+  - cd tests && npm run test && cd ../
   - mv _build/install/default/bin/graphql_ppx graphql_ppx-$TARGET_NAME.exe
 
 deploy:
