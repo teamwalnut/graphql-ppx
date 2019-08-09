@@ -6,10 +6,8 @@ sudo: required
 services:
   - docker
 
-# before_install:
-#   - bash -e .ci/travis_before_install.sh
-#   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export TARGET_NAME=darwin-x64; fi
-#   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export TARGET_NAME=linux-x64; fi
+before_install:
+  - npm install -g esy@latest
 
 before_script:
   - esy install
