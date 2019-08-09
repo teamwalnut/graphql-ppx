@@ -39,7 +39,7 @@ deploy:
 
 jobs:
   include:
-     - stage: Wait for binaries to become available
+    - stage: Wait for binaries to become available
       addons:
         apt:
           sources: []
@@ -47,7 +47,7 @@ jobs:
       before_install: skip
       before_script: skip
       deploy: []
-      script: 
+      script:
         - bash -e ./.ci/wait_for_binaries.sh
     - stage: Deploy to npmjs
       addons:
