@@ -47,7 +47,7 @@ jobs:
       before_install: skip
       before_script: skip
       script:
-        - bash -e .ci/download_binaries.sh
+        - bash -e ./.ci/download_binaries.sh
       deploy:
         provider: npm
         email: tomaszcichocinski@gmail.com
@@ -56,5 +56,5 @@ jobs:
         skip_cleanup: true
         on:
           tags: true
-          repo: baransu/graphql_ppx_ppx
+          repo: baransu/graphql_ppx_re
           branch: release
