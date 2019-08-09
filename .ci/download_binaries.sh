@@ -5,10 +5,10 @@ if [ -z "$TRAVIS_TAG" ]; then
     exit 0
 fi
 
-BASE_URL=https://github.com/baransu/graphql_ppx_re/releases/download/$TRAVIS_TAG/graphql_ppx_re-
+BASE_URL=https://github.com/baransu/graphql_ppx_re/releases/download/$TRAVIS_TAG/graphql_ppx-
 
 mkdir -p bin
 
-for platform in linux-x64 darwin-x64 win-x64 win-x86; do
+for platform in linux-x64 darwin-x64; do
     (cd bin && curl -fOL $BASE_URL$platform.exe)
 done
