@@ -9,6 +9,7 @@ services:
 before_install:
   - nvm install --lts
   - nvm use --lts
+  - node -v
   - npm install -g esy@latest
 
 before_script:
