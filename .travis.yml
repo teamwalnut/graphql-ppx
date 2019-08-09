@@ -64,4 +64,4 @@ jobs:
         on:
           tags: true
           repo: baransu/graphql_ppx_ppx
-          branch: release
+          branch: master
