@@ -35,7 +35,7 @@ deploy:
   on:
     tags: true
     repo: baransu/graphql_ppx_re
-    branch: release
+    branch: master
 
 jobs:
   include:
@@ -67,4 +67,4 @@ jobs:
         on:
           tags: true
           repo: baransu/graphql_ppx_re
-          branch: release
+          branch: master
