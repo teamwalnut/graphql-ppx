@@ -1,5 +1,8 @@
 # graphql_ppx_re
 
+[![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
+[![Build Status](https://travis-ci.com/baransu/graphql_ppx_re.svg?branch=master)](https://travis-ci.com/baransu/graphql_ppx_re)
+
 This project builds upon [graphql_ppx](https://github.com/mhallin/graphql_ppx). At this points it's basiclly original OCaml code reformated to Reason with small adjustments to build process.
 
 Right now I don't focus on Native Reason. If you want to help, PRs welcome.
