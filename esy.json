@@ -5,10 +5,6 @@
   "repository": "https://github.com/baransu/graphql_ppx_re",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
   "license": "MIT",
-  "esy": {
-    "build": "dune build -p graphql_ppx",
-    "buildsInSource": "_build"
-  },
   "dependencies": {
     "@opam/dune": "*",
     "@opam/result": "*",
@@ -24,6 +20,6 @@
     "ocaml": "~4.2.3"
   },
   "peerDependencies": {
-    "ocaml": " >= 4.2.3  < 4.7.0"
+    "ocaml": ">= 4.2.3  < 4.7.0"
   }
 }
