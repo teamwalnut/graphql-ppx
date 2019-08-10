@@ -59,6 +59,7 @@ jobs:
       deploy:
         provider: npm
         email: tomaszcichocinski@gmail.com
+        skip_cleanup: true
         api_key:
           secure: RmCpVNUsa24vHuLsEE6CSs7xe5KOLNMJLv7aOXq5+MZDpobVyD7oP9iD5LPN9+HLR+6YgWH8oG5VjMk2QrGL/U6kW1Y/gFmDbSlEZU1IHHfflCJwD11hN+iq3MDE32ATPOgtpizQvU4VX8peVcco+wufmBMW7LOMMtIaRyEJInn8eoKmPNAbG2eIedPntGmmN8nnZyoRipn2AogNUwQTXqgHGIvuEFgIAkuKY7SWvcSMLCFnCRcF2M6MLBLPSgUKHC4mO6JpRiWys2c7jtMj4pLnfL7J4E9FA/LvfjLX5b8G1apeoMpf1Qc4PeE5tjjZL7MLpsbPBTUoTcxpfCT08wOBCHcwOMyzFMYJj6TglmkFTc+6/MU/ZQjxaGjuo55cN84d38cKkW72P2iUM1pPkrBIwBOwVlhATvAPYBjDzAaVcxRfinOhntMhVtl7fuNKb3c/fK0YxwTmQIJiCoh6FwNpe96ab8mY/D0cgn1PKTd1nxXqr9gsmufAPlqEN4e0VLMlDHtejb9wlrUxAFPx+GSNxdDUIfjg4iSljotx6JBXl+1aaNhy4l9Tkuvko7PX1ir85DNc+n8ysn76LwbcpBZA1bsDGj15NrEmaBuqeMiovCaTAY/QrnmxN7IjfoyHA1FmXKeHY/U+NwBk2qow2YE3SPgld4iSCM/oBGHqcGA=
         on:
