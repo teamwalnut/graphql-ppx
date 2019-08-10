@@ -9,3 +9,4 @@ _release
 .graphql_ppx_cache
 graphql_ppx.exe
 yarn-error.log
+/bin

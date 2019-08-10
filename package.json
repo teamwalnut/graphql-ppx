@@ -5,28 +5,10 @@
   "repository": "https://github.com/baransu/graphql_ppx_re",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "esy": {
-    "build": "dune build -p graphql_ppx",
-    "buildsInSource": "_build"
-  },
-  "dependencies": {
-    "@opam/dune": "*",
-    "@opam/result": "*",
-    "@opam/yojson": "*",
-    "@opam/ocaml-migrate-parsetree": "1.2.0",
-    "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "*",
-    "refmterr": "*",
-    "ocaml": "~4.2.3"
-  },
-  "devDependencies": {
-    "@esy-ocaml/merlin": "*",
-    "ocaml": "~4.2.3"
-  },
-  "peerDependencies": {
-    "ocaml": " >= 4.2.3  < 4.7.0"
   }
 }

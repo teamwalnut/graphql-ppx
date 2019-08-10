@@ -16,6 +16,7 @@ before_install:
   - npm install -g esy@latest
 
 before_script:
+  - IS_GRAPHQL_PPX_CI=true yarn
   - esy install
   - cd tests && npm install && cd ../
 
