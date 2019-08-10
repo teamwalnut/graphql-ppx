@@ -145,7 +145,7 @@ let mapper = (_config, _cookies) => {
           switch (Sys.getenv("GRAPHQL_PPX_APOLLO_MODE")) {
           | "true" => true
           | _ => false
-          | exception Not_found => true
+          | exception Not_found => false
           },
         root_directory: Sys.getcwd(),
         schema_file:
