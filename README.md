@@ -7,6 +7,16 @@ This project builds upon [graphql_ppx](https://github.com/mhallin/graphql_ppx). 
 
 Right now I don't focus on Native Reason. If you want to help, PRs welcome.
 
+## Installation
+
+-- yarn/npm install
+-- add ppx to bsconfig.json
+
+## Usage
+
+-- getting schema.graphql
+-- generating graphql_schema.json
+
 ## Developing
 
 ```
@@ -17,10 +27,18 @@ esy build
 
 ## Running tests
 
+### BuckleScript
+
 ```
 cd tests
 yarn
 yarn test
+```
+
+### Native
+
+```
+esy dune runtest -f
 ```
 
 ## Configuration
@@ -34,3 +52,7 @@ Tells graphql_ppx to add \_\_typename to every object in a query. Usefull in cas
 #### GRAPHQL_PPX_SCHEMA
 
 By default graphql_ppx uses `graphql_schema.json` filed from your root directory. You can override it by provind env variable overriding it
+
+## Licens
+
+-- MIT + info about graphql_ppx work

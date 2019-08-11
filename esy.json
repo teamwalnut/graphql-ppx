@@ -10,6 +10,7 @@
     "ocaml": "~4.2.3"
   },
   "devDependencies": {
+    "@opam/alcotest": "*",
     "@esy-ocaml/merlin": "*",
     "ocaml": "~4.2.3"
   },

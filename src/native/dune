@@ -1,0 +1,10 @@
+(library
+ (name graphql_ppx)
+ (public_name graphql_ppx)
+ (kind ppx_rewriter)
+ (libraries reason
+            ocaml-migrate-parsetree
+            graphql_ppx.base)
+ (preprocess (pps ppx_tools_versioned.metaquot_406)))
+
+
