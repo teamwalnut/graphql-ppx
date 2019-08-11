@@ -16,10 +16,10 @@ before_install:
   - npm install -g esy@latest
 
 before_script:
-  - esy install
   - cd tests_bucklescript && npm install && cd ../
 
 script:
+  - esy install
   - esy build
   - cd tests_bucklescript && npm run test && cd ../
   - esy dune runtest -f
