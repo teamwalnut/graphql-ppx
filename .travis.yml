@@ -15,15 +15,18 @@ before_install:
   - node -v
   - npm install -g esy@latest
 
-before_script:
-  - cd tests_bucklescript && npm install && cd ../
-
 script:
-  - esy install
-  - esy build
-  - cd tests_bucklescript && npm run test && cd ../
-  - esy dune runtest -f
+  # Ocaml 4.02 and BuckleScript 5.X
+  - esy @402
+  - esy @402 build
+  - esy @402 dune runtest -f
+  - cd tests_bucklescript && make bsb5 && cd ../
   - mv _esy/default/build/default/src//bucklescript_bin/bin.exe graphql_ppx-$TARGET_NAME.exe
+
+  # Ocaml 4.06 and BuckleScript 6.X
+  - esy @406
+  - esy @406 build
+  - esy @402 dune runtest -f
 
 deploy:
   provider: releases
