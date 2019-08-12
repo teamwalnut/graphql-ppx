@@ -1,4 +1,4 @@
-open Base;
+open Graphql_ppx_base;
 
 let conv_pos = pos => {
   Lexing.pos_fname: pos.Source_pos.pos_fname,

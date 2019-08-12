@@ -2,7 +2,7 @@
   "name": "ppx_example",
   "version": "0.1.0",
   "scripts": {
-    "test": "bsb -clean-world -make-world && ./node_modules/.bin/jest --verbose lib/js",
+    "test": "GRAPHQL_PPX_APOLLO_MODE=true bsb -clean-world -make-world && ./node_modules/.bin/jest --verbose lib/js",
     "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o graphql_schema.json schema.graphql"
   },
   "keywords": [
@@ -11,10 +11,10 @@
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.5",
-    "bs-platform": "4.0.18",
+    "bs-platform": "5.0.6",
+    "gql-tools": "^0.0.15",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.6.1",
-    "graphql-tools": "^4.0.3",
-    "gql-tools": "^0.0.15"
+    "graphql-tools": "^4.0.3"
   }
 }

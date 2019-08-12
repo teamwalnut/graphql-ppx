@@ -1,15 +1,15 @@
-open Base;
+open Graphql_ppx_base;
 open Result_structure;
 open Schema;
 
-open Ast_402;
+open Ast_406;
 open Asttypes;
 open Parsetree;
 
 open Generator_utils;
 open Output_bucklescript_utils;
 
-let const_str_expr = s => Ast_helper.(Exp.constant(Const_string(s, None)));
+let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -74,13 +74,13 @@ let boolean_decoder = loc =>
     }
   );
 
-let generate_poly_enum_decoder = (_loc, enum_meta) => {
+let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
     Ast_helper.(
       enum_meta.em_values
       |> List.map(({evm_name, _}) =>
            Exp.case(
-             Pat.constant(Const_string(evm_name, None)),
+             Pat.constant(Pconst_string(evm_name, None)),
              Exp.variant(evm_name, None),
            )
          )
@@ -106,12 +106,15 @@ let generate_poly_enum_decoder = (_loc, enum_meta) => {
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
+
   let enum_ty =
     [@metaloc loc]
     Ast_helper.(
       Typ.variant(
         enum_meta.em_values
-        |> List.map(({evm_name, _}) => Rtag(evm_name, [], true, [])),
+        |> List.map(({evm_name, _}) =>
+             Rtag({txt: evm_name, loc}, [], true, [])
+           ),
         Closed,
         None,
       )
@@ -342,14 +345,18 @@ and generate_object_decoder = (config, loc, name, fields) => {
     fields
     |> List.mapi(
          (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
-         (key, [], Ast_helper.Typ.var("a" ++ string_of_int(i)))
+         Otag(
+           {txt: key, loc},
+           [],
+           Ast_helper.Typ.var("a" ++ string_of_int(i)),
+         )
        );
 
   let rec make_obj_constructor_fn = i =>
     fun
     | [] =>
       Ast_helper.Typ.arrow(
-        "",
+        Nolabel,
         Ast_helper.Typ.constr(
           {txt: Longident.Lident("unit"), loc: Location.none},
           [],
@@ -362,7 +369,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
     | [Fr_fragment_spread(key, _, _), ...next]
     | [Fr_named_field(key, _, _), ...next] =>
       Ast_helper.Typ.arrow(
-        key,
+        Labelled(key),
         Ast_helper.Typ.var("a" ++ string_of_int(i)),
         make_obj_constructor_fn(i + 1, next),
       );
@@ -400,7 +407,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
             |> List.map(
                  fun
                  | Fr_named_field(key, _, inner) => (
-                     key,
+                     Labelled(key),
                      switch%expr (
                        Js.Dict.get(value, [%e const_str_expr(key)])
                      ) {
@@ -427,7 +434,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                  | Fr_fragment_spread(key, loc, name) => {
                      let loc = conv_loc(loc);
                      (
-                       key,
+                       Labelled(key),
                        {
                          let%expr value = Js.Json.object_(value);
                          %e
@@ -438,7 +445,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                ),
             [
               (
-                "",
+                Nolabel,
                 Ast_helper.Exp.construct(
                   {txt: Longident.Lident("()"), loc: Location.none},
                   None,
@@ -500,7 +507,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
         fields
         |> List.map(({poly_variant_name, _}) =>
              Rtag(
-               Compat.capitalize_ascii(poly_variant_name),
+               {txt: Compat.capitalize_ascii(name), loc},
                [],
                false,
                [
@@ -553,7 +560,7 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
 
   let map_case = ({poly_variant_name: type_name, res_structure: inner, _}) => {
     open Ast_helper;
-    let name_pattern = Pat.constant(Const_string(type_name, None));
+    let name_pattern = Pat.constant(Pconst_string(type_name, None));
 
     Exp.variant(type_name, Some(generate_decoder(config, inner)))
     |> Exp.case(name_pattern);
@@ -561,7 +568,7 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
 
   let map_case_ty = ({poly_variant_name: name, _}) =>
     Rtag(
-      name,
+      {txt: name, loc},
       [],
       false,
       [{ptyp_desc: Ptyp_any, ptyp_attributes: [], ptyp_loc: Location.none}],
@@ -630,7 +637,7 @@ and generate_poly_variant_union =
     Ast_helper.(
       fragments
       |> List.map(({poly_variant_name: type_name, res_structure: inner, _}) => {
-           let name_pattern = Pat.constant(Const_string(type_name, None));
+           let name_pattern = Pat.constant(Pconst_string(type_name, None));
            Ast_helper.(
              Exp.variant(type_name, Some(generate_decoder(config, inner)))
            )
@@ -656,7 +663,7 @@ and generate_poly_variant_union =
         )
       | Nonexhaustive => (
           Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [Rtag("Nonexhaustive", [], true, [])],
+          [Rtag({txt: "Nonexhaustive", loc}, [], true, [])],
         )
       }
     );
@@ -664,7 +671,7 @@ and generate_poly_variant_union =
     fragments
     |> List.map(({poly_variant_name: name, _}) =>
          Rtag(
-           name,
+           {txt: name, loc},
            [],
            false,
            [

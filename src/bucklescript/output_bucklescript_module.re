@@ -1,8 +1,8 @@
-open Base;
+open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
 
-open Ast_402;
+open Ast_406;
 open Asttypes;
 open Parsetree;
 open Ast_helper;
@@ -44,7 +44,7 @@ let ret_type_magic = [
 ];
 
 let emit_printed_query = parts => {
-  open Ast_402;
+  open Ast_406;
   open Graphql_printer;
   let generate_expr = acc =>
     fun
@@ -56,7 +56,10 @@ let emit_printed_query = parts => {
             Location.txt: Longident.parse("^"),
             loc: Location.none,
           }),
-          [("", acc), ("", Exp.constant(Asttypes.Const_string(s, None)))],
+          [
+            (Nolabel, acc),
+            (Nolabel, Exp.constant(Parsetree.Pconst_string(s, None))),
+          ],
         )
       )
     | FragmentNameRef(f) =>
@@ -67,9 +70,9 @@ let emit_printed_query = parts => {
             loc: Location.none,
           }),
           [
-            ("", acc),
+            (Nolabel, acc),
             (
-              "",
+              Nolabel,
               Exp.ident({
                 Location.txt: Longident.parse(f ++ ".name"),
                 loc: Location.none,
@@ -86,9 +89,9 @@ let emit_printed_query = parts => {
             loc: Location.none,
           }),
           [
-            ("", acc),
+            (Nolabel, acc),
             (
-              "",
+              Nolabel,
               Exp.ident({
                 Location.txt: Longident.parse(f ++ ".query"),
                 loc: Location.none,
@@ -100,13 +103,13 @@ let emit_printed_query = parts => {
 
   Array.fold_left(
     generate_expr,
-    Ast_402.(Ast_helper.Exp.constant(Asttypes.Const_string("", None))),
+    Ast_406.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
     parts,
   );
 };
 
 let rec emit_json =
-  Ast_402.(
+  Ast_406.(
     fun
     | `Assoc(vs) => {
         let pairs =
@@ -115,7 +118,7 @@ let rec emit_json =
               vs
               |> List.map(((key, value)) =>
                    Exp.tuple([
-                     Exp.constant(Const_string(key, None)),
+                     Exp.constant(Pconst_string(key, None)),
                      emit_json(value),
                    ])
                  ),
@@ -133,11 +136,13 @@ let rec emit_json =
     | `Bool(false) => [%expr Js.Json.boolean(false)]
     | `Null => [%expr Obj.magic(Js.Undefined.empty)]
     | `String(s) => [%expr
-        Js.Json.string([%e Ast_helper.Exp.constant(Const_string(s, None))])
+        Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
       ]
     | `Int(i) => [%expr
         Js.Json.number(
-          [%e Ast_helper.Exp.constant(Const_float(string_of_int(i)))],
+          [%e
+            Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))
+          ],
         )
       ]
     | `StringExpr(parts) => [%expr
@@ -228,8 +233,8 @@ let generate_fragment_module =
   let variable_fields =
     variable_names
     |> List.map(name =>
-         (
-           name,
+         Otag(
+           {txt: name, loc: Location.none},
            [],
            Ast_helper.Typ.constr(
              {txt: Longident.Lident("unit"), loc: Location.none},
@@ -257,7 +262,9 @@ let generate_fragment_module =
         [
           [%stri let parse = value => [%e parse_fn]],
           [%stri
-            let name = [%e Ast_helper.Exp.constant(Const_string(name, None))]
+            let name = [%e
+              Ast_helper.Exp.constant(Pconst_string(name, None))
+            ]
           ],
         ],
         ret_type_magic,

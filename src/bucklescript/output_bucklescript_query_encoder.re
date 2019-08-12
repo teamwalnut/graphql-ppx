@@ -1,10 +1,10 @@
-open Base;
+open Graphql_ppx_base;
 open Graphql_ast;
 open Result_structure;
 open Source_pos;
 open Schema;
 
-open Ast_402;
+open Ast_406;
 open Asttypes;
 open Parsetree;
 
@@ -22,7 +22,7 @@ let gen_field_array = (loc, typename, field_array_exprs) =>
         [@metaloc conv_loc(loc)]
         [%expr
           (
-            [%e Ast_helper.Exp.constant(Const_string("__typename", None))],
+            [%e Ast_helper.Exp.constant(Pconst_string("__typename", None))],
             Js.Json.string([%e typename]),
           )
         ],
@@ -71,7 +71,7 @@ let rec generate_encoder = (config, structure) =>
       enum_meta.em_values
       |> List.map(({evm_name, _}) => {
            let pattern = Ast_helper.Pat.variant(evm_name, None);
-           let expr = Ast_helper.Exp.constant(Const_string(evm_name, None));
+           let expr = Ast_helper.Exp.constant(Pconst_string(evm_name, None));
            Ast_helper.Exp.case(pattern, [%expr Js.Json.string([%e expr])]);
          })
       |> Ast_helper.Exp.match([%expr v]);
@@ -138,7 +138,7 @@ and generate_object_fields_encoder = (config, loc, fields, typename, expr) => {
              [@metaloc conv_loc(loc)]
              [%expr
                (
-                 [%e Ast_helper.Exp.constant(Const_string(name, None))],
+                 [%e Ast_helper.Exp.constant(Pconst_string(name, None))],
                  [%e parser]([%e expr]##[%e ident]),
                )
              ];
@@ -161,7 +161,7 @@ and generate_record_fields_encoder = (config, loc, fields, typename, expr) => {
              [@metaloc conv_loc(loc)]
              [%expr
                (
-                 [%e Ast_helper.Exp.constant(Const_string(name, None))],
+                 [%e Ast_helper.Exp.constant(Pconst_string(name, None))],
                  [%e parser](
                    [%e
                      Ast_helper.Exp.field(
@@ -199,7 +199,7 @@ and generage_poly_variant_decoder = (config, loc, fragments) =>
            config,
            loc,
            res_structure,
-           Ast_helper.Exp.constant(Const_string(typename, None)),
+           Ast_helper.Exp.constant(Pconst_string(typename, None)),
          );
 
        Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);
@@ -224,7 +224,7 @@ and generate_interface_decoder = (config, loc, base, fragments) => {
              config,
              loc,
              res_structure,
-             Ast_helper.Exp.constant(Const_string(typename, None)),
+             Ast_helper.Exp.constant(Pconst_string(typename, None)),
            );
 
          Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);

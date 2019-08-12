@@ -34,21 +34,21 @@ let rec print_input_value = iv =>
   | Iv_boolean(b) => string_of_bool(b)
   | Iv_enum(s) => s
   | Iv_variable(v) => "$" ++ v
-  | Iv_list(l) =>
+  | Iv_list(list) =>
     "["
     ++ (
-      List.map(({item, _}) => print_input_value(item), l)
+      list
+      |> List.map(({item, _}) => print_input_value(item))
       |> String.concat(", ")
     )
     ++ "]"
-  | Iv_object(o) =>
+  | Iv_object(obj) =>
     "{"
     ++ (
-      List.map(
-        (({item: key, _}, {item: value, _})) =>
-          key ++ ": " ++ print_input_value(value),
-        o,
-      )
+      obj
+      |> List.map((({item: key, _}, {item: value, _})) =>
+           key ++ ": " ++ print_input_value(value)
+         )
       |> String.concat(", ")
     )
     ++ "}"
@@ -106,33 +106,44 @@ let rec print_type = ty =>
   | Tr_non_null_named(n) => n.item ++ "!"
   };
 
-let rec print_selection_set = (schema, ty, ss) =>
-  switch (ss) {
+let rec print_selection_set = (schema, ty, selection_set) =>
+  switch (selection_set) {
   | [] => [||]
-  | l =>
+  | selection =>
     let add_typename =
       switch (ty) {
       | Interface(_)
       | Union(_) => true
-      | Object(_) => Ppx_config.apollo_mode()
+      | Object({om_name, _}) =>
+        let is_top_level_subscrption_type =
+          schema.meta.sm_subscription_type == Some(om_name);
+
+        !is_top_level_subscrption_type && Ppx_config.apollo_mode();
       | _ => false
       };
 
-    Array.concat([
-      [|
-        String("{\n"),
-        if (add_typename) {String("__typename\n")} else {Empty},
-      |],
-      l
+    let maybe_typename =
+      if (add_typename) {
+        String("__typename\n");
+      } else {
+        Empty;
+      };
+
+    let selection =
+      selection
       |> List.map(s =>
            Array.append(print_selection(schema, ty, s), [|String("\n")|])
          )
-      |> Array.concat,
+      |> Array.concat;
+
+    Array.concat([
+      [|String("{\n"), maybe_typename|],
+      selection,
       [|String("}\n")|],
     ]);
   }
-and print_selection = (schema, ty, s) =>
-  switch (s) {
+and print_selection = (schema, ty, selection) =>
+  switch (selection) {
   | Field({item, _}) => print_field(schema, ty, item)
   | FragmentSpread({item, _}) => print_fragment_spread(item)
   | InlineFragment({item, _}) => print_inline_fragment(schema, ty, item)

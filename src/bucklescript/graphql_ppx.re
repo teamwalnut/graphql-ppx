@@ -1,16 +1,4 @@
-module From_current =
-  Migrate_parsetree.Convert(
-    Migrate_parsetree.OCaml_current,
-    Migrate_parsetree.OCaml_402,
-  );
-
-module To_current =
-  Migrate_parsetree.Convert(
-    Migrate_parsetree.OCaml_402,
-    Migrate_parsetree.OCaml_current,
-  );
-
-open Base;
+open Graphql_ppx_base;
 open Source_pos;
 
 open Output_bucklescript_utils;
@@ -22,10 +10,9 @@ let add_pos = (delimLength, base, pos) => {
     pos_lnum: base.pos_lnum + pos.line,
     pos_bol: 0,
     pos_cnum:
-      if (pos.line == 0) {
-        delimLength + col + pos.col;
-      } else {
-        pos.col;
+      switch (pos.line) {
+      | 0 => delimLength + col + pos.col
+      | _ => pos.col
       },
   };
 };
@@ -63,31 +50,14 @@ let fmt_parse_err = err =>
   );
 
 let make_error_expr = (loc, message) => {
-  Ast_402.(
+  Ast_406.(
     Ast_mapper.extension_of_error(Location.error(~loc, message))
     |> Ast_helper.Exp.extension(~loc)
   );
 };
 
-let is_prefixed = (prefix, str) => {
-  let i = 0;
-  let len = String.length(prefix);
-  let j = ref(0);
-  while (j^ < len
-         && String.unsafe_get(prefix, j^) == String.unsafe_get(str, i + j^)) {
-    incr(j);
-  };
-  j^ == len;
-};
-
-let drop_prefix = (prefix, str) => {
-  let len = String.length(prefix);
-  let rest = String.length(str) - len;
-  String.sub(str, len, rest);
-};
-
 let rewrite_query = (loc, delim, query) => {
-  open Ast_402;
+  open Ast_406;
   open Ast_helper;
   open Parsetree;
   let lexer = Graphql_lexer.make(query);
@@ -148,8 +118,8 @@ let rewrite_query = (loc, delim, query) => {
   };
 };
 
-let mapper = argv => {
-  open Ast_402;
+let mapper = (_config, _cookies) => {
+  open Ast_406;
   open Ast_mapper;
   open Parsetree;
   open Asttypes;
@@ -157,35 +127,32 @@ let mapper = argv => {
   let () =
     Ppx_config.(
       set_config({
-        verbose_logging:
-          switch (List.find((==)("-verbose"), argv)) {
-          | _ => true
-          | exception Not_found => false
-          },
-        output_mode:
-          switch (List.find((==)("-ast-out"), argv)) {
-          | _ => Ppx_config.Apollo_AST
-          | exception Not_found => Ppx_config.String
-          },
+        verbose_logging: false,
+        // switch (List.find((==)("-verbose"), argv)) {
+        // | _ => true
+        // | exception Not_found => false
+        // },
+        output_mode: Ppx_config.String,
+        // switch (List.find((==)("-ast-out"), argv)) {
+        // | _ => Ppx_config.Apollo_AST
+        // | exception Not_found =>
+        // },
         verbose_error_handling:
-          switch (List.find((==)("-o"), argv)) {
-          | _ => false
-          | exception Not_found =>
-            switch (Sys.getenv("NODE_ENV")) {
-            | "production" => false
-            | _ => true
-            | exception Not_found => true
-            }
+          switch (Sys.getenv("NODE_ENV")) {
+          | "production" => false
+          | _ => true
+          | exception Not_found => true
           },
         apollo_mode:
-          switch (List.find((==)("-apollo-mode"), argv)) {
-          | _ => true
+          switch (Sys.getenv("GRAPHQL_PPX_APOLLO_MODE")) {
+          | "true" => true
+          | _ => false
           | exception Not_found => false
           },
         root_directory: Sys.getcwd(),
         schema_file:
-          switch (List.find(is_prefixed("-schema="), argv)) {
-          | arg => drop_prefix("-schema=", arg)
+          switch (Sys.getenv("GRAPHQL_PPX_SCHEMA")) {
+          | arg => arg
           | exception Not_found => "graphql_schema.json"
           },
         raise_error_with_loc: (loc, message) => {
@@ -195,40 +162,46 @@ let mapper = argv => {
       })
     );
 
-  let module_expr = (mapper, mexpr) =>
-    switch (mexpr) {
-    | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
-      switch (pstr) {
-      | PStr([
-          {
-            pstr_desc:
-              Pstr_eval(
-                {
-                  pexp_loc: loc,
-                  pexp_desc: Pexp_constant(Const_string(query, delim)),
+  {
+    ...default_mapper,
+    module_expr: (mapper, mexpr) =>
+      switch (mexpr) {
+      | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
+        switch (pstr) {
+        | PStr([
+            {
+              pstr_desc:
+                Pstr_eval(
+                  {
+                    pexp_loc: loc,
+                    pexp_desc: Pexp_constant(Pconst_string(query, delim)),
+                    _,
+                  },
                   _,
-                },
-                _,
+                ),
+              _,
+            },
+          ]) =>
+          rewrite_query(conv_loc_from_ast(loc), delim, query)
+        | _ =>
+          raise(
+            Location.Error(
+              Location.error(
+                ~loc,
+                "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
               ),
-            _,
-          },
-        ]) =>
-        rewrite_query(conv_loc_from_ast(loc), delim, query)
-      | _ =>
-        raise(
-          Location.Error(
-            Location.error(
-              ~loc,
-              "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
             ),
-          ),
-        )
-      }
-    | other => default_mapper.module_expr(mapper, other)
-    };
-
-  To_current.copy_mapper({...default_mapper, module_expr});
+          )
+        }
+      | other => default_mapper.module_expr(mapper, other)
+      },
+  };
 };
 
 let () =
-  Migrate_parsetree.Compiler_libs.Ast_mapper.register("graphql", mapper);
+  Migrate_parsetree.Driver.register(
+    ~name="graphql",
+    ~args=[],
+    Migrate_parsetree.Versions.ocaml_406,
+    mapper,
+  );

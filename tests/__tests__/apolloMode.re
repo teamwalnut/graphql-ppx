@@ -1,4 +1,7 @@
-module MyQuery = [%graphql
+open Jest;
+open Expect;
+
+module BasciQuery = [%graphql
   {|
   {
     first: nestedObject {
@@ -21,18 +24,38 @@ module MyQuery = [%graphql
 |}
 ];
 
-Jest.(
-  describe("Apollo mode", () => {
-    open Expect;
-    open! Expect.Operators;
+module Subscription = [%graphql
+  {|
+  subscription {
+    simpleSubscription {
+      ...on Dog {
+        name
+      }
+      ...on Human {
+        name
+      }
+    }
+  }
+|}
+];
 
-    test("Adds __typename to objects", () => {
-      let typenameRegex = [%bs.re {|/__typename/g|}];
+describe("Apollo mode", () => {
+  let typenameRegex = [%bs.re {|/__typename/g|}];
 
-      MyQuery.query
-      |> Js.String.match(typenameRegex)
-      |> Belt.Option.map(_, Array.length)
-      |> expect == Some(7);
-    });
-  })
-);
+  test("Adds __typename to objects", () =>
+    BasciQuery.query
+    |> Js.String.match(typenameRegex)
+    |> Belt.Option.map(_, Array.length)
+    |> expect
+    |> toEqual(Some(7))
+  );
+
+  test("subscription don't have top level __typename", () =>
+    Subscription.query
+    |> Js.String.match(typenameRegex)
+    |> Belt.Option.map(_, Array.length)
+    |> expect
+    // 3 because on each union case and in simpleSubscription
+    |> toEqual(Some(3))
+  );
+});

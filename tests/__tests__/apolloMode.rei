@@ -1,4 +1,5 @@
-module MyQuery: {
+module BasciQuery: {
+  let query: string;
   type t = {
     .
     "first": {. "inner": option({. "inner": option({. "field": string})})},
@@ -17,6 +18,7 @@ module MyQuery: {
     },
   };
 
+  let parse: Js.Json.t => t;
   let make:
     unit =>
     {
@@ -25,6 +27,7 @@ module MyQuery: {
       "query": string,
       "variables": Js.Json.t,
     };
+
   let makeWithVariables:
     Js.t({.}) =>
     {
@@ -33,6 +36,33 @@ module MyQuery: {
       "query": string,
       "variables": Js.Json.t,
     };
-
+};
+module Subscription: {
   let query: string;
+  type t = {
+    .
+    "simpleSubscription": [
+      | `Dog({. "name": string})
+      | `Human({. "name": string})
+    ],
+  };
+
+  let parse: Js.Json.t => t;
+  let make:
+    unit =>
+    {
+      .
+      "parse": Js.Json.t => t,
+      "query": string,
+      "variables": Js.Json.t,
+    };
+
+  let makeWithVariables:
+    Js.t({.}) =>
+    {
+      .
+      "parse": Js.Json.t => t,
+      "query": string,
+      "variables": Js.Json.t,
+    };
 };

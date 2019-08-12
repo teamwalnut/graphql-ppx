@@ -1,0 +1,11 @@
+/_build
+/.vscode
+/node_modules
+/ppx
+/graphql_ppx.*
+/.ci
+/src
+/tests
+/esy.lock
+esy.json
+dune-project
