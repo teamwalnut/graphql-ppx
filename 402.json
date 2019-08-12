@@ -14,7 +14,7 @@
     "ocaml": "~4.2.0"
   },
   "peerDependencies": {
-    "ocaml": ">= 4.2.0  < 4.9.0"
+    "ocaml": ">= 4.2.0"
   },
   "esy": {
     "build": "refmterr dune build -p graphql_ppx"
