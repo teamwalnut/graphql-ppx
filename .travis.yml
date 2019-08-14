@@ -24,9 +24,9 @@ script:
   - mv _esy/402/build/default/src/bucklescript_bin/bin.exe graphql_ppx-$TARGET_NAME.exe
 
   # Ocaml 4.06 and BuckleScript 6.X
-  - esy @406
-  - esy @406 build
-  - esy @402 dune runtest -f
+  - esy
+  - esy build
+  - esy dune runtest -f
 
 deploy:
   provider: releases
