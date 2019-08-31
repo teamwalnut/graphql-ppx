@@ -22,12 +22,12 @@ jobs:
       run: |
         npm install -g esy@latest
         
-     - name: install
+    - name: install
       run: |
         esy install
         cd tests && npm install && cd ../
         
-     - name: test and build
+    - name: test and build
       run: |
         esy build
         cd tests && npm run test && cd ../
