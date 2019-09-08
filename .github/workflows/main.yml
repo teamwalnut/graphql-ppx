@@ -31,15 +31,11 @@ jobs:
         run: |
           esy build
           cd tests && npm run test && cd ../
-          if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi
           mkdir -p bin
-          echo ${TARGET_NAME}
-          mv _build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-${TARGET_NAME}.exe
+          mv _build/default/src/bucklescript_bin/bin.exe graphql_ppx-${{ matrix.os }}.exe
         env:
           CI: true
-      - name: Upload artifacts
+      - name: Upload artifacts ${TARGET_NAME}
         uses: actions/upload-artifact@master
         with:
           name: ${TARGET_NAME}
@@ -52,14 +48,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        binary: [darwin-x64, linux-x64, win-x64]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@master
         with:
-          name: ${{ matrix.binary }}
-          path: bin/graphql_ppx-${{ matrix.binary }}.exe
+          name: ${{ matrix.os }}
+          path: graphql_ppx-${{ matrix.os }}.exe
+      - name: Rename binaries
+        run: |
+          if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi  
+          mv graphql_ppx-${{ matrix.os }}.exe bin/graphql_ppx-${TARGET_NAME}.exe
       - name: Publish
         uses: actions/npm@master
         env:
