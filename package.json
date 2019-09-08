@@ -12,7 +12,6 @@
     "access": "public"
   },
   "esy": {
-    "build": "dune build -p graphql_ppx",
-    "buildsInSource": "_build"
+    "build": "refmterr dune build -p graphql_ppx"
   }
 }
