@@ -37,14 +37,12 @@ let make_make_fun = (config, variable_defs) => {
         Ast_helper.(
           Exp.fun_(
             ~loc=name_loc,
-            Labelled(
-              switch (def.vd_type.item) {
-              | Tr_non_null_list(_)
-              | Tr_non_null_named(_) => name.item
-              | Tr_list(_)
-              | Tr_named(_) => "?" ++ name.item
-              },
-            ),
+            switch (def.vd_type.item) {
+            | Tr_non_null_list(_)
+            | Tr_non_null_named(_) => Labelled(name.item)
+            | Tr_list(_)
+            | Tr_named(_) => Optional(name.item)
+            },
             None,
             Pat.var(~loc=name_loc, {txt: name.item, loc: name_loc}),
             make_labelled_function(tl, body),
