@@ -45,7 +45,8 @@ jobs:
     strategy:
       matrix:
         binary: [darwin-x64, linux-x64, win-x64]
-
+        
+    steps:
     - name: Upload artifacts 
       uses: actions/upload-artifact@master
 #       if: github.event_name == 'release' && github.event.action == 'published'
