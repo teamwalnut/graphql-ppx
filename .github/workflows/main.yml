@@ -30,12 +30,13 @@ jobs:
     - name: test and build
       run: |
         esy build
-        ls -a
+        ls -a _esy
         cd tests && npm run test && cd ../
         if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
         if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
         if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi
-        mv _build/default/src/bucklescript_bin/bin.exe graphql_ppx-$TARGET_NAME.exe
+        mkdir -p bin
+        mv _build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-$TARGET_NAME.exe
       env:
         CI: true
         
@@ -50,7 +51,13 @@ jobs:
     steps:
     - name: Upload artifacts 
       uses: actions/upload-artifact@master
-#       if: github.event_name == 'release' && github.event.action == 'published'
       with:
         name: ${{ matrix.binary }}
-        path: graphql_ppx-${{ matrix.binary }}.exe
+        path: bin/graphql_ppx-${{ matrix.binary }}.exe
+    - name: Publish
+#       if: github.event_name == 'release' && github.event.action == 'published'
+      uses: actions/npm@master
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      with:
+        args: publish
