@@ -38,23 +38,28 @@ jobs:
           mv _build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-$TARGET_NAME.exe
         env:
           CI: true
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: $TARGET_NAME
+          path: bin/graphql_ppx-$TARGET_NAME.exe
 
   release:
     needs: test_and_build
     name: Release
+    # if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     strategy:
       matrix:
         binary: [darwin-x64, linux-x64, win-x64]
 
     steps:
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
+      - name: Download artifacts
+      - uses: actions/download-artifact@master
         with:
-          name: ${{ matrix.binary }}
-          path: bin/graphql_ppx-${{ matrix.binary }}.exe
+          name: my-artifact
+          path: path/to/artifact
       - name: Publish
-        #       if: github.event_name == 'release' && github.event.action == 'published'
         uses: actions/npm@master
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
