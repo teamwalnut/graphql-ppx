@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-      - uses: actions/download-artifact@master
+        uses: actions/download-artifact@master
         with:
           name: my-artifact
           path: path/to/artifact
