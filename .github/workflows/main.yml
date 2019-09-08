@@ -12,51 +12,51 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-        
-    - name: setup
-      run: |
-        npm install -g esy@latest
-        
-    - name: install
-      run: |
-        esy install
-        cd tests && npm install && cd ../
-        
-    - name: test and build
-      run: |
-        esy refmterr dune build -p graphql_ppx -f
-        cd tests && npm run test && cd ../
-        if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
-        if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi
-        mkdir -p bin
-        mv _esy/default/build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-$TARGET_NAME.exe
-      env:
-        CI: true
-        
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: setup
+        run: |
+          npm install -g esy@latest
+
+      - name: install
+        run: |
+          esy install
+          cd tests && npm install && cd ../
+
+      - name: test and build
+        run: |
+          esy refmterr dune build -p graphql_ppx -f
+          cd tests && npm run test && cd ../
+          if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi
+          mkdir -p bin
+          mv _esy/default/build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-$TARGET_NAME.exe
+        env:
+          CI: true
+
   release:
     needs: test_and_build
-    name: Release ${{}}
+    name: Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
         binary: [darwin-x64, linux-x64, win-x64]
-        
+
     steps:
-    - name: Upload artifacts 
-      uses: actions/upload-artifact@master
-      with:
-        name: ${{ matrix.binary }}
-        path: bin/graphql_ppx-${{ matrix.binary }}.exe
-    - name: Publish
-#       if: github.event_name == 'release' && github.event.action == 'published'
-      uses: actions/npm@master
-      env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-      with:
-        args: publish
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.binary }}
+          path: bin/graphql_ppx-${{ matrix.binary }}.exe
+      - name: Publish
+        #       if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/npm@master
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        with:
+          args: publish
