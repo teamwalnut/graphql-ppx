@@ -35,14 +35,15 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
           if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi
           mkdir -p bin
-          mv _build/default/src/bucklescript_bin/bin.exe "bin/graphql_ppx-$TARGET_NAME.exe"
+          echo ${TARGET_NAME}
+          mv _build/default/src/bucklescript_bin/bin.exe bin/graphql_ppx-${TARGET_NAME}.exe
         env:
           CI: true
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: "$TARGET_NAME"
-          path: "bin/graphql_ppx-$TARGET_NAME.exe"
+          name: ${TARGET_NAME}
+          path: bin/graphql_ppx-${TARGET_NAME}.exe
 
   release:
     needs: test_and_build
@@ -57,8 +58,8 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@master
         with:
-          name: my-artifact
-          path: path/to/artifact
+          name: ${{ matrix.binary }}
+          path: bin/graphql_ppx-${{ matrix.binary }}.exe
       - name: Publish
         uses: actions/npm@master
         env:
