@@ -5,7 +5,7 @@
 
 This project builds upon [graphql_ppx](https://github.com/mhallin/graphql_ppx). At this points it's basiclly original OCaml code reformated to Reason with small adjustments to build process.
 
-Right now I don't focus on Native Reason. If you want to help, PRs welcome.
+### [Native Reason and BuckleScript 6.x support is coming!](https://github.com/baransu/graphql_ppx_re/pull/13)
 
 ## Developing
 
