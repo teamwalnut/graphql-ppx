@@ -35,11 +35,11 @@ jobs:
           mv _build/default/src/bucklescript_bin/bin.exe graphql_ppx-${{ matrix.os }}.exe
         env:
           CI: true
-      - name: Upload artifacts ${TARGET_NAME}
+      - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
-          name: ${TARGET_NAME}
-          path: bin/graphql_ppx-${TARGET_NAME}.exe
+          name: graphql_ppx-${{ matrix.os }}
+          path: graphql_ppx-${{ matrix.os }}.exe
 
   release:
     needs: test_and_build
@@ -54,7 +54,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@master
         with:
-          name: ${{ matrix.os }}
+          name: graphql_ppx-${{ matrix.os }}
           path: graphql_ppx-${{ matrix.os }}.exe
       - name: Rename binaries
         run: |
