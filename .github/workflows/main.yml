@@ -30,6 +30,7 @@ jobs:
     - name: test and build
       run: |
         esy build
+        ls -a
         cd tests && npm run test && cd ../
         if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
         if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
