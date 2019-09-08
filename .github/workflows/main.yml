@@ -39,6 +39,7 @@ jobs:
         
   release:
     needs: test_and_build
+    on: [push]
 #     on:
 #       release:
 #         branches:
