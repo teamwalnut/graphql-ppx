@@ -58,6 +58,7 @@ jobs:
           path: graphql_ppx-${{ matrix.os }}.exe
       - name: Rename binaries
         run: |
+          mkdir -p bin
           if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
           if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
           if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi  
