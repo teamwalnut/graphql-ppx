@@ -62,7 +62,7 @@ jobs:
       - name: Rename binaries
         run: |
           mkdir -p bin
-          mv graphql_ppx-*.exe bin/graphql_ppx-*.exe
+          cp graphql_ppx-* bin/
       - name: Publish
         uses: actions/npm@master
         env:
