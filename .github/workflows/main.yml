@@ -46,23 +46,23 @@ jobs:
     name: Release
     # if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
 
     steps:
-      - name: Download artifacts
+      - uses: actions/checkout@v1
+      - name: Download linux artifacts
         uses: actions/download-artifact@master
         with:
-          name: graphql_ppx-${{ matrix.os }}
-          path: graphql_ppx-${{ matrix.os }}.exe
+          name: graphql_ppx-ubuntu-latest
+          path: graphql_ppx-linux-x64.exe
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: graphql_ppx-macOS-latest
+          path: graphql_ppx-darwin-x64.exe
       - name: Rename binaries
         run: |
           mkdir -p bin
-          if [ "${{ matrix.os }}" = "macOS-latest" ]; then export TARGET_NAME=darwin-x64; fi
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then export TARGET_NAME=linux-x64; fi
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then export TARGET_NAME=win-x64; fi  
-          mv graphql_ppx-${{ matrix.os }}.exe bin/graphql_ppx-${TARGET_NAME}.exe
+          mv graphql_ppx-*.exe bin/graphql_ppx-*.exe
       - name: Publish
         uses: actions/npm@master
         env:
