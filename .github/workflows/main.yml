@@ -41,10 +41,9 @@ jobs:
           name: graphql_ppx-${{ matrix.os }}.exe
           path: graphql_ppx-${{ matrix.os }}.exe
 
-  release:
+  publish:
     needs: test_and_build
-    name: Release
-    if: github.event_name == 'release' && github.event.action == 'published'
+    name: Publish
     runs-on: ubuntu-latest
 
     steps:
@@ -60,6 +59,7 @@ jobs:
           name: graphql_ppx-macOS-latest.exe
           path: bin/graphql_ppx-darwin-x64.exe
       - name: Publish
+        if: github.event_name == 'release' && github.event.action == 'published'
         uses: actions/npm@master
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
