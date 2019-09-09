@@ -38,7 +38,7 @@ jobs:
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
-          name: graphql_ppx-${{ matrix.os }}
+          name: graphql_ppx-${{ matrix.os }}.exe
           path: graphql_ppx-${{ matrix.os }}.exe
 
   release:
@@ -52,17 +52,13 @@ jobs:
       - name: Download linux artifacts
         uses: actions/download-artifact@master
         with:
-          name: graphql_ppx-ubuntu-latest
-          path: graphql_ppx-linux-x64.exe
+          name: graphql_ppx-ubuntu-latest.exe
+          path: bin/graphql_ppx-linux-x64.exe
       - name: Download macOS artifacts
         uses: actions/download-artifact@master
         with:
-          name: graphql_ppx-macOS-latest
-          path: graphql_ppx-darwin-x64.exe
-      - name: Rename binaries
-        run: |
-          mkdir -p bin
-          cp -r graphql_ppx-* bin/
+          name: graphql_ppx-macOS-latest.exe
+          path: bin/graphql_ppx-darwin-x64.exe
       - name: Publish
         uses: actions/npm@master
         env:
