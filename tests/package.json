@@ -2,7 +2,7 @@
   "name": "ppx_example",
   "version": "0.1.0",
   "scripts": {
-    "test": "./node_modules/.bin/cross-env GRAPHQL_PPX_APOLLO_MODE=true bsb -clean-world -make-world && ./node_modules/.bin/jest --verbose lib/js",
+    "test": "cross-env GRAPHQL_PPX_APOLLO_MODE=true bsb -clean-world -make-world && ./node_modules/.bin/jest --verbose lib/js",
     "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o graphql_schema.json schema.graphql"
   },
   "keywords": [
