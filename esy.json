@@ -7,7 +7,8 @@
     "@opam/ppx_tools_versioned": "*",
     "@esy-ocaml/reason": "*",
     "refmterr": "*",
-    "ocaml": "~4.2.3"
+    "ocaml": "~4.2.3",
+    "@opam/menhir": "20171013"
   },
   "esy": {
     "build": "refmterr dune build -p graphql_ppx",
