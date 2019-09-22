@@ -20,13 +20,11 @@ jobs:
 
       - name: setup
         run: |
-          npm install -g esy@latest
-          npm install -g cross-env # for windows :/
+          npm install -g esy@latest cross-env # for windows :/
 
       - name: install
         run: |
-          esy install
-          cd tests && npm install && cd ../
+          esy install && cd tests && npm install && cd ../
 
       - name: build
         run: |
