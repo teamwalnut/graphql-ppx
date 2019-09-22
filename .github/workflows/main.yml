@@ -1,4 +1,4 @@
-name: Main workflow
+name: graphql_ppx_re CI
 
 on: [push]
 
