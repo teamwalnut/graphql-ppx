@@ -1,6 +1,6 @@
 {
   "name": "@baransu/graphql_ppx_re",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "description": "GraphQL PPX rewriter for Bucklescript/ReasonML",
   "repository": "https://github.com/baransu/graphql_ppx_re",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
@@ -12,7 +12,6 @@
     "access": "public"
   },
   "esy": {
-    "build": "dune build -p graphql_ppx",
-    "buildsInSource": "_build"
+    "build": "refmterr dune build -p graphql_ppx"
   }
 }

@@ -1,7 +1,6 @@
 # graphql_ppx_re
 
 [![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
-[![Build Status](https://travis-ci.com/baransu/graphql_ppx_re.svg?branch=master)](https://travis-ci.com/baransu/graphql_ppx_re)
 
 ### [Native Reason and BuckleScript 6.x support is coming!](https://github.com/baransu/graphql_ppx_re/pull/13)
 
