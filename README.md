@@ -49,13 +49,13 @@ using a version control system, you don't need to check it in.
 
 # Limitations
 
-While graphql_ppx covers a large portion of the GraphQL spec, there are still
+While `graphql_ppx_re` covers a large portion of the GraphQL spec, there are still
 some unsupported areas:
 
 * Not all GraphQL validations are implemented. It will *not* validate argument
   types and do other sanity-checking of the queries. The fact that a query
   compiles does not mean that it will pass server-side validation.
-* Fragment support is limited and not 100% safe - because graphql_ppx only can
+* Fragment support is limited and not 100% safe - because `graphql_ppx_re` only can
   perform local reasoning on queries, you can construct queries with fragments
   that are invalid.
 
