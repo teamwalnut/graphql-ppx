@@ -75,8 +75,8 @@ jobs:
           mv graphql_ppx-darwin-x64.exe bin/graphql_ppx-darwin-x64.exe
           mv graphql_ppx-linux-x64.exe bin/graphql_ppx-linux-x64.exe
 
-      - name: Publish
-        if: github.event_name == 'release'
+      - if: github.event_name == 'release' && github.event.action == 'created'
+        name: Publish
         uses: actions/npm@master
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
