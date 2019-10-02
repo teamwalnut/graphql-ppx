@@ -5,7 +5,7 @@ on:
     branches:    
       - master
     tags:      
-      - *
+      - 0.*
 
 jobs:
   test_and_build:
