@@ -1,0 +1,43 @@
+name: graphql_ppx_re CI pipeline
+
+on: [push]
+
+jobs:
+  test_and_build:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: setup
+        run: |
+          npm install -g esy@latest cross-env
+
+      - name: install
+        run: |
+          esy install && cd tests && npm install && cd ../
+
+      - name: build
+        run: |
+          esy build
+
+      - name: test
+        run: |
+          cd tests && npm run test && cd ../ && mv _build/default/src/bucklescript_bin/bin.exe graphql_ppx-${{ matrix.os }}.exe
+        env:
+          CI: true
+
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: graphql_ppx-${{ matrix.os }}.exe
+          path: graphql_ppx-${{ matrix.os }}.exe
