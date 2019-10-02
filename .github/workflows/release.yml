@@ -2,8 +2,6 @@ name: graphql_ppx_re release pipeline
 
 on:
   push:
-    branches:    
-      - master
     tags:      
       - 0.*
 
