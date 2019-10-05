@@ -505,7 +505,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     Ast_helper.(
       Typ.variant(
         fields
-        |> List.map(({poly_variant_name, _}) =>
+        |> List.map(({poly_variant_name: name, _}) =>
              Rtag(
                {txt: Compat.capitalize_ascii(name), loc},
                [],

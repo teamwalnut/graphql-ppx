@@ -1,4 +1,5 @@
 /_build
+/_esy
 /.vscode
 /node_modules
 /ppx
@@ -7,5 +8,7 @@
 /src
 /tests
 /esy.lock
+/402.esy.lock
+/binaries
 esy.json
 dune-project

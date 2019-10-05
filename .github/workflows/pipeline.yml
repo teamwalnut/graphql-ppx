@@ -1,0 +1,42 @@
+name: graphql_ppx_re pipeline
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  test_and_build:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: setup
+        run: |
+          npm install -g esy@latest cross-env
+      - name: install-build
+        run: |
+          esy install && esy b
+      - name: test-native
+        run: |
+          esy b dune runtest -f
+      - name: test-bsb5
+        run: |
+          cd tests_bucklescript && node ./run.js bsb5
+      - name: install-build @402
+        run: |
+          esy @402 install && esy @402 b
+      - name: test-bsb6
+        run: |
+          cd tests_bucklescript && node ./run.js bsb6
+        env:
+          CI: true
