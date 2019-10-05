@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v1
@@ -26,9 +26,6 @@ jobs:
       - name: install-build
         run: |
           esy install && esy b
-      - name: test-native
-        run: |
-          esy dune runtest -f
       - name: test-bsb5
         run: |
           cd tests_bucklescript && node ./run.js bsb5
