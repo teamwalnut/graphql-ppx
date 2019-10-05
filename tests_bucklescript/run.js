@@ -32,18 +32,24 @@ async function test(folder) {
 
 async function run() {
   const [, , command] = process.argv;
-  switch (command) {
-    case "bsb5":
-      return await test("bsb5");
-    case "bsb6":
-      return await test("bsb6");
-    default:
-      return Promise.resolvbe(
+  try {
+    switch (command) {
+      case "bsb5":
+        await test("bsb5");
+        break;
+      case "bsb6":
+        await test("bsb6");
+        break;
+
+      default:
         console.log(
           `Unknown comamnd: ${command}. Supported commands: bsb5, bsb6`
-        )
-      );
+        );
+        break;
+    }
+  } catch (error) {
+    throw error;
   }
 }
 
-run().catch(console.error);
+run();
