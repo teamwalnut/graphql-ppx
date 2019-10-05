@@ -3,7 +3,7 @@ open Expect;
 
 module MyQuery = [%graphql {|
   mutation {
-    optionalInputArgs
+    optionalInputArgs(required: "val", anotherRequired: "val")
   }
 |}];
 
