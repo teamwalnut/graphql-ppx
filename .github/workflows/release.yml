@@ -75,10 +75,35 @@ jobs:
 
       - name: Move artifacts
         run: |
-          mkdir -p bin
+          mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
+          rm -rf binaries
+
+      - name: Download bsb6 linux artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest-bsb6
+          path: binaries/linux
+
+      - name: Download bsb6 macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest-bsb6
+          path: binaries/darwin
+
+      - name: Download bsb6 windows artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-bsb6
+          path: binaries/windows
+
+      - name: Move artifacts
+        run: |
+          mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: Publish
         uses: actions/npm@master
