@@ -2,8 +2,6 @@
 
 [![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
 
-### [Native Reason and BuckleScript 6.x support is coming!](https://github.com/baransu/graphql_ppx_re/pull/13)
-
 > Reason/OCaml PPX (PreProcessor eXtension) helping with creating type-safe, compile time validated GraphQL queries generating response decoders.
 
 This project builds upon [mhallin/graphql_ppx](https://github.com/mhallin/graphql_ppx). It wouldn't be possible without great work of [mhallin/graphql_ppx contributors](https://github.com/mhallin/graphql_ppx/graphs/contributors).
@@ -22,6 +20,27 @@ Second, add it to `ppx-flags` in your `bsconfig.json`:
 
 ```json
 "ppx-flags": ["@baransu/graphql_ppx_re/ppx"]
+```
+
+## Native
+
+If you want to use native version edit your `esy.json` file
+
+```json
+{
+  "dependencies": {
+    "@baransu/graphql_ppx_re": "*"
+  },
+  "resolutions": {
+    "@baransu/graphql_ppx_re": "baransu/graphql_ppx_re:esy.json#<use latest stable commit from master>"
+  }
+}
+```
+
+and update your `dune` file:
+
+```
+(preprocess (pps graphql_ppx))
 ```
 
 # Usage
