@@ -10,8 +10,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "esy": {
-    "build": "refmterr dune build -p graphql_ppx"
   }
 }

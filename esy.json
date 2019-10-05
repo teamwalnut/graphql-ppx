@@ -5,10 +5,16 @@
     "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": "1.2.0",
     "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "*",
+    "@esy-ocaml/reason": "3.5.0",
     "refmterr": "*",
-    "ocaml": "~4.2.3",
     "@opam/menhir": "20171013"
+  },
+  "devDependencies": {
+    "@opam/alcotest": "*",
+    "ocaml": "~4.6.0"
+  },
+  "peerDependencies": {
+    "ocaml": ">= 4.6.0"
   },
   "esy": {
     "build": "refmterr dune build -p graphql_ppx",

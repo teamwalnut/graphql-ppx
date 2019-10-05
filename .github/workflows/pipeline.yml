@@ -20,21 +20,23 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: setup
         run: |
           npm install -g esy@latest cross-env
-
-      - name: install
+      - name: install-build
         run: |
-          esy install && cd tests && npm install && cd ../
-
-      - name: build
+          esy install && esy b
+      - name: test-native
         run: |
-          esy build
-
-      - name: test
+          esy b dune runtest -f
+      - name: test-bsb5
         run: |
-          cd tests && npm run test
+          cd tests_bucklescript && node ./run.js bsb5
+      - name: install-build @402
+        run: |
+          esy @402 install && esy @402 b
+      - name: test-bsb6
+        run: |
+          cd tests_bucklescript && node ./run.js bsb6
         env:
           CI: true

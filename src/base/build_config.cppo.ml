@@ -1,4 +1,4 @@
-#if OCAML_VERSION >= (4, 3, 0)
+#if OCAML_VERSION >= (4, 03, 0)
 
 let capitalize_ascii = String.capitalize_ascii
 let uncapitalize_ascii = String.uncapitalize_ascii
