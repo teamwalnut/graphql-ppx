@@ -6,7 +6,7 @@ module Visitor: Traversal_utils.VisitorSig = {
 
   include AbstractVisitor;
 
-  let enter_field = (self, ctx, def) => {
+  let enter_field = (_self, ctx, def) => {
     let field_meta = 
       Context.parent_type(ctx)
       |> Option.flat_map(t => Schema.lookup_field(t, def.item.fd_name.item));
