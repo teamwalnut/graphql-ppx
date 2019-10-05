@@ -6,7 +6,8 @@
     "@opam/ocaml-migrate-parsetree": "1.2.0",
     "@opam/ppx_tools_versioned": "*",
     "@esy-ocaml/reason": "3.5.0",
-    "refmterr": "*"
+    "refmterr": "*",
+    "@opam/menhir": "20171013"
   },
   "devDependencies": {
     "@opam/alcotest": "*",

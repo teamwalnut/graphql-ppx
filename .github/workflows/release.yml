@@ -1,0 +1,86 @@
+name: graphql_ppx_re release pipeline
+
+on:
+  push:
+    tags:      
+      - 0.*
+
+jobs:
+  test_and_build:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: setup
+        run: |
+          npm install -g esy@latest cross-env
+
+      - name: install
+        run: |
+          esy install && cd tests && npm install && cd ../
+
+      - name: build
+        run: |
+          esy build
+
+      - name: test
+        run: |
+          cd tests && npm run test
+        env:
+          CI: true
+
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}
+          path: _build/default/src/bucklescript_bin/bin.exe
+
+  publish:
+    needs: test_and_build
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download linux artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest
+          path: binaries/linux
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest
+          path: binaries/darwin
+
+      - name: Download windows artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest
+          path: binaries/windows
+
+      - name: Move artifacts
+        run: |
+          mkdir -p bin
+          mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
+
+      - name: Publish
+        uses: actions/npm@master
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        with:
+          args: publish
