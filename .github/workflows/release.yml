@@ -26,7 +26,7 @@ jobs:
       - name: install-build
         run: |
           esy install && esy b
-      - name: install-build
+      - name: test-native
         run: |
           esy b dune runtest -f
       - name: test-bsb5
