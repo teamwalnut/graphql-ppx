@@ -25,13 +25,13 @@ jobs:
           npm install -g esy@latest cross-env
       - name: install-build
         run: |
-          esy install  && esy build
-      - name: install-build @402
-        run: |
-          esy @402 install && esy @402 build
+          esy install && esy b
       - name: test-bsb5
         run: |
           cd tests_bucklescript && node ./run.js bsb5
+      - name: install-build @402
+        run: |
+          esy @402 install && esy @402 b
       - name: test-bsb6
         run: |
           cd tests_bucklescript && node ./run.js bsb6

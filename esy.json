@@ -17,6 +17,7 @@
     "ocaml": ">= 4.6.0"
   },
   "esy": {
-    "build": "refmterr dune build -p graphql_ppx"
+    "build": "refmterr dune build -p graphql_ppx",
+    "buildsInSource": "_build"
   }
 }
