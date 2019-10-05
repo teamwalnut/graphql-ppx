@@ -249,8 +249,11 @@ By default graphql_ppx uses `graphql_schema.json` filed from your root directory
 
 ```
 npm install -g esy@latest
+esy @402 install
+esy @402 dune build -p graphql_ppx
+# or
 esy install
-esy build
+esy dune build -p graphql_ppx
 ```
 
 ## Running tests
