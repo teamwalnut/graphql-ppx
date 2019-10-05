@@ -2,8 +2,8 @@ open Jest;
 open Expect;
 
 module MyQuery = [%graphql {|
-  mutation {
-    optionalInputArgs(required: "val", anotherRequired: "val")
+  mutation MyMutation($required: String!) {
+    optionalInputArgs(required: $required, anotherRequired: "val")
   }
 |}];
 
