@@ -20,36 +20,41 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: setup
         run: |
           npm install -g esy@latest cross-env
-
-      - name: install
+      - name: install-build
         run: |
-          esy install && cd tests && npm install && cd ../
-
-      - name: build
+          esy install && esy b
+      - name: test-native
         run: |
-          esy build
-
-      - name: test
+          esy b dune runtest -f
+      - name: test-bsb5
         run: |
-          cd tests && npm run test
-        env:
-          CI: true
-
+          cd tests_bucklescript && node ./run.js bsb5
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
           path: _build/default/src/bucklescript_bin/bin.exe
+      - name: install-build @402
+        run: |
+          esy @402 install && esy @402 b
+      - name: test-bsb6
+        run: |
+          cd tests_bucklescript && node ./run.js bsb6
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-bsb6
+          path: _build/default/src/bucklescript_bin/bin.exe
+        env:
+          CI: true
 
   publish:
     needs: test_and_build
     name: Publish
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
 
@@ -73,10 +78,35 @@ jobs:
 
       - name: Move artifacts
         run: |
-          mkdir -p bin
+          mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
+          rm -rf binaries
+
+      - name: Download bsb6 linux artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest-bsb6
+          path: binaries/linux
+
+      - name: Download bsb6 macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest-bsb6
+          path: binaries/darwin
+
+      - name: Download bsb6 windows artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-bsb6
+          path: binaries/windows
+
+      - name: Move artifacts
+        run: |
+          mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: Publish
         uses: actions/npm@master
