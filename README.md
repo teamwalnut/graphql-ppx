@@ -93,7 +93,7 @@ some unsupported areas:
 - Interfaces are also converted into polymorphic variants. Overlapping interface
   selections and other more uncommon use cases are not yet supported.
 - Basic fragment support
-- Required arguments validation - you're not going to miss required faguments on any field.
+- Required arguments validation - you're not going to miss required arguments on any field.
 
 ## Extra features
 
