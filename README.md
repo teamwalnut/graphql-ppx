@@ -93,6 +93,7 @@ some unsupported areas:
 - Interfaces are also converted into polymorphic variants. Overlapping interface
   selections and other more uncommon use cases are not yet supported.
 - Basic fragment support
+- Required arguments validation - you're not going to miss required arguments on any field.
 
 ## Extra features
 
@@ -268,8 +269,11 @@ By default graphql_ppx uses `graphql_schema.json` filed from your root directory
 
 ```
 npm install -g esy@latest
+esy @402 install
+esy @402 dune build -p graphql_ppx
+# or
 esy install
-esy build
+esy dune build -p graphql_ppx
 ```
 
 ## Running tests

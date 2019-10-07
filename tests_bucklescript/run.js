@@ -27,7 +27,7 @@ async function test(folder) {
   await command(`cp ./${folder}/* .`);
   await command("npm install");
   await command("npm run test");
-  await cleanup();
+  // await cleanup();
 }
 
 async function run() {
