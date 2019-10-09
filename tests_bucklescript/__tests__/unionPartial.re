@@ -1,16 +1,6 @@
-open Jest;
-
-
-
-
-
-
-
-    open Expect;
-
 module MyQuery = [%graphql
   {|
-  {
+  query {
     dogOrHuman {
       ...on Dog {
         name
@@ -21,28 +11,32 @@ module MyQuery = [%graphql
 |}
 ];
 
+open Jest;
+open Expect;
 
-  describe("Union types", () => {
+let json = {| {
+  "dogOrHuman": {
+    "__typename": "Human",
+    "name": "Max"
+  }
+}|};
 
-
-    test("Decodes non-exhaustive query", () => {
-    let json = {| {
-      "dogOrHuman": {
-        "__typename": "Human",
-        "name": "Max"
-      }
-    } |};
-
-    json 
+describe("Union types", () => {
+  test("Decodes non-exhaustive query", () =>
+    json
     |> Js.Json.parseExn
     |> MyQuery.parse
     |> expect
-    |> toEqual({"dogOrHuman": `Nonexhaustive});
+    |> toEqual({"dogOrHuman": `Nonexhaustive})
+  );
 
-
-
-
-
-    });
-  });
-
+  test("Serializes", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> MyQuery.serialize
+    |> Js.Json.stringify
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic)
+  );
+});

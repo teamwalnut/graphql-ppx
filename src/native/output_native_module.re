@@ -57,10 +57,7 @@ let emit_printed_query = parts => {
           }),
           [
             (Nolabel, acc),
-            (
-              Nolabel,
-              Exp.constant(Pconst_string(s, None)),
-            ),
+            (Nolabel, Exp.constant(Pconst_string(s, None))),
           ],
         )
       )
@@ -145,17 +142,11 @@ let rec emit_json = {
     }
   | `Null => [%expr Obj.magic(Js.Undefined.empty)]
   | `String(s) => [%expr
-      Js.Json.string(
-        [%e
-          Ast_helper.Exp.constant(Pconst_string(s, None))
-        ],
-      )
+      Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
     ]
   | `Int(i) => [%expr
       Js.Json.number(
-        [%e
-          Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))
-        ],
+        [%e Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))],
       )
     ]
   | `StringExpr(parts) => [%expr
@@ -199,14 +190,14 @@ let generate_default_operation =
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       List.concat([
         [[%stri let parse = value => [%e parse_fn]]],
-        if (rec_flag == Recursive) {
-          [
+        switch (rec_flag) {
+        | Recursive => [
             {
               pstr_desc: Pstr_value(rec_flag, encoders |> Array.to_list),
               pstr_loc: Location.none,
             },
-          ];
-        } else {
+          ]
+        | _ =>
           encoders
           |> Array.map(encoder =>
                {
@@ -214,7 +205,7 @@ let generate_default_operation =
                  pstr_loc: Location.none,
                }
              )
-          |> Array.to_list;
+          |> Array.to_list
         },
         [
           [%stri let make = [%e make_fn]],

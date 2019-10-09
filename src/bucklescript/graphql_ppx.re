@@ -143,6 +143,12 @@ let mapper = (_config, _cookies) => {
           | _ => true
           | exception Not_found => true
           },
+        serialization_experimental:
+          switch (Sys.getenv("GRAPHQL_PPX_SERIALIZATION_EXPERIMENTAL")) {
+          | "true" => true
+          | _ => false
+          | exception Not_found => false
+          },
         apollo_mode:
           switch (Sys.getenv("GRAPHQL_PPX_APOLLO_MODE")) {
           | "true" => true

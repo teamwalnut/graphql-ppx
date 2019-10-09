@@ -79,10 +79,11 @@ let rec generate_encoder = (config, structure) =>
     %expr
     (v => [%e encoder]);
   | Res_custom_decoder(loc, ident, inner) =>
+    print_endline("Custom decoder: " ++ ident);
     /* TODO: this one is problematic because we should provide both decode and encode
        probably requires changes to the custom decoder result type to support two way serialization */
     %expr
-    (v => v)
+    (v => v);
   | Res_record(loc, name, fields) =>
     [@metaloc conv_loc(loc)]
     [%expr
@@ -102,21 +103,33 @@ let rec generate_encoder = (config, structure) =>
       )
     ]
   | Res_poly_variant_selection_set(loc, name, fields) =>
+    // print_endline("Res_poly_variant_selection_set: " ++ name);
     %expr
     (v => v)
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     %expr
-    (v => [%e generage_poly_variant_decoder(config, loc, fragments)])
+    (
+      v => [%e
+        generage_poly_variant_decoder(~exhaustive, config, loc, fragments)
+      ]
+    )
   | Res_poly_variant_interface(loc, name, base, fragments) =>
     %expr
     (v => [%e generate_interface_decoder(config, loc, base, fragments)])
   | Res_solo_fragment_spread(loc, name) =>
+    let loc = conv_loc(loc);
+    let ident =
+      Ast_helper.Exp.ident({
+        loc,
+        txt: Longident.parse(name ++ ".serialize"),
+      });
     %expr
-    (v => v)
+    (v => [%e ident](v));
   | Res_error(loc, message) =>
     let loc = conv_loc(loc);
     let ext =
-      Ast_mapper.extension_of_error(Location.error(~loc, message))
+      Location.error(~loc, message)
+      |> Ast_mapper.extension_of_error
       |> Ast_helper.Exp.extension(~loc);
 
     %expr
@@ -143,7 +156,15 @@ and generate_object_fields_encoder = (config, loc, fields, typename, expr) => {
                )
              ];
            }
-         | Fr_fragment_spread(_name, _loc, _string) => [%expr [%e expr]],
+         | Fr_fragment_spread(name, loc, fragment) => {
+             raise_error_with_loc(
+               loc,
+               "Fragment spreads with @bsField cannot be serialized, field: "
+               ++ name
+               ++ ", fragment: "
+               ++ fragment,
+             );
+           },
        );
 
   let field_array = gen_field_array(loc, typename, field_array_exprs);
@@ -173,7 +194,15 @@ and generate_record_fields_encoder = (config, loc, fields, typename, expr) => {
                )
              ];
            }
-         | Fr_fragment_spread(_name, _loc, _string) => [%expr [%e expr]],
+         | Fr_fragment_spread(name, loc, fragment) => {
+             raise_error_with_loc(
+               loc,
+               "Fragment spreads with @bsField cannot be serialized, field: "
+               ++ name
+               ++ ", fragment: "
+               ++ fragment,
+             );
+           },
        );
 
   let field_array = gen_field_array(loc, typename, field_array_exprs);
@@ -181,30 +210,43 @@ and generate_record_fields_encoder = (config, loc, fields, typename, expr) => {
   [@metaloc conv_loc(loc)]
   [%expr Js.Json.object_([%e field_array] |> Js.Dict.fromArray)];
 }
-and generage_poly_variant_decoder = (config, loc, fragments) =>
-  fragments
-  |> List.map(({poly_variant_name, res_structure, typename}) => {
-       let pattern =
-         Ast_helper.Pat.variant(
-           poly_variant_name,
-           Some({
-             ppat_desc: Ppat_var({txt: "v", loc: conv_loc(loc)}),
-             ppat_loc: conv_loc(loc),
-             ppat_attributes: [],
-           }),
-         );
+and generage_poly_variant_decoder = (~exhaustive, config, loc, fragments) => {
+  let fragment_cases =
+    fragments
+    |> List.map(({poly_variant_name, res_structure, typename}) => {
+         let pattern =
+           Ast_helper.Pat.variant(
+             poly_variant_name,
+             Some({
+               ppat_desc: Ppat_var({txt: "v", loc: conv_loc(loc)}),
+               ppat_loc: conv_loc(loc),
+               ppat_attributes: [],
+             }),
+           );
 
-       let encoder =
-         gen_body_encoder(
-           config,
-           loc,
-           res_structure,
-           Ast_helper.Exp.constant(Pconst_string(typename, None)),
-         );
+         let encoder =
+           gen_body_encoder(
+             config,
+             loc,
+             res_structure,
+             Ast_helper.Exp.constant(Pconst_string(typename, None)),
+           );
 
-       Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);
-     })
-  |> Ast_helper.Exp.match([%expr v])
+         Ast_helper.Exp.case(pattern, [%expr [%e encoder](v)]);
+       });
+
+  let cases =
+    switch (exhaustive) {
+    | Exhaustive => fragment_cases
+    | Nonexhaustive =>
+      raise_error_with_loc(
+        loc,
+        "Query on unions must be exhaustive to be serializable",
+      )
+    };
+
+  cases |> Ast_helper.Exp.match([%expr v]);
+}
 and generate_interface_decoder = (config, loc, base, fragments) => {
   let fragment_cases =
     fragments

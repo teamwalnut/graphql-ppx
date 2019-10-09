@@ -109,46 +109,42 @@ let emit_printed_query = parts => {
 };
 
 let rec emit_json =
-  Ast_406.(
-    fun
-    | `Assoc(vs) => {
-        let pairs =
-          Ast_helper.(
-            Exp.array(
-              vs
-              |> List.map(((key, value)) =>
-                   Exp.tuple([
-                     Exp.constant(Pconst_string(key, None)),
-                     emit_json(value),
-                   ])
-                 ),
-            )
-          );
-        %expr
-        Js.Json.object_(Js.Dict.fromArray([%e pairs]));
-      }
-    | `List(ls) => {
-        let values = Ast_helper.Exp.array(List.map(emit_json, ls));
-        %expr
-        Js.Json.array([%e values]);
-      }
-    | `Bool(true) => [%expr Js.Json.boolean(true)]
-    | `Bool(false) => [%expr Js.Json.boolean(false)]
-    | `Null => [%expr Obj.magic(Js.Undefined.empty)]
-    | `String(s) => [%expr
-        Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
-      ]
-    | `Int(i) => [%expr
-        Js.Json.number(
-          [%e
-            Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))
-          ],
-        )
-      ]
-    | `StringExpr(parts) => [%expr
-        Js.Json.string([%e emit_printed_query(parts)])
-      ]
-  );
+  fun
+  | `Assoc(vs) => {
+      let pairs =
+        Ast_helper.(
+          Exp.array(
+            vs
+            |> List.map(((key, value)) =>
+                 Exp.tuple([
+                   Exp.constant(Pconst_string(key, None)),
+                   emit_json(value),
+                 ])
+               ),
+          )
+        );
+      %expr
+      Js.Json.object_(Js.Dict.fromArray([%e pairs]));
+    }
+  | `List(ls) => {
+      let values = Ast_helper.Exp.array(List.map(emit_json, ls));
+      %expr
+      Js.Json.array([%e values]);
+    }
+  | `Bool(true) => [%expr Js.Json.boolean(true)]
+  | `Bool(false) => [%expr Js.Json.boolean(false)]
+  | `Null => [%expr Obj.magic(Js.Undefined.empty)]
+  | `String(s) => [%expr
+      Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
+    ]
+  | `Int(i) => [%expr
+      Js.Json.number(
+        [%e Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))],
+      )
+    ]
+  | `StringExpr(parts) => [%expr
+      Js.Json.string([%e emit_printed_query(parts)])
+    ];
 
 let make_printed_query = (config, document) => {
   let source = Graphql_printer.print_document(config.schema, document);
@@ -190,27 +186,28 @@ let generate_default_operation =
       );
 
     let encoders =
-      if (rec_flag == Recursive) {
-        [
+      switch (rec_flag) {
+      | Recursive => [
           {
             pstr_desc: Pstr_value(rec_flag, encoders),
             pstr_loc: Location.none,
           },
-        ];
-      } else {
+        ]
+      | _ =>
         encoders
         |> List.map(encoder =>
              {
                pstr_desc: Pstr_value(Nonrecursive, [encoder]),
                pstr_loc: Location.none,
              }
-           );
+           )
       };
 
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       [[%stri let parse = value => [%e parse_fn]]],
-      [[%stri let serialize = [%e serialize_fn]]],
+      Ppx_config.serialization_experimental()
+        ? [[%stri let serialize = [%e serialize_fn]]] : [],
       encoders,
       [
         [%stri let make = [%e make_fn]],
@@ -225,6 +222,9 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
+
+  let serialize_fn =
+    Output_bucklescript_query_encoder.generate_encoder(config, res_structure);
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
@@ -259,8 +259,10 @@ let generate_fragment_module =
     } else {
       List.concat([
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]),
+        [[%stri let parse = value => [%e parse_fn]]],
+        Ppx_config.serialization_experimental()
+          ? [[%stri let serialize = [%e serialize_fn]]] : [],
         [
-          [%stri let parse = value => [%e parse_fn]],
           [%stri
             let name = [%e
               Ast_helper.Exp.constant(Pconst_string(name, None))

@@ -6,7 +6,6 @@ module MyQuery = [%graphql
         name
         barkVolume
       }
-
       ...on Human {
         name
       }
@@ -14,6 +13,9 @@ module MyQuery = [%graphql
   }
 |}
 ];
+
+open Jest;
+open Expect;
 
 let json = {| {
   "dogOrHuman": {
@@ -23,26 +25,22 @@ let json = {| {
   }
 } |};
 
-Jest.(
-  describe("Union types", () => {
-    open Expect;
+describe("Union types", () => {
+  test("Decodes exhaustive query", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({"dogOrHuman": `Dog({"name": "Fido", "barkVolume": 123.0})})
+  );
 
-    test("Decodes exhaustive query", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({"dogOrHuman": `Dog({"name": "Fido", "barkVolume": 123.0})})
-    );
-
-    test("Serializes", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> MyQuery.serialize
-      |> Js.Json.stringify
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic)
-    );
-  })
-);
+  test("Serializes", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> MyQuery.serialize
+    |> Js.Json.stringify
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic)
+  );
+});

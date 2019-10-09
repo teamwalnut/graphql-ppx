@@ -22,39 +22,45 @@ module MyQuery = [%graphql
 |}
 ];
 
-Jest.(
-  describe("Fragment definition", () => {
-    open Expect;
-    open! Expect.Operators;
+open Jest;
+open Expect;
 
-    test("Decodes the fragment", () =>
-      expect(
-        MyQuery.parse(
-          Js.Json.parseExn(
-            {|
-      {
-        "l1": {"nullableOfNullable": ["a", null, "b"]},
-        "l2": {"nullableOfNullable": ["a", null, "b"]}
-      }|},
-          ),
-        ),
-      )
-      == {
-           "l1": {
+let json = {|{
+  "l1": {"nullableOfNullable": ["a", null, "b"]},
+  "l2": {"nullableOfNullable": ["a", null, "b"]}
+}|};
+
+describe("Fragment definition", () => {
+  test("Decodes the fragment", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "l1": {
+           "nullableOfNullable": Some([|Some("a"), None, Some("b")|]),
+           "nullableOfNonNullable": None,
+         },
+         "l2": {
+           "frag1": {
              "nullableOfNullable": Some([|Some("a"), None, Some("b")|]),
              "nullableOfNonNullable": None,
            },
-           "l2": {
-             "frag1": {
-               "nullableOfNullable": Some([|Some("a"), None, Some("b")|]),
-               "nullableOfNonNullable": None,
-             },
-             "frag2": {
-               "nullableOfNullable": Some([|Some("a"), None, Some("b")|]),
-               "nullableOfNonNullable": None,
-             },
+           "frag2": {
+             "nullableOfNullable": Some([|Some("a"), None, Some("b")|]),
+             "nullableOfNonNullable": None,
            },
-         }
-    );
-  })
-);
+         },
+       })
+  );
+
+  test("Serializes", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> MyQuery.serialize
+    |> Js.Json.stringify
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic)
+  );
+});

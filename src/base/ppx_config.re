@@ -6,6 +6,7 @@ type config = {
   verbose_logging: bool,
   output_mode,
   verbose_error_handling: bool,
+  serialization_experimental: bool,
   apollo_mode: bool,
   root_directory: string,
   schema_file: string,
@@ -22,6 +23,9 @@ let verbose_logging = () =>
 let output_mode = () => (config_ref^ |> Option.unsafe_unwrap).output_mode;
 
 let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
+
+let serialization_experimental = () =>
+  (config_ref^ |> Option.unsafe_unwrap).serialization_experimental;
 
 let verbose_error_handling = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_error_handling;

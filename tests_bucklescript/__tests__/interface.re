@@ -24,6 +24,9 @@ module QueryWithoutFragments = [%graphql
 |}
 ];
 
+open Jest;
+open Expect;
+
 let json = {|{
  "users": [
     { "__typename": "AdminUser", "id": "1", "name": "bob" },
@@ -31,45 +34,42 @@ let json = {|{
     { "__typename": "OtherUser", "id": "3"}
 ]}|};
 
-Jest.(
-  describe("Interface definition", () => {
-    open Expect;
-  
-    test("Decodes the interface with fragments", () =>
-      json
-      |> Js.Json.parseExn
-      |> QueryWithFragments.parse
-      |> expect
-      |> toEqual({
-           "users": [|
-             `AdminUser({"id": "1", "name": "bob"}),
-             `AnonymousUser({"id": "2", "anonymousId": 1}),
-             `User("OtherUser", {"id": "3"}),
-           |],
-         })
-    );
+describe("Interface definition", () => {
+  test("Decodes the interface with fragments", () =>
+    json
+    |> Js.Json.parseExn
+    |> QueryWithFragments.parse
+    |> expect
+    |> toEqual({
+         "users": [|
+           `AdminUser({"id": "1", "name": "bob"}),
+           `AnonymousUser({"id": "2", "anonymousId": 1}),
+           `User(("OtherUser", {"id": "3"})),
+         |],
+       })
+  );
 
-    test("Decodes the interface without fragments", () =>
-      json 
-      |> Js.Json.parseExn
-      |> QueryWithoutFragments.parse |> expect |> toEqual(
-       {
-           "users": [|
-             `User("AdminUser", {"id": "1"}),
-             `User("AnonymousUser", {"id": "2"}),
-             `User("OtherUser", {"id": "3"}),
-           |],
-         })
-    );
+  test("Decodes the interface without fragments", () =>
+    json
+    |> Js.Json.parseExn
+    |> QueryWithoutFragments.parse
+    |> expect
+    |> toEqual({
+         "users": [|
+           `User(("AdminUser", {"id": "1"})),
+           `User(("AnonymousUser", {"id": "2"})),
+           `User(("OtherUser", {"id": "3"})),
+         |],
+       })
+  );
 
-     test("Serializes", () =>
-      json
-      |> Js.Json.parseExn
-      |> QueryWithFragments.parse
-      |> QueryWithFragments.serialize
-      |> Js.Json.stringify
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic)
-    );
-  })
-);
+  test("Serializes", () =>
+    json
+    |> Js.Json.parseExn
+    |> QueryWithFragments.parse
+    |> QueryWithFragments.serialize
+    |> Js.Json.stringify
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic)
+  );
+});
