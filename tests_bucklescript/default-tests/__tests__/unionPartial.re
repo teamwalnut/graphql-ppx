@@ -21,12 +21,12 @@ let json = {| {
   }
 }|};
 
-describe("Union types", () => {
+describe("Union types", () =>
   test("Decodes non-exhaustive query", () =>
     json
     |> Js.Json.parseExn
     |> MyQuery.parse
     |> expect
     |> toEqual({"dogOrHuman": `Nonexhaustive})
-  );
-});
+  )
+);

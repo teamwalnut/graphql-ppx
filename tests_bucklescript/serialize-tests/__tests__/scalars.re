@@ -21,11 +21,9 @@ module MyQuery = [%graphql
 open Jest;
 open Expect;
 
-  describe("Scalars", () => {
-
-
-    test("Serializes correctly", () => {
-       let json = {| {
+describe("Scalars", () =>
+  test("Serializes correctly", () => {
+    let json = {| {
         "variousScalars": {
           "nullableString": null,
           "string": "a string",
@@ -41,12 +39,12 @@ open Expect;
         }
       } |};
 
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> MyQuery.serialize
-      |> Js.Json.stringify
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic);
-    });
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> MyQuery.serialize
+    |> Js.Json.stringify
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic);
   })
+);

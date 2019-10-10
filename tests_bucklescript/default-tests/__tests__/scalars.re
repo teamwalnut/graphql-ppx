@@ -18,12 +18,12 @@ module MyQuery = [%graphql
 |}
 ];
 
-Jest.(
-  describe("Scalars", () => {
-    open Expect;
+open Jest;
+open Expect;
 
-    test("Decodes non-null scalars", () => {
-      let json = {| {
+describe("Scalars", () => {
+  test("Decodes non-null scalars", () => {
+    let json = {| {
         "variousScalars": {
           "nullableString": "a nullable string",
           "string": "a string",
@@ -39,29 +39,29 @@ Jest.(
         }
       } |};
 
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "variousScalars": {
-             "nullableString": Some("a nullable string"),
-             "string": "a string",
-             "nullableInt": Some(456),
-             "int": 123,
-             "nullableFloat": Some(678.5),
-             "float": 1234.5,
-             "nullableBoolean": Some(false),
-             "boolean": true,
-             "nullableID": Some("a nullable ID"),
-             "id": "an ID",
-             "enum": `FIRST,
-           },
-         });
-    });
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "variousScalars": {
+           "nullableString": Some("a nullable string"),
+           "string": "a string",
+           "nullableInt": Some(456),
+           "int": 123,
+           "nullableFloat": Some(678.5),
+           "float": 1234.5,
+           "nullableBoolean": Some(false),
+           "boolean": true,
+           "nullableID": Some("a nullable ID"),
+           "id": "an ID",
+           "enum": `FIRST,
+         },
+       });
+  });
 
-    test("Decodes null scalars", () => {
-      let json = {| {
+  test("Decodes null scalars", () => {
+    let json = {| {
         "variousScalars": {
           "nullableString": null,
           "string": "a string",
@@ -77,29 +77,29 @@ Jest.(
         }
       } |};
 
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "variousScalars": {
-             "nullableString": None,
-             "string": "a string",
-             "nullableInt": None,
-             "int": 123,
-             "nullableFloat": None,
-             "float": 1234.5,
-             "nullableBoolean": None,
-             "boolean": true,
-             "nullableID": None,
-             "id": "an ID",
-             "enum": `FIRST,
-           },
-         });
-    });
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "variousScalars": {
+           "nullableString": None,
+           "string": "a string",
+           "nullableInt": None,
+           "int": 123,
+           "nullableFloat": None,
+           "float": 1234.5,
+           "nullableBoolean": None,
+           "boolean": true,
+           "nullableID": None,
+           "id": "an ID",
+           "enum": `FIRST,
+         },
+       });
+  });
 
-    test("Decodes omitted scalars", () => {
-      let json = {| {
+  test("Decodes omitted scalars", () => {
+    let json = {| {
         "variousScalars": {
           "string": "a string",
           "int": 123,
@@ -110,25 +110,24 @@ Jest.(
         }
       } |};
 
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "variousScalars": {
-             "nullableString": None,
-             "string": "a string",
-             "nullableInt": None,
-             "int": 123,
-             "nullableFloat": None,
-             "float": 1234.5,
-             "nullableBoolean": None,
-             "boolean": true,
-             "nullableID": None,
-             "id": "an ID",
-             "enum": `FIRST,
-           },
-         });
-    });
-  })
-);
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "variousScalars": {
+           "nullableString": None,
+           "string": "a string",
+           "nullableInt": None,
+           "int": 123,
+           "nullableFloat": None,
+           "float": 1234.5,
+           "nullableBoolean": None,
+           "boolean": true,
+           "nullableID": None,
+           "id": "an ID",
+           "enum": `FIRST,
+         },
+       });
+  });
+});

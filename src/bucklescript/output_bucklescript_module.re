@@ -179,15 +179,15 @@ let generate_default_operation =
     let (make_fn, make_with_variables_fn) =
       Output_bucklescript_unifier.make_make_fun(config, variable_defs);
 
-let serialize = () => {
-    let serialize_fn =
-      Output_bucklescript_query_encoder.generate_encoder(
-        config,
-        res_structure,
-      );
+    let serialize = () => {
+      let serialize_fn =
+        Output_bucklescript_query_encoder.generate_encoder(
+          config,
+          res_structure,
+        );
 
       [%stri let serialize = [%e serialize_fn]];
-};
+    };
 
     let encoders =
       switch (rec_flag) {
@@ -249,12 +249,15 @@ let generate_fragment_module =
       [Ast_helper.Typ.object_(variable_fields, Open)],
     );
 
-
   let serialize = () => {
-      let serialize_fn =
-    Output_bucklescript_query_encoder.generate_encoder(config, res_structure);
- 
-    [%stri let serialize = [%e serialize_fn]]  };
+    let serialize_fn =
+      Output_bucklescript_query_encoder.generate_encoder(
+        config,
+        res_structure,
+      );
+
+    [%stri let serialize = [%e serialize_fn]];
+  };
 
   let contents =
     if (has_error) {
@@ -267,7 +270,7 @@ let generate_fragment_module =
       List.concat([
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]),
         [[%stri let parse = value => [%e parse_fn]]],
-       Ppx_config.serialization_experimental() ? [serialize()] : [],
+        Ppx_config.serialization_experimental() ? [serialize()] : [],
         [
           [%stri
             let name = [%e

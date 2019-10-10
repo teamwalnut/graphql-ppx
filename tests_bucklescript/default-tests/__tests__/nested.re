@@ -33,24 +33,22 @@ let json = {|
   }
 |};
 
-Jest.(
-  describe("Nested", () => {
-    open Expect;
+open Jest;
+open Expect;
 
-    test("Decodes recursively", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "first": {
-             "inner": Some({"inner": Some({"field": "second"})}),
-           },
-           "second": {
-             "inner": None,
-           },
-         })
-    );
-
-  })
+describe("Nested", () =>
+  test("Decodes recursively", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "first": {
+           "inner": Some({"inner": Some({"field": "second"})}),
+         },
+         "second": {
+           "inner": None,
+         },
+       })
+  )
 );

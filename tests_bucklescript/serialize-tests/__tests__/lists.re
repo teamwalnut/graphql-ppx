@@ -25,17 +25,15 @@ let json = {|
 }
 |};
 
-  describe("Lists", () => {
-
-
-    test("Serializes correctly", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> MyQuery.serialize
-      |> Js.Json.stringify
-      |> Utils.whitespaceAgnostic
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic)
-    );
-  })
+describe("Lists", () =>
+  test("Serializes correctly", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> MyQuery.serialize
+    |> Js.Json.stringify
+    |> Utils.whitespaceAgnostic
+    |> expect
+    |> toEqual(json |> Utils.whitespaceAgnostic)
+  )
+);

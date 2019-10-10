@@ -24,7 +24,7 @@ let json = {|{
   "l1": {"nullableOfNullable": ["a", null, "b"]},
 }|};
 
-describe("Fragment definition", () => {
+describe("Fragment definition", () =>
   test("Serializes", () =>
     json
     |> Js.Json.parseExn
@@ -33,5 +33,5 @@ describe("Fragment definition", () => {
     |> Js.Json.stringify
     |> expect
     |> toEqual(json |> Utils.whitespaceAgnostic)
-  );
-});
+  )
+);

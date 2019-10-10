@@ -22,23 +22,22 @@ let json = {|
 }
 |};
 
-Jest.(
-  describe("Lists", () => {
-    open Expect;
+open Jest;
+open Expect;
 
-    test("Null in nullable lists", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "lists": {
-             "nullableOfNullable": Some([|None, Some("123")|]),
-             "nullableOfNonNullable": None,
-             "nonNullableOfNullable": [|None, Some("123")|],
-             "nonNullableOfNonNullable": [|"a", "b"|],
-           },
-         })
-    );
-  })
+describe("Lists", () =>
+  test("Null in nullable lists", () =>
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({
+         "lists": {
+           "nullableOfNullable": Some([|None, Some("123")|]),
+           "nullableOfNonNullable": None,
+           "nonNullableOfNullable": [|None, Some("123")|],
+           "nonNullableOfNonNullable": [|"a", "b"|],
+         },
+       })
+  )
 );

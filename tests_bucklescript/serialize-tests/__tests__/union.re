@@ -25,7 +25,7 @@ let json = {| {
   }
 } |};
 
-describe("Union types", () => {
+describe("Union types", () =>
   test("Serializes", () =>
     json
     |> Js.Json.parseExn
@@ -34,5 +34,5 @@ describe("Union types", () => {
     |> Js.Json.stringify
     |> expect
     |> toEqual(json |> Utils.whitespaceAgnostic)
-  );
-});
+  )
+);

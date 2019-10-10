@@ -69,9 +69,9 @@ Jest.(
     open Expect;
     open! Expect.Operators;
 
-     test("Encodes a record in a Selection", () => {
+    test("Encodes a record in a Selection", () => {
       let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
-      
+
       json
       |> Js.Json.parseExn
       |> MyQuery.parse

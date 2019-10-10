@@ -13,7 +13,7 @@ module MyQuery: {
       "boolean": bool,
       "nullableID": option(string),
       "id": string,
-      "enum": [ |`FIRST |`SECOND | `THIRD],
+      "enum": [ | `FIRST | `SECOND | `THIRD],
     },
   };
 

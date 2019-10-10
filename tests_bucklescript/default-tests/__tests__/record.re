@@ -64,51 +64,49 @@ module UnionExternalFragmentQuery = [%graphql
 |}
 ];
 
-Jest.(
-  describe("Record", () => {
-    open Expect;
-    open! Expect.Operators;
+open Jest;
+open Expect;
 
-    test("Decodes a record in a Selection", () => {
-      let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
-      let expected = {string: "a string", int: 123};
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({"variousScalars": expected});
-    });
+describe("Record", () => {
+  test("Decodes a record in a Selection", () => {
+    let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
+    let expected = {string: "a string", int: 123};
+    json
+    |> Js.Json.parseExn
+    |> MyQuery.parse
+    |> expect
+    |> toEqual({"variousScalars": expected});
+  });
 
-    test("Decodes a record in an external fragment", () => {
-      let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
-      let expected = {string: "a string", int: 123};
+  test("Decodes a record in an external fragment", () => {
+    let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
+    let expected = {string: "a string", int: 123};
 
-      json
-      |> Js.Json.parseExn
-      |> ExternalFragmentQuery.parse
-      |> expect
-      |> toEqual({"variousScalars": expected});
-    });
+    json
+    |> Js.Json.parseExn
+    |> ExternalFragmentQuery.parse
+    |> expect
+    |> toEqual({"variousScalars": expected});
+  });
 
-    test("Decodes a record in an inline fragment", () => {
-      let expected = `Dog({name: "name", barkVolume: 123.0});
-      let json = {|{"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}}|};
+  test("Decodes a record in an inline fragment", () => {
+    let expected = `Dog({name: "name", barkVolume: 123.0});
+    let json = {|{"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}}|};
 
-      json
-      |> Js.Json.parseExn
-      |> InlineFragmentQuery.parse
-      |> expect
-      |> toEqual({"dogOrHuman": expected});
-    });
+    json
+    |> Js.Json.parseExn
+    |> InlineFragmentQuery.parse
+    |> expect
+    |> toEqual({"dogOrHuman": expected});
+  });
 
-    test("Decodes a record in an external fragment on union selections", () => {
-      let expected = `Dog({name: "name", barkVolume: 123.0});
-      let json = {|{"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}}|};
-      json
-      |> Js.Json.parseExn
-      |> UnionExternalFragmentQuery.parse
-      |> expect
-      |> toEqual({"dogOrHuman": expected});
-    });
-  })
-);
+  test("Decodes a record in an external fragment on union selections", () => {
+    let expected = `Dog({name: "name", barkVolume: 123.0});
+    let json = {|{"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}}|};
+    json
+    |> Js.Json.parseExn
+    |> UnionExternalFragmentQuery.parse
+    |> expect
+    |> toEqual({"dogOrHuman": expected});
+  });
+});

@@ -30,7 +30,7 @@ let json = {|{
   "l2": {"nullableOfNullable": ["a", null, "b"]}
 }|};
 
-describe("Fragment definition", () => {
+describe("Fragment definition", () =>
   test("Decodes the fragment", () =>
     json
     |> Js.Json.parseExn
@@ -52,5 +52,5 @@ describe("Fragment definition", () => {
            },
          },
        })
-  );
-});
+  )
+);

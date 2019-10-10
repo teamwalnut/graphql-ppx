@@ -34,7 +34,7 @@ let json = {|{
     { "__typename": "OtherUser", "id": "3"}
 ]}|};
 
-describe("Interface definition", () => {
+describe("Interface definition", () =>
   test("Serializes", () =>
     json
     |> Js.Json.parseExn
@@ -43,5 +43,5 @@ describe("Interface definition", () => {
     |> Js.Json.stringify
     |> expect
     |> toEqual(json |> Utils.whitespaceAgnostic)
-  );
-});
+  )
+);
