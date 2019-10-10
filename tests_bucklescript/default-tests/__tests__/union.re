@@ -33,14 +33,4 @@ describe("Union types", () => {
     |> expect
     |> toEqual({"dogOrHuman": `Dog({"name": "Fido", "barkVolume": 123.0})})
   );
-
-  test("Serializes", () =>
-    json
-    |> Js.Json.parseExn
-    |> MyQuery.parse
-    |> MyQuery.serialize
-    |> Js.Json.stringify
-    |> expect
-    |> toEqual(json |> Utils.whitespaceAgnostic)
-  );
 });

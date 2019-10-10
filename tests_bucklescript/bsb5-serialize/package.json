@@ -1,0 +1,13 @@
+{
+  "name": "bsb5-serialize",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "cross-env GRAPHQL_PPX_SERIALIZATION_EXPERIMENTAL=true GRAPHQL_PPX_APOLLO_MODE=true GRAPHQL_PPX_SCHEMA=../graphql_schema.json bsb -clean-world -make-world && jest --verbose lib/js/serialize-tests"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.5",
+    "bs-platform": "5.0.6",
+    "cross-env": "^5.2.1"
+  }
+}

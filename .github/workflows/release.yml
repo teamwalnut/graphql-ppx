@@ -31,7 +31,7 @@ jobs:
           esy b dune runtest -f
       - name: test-bsb5
         run: |
-          cd tests_bucklescript && node ./run.js bsb5
+          cd tests_bucklescript && node run bsb5 && node run bsb5-serialize
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
@@ -42,7 +42,7 @@ jobs:
           esy @402 install && esy @402 b
       - name: test-bsb6
         run: |
-          cd tests_bucklescript && node ./run.js bsb6
+          cd tests_bucklescript && node run bsb6 && node run bsb6-serialize
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:

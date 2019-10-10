@@ -35,34 +35,6 @@ let json = {|{
 ]}|};
 
 describe("Interface definition", () => {
-  test("Decodes the interface with fragments", () =>
-    json
-    |> Js.Json.parseExn
-    |> QueryWithFragments.parse
-    |> expect
-    |> toEqual({
-         "users": [|
-           `AdminUser({"id": "1", "name": "bob"}),
-           `AnonymousUser({"id": "2", "anonymousId": 1}),
-           `User(("OtherUser", {"id": "3"})),
-         |],
-       })
-  );
-
-  test("Decodes the interface without fragments", () =>
-    json
-    |> Js.Json.parseExn
-    |> QueryWithoutFragments.parse
-    |> expect
-    |> toEqual({
-         "users": [|
-           `User(("AdminUser", {"id": "1"})),
-           `User(("AnonymousUser", {"id": "2"})),
-           `User(("OtherUser", {"id": "3"})),
-         |],
-       })
-  );
-
   test("Serializes", () =>
     json
     |> Js.Json.parseExn

@@ -79,20 +79,6 @@ Jest.(
       |> toEqual({"variousScalars": expected});
     });
 
-    test("Encodes a record in a Selection", () => {
-      let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
-      
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> MyQuery.serialize
-      |> Js.Json.stringify
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic);
-    });
-
-
-
     test("Decodes a record in an external fragment", () => {
       let json = {|{"variousScalars": {"string": "a string", "int": 123}}|};
       let expected = {string: "a string", int: 123};

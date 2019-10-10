@@ -26,6 +26,9 @@ module MyQuery = [%graphql
 |}
 ];
 
+open Jest;
+open Expect;
+
 let json = {|
   {
     "first": {"inner": {"inner": {"field": "second"}}},
@@ -33,26 +36,10 @@ let json = {|
   }
 |};
 
-Jest.(
   describe("Nested", () => {
-    open Expect;
 
-    test("Decodes recursively", () =>
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> expect
-      |> toEqual({
-           "first": {
-             "inner": Some({"inner": Some({"field": "second"})}),
-           },
-           "second": {
-             "inner": None,
-           },
-         })
-    );
 
-    test("Serializes correctly", () =>
+    test("Serializes", () =>
       json
       |> Js.Json.parseExn
       |> MyQuery.parse
@@ -62,4 +49,3 @@ Jest.(
       |> toEqual(json |> Utils.whitespaceAgnostic)
     );
   })
-);

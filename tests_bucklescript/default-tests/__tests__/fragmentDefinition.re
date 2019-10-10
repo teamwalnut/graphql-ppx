@@ -53,14 +53,4 @@ describe("Fragment definition", () => {
          },
        })
   );
-
-  test("Serializes", () =>
-    json
-    |> Js.Json.parseExn
-    |> MyQuery.parse
-    |> MyQuery.serialize
-    |> Js.Json.stringify
-    |> expect
-    |> toEqual(json |> Utils.whitespaceAgnostic)
-  );
 });

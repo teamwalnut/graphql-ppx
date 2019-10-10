@@ -179,11 +179,15 @@ let generate_default_operation =
     let (make_fn, make_with_variables_fn) =
       Output_bucklescript_unifier.make_make_fun(config, variable_defs);
 
+let serialize = () => {
     let serialize_fn =
       Output_bucklescript_query_encoder.generate_encoder(
         config,
         res_structure,
       );
+
+      [%stri let serialize = [%e serialize_fn]];
+};
 
     let encoders =
       switch (rec_flag) {
@@ -206,8 +210,7 @@ let generate_default_operation =
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       [[%stri let parse = value => [%e parse_fn]]],
-      Ppx_config.serialization_experimental()
-        ? [[%stri let serialize = [%e serialize_fn]]] : [],
+      Ppx_config.serialization_experimental() ? [serialize()] : [],
       encoders,
       [
         [%stri let make = [%e make_fn]],
@@ -222,9 +225,6 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
-
-  let serialize_fn =
-    Output_bucklescript_query_encoder.generate_encoder(config, res_structure);
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
@@ -249,6 +249,13 @@ let generate_fragment_module =
       [Ast_helper.Typ.object_(variable_fields, Open)],
     );
 
+
+  let serialize = () => {
+      let serialize_fn =
+    Output_bucklescript_query_encoder.generate_encoder(config, res_structure);
+ 
+    [%stri let serialize = [%e serialize_fn]]  };
+
   let contents =
     if (has_error) {
       [
@@ -260,8 +267,7 @@ let generate_fragment_module =
       List.concat([
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]),
         [[%stri let parse = value => [%e parse_fn]]],
-        Ppx_config.serialization_experimental()
-          ? [[%stri let serialize = [%e serialize_fn]]] : [],
+       Ppx_config.serialization_experimental() ? [serialize()] : [],
         [
           [%stri
             let name = [%e

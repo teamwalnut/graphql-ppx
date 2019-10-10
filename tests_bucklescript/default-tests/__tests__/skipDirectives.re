@@ -38,17 +38,6 @@ Jest.(
     });
 
 
-    test("Correct serialization", () => {
-      let json = {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|};
-
-      json
-      |> Js.Json.parseExn
-      |> MyQuery.parse
-      |> MyQuery.serialize
-      |> Js.Json.stringify
-      |> expect
-      |> toEqual(json |> Utils.whitespaceAgnostic);
-    });
 
     test("Responds with None to omitted fields", () => {
       let json = {|{"v1": {}, "v2": {}}|};

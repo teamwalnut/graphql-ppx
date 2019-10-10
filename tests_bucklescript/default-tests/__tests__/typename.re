@@ -27,7 +27,7 @@ Jest.(
       |> MyQuery.parse
       |> expect
       |> toEqual({
-                   "first": {
+          "first": {
              "__typename": "NestedObject",
              "inner": None,
            },

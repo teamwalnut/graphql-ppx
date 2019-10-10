@@ -79,11 +79,10 @@ let rec generate_encoder = (config, structure) =>
     %expr
     (v => [%e encoder]);
   | Res_custom_decoder(loc, ident, inner) =>
-    print_endline("Custom decoder: " ++ ident);
-    /* TODO: this one is problematic because we should provide both decode and encode
-       probably requires changes to the custom decoder result type to support two way serialization */
-    %expr
-    (v => v);
+    raise_error_with_loc(
+      loc,
+      "Fields with @bsDecode cannot be serialized. Please remove @bsDecode to allow serialization.",
+    )
   | Res_record(loc, name, fields) =>
     [@metaloc conv_loc(loc)]
     [%expr
@@ -103,7 +102,7 @@ let rec generate_encoder = (config, structure) =>
       )
     ]
   | Res_poly_variant_selection_set(loc, name, fields) =>
-    // print_endline("Res_poly_variant_selection_set: " ++ name);
+    // TODO:
     %expr
     (v => v)
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>

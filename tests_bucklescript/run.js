@@ -23,7 +23,7 @@ async function cleanup() {
   await command("rm -rf node_modules");
 }
 
-async function test(folder) {
+async function test(folder, cleanup) {
   await command(`cp ./${folder}/* .`);
   await command("npm install");
   await command("npm run test");
@@ -31,25 +31,18 @@ async function test(folder) {
 }
 
 async function run() {
-  const [, , command] = process.argv;
+  const [, , folder, cleanup] = process.argv;
   try {
-    switch (command) {
-      case "bsb5":
-        await test("bsb5");
-        break;
-      case "bsb6":
-        await test("bsb6");
-        break;
-
-      default:
-        console.log(
-          `Unknown comamnd: ${command}. Supported commands: bsb5, bsb6`
-        );
-        break;
-    }
+    await test(folder, toBool(cleanup, true));
   } catch (error) {
     throw error;
   }
+}
+
+function toBool(value, def) {
+  if (value == "false") return false;
+  if (value == "true") return true;
+  return def;
 }
 
 run();
