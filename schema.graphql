@@ -54,6 +54,11 @@ type Query {
 
 type Mutation {
   mutationWithError: MutationWithErrorResult!
+  optionalInputArgs(
+    required: String!
+    optional: String
+    anotherRequired: String!
+  ): String!
 }
 
 type Subscription {

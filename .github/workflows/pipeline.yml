@@ -42,5 +42,6 @@ jobs:
       - name: test-bsb5
         run: |
           cd tests_bucklescript && node run bsb5 && node run bsb5-serialize
+        
         env:
           CI: true

@@ -22,6 +22,11 @@ Second, add it to `ppx-flags` in your `bsconfig.json`:
 "ppx-flags": ["@baransu/graphql_ppx_re/ppx"]
 ```
 
+If you're using bs-platform 6.x, add this to `bsconfig.json` instead:
+```json
+"ppx-flags": ["@baransu/graphql_ppx_re/ppx6"]
+```
+
 ## Native
 
 If you want to use native version edit your `esy.json` file
@@ -93,6 +98,7 @@ some unsupported areas:
 - Interfaces are also converted into polymorphic variants. Overlapping interface
   selections and other more uncommon use cases are not yet supported.
 - Basic fragment support
+- Required arguments validation - you're not going to miss required arguments on any field.
 
 ## Extra features
 
@@ -268,8 +274,11 @@ By default graphql_ppx uses `graphql_schema.json` filed from your root directory
 
 ```
 npm install -g esy@latest
+esy @402 install
+esy @402 dune build -p graphql_ppx
+# or
 esy install
-esy build
+esy dune build -p graphql_ppx
 ```
 
 ## Running tests

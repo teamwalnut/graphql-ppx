@@ -23,6 +23,7 @@ jobs:
       - name: setup
         run: |
           npm install -g esy@latest cross-env
+          
       # BuckleScript 6.x, OCaml 4.06
       - name: install-build
         run: |
@@ -46,6 +47,7 @@ jobs:
       - name: test-bsb5
         run: |
           cd tests_bucklescript && node run bsb5 && node run bsb5-serialize
+
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
