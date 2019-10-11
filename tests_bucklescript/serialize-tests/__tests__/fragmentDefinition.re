@@ -2,7 +2,6 @@ module Fragments = [%graphql
   {|
   fragment listFragment on Lists {
     nullableOfNullable
-    nullableOfNonNullable
   }
 |}
 ];
@@ -21,7 +20,7 @@ open Jest;
 open Expect;
 
 let json = {|{
-  "l1": {"nullableOfNullable": ["a", null, "b"]},
+  "l1": {"nullableOfNullable": ["a", null, "b"]}
 }|};
 
 describe("Fragment definition", () =>
