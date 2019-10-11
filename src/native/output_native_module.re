@@ -1,3 +1,4 @@
+open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
