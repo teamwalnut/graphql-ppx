@@ -1,6 +1,9 @@
 name: graphql_ppx_re pipeline
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches-ignore:
       - master
