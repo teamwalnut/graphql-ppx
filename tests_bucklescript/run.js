@@ -4,7 +4,7 @@ function command(cmd) {
   console.log(cmd);
   return new Promise((resolve, reject) => {
     const process = exec(cmd, (error, stdout, stderr) => {
-      if (error) console.warn(error);
+      if (error) reject(error);
       resolve(stdout ? stdout : stderr);
     });
     process.stdout.on("data", function(data) {
