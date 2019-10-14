@@ -6,10 +6,17 @@ module AllRulesImpl =
     (
       Multi_visitor.Visitor(
         Rule_no_unused_variables.Visitor,
-        Multi_visitor.Visitor(
-          Rule_required_arguments.Visitor,
-          Multi_visitor.NullVisitor,
-        )
+        (
+          Multi_visitor.Visitor(
+            Rule_all_required_arguments.Visitor,
+            (
+              Multi_visitor.Visitor(
+                Rule_no_undefined_variables.Visitor,
+                Multi_visitor.NullVisitor,
+              )
+            ),
+          )
+        ),
       )
     ),
   );
