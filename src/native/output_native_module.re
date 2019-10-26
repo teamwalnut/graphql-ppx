@@ -226,7 +226,7 @@ let generate_default_operation =
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
         ],
       ]),
-      /* ret_type_magic */
+      ret_type_magic
     ]);
   };
 };
@@ -277,7 +277,7 @@ let generate_fragment_module =
             ]
           ],
         ],
-        /* ret_type_magic */
+        ret_type_magic
       ]);
     };
 
