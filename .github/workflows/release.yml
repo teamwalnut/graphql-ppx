@@ -26,13 +26,15 @@ jobs:
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
-          esy install && esy b
+          esy install
+          esy b
       - name: test-native
         run: |
           esy b dune runtest -f
       - name: test-bsb6
         run: |
-          cd tests_bucklescript && node ./run.js bsb6
+          cd tests_bucklescript
+          node ./run.js bsb6
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
@@ -41,10 +43,12 @@ jobs:
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
         run: |
-          esy @402 install && esy @402 b
+          esy @402 install
+          esy @402 b
       - name: test-bsb5
         run: |
-          cd tests_bucklescript && node ./run.js bsb5
+          cd tests_bucklescript
+          node ./run.js bsb5
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
