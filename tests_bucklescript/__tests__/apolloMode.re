@@ -55,7 +55,7 @@ describe("Apollo mode", () => {
     |> Js.String.match(typenameRegex)
     |> Belt.Option.map(_, Array.length)
     |> expect
-    // 3 because on each union case and in simpleSubscription
+    /* 3 because on each union case and in simpleSubscription */
     |> toEqual(Some(3))
   );
 });

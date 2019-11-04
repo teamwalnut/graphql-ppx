@@ -19,6 +19,5 @@ module MyQuery: {
     };
 
   let query: string;
-  let makeVariables:
-    (~arg: [ | `FIRST | `SECOND | `THIRD], unit) => Js.Json.t;
+  let makeVariables: (~arg: [ | `FIRST | `SECOND | `THIRD], unit) => Js.Json.t;
 };
