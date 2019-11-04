@@ -51,7 +51,5 @@ module MyQuery: {
       "query": string,
       "variables": Js.Json.t,
     };
-  let makeVariables:
-    unit =>
-    Js.Json.t;
+  let makeVariables: unit => Js.Json.t;
 };
