@@ -50,4 +50,22 @@ module MyQuery: {
     };
 
   let query: string;
+  let makeVariables:
+    (
+      ~arg: {
+              ..
+              "nullableString": option(string),
+              "string": string,
+              "nullableInt": option(int),
+              "int": int,
+              "nullableFloat": option(float),
+              "float": float,
+              "nullableBoolean": option(bool),
+              "boolean": bool,
+              "nullableID": option(string),
+              "id": string,
+            },
+      unit
+    ) =>
+    Js.Json.t;
 };

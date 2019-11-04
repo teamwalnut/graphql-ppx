@@ -16,6 +16,11 @@ Jest.(
       == Js.Json.parseExn({|{"query": "a query"}|})
     );
 
+    test("Can create variables", () =>
+      expect(MyQuery.makeVariables(~query="a query", ()))
+      == Js.Json.parseExn({|{"query": "a query"}|})
+    );
+
     test("No name clash with the query field", () =>
       expect(MyQuery.make(~query="a query", ())##query) != "a query"
     );

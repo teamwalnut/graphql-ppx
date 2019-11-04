@@ -34,4 +34,5 @@ module MyQuery: {
     };
 
   let query: string;
+  let makeVariables: unit => Js.Json.t;
 };

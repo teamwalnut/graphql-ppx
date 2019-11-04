@@ -36,6 +36,7 @@ module BasciQuery: {
       "query": string,
       "variables": Js.Json.t,
     };
+  let makeVariables: unit => Js.Json.t;
 };
 module Subscription: {
   let query: string;
@@ -65,4 +66,5 @@ module Subscription: {
       "query": string,
       "variables": Js.Json.t,
     };
+  let makeVariables: unit => Js.Json.t;
 };

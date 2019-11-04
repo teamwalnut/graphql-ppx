@@ -36,4 +36,15 @@ module MyQuery: {
     };
 
   let query: string;
+  let makeVariables:
+    (
+      ~arg: {
+              .
+              "inner": option('a),
+              "enum": option([ | `FIRST | `SECOND | `THIRD]),
+              "otherField": option(string),
+            } as 'a,
+      unit
+    ) =>
+    Js.Json.t;
 };
