@@ -27,7 +27,6 @@ let make_make_fun = (config, variable_defs) => {
       ),
     );
 
-
   switch (variable_defs) {
   | Some({item, span}) =>
     let rec make_labelled_function = (defs, body) =>
@@ -143,9 +142,7 @@ let make_make_fun = (config, variable_defs) => {
           ]
         )
       ],
-      [%expr
-        (() => [%e [%expr Js.Json.null]])
-      ],
+      [%expr (() => [%e [%expr Js.Json.null]])],
     )
   };
 };
