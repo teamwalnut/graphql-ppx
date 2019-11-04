@@ -44,4 +44,19 @@ module MyQuery: {
     };
 
   let query: string;
+  let makeVariables:
+    (
+      ~nullableString: string=?,
+      ~string: string,
+      ~nullableInt: int=?,
+      ~int: int,
+      ~nullableFloat: float=?,
+      ~float: float,
+      ~nullableBoolean: bool=?,
+      ~boolean: bool,
+      ~nullableID: string=?,
+      ~id: string,
+      unit
+    ) =>
+    Js.Json.t;
 };

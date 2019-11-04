@@ -40,6 +40,7 @@ module QueryWithFragments: {
       "variables": Js.Json.t,
     };
   let query: string;
+  let makeVariables: unit => Js.Json.t;
 };
 
 module QueryWithoutFragments: {
@@ -62,4 +63,5 @@ module QueryWithoutFragments: {
       "variables": Js.Json.t,
     };
   let query: string;
+  let makeVariables: unit => Js.Json.t;
 };
