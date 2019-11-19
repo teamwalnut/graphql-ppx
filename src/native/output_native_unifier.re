@@ -114,12 +114,14 @@ let make_make_fun = (config, variable_defs) => {
     (
       make_labelled_function(item, make_make_triple(loc, variable_ctor_body)),
       make_object_function(item, make_make_triple(loc, variable_ctor_body)),
+      make_labelled_function(item, variable_ctor_body),
     );
   | None => (
       [%expr (() => [%e make_make_triple(Location.none, [%expr `Null])])],
       [%expr
         ((_: {.}) => [%e make_make_triple(Location.none, [%expr `Null])])
       ],
+      [%expr (() => [%e [%expr `Null]])],
     )
   };
 };
