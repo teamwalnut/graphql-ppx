@@ -350,7 +350,15 @@ let parse_json_schema = json_schema => {
   let result = Yojson.Basic.from_file(json_schema);
   open Yojson.Basic.Util;
   open Schema;
-  let schema = result |> member("data") |> member("__schema");
+  let schema =
+    result
+    |> member("data")
+    |> to_option(json => json |> member("__schema"))
+    |> (
+      fun
+      | Some(json) => json
+      | None => result |> member("__schema")
+    );
   {
     meta: make_schema_meta(schema),
     type_map:

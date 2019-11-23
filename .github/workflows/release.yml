@@ -3,7 +3,7 @@ name: graphql_ppx_re release pipeline
 on:
   push:
     tags:
-      - 0.*
+      - v*
 
 jobs:
   test_and_build:

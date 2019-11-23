@@ -1,6 +1,9 @@
 name: graphql_ppx_re pipeline
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches-ignore:
       - master
@@ -26,7 +29,7 @@ jobs:
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
-          esy install
+          esy install 
           esy b
       - name: test-native
         run: |
