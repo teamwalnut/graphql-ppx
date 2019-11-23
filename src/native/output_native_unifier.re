@@ -91,7 +91,7 @@ let make_make_fun = (config, variable_defs) => {
                [%e
                  Ast_helper.Exp.constant(
                    ~loc,
-                   [@implicit_arity] Pconst_string(name.item, None),
+                   Pconst_string(name.item, None),
                  )
                ],
                [%e parser_](
@@ -116,9 +116,19 @@ let make_make_fun = (config, variable_defs) => {
       make_object_function(item, make_make_triple(loc, variable_ctor_body)),
     );
   | None => (
-      [%expr (() => [%e make_make_triple(Location.none, [%expr `Null])])],
       [%expr
-        ((_: {.}) => [%e make_make_triple(Location.none, [%expr `Null])])
+        (
+          () => [%e
+            make_make_triple(Location.none, [%expr (`Null: Yojson.Basic.t)])
+          ]
+        )
+      ],
+      [%expr
+        (
+          (_: {.}) => [%e
+            make_make_triple(Location.none, [%expr (`Null: Yojson.Basic.t)])
+          ]
+        )
       ],
     )
   };

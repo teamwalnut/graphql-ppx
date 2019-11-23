@@ -57,10 +57,7 @@ let emit_printed_query = parts => {
           }),
           [
             (Nolabel, acc),
-            (
-              Nolabel,
-              Exp.constant([@implicit_arity] Pconst_string(s, None)),
-            ),
+            (Nolabel, Exp.constant(Pconst_string(s, None))),
           ],
         )
       )
@@ -105,65 +102,52 @@ let emit_printed_query = parts => {
 
   Array.fold_left(
     generate_expr,
-    Ast_helper.Exp.constant([@implicit_arity] Pconst_string("", None)),
+    Ast_helper.Exp.constant(Pconst_string("", None)),
     parts,
   );
 };
 
-let rec emit_json = {
-  fun
-  // let loc = Location.none;
-
-  | `Assoc(vs) => {
-      let pairs =
-        Ast_helper.(
-          Exp.array(
-            vs
-            |> List.map(((key, value)) =>
-                 Exp.tuple([
-                   Exp.constant([@implicit_arity] Pconst_string(key, None)),
-                   emit_json(value),
-                 ])
-               ),
-          )
-        );
-      %expr
-      `Assoc([%e pairs] |> Array.to_list);
-    }
-  | `List(ls) => {
-      let values = Ast_helper.Exp.array(List.map(emit_json, ls));
-      %expr
-      `List([%e values] |> Array.to_list);
-    }
-  | `Bool(b) =>
-    if (b) {
-      %expr
-      Js.Json.boolean(true);
-    } else {
-      %expr
-      Js.Json.boolean(false);
-    }
-  | `Null => [%expr Obj.magic(Js.Undefined.empty)]
-  | `String(s) => [%expr
-      Js.Json.string(
-        [%e
-          Ast_helper.Exp.constant([@implicit_arity] Pconst_string(s, None))
-        ],
-      )
-    ]
-  | `Int(i) => [%expr
-      Js.Json.number(
-        [%e
-          Ast_helper.Exp.constant(
-            [@implicit_arity] Pconst_float(string_of_int(i), None),
-          )
-        ],
-      )
-    ]
-  | `StringExpr(parts) => [%expr
-      Js.Json.string([%e emit_printed_query(parts)])
-    ];
-};
+let rec emit_json =
+  Ast_406.(
+    fun
+    | `Assoc(vs) => {
+        let pairs =
+          Ast_helper.(
+            Exp.array(
+              vs
+              |> List.map(((key, value)) =>
+                   Exp.tuple([
+                     Exp.constant(Pconst_string(key, None)),
+                     emit_json(value),
+                   ])
+                 ),
+            )
+          );
+        %expr
+        `Assoc([%e pairs] |> Array.to_list);
+      }
+    | `List(ls) => {
+        let values = Ast_helper.Exp.array(List.map(emit_json, ls));
+        %expr
+        `List([%e values] |> Array.to_list);
+      }
+    | `Bool(true) => [%expr Js.Json.boolean(true)]
+    | `Bool(false) => [%expr Js.Json.boolean(false)]
+    | `Null => [%expr Obj.magic(Js.Undefined.empty)]
+    | `String(s) => [%expr
+        Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
+      ]
+    | `Int(i) => [%expr
+        Js.Json.number(
+          [%e
+            Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))
+          ],
+        )
+      ]
+    | `StringExpr(parts) => [%expr
+        Js.Json.string([%e emit_printed_query(parts)])
+      ]
+  );
 
 let make_printed_query = (config, document) => {
   let source = Graphql_printer.print_document(config.schema, document);
@@ -174,7 +158,6 @@ let make_printed_query = (config, document) => {
     | Ppx_config.String => emit_printed_query(source)
     };
 
-  // let loc = Location.none;
   [
     [%stri let ppx_printed_query = [%e reprinted]],
     [%stri let query = ppx_printed_query],
@@ -185,7 +168,6 @@ let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
     Output_native_decoder.generate_decoder(config, res_structure);
-  // let loc = Location.none;
   if (has_error) {
     [[%stri let parse = value => [%e parse_fn]]];
   } else {
@@ -204,9 +186,7 @@ let generate_default_operation =
         if (rec_flag == Recursive) {
           [
             {
-              pstr_desc:
-                [@implicit_arity]
-                Pstr_value(rec_flag, encoders |> Array.to_list),
+              pstr_desc: Pstr_value(rec_flag, encoders |> Array.to_list),
               pstr_loc: Location.none,
             },
           ];
@@ -214,8 +194,7 @@ let generate_default_operation =
           encoders
           |> Array.map(encoder =>
                {
-                 pstr_desc:
-                   [@implicit_arity] Pstr_value(Nonrecursive, [encoder]),
+                 pstr_desc: Pstr_value(Nonrecursive, [encoder]),
                  pstr_loc: Location.none,
                }
              )
@@ -226,7 +205,7 @@ let generate_default_operation =
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
         ],
       ]),
-      ret_type_magic
+      ret_type_magic,
     ]);
   };
 };
@@ -242,7 +221,6 @@ let generate_fragment_module =
   let variable_fields =
     variable_names
     |> List.map(name =>
-         [@implicit_arity]
          Otag(
            {txt: name, loc},
            [],
@@ -271,13 +249,11 @@ let generate_fragment_module =
           [%stri let parse = value => [%e parse_fn]],
           [%stri
             let name = [%e
-              Ast_helper.Exp.constant(
-                [@implicit_arity] Pconst_string(name, None),
-              )
+              Ast_helper.Exp.constant(Pconst_string(name, None))
             ]
           ],
         ],
-        ret_type_magic
+        ret_type_magic,
       ]);
     };
 
@@ -296,11 +272,9 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | [@implicit_arity]
-    Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Mod_default_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | [@implicit_arity]
-    Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,
