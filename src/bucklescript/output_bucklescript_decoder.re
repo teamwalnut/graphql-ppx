@@ -204,10 +204,10 @@ and generate_array_decoder = (config, loc, inner) =>
     value
     |> Js.Json.decodeArray
     |> Js.Option.getExn
-    |> Js.Array.map(value =>
+    |> Js.Array.map(value => {
          %e
          generate_decoder(config, inner)
-       )
+       })
   ]
 and generate_custom_decoder = (config, loc, ident, inner) => {
   let fn_expr =
