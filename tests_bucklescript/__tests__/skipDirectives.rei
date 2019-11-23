@@ -32,4 +32,5 @@ module MyQuery: {
     };
 
   let query: string;
+  let makeVariables: (~var: bool, unit) => Js.Json.t;
 };

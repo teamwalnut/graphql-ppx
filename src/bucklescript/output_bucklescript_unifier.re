@@ -26,6 +26,7 @@ let make_make_fun = (config, variable_defs) => {
         ]),
       ),
     );
+
   switch (variable_defs) {
   | Some({item, span}) =>
     let rec make_labelled_function = (defs, body) =>
@@ -128,6 +129,7 @@ let make_make_fun = (config, variable_defs) => {
     (
       make_labelled_function(item, make_make_triple(loc, variable_ctor_body)),
       make_object_function(item, make_make_triple(loc, variable_ctor_body)),
+      make_labelled_function(item, variable_ctor_body),
     );
   | None => (
       [%expr
@@ -140,6 +142,7 @@ let make_make_fun = (config, variable_defs) => {
           ]
         )
       ],
+      [%expr (() => [%e [%expr Js.Json.null]])],
     )
   };
 };

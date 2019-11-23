@@ -30,4 +30,13 @@ module MyQuery: {
       "variables": Js.Json.t,
     };
   let query: string;
+  let makeVariables:
+    (
+      ~nullableOfNullable: array(option(string))=?,
+      ~nullableOfNonNullable: array(string)=?,
+      ~nonNullableOfNullable: array(option(string)),
+      ~nonNullableOfNonNullable: array(string),
+      unit
+    ) =>
+    Js.Json.t;
 };

@@ -149,7 +149,7 @@ let generate_error = (loc, message) => {
   Ast_helper.Exp.extension(~loc, ext);
 };
 
-let rec generate_decoder = config => {
+let rec generate_decoder = config =>
   fun
   | Res_nullable(loc, inner) =>
     generate_nullable_decoder(config, conv_loc(loc), inner)
@@ -189,28 +189,26 @@ let rec generate_decoder = config => {
     )
   | Res_solo_fragment_spread(loc, name) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
-}
+  | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
-  {
+  (
     switch%expr (Js.Json.decodeNull(value)) {
     | None => Some([%e generate_decoder(config, inner)])
     | Some(_) => None
-    };
-  }
+    }
+  )
 and generate_array_decoder = (config, loc, inner) =>
   [@metaloc loc]
-  {
-    %expr
+  [%expr
     value
     |> Js.Json.decodeArray
     |> Js.Option.getExn
     |> Js.Array.map(value => {
          %e
          generate_decoder(config, inner)
-       });
-  }
+       })
+  ]
 and generate_custom_decoder = (config, loc, ident, inner) => {
   let fn_expr =
     Ast_helper.(
