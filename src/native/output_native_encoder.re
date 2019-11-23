@@ -84,7 +84,7 @@ let rec parser_for_type = (schema, loc, type_ref) => {
       (
         v =>
           switch (v) {
-          | None => `Null
+          | None => (`Null: Yojson.Basic.t)
           | Some(v) => [%e child_parser](v)
           }
       )
@@ -124,11 +124,7 @@ let json_of_fields = (schema, loc, expr, fields) => {
          [@metaloc loc]
          [%expr
            (
-             [%e
-               Ast_helper.Exp.constant(
-                 [@implicit_arity] Pconst_string(am_name, None),
-               )
-             ],
+             [%e Ast_helper.Exp.constant(Pconst_string(am_name, None))],
              [%e parser](
                [%e Ast_helper.Exp.send(expr, {txt: am_name, loc})],
              ),
@@ -162,9 +158,7 @@ let generate_encoder = (config, (spanning, x)) => {
         |> List.map(({evm_name, _}) => {
              let pattern = Ast_helper.Pat.variant(evm_name, None);
              let expr =
-               Ast_helper.Exp.constant(
-                 [@implicit_arity] Pconst_string(evm_name, None),
-               );
+               Ast_helper.Exp.constant(Pconst_string(evm_name, None));
              Ast_helper.Exp.case(pattern, [%expr `String([%e expr])]);
            });
       Ast_helper.Exp.match([%expr value], match_arms);

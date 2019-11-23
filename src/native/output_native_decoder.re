@@ -9,8 +9,7 @@ open Parsetree;
 open Generator_utils;
 open Output_native_utils;
 
-let const_str_expr = s =>
-  Ast_helper.(Exp.constant([@implicit_arity] Pconst_string(s, None)));
+let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -82,7 +81,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       List.map(
         ({evm_name, _}) =>
           Exp.case(
-            Pat.constant([@implicit_arity] Pconst_string(evm_name, None)),
+            Pat.constant(Pconst_string(evm_name, None)),
             Exp.variant(evm_name, None),
           ),
         enum_meta.em_values,
@@ -114,8 +113,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
     Ast_helper.(
       Typ.variant(
         List.map(
-          ({evm_name, _}) =>
-            [@implicit_arity] Rtag({txt: evm_name, loc}, [], true, []),
+          ({evm_name, _}) => Rtag({txt: evm_name, loc}, [], true, []),
           enum_meta.em_values,
         ),
         Closed,
@@ -154,30 +152,27 @@ let generate_error = (loc, message) => {
 
 let rec generate_decoder = config =>
   fun
-  | [@implicit_arity] Res_nullable(loc, inner) =>
+  | Res_nullable(loc, inner) =>
     generate_nullable_decoder(config, conv_loc(loc), inner)
-  | [@implicit_arity] Res_array(loc, inner) =>
+  | Res_array(loc, inner) =>
     generate_array_decoder(config, conv_loc(loc), inner)
   | Res_id(loc) => id_decoder(conv_loc(loc))
   | Res_string(loc) => string_decoder(conv_loc(loc))
   | Res_int(loc) => int_decoder(conv_loc(loc))
   | Res_float(loc) => float_decoder(conv_loc(loc))
   | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
-  | Res_raw_scalar(_loc) => {
-      %expr
-      value;
-    }
-  | [@implicit_arity] Res_poly_enum(loc, enum_meta) =>
+  | Res_raw_scalar(_loc) => [%expr value]
+  | Res_poly_enum(loc, enum_meta) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
-  | [@implicit_arity] Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
-  | [@implicit_arity] Res_record(loc, name, fields) =>
+  | Res_record(loc, name, fields) =>
     generate_record_decoder(config, conv_loc(loc), name, fields)
-  | [@implicit_arity] Res_object(loc, name, fields) =>
+  | Res_object(loc, name, fields) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
-  | [@implicit_arity] Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set(loc, name, fields) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
-  | [@implicit_arity] Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union(
       config,
       conv_loc(loc),
@@ -185,7 +180,7 @@ let rec generate_decoder = config =>
       fragments,
       exhaustive,
     )
-  | [@implicit_arity] Res_poly_variant_interface(loc, name, base, fragments) =>
+  | Res_poly_variant_interface(loc, name, base, fragments) =>
     generate_poly_variant_interface(
       config,
       conv_loc(loc),
@@ -193,14 +188,13 @@ let rec generate_decoder = config =>
       base,
       fragments,
     )
-  | [@implicit_arity] Res_solo_fragment_spread(loc, name) =>
+  | Res_solo_fragment_spread(loc, name) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
-  | [@implicit_arity] Res_error(loc, message) =>
-    generate_error(conv_loc(loc), message)
+  | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
-    switch%expr (value) {
+    switch%expr ((value: Yojson.Basic.t)) {
     | `Null => None
     | value => Some([%e generate_decoder(config, inner)])
     }
@@ -256,7 +250,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | [@implicit_arity] Fr_named_field(field, _, _) =>
+           | Fr_named_field(field, _, _) =>
              Some(Pat.var({loc, txt: "field_" ++ field}))
            | Fr_fragment_spread(_) => None,
          )
@@ -268,7 +262,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | [@implicit_arity] Fr_named_field(field, loc, inner) => {
+           | Fr_named_field(field, loc, inner) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
@@ -304,7 +298,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> List.map(
            fun
-           | [@implicit_arity] Fr_named_field(field, loc, _) => {
+           | Fr_named_field(field, loc, _) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -314,7 +308,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | [@implicit_arity] Fr_fragment_spread(field, loc, name) => {
+           | Fr_fragment_spread(field, loc, name) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -359,11 +353,10 @@ and generate_object_decoder = (config, loc, name, fields) =>
             Pat.any(),
             List.map(
               fun
-              | [@implicit_arity] Fr_named_field(key, _, inner) =>
+              | Fr_named_field(key, _, inner) =>
                 Cf.method(
                   {txt: key, loc: Location.none},
                   Public,
-                  [@implicit_arity]
                   Cfk_concrete(
                     Fresh,
                     switch%expr (List.assoc([%e const_str_expr(key)], value)) {
@@ -388,12 +381,11 @@ and generate_object_decoder = (config, loc, name, fields) =>
                     },
                   ),
                 )
-              | [@implicit_arity] Fr_fragment_spread(key, loc, name) => {
+              | Fr_fragment_spread(key, loc, name) => {
                   let loc = conv_loc(loc);
                   Cf.method(
                     {txt: key, loc: Location.none},
                     Public,
-                    [@implicit_arity]
                     Cfk_concrete(
                       Fresh,
                       {
@@ -462,7 +454,6 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
       Typ.variant(
         List.map(
           ((name, _)) =>
-            [@implicit_arity]
             Rtag(
               {txt: Compat.capitalize_ascii(name), loc},
               [],
@@ -506,14 +497,12 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
 
   let map_case = ((type_name, inner)) => {
     open Ast_helper;
-    let name_pattern =
-      Pat.constant([@implicit_arity] Pconst_string(type_name, None));
+    let name_pattern = Pat.constant(Pconst_string(type_name, None));
     let variant =
       Exp.variant(type_name, Some(generate_decoder(config, inner)));
     Exp.case(name_pattern, variant);
   };
   let map_case_ty = ((name, _)) =>
-    [@implicit_arity]
     Rtag(
       name,
       [],
@@ -589,8 +578,7 @@ and generate_poly_variant_union =
     Ast_helper.(
       fragments
       |> List.map(((type_name, inner)) => {
-           let name_pattern =
-             Pat.constant([@implicit_arity] Pconst_string(type_name, None));
+           let name_pattern = Pat.constant(Pconst_string(type_name, None));
            let variant =
              Ast_helper.(
                Exp.variant(type_name, Some(generate_decoder(config, inner)))
@@ -617,16 +605,13 @@ and generate_poly_variant_union =
         )
       | Nonexhaustive => (
           Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [
-            [@implicit_arity] Rtag({txt: "Nonexhaustive", loc}, [], true, []),
-          ],
+          [Rtag({txt: "Nonexhaustive", loc}, [], true, [])],
         )
       }
     );
   let fragment_case_tys =
     List.map(
       ((name, _)) =>
-        [@implicit_arity]
         Rtag(
           {txt: name, loc},
           [],
