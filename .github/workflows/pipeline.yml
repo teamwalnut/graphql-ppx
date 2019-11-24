@@ -26,26 +26,29 @@ jobs:
       - name: setup
         run: |
           npm install -g esy@latest cross-env
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build
-        run: |
-          esy install 
-          esy b
-      - name: test-native
-        run: |
-          esy b dune runtest -f
-      - name: test-bsb6
-        run: |
-          cd tests_bucklescript
-          node ./run.js bsb6
+
       # OCaml 4.02 and BuckleScript 5
-      - name: install-build @402
+      - name: bucklescript5
         run: |
           esy @402 install
           esy @402 b
-      - name: test-bsb5
-        run: |
           cd tests_bucklescript
           node ./run.js bsb5
+
+      # OCaml 4.06 and BuckleScript 6
+      - name: bucklescript6
+        run: |
+          esy @406 install 
+          esy @406 b
+          cd tests_bucklescript
+          node ./run.js bsb6
+
+      # OCaml 4.09
+      - name: native
+        run: |
+          esy install
+          esy b
+          esy b dune runtest -f
+
         env:
           CI: true
