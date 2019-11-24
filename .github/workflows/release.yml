@@ -27,6 +27,7 @@ jobs:
       # OCaml 4.02 and BuckleScript 5
       - name: bucklescript5
         run: |
+          rm -rf _build
           esy @402 install
           esy @402 b
           cd tests_bucklescript
@@ -41,6 +42,7 @@ jobs:
       # OCaml 4.06 and BuckleScript 6
       - name: bucklescript6
         run: |
+          rm -rf _build
           esy @406 install 
           esy @406 b
           cd tests_bucklescript
