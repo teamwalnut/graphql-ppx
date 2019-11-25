@@ -178,11 +178,8 @@ let generate_default_operation =
         Result_structure.res_loc(res_structure),
         variable_defs,
       );
-    let (make_fn, make_with_variables_fn, make_variables_fn) =
+    let (make_fn, make_with_variables_fn, make_variables_fn, definition_tuple) =
       Output_bucklescript_unifier.make_make_fun(config, variable_defs);
-
-    let definition =
-      Output_bucklescript_unifier_2.make_definition(config, variable_defs);
 
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
@@ -209,7 +206,7 @@ let generate_default_operation =
           [%stri let make = [%e make_fn]],
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
           [%stri let makeVariables = [%e make_variables_fn]],
-          [%stri let definition = [%e definition]],
+          [%stri let definition = [%e definition_tuple]],
         ],
       ]),
       ret_type_magic,
