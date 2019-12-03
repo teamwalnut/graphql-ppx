@@ -17,18 +17,24 @@ Jest.(
 
     test("Allows you to omit nullable arguments", () =>
       expect(MyQuery.make(~name="Pikachu", ())##variables)
-      == Js.Json.parseExn({| {
+      |> toEqual(
+           Js.Json.parseExn(
+             {| {
              "name": "Pikachu"
-           } |})
+           } |},
+           ),
+         )
     );
 
     test("Includes non-nulled arguments", () =>
       expect(MyQuery.make(~id="pikachu_id", ~name="Pikachu", ())##variables)
-      == Js.Json.parseExn(
-           {| {
+      |> toEqual(
+           Js.Json.parseExn(
+             {| {
              "name": "Pikachu",
              "id": "pikachu_id"
            } |},
+           ),
          )
     );
   })

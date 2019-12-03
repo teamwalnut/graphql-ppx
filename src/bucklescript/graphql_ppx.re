@@ -56,7 +56,7 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (loc, delim, query, maybe_schema) => {
+let rewrite_query = (~schema=None, loc, delim, query) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -94,7 +94,7 @@ let rewrite_query = (loc, delim, query, maybe_schema) => {
         delimiter: delim,
         full_document: document,
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(maybe_schema)),
+        schema: Lazy.force(Read_schema.get_schema(schema)),
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -221,7 +221,12 @@ let mapper = (_config, _cookies) => {
             },
           ]) =>
           let maybe_schema = extract_schema_from_config(fields);
-          rewrite_query(conv_loc_from_ast(loc), delim, query, maybe_schema);
+          rewrite_query(
+            ~schema=maybe_schema,
+            conv_loc_from_ast(loc),
+            delim,
+            query,
+          );
         | PStr([
             {
               pstr_desc:
@@ -236,7 +241,7 @@ let mapper = (_config, _cookies) => {
               _,
             },
           ]) =>
-          rewrite_query(conv_loc_from_ast(loc), delim, query, None)
+          rewrite_query(conv_loc_from_ast(loc), delim, query)
         | _ =>
           raise(
             Location.Error(
