@@ -116,6 +116,31 @@ let rewrite_query = (loc, delim, query, maybe_schema) => {
   };
 };
 
+let extract_schema_from_config = config_fields => {
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_schema_field =
+    List.find_opt(
+      config_field =>
+        switch (config_field) {
+        | (
+            {txt: Longident.Lident("schema"), _},
+            {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _},
+          ) =>
+          true
+        | _ => false
+        },
+      config_fields,
+    );
+
+  switch (maybe_schema_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
+    Some(schema_name)
+  | _ => None
+  };
+};
+
 let mapper = (_config, _cookies) => {
   open Ast_406;
   open Ast_mapper;
@@ -181,22 +206,12 @@ let mapper = (_config, _cookies) => {
             },
             {
               pstr_desc:
-                Pstr_eval(
-                  {
-                    pexp_desc: Pexp_constant(Pconst_string(schema_name, _)),
-                    _,
-                  },
-                  _,
-                ),
+                Pstr_eval({pexp_desc: Pexp_record(fields, None), _}, _),
               _,
             },
           ]) =>
-          rewrite_query(
-            conv_loc_from_ast(loc),
-            delim,
-            query,
-            Some(schema_name),
-          )
+          let maybe_schema = extract_schema_from_config(fields);
+          rewrite_query(conv_loc_from_ast(loc), delim, query, maybe_schema);
         | PStr([
             {
               pstr_desc:
