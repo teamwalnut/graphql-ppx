@@ -117,22 +117,32 @@ let rewrite_query = (loc, delim, query, maybe_schema) => {
 };
 
 let extract_schema_from_config = config_fields => {
+  open Ast_406;
   open Asttypes;
   open Parsetree;
 
   let maybe_schema_field =
-    List.find_opt(
-      config_field =>
-        switch (config_field) {
-        | (
-            {txt: Longident.Lident("schema"), _},
-            {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _},
-          ) =>
-          true
-        | _ => false
-        },
-      config_fields,
-    );
+    try (
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("schema"), _},
+                {
+                  pexp_desc: Pexp_constant(Pconst_string(schema_name, _)),
+                  _,
+                },
+              ) =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
 
   switch (maybe_schema_field) {
   | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
