@@ -72,7 +72,7 @@ let drop_prefix = (prefix, str) => {
   String.sub(str, len, rest);
 };
 
-let rewrite_query = (loc, delim, query, maybe_schema) => {
+let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_406;
 
   let lexer = Graphql_lexer.make(query);
@@ -109,7 +109,7 @@ let rewrite_query = (loc, delim, query, maybe_schema) => {
         delimiter: delim,
         full_document: document,
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(maybe_schema)),
+        schema: Lazy.force(Read_schema.get_schema(schema)),
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -130,6 +130,41 @@ let rewrite_query = (loc, delim, query, maybe_schema) => {
         Output_native_module.generate_modules(config, parts);
       };
     };
+  };
+};
+
+let extract_schema_from_config = config_fields => {
+  open Ast_406;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_schema_field =
+    try (
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("schema"), _},
+                {
+                  pexp_desc: Pexp_constant(Pconst_string(schema_name, _)),
+                  _,
+                },
+              ) =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_schema_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
+    Some(schema_name)
+  | _ => None
   };
 };
 
@@ -198,22 +233,18 @@ let mapper = (_config, _cookies) => {
             },
             {
               pstr_desc:
-                Pstr_eval(
-                  {
-                    pexp_desc: Pexp_constant(Pconst_string(schema_name, _)),
-                    _,
-                  },
-                  _,
-                ),
+                Pstr_eval({pexp_desc: Pexp_record(fields, None), _}, _),
               _,
             },
           ]) =>
+          let maybe_schema = extract_schema_from_config(fields);
           rewrite_query(
-            conv_loc_from_ast(loc),
-            delim,
-            query,
-            Some(schema_name),
-          )
+            ~schema=?maybe_schema,
+            ~loc=conv_loc_from_ast(loc),
+            ~delim,
+            ~query,
+            (),
+          );
         | PStr([
             {
               pstr_desc:
@@ -228,7 +259,7 @@ let mapper = (_config, _cookies) => {
               _,
             },
           ]) =>
-          rewrite_query(conv_loc_from_ast(loc), delim, query, None)
+          rewrite_query(~loc=conv_loc_from_ast(loc), ~delim, ~query, ())
         | _ =>
           raise(
             Location.Error(
