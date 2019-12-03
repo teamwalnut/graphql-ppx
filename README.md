@@ -254,10 +254,10 @@ type resultType = MyQuery.t;
 
 # Troubleshooting
 
-### "Type ... doesn't have any fields" 
+### "Type ... doesn't have any fields"
 
 
-Sometimes when working with union types you'll get the following error. 
+Sometimes when working with union types you'll get the following error.
 ```
 Fatal error: exception Graphql_ppx_base__Schema.Invalid_type("Type IssueTimelineItems doesn't have any fields")
 ```
@@ -327,9 +327,14 @@ esy dune build -p graphql_ppx
 ### BuckleScript
 
 ```
-cd tests
-yarn
-yarn test
+cd tests_bucklescript
+node run.js bsb5
+```
+
+If you're using bs-platform 6.x
+```
+cd tests_bucklescript
+node run.js bsb6
 ```
 
 ### Native
