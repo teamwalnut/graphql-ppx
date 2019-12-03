@@ -56,7 +56,7 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (~schema=None, loc, delim, query) => {
+let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -222,10 +222,11 @@ let mapper = (_config, _cookies) => {
           ]) =>
           let maybe_schema = extract_schema_from_config(fields);
           rewrite_query(
-            ~schema=maybe_schema,
-            conv_loc_from_ast(loc),
-            delim,
-            query,
+            ~schema=?maybe_schema,
+            ~loc=conv_loc_from_ast(loc),
+            ~delim,
+            ~query,
+            (),
           );
         | PStr([
             {
@@ -241,7 +242,7 @@ let mapper = (_config, _cookies) => {
               _,
             },
           ]) =>
-          rewrite_query(conv_loc_from_ast(loc), delim, query)
+          rewrite_query(~loc=conv_loc_from_ast(loc), ~delim, ~query, ())
         | _ =>
           raise(
             Location.Error(
