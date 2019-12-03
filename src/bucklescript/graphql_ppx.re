@@ -129,10 +129,7 @@ let extract_schema_from_config = config_fields => {
             switch (config_field) {
             | (
                 {txt: Longident.Lident("schema"), _},
-                {
-                  pexp_desc: Pexp_constant(Pconst_string(schema_name, _)),
-                  _,
-                },
+                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
               ) =>
               true
             | _ => false
