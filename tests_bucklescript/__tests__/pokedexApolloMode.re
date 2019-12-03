@@ -10,7 +10,7 @@ module MyQuery = [%graphql
       }
     }
   |};
-  "../pokedex_schema.json"
+  {schema: "../pokedex_schema.json"}
 ];
 
 describe("Apollo mode with alternate schema", () =>

@@ -7,7 +7,7 @@ module MyQuery = [%graphql
       }
     }
   |};
-  "../pokedex_schema.json"
+  {schema: "../pokedex_schema.json"}
 ];
 
 Jest.(
