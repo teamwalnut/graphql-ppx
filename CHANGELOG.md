@@ -34,6 +34,10 @@
 
 ## [0.3.2](https://github.com/baransu/graphql_ppx_re/compare/v0.3.1...v0.3.2) (2019-10-21)
 
+### Bug fixes
+
+- improve schema reading (handle case where data is not in json schema) ([9324ba2](https://github.com/baransu/graphql_ppx_re/commit/9324ba232385540b61f485064ee09b1e49929146))
+
 ## [0.3.1](https://github.com/baransu/graphql_ppx_re/compare/0.2.0...v0.3.1) (2019-10-19)
 
 ### Bug Fixes
