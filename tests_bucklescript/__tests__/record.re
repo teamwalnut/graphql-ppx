@@ -8,12 +8,24 @@ type dog = {
   barkVolume: float,
 };
 
+type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = [%graphql
   {|
   {
     variousScalars @bsRecord {
       string
       int
+    }
+  }
+|}
+];
+
+module OneFieldQuery = [%graphql
+  {|
+  {
+    variousScalars @bsRecord {
+      nullableString
     }
   }
 |}
@@ -79,6 +91,18 @@ Jest.(
         ),
       )
       == {"variousScalars": expected};
+    });
+
+    test("Decodes a record with one field in a selection", () => {
+      let expected = {nullableString: Some("a string")};
+      expect(
+        OneFieldQuery.parse(
+          Js.Json.parseExn(
+            {|{"variousScalars": {"nullableString": "a string"}}|},
+          ),
+        ),
+      )
+      |> toEqual({"variousScalars": expected});
     });
 
     test("Decodes a record in an external fragment", () => {
