@@ -1,6 +1,6 @@
 ## [0.4.1](https://github.com/baransu/graphql_ppx_re/compare/v0.4.0...v0.4.1) (2019-12-04)
 
-### Bug fixes
+### Bug Fixes
 
 - one field query with bs record ([e231d19](https://github.com/baransu/graphql_ppx_re/commit/e231d1970b69f175400a324e2542a4748588b34b))
 - **bucklescript:** test suite upgrade and how to run tests documentation improved ([19db453](https://github.com/baransu/graphql_ppx_re/commit/19db453aef42f354f2e8f5cd532002ebfa66c22c))
@@ -34,7 +34,7 @@
 
 ## [0.3.2](https://github.com/baransu/graphql_ppx_re/compare/v0.3.1...v0.3.2) (2019-10-21)
 
-### Bug fixes
+### Bug Fixes
 
 - improve schema reading (handle case where data is not in json schema) ([9324ba2](https://github.com/baransu/graphql_ppx_re/commit/9324ba232385540b61f485064ee09b1e49929146))
 
