@@ -1,4 +1,5 @@
 {
+  "name": "graphql_ppx",
   "description": "Used to build for BuckleScript 6+ using OCaml 4.06",
   "dependencies": {
     "@opam/dune": "*",
@@ -15,7 +16,7 @@
     "ocaml": "~4.6.0"
   },
   "esy": {
-    "build": "refmterr dune build -p graphql_ppx",
+    "build": [["dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }
