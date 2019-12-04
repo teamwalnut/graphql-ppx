@@ -56,7 +56,7 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (loc, delim, query) => {
+let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -94,7 +94,7 @@ let rewrite_query = (loc, delim, query) => {
         delimiter: delim,
         full_document: document,
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema()),
+        schema: Lazy.force(Read_schema.get_schema(schema)),
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -113,6 +113,38 @@ let rewrite_query = (loc, delim, query) => {
         |> Output_bucklescript_module.generate_modules(config)
       };
     };
+  };
+};
+
+let extract_schema_from_config = config_fields => {
+  open Ast_406;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_schema_field =
+    try (
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("schema"), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+              ) =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_schema_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
+    Some(schema_name)
+  | _ => None
   };
 };
 
@@ -179,8 +211,35 @@ let mapper = (_config, _cookies) => {
                 ),
               _,
             },
+            {
+              pstr_desc:
+                Pstr_eval({pexp_desc: Pexp_record(fields, None), _}, _),
+              _,
+            },
           ]) =>
-          rewrite_query(conv_loc_from_ast(loc), delim, query)
+          let maybe_schema = extract_schema_from_config(fields);
+          rewrite_query(
+            ~schema=?maybe_schema,
+            ~loc=conv_loc_from_ast(loc),
+            ~delim,
+            ~query,
+            (),
+          );
+        | PStr([
+            {
+              pstr_desc:
+                Pstr_eval(
+                  {
+                    pexp_loc: loc,
+                    pexp_desc: Pexp_constant(Pconst_string(query, delim)),
+                    _,
+                  },
+                  _,
+                ),
+              _,
+            },
+          ]) =>
+          rewrite_query(~loc=conv_loc_from_ast(loc), ~delim, ~query, ())
         | _ =>
           raise(
             Location.Error(

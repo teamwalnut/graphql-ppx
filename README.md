@@ -305,6 +305,30 @@ Tells graphql_ppx to add `__typename` to every object in a query. Usefull in cas
 
 By default graphql_ppx uses `graphql_schema.json` filed from your root directory. You can override it by providing env variable overriding it.
 
+# Query specific configuration
+
+If you want to use multiple schemas in your project it can be provided as a secondary config argument in your graphql ppx definition.
+
+```ocaml
+module MyQuery = [%graphql
+  {|
+    query pokemon($id: String, $name: String) {
+      pokemon(name: $name, id: $id) {
+        id
+        name
+      }
+    }
+  |};
+  {schema: "pokedex_schema.json"}
+];
+```
+
+This will use the `pokedex_schema.json` instead of using the default `graphql_schema.json` file.
+
+This opens up the possibility to use multiple different GraphQL APIs in the same project.
+
+**Note** the path to your file is based on where you run `bsb`. In this case `pokedex_schema.json` is a sibling to `node_modules`.
+
 # Supported platforms
 
 `graphql_ppx_re` somes with prebuild binaries for `linux-x64`, `darwin-x64` and `win-x64`. If you need support for other platform, please open an issue.
