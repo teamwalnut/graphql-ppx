@@ -115,7 +115,7 @@ jobs:
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: Publish
-      - uses: actions/setup-node@v1
+        uses: actions/setup-node@v1
         with:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
