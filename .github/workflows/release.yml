@@ -24,6 +24,13 @@ jobs:
         run: |
           npm install -g esy@latest cross-env
 
+      # OCaml 4.09
+      - name: native
+      run: |
+        esy install
+        esy b
+        esy B dune runtest -f
+
       # OCaml 4.02 and BuckleScript 5
       - name: bucklescript5
         run: |
@@ -51,13 +58,6 @@ jobs:
         with:
           name: ${{ matrix.os }}-bsb6
           path: _build/default/src/bucklescript_bin/bin.exe
-
-      # OCaml 4.09
-      - name: native
-        run: |
-          esy install
-          esy b
-          esy b dune runtest -f
 
         env:
           CI: true
