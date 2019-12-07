@@ -22,7 +22,7 @@ Second, add it to `ppx-flags` in your `bsconfig.json`:
 "ppx-flags": ["@baransu/graphql_ppx_re/ppx"]
 ```
 
-If you're using bs-platform 6.x, add this to `bsconfig.json` instead:
+If you're using bs-platform 6.x or above, add this to `bsconfig.json` instead:
 ```json
 "ppx-flags": ["@baransu/graphql_ppx_re/ppx6"]
 ```
