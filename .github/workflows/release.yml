@@ -26,10 +26,10 @@ jobs:
 
       # OCaml 4.09
       - name: native
-      run: |
-        esy install
-        esy b
-        esy B dune runtest -f
+        run: |
+          esy install
+          esy b
+          esy B dune runtest -f
 
       # OCaml 4.02 and BuckleScript 5
       - name: bucklescript5
