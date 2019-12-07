@@ -115,8 +115,10 @@ jobs:
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: Publish
-        uses: actions/npm@master
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - uses: actions/setup-node@v1
         with:
-          args: publish
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
