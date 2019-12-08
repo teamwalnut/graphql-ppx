@@ -13,6 +13,14 @@ open Output_native_utils;
 exception Unimplemented(string);
 
 let make_make_fun = (config, variable_defs) => {
+  let make_tuple = (loc, variables, compose) => [%expr
+    (
+      parse,
+      ppx_printed_query,
+      graphql_ppx_use_json_variables_fn => [%e compose],
+    )
+  ];
+
   let make_make_triple = (_loc, variables) => [%expr
     {
       as _;
@@ -111,10 +119,17 @@ let make_make_fun = (config, variable_defs) => {
       [@metaloc loc]
       [%expr `Assoc([%e make_var_ctor(item)] |> Array.to_list)];
 
+    let user_function =
+      make_labelled_function(
+        item,
+        [%expr graphql_ppx_use_json_variables_fn([%e variable_ctor_body])],
+      );
+
     (
       make_labelled_function(item, make_make_triple(loc, variable_ctor_body)),
       make_object_function(item, make_make_triple(loc, variable_ctor_body)),
       make_labelled_function(item, variable_ctor_body),
+      make_tuple(loc, variable_ctor_body, user_function),
     );
   | None => (
       [%expr
@@ -132,6 +147,7 @@ let make_make_fun = (config, variable_defs) => {
         )
       ],
       [%expr (() => [%e [%expr `Null]])],
+      [%expr [%e make_tuple(Location.none, [%expr `Null], [%expr 0])]],
     )
   };
 };

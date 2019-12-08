@@ -4,21 +4,23 @@
     "@opam/dune": "*",
     "@opam/result": "*",
     "@opam/yojson": "*",
-    "@opam/ocaml-migrate-parsetree": "1.2.0",
+    "@opam/ocaml-migrate-parsetree": "*",
     "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "3.5.0",
-    "refmterr": "*",
+    "@esy-ocaml/reason": "*",
     "@opam/menhir": "20171013"
   },
   "devDependencies": {
     "@opam/alcotest": "*",
-    "ocaml": "~4.6.0"
+    "@opam/merlin": "*",
+    "ocaml": "<4.9.0",
+    "refmterr": "*"
   },
   "peerDependencies": {
-    "ocaml": ">= 4.6.0"
+    "ocaml": ">=4.6.0 & <4.9.0"
   },
   "esy": {
     "build": [["dune", "build", "-p", "#{self.name}"]],
+    "buildDev": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }
