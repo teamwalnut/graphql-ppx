@@ -43,7 +43,7 @@ jobs:
           cd tests_bucklescript
           node ./run.js bsb5
 
-      # OCaml 4.06 and BuckleScript 6
+      # OCaml 4.06 and BuckleScript 6+
       - name: bucklescript6
         run: |
           esy "@406" install 
