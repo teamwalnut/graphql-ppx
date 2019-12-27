@@ -145,9 +145,9 @@ let rec generate_decoder = config =>
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
-    switch%expr (Js.Json.decodeNull(value)) {
-    | None => Some([%e generate_decoder(config, inner)])
-    | Some(_) => None
+    switch%expr (Js.Nullable.isNullable(value)) {
+    | false => Some([%e generate_decoder(config, inner)])
+    | true => None
     }
   )
 and generate_array_decoder = (config, loc, inner) =>
@@ -362,15 +362,8 @@ and generate_object_decoder = (config, loc, name, fields) => {
                        %expr
                        None;
                      } else {
-                       make_error_raiser(
-                         [%expr
-                           "Field "
-                           ++ [%e const_str_expr(key)]
-                           ++ " on type "
-                           ++ [%e const_str_expr(name)]
-                           ++ " is missing"
-                         ],
-                       );
+                       %expr
+                       None;
                      }
                    },
                  )
