@@ -20,59 +20,11 @@ let make_error_raiser = message =>
     Js.Exn.raiseError("Unexpected GraphQL query response");
   };
 
-let string_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeString(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected string, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => (value: string)
-    }
-  );
-
+let string_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): string)];
 let id_decoder = string_decoder;
-
-let float_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeNumber(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected float, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => value
-    }
-  );
-
-let int_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeNumber(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected int, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => int_of_float(value)
-    }
-  );
-
-let boolean_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeBoolean(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected boolean, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => value
-    }
-  );
+let float_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): float)];
+let int_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
+let boolean_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): bool)];
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -201,9 +153,7 @@ and generate_nullable_decoder = (config, loc, inner) =>
 and generate_array_decoder = (config, loc, inner) =>
   [@metaloc loc]
   [%expr
-    value
-    |> Js.Json.decodeArray
-    |> Js.Option.getExn
+    Obj.magic(value)
     |> Js.Array.map(value => {
          %e
          generate_decoder(config, inner)
@@ -244,9 +194,9 @@ and generate_record_decoder = (config, loc, name, fields) => {
            | Fr_fragment_spread(_) => None,
          )
       |> (
-           fun
-           | [field_pattern] => field_pattern
-           | field_patterns => Pat.tuple(field_patterns)
+        fun
+        | [field_pattern] => field_pattern
+        | field_patterns => Pat.tuple(field_patterns)
       )
     );
 
@@ -284,9 +234,9 @@ and generate_record_decoder = (config, loc, name, fields) => {
            | Fr_fragment_spread(_) => None,
          )
       |> (
-           fun
-           | [field_decoder] => field_decoder
-           | field_decoders => Exp.tuple(field_decoders)
+        fun
+        | [field_decoder] => field_decoder
+        | field_decoders => Exp.tuple(field_decoders)
       )
     );
 
@@ -373,7 +323,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
       );
   [@metaloc loc]
   {
-    let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+    let%expr value = Obj.magic(value);
 
     %e
     Ast_helper.Exp.letmodule(
