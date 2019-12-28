@@ -110,6 +110,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         full_document: document,
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
+        template_literal: None,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -139,7 +140,7 @@ let extract_schema_from_config = config_fields => {
   open Parsetree;
 
   let maybe_schema_field =
-    try (
+    try(
       Some(
         List.find(
           config_field =>
