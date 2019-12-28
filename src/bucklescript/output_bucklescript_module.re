@@ -43,7 +43,48 @@ let ret_type_magic = [
   [%stri type t = MT_Ret.t],
 ];
 
-let emit_printed_query = parts => {
+let compress_parts = (parts: array(Graphql_printer.t)) => {
+  let ident = ref(0);
+  Graphql_printer.(
+    parts
+    |> Array.to_list
+    |> List.fold_left(
+         (acc, curr) => {
+           switch (acc, curr) {
+           | ([String(s1), ...rest], String(s2)) =>
+             if (s2 == "{\n") {
+               ident := ident^ + 1;
+             };
+             let s1 =
+               if (s2 == "}\n") {
+                 ident := ident^ - 1;
+                 String.sub(s1, 0, String.length(s1) - 2);
+               } else {
+                 s1;
+               };
+             let res = [
+               String(
+                 s1
+                 ++ (
+                   String.contains(s2, '\n')
+                     ? s2 ++ String.make(ident^ * 2, ' ') : s2
+                 ),
+               ),
+               ...rest,
+             ];
+             res;
+           | (acc, Empty) => acc
+           | (acc, curr) => [curr, ...acc]
+           }
+         },
+         [],
+       )
+    |> List.rev
+    |> Array.of_list
+  );
+};
+
+let emit_printed_query = (~strProcess=?, parts) => {
   open Ast_406;
   open Graphql_printer;
   let generate_expr = acc =>
@@ -101,11 +142,28 @@ let emit_printed_query = parts => {
         )
       );
 
-  Array.fold_left(
-    generate_expr,
-    Ast_406.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
-    parts,
-  );
+  let parts = compress_parts(parts);
+
+  switch (parts) {
+  | [|String(s)|] =>
+    Ast_helper.(
+      Exp.constant(
+        Parsetree.Pconst_string(
+          switch (strProcess) {
+          | None => s
+          | Some(strProcess) => strProcess(s)
+          },
+          None,
+        ),
+      )
+    )
+  | parts =>
+    Array.fold_left(
+      generate_expr,
+      Ast_406.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
+      parts,
+    )
+  };
 };
 
 let rec emit_json =
@@ -156,7 +214,23 @@ let make_printed_query = (config, document) => {
     switch (Ppx_config.output_mode()) {
     | Ppx_config.Apollo_AST =>
       Ast_serializer_apollo.serialize_document(source, document) |> emit_json
-    | Ppx_config.String => emit_printed_query(source)
+    | Ppx_config.String =>
+      let tmp =
+        emit_printed_query(
+          ~strProcess=str => "graphql`\n" ++ str ++ "`",
+          source,
+        );
+
+      Ast_406.(
+        Ast_helper.(
+          Exp.extension((
+            {txt: "bs.raw", loc: Location.none},
+            PStr([
+              {pstr_desc: Pstr_eval(tmp, []), pstr_loc: Location.none},
+            ]),
+          ))
+        )
+      );
     };
 
   [
