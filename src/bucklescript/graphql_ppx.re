@@ -56,7 +56,7 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
+let rewrite_query = (~template_literal=?, ~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -95,6 +95,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         full_document: document,
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
+        template_literal,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -122,7 +123,7 @@ let extract_schema_from_config = config_fields => {
   open Parsetree;
 
   let maybe_schema_field =
-    try (
+    try(
       Some(
         List.find(
           config_field =>
@@ -144,6 +145,44 @@ let extract_schema_from_config = config_fields => {
   switch (maybe_schema_field) {
   | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
     Some(schema_name)
+  | _ => None
+  };
+};
+
+let extract_template_literal_from_config = config_fields => {
+  open Ast_406;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_template_literal_field =
+    try(
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("templateLiteral"), _},
+                {
+                  pexp_desc: Pexp_ident({txt: Ldot(Longident.Lident(_), _)}),
+                  _,
+                },
+              ) =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_template_literal_field) {
+  | Some((
+      _,
+      {pexp_desc: Pexp_ident({txt: Ldot(Longident.Lident(m), fn)})},
+    )) =>
+    Some(m ++ "." ++ fn)
   | _ => None
   };
 };
@@ -218,8 +257,12 @@ let mapper = (_config, _cookies) => {
             },
           ]) =>
           let maybe_schema = extract_schema_from_config(fields);
+          let maybe_template_literal =
+            extract_template_literal_from_config(fields);
+
           rewrite_query(
             ~schema=?maybe_schema,
+            ~template_literal=?maybe_template_literal,
             ~loc=conv_loc_from_ast(loc),
             ~delim,
             ~query,
