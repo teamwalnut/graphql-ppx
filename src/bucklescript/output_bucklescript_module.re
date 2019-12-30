@@ -224,12 +224,16 @@ let make_printed_query = (config, document) => {
           switch (config.template_literal) {
           | None => emit_printed_query(source)
           | Some(template_literal) =>
+            // if the template literal is: "graphql"
+            // a string is created like this: graphql`[query]`
             let tmp =
               emit_printed_query(
                 ~strProcess=str => template_literal ++ "`\n" ++ str ++ "`",
                 source,
               );
 
+            // the only way to emit a template literal for now, using thebs.raw
+            // extension
             Exp.extension((
               {txt: "bs.raw", loc: Location.none},
               PStr([
