@@ -43,12 +43,26 @@ let ret_type_magic = [
   [%stri type t = MT_Ret.t],
 ];
 
+// port of split_on_char from the stdlib because it was only introduced
+// in ocaml 4.04
+let split_on_char = (sep, s) => {
+  let r = ref([]);
+  let j = ref(String.length(s));
+  for (i in String.length(s) - 1 downto 0) {
+    if (String.unsafe_get(s, i) == sep) {
+      r := [String.sub(s, i + 1, j^ - i - 1), ...r^];
+      j := i;
+    };
+  };
+  [String.sub(s, 0, j^), ...r^];
+};
+
 let pretty_print = (query: string): string => {
   let indent = ref(1);
 
   let str =
     query
-    |> String.split_on_char('\n')
+    |> split_on_char('\n')
     |> List.map(l => String.trim(l))
     |> List.filter(l => l != "")
     |> List.map(line => {
