@@ -29,7 +29,7 @@ jobs:
         run: |
           esy install
           esy b
-          esy B dune runtest -f
+          esy dune runtest -f
 
       # OCaml 4.02 and BuckleScript 5
       - name: bucklescript5
