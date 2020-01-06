@@ -1,6 +1,7 @@
-##################################################
+################################################################################
 # Dockerfile used for building linux/alpine binary
-##################################################
+# taken from https://github.com/anmonteiro/gh-feed-reader/blob/master/Dockerfile
+################################################################################
 
 # start from node image so we can install esy from npm
 FROM node:12-alpine as build

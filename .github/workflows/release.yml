@@ -14,8 +14,10 @@ jobs:
         node-version: [12.x]
         os: [ubuntu-latest]
 
+    container:
+      image: cichocinski/node-with-esy:12-alpine
+
     steps:
-      - uses: docker://node:12.6-alpine
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -28,7 +30,7 @@ jobs:
       - name: install-build
         run: |
           esy install
-          esy b
+          esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-native
         run: |
           esy b dune runtest -f
@@ -45,7 +47,7 @@ jobs:
       - name: install-build @402
         run: |
           esy @402 install
-          esy @402 b
+          esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb5
         run: |
           cd tests_bucklescript

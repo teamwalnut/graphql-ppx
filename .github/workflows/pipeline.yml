@@ -32,7 +32,6 @@ jobs:
         # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
-          apk --version 
           esy install 
           esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-native
@@ -45,7 +44,6 @@ jobs:
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
         run: |
-          apk --version 
           esy @402 install
           esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb5
