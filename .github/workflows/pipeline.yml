@@ -31,7 +31,7 @@ jobs:
       - name: install-build
         run: |
           esy install 
-          esy b
+          esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-native
         run: |
           esy b dune runtest -f
@@ -43,7 +43,7 @@ jobs:
       - name: install-build @402
         run: |
           esy @402 install
-          esy @402 b
+          esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb5
         run: |
           cd tests_bucklescript
