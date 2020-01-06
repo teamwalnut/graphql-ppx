@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-latest]
 
     container:
-      image: node:12.6-alpine
+      image: cichocinski/node-with-esy:12-alpine
 
     steps:
       - uses: actions/checkout@v1
@@ -28,7 +28,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: setup
         run: |
-          npm install -g esy@latest cross-env
+          npm install -g cross-env
         # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
