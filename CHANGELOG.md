@@ -1,4 +1,4 @@
-## [0.4.7](https://github.com/baransu/graphql_ppx_re/compare/v0.4.6...v0.4.7) (2019-12-04)
+## [0.4.8](https://github.com/baransu/graphql_ppx_re/compare/v0.4.6...v0.4.8) (2020-01-06)
 
 ### Bug Fixes
 
