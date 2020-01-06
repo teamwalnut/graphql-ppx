@@ -30,7 +30,7 @@ jobs:
       - uses: docker://node:12.6-alpine
       - name: install-build
         run: |
-          cat /etc/alpine-release 
+          apk --version 
           esy install 
           esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-native
@@ -44,7 +44,7 @@ jobs:
       - uses: docker://node:12.6-alpine
       - name: install-build @402
         run: |
-          cat /etc/alpine-release 
+          apk --version 
           esy @402 install
           esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb5
