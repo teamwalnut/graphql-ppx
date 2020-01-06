@@ -1,6 +1,6 @@
 {
   "name": "@baransu/graphql_ppx_re",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "GraphQL PPX rewriter for Bucklescript/ReasonML",
   "repository": "https://github.com/baransu/graphql_ppx_re",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
