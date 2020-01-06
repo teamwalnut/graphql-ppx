@@ -10,7 +10,7 @@ on:
 
 jobs:
   test_and_build_alpine:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }} with alpine Docker
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
