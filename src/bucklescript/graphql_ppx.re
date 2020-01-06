@@ -203,14 +203,13 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                let maybe_schema = extract_schema_from_config(fields);
                 rewrite_query(
-                  ~schema=?maybe_schema,
+                  ~schema=?extract_schema_from_config(fields),
                   ~loc=conv_loc_from_ast(loc),
                   ~delim,
                   ~query,
                   (),
-                );
+                )
               | PStr([
                   {
                     pstr_desc:
@@ -250,27 +249,6 @@ let mapper = (_config, _cookies) => {
   );
 };
 
-let reset_args = () =>
-  Ppx_config.(
-    set_config({
-      verbose_logging: false,
-      output_mode: Ppx_config.String,
-      verbose_error_handling:
-        switch (Sys.getenv("NODE_ENV")) {
-        | "production" => false
-        | _ => true
-        | exception Not_found => true
-        },
-      apollo_mode: false,
-      schema_file: "graphql_schema.json",
-      root_directory: Sys.getcwd(),
-      raise_error_with_loc: (loc, message) => {
-        let loc = conv_loc(loc);
-        raise(Location.Error(Location.error(~loc, message)));
-      },
-    })
-  );
-
 let args = [
   (
     "-verbose",
@@ -280,15 +258,15 @@ let args = [
           {...current, verbose_logging: true}
         ),
     ),
-    "Defines if loggin should be verbose or not",
+    "Defines if logging should be verbose or not",
   ),
   (
     "-apollo-mode",
-    Arg.Bool(
-      apollo_mode =>
-        Ppx_config.update_config(current => {...current, apollo_mode}),
+    Arg.Unit(
+      () =>
+        Ppx_config.update_config(current => {...current, apollo_mode: true}),
     ),
-    "<true|false> Defines if apply Apollo specific code generation",
+    "Defines if apply Apollo specific code generation",
   ),
   (
     "-schema",
@@ -324,10 +302,6 @@ let args = [
 ];
 
 let () =
-  Migrate_parsetree.Driver.register(
-    ~name="graphql",
-    ~reset_args,
-    ~args,
-    Migrate_parsetree.Versions.ocaml_406,
-    mapper,
+  Migrate_parsetree.(
+    Driver.register(~name="graphql", ~args, Versions.ocaml_406, mapper)
   );

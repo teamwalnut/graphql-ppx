@@ -11,8 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.5",
-    "bs-platform": "5.0.6",
-    "cross-env": "^5.2.1",
+    "bs-platform": "~5.2.0",
     "gql-tools": "^0.0.15",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.6.1",
