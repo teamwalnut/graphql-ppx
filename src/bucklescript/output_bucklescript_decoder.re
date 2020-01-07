@@ -20,11 +20,66 @@ let make_error_raiser = message =>
     Js.Exn.raiseError("Unexpected GraphQL query response");
   };
 
-let string_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): string)];
+let string_decoder = loc =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.Json.decodeString(value)) {
+    | None =>
+      %e
+      make_error_raiser(
+        [%expr "Expected string, got " ++ Js.Json.stringify(value)],
+      )
+    | Some(value) => (value: string)
+    }
+  );
+let float_decoder = loc =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.Json.decodeNumber(value)) {
+    | None =>
+      %e
+      make_error_raiser(
+        [%expr "Expected float, got " ++ Js.Json.stringify(value)],
+      )
+    | Some(value) => value
+    }
+  );
+
+let int_decoder = loc =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.Json.decodeNumber(value)) {
+    | None =>
+      %e
+      make_error_raiser(
+        [%expr "Expected int, got " ++ Js.Json.stringify(value)],
+      )
+    | Some(value) => int_of_float(value)
+    }
+  );
+
+let boolean_decoder = loc =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.Json.decodeBoolean(value)) {
+    | None =>
+      %e
+      make_error_raiser(
+        [%expr "Expected boolean, got " ++ Js.Json.stringify(value)],
+      )
+    | Some(value) => value
+    }
+  );
 let id_decoder = string_decoder;
-let float_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): float)];
-let int_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
-let boolean_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): bool)];
+
+let string_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): string)];
+let id_decoder_lean = string_decoder;
+let float_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): float)];
+let int_decoder_lean = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
+let boolean_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): bool)];
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -101,17 +156,30 @@ let generate_error = (loc, message) => {
   Ast_helper.Exp.extension(~loc, ext);
 };
 
+let lean_parse = Ppx_config.lean_parse();
 let rec generate_decoder = config =>
   fun
   | Res_nullable(loc, inner) =>
     generate_nullable_decoder(config, conv_loc(loc), inner)
   | Res_array(loc, inner) =>
-    generate_array_decoder(config, conv_loc(loc), inner)
-  | Res_id(loc) => id_decoder(conv_loc(loc))
-  | Res_string(loc) => string_decoder(conv_loc(loc))
-  | Res_int(loc) => int_decoder(conv_loc(loc))
-  | Res_float(loc) => float_decoder(conv_loc(loc))
-  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
+    lean_parse
+      ? generate_array_decoder_lean(config, conv_loc(loc), inner)
+      : generate_array_decoder(config, conv_loc(loc), inner)
+  | Res_id(loc) =>
+    lean_parse ? id_decoder_lean(conv_loc(loc)) : id_decoder(conv_loc(loc))
+  | Res_string(loc) =>
+    lean_parse
+      ? string_decoder_lean(conv_loc(loc)) : string_decoder(conv_loc(loc))
+  | Res_int(loc) =>
+    lean_parse
+      ? int_decoder_lean(conv_loc(loc)) : int_decoder(conv_loc(loc))
+  | Res_float(loc) =>
+    lean_parse
+      ? float_decoder_lean(conv_loc(loc)) : float_decoder(conv_loc(loc))
+  | Res_boolean(loc) =>
+    lean_parse
+      ? boolean_decoder_lean(conv_loc(loc))
+      : boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
@@ -151,6 +219,17 @@ and generate_nullable_decoder = (config, loc, inner) =>
     }
   )
 and generate_array_decoder = (config, loc, inner) =>
+  [@metaloc loc]
+  [%expr
+    value
+    |> Js.Json.decodeArray
+    |> Js.Option.getExn
+    |> Js.Array.map(value => {
+         %e
+         generate_decoder(config, inner)
+       })
+  ]
+and generate_array_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   [%expr
     Obj.magic(value)
@@ -323,8 +402,9 @@ and generate_object_decoder = (config, loc, name, fields) => {
       );
   [@metaloc loc]
   {
-    let%expr value = Obj.magic(value);
-
+    let%expr value =
+      lean_parse
+        ? Obj.magic(value) : value |> Js.Json.decodeObject |> Js.Option.getExn;
     %e
     Ast_helper.Exp.letmodule(
       {txt: "GQL", loc: Location.none},
@@ -353,7 +433,32 @@ and generate_object_decoder = (config, loc, name, fields) => {
                fun
                | Fr_named_field(key, _, inner) => (
                    Labelled(key),
-                   generate_decoder(config, inner),
+                   lean_parse
+                     ? generate_decoder(config, inner)
+                     : (
+                       switch%expr (
+                         Js.Dict.get(value, [%e const_str_expr(key)])
+                       ) {
+                       | Some(value) =>
+                         %e
+                         generate_decoder(config, inner)
+                       | None =>
+                         if%e (can_be_absent_as_field(inner)) {
+                           %expr
+                           None;
+                         } else {
+                           make_error_raiser(
+                             [%expr
+                               "Field "
+                               ++ [%e const_str_expr(key)]
+                               ++ " on type "
+                               ++ [%e const_str_expr(name)]
+                               ++ " is missing"
+                             ],
+                           );
+                         }
+                       }
+                     ),
                  )
                | Fr_fragment_spread(key, loc, name) => {
                    let loc = conv_loc(loc);
