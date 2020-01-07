@@ -11,6 +11,8 @@ open Output_bucklescript_utils;
 
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
+let lean_parse = () => Ppx_config.lean_parse();
+
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
@@ -74,7 +76,7 @@ let id_decoder = string_decoder;
 
 let string_decoder_lean = loc =>
   [@metaloc loc] [%expr (Obj.magic(value): string)];
-let id_decoder_lean = string_decoder;
+let id_decoder_lean = string_decoder_lean;
 let float_decoder_lean = loc =>
   [@metaloc loc] [%expr (Obj.magic(value): float)];
 let int_decoder_lean = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
@@ -156,28 +158,30 @@ let generate_error = (loc, message) => {
   Ast_helper.Exp.extension(~loc, ext);
 };
 
-let lean_parse = Ppx_config.lean_parse();
 let rec generate_decoder = config =>
   fun
   | Res_nullable(loc, inner) =>
-    generate_nullable_decoder(config, conv_loc(loc), inner)
+    lean_parse()
+      ? generate_nullable_decoder_lean(config, conv_loc(loc), inner)
+      : generate_nullable_decoder(config, conv_loc(loc), inner)
   | Res_array(loc, inner) =>
-    lean_parse
+    lean_parse()
       ? generate_array_decoder_lean(config, conv_loc(loc), inner)
       : generate_array_decoder(config, conv_loc(loc), inner)
   | Res_id(loc) =>
-    lean_parse ? id_decoder_lean(conv_loc(loc)) : id_decoder(conv_loc(loc))
+    lean_parse()
+      ? id_decoder_lean(conv_loc(loc)) : id_decoder(conv_loc(loc))
   | Res_string(loc) =>
-    lean_parse
+    lean_parse()
       ? string_decoder_lean(conv_loc(loc)) : string_decoder(conv_loc(loc))
   | Res_int(loc) =>
-    lean_parse
+    lean_parse()
       ? int_decoder_lean(conv_loc(loc)) : int_decoder(conv_loc(loc))
   | Res_float(loc) =>
-    lean_parse
+    lean_parse()
       ? float_decoder_lean(conv_loc(loc)) : float_decoder(conv_loc(loc))
   | Res_boolean(loc) =>
-    lean_parse
+    lean_parse()
       ? boolean_decoder_lean(conv_loc(loc))
       : boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
@@ -210,12 +214,20 @@ let rec generate_decoder = config =>
   | Res_solo_fragment_spread(loc, name) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
-and generate_nullable_decoder = (config, loc, inner) =>
+and generate_nullable_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   (
     switch%expr (Js.Nullable.isNullable(value)) {
     | false => Some([%e generate_decoder(config, inner)])
     | true => None
+    }
+  )
+and generate_nullable_decoder = (config, loc, inner) =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.Json.decodeNull(value)) {
+    | None => Some([%e generate_decoder(config, inner)])
+    | Some(_) => None
     }
   )
 and generate_array_decoder = (config, loc, inner) =>
@@ -379,33 +391,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
          )
        );
 
-  let rec make_obj_constructor_fn = i =>
-    fun
-    | [] =>
-      Ast_helper.Typ.arrow(
-        Nolabel,
-        Ast_helper.Typ.constr(
-          {txt: Longident.Lident("unit"), loc: Location.none},
-          [],
-        ),
-        Ast_helper.Typ.constr(
-          {txt: Longident.parse("Js.t"), loc: Location.none},
-          [Ast_helper.Typ.object_(ctor_result_type, Closed)],
-        ),
-      )
-    | [Fr_fragment_spread(key, _, _), ...next]
-    | [Fr_named_field(key, _, _), ...next] =>
-      Ast_helper.Typ.arrow(
-        Labelled(key),
-        Ast_helper.Typ.var("a" ++ string_of_int(i)),
-        make_obj_constructor_fn(i + 1, next),
-      );
-  [@metaloc loc]
-  {
-    let%expr value =
-      lean_parse
-        ? Obj.magic(value) : value |> Js.Json.decodeObject |> Js.Option.getExn;
-    %e
+  let rec do_obj_constructor = () => {
     Ast_helper.Exp.letmodule(
       {txt: "GQL", loc: Location.none},
       Ast_helper.Mod.structure([
@@ -433,7 +419,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                fun
                | Fr_named_field(key, _, inner) => (
                    Labelled(key),
-                   lean_parse
+                   lean_parse()
                      ? generate_decoder(config, inner)
                      : (
                        switch%expr (
@@ -484,7 +470,40 @@ and generate_object_decoder = (config, loc, name, fields) => {
         ),
       ),
     );
-  };
+  }
+
+  and obj_constructor = () => {
+    let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+    %e
+    do_obj_constructor();
+  }
+  and obj_constructor_lean = () => {
+    let%expr value = Obj.magic(value);
+    %e
+    do_obj_constructor();
+  }
+  and make_obj_constructor_fn = i =>
+    fun
+    | [] =>
+      Ast_helper.Typ.arrow(
+        Nolabel,
+        Ast_helper.Typ.constr(
+          {txt: Longident.Lident("unit"), loc: Location.none},
+          [],
+        ),
+        Ast_helper.Typ.constr(
+          {txt: Longident.parse("Js.t"), loc: Location.none},
+          [Ast_helper.Typ.object_(ctor_result_type, Closed)],
+        ),
+      )
+    | [Fr_fragment_spread(key, _, _), ...next]
+    | [Fr_named_field(key, _, _), ...next] =>
+      Ast_helper.Typ.arrow(
+        Labelled(key),
+        Ast_helper.Typ.var("a" ++ string_of_int(i)),
+        make_obj_constructor_fn(i + 1, next),
+      );
+  [@metaloc loc] lean_parse() ? obj_constructor_lean() : obj_constructor();
 }
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
