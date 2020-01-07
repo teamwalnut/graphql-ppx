@@ -11,8 +11,7 @@ open Output_bucklescript_utils;
 
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
-// let lean_parse = () => Ppx_config.lean_parse();
-let lean_parse = () => true;
+let lean_parse = () => Ppx_config.lean_parse();
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
