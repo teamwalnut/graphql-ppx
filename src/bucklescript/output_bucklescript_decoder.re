@@ -11,7 +11,8 @@ open Output_bucklescript_utils;
 
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
-let lean_parse = () => Ppx_config.lean_parse();
+// let lean_parse = () => Ppx_config.lean_parse();
+let lean_parse = () => true;
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -217,7 +218,7 @@ let rec generate_decoder = config =>
 and generate_nullable_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   (
-    switch%expr (Js.Nullable.isNullable(value)) {
+    switch%expr ((Obj.magic(value): Js.null('a)) == Js.null) {
     | false => Some([%e generate_decoder(config, inner)])
     | true => None
     }
@@ -419,32 +420,100 @@ and generate_object_decoder = (config, loc, name, fields) => {
                fun
                | Fr_named_field(key, _, inner) => (
                    Labelled(key),
-                   lean_parse()
-                     ? generate_decoder(config, inner)
-                     : (
-                       switch%expr (
-                         Js.Dict.get(value, [%e const_str_expr(key)])
-                       ) {
-                       | Some(value) =>
-                         %e
-                         generate_decoder(config, inner)
-                       | None =>
-                         if%e (can_be_absent_as_field(inner)) {
-                           %expr
-                           None;
-                         } else {
-                           make_error_raiser(
-                             [%expr
-                               "Field "
-                               ++ [%e const_str_expr(key)]
-                               ++ " on type "
-                               ++ [%e const_str_expr(name)]
-                               ++ " is missing"
-                             ],
-                           );
-                         }
-                       }
-                     ),
+                   switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
+                   | Some(value) =>
+                     %e
+                     generate_decoder(config, inner)
+                   | None =>
+                     if%e (can_be_absent_as_field(inner)) {
+                       %expr
+                       None;
+                     } else {
+                       make_error_raiser(
+                         [%expr
+                           "Field "
+                           ++ [%e const_str_expr(key)]
+                           ++ " on type "
+                           ++ [%e const_str_expr(name)]
+                           ++ " is missing"
+                         ],
+                       );
+                     }
+                   },
+                 )
+               | Fr_fragment_spread(key, loc, name) => {
+                   let loc = conv_loc(loc);
+                   (
+                     Labelled(key),
+                     {
+                       let%expr value = Js.Json.object_(value);
+                       %e
+                       generate_solo_fragment_spread(loc, name);
+                     },
+                   );
+                 },
+             ),
+          [
+            (
+              Nolabel,
+              Ast_helper.Exp.construct(
+                {txt: Longident.Lident("()"), loc: Location.none},
+                None,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  and do_obj_constructor_lean = () => {
+    Ast_helper.Exp.letmodule(
+      {txt: "GQL", loc: Location.none},
+      Ast_helper.Mod.structure([
+        Ast_helper.Str.primitive({
+          pval_name: {
+            txt: "make_obj",
+            loc: Location.none,
+          },
+          pval_type: make_obj_constructor_fn(0, fields),
+          pval_prim: [""],
+          pval_attributes: [
+            ({txt: "bs.obj", loc: Location.none}, PStr([])),
+          ],
+          pval_loc: Location.none,
+        }),
+      ]),
+      Ast_helper.Exp.apply(
+        Ast_helper.Exp.ident({
+          txt: Longident.parse("GQL.make_obj"),
+          loc: Location.none,
+        }),
+        List.append(
+          fields
+          |> List.map(
+               fun
+               | Fr_named_field(key, _, inner) => (
+                   Labelled(key),
+                   if (can_be_absent_as_field(inner)) {
+                     switch%expr (
+                       Js.Dict.get(value, [%e const_str_expr(key)])
+                     ) {
+                     | Some(value) =>
+                       %e
+                       generate_decoder(config, inner)
+                     | None => None
+                     };
+                   } else {
+                     let%expr value: 'a =
+                       Obj.magic(
+                         Js.Dict.get(value, [%e const_str_expr(key)]):
+                                                                    option(
+                                                                    'a,
+                                                                    ),
+                       );
+                     %e
+                     generate_decoder(config, inner);
+                   },
                  )
                | Fr_fragment_spread(key, loc, name) => {
                    let loc = conv_loc(loc);
@@ -473,14 +542,16 @@ and generate_object_decoder = (config, loc, name, fields) => {
   }
 
   and obj_constructor = () => {
+    [@metaloc loc]
     let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
     %e
     do_obj_constructor();
   }
   and obj_constructor_lean = () => {
-    let%expr value = Obj.magic(value);
+    [@metaloc loc]
+    let%expr value: Js.Dict.t(Js.Json.t) = Obj.magic(value: Js.Json.t);
     %e
-    do_obj_constructor();
+    do_obj_constructor_lean();
   }
   and make_obj_constructor_fn = i =>
     fun
@@ -503,7 +574,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
         Ast_helper.Typ.var("a" ++ string_of_int(i)),
         make_obj_constructor_fn(i + 1, next),
       );
-  [@metaloc loc] lean_parse() ? obj_constructor_lean() : obj_constructor();
+  lean_parse() ? obj_constructor_lean() : obj_constructor();
 }
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
