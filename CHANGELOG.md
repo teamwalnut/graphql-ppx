@@ -1,3 +1,9 @@
+## [0.4.9](https://github.com/baransu/graphql_ppx_re/compare/v0.4.6...v0.4.9) (2020-01-06)
+
+### Bug Fixes
+
+- ci: build linux binary on alpine with static linking ([9a4f31b](https://github.com/baransu/graphql_ppx_re/commit/9a4f31b76350bf73e108d31a5d6a75dc9a681238))
+
 ## [0.4.1](https://github.com/baransu/graphql_ppx_re/compare/v0.4.0...v0.4.1) (2019-12-04)
 
 ### Bug Fixes
