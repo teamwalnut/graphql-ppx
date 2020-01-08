@@ -505,30 +505,6 @@ and generate_object_decoder = (config, loc, name, fields) => {
                      generate_decoder(config, inner);
                    },
                  )
-               //  | Fr_named_field(key, _, Res_nullable(inner)) => (
-               //      Labelled(key),
-               //      {
-               //        //  if (can_be_absent_as_field(inner)) {
-               //        //    switch%expr (
-               //        //      Js.Dict.get(value, [%e const_str_expr(key)])
-               //        //    ) {
-               //        //    | Some(value) =>
-               //        //      %e
-               //        //      generate_decoder(config, inner)
-               //        //    | None => None
-               //        //    };
-               //        //  } else {
-               //        let%expr value: 'a =
-               //          Obj.magic(
-               //            Js.Dict.get(value, [%e const_str_expr(key)]):
-               //                                                       option(
-               //                                                       'a,
-               //                                                       ),
-               //          );
-               //        %e
-               //        generate_decoder(config, inner);
-               //      },
-               //    )
                | Fr_fragment_spread(key, loc, name) => {
                    let loc = conv_loc(loc);
                    (
