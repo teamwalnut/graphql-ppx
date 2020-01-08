@@ -161,7 +161,7 @@ let extract_template_literal_from_config = config_fields => {
           config_field =>
             switch (config_field) {
             | (
-                {txt: Longident.Lident("templateLiteral"), _},
+                {txt: Longident.Lident("templateTag"), _},
                 {pexp_desc: Pexp_ident({txt: _}), _},
               ) =>
               true
