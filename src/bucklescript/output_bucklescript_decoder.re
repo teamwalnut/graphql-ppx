@@ -217,10 +217,12 @@ let rec generate_decoder = config =>
 and generate_nullable_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   (
-    switch%expr ((Obj.magic(value): Js.null('a)) == Js.null) {
-    | false => Some([%e generate_decoder(config, inner)])
-    | true => None
+    switch%expr (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+    | Some(_) => Some([%e generate_decoder(config, inner)])
+    | None => None
     }
+    // (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.null
+    // || (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.undefined
   )
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
@@ -493,27 +495,40 @@ and generate_object_decoder = (config, loc, name, fields) => {
                fun
                | Fr_named_field(key, _, inner) => (
                    Labelled(key),
-                   if (can_be_absent_as_field(inner)) {
-                     switch%expr (
-                       Js.Dict.get(value, [%e const_str_expr(key)])
-                     ) {
-                     | Some(value) =>
-                       %e
-                       generate_decoder(config, inner)
-                     | None => None
-                     };
-                   } else {
+                   {
                      let%expr value: 'a =
                        Obj.magic(
-                         Js.Dict.get(value, [%e const_str_expr(key)]):
-                                                                    option(
-                                                                    'a,
-                                                                    ),
+                         Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
                        );
+
                      %e
                      generate_decoder(config, inner);
                    },
                  )
+               //  | Fr_named_field(key, _, Res_nullable(inner)) => (
+               //      Labelled(key),
+               //      {
+               //        //  if (can_be_absent_as_field(inner)) {
+               //        //    switch%expr (
+               //        //      Js.Dict.get(value, [%e const_str_expr(key)])
+               //        //    ) {
+               //        //    | Some(value) =>
+               //        //      %e
+               //        //      generate_decoder(config, inner)
+               //        //    | None => None
+               //        //    };
+               //        //  } else {
+               //        let%expr value: 'a =
+               //          Obj.magic(
+               //            Js.Dict.get(value, [%e const_str_expr(key)]):
+               //                                                       option(
+               //                                                       'a,
+               //                                                       ),
+               //          );
+               //        %e
+               //        generate_decoder(config, inner);
+               //      },
+               //    )
                | Fr_fragment_spread(key, loc, name) => {
                    let loc = conv_loc(loc);
                    (
