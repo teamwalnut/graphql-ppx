@@ -1,4 +1,5 @@
 {
+  "name": "graphql_ppx",
   "dependencies": {
     "@opam/dune": "*",
     "@opam/result": "*",
@@ -17,7 +18,7 @@
     "ocaml": ">= 4.6.0"
   },
   "esy": {
-    "build": "refmterr dune build -p graphql_ppx",
+    "build": [["dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }

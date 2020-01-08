@@ -6,13 +6,67 @@ on:
       - v*
 
 jobs:
+  test_and_build_alpine:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }} with alpine Docker
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest]
+
+    container:
+      image: cichocinski/node-with-esy:12-alpine
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: setup
+        run: |
+          npm install -g cross-env
+      # OCaml 4.06 and BuckleScript 6
+      - name: install-build
+        run: |
+          esy install
+          esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
+      - name: test-native
+        run: |
+          esy b dune runtest -f
+      - name: test-bsb6
+        run: |
+          cd tests_bucklescript
+          node ./run.js bsb6
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-bsb6
+          path: _build/default/src/bucklescript_bin/bin.exe
+      # OCaml 4.02 and BuckleScript 5
+      - name: install-build @402
+        run: |
+          esy @402 install
+          esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
+      - name: test-bsb5
+        run: |
+          cd tests_bucklescript
+          node ./run.js bsb5
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}
+          path: _build/default/src/bucklescript_bin/bin.exe
+        env:
+          CI: true
+
   test_and_build:
     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [12.x]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v1
