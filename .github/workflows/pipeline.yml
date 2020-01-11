@@ -10,7 +10,7 @@ on:
 
 jobs:
   test_and_build_linux:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }} in alpine Docker
+    name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }} in alpine Docker
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -90,7 +90,7 @@ jobs:
           path: _build/default/src/bucklescript_bin/bin.exe
 
   test_and_build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
