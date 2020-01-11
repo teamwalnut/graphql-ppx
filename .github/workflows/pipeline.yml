@@ -167,7 +167,7 @@ jobs:
   publish:
     needs: test_and_build
     if: github.event_name != 'pull_request'
-    name: Publish
+    name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -176,28 +176,28 @@ jobs:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Download linux artifacts
+      - name: (only on release) Download linux artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: ubuntu-latest
           path: binaries/linux
 
-      - name: Download macOS artifacts
+      - name: (only on release) Download macOS artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: macOS-latest
           path: binaries/darwin
 
-      - name: Download windows artifacts
+      - name: (only on release) Download windows artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: windows-latest
           path: binaries/windows
 
-      - name: Move artifacts
+      - name: (only on release) Move artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         run: |
           mkdir -p bin/bsb6
@@ -206,35 +206,35 @@ jobs:
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
           rm -rf binaries
 
-      - name: Download bsb6 linux artifacts
+      - name: (only on release) Download bsb6 linux artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: ubuntu-latest-bsb6
           path: binaries/linux
 
-      - name: Download bsb6 macOS artifacts
+      - name: (only on release) Download bsb6 macOS artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: macOS-latest-bsb6
           path: binaries/darwin
 
-      - name: Download bsb6 windows artifacts
+      - name: (only on release) Download bsb6 windows artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         uses: actions/download-artifact@master
         with:
           name: windows-latest-bsb6
           path: binaries/windows
 
-      - name: Move artifacts
+      - name: (only on release) Move bsb artifacts
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         run: |
           mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
-      - name: Publish
+      - name: (only on release) Publish
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
         run: npm publish
         env:
