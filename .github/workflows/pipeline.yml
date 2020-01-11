@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-latest]
 
     container:
-      image: cichocinski/node-with-esy:12-alpine
+      image: cichocinski/docker-esy:alpine3.8
 
     steps:
       - uses: actions/checkout@v1
