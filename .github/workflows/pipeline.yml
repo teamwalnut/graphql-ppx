@@ -1,16 +1,10 @@
 name: graphql_ppx_re pipeline
 
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches-ignore:
-      - master
+on: [push, pull_request]
 
 jobs:
-  test_and_build_alpine:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }} with alpine Docker
+  test_and_build_linux:
+    name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,7 +12,8 @@ jobs:
         os: [ubuntu-latest]
 
     container:
-      image: cichocinski/node-with-esy:12-alpine
+      # https://github.com/baransu/docker-esy
+      image: cichocinski/docker-esy:alpine3.8
 
     steps:
       - uses: actions/checkout@v1
@@ -27,11 +22,33 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Get esy store path
+        id: esy_cache_path
+        shell: bash
+        run: |
+          # COMPUTE THE ESY INSTALL CACHE LOCATION AHEAD OF TIME
+          DESIRED_LEN="86"
+          HOME_ESY3="$HOME/.esy/3"
+          HOME_ESY3_LEN=${#HOME_ESY3}
+          NUM_UNDERS=$(echo "$(($DESIRED_LEN-$HOME_ESY3_LEN))")
+          UNDERS=$(printf "%-${NUM_UNDERS}s" "_")
+          UNDERS="${UNDERS// /_}"
+          THE_ESY__CACHE_INSTALL_PATH=${HOME_ESY3}${UNDERS}/i  
+          echo "THE_ESY__CACHE_INSTALL_PATH: $THE_ESY__CACHE_INSTALL_PATH"
+          echo "##[set-output name=path;]$THE_ESY__CACHE_INSTALL_PATH"
+      - name: Restore esy cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.esy_cache_path.outputs.path }}
+          key: v1-esy-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            v1-esy-${{ matrix.os }}-
+
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
           esy install 
-          esy dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
+          esy dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
       - name: test-native
         run: |
           esy b dune runtest -f
@@ -39,26 +56,35 @@ jobs:
         run: |
           cd tests_bucklescript
           node ./run.js bsb6
+        env:
+          CI: true
+      - name: (only on release) Upload artifacts ${{ matrix.os }}
+        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-bsb6
+          path: _build/default/src/bucklescript_bin/bin.exe
 
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
         run: |
           esy @402 install
-          esy @402 dune build --root . --only-packages graphql_ppx --ignore-promoted-rules --no-config --profile release-static
+          esy @402 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb5
         run: |
           cd tests_bucklescript
           node ./run.js bsb5
-      - name: Upload artifacts ${{ matrix.os }}
+        env:
+          CI: true
+      - name: (only on release) Upload artifacts ${{ matrix.os }}
+        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
           path: _build/default/src/bucklescript_bin/bin.exe
-        env:
-          CI: true
 
   test_and_build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -71,9 +97,36 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: setup
+      - name: Install esy
         run: |
           npm install -g esy@latest
+
+      - name: Get esy store path
+        id: esy_cache_path
+        shell: bash
+        run: |
+          # COMPUTE THE ESY INSTALL CACHE LOCATION AHEAD OF TIME
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            THE_ESY__CACHE_INSTALL_PATH=$HOME/.esy/3_/i
+            THE_ESY__CACHE_INSTALL_PATH=$( cygpath --mixed --absolute "$THE_ESY__CACHE_INSTALL_PATH")
+          else
+            DESIRED_LEN="86"
+            HOME_ESY3="$HOME/.esy/3"
+            HOME_ESY3_LEN=${#HOME_ESY3}
+            NUM_UNDERS=$(echo "$(($DESIRED_LEN-$HOME_ESY3_LEN))")
+            UNDERS=$(printf "%-${NUM_UNDERS}s" "_")
+            UNDERS="${UNDERS// /_}"
+            THE_ESY__CACHE_INSTALL_PATH=${HOME_ESY3}${UNDERS}/i  
+          fi
+          echo "THE_ESY__CACHE_INSTALL_PATH: $THE_ESY__CACHE_INSTALL_PATH"
+          echo "##[set-output name=path;]$THE_ESY__CACHE_INSTALL_PATH"
+      - name: Restore esy cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.esy_cache_path.outputs.path }}
+          key: v1-esy-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          restore-keys: |
+            v1-esy-${{ matrix.os }}-
 
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
@@ -87,6 +140,12 @@ jobs:
         run: |
           cd tests_bucklescript
           node ./run.js bsb6
+      - name: (only on release) Upload artifacts ${{ matrix.os }}
+        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-bsb6
+          path: _build/default/src/bucklescript_bin/bin.exe
 
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
@@ -99,3 +158,85 @@ jobs:
           node ./run.js bsb5
         env:
           CI: true
+      - name: (only on release) Upload artifacts ${{ matrix.os }}
+        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}
+          path: _build/default/src/bucklescript_bin/bin.exe
+
+  publish:
+    needs: test_and_build
+    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
+    name: (only on release) Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download linux artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest
+          path: binaries/linux
+
+      - name: Download macOS artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest
+          path: binaries/darwin
+
+      - name: Download windows artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest
+          path: binaries/windows
+
+      - name: Move artifacts
+        if: success()
+        run: |
+          mkdir -p bin/bsb6
+          mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
+          rm -rf binaries
+
+      - name: Download bsb6 linux artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest-bsb6
+          path: binaries/linux
+
+      - name: Download bsb6 macOS artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest-bsb6
+          path: binaries/darwin
+
+      - name: Download bsb6 windows artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-bsb6
+          path: binaries/windows
+
+      - name: Move bsb artifacts
+        if: success()
+        run: |
+          mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
+
+      - name: Publish
+        if: success()
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
