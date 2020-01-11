@@ -166,7 +166,7 @@ jobs:
 
   publish:
     needs: test_and_build
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
     name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
@@ -176,29 +176,29 @@ jobs:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
 
-      - name: (only on release) Download linux artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Download linux artifacts
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: ubuntu-latest
           path: binaries/linux
 
-      - name: (only on release) Download macOS artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Download macOS artifacts
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: macOS-latest
           path: binaries/darwin
 
-      - name: (only on release) Download windows artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Download windows artifacts
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: windows-latest
           path: binaries/windows
 
-      - name: (only on release) Move artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Move artifacts
+        if: success()
         run: |
           mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
@@ -206,15 +206,15 @@ jobs:
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
           rm -rf binaries
 
-      - name: (only on release) Download bsb6 linux artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Download bsb6 linux artifacts
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: ubuntu-latest-bsb6
           path: binaries/linux
 
-      - name: (only on release) Download bsb6 macOS artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      - name: Download bsb6 macOS artifacts
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: macOS-latest-bsb6
