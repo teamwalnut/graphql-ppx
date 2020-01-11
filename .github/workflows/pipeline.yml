@@ -21,9 +21,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install required dependencies
-        run: |
-          npm install -g cross-env
 
       - name: Get esy store path
         id: esy_cache_path
@@ -98,9 +95,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
+      - name: Install esy
         run: |
-          npm install -g esy@latest cross-env
+          npm install -g esy@latest
 
       - name: Get esy store path
         id: esy_cache_path
@@ -221,21 +218,21 @@ jobs:
           path: binaries/darwin
 
       - name: (only on release) Download bsb6 windows artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+        if: success()
         uses: actions/download-artifact@master
         with:
           name: windows-latest-bsb6
           path: binaries/windows
 
       - name: (only on release) Move bsb artifacts
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+        if: success()
         run: |
           mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: (only on release) Publish
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+        if: success()
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

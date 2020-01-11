@@ -16,6 +16,8 @@ let config_ref = ref(None);
 
 let set_config = config => config_ref := Some(config);
 
+let update_config = update => config_ref := config_ref^ |> Option.map(update);
+
 let verbose_logging = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_logging;
 
