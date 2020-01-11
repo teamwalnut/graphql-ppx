@@ -51,7 +51,7 @@ jobs:
           key: v1-esy-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
             v1-esy-${{ matrix.os }}-
-          
+
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
@@ -146,7 +146,7 @@ jobs:
         run: |
           cd tests_bucklescript
           node ./run.js bsb6
-     - name: Upload artifacts ${{ matrix.os }}
+      - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}-bsb6
