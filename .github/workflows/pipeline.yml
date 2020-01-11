@@ -26,10 +26,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: setup
-        run: |
-          npm install -g cross-env
-        # OCaml 4.06 and BuckleScript 6
+
+      # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
           esy install 
@@ -41,6 +39,7 @@ jobs:
         run: |
           cd tests_bucklescript
           node ./run.js bsb6
+
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
         run: |
@@ -74,7 +73,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: setup
         run: |
-          npm install -g esy@latest cross-env
+          npm install -g esy@latest
+
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
@@ -87,6 +87,7 @@ jobs:
         run: |
           cd tests_bucklescript
           node ./run.js bsb6
+
       # OCaml 4.02 and BuckleScript 5
       - name: install-build @402
         run: |
