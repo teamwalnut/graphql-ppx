@@ -1,3 +1,10 @@
+## [0.5.0](https://github.com/baransu/graphql_ppx_re/compare/v0.4.9...v0.5.0) (2020-01-11)
+
+### Features
+
+- Support configuration via ppx-flags, drop env based one ([3ed986e](https://github.com/baransu/graphql_ppx_re/commit/3ed986e7cf020e751ce93a46896f45c33e52c860))
+- Move pipeline to one file, add esy cache ([b9517da9](https://github.com/baransu/graphql_ppx_re/commit/b9517da9d74e8e90b83808b6dfcc520f97fca7ea))
+
 ## [0.4.9](https://github.com/baransu/graphql_ppx_re/compare/v0.4.6...v0.4.9) (2020-01-06)
 
 ### Bug Fixes
