@@ -167,7 +167,7 @@ let () =
         let loc = conv_loc(loc);
         raise(Location.Error(Location.error(~loc, message)));
       },
-      lean_parse: false,
+      lean_parse: true,
     })
   );
 
