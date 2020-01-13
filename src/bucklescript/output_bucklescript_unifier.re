@@ -14,11 +14,7 @@ exception Unimplemented(string);
 
 let make_make_fun = (config, variable_defs) => {
   let make_tuple = (_loc, _variables, compose) => [%expr
-    (
-      parse,
-      ppx_printed_query,
-      graphql_ppx_use_json_variables_fn => [%e compose],
-    )
+    (parse, query, graphql_ppx_use_json_variables_fn => [%e compose])
   ];
 
   let make_make_triple = (loc, variables) =>
@@ -27,10 +23,7 @@ let make_make_fun = (config, variable_defs) => {
       (
         {txt: "bs.obj", loc},
         PStr([
-          [@metaloc loc]
-          [%stri
-            {query: ppx_printed_query, variables: [%e variables], parse}
-          ],
+          [@metaloc loc] [%stri {query, variables: [%e variables], parse}],
         ]),
       ),
     );
