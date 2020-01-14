@@ -144,6 +144,43 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   };
 };
 
+let generate_poly_enum_decoder_lean = (loc, enum_meta) => {
+  let enum_match_arms =
+    Ast_helper.(
+      enum_meta.em_values
+      |> List.mapi((i, {evm_name, _}) =>
+           if (i == List.length(enum_meta.em_values) - 1) {
+             Exp.case(Pat.any(), Exp.variant(evm_name, None));
+           } else {
+             Exp.case(
+               Pat.constant(Pconst_string(evm_name, None)),
+               Exp.variant(evm_name, None),
+             );
+           }
+         )
+    );
+
+  let result =
+    Ast_helper.(
+      Exp.constraint_(
+        Exp.match([%expr (Obj.magic(value): string)], enum_match_arms),
+        Typ.variant(
+          enum_meta.em_values
+          |> List.map(({evm_name, _}) =>
+               Rtag({txt: evm_name, loc}, [], true, [])
+             ),
+          Closed,
+          None,
+        ),
+      )
+    );
+
+  [@metaloc loc]
+  let%expr value: string = Obj.magic(value);
+  %e
+  result;
+};
+
 let generate_solo_fragment_spread = (loc, name) => {
   let ident =
     Ast_helper.Exp.ident({loc, txt: Longident.parse(name ++ ".parse")});
@@ -186,7 +223,9 @@ let rec generate_decoder = config =>
       : boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(conv_loc(loc), enum_meta)
+    lean_parse()
+      ? generate_poly_enum_decoder_lean(conv_loc(loc), enum_meta)
+      : generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
   | Res_record(loc, name, fields) =>
