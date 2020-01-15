@@ -260,8 +260,6 @@ and generate_nullable_decoder_lean = (config, loc, inner) =>
     | Some(_) => Some([%e generate_decoder(config, inner)])
     | None => None
     }
-    // (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.null
-    // || (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.undefined
   )
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
