@@ -1,24 +1,58 @@
-// function that generate types. It will output a nested list type descriptions,
-// (probably as variants with parameters), later be flattened and converted to
-// an ast of combined type definitions
+open Graphql_ppx_base;
+open Result_structure;
+open Extract_type_definitions;
 
-// thing to note.. we need to capture the "path" for naming
-let rec generate_types = config =>
+let generate_name = (name, path) => {
+  List.fold_right((item, acc) => item ++ acc, [name, ...path], "");
+};
+
+let base_type = name => {
+  Ast_helper.Typ.constr(
+    {Location.txt: Longident.Lident(name), loc: Location.none},
+    [],
+  );
+};
+
+// generate the type definition, including nullables, arrays etc.
+let generate_type =
   fun
-  | Res_nullable(loc, inner) => [generate_types(inner)]
-  | Res_array(loc, inner) => [generate_types(inner)]
-  | Res_poly_enum(loc, enum_meta) => []
-  | Res_record(loc, name, fields) => []
-  | Res_object(loc, name, fields) => []
-  | Res_poly_variant_selection_set(loc, name, fields) => []
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) => []
-  | Res_poly_variant_interface(loc, name, base, fragments) => []
-  | Res_solo_fragment_spread(loc, name) => []
-  | Res_error(loc, message) => []
-  | Res_id(loc) => []
-  | Res_string(loc) => []
-  | Res_int(loc) => []
-  | Res_float(loc) => []
-  | Res_boolean(loc) => []
-  | Res_raw_scalar(_) => []
-  | Res_custom_decoder(loc, ident, inner) => [];
+  | Res_string(loc) => base_type("string");
+
+// generate all the types:
+let generate_types = (path, res) => {
+  extract([], res)
+  |> List.map(
+       fun
+       | Object({fields, name, path}) =>
+         Ast_helper.Type.mk(
+           ~kind=
+             Ptype_record(
+               fields
+               |> List.map(
+                    fun
+                    | Fragment({module_name}) =>
+                      Ast_helper.Type.field(
+                        {
+                          Location.txt: "fragment_" ++ module_name,
+                          loc: Location.none,
+                        },
+                        Ast_helper.Typ.constr(
+                          {
+                            Location.txt: Longident.parse(module_name ++ ".t"),
+                            loc: Location.none,
+                          },
+                          [],
+                        ),
+                      )
+
+                    | Field({name, type_}) =>
+                      Ast_helper.Type.field(
+                        {Location.txt: name, loc: Location.none},
+                        generate_type(type_),
+                      ),
+                  ),
+             ),
+           {loc: Location.none, txt: generate_name(name, path)},
+         ),
+     );
+};
