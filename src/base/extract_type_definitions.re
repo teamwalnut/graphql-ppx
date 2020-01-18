@@ -2,15 +2,14 @@ open Result_structure;
 
 type object_field =
   | Field({
-      name: string,
       type_: Result_structure.t,
+      path: list(string),
     })
   | Fragment({module_name: string});
 
 type type_def =
   | Object({
       path: list(string),
-      name: string,
       fields: list(object_field),
     });
 
@@ -21,30 +20,35 @@ let rec extract = path =>
   fun
   | Res_nullable(loc, inner) => extract(path, inner)
   | Res_array(loc, inner) => extract(path, inner)
-  | Res_object(loc, name, fields)
-  | Res_record(loc, name, fields) => [
-      Object({
-        name,
-        path,
-        fields:
-          fields
-          |> List.map(
-               fun
-               | Fr_named_field(name, _loc, type_) => Field({name, type_})
-               | Fr_fragment_spread(_key, _loc, name) =>
-                 Fragment({module_name: name}),
-             ),
-      }),
-      ...fields
-         |> List.fold_left(
-              acc =>
-                fun
-                | Fr_named_field(name, _loc, type_) =>
-                  List.append(extract([name, ...path], type_), acc)
-                | Fr_fragment_spread(_key, _loc, _name) => acc,
-              [],
-            ),
-    ]
+  | Res_object(loc, obj_name, fields)
+  | Res_record(loc, obj_name, fields) => {
+      [
+        Object({
+          path: List.length(path) == 0 ? [obj_name] : path,
+          fields:
+            fields
+            |> List.map(
+                 fun
+                 | Fr_named_field(name, _loc, type_) =>
+                   Field({path: [name ++ "BB", ...path], type_})
+                 | Fr_fragment_spread(_key, _loc, name) =>
+                   Fragment({module_name: name}),
+               ),
+        }),
+        ...fields
+           |> List.fold_left(
+                acc =>
+                  fun
+                  | Fr_named_field(name, _loc, type_) =>
+                    List.append(
+                      extract([name ++ "EE", ...path], type_),
+                      acc,
+                    )
+                  | Fr_fragment_spread(_key, _loc, _name) => acc,
+                [],
+              ),
+      ];
+    }
   | Res_poly_variant_selection_set(loc, name, fields) => []
   | Res_poly_variant_union(loc, name, fragments, exhaustive) => []
   | Res_poly_variant_interface(loc, name, base, fragments) => []

@@ -4,8 +4,14 @@ open Extract_type_definitions;
 open Source_pos;
 open Output_bucklescript_utils;
 
-let generate_name = (name, path) => {
-  List.fold_right((item, acc) => item ++ "_" ++ acc, [name, ...path], "");
+let generate_name = path => {
+  path
+  |> List.rev
+  |> List.fold_left(
+       (acc, item) => (acc == "" ? "" : acc ++ "_") ++ item,
+       "",
+     )
+  |> String.lowercase_ascii;
 };
 
 let base_type = name => {
@@ -38,7 +44,7 @@ let rec generate_type = path =>
   | Res_float(loc) => base_type("float")
   | Res_boolean(loc) => base_type("bool")
   | Res_object(_loc, name, _fields)
-  | Res_record(_loc, name, _fields) => base_type(generate_name(name, path))
+  | Res_record(_loc, name, _fields) => base_type(generate_name(path))
   | Res_poly_variant_selection_set(loc, _, _)
   | Res_poly_variant_union(loc, _, _, _)
   | Res_poly_variant_interface(loc, _, _, _)
@@ -59,7 +65,7 @@ let generate_types = (path, res) => {
     extract([], res)
     |> List.map(
          fun
-         | Object({fields, name, path}) =>
+         | Object({fields, path: obj_path}) =>
            Ast_helper.Type.mk(
              ~kind=
                Ptype_record(
@@ -81,15 +87,14 @@ let generate_types = (path, res) => {
                             [],
                           ),
                         )
-
-                      | Field({name, type_}) =>
+                      | Field({path: [name, ...path], type_}) =>
                         Ast_helper.Type.field(
                           {Location.txt: name, loc: Location.none},
-                          generate_type(path, type_),
+                          generate_type([name, ...path], type_),
                         ),
                     ),
                ),
-             {loc: Location.none, txt: generate_name(name, path)},
+             {loc: Location.none, txt: generate_name(obj_path)},
            ),
        );
 
