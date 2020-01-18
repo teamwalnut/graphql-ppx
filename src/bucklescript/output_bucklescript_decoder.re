@@ -468,66 +468,94 @@ and generate_object_decoder = (config, loc, name, fields) => {
     );
   }
   and do_obj_constructor_lean = () => {
-    Ast_helper.Exp.letmodule(
-      {txt: "GQL", loc: Location.none},
-      Ast_helper.Mod.structure([
-        Ast_helper.Str.primitive({
-          pval_name: {
-            txt: "make_obj",
-            loc: Location.none,
-          },
-          pval_type: make_obj_constructor_fn(0, fields),
-          pval_prim: [""],
-          pval_attributes: [
-            ({txt: "bs.obj", loc: Location.none}, PStr([])),
-          ],
-          pval_loc: Location.none,
-        }),
-      ]),
-      Ast_helper.Exp.apply(
-        Ast_helper.Exp.ident({
-          txt: Longident.parse("GQL.make_obj"),
-          loc: Location.none,
-        }),
-        List.append(
-          fields
-          |> List.map(
-               fun
-               | Fr_named_field(key, _, inner) => (
-                   Labelled(key),
-                   {
-                     let%expr value: 'a =
-                       Obj.magic(
-                         Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
-                       );
-
-                     %e
-                     generate_decoder(config, inner);
-                   },
-                 )
-               | Fr_fragment_spread(key, loc, name) => {
-                   let loc = conv_loc(loc);
-                   (
-                     Labelled(key),
-                     {
-                       let%expr value = Js.Json.object_(value);
-                       %e
-                       generate_solo_fragment_spread(loc, name);
-                     },
+    // Ast_helper.Exp.letmodule(
+    //   {txt: "GQL", loc: Location.none},
+    //   Ast_helper.Mod.structure([
+    //     Ast_helper.Str.primitive({
+    //       pval_name: {
+    //         txt: "make_obj",
+    //         loc: Location.none,
+    //       },
+    //       pval_type: make_obj_constructor_fn(0, fields),
+    //       pval_prim: [""],
+    //       pval_attributes: [
+    //         ({txt: "bs.obj", loc: Location.none}, PStr([])),
+    //       ],
+    //       pval_loc: Location.none,
+    //     }),
+    //   ]),
+    //   Ast_helper.Exp.apply(
+    //     Ast_helper.Exp.ident({
+    //       txt: Longident.parse("GQL.make_obj"),
+    //       loc: Location.none,
+    //     }),
+    //     List.append(
+    //       fields
+    //       |> List.map(
+    //            fun
+    //            | Fr_named_field(key, _, inner) => (
+    //                Labelled(key),
+    //                {
+    //                  let%expr value: 'a =
+    //                    Obj.magic(
+    //                      Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
+    //                    );
+    //                  %e
+    //                  generate_decoder(config, inner);
+    //                },
+    //              )
+    //            | Fr_fragment_spread(key, loc, name) => {
+    //                let loc = conv_loc(loc);
+    //                (
+    //                  Labelled(key),
+    //                  {
+    //                    let%expr value = Js.Json.object_(value);
+    //                    %e
+    //                    generate_solo_fragment_spread(loc, name);
+    //                  },
+    //                );
+    //              },
+    //          ),
+    //       [
+    //         (
+    //           Nolabel,
+    //           Ast_helper.Exp.construct(
+    //             {txt: Longident.Lident("()"), loc: Location.none},
+    //             None,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+    Ast_helper.Exp.record(
+      fields
+      |> List.map(
+           fun
+           | Fr_named_field(key, _, inner) => (
+               {Location.txt: Longident.parse(key), loc: Location.none},
+               {
+                 let%expr value =
+                   Js.Dict.unsafeGet(
+                     Obj.magic(value),
+                     [%e const_str_expr(key)],
                    );
-                 },
+
+                 %e
+                 generate_decoder(config, inner);
+               },
              ),
-          [
-            (
-              Nolabel,
-              Ast_helper.Exp.construct(
-                {txt: Longident.Lident("()"), loc: Location.none},
-                None,
-              ),
-            ),
-          ],
-        ),
-      ),
+           //  | Fr_fragment_spread(_key, loc, name) => (
+           //      {
+           //        Location.txt: Longident.parse("fragment_" ++ name),
+           //        loc: Location.none,
+           //      },
+           //      {
+           //       [%expr Obj.magic(value)];
+           //      }
+           //    ),
+         ),
+      None,
     );
   }
   and do_obj_constructor_record = () => {
@@ -803,12 +831,12 @@ and generate_object_decoder = (config, loc, name, fields) => {
     %e
     do_obj_constructor();
   }
-  and obj_constructor_lean = () => {
+  and obj_constructor_lean = () =>
     [@metaloc loc]
-    let%expr value: Js.Dict.t(Js.Json.t) = Obj.magic(value: Js.Json.t);
-    %e
-    do_obj_constructor_lean();
-  }
+    {
+      do_obj_constructor_lean();
+    }
+
   and make_obj_constructor_fn = i =>
     fun
     | [] =>

@@ -4,15 +4,14 @@ open Extract_type_definitions;
 open Source_pos;
 open Output_bucklescript_utils;
 
-let generate_name = path => {
-  path
-  |> List.rev
-  |> List.fold_left(
-       (acc, item) => (acc == "" ? "" : acc ++ "_") ++ item,
-       "",
-     )
-  |> String.lowercase_ascii;
-};
+let generate_name =
+  fun
+  | [] => "t"
+  | path => {
+      path
+      |> List.rev
+      |> List.fold_left((acc, item) => acc ++ "_" ++ item, "t");
+    };
 
 let base_type = name => {
   Ast_helper.Typ.constr(
@@ -62,7 +61,7 @@ let rec generate_type = path =>
 // generate all the types necessary types that we later refer to by name.
 let generate_types = (path, res) => {
   let types =
-    extract([], res)
+    extract(path, res)
     |> List.map(
          fun
          | Object({fields, path: obj_path}) =>
@@ -87,6 +86,7 @@ let generate_types = (path, res) => {
                             [],
                           ),
                         )
+                      // need to raise here on an empty list, but that should never happen
                       | Field({path: [name, ...path], type_}) =>
                         Ast_helper.Type.field(
                           {Location.txt: name, loc: Location.none},

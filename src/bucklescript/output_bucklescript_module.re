@@ -166,7 +166,7 @@ let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let types = Output_bucklescript_types.generate_types([], res_structure);
   if (has_error) {
     [[%stri let parse = value => [%e parse_fn]]];
   } else {
@@ -182,7 +182,8 @@ let generate_default_operation =
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       List.concat([
-        [[%stri let parse = value => [%e parse_fn]]],
+        [types],
+        [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
         if (rec_flag == Recursive) {
           [
             {
@@ -201,14 +202,12 @@ let generate_default_operation =
           |> Array.to_list;
         },
         [
-          types,
           [%stri let make = [%e make_fn]],
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
           [%stri let makeVariables = [%e make_variables_fn]],
           [%stri let definition = [%e definition_tuple]],
         ],
       ]),
-      ret_type_magic,
     ]);
   };
 };

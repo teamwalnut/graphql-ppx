@@ -22,15 +22,17 @@ let rec extract = path =>
   | Res_array(loc, inner) => extract(path, inner)
   | Res_object(loc, obj_name, fields)
   | Res_record(loc, obj_name, fields) => {
+      // let path = List.length(path) == 0 ? [obj_name] : path;
+      let path = path;
       [
         Object({
-          path: List.length(path) == 0 ? [obj_name] : path,
+          path,
           fields:
             fields
             |> List.map(
                  fun
                  | Fr_named_field(name, _loc, type_) =>
-                   Field({path: [name ++ "BB", ...path], type_})
+                   Field({path: [name, ...path], type_})
                  | Fr_fragment_spread(_key, _loc, name) =>
                    Fragment({module_name: name}),
                ),
@@ -40,10 +42,7 @@ let rec extract = path =>
                 acc =>
                   fun
                   | Fr_named_field(name, _loc, type_) =>
-                    List.append(
-                      extract([name ++ "EE", ...path], type_),
-                      acc,
-                    )
+                    List.append(extract([name, ...path], type_), acc)
                   | Fr_fragment_spread(_key, _loc, _name) => acc,
                 [],
               ),
