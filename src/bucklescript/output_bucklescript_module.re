@@ -43,69 +43,52 @@ let ret_type_magic = [
   [%stri type t = MT_Ret.t],
 ];
 
+let join = (part1, part2) => {
+  Ast_helper.(
+    Exp.apply(
+      Exp.ident({Location.txt: Longident.parse("^"), loc: Location.none}),
+      [(Nolabel, part1), (Nolabel, part2)],
+    )
+  );
+};
+
 let emit_printed_query = parts => {
   open Ast_406;
+  let make_string = s => {
+    Exp.constant(Parsetree.Pconst_string(s, None));
+  };
+  let make_fragment_name = f => {
+    Exp.ident({
+      Location.txt: Longident.parse(f ++ ".name"),
+      loc: Location.none,
+    });
+  };
+  let make_fragment_query = f => {
+    Exp.ident({
+      Location.txt: Longident.parse(f ++ ".query"),
+      loc: Location.none,
+    });
+  };
   open Graphql_printer;
-  let generate_expr = acc =>
-    fun
-    | Empty => acc
-    | String(s) =>
-      Ast_helper.(
-        Exp.apply(
-          Exp.ident({
-            Location.txt: Longident.parse("^"),
-            loc: Location.none,
-          }),
-          [
-            (Nolabel, acc),
-            (Nolabel, Exp.constant(Parsetree.Pconst_string(s, None))),
-          ],
-        )
-      )
-    | FragmentNameRef(f) =>
-      Ast_helper.(
-        Exp.apply(
-          Exp.ident({
-            Location.txt: Longident.parse("^"),
-            loc: Location.none,
-          }),
-          [
-            (Nolabel, acc),
-            (
-              Nolabel,
-              Exp.ident({
-                Location.txt: Longident.parse(f ++ ".name"),
-                loc: Location.none,
-              }),
-            ),
-          ],
-        )
-      )
-    | FragmentQueryRef(f) =>
-      Ast_helper.(
-        Exp.apply(
-          Exp.ident({
-            Location.txt: Longident.parse("^"),
-            loc: Location.none,
-          }),
-          [
-            (Nolabel, acc),
-            (
-              Nolabel,
-              Exp.ident({
-                Location.txt: Longident.parse(f ++ ".query"),
-                loc: Location.none,
-              }),
-            ),
-          ],
-        )
-      );
+  let generate_expr = (acc, part) =>
+    switch (acc, part) {
+    | (acc, Empty) => acc
+    | (None, String(s)) => Some(make_string(s))
+    | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
+    | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
+    | (Some(acc), FragmentNameRef(f)) =>
+      Some(join(acc, make_fragment_name(f)))
+    | (None, FragmentQueryRef(f)) => Some(make_fragment_query(f))
+    | (Some(acc), FragmentQueryRef(f)) =>
+      Some(join(acc, make_fragment_query(f)))
+    };
 
-  Array.fold_left(
-    generate_expr,
-    Ast_406.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
-    parts,
-  );
+  let result = parts |> Array.fold_left(generate_expr, None);
+
+  switch (result) {
+  | None => make_string("")
+  | Some(e) => e
+  };
 };
 
 let rec emit_json =
