@@ -10,14 +10,14 @@ type object_field =
   | Fragment({
       module_name: string,
       key: string,
+      type_name: option(string),
     });
 
 type type_def =
   | Object({
       path: list(string),
       fields: list(object_field),
-    })
-  | CustomDecoder({ident: string});
+    });
 
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
@@ -39,8 +39,8 @@ let rec extract = path =>
                  fun
                  | Fr_named_field(name, loc, type_) =>
                    Field({loc, path: [name, ...path], type_})
-                 | Fr_fragment_spread(key, _loc, name) =>
-                   Fragment({module_name: name, key}),
+                 | Fr_fragment_spread(key, _loc, name, type_name) =>
+                   Fragment({module_name: name, key, type_name}),
                ),
         }),
         ...fields
@@ -49,7 +49,7 @@ let rec extract = path =>
                   fun
                   | Fr_named_field(name, _loc, type_) =>
                     List.append(extract([name, ...path], type_), acc)
-                  | Fr_fragment_spread(_key, _loc, _name) => acc,
+                  | Fr_fragment_spread(_key, _loc, _name, _) => acc,
                 [],
               ),
       ];

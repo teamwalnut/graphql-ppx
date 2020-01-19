@@ -344,8 +344,20 @@ and unify_selection = (error_marker, config, ty, selection) =>
     switch (find_directive("bsField", fs_directives)) {
     | None =>
       let key =
-        fs_name.item |> String.split_on_char('.') |> List.rev |> List.hd |> String.uncapitalize_ascii;
-      Fr_fragment_spread(key, config.map_loc(span), fs_name.item);
+        fs_name.item
+        |> String.split_on_char('.')
+        |> List.rev
+        |> List.hd
+        |> String.uncapitalize_ascii;
+      Fr_fragment_spread(
+        key,
+        config.map_loc(span),
+        fs_name.item,
+        switch (ty) {
+        | Object({om_name}) => Some(om_name)
+        | _ => None
+        },
+      );
     | Some({item: {d_arguments, _}, span}) =>
       switch (find_argument("name", d_arguments)) {
       | None =>
@@ -355,7 +367,15 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "bsField must be given 'name' argument",
         )
       | Some((_, {item: Iv_string(key), span})) =>
-        Fr_fragment_spread(key, config.map_loc(span), fs_name.item)
+        Fr_fragment_spread(
+          key,
+          config.map_loc(span),
+          fs_name.item,
+          switch (ty) {
+          | Object({om_name}) => Some(om_name)
+          | _ => None
+          },
+        )
       | Some(_) =>
         raise_error(
           config.map_loc,

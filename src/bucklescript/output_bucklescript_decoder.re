@@ -349,7 +349,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | Fr_fragment_spread(field, loc, name) => {
+           | Fr_fragment_spread(field, loc, name, _) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -386,7 +386,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
   let ctor_result_type =
     fields
     |> List.mapi(
-         (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
+         (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _, _)) =>
          Otag(
            {txt: key, loc},
            [],
@@ -443,7 +443,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                      }
                    },
                  )
-               | Fr_fragment_spread(key, loc, name) => {
+               | Fr_fragment_spread(key, loc, name, _) => {
                    let loc = conv_loc(loc);
                    (
                      Labelled(key),
@@ -546,15 +546,18 @@ and generate_object_decoder = (config, loc, name, fields) => {
                  generate_decoder(config, inner);
                },
              )
-            | Fr_fragment_spread(key, loc, name) => (
-                {
-                  Location.txt: Longident.parse(key),
-                  loc: Location.none,
-                },
-                {
-                 [%expr Obj.magic(value)];
-                }
-              )
+           | Fr_fragment_spread(key, loc, name, _) => (
+               {Location.txt: Longident.parse(key), loc: Location.none},
+               {
+                 let ident =
+                   Ast_helper.Exp.ident({
+                     loc: conv_loc(loc),
+                     txt: Longident.parse(name ++ ".parse"),
+                   });
+                 %expr
+                 [%e ident](value);
+               },
+             ),
          ),
       None,
     );
@@ -588,7 +591,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                 List.mapi(
                   i => {
                     fun
-                    | Fr_fragment_spread(_, _, _)
+                    | Fr_fragment_spread(_, _, _, _)
                     | Fr_named_field(_, _, _) => (
                         Ast_helper.Typ.var(
                           type_name ++ "a" ++ string_of_int(i),
@@ -603,7 +606,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                   List.mapi(
                     i => {
                       fun
-                      | Fr_fragment_spread(key, _, _)
+                      | Fr_fragment_spread(key, _, _, _)
                       | Fr_named_field(key, _, _) =>
                         Ast_helper.Type.field(
                           {Location.txt: key, loc: Location.none},
@@ -707,7 +710,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                   },
                 );
               }
-            | Fr_fragment_spread(key, loc, name) => {
+            | Fr_fragment_spread(key, loc, name, _) => {
                 let loc = conv_loc(loc);
                 (
                   {Location.txt: Longident.parse(key), loc: Location.none},
@@ -728,7 +731,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
           List.mapi(
             i => {
               fun
-              | Fr_fragment_spread(_, _, _)
+              | Fr_fragment_spread(_, _, _, _)
               | Fr_named_field(_, _, _) =>
                 Ast_helper.Typ.var(type_name ++ "a" ++ string_of_int(i))
             },
@@ -852,7 +855,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
           [Ast_helper.Typ.object_(ctor_result_type, Closed)],
         ),
       )
-    | [Fr_fragment_spread(key, _, _), ...next]
+    | [Fr_fragment_spread(key, _, _, _), ...next]
     | [Fr_named_field(key, _, _), ...next] =>
       Ast_helper.Typ.arrow(
         Labelled(key),

@@ -27,22 +27,6 @@ let find_variables = (config, document) => {
   VariableFinderImpl.from_self(VariableFinder.visit_document(ctx, document));
 };
 
-let ret_type_magic = [
-  /* Some functor magic to determine the return type of parse */
-  [%stri module type mt_ret = {type t;}],
-  [%stri type typed_ret('a) = (module mt_ret with type t = 'a)],
-  [%stri
-    let ret_type = (type a, f: _ => a): typed_ret(a) => {
-      module MT_Ret = {
-        type t = a;
-      };
-      (module MT_Ret);
-    }
-  ],
-  [%stri module MT_Ret = (val ret_type(parse))],
-  [%stri type t = MT_Ret.t],
-];
-
 let join = (part1, part2) => {
   Ast_helper.(
     Exp.apply(
@@ -200,6 +184,7 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
+  let types = Output_bucklescript_types.generate_types([], res_structure);
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
@@ -233,14 +218,33 @@ let generate_fragment_module =
       List.concat([
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]),
         [
-          [%stri let parse = value => [%e parse_fn]],
+          types,
+          [%stri type raw_t],
+          Ast_helper.(
+            Str.type_(
+              Recursive,
+              [
+                Type.mk(
+                  ~manifest=
+                    Typ.constr(
+                      {loc: Location.none, txt: Longident.Lident("t")},
+                      [],
+                    ),
+                  {
+                    loc: Location.none,
+                    txt: "t_" ++ fragment.item.fg_type_condition.item,
+                  },
+                ),
+              ],
+            )
+          ),
+          [%stri let parse: Js.Json.t => t = value => [%e parse_fn]],
           [%stri
             let name = [%e
               Ast_helper.Exp.constant(Pconst_string(name, None))
             ]
           ],
         ],
-        ret_type_magic,
       ]);
     };
 

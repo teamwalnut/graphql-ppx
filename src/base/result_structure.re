@@ -6,7 +6,7 @@ type loc = Source_pos.ast_location;
 
 type field_result =
   | Fr_named_field(string, loc, t)
-  | Fr_fragment_spread(string, loc, string)
+  | Fr_fragment_spread(string, loc, string, option(string))
 and t =
   | Res_nullable(loc, t)
   | Res_array(loc, t)

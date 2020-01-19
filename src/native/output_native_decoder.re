@@ -306,7 +306,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | Fr_fragment_spread(field, loc, name) => {
+           | Fr_fragment_spread(field, loc, name, _) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -379,7 +379,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
                     },
                   ),
                 )
-              | Fr_fragment_spread(key, loc, name) => {
+              | Fr_fragment_spread(key, loc, name, _) => {
                   let loc = conv_loc(loc);
                   Cf.method(
                     {txt: key, loc: Location.none},
