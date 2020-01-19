@@ -55,6 +55,7 @@ let rec generate_type = path =>
   | Res_int(loc) => base_type("int")
   | Res_float(loc) => base_type("float")
   | Res_boolean(loc) => base_type("bool")
+  | Res_raw_scalar(loc) => base_type("Js.Json.t")
   | Res_object(_loc, name, _fields)
   | Res_record(_loc, name, _fields) => base_type(generate_name(path))
   | Res_poly_variant_union(loc, name, fragments, exhaustive_flag) => {
@@ -130,14 +131,32 @@ let rec generate_type = path =>
         Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
       );
     }
-  | Res_error(loc, _)
-  | Res_raw_scalar(loc)
-  | Res_poly_enum(loc, _) =>
+  | Res_error(loc, _) =>
     raise(
       Location.Error(
-        Location.error(~loc=conv_loc(loc), "Currently unsupported"),
+        Location.error(
+          ~loc=conv_loc(loc),
+          "An error result should not happen here",
+        ),
       ),
-    );
+    )
+  | Res_poly_enum(loc, enum_meta) => {
+      Ast_406.Parsetree.(
+        Graphql_ppx_base__.Schema.(
+          [@metaloc conv_loc(loc)]
+          Ast_helper.(
+            Typ.variant(
+              enum_meta.em_values
+              |> List.map(({evm_name, _}) =>
+                   Rtag({txt: evm_name, loc: conv_loc(loc)}, [], true, [])
+                 ),
+              Closed,
+              None,
+            )
+          )
+        )
+      );
+    };
 
 // generate all the types necessary types that we later refer to by name.
 let generate_types = (path, res) => {
