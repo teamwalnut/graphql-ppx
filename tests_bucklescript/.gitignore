@@ -5,6 +5,7 @@ npm-debug.log
 /lib
 node_modules
 /build/
+__tests__
 bs-ppx-css
 *.bs.js
 bsconfig.json
