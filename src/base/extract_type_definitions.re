@@ -7,7 +7,10 @@ type object_field =
       loc: Source_pos.ast_location,
       path: list(string),
     })
-  | Fragment({module_name: string});
+  | Fragment({
+      module_name: string,
+      key: string,
+    });
 
 type type_def =
   | Object({
@@ -36,8 +39,8 @@ let rec extract = path =>
                  fun
                  | Fr_named_field(name, loc, type_) =>
                    Field({loc, path: [name, ...path], type_})
-                 | Fr_fragment_spread(_key, _loc, name) =>
-                   Fragment({module_name: name}),
+                 | Fr_fragment_spread(key, _loc, name) =>
+                   Fragment({module_name: name, key}),
                ),
         }),
         ...fields
@@ -60,7 +63,6 @@ let rec extract = path =>
          [],
        )
   | Res_custom_decoder(loc, ident, inner) => extract(path, inner)
-  | Res_poly_variant_selection_set(loc, name, fields) => []
   | Res_solo_fragment_spread(loc, name) => []
   | Res_error(loc, message) => []
   | Res_id(loc) => []

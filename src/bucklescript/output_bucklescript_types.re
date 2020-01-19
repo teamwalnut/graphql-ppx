@@ -57,30 +57,6 @@ let rec generate_type = path =>
   | Res_boolean(loc) => base_type("bool")
   | Res_object(_loc, name, _fields)
   | Res_record(_loc, name, _fields) => base_type(generate_name(path))
-  | Res_poly_variant_selection_set(loc, name, fields) =>
-    Ast_406.Parsetree.(
-      Ast_helper.(
-        Typ.variant(
-          fields
-          |> List.map(((name, _)) =>
-               Rtag(
-                 {txt: Compat.capitalize_ascii(name), loc: conv_loc(loc)},
-                 [],
-                 false,
-                 [
-                   {
-                     ptyp_desc: Ptyp_any,
-                     ptyp_attributes: [],
-                     ptyp_loc: Location.none,
-                   },
-                 ],
-               )
-             ),
-          Closed,
-          None,
-        )
-      )
-    )
   | Res_poly_variant_union(loc, name, fragments, exhaustive_flag) => {
       let (fallback_case, fallback_case_ty) =
         Ast_406.Parsetree.(
