@@ -165,6 +165,7 @@ let generate_default_operation =
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       List.concat([
+        [[%stri type raw_t]],
         [types],
         [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
         if (rec_flag == Recursive) {

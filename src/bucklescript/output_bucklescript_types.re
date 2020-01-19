@@ -110,6 +110,8 @@ let rec generate_type = path =>
         )
       );
     }
+  | Res_solo_fragment_spread(loc, module_name) =>
+    base_type(module_name ++ ".raw_t")
   | Res_poly_variant_interface(loc, name, base, fragments) => {
       let map_case_ty = ((name, res)) =>
         Ast_406.Parsetree.(
@@ -128,7 +130,6 @@ let rec generate_type = path =>
         Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
       );
     }
-  | Res_solo_fragment_spread(loc, _)
   | Res_error(loc, _)
   | Res_raw_scalar(loc)
   | Res_poly_enum(loc, _) =>
@@ -151,16 +152,13 @@ let generate_types = (path, res) => {
                  fields
                  |> List.map(
                       fun
-                      | Fragment({module_name}) =>
+                      | Fragment({key, module_name}) =>
                         Ast_helper.Type.field(
-                          {
-                            Location.txt: "fragment_" ++ module_name,
-                            loc: Location.none,
-                          },
+                          {Location.txt: key, loc: Location.none},
                           Ast_helper.Typ.constr(
                             {
                               Location.txt:
-                                Longident.parse(module_name ++ ".t"),
+                                Longident.parse(module_name ++ ".raw_t"),
                               loc: Location.none,
                             },
                             [],

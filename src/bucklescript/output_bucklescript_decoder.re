@@ -545,16 +545,16 @@ and generate_object_decoder = (config, loc, name, fields) => {
                  %e
                  generate_decoder(config, inner);
                },
-             ),
-           //  | Fr_fragment_spread(_key, loc, name) => (
-           //      {
-           //        Location.txt: Longident.parse("fragment_" ++ name),
-           //        loc: Location.none,
-           //      },
-           //      {
-           //       [%expr Obj.magic(value)];
-           //      }
-           //    ),
+             )
+            | Fr_fragment_spread(key, loc, name) => (
+                {
+                  Location.txt: Longident.parse(key),
+                  loc: Location.none,
+                },
+                {
+                 [%expr Obj.magic(value)];
+                }
+              )
          ),
       None,
     );

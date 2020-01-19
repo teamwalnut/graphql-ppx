@@ -343,11 +343,9 @@ and unify_selection = (error_marker, config, ty, selection) =>
   | FragmentSpread({item: {fs_directives, fs_name}, span}) =>
     switch (find_directive("bsField", fs_directives)) {
     | None =>
-      raise_error(
-        config.map_loc,
-        span,
-        "You must use @bsField(name: \"fieldName\") to use fragment spreads",
-      )
+      let key =
+        fs_name.item |> String.split_on_char('.') |> List.rev |> List.hd |> String.uncapitalize_ascii;
+      Fr_fragment_spread(key, config.map_loc(span), fs_name.item);
     | Some({item: {d_arguments, _}, span}) =>
       switch (find_argument("name", d_arguments)) {
       | None =>
