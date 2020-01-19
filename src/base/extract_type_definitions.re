@@ -1,8 +1,10 @@
 open Result_structure;
+open Graphql_ppx_base__;
 
 type object_field =
   | Field({
       type_: Result_structure.t,
+      loc: Source_pos.ast_location,
       path: list(string),
     })
   | Fragment({module_name: string});
@@ -31,8 +33,8 @@ let rec extract = path =>
             fields
             |> List.map(
                  fun
-                 | Fr_named_field(name, _loc, type_) =>
-                   Field({path: [name, ...path], type_})
+                 | Fr_named_field(name, loc, type_) =>
+                   Field({loc, path: [name, ...path], type_})
                  | Fr_fragment_spread(_key, _loc, name) =>
                    Fragment({module_name: name}),
                ),
@@ -48,9 +50,15 @@ let rec extract = path =>
               ),
       ];
     }
+  | Res_poly_variant_union(loc, name, fragments, _)
+  | Res_poly_variant_interface(loc, name, _, fragments) =>
+    fragments
+    |> List.fold_left(
+         (acc, (name, inner)) =>
+           List.append(extract([name, ...path], inner), acc),
+         [],
+       )
   | Res_poly_variant_selection_set(loc, name, fields) => []
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) => []
-  | Res_poly_variant_interface(loc, name, base, fragments) => []
   | Res_solo_fragment_spread(loc, name) => []
   | Res_error(loc, message) => []
   | Res_id(loc) => []
