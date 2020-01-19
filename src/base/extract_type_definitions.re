@@ -13,7 +13,8 @@ type type_def =
   | Object({
       path: list(string),
       fields: list(object_field),
-    });
+    })
+  | CustomDecoder({ident: string});
 
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
@@ -58,6 +59,7 @@ let rec extract = path =>
            List.append(extract([name, ...path], inner), acc),
          [],
        )
+  | Res_custom_decoder(loc, ident, inner) => extract(path, inner)
   | Res_poly_variant_selection_set(loc, name, fields) => []
   | Res_solo_fragment_spread(loc, name) => []
   | Res_error(loc, message) => []
@@ -67,5 +69,4 @@ let rec extract = path =>
   | Res_float(loc) => []
   | Res_boolean(loc) => []
   | Res_raw_scalar(_) => []
-  | Res_custom_decoder(loc, ident, inner) => []
   | Res_poly_enum(loc, enum_meta) => [];

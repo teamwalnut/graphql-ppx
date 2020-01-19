@@ -396,10 +396,10 @@ and unify_field = (error_marker, config, field_span, ty) => {
     };
 
   let loc = config.map_loc(field_span.span);
-  switch (ast_field.fd_directives |> find_directive("bsDecoder")) {
+  switch (ast_field.fd_directives |> find_directive("decoder")) {
   | None => Fr_named_field(key, loc, parser_expr)
   | Some({item: {d_arguments, _}, span}) =>
-    switch (find_argument("fn", d_arguments)) {
+    switch (find_argument("module", d_arguments)) {
     | None =>
       Fr_named_field(
         key,
@@ -408,14 +408,14 @@ and unify_field = (error_marker, config, field_span, ty) => {
           error_marker,
           config.map_loc,
           span,
-          "bsDecoder must be given 'fn' argument",
+          "decoder must be given 'module' argument",
         ),
       )
-    | Some((_, {item: Iv_string(fn_name), span})) =>
+    | Some((_, {item: Iv_string(module_name), span})) =>
       Fr_named_field(
         key,
         loc,
-        Res_custom_decoder(config.map_loc(span), fn_name, parser_expr),
+        Res_custom_decoder(config.map_loc(span), module_name, parser_expr),
       )
     | Some((_, {span, _})) =>
       Fr_named_field(

@@ -255,7 +255,10 @@ and generate_array_decoder_lean = (config, loc, inner) =>
 and generate_custom_decoder = (config, loc, ident, inner) => {
   let fn_expr =
     Ast_helper.(
-      Exp.ident({loc: Location.none, txt: Longident.parse(ident)})
+      Exp.ident({
+        loc: Location.none,
+        txt: Longident.parse(ident ++ ".parse"),
+      })
     );
   [@metaloc loc] [%expr [%e fn_expr]([%e generate_decoder(config, inner)])];
 }

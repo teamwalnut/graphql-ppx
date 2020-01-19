@@ -27,7 +27,7 @@ let generate_name =
 
 let base_type = name => {
   Ast_helper.Typ.constr(
-    {Location.txt: Longident.Lident(name), loc: Location.none},
+    {Location.txt: Longident.parse(name), loc: Location.none},
     [],
   );
 };
@@ -50,6 +50,7 @@ let rec generate_type = path =>
         [generate_type(path, inner)],
       )
     )
+  | Res_custom_decoder(loc, module_name, _) => base_type(module_name ++ ".t")
   | Res_id(loc) => base_type("string")
   | Res_int(loc) => base_type("int")
   | Res_float(loc) => base_type("float")
@@ -154,7 +155,6 @@ let rec generate_type = path =>
   | Res_solo_fragment_spread(loc, _)
   | Res_error(loc, _)
   | Res_raw_scalar(loc)
-  | Res_custom_decoder(loc, _, _)
   | Res_poly_enum(loc, _) =>
     raise(
       Location.Error(
