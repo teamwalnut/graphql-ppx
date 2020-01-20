@@ -168,6 +168,7 @@ let () =
         raise(Location.Error(Location.error(~loc, message)));
       },
       lean_parse: true,
+      records: false,
     })
   );
 
@@ -307,6 +308,13 @@ let args = [
         Ppx_config.update_config(current => {...current, lean_parse: true}),
     ),
     "A leaner parse function (experimental)",
+  ),
+  (
+    "-records",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: true}),
+    ),
+    "Compile to records instead of objects (experimental)",
   ),
 ];
 

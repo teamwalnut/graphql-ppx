@@ -185,6 +185,7 @@ let () =
         raise(Location.Error(Location.error(~loc, message)));
       },
       lean_parse: false,
+      records: false,
     })
   );
 
