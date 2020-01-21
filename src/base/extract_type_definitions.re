@@ -4,6 +4,14 @@ open Generator_utils;
 open Schema;
 open Source_pos;
 
+type nullable =
+  | NonNull
+  | Null;
+// extract the typeref
+type extracted_type =
+  | Type(nullable, option(Schema.type_meta))
+  | List(nullable, extracted_type);
+
 type object_field =
   | Field({
       type_: Result_structure.t,
@@ -18,7 +26,7 @@ type object_field =
 
 type input_object_field =
   | InputField({
-      type_ref: Schema.type_ref,
+      type_: extracted_type,
       path: list(string),
     });
 
@@ -97,6 +105,17 @@ let fetch_type = (schema, type_ref) => {
   (type_name, lookup_type(schema, type_name));
 };
 
+let rec convert_type_ref = schema =>
+  fun
+  | Named(type_name) => Type(Null, lookup_type(schema, type_name))
+  | NonNull(Named(type_name)) =>
+    Type(NonNull, lookup_type(schema, type_name))
+  | List(type_ref) => List(Null, convert_type_ref(schema, type_ref))
+  | NonNull(List(type_ref)) =>
+    List(NonNull, convert_type_ref(schema, type_ref))
+  // fold multiple non_nulls
+  | NonNull(NonNull(inner)) => convert_type_ref(schema, NonNull(inner));
+
 let generate_input_field_types =
     (path, schema: Schema.schema, fields: list((string, Schema.type_ref))) => {
   fields
@@ -104,14 +123,13 @@ let generate_input_field_types =
        acc =>
          fun
          | (name, type_ref) => {
-             let (type_name, type_) = fetch_type(schema, type_ref);
-             switch (type_) {
-             | Some(type_) => [
-                 InputField({type_ref, path: [name, ...path]}),
-                 ...acc,
-               ]
-             | _ => acc
-             };
+             [
+               InputField({
+                 type_: convert_type_ref(schema, type_ref),
+                 path: [name, ...path],
+               }),
+               ...acc,
+             ];
            },
        [],
      )
