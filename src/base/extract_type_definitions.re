@@ -1,5 +1,8 @@
 open Result_structure;
 open Graphql_ppx_base__;
+open Generator_utils;
+open Schema;
+open Source_pos;
 
 type object_field =
   | Field({
@@ -13,10 +16,20 @@ type object_field =
       type_name: option(string),
     });
 
+type input_object_field =
+  | InputField({
+      type_ref: Schema.type_ref,
+      path: list(string),
+    });
+
 type type_def =
   | Object({
       path: list(string),
       fields: list(object_field),
+    })
+  | InputObject({
+      path: list(string),
+      fields: list(input_object_field),
     });
 
 // function that generate types. It will output a nested list type descriptions
@@ -72,3 +85,96 @@ let rec extract = path =>
   | Res_boolean(loc) => []
   | Res_raw_scalar(_) => []
   | Res_poly_enum(loc, enum_meta) => [];
+
+let raise_inconsistent_schema = (type_name, loc) =>
+  raise_error_with_loc(
+    loc,
+    "Inconsistent schema, type named " ++ type_name ++ " cannot be found",
+  );
+
+let fetch_type = (schema, type_ref) => {
+  let type_name = innermost_name(type_ref);
+  (type_name, lookup_type(schema, type_name));
+};
+
+let generate_input_field_types =
+    (path, schema: Schema.schema, fields: list((string, Schema.type_ref))) => {
+  fields
+  |> List.fold_left(
+       acc =>
+         fun
+         | (name, type_ref) => {
+             let (type_name, type_) = fetch_type(schema, type_ref);
+             switch (type_) {
+             | Some(type_) => [
+                 InputField({type_ref, path: [name, ...path]}),
+                 ...acc,
+               ]
+             | _ => acc
+             };
+           },
+       [],
+     )
+  |> List.rev;
+};
+
+let rec extract_input_object =
+        (path: list(string), schema: Graphql_ppx_base.Schema.schema) => {
+  fun
+  | (name: string, fields: list((string, Schema.type_ref))) => [
+      InputObject({
+        path,
+        fields: generate_input_field_types(path, schema, fields),
+      }),
+      ...fields
+         |> List.fold_left(
+              acc =>
+                fun
+                | (name, type_ref) => {
+                    let (type_name, type_) = fetch_type(schema, type_ref);
+                    switch (type_) {
+                    | Some(InputObject({iom_name, iom_input_fields})) =>
+                      let fields =
+                        iom_input_fields
+                        |> List.map(field =>
+                             (field.am_name, field.am_arg_type)
+                           );
+
+                      let result =
+                        extract_input_object(
+                          [name, ...path],
+                          schema,
+                          (iom_name, fields),
+                        );
+
+                      List.append(acc, result);
+                    | _ => acc
+                    };
+                  },
+              [],
+            ),
+    ];
+};
+
+let extract_args:
+  (
+    Graphql_ppx_base.Schema.schema,
+    option(
+      spanning(list((spanning(string), Graphql_ast.variable_definition))),
+    )
+  ) =>
+  list(type_def) =
+  schema => {
+    fun
+    | Some({item, _}) => {
+        (
+          "",
+          item
+          |> List.map(((span, {Graphql_ast.vd_type: variable_type, _})) =>
+               (span.item, Type_utils.to_schema_type_ref(variable_type.item))
+             ),
+        )
+        |> extract_input_object([], schema);
+      }
+    | _ => [];
+  };
