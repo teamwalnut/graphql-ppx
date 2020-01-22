@@ -383,152 +383,17 @@ and generate_record_decoder = (config, loc, name, fields) => {
   };
 }
 and generate_object_decoder = (config, loc, name, fields) => {
-  let ctor_result_type =
-    fields
-    |> List.mapi(
-         (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _, _)) =>
-         Otag(
-           {txt: key, loc},
-           [],
-           Ast_helper.Typ.var("a" ++ string_of_int(i)),
-         )
-       );
-
   let rec do_obj_constructor = () => {
-    Ast_helper.Exp.letmodule(
-      {txt: "GQL", loc: Location.none},
-      Ast_helper.Mod.structure([
-        Ast_helper.Str.primitive({
-          pval_name: {
-            txt: "make_obj",
-            loc: Location.none,
-          },
-          pval_type: make_obj_constructor_fn(0, fields),
-          pval_prim: [""],
-          pval_attributes: [
-            ({txt: "bs.obj", loc: Location.none}, PStr([])),
-          ],
-          pval_loc: Location.none,
-        }),
-      ]),
-      Ast_helper.Exp.apply(
-        Ast_helper.Exp.ident({
-          txt: Longident.parse("GQL.make_obj"),
-          loc: Location.none,
-        }),
-        List.append(
-          fields
-          |> List.map(
-               fun
-               | Fr_named_field(key, _, inner) => (
-                   Labelled(key),
-                   switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
-                   | Some(value) =>
-                     %e
-                     generate_parser(config, inner)
-                   | None =>
-                     if%e (can_be_absent_as_field(inner)) {
-                       %expr
-                       None;
-                     } else {
-                       make_error_raiser(
-                         [%expr
-                           "Field "
-                           ++ [%e const_str_expr(key)]
-                           ++ " on type "
-                           ++ [%e const_str_expr(name)]
-                           ++ " is missing"
-                         ],
-                       );
-                     }
-                   },
-                 )
-               | Fr_fragment_spread(key, loc, name, _) => {
-                   let loc = conv_loc(loc);
-                   (
-                     Labelled(key),
-                     {
-                       let%expr value = Js.Json.object_(value);
-                       %e
-                       generate_solo_fragment_spread(loc, name);
-                     },
-                   );
-                 },
-             ),
-          [
-            (
-              Nolabel,
-              Ast_helper.Exp.construct(
-                {txt: Longident.Lident("()"), loc: Location.none},
-                None,
-              ),
-            ),
-          ],
-        ),
-      ),
+    Ast_406.(
+      Ast_helper.(
+        Exp.extension((
+          {txt: "bs.obj", loc: Location.none},
+          PStr([[%stri [%e do_obj_constructor_lean()]]]),
+        ))
+      )
     );
   }
   and do_obj_constructor_lean = () => {
-    // Ast_helper.Exp.letmodule(
-    //   {txt: "GQL", loc: Location.none},
-    //   Ast_helper.Mod.structure([
-    //     Ast_helper.Str.primitive({
-    //       pval_name: {
-    //         txt: "make_obj",
-    //         loc: Location.none,
-    //       },
-    //       pval_type: make_obj_constructor_fn(0, fields),
-    //       pval_prim: [""],
-    //       pval_attributes: [
-    //         ({txt: "bs.obj", loc: Location.none}, PStr([])),
-    //       ],
-    //       pval_loc: Location.none,
-    //     }),
-    //   ]),
-    //   Ast_helper.Exp.apply(
-    //     Ast_helper.Exp.ident({
-    //       txt: Longident.parse("GQL.make_obj"),
-    //       loc: Location.none,
-    //     }),
-    //     List.append(
-    //       fields
-    //       |> List.map(
-    //            fun
-    //            | Fr_named_field(key, _, inner) => (
-    //                Labelled(key),
-    //                {
-    //                  let%expr value: 'a =
-    //                    Obj.magic(
-    //                      Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
-    //                    );
-    //                  %e
-    //                  generate_decoder(config, inner);
-    //                },
-    //              )
-    //            | Fr_fragment_spread(key, loc, name) => {
-    //                let loc = conv_loc(loc);
-    //                (
-    //                  Labelled(key),
-    //                  {
-    //                    let%expr value = Js.Json.object_(value);
-    //                    %e
-    //                    generate_solo_fragment_spread(loc, name);
-    //                  },
-    //                );
-    //              },
-    //          ),
-    //       [
-    //         (
-    //           Nolabel,
-    //           Ast_helper.Exp.construct(
-    //             {txt: Longident.Lident("()"), loc: Location.none},
-    //             None,
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
     Ast_helper.Exp.record(
       fields
       |> List.map(
@@ -555,315 +420,23 @@ and generate_object_decoder = (config, loc, name, fields) => {
                      txt: Longident.parse(name ++ ".parse"),
                    });
                  %expr
-                 [%e ident](value);
+                 [%e ident](Obj.magic(value));
                },
              ),
          ),
       None,
     );
   }
-  and do_obj_constructor_record = () => {
-    let type_name = String.lowercase_ascii(name);
-    let module_name = "REC_MOD_" ++ String.capitalize_ascii(name);
-    // let module_name = "GQL";
-
-    Ast_helper.Exp.letmodule(
-      {txt: module_name, loc: Location.none},
-      Ast_helper.Mod.structure([
-        /*
-         probably better to construct this AST with Ast_helper,
-         but "Ast_helper" is totally not documented so not very helpful :)
-
-         The output of this should be
-
-            module GQL = {
-              type object_type = {
-                <attribute_name>: 'a<attribute_index>, ...
-              };
-            };
-            ({<attribute_name>: <value>, ...}: GQL.object_type)
-         */
-        Ast_helper.Str.type_(
-          Recursive,
-          [
-            Ast_helper.Type.mk(
-              ~params=
-                List.mapi(
-                  i => {
-                    fun
-                    | Fr_fragment_spread(_, _, _, _)
-                    | Fr_named_field(_, _, _) => (
-                        Ast_helper.Typ.var(
-                          type_name ++ "a" ++ string_of_int(i),
-                        ),
-                        Invariant,
-                      )
-                  },
-                  fields,
-                ),
-              ~kind=
-                Ptype_record(
-                  List.mapi(
-                    i => {
-                      fun
-                      | Fr_fragment_spread(key, _, _, _)
-                      | Fr_named_field(key, _, _) =>
-                        Ast_helper.Type.field(
-                          {Location.txt: key, loc: Location.none},
-                          Ast_helper.Typ.var(
-                            type_name ++ "a" ++ string_of_int(i),
-                          ),
-                        )
-                    },
-                    fields,
-                  ),
-                ),
-              {loc: Location.none, txt: type_name},
-            ),
-          ],
-        ),
-        // {
-        //   pstr_loc: Location.none,
-        //   pstr_desc:
-        //     Pstr_type(
-        //       Recursive,
-        //       [
-        //         {
-        //           ptype_name: {
-        //             txt: "object_type",
-        //             loc: Location.none,
-        //           },
-        //           ptype_attributes: [],
-        //           ptype_loc: Location.none,
-        //           ptype_params: [],
-        //           ptype_cstrs: [],
-        //           ptype_kind:
-        //             Ptype_record(
-        //               List.mapi(
-        //                 i =>
-        //                   fun
-        //                   | Fr_fragment_spread(key, _, _)
-        //                   | Fr_named_field(key, _, _) => {
-        //                       pld_loc: Location.none,
-        //                       pld_attributes: [],
-        //                       pld_name: {
-        //                         txt: key,
-        //                         loc: Location.none,
-        //                       },
-        //                       pld_mutable: Immutable,
-        //                       pld_type: {
-        //                         ptyp_loc: Location.none,
-        //                         ptyp_attributes: [],
-        //                         ptyp_desc: Ptyp_var("a" ++ string_of_int(i)),
-        //                       },
-        //                     },
-        //                 fields,
-        //               ),
-        //             ),
-        //           ptype_private: Public,
-        //           ptype_manifest: None,
-        //         },
-        //       ],
-        //     ),
-        // },
-      ]),
-      Ast_helper.Exp.constraint_(
-        // Ast_helper.Exp.open_(
-        //   Fresh,
-        //   {txt: Lident(module_name), loc: Location.none},
-        Ast_helper.Exp.record(
-          List.map(
-            fun
-            | Fr_named_field(key, _, inner) => {
-                (
-                  // (
-                  //   {Location.txt: Longident.parse(key), loc: Location.none},
-                  //   {
-                  //     let%expr value: 'a =
-                  //       Obj.magic(
-                  //         Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
-                  //       );
-                  //     %e
-                  //     generate_decoder(config, inner);
-                  //   },
-                  // );
-                  {Location.txt: Longident.parse(key), loc: Location.none},
-                  switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
-                  | Some(value) =>
-                    %e
-                    generate_parser(config, inner)
-                  | None =>
-                    if%e (can_be_absent_as_field(inner)) {
-                      %expr
-                      None;
-                    } else {
-                      make_error_raiser(
-                        [%expr
-                          "Field "
-                          ++ [%e const_str_expr(key)]
-                          ++ " on type "
-                          ++ [%e const_str_expr(name)]
-                          ++ " is missing"
-                        ],
-                      );
-                    }
-                  },
-                );
-              }
-            | Fr_fragment_spread(key, loc, name, _) => {
-                let loc = conv_loc(loc);
-                (
-                  {Location.txt: Longident.parse(key), loc: Location.none},
-                  {
-                    let%expr value = Js.Json.object_(value);
-                    %e
-                    generate_solo_fragment_spread(loc, name);
-                  },
-                );
-              },
-            fields,
-          ),
-          None,
-        ),
-        // ),
-        Ast_helper.Typ.constr(
-          {txt: Ldot(Lident(module_name), type_name), loc: Location.none},
-          List.mapi(
-            i => {
-              fun
-              | Fr_fragment_spread(_, _, _, _)
-              | Fr_named_field(_, _, _) =>
-                Ast_helper.Typ.var(type_name ++ "a" ++ string_of_int(i))
-            },
-            fields,
-          ),
-        ),
-      ),
-      //     {
-      //       pstr_loc: Location.none,
-      //       pstr_desc:
-      //         Pstr_value(
-      //           Nonrecursive,
-      //           [
-      //             {
-      //               pvb_attributes: [],
-      //               pvb_loc: Location.none,
-      //               pvb_pat: {
-      //                 ppat_attributes: [],
-      //                 ppat_loc: Location.none,
-      //                 ppat_desc: Ppat_any,
-      //               },
-      //               pvb_expr: {
-      //                 pexp_loc: Location.none,
-      //                 pexp_attributes: [],
-      //                 pexp_desc:
-      //                   Pexp_constraint(
-      //                     {
-      //                       pexp_loc: Location.none,
-      //                       pexp_attributes: [],
-      //                       pexp_desc:
-      //                         Pexp_record(
-      //                           List.map(
-      //                             fun
-      //                             | Fr_named_field(key, _, inner) => {
-      //                                 (
-      //                                   {
-      //                                     txt: Longident.Lident(key),
-      //                                     loc: Location.none,
-      //                                   },
-      //                                   {
-      //                                     let%expr value: 'a =
-      //                                       Obj.magic(
-      //                                         Js.Dict.unsafeGet(
-      //                                           value,
-      //                                           [%e const_str_expr(key)],
-      //                                         ): 'a,
-      //                                       );
-      //                                     %e
-      //                                     generate_decoder(config, inner);
-      //                                   },
-      //                                 );
-      //                               }
-      //                             | Fr_fragment_spread(key, loc, name) => {
-      //                                 let loc = conv_loc(loc);
-      //                                 (
-      //                                   {
-      //                                     txt: Longident.Lident("label"),
-      //                                     loc: Location.none,
-      //                                   },
-      //                                   {
-      //                                     let%expr value =
-      //                                       Js.Json.object_(value);
-      //                                     %e
-      //                                     generate_solo_fragment_spread(
-      //                                       loc,
-      //                                       name,
-      //                                     );
-      //                                   },
-      //                                 );
-      //                               },
-      //                             fields,
-      //                           ),
-      //                           None,
-      //                         ),
-      //                     },
-      //                     {
-      //                       ptyp_loc: Location.none,
-      //                       ptyp_attributes: [],
-      //                       ptyp_desc:
-      //                         Ptyp_constr(
-      //                           {
-      //                             txt: Ldot(Lident("GQL"), "object_type"),
-      //                             loc: Location.none,
-      //                           },
-      //                           [],
-      //                         ),
-      //                     },
-      //                   ),
-      //               },
-      //             },
-      //           ],
-      //         ),
-      //     },
-      //   ),
-    );
-  }
-
   and obj_constructor = () => {
-    [@metaloc loc]
     let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
     %e
     do_obj_constructor();
   }
-  and obj_constructor_lean = () =>
-    [@metaloc loc]
-    {
-      do_obj_constructor_lean();
-    }
+  and obj_constructor_lean = () => {
+    do_obj_constructor_lean();
+  };
 
-  and make_obj_constructor_fn = i =>
-    fun
-    | [] =>
-      Ast_helper.Typ.arrow(
-        Nolabel,
-        Ast_helper.Typ.constr(
-          {txt: Longident.Lident("unit"), loc: Location.none},
-          [],
-        ),
-        Ast_helper.Typ.constr(
-          {txt: Longident.parse("Js.t"), loc: Location.none},
-          [Ast_helper.Typ.object_(ctor_result_type, Closed)],
-        ),
-      )
-    | [Fr_fragment_spread(key, _, _, _), ...next]
-    | [Fr_named_field(key, _, _), ...next] =>
-      Ast_helper.Typ.arrow(
-        Labelled(key),
-        Ast_helper.Typ.var("a" ++ string_of_int(i)),
-        make_obj_constructor_fn(i + 1, next),
-      );
-
-  lean_parse() ? obj_constructor_lean() : obj_constructor();
+  config.records ? obj_constructor_lean() : obj_constructor();
 }
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
@@ -908,6 +481,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
           ++ " were null"
         ],
       );
+
   let variant_type =
     Ast_helper.(
       Typ.variant(

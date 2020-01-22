@@ -134,11 +134,12 @@ let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
     Output_bucklescript_parser.generate_parser(config, res_structure);
-  let types = Output_bucklescript_types.generate_types(res_structure);
+  let types = Output_bucklescript_types.generate_types(config, res_structure);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
+      config,
       extract_args(config, variable_defs),
     );
 
@@ -186,7 +187,7 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_parser.generate_parser(config, res_structure);
-  let types = Output_bucklescript_types.generate_types(res_structure);
+  let types = Output_bucklescript_types.generate_types(config, res_structure);
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])

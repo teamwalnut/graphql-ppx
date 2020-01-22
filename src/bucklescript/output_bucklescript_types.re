@@ -33,13 +33,13 @@ let base_type = (~inner=[], name) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = path =>
+let rec generate_type = (config, path) =>
   fun
   | Res_string(loc) => base_type("string")
   | Res_nullable(_loc, inner) =>
-    base_type(~inner=[generate_type(path, inner)], "option")
+    base_type(~inner=[generate_type(config, path, inner)], "option")
   | Res_array(_loc, inner) =>
-    base_type(~inner=[generate_type(path, inner)], "array")
+    base_type(~inner=[generate_type(config, path, inner)], "array")
   | Res_custom_decoder(loc, module_name, _) => base_type(module_name ++ ".t")
   | Res_id(loc) => base_type("string")
   | Res_int(loc) => base_type("int")
@@ -81,6 +81,7 @@ let rec generate_type = path =>
             }
           )
         );
+
       let fragment_case_tys =
         fragments
         |> List.map(((name, res)) =>
@@ -89,7 +90,7 @@ let rec generate_type = path =>
                  {txt: name, loc: conv_loc(loc)},
                  [],
                  false,
-                 [generate_type([name, ...path], res)],
+                 [generate_type(config, [name, ...path], res)],
                )
              )
            );
@@ -110,7 +111,7 @@ let rec generate_type = path =>
             {txt: name, loc: conv_loc(loc)},
             [],
             false,
-            [generate_type([name, ...path], res)],
+            [generate_type(config, [name, ...path], res)],
           )
         );
 
@@ -148,57 +149,127 @@ let rec generate_type = path =>
       );
     };
 
+let generate_record_type = (config, fields, obj_path) => {
+  Ast_helper.Type.mk(
+    ~kind=
+      Ptype_record(
+        fields
+        |> List.map(
+             fun
+             | Fragment({key, module_name, type_name}) =>
+               Ast_helper.Type.field(
+                 {Location.txt: key, loc: Location.none},
+                 Ast_helper.Typ.constr(
+                   {
+                     Location.txt:
+                       Longident.parse(
+                         module_name
+                         ++ ".t"
+                         ++ (
+                           switch (type_name) {
+                           | None => ""
+                           | Some(type_name) => "_" ++ type_name
+                           }
+                         ),
+                       ),
+                     loc: Location.none,
+                   },
+                   [],
+                 ),
+               )
+             | Field({path: [name, ...path], type_}) =>
+               Ast_helper.Type.field(
+                 {Location.txt: name, loc: Location.none},
+                 generate_type(config, [name, ...path], type_),
+               )
+             | Field({path: [], loc}) =>
+               // I don't think this should ever happen but we need to
+               // cover this case, perhaps we can constrain the type
+               raise(
+                 Location.Error(
+                   Location.error(~loc=loc |> conv_loc, "No path"),
+                 ),
+               ),
+           ),
+      ),
+    {loc: Location.none, txt: generate_name(obj_path)},
+  );
+};
+
+let generate_object_type = (config, fields, obj_path) => {
+  Parsetree.(
+    Ast_helper.(
+      Type.mk(
+        ~kind=Ptype_abstract,
+        ~manifest=
+          Typ.constr(
+            {Location.txt: Longident.parse("Js.t"), loc: Location.none},
+            [
+              Ast_helper.Typ.object_(
+                fields
+                |> List.map(
+                     fun
+                     | Fragment({key, module_name, type_name}) =>
+                       Otag(
+                         {txt: key, loc: Location.none},
+                         [],
+                         Ast_helper.Typ.constr(
+                           {
+                             Location.txt:
+                               Longident.parse(
+                                 module_name
+                                 ++ ".t"
+                                 ++ (
+                                   switch (type_name) {
+                                   | None => ""
+                                   | Some(type_name) => "_" ++ type_name
+                                   }
+                                 ),
+                               ),
+                             loc: Location.none,
+                           },
+                           [],
+                         ),
+                       )
+                     | Field({path: [name, ...path], type_}) =>
+                       Otag(
+                         {txt: name, loc: Location.none},
+                         [],
+                         generate_type(config, [name, ...path], type_),
+                       )
+                     | Field({path: [], loc}) =>
+                       // I don't think this should ever happen but we need to
+                       // cover this case, perhaps we can constrain the type
+                       raise(
+                         Location.Error(
+                           Location.error(~loc=loc |> conv_loc, "No path"),
+                         ),
+                       ),
+                   ),
+                Closed,
+              ),
+            ],
+          ),
+        {loc: Location.none, txt: generate_name(obj_path)},
+      )
+    )
+  );
+};
+let generate_graphql_object =
+    (config: Generator_utils.output_config, fields, obj_path) => {
+  config.records
+    ? generate_record_type(config, fields, obj_path)
+    : generate_object_type(config, fields, obj_path);
+};
+
 // generate all the types necessary types that we later refer to by name.
-let generate_types = res => {
+let generate_types = (config: Generator_utils.output_config, res) => {
   let types =
     extract([], res)
     |> List.map(
          fun
          | Object({fields, path: obj_path}) =>
-           Ast_helper.Type.mk(
-             ~kind=
-               Ptype_record(
-                 fields
-                 |> List.map(
-                      fun
-                      | Fragment({key, module_name, type_name}) =>
-                        Ast_helper.Type.field(
-                          {Location.txt: key, loc: Location.none},
-                          Ast_helper.Typ.constr(
-                            {
-                              Location.txt:
-                                Longident.parse(
-                                  module_name
-                                  ++ ".t"
-                                  ++ (
-                                    switch (type_name) {
-                                    | None => ""
-                                    | Some(type_name) => "_" ++ type_name
-                                    }
-                                  ),
-                                ),
-                              loc: Location.none,
-                            },
-                            [],
-                          ),
-                        )
-                      | Field({path: [name, ...path], type_}) =>
-                        Ast_helper.Type.field(
-                          {Location.txt: name, loc: Location.none},
-                          generate_type([name, ...path], type_),
-                        )
-                      | Field({path: [], loc}) =>
-                        // I don't think this should ever happen but we need to
-                        // cover this case, perhaps we can constrain the type
-                        raise(
-                          Location.Error(
-                            Location.error(~loc=loc |> conv_loc, "No path"),
-                          ),
-                        ),
-                    ),
-               ),
-             {loc: Location.none, txt: generate_name(obj_path)},
-           ),
+           generate_graphql_object(config, fields, obj_path),
        );
 
   Ast_helper.Str.type_(Recursive, types);
@@ -261,45 +332,88 @@ let rec generate_arg_type = loc =>
       ),
     );
 
+let generate_record_input_object = (input_obj_name, fields) => {
+  Ast_helper.Type.mk(
+    ~kind=
+      Ptype_record(
+        fields
+        |> List.map(
+             fun
+             | InputField({name, type_, loc}) => {
+                 Ast_helper.Type.field(
+                   {Location.txt: name, loc: Location.none},
+                   generate_arg_type(loc, type_),
+                 );
+               },
+           ),
+      ),
+    {
+      loc: Location.none,
+      txt:
+        generate_name(
+          ~prefix="t_variables",
+          switch (input_obj_name) {
+          | None => []
+          | Some(name) => [name]
+          },
+        ),
+    },
+  );
+};
+
+let generate_object_input_object = (input_obj_name, fields) => {
+  Parsetree.(
+    Ast_helper.(
+      Type.mk(
+        ~kind=Ptype_abstract,
+        ~manifest=
+          Typ.constr(
+            {Location.txt: Longident.parse("Js.t"), loc: Location.none},
+            [
+              Ast_helper.Typ.object_(
+                fields
+                |> List.map(
+                     fun
+                     | InputField({name, type_, loc}) =>
+                       Otag(
+                         {txt: name, loc: Location.none},
+                         [],
+                         generate_arg_type(loc, type_),
+                       ),
+                   ),
+                Closed,
+              ),
+            ],
+          ),
+        {
+          loc: Location.none,
+          txt:
+            generate_name(
+              ~prefix="t_variables",
+              switch (input_obj_name) {
+              | None => []
+              | Some(name) => [name]
+              },
+            ),
+        },
+      )
+    )
+  );
+};
+
+let generate_input_object =
+    (config: Generator_utils.output_config, input_obj_name, fields) => {
+  config.records
+    ? generate_record_input_object(input_obj_name, fields)
+    : generate_object_input_object(input_obj_name, fields);
+};
+
 let generate_arg_types = (config, variable_defs) => {
   extract_args(config, variable_defs)
   |> List.map(
        fun
        | InputObject({name: input_obj_name, fields}) => {
-           Ast_helper.Type.mk(
-             ~kind=
-               Ptype_record(
-                 fields
-                 |> List.map(
-                      fun
-                      | InputField({name, type_, loc}) => {
-                          Ast_helper.Type.field(
-                            {Location.txt: name, loc: Location.none},
-                            generate_arg_type(loc, type_),
-                          );
-                        },
-                      // | InputField({path: [], loc}) =>
-                      //   // I don't think this should ever happen but we need to
-                      //   // cover this case, perhaps we can constrain the type
-                      //   raise(
-                      //     Location.Error(
-                      //       Location.error(~loc=loc |> conv_loc, "No path"),
-                      //     ),
-                      //   ),
-                    ),
-               ),
-             {
-               loc: Location.none,
-               txt:
-                 generate_name(
-                   ~prefix="t_variables",
-                   switch (input_obj_name) {
-                   | None => []
-                   | Some(name) => [name]
-                   },
-                 ),
-             },
-           );
+           generate_input_object(config, input_obj_name, fields);
          },
      )
   |> Ast_helper.Str.type_(Recursive);

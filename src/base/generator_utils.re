@@ -21,6 +21,7 @@ type output_config = {
   delimiter: option(string),
   schema: Schema.schema,
   full_document: Graphql_ast.document,
+  records: bool,
 };
 
 let filter_map = (f, l) => {

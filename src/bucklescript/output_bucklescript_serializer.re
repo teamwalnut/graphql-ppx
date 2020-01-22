@@ -33,23 +33,23 @@ let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
   | Type(Scalar({sm_name: "String"})) => [%expr
-      (v => Some(Js.Json.string(v)))
+      (a => Some(Js.Json.string(a)))
     ]
   | Type(Scalar({sm_name: "Int"})) => [%expr
-      (v => Some(Js.Json.number(float_of_int(v))))
+      (a => Some(Js.Json.number(float_of_int(a))))
     ]
   | Type(Scalar({sm_name: "Float"})) => [%expr
-      (v => Some(Js.Json.number(v)))
+      (a => Some(Js.Json.number(a)))
     ]
   | Type(Scalar({sm_name: "Boolean"})) => [%expr
-      (v => Some(Js.Json.boolean(v)))
+      (a => Some(Js.Json.boolean(a)))
     ]
-  | Type(Scalar({sm_name: _})) => [%expr (v => Some(v))]
+  | Type(Scalar({sm_name: _})) => [%expr (a => Some(a))]
   | Type(InputObject({iom_name})) => [%expr
       (
-        v =>
+        a =>
           Some(
-            [%e ident_from_string("serializeInputObject" ++ iom_name)](v),
+            [%e ident_from_string("serializeInputObject" ++ iom_name)](a),
           )
       )
     ]
@@ -57,7 +57,7 @@ let rec serialize_type =
       let case_exp =
         Ast_helper.(
           Exp.match(
-            ident_from_string("v"),
+            ident_from_string("a"),
             em_values
             |> List.map(value => {
                  Exp.case(
@@ -78,14 +78,14 @@ let rec serialize_type =
           )
         );
       %expr
-      (v => Some([%e case_exp]));
+      (a => Some([%e case_exp]));
     }
   | Nullable(inner) => [%expr
       (
-        v =>
-          switch (v) {
+        a =>
+          switch (a) {
           | None => None
-          | Some(v) => [%e serialize_type(inner)](v)
+          | Some(b) => [%e serialize_type(inner)](b)
           }
       )
     ]
@@ -93,12 +93,12 @@ let rec serialize_type =
   // JSON nulls
   | List(inner) => [%expr
       (
-        v =>
+        a =>
           Some(
-            v
-            |> Array.map(v =>
-                 switch ([%e serialize_type(inner)](v)) {
-                 | Some(v) => v
+            a
+            |> Array.map(b =>
+                 switch ([%e serialize_type(inner)](b)) {
+                 | Some(c) => c
                  | None => Js.Json.null
                  }
                ),
@@ -114,7 +114,7 @@ let rec serialize_type =
  * This creates a serialize function for variables and/or input types
  * the return type is Js.Json.t.
  */
-let serialize_fun = fields => {
+let serialize_fun = (config, fields) => {
   let arg = "input";
   Ast_helper.(
     Exp.fun_(
@@ -136,7 +136,16 @@ let serialize_fun = fields => {
                          )
                        ],
                        [%e serialize_type(type_)](
-                         [%e ident_from_string(arg ++ "." ++ name)],
+                         switch%e (config.records) {
+                         | true => ident_from_string(arg ++ "." ++ name)
+                         | false =>
+                           %expr
+                           [%e ident_from_string(arg)]##[%e
+                                                           ident_from_string(
+                                                             name,
+                                                           )
+                                                         ]
+                         },
                        ),
                      );
                    };
@@ -163,7 +172,8 @@ let serialize_fun = fields => {
   );
 };
 
-let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
+let generate_serialize_variables =
+    (config, arg_type_defs: list(arg_type_def)) =>
   Ast_helper.(
     Str.value(
       Recursive,
@@ -204,7 +214,7 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
                    ),
                  ),
                ),
-               serialize_fun(fields),
+               serialize_fun(config, fields),
              ),
          ),
     )
@@ -224,7 +234,7 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
   * function, the end-result will be serialized.
  */
 let generate_variable_constructors =
-    (schema, arg_type_defs: list(arg_type_def)) => {
+    (config, arg_type_defs: list(arg_type_def)) => {
   Ast_helper.(
     Str.value(
       Nonrecursive,
@@ -281,24 +291,39 @@ let generate_variable_constructors =
                    );
                  };
 
+                 let record =
+                   Ast_helper.(
+                     Exp.record(
+                       ~loc=loc |> conv_loc,
+                       fields
+                       |> List.map(
+                            fun
+                            | InputField({name, loc}) => (
+                                {
+                                  Location.txt: Longident.parse(name),
+                                  loc: Location.none,
+                                },
+                                ident_from_string(name),
+                              ),
+                          ),
+                       None,
+                     )
+                   );
+
+                 let object_ =
+                   Ast_406.(
+                     Ast_helper.(
+                       Exp.extension((
+                         {txt: "bs.obj", loc: Location.none},
+                         PStr([[%stri [%e record]]]),
+                       ))
+                     )
+                   );
+
                  let body =
                    Ast_helper.(
                      Exp.constraint_(
-                       Exp.record(
-                         ~loc=loc |> conv_loc,
-                         fields
-                         |> List.map(
-                              fun
-                              | InputField({name, loc}) => (
-                                  {
-                                    Location.txt: Longident.parse(name),
-                                    loc: Location.none,
-                                  },
-                                  ident_from_string(name),
-                                ),
-                            ),
-                         None,
-                       ),
+                       config.records ? record : object_,
                        Typ.constr(
                          {
                            txt:

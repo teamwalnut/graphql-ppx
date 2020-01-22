@@ -110,6 +110,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         full_document: document,
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
+        records: false,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
