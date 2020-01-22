@@ -53,16 +53,15 @@ async function test(folder) {
   // await command(`cp -r ./apollo-mode/ ./__tests__`);
   // await command("npm run test");
 
-  // objects
-  // writeConfig([]);
-  // await command(`cp -r ./object-tests/ ./__tests__`);
-  // await command("npm run test");
-
+  writeConfig([]);
+  await command(`cp -r ./object-tests/ ./__tests__`);
+  await command("npm run test");
+  await cleanup();
   // records
   writeConfig(["-apollo-mode", "-lean-parse", "-records"]);
   await command(`cp -r ./record-tests/ ./__tests__`);
   await command("npm run test");
-  // await cleanup();
+  await cleanup();
 }
 
 async function run() {

@@ -256,8 +256,8 @@ let generate_object_type = (config, fields, obj_path) => {
   );
 };
 let generate_graphql_object =
-    (config: Generator_utils.output_config, fields, obj_path) => {
-  config.records
+    (config: Generator_utils.output_config, fields, obj_path, force_record) => {
+  config.records || force_record
     ? generate_record_type(config, fields, obj_path)
     : generate_object_type(config, fields, obj_path);
 };
@@ -268,8 +268,8 @@ let generate_types = (config: Generator_utils.output_config, res) => {
     extract([], res)
     |> List.map(
          fun
-         | Object({fields, path: obj_path}) =>
-           generate_graphql_object(config, fields, obj_path),
+         | Object({fields, path: obj_path, force_record}) =>
+           generate_graphql_object(config, fields, obj_path, force_record),
        );
 
   Ast_helper.Str.type_(Recursive, types);
