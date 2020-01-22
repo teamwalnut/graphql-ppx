@@ -152,11 +152,6 @@ let generate_default_operation =
     //   );
     // let (make_fn, make_with_variables_fn, make_variables_fn, definition_tuple) =
     //   Output_bucklescript_unifier.make_make_fun(config, variable_defs);
-    let make_fn = [%expr
-      let make = () => {
-        makeVariables();
-      }
-    ];
 
     let variable_constructors =
       Output_bucklescript_encoder.generate_variable_constructors(

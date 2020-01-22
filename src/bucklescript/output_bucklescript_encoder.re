@@ -439,6 +439,29 @@ let generate_variable_constructors =
                        );
                      };
 
+                 let make_labeled_fun_with_f = (body, fields) => {
+                   Ast_helper.(
+                     Exp.fun_(
+                       ~loc=loc |> conv_loc,
+                       Optional("f"),
+                       None,
+                       Pat.var(
+                         ~loc=loc |> conv_loc,
+                         {txt: "f", loc: loc |> conv_loc},
+                       ),
+                       make_labeled_fun(
+                         switch%expr (f) {
+                         | None =>
+                           %e
+                           body
+                         | Some(f) => f([%e body])
+                         },
+                         fields,
+                       ),
+                     )
+                   );
+                 };
+
                  let body =
                    Ast_helper.(
                      Exp.constraint_(
@@ -474,7 +497,24 @@ let generate_variable_constructors =
                      )
                    );
 
-                 fields |> make_labeled_fun(body);
+                 switch (name) {
+                 | None =>
+                   Ast_helper.(
+                     make_labeled_fun_with_f(
+                       Exp.apply(
+                         Exp.ident({
+                           Location.txt:
+                             Longident.Lident("serializeVariables"),
+                           loc: Location.none,
+                         }),
+                         [(Nolabel, body)],
+                       ),
+                       fields,
+                     )
+                   )
+
+                 | Some(_) => make_labeled_fun(body, fields)
+                 };
                },
              ),
          ),
