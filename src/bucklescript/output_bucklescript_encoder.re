@@ -341,15 +341,38 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
            fun
            | InputObject({name, fields, loc}) =>
              Vb.mk(
-               Pat.var({
-                 loc: Location.none,
-                 txt:
-                   switch (name) {
-                   | None => "serializeVariables"
-                   | Some(input_object_name) =>
-                     "serializeInputObject" ++ input_object_name
-                   },
-               }),
+               Pat.constraint_(
+                 Pat.var({
+                   loc: Location.none,
+                   txt:
+                     switch (name) {
+                     | None => "serializeVariables"
+                     | Some(input_object_name) =>
+                       "serializeInputObject" ++ input_object_name
+                     },
+                 }),
+                 Typ.arrow(
+                   Nolabel,
+                   Typ.constr(
+                     {
+                       txt:
+                         Longident.parse(
+                           switch (name) {
+                           | None => "t_variables"
+                           | Some(input_object_name) =>
+                             "t_variables_" ++ input_object_name
+                           },
+                         ),
+                       loc: Location.none,
+                     },
+                     [],
+                   ),
+                   Typ.constr(
+                     {txt: Longident.parse("Js.Json.t"), loc: Location.none},
+                     [],
+                   ),
+                 ),
+               ),
                serialize_fun(fields),
              ),
          ),
