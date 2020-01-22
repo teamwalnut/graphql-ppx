@@ -112,8 +112,7 @@ let rec serialize_type =
 
 /*
  * This creates a serialize function for variables and/or input types
- * the return type is JSON.
- *
+ * the return type is Js.Json.t.
  */
 let serialize_fun = fields => {
   let arg = "input";
@@ -211,6 +210,19 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
     )
   );
 
+/*
+  * Generate constructors for variables and for input types.
+  * If there are lots of optional variables this will generate a function with
+  * optional arguments, so you do not have to specify all variables if most are
+  * None.
+  *
+  * This also helps if you don't want the build to break if a optional variable
+  * is added.
+  *
+  * The makeVariables (root) yields Js.Json.t, the input types will yield
+  * unserialized contents, but if you use them inside of the makeVariables
+  * function, the end-result will be serialized.
+ */
 let generate_variable_constructors =
     (schema, arg_type_defs: list(arg_type_def)) => {
   Ast_helper.(
