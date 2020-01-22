@@ -133,28 +133,20 @@ let make_printed_query = (config, document) => {
 let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
-    Output_bucklescript_decoder.generate_decoder(config, res_structure);
+    Output_bucklescript_parser.generate_parser(config, res_structure);
   let types = Output_bucklescript_types.generate_types(res_structure);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
   let serialize_variable_functions =
-    Output_bucklescript_encoder.generate_serialize_variables(
+    Output_bucklescript_serializer.generate_serialize_variables(
       extract_args(config, variable_defs),
     );
+
   if (has_error) {
     [[%stri let parse = value => [%e parse_fn]]];
   } else {
-    // let (rec_flag, encoders) =
-    //   Output_bucklescript_encoder.generate_encoders(
-    //     config,
-    //     Result_structure.res_loc(res_structure),
-    //     variable_defs,
-    //   );
-    // let (make_fn, make_with_variables_fn, make_variables_fn, definition_tuple) =
-    //   Output_bucklescript_unifier.make_make_fun(config, variable_defs);
-
     let variable_constructors =
-      Output_bucklescript_encoder.generate_variable_constructors(
+      Output_bucklescript_serializer.generate_variable_constructors(
         config,
         extract_args(config, variable_defs),
       );
@@ -168,9 +160,21 @@ let generate_default_operation =
         [serialize_variable_functions],
         [
           variable_constructors,
-          // [%stri let make = [%e make_fn]],
-          // [%stri let makeWithVariables = [%e make_with_variables_fn]],
-          // [%stri let makeVariables = [%e make_variables_fn]],
+          [%stri let makeVariables = makeVar(~f=f => f)],
+          [%stri
+            let make =
+              makeVar(~f=variables => {
+                {"query": query, "variables": variables, "parse": parse}
+              })
+          ],
+          [%stri
+            let makeWithVariables = variables => {
+              "query": query,
+              "variables": serializeVariables(variables),
+              "parse": parse,
+            }
+          ],
+          [%stri let definition = (query, parse, makeVar)],
           // [%stri let definition = [%e definition_tuple]],
         ],
       ]),
@@ -181,7 +185,7 @@ let generate_default_operation =
 let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
-    Output_bucklescript_decoder.generate_decoder(config, res_structure);
+    Output_bucklescript_parser.generate_parser(config, res_structure);
   let types = Output_bucklescript_types.generate_types(res_structure);
 
   let variable_names =

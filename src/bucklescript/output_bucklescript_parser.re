@@ -158,7 +158,7 @@ let generate_error = (loc, message) => {
   Ast_helper.Exp.extension(~loc, ext);
 };
 
-let rec generate_decoder = config =>
+let rec generate_parser = config =>
   fun
   | Res_nullable(loc, inner) =>
     lean_parse()
@@ -216,7 +216,7 @@ and generate_nullable_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   (
     switch%expr (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-    | Some(_) => Some([%e generate_decoder(config, inner)])
+    | Some(_) => Some([%e generate_parser(config, inner)])
     | None => None
     }
     // (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.null
@@ -226,7 +226,7 @@ and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
     switch%expr (Js.Json.decodeNull(value)) {
-    | None => Some([%e generate_decoder(config, inner)])
+    | None => Some([%e generate_parser(config, inner)])
     | Some(_) => None
     }
   )
@@ -238,7 +238,7 @@ and generate_array_decoder = (config, loc, inner) =>
     |> Js.Option.getExn
     |> Js.Array.map(value => {
          %e
-         generate_decoder(config, inner)
+         generate_parser(config, inner)
        })
   ]
 and generate_array_decoder_lean = (config, loc, inner) =>
@@ -247,7 +247,7 @@ and generate_array_decoder_lean = (config, loc, inner) =>
     Obj.magic(value)
     |> Js.Array.map(value => {
          %e
-         generate_decoder(config, inner)
+         generate_parser(config, inner)
        })
   ]
 and generate_custom_decoder = (config, loc, ident, inner) => {
@@ -258,7 +258,7 @@ and generate_custom_decoder = (config, loc, ident, inner) => {
         txt: Longident.parse(ident ++ ".parse"),
       })
     );
-  [@metaloc loc] [%expr [%e fn_expr]([%e generate_decoder(config, inner)])];
+  [@metaloc loc] [%expr [%e fn_expr]([%e generate_parser(config, inner)])];
 }
 and generate_record_decoder = (config, loc, name, fields) => {
   /*
@@ -306,7 +306,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  switch%expr (Js.Dict.get(value, [%e const_str_expr(field)])) {
                  | Some(value) =>
                    %e
-                   generate_decoder(config, inner)
+                   generate_parser(config, inner)
                  | None =>
                    if%e (can_be_absent_as_field(inner)) {
                      %expr
@@ -425,7 +425,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                    switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
                    | Some(value) =>
                      %e
-                     generate_decoder(config, inner)
+                     generate_parser(config, inner)
                    | None =>
                      if%e (can_be_absent_as_field(inner)) {
                        %expr
@@ -543,7 +543,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                    );
 
                  %e
-                 generate_decoder(config, inner);
+                 generate_parser(config, inner);
                },
              )
            | Fr_fragment_spread(key, loc, name, _) => (
@@ -691,7 +691,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                   switch%expr (Js.Dict.get(value, [%e const_str_expr(key)])) {
                   | Some(value) =>
                     %e
-                    generate_decoder(config, inner)
+                    generate_parser(config, inner)
                   | None =>
                     if%e (can_be_absent_as_field(inner)) {
                       %expr
@@ -873,7 +873,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
           Ast_helper.(
             Exp.variant(
               Compat.capitalize_ascii(field),
-              Some(generate_decoder(config, inner)),
+              Some(generate_parser(config, inner)),
             )
           );
         switch%expr (Js.Dict.get(value, [%e const_str_expr(field)])) {
@@ -949,7 +949,7 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
     open Ast_helper;
     let name_pattern = Pat.any();
 
-    Exp.variant(type_name, Some(generate_decoder(config, inner)))
+    Exp.variant(type_name, Some(generate_parser(config, inner)))
     |> Exp.case(name_pattern);
   };
 
@@ -957,7 +957,7 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
     open Ast_helper;
     let name_pattern = Pat.constant(Pconst_string(type_name, None));
 
-    Exp.variant(type_name, Some(generate_decoder(config, inner)))
+    Exp.variant(type_name, Some(generate_parser(config, inner)))
     |> Exp.case(name_pattern);
   };
   let map_case_ty = ((name, _)) =>
@@ -1033,7 +1033,7 @@ and generate_poly_variant_union =
       |> List.map(((type_name, inner)) => {
            let name_pattern = Pat.constant(Pconst_string(type_name, None));
            Ast_helper.(
-             Exp.variant(type_name, Some(generate_decoder(config, inner)))
+             Exp.variant(type_name, Some(generate_parser(config, inner)))
            )
            |> Exp.case(name_pattern);
          })
