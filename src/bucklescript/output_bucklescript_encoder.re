@@ -217,15 +217,26 @@ let generate_encoders = (config, _loc) =>
 let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => [%expr Some(Js.Json.string(v))]
-  | Type(Scalar({sm_name: "Int"})) => [%expr
-      Some(Js.Json.number(float_of_int(v)))
+  | Type(Scalar({sm_name: "String"})) => [%expr
+      (v => Some(Js.Json.string(v)))
     ]
-  | Type(Scalar({sm_name: "Float"})) => [%expr Some(Js.Json.number(v))]
-  | Type(Scalar({sm_name: "Boolean"})) => [%expr Some(Js.Json.boolean(v))]
-  | Type(Scalar({sm_name: _})) => [%expr Some(v)]
+  | Type(Scalar({sm_name: "Int"})) => [%expr
+      (v => Some(Js.Json.number(float_of_int(v))))
+    ]
+  | Type(Scalar({sm_name: "Float"})) => [%expr
+      (v => Some(Js.Json.number(v)))
+    ]
+  | Type(Scalar({sm_name: "Boolean"})) => [%expr
+      (v => Some(Js.Json.boolean(v)))
+    ]
+  | Type(Scalar({sm_name: _})) => [%expr (v => Some(v))]
   | Type(InputObject({iom_name})) => [%expr
-      Some([%e ident_from_string("serializeInputObject" ++ iom_name)](v))
+      (
+        v =>
+          Some(
+            [%e ident_from_string("serializeInputObject" ++ iom_name)](v),
+          )
+      )
     ]
   | Type(Enum({em_values})) => {
       let case_exp =
@@ -252,32 +263,37 @@ let rec serialize_type =
           )
         );
       %expr
-      Some([%e case_exp]);
+      (v => Some([%e case_exp]));
     }
-  | Nullable(inner) =>
-    switch%expr (v) {
-    | None => None
-    | Some(v) =>
-      %e
-      serialize_type(inner)
-    }
+  | Nullable(inner) => [%expr
+      (
+        v =>
+          switch (v) {
+          | None => None
+          | Some(v) => [%e serialize_type(inner)](v)
+          }
+      )
+    ]
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
   | List(inner) => [%expr
-      Some(
-        v
-        |> Array.map(v =>
-             switch ([%e serialize_type(inner)]) {
-             | Some(v) => v
-             | None => Js.Json.null
-             }
-           ),
+      (
+        v =>
+          Some(
+            v
+            |> Array.map(v =>
+                 switch ([%e serialize_type(inner)](v)) {
+                 | Some(v) => v
+                 | None => Js.Json.null
+                 }
+               ),
+          )
       )
     ]
-  | Type(Object(_)) => [%expr None]
-  | Type(Union(_)) => [%expr None]
-  | Type(Interface(_)) => [%expr None]
-  | TypeNotFound(_) => [%expr None];
+  | Type(Object(_)) => [%expr (v => None)]
+  | Type(Union(_)) => [%expr (v => None)]
+  | Type(Interface(_)) => [%expr (v => None)]
+  | TypeNotFound(_) => [%expr (v => None)];
 
 /*
  * This creates a serialize function for variables and/or input types
@@ -299,14 +315,15 @@ let serialize_fun = fields => {
                | InputField({name, type_}) => {
                    %expr
                    {
-                     let v = [%e ident_from_string(arg ++ "." ++ name)];
                      (
                        [%e
                          Ast_helper.Exp.constant(
                            Parsetree.Pconst_string(name, None),
                          )
                        ],
-                       [%e serialize_type(type_)],
+                       [%e serialize_type(type_)](
+                         [%e ident_from_string(arg ++ "." ++ name)],
+                       ),
                      );
                    };
                  },
@@ -378,3 +395,89 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
          ),
     )
   );
+
+let generate_variable_constructors =
+    (schema, arg_type_defs: list(arg_type_def)) => {
+  Ast_helper.(
+    Str.value(
+      Nonrecursive,
+      arg_type_defs
+      |> List.map(
+           fun
+           | InputObject({name, fields, loc}) =>
+             Vb.mk(
+               Pat.var({
+                 loc: Location.none,
+                 txt:
+                   switch (name) {
+                   | None => "makeVariables"
+                   | Some(input_object_name) =>
+                     "makeInputObject" ++ input_object_name
+                   },
+               }),
+               {
+                 let rec make_labeled_fun = body =>
+                   fun
+                   | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
+                   | [InputField({name, loc, type_}), ...tl] => {
+                       let name_loc = loc |> conv_loc;
+                       Ast_helper.(
+                         Exp.fun_(
+                           ~loc=name_loc,
+                           switch (type_) {
+                           | List(_)
+                           | Type(_) => Labelled(name)
+                           | _ => Optional(name)
+                           },
+                           None,
+                           Pat.var(
+                             ~loc=name_loc,
+                             {txt: name, loc: name_loc},
+                           ),
+                           make_labeled_fun(body, tl),
+                         )
+                       );
+                     };
+
+                 let body =
+                   Ast_helper.(
+                     Exp.constraint_(
+                       Exp.record(
+                         ~loc=loc |> conv_loc,
+                         fields
+                         |> List.map(
+                              fun
+                              | InputField({name, loc}) => (
+                                  {
+                                    Location.txt: Longident.parse(name),
+                                    loc: Location.none,
+                                  },
+                                  ident_from_string(name),
+                                ),
+                            ),
+                         None,
+                       ),
+                       Typ.constr(
+                         {
+                           txt:
+                             Longident.parse(
+                               switch (name) {
+                               | None => "t_variables"
+                               | Some(input_type_name) =>
+                                 "t_variables_" ++ input_type_name
+                               },
+                             ),
+                           loc: Location.none,
+                         },
+                         [],
+                       ),
+                     )
+                   );
+
+                 fields |> make_labeled_fun(body);
+               },
+             ),
+         ),
+    )
+  );
+};
