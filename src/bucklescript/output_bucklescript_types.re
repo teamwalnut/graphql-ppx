@@ -16,19 +16,19 @@ let make_error_raiser = message =>
 // duplicate of ouput_bucklescript_decoder
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
-let generate_name =
+let generate_name = (~prefix="t") =>
   fun
-  | [] => "t"
+  | [] => prefix
   | path => {
       path
       |> List.rev
-      |> List.fold_left((acc, item) => acc ++ "_" ++ item, "t");
+      |> List.fold_left((acc, item) => acc ++ "_" ++ item, prefix);
     };
 
-let base_type = name => {
+let base_type = (~inner=[], name) => {
   Ast_helper.Typ.constr(
     {Location.txt: Longident.parse(name), loc: Location.none},
-    [],
+    inner,
   );
 };
 
@@ -37,19 +37,9 @@ let rec generate_type = path =>
   fun
   | Res_string(loc) => base_type("string")
   | Res_nullable(_loc, inner) =>
-    Ast_helper.(
-      Typ.constr(
-        {Location.txt: Longident.Lident("option"), loc: Location.none},
-        [generate_type(path, inner)],
-      )
-    )
+    base_type(~inner=[generate_type(path, inner)], "option")
   | Res_array(_loc, inner) =>
-    Ast_helper.(
-      Typ.constr(
-        {Location.txt: Longident.Lident("array"), loc: Location.none},
-        [generate_type(path, inner)],
-      )
-    )
+    base_type(~inner=[generate_type(path, inner)], "array")
   | Res_custom_decoder(loc, module_name, _) => base_type(module_name ++ ".t")
   | Res_id(loc) => base_type("string")
   | Res_int(loc) => base_type("int")
@@ -159,9 +149,9 @@ let rec generate_type = path =>
     };
 
 // generate all the types necessary types that we later refer to by name.
-let generate_types = (path, res) => {
+let generate_types = res => {
   let types =
-    extract(path, res)
+    extract([], res)
     |> List.map(
          fun
          | Object({fields, path: obj_path}) =>
@@ -212,4 +202,105 @@ let generate_types = (path, res) => {
        );
 
   Ast_helper.Str.type_(Recursive, types);
+};
+
+let rec generate_arg_type = loc =>
+  fun
+  | Type(Scalar({sm_name: "ID"}))
+  | Type(Scalar({sm_name: "String"})) => base_type("string")
+  | Type(Scalar({sm_name: "Int"})) => base_type("int")
+  | Type(Scalar({sm_name: "Float"})) => base_type("float")
+  | Type(Scalar({sm_name: "Boolean"})) => base_type("bool")
+  | Type(Scalar({sm_name: _})) => base_type("Js.Json.t")
+  | Type(Enum(enum_meta)) =>
+    Ast_406.Parsetree.(
+      Graphql_ppx_base__.Schema.(
+        Ast_helper.(
+          Typ.variant(
+            enum_meta.em_values
+            |> List.map(({evm_name, _}) =>
+                 Rtag({txt: evm_name, loc: Location.none}, [], true, [])
+               ),
+            Closed,
+            None,
+          )
+        )
+      )
+    )
+  | Type(InputObject({iom_name})) =>
+    base_type(generate_name(~prefix="t_variables", [iom_name]))
+  | Type(Object(_)) =>
+    raise(
+      Location.Error(
+        Location.error(~loc=loc |> conv_loc, "Object not allowed in args"),
+      ),
+    )
+  | Type(Union(_)) =>
+    raise(
+      Location.Error(
+        Location.error(~loc=loc |> conv_loc, "Union not allowed in args"),
+      ),
+    )
+  | Type(Interface(_)) =>
+    raise(
+      Location.Error(
+        Location.error(~loc=loc |> conv_loc, "Interface not allowed in args"),
+      ),
+    )
+  | Nullable(inner) =>
+    base_type(~inner=[generate_arg_type(loc, inner)], "option")
+  | List(inner) =>
+    base_type(~inner=[generate_arg_type(loc, inner)], "array")
+  | TypeNotFound(name) =>
+    raise(
+      Location.Error(
+        Location.error(
+          ~loc=loc |> conv_loc,
+          "Type " ++ name ++ " not found!",
+        ),
+      ),
+    );
+
+let generate_arg_types = (config, variable_defs) => {
+  extract_args(config, variable_defs)
+  |> List.map(
+       fun
+       | InputObject({name: input_obj_name, fields}) => {
+           Ast_helper.Type.mk(
+             ~kind=
+               Ptype_record(
+                 fields
+                 |> List.map(
+                      fun
+                      | InputField({name, type_, loc}) => {
+                          Ast_helper.Type.field(
+                            {Location.txt: name, loc: Location.none},
+                            generate_arg_type(loc, type_),
+                          );
+                        },
+                      // | InputField({path: [], loc}) =>
+                      //   // I don't think this should ever happen but we need to
+                      //   // cover this case, perhaps we can constrain the type
+                      //   raise(
+                      //     Location.Error(
+                      //       Location.error(~loc=loc |> conv_loc, "No path"),
+                      //     ),
+                      //   ),
+                    ),
+               ),
+             {
+               loc: Location.none,
+               txt:
+                 generate_name(
+                   ~prefix="t_variables",
+                   switch (input_obj_name) {
+                   | None => []
+                   | Some(name) => [name]
+                   },
+                 ),
+             },
+           );
+         },
+     )
+  |> Ast_helper.Str.type_(Recursive);
 };

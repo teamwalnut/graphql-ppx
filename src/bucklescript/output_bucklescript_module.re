@@ -6,6 +6,7 @@ open Ast_406;
 open Asttypes;
 open Parsetree;
 open Ast_helper;
+open Extract_type_definitions;
 
 module StringSet = Set.Make(String);
 module VariableFinderImpl = {
@@ -133,7 +134,13 @@ let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
-  let types = Output_bucklescript_types.generate_types([], res_structure);
+  let types = Output_bucklescript_types.generate_types(res_structure);
+  let arg_types =
+    Output_bucklescript_types.generate_arg_types(config, variable_defs);
+  let serialize_variable_functions =
+    Output_bucklescript_encoder.generate_serialize_variables(
+      extract_args(config, variable_defs),
+    );
   if (has_error) {
     [[%stri let parse = value => [%e parse_fn]]];
   } else {
@@ -151,6 +158,7 @@ let generate_default_operation =
       List.concat([
         [[%stri type raw_t]],
         [types],
+        [arg_types],
         [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
         if (rec_flag == Recursive) {
           [
@@ -169,6 +177,7 @@ let generate_default_operation =
              )
           |> Array.to_list;
         },
+        [serialize_variable_functions],
         [
           [%stri let make = [%e make_fn]],
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
@@ -184,7 +193,7 @@ let generate_fragment_module =
     (config, name, _required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_decoder.generate_decoder(config, res_structure);
-  let types = Output_bucklescript_types.generate_types([], res_structure);
+  let types = Output_bucklescript_types.generate_types(res_structure);
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])

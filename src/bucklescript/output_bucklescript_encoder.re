@@ -9,11 +9,12 @@ open Asttypes;
 open Type_utils;
 open Generator_utils;
 open Output_bucklescript_utils;
+open Extract_type_definitions;
 
 let mangle_enum_name = Generator_utils.uncapitalize_ascii;
 
-let ident_from_string = (loc, func_name) =>
-  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(func_name), loc}));
+let ident_from_string = (~loc=Location.none, ident) =>
+  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
 
 module StringSet = Set.Make(String);
 
@@ -105,7 +106,7 @@ let rec parser_for_type = (schema, loc, type_ref) => {
       %expr
       (v => v)
     | Some(ty) =>
-      function_name_string(ty) |> ident_from_string(conv_loc(loc))
+      function_name_string(ty) |> ident_from_string(~loc=conv_loc(loc))
     }
   };
 };
@@ -129,7 +130,7 @@ let json_of_fields = (schema, loc, expr, fields) => {
                )
              ],
              [%e parser](
-               [%e expr]##[%e ident_from_string(conv_loc(loc), am_name)],
+               [%e expr]##[%e ident_from_string(~loc=conv_loc(loc), am_name)],
              ),
            )
          ];
@@ -197,3 +198,160 @@ let generate_encoders = (config, _loc) =>
     )
 
   | None => (Nonrecursive, [||]);
+
+/*
+  * This serializes a variable type to an option type with a JSON value
+  * the reason that it generates an option type is that we don't want the values
+  * to become Js.Json.null, that would mean actually setting a value to null in
+  * the GraphQL spec.
+  *
+  * What we want however is to remove these values from the generated JSON
+  * object. To be able to achieve that we wrap it in an option, so that we know
+  * which values to remove.
+  *
+  * In the future we'd like to support a flag so that:
+  *   Some(Some(val)) => actual value
+  *   None => not present in JSON object
+  *   Some(None) => Null
+ */
+let rec serialize_type =
+  fun
+  | Type(Scalar({sm_name: "ID"}))
+  | Type(Scalar({sm_name: "String"})) => [%expr Some(Js.Json.string(v))]
+  | Type(Scalar({sm_name: "Int"})) => [%expr
+      Some(Js.Json.number(float_of_int(v)))
+    ]
+  | Type(Scalar({sm_name: "Float"})) => [%expr Some(Js.Json.number(v))]
+  | Type(Scalar({sm_name: "Boolean"})) => [%expr Some(Js.Json.boolean(v))]
+  | Type(Scalar({sm_name: _})) => [%expr Some(v)]
+  | Type(InputObject({iom_name})) => [%expr
+      Some([%e ident_from_string("serializeInputObject" ++ iom_name)](v))
+    ]
+  | Type(Enum({em_values})) => {
+      let case_exp =
+        Ast_helper.(
+          Exp.match(
+            ident_from_string("v"),
+            em_values
+            |> List.map(value => {
+                 Exp.case(
+                   Pat.variant(value.evm_name, None),
+                   Exp.apply(
+                     ident_from_string("Js.Json.string"),
+                     [
+                       (
+                         Nolabel,
+                         Ast_helper.Exp.constant(
+                           Parsetree.Pconst_string(value.evm_name, None),
+                         ),
+                       ),
+                     ],
+                   ),
+                 )
+               }),
+          )
+        );
+      %expr
+      Some([%e case_exp]);
+    }
+  | Nullable(inner) =>
+    switch%expr (v) {
+    | None => None
+    | Some(v) =>
+      %e
+      serialize_type(inner)
+    }
+  // in this case if there are null values in the list actually convert them to
+  // JSON nulls
+  | List(inner) => [%expr
+      Some(
+        v
+        |> Array.map(v =>
+             switch ([%e serialize_type(inner)]) {
+             | Some(v) => v
+             | None => Js.Json.null
+             }
+           ),
+      )
+    ]
+  | Type(Object(_)) => [%expr None]
+  | Type(Union(_)) => [%expr None]
+  | Type(Interface(_)) => [%expr None]
+  | TypeNotFound(_) => [%expr None];
+
+/*
+ * This creates a serialize function for variables and/or input types
+ * the return type is JSON.
+ *
+ */
+let serialize_fun = fields => {
+  let arg = "input";
+  Ast_helper.(
+    Exp.fun_(
+      Nolabel,
+      None,
+      Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
+      {
+        let field_array =
+          fields
+          |> List.map(
+               fun
+               | InputField({name, type_}) => {
+                   %expr
+                   {
+                     let v = [%e ident_from_string(arg ++ "." ++ name)];
+                     (
+                       [%e
+                         Ast_helper.Exp.constant(
+                           Parsetree.Pconst_string(name, None),
+                         )
+                       ],
+                       [%e serialize_type(type_)],
+                     );
+                   };
+                 },
+             )
+          |> Ast_helper.Exp.array;
+
+        %expr
+        [%e field_array]
+        |> Js.Array.filter(
+             fun
+             | (_, None) => false
+             | (_, Some(_)) => true,
+           )
+        |> Js.Array.map(
+             fun
+             | (k, Some(v)) => (k, v)
+             | (k, None) => (k, Js.Json.null),
+           )
+        |> Js.Dict.fromArray
+        |> Js.Json.object_;
+      },
+    )
+  );
+};
+
+let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
+  Ast_helper.(
+    Str.value(
+      Recursive,
+      arg_type_defs
+      |> List.map(
+           fun
+           | InputObject({name, fields, loc}) =>
+             Vb.mk(
+               Pat.var({
+                 loc: Location.none,
+                 txt:
+                   switch (name) {
+                   | None => "serializeVariables"
+                   | Some(input_object_name) =>
+                     "serializeInputObject" ++ input_object_name
+                   },
+               }),
+               serialize_fun(fields),
+             ),
+         ),
+    )
+  );
