@@ -59,10 +59,10 @@ async function test(folder) {
   // await command("npm run test");
 
   // records
-  writeConfig(["-apollo-mode", "-lean-parse"]);
+  writeConfig(["-apollo-mode", "-lean-parse", "-records"]);
   await command(`cp -r ./record-tests/ ./__tests__`);
   await command("npm run test");
-  await cleanup();
+  // await cleanup();
 }
 
 async function run() {

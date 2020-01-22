@@ -137,10 +137,11 @@ let generate_default_operation =
   let types = Output_bucklescript_types.generate_types(config, res_structure);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
+  let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
       config,
-      extract_args(config, variable_defs),
+      extracted_args,
     );
 
   if (has_error) {
@@ -149,18 +150,27 @@ let generate_default_operation =
     let variable_constructors =
       Output_bucklescript_serializer.generate_variable_constructors(
         config,
-        extract_args(config, variable_defs),
+        extracted_args,
       );
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
       List.concat([
         [[%stri type raw_t]],
         [types],
-        [arg_types],
+        switch (extracted_args) {
+        | [] => []
+        | _ => [arg_types]
+        },
         [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
-        [serialize_variable_functions],
+        switch (serialize_variable_functions) {
+        | None => [[%stri let serializeVariables = _ => Js.Json.null]]
+        | Some(f) => [f]
+        },
+        switch (variable_constructors) {
+        | None => [[%stri let makeVar = (~f, ()) => f(Js.Json.null)]]
+        | Some(c) => [c]
+        },
         [
-          variable_constructors,
           [%stri let makeVariables = makeVar(~f=f => f)],
           [%stri
             let make =

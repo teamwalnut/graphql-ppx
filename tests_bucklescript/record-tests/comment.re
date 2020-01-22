@@ -14,7 +14,7 @@ Jest.(
     test("Constructs with comment in query", () =>
       expect(
         MyQuery.makeVariables(
-          ~arg={"field": Some("test"), "enum": Some(`SECOND)},
+          ~arg={field: Some("test"), enum: Some(`SECOND)},
           (),
         ),
       )

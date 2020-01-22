@@ -13,10 +13,7 @@ Jest.(
 
     test("Constructing a recursive input type", () =>
       expect(
-        MyQuery.make(
-          ~arg={"field": Some("test"), "enum": Some(`SECOND)},
-          (),
-        )##variables,
+        MyQuery.make(~arg={field: Some("test"), enum: Some(`SECOND)}, ())##variables,
       )
       == Js.Json.parseExn(
            {| {

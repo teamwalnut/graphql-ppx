@@ -115,7 +115,7 @@ let rec serialize_type =
  * the return type is Js.Json.t.
  */
 let serialize_fun = (config, fields) => {
-  let arg = "input";
+  let arg = "inp";
   Ast_helper.(
     Exp.fun_(
       Nolabel,
@@ -137,7 +137,14 @@ let serialize_fun = (config, fields) => {
                        ],
                        [%e serialize_type(type_)](
                          switch%e (config.records) {
-                         | true => ident_from_string(arg ++ "." ++ name)
+                         | true =>
+                           Exp.field(
+                             ident_from_string(arg),
+                             {
+                               Location.txt: Longident.Lident(name),
+                               loc: Location.none,
+                             },
+                           )
                          | false =>
                            %expr
                            [%e ident_from_string(arg)]##[%e
@@ -174,51 +181,60 @@ let serialize_fun = (config, fields) => {
 
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
-  Ast_helper.(
-    Str.value(
-      Recursive,
-      arg_type_defs
-      |> List.map(
-           fun
-           | InputObject({name, fields, loc}) =>
-             Vb.mk(
-               Pat.constraint_(
-                 Pat.var({
-                   loc: Location.none,
-                   txt:
-                     switch (name) {
-                     | None => "serializeVariables"
-                     | Some(input_object_name) =>
-                       "serializeInputObject" ++ input_object_name
-                     },
-                 }),
-                 Typ.arrow(
-                   Nolabel,
-                   Typ.constr(
-                     {
-                       txt:
-                         Longident.parse(
-                           switch (name) {
-                           | None => "t_variables"
-                           | Some(input_object_name) =>
-                             "t_variables_" ++ input_object_name
-                           },
-                         ),
+  switch (arg_type_defs) {
+  | [] => None
+  | _ =>
+    Some(
+      Ast_helper.(
+        Str.value(
+          Recursive,
+          arg_type_defs
+          |> List.map(
+               fun
+               | InputObject({name, fields, loc}) =>
+                 Vb.mk(
+                   Pat.constraint_(
+                     Pat.var({
                        loc: Location.none,
-                     },
-                     [],
+                       txt:
+                         switch (name) {
+                         | None => "serializeVariables"
+                         | Some(input_object_name) =>
+                           "serializeInputObject" ++ input_object_name
+                         },
+                     }),
+                     Typ.arrow(
+                       Nolabel,
+                       Typ.constr(
+                         {
+                           txt:
+                             Longident.parse(
+                               switch (name) {
+                               | None => "t_variables"
+                               | Some(input_object_name) =>
+                                 "t_variables_" ++ input_object_name
+                               },
+                             ),
+                           loc: Location.none,
+                         },
+                         [],
+                       ),
+                       Typ.constr(
+                         {
+                           txt: Longident.parse("Js.Json.t"),
+                           loc: Location.none,
+                         },
+                         [],
+                       ),
+                     ),
                    ),
-                   Typ.constr(
-                     {txt: Longident.parse("Js.Json.t"), loc: Location.none},
-                     [],
-                   ),
+                   serialize_fun(config, fields),
                  ),
-               ),
-               serialize_fun(config, fields),
              ),
-         ),
+        )
+      ),
     )
-  );
+  };
 
 /*
   * Generate constructors for variables and for input types.
@@ -235,133 +251,140 @@ let generate_serialize_variables =
  */
 let generate_variable_constructors =
     (config, arg_type_defs: list(arg_type_def)) => {
-  Ast_helper.(
-    Str.value(
-      Nonrecursive,
-      arg_type_defs
-      |> List.map(
-           fun
-           | InputObject({name, fields, loc}) =>
-             Vb.mk(
-               Pat.var({
-                 loc: Location.none,
-                 txt:
-                   switch (name) {
-                   | None => "makeVar"
-                   | Some(input_object_name) =>
-                     "makeInputObject" ++ input_object_name
-                   },
-               }),
-               {
-                 let rec make_labeled_fun = body =>
-                   fun
-                   | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
-                   | [InputField({name, loc, type_}), ...tl] => {
-                       let name_loc = loc |> conv_loc;
+  switch (arg_type_defs) {
+  | [] => None
+  | _ =>
+    Some(
+      Ast_helper.(
+        Str.value(
+          Nonrecursive,
+          arg_type_defs
+          |> List.map(
+               fun
+               | InputObject({name, fields, loc}) =>
+                 Vb.mk(
+                   Pat.var({
+                     loc: Location.none,
+                     txt:
+                       switch (name) {
+                       | None => "makeVar"
+                       | Some(input_object_name) =>
+                         "makeInputObject" ++ input_object_name
+                       },
+                   }),
+                   {
+                     let rec make_labeled_fun = body =>
+                       fun
+                       | [] =>
+                         [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
+                       | [InputField({name, loc, type_}), ...tl] => {
+                           let name_loc = loc |> conv_loc;
+                           Ast_helper.(
+                             Exp.fun_(
+                               ~loc=name_loc,
+                               switch (type_) {
+                               | List(_)
+                               | Type(_) => Labelled(name)
+                               | _ => Optional(name)
+                               },
+                               None,
+                               Pat.var(
+                                 ~loc=name_loc,
+                                 {txt: name, loc: name_loc},
+                               ),
+                               make_labeled_fun(body, tl),
+                             )
+                           );
+                         };
+
+                     let make_labeled_fun_with_f = (body, fields) => {
                        Ast_helper.(
                          Exp.fun_(
-                           ~loc=name_loc,
-                           switch (type_) {
-                           | List(_)
-                           | Type(_) => Labelled(name)
-                           | _ => Optional(name)
-                           },
+                           ~loc=loc |> conv_loc,
+                           Labelled("f"),
                            None,
                            Pat.var(
-                             ~loc=name_loc,
-                             {txt: name, loc: name_loc},
+                             ~loc=loc |> conv_loc,
+                             {txt: "f", loc: loc |> conv_loc},
                            ),
-                           make_labeled_fun(body, tl),
+                           make_labeled_fun([%expr f([%e body])], fields),
                          )
                        );
                      };
 
-                 let make_labeled_fun_with_f = (body, fields) => {
-                   Ast_helper.(
-                     Exp.fun_(
-                       ~loc=loc |> conv_loc,
-                       Labelled("f"),
-                       None,
-                       Pat.var(
-                         ~loc=loc |> conv_loc,
-                         {txt: "f", loc: loc |> conv_loc},
-                       ),
-                       make_labeled_fun([%expr f([%e body])], fields),
-                     )
-                   );
-                 };
-
-                 let record =
-                   Ast_helper.(
-                     Exp.record(
-                       ~loc=loc |> conv_loc,
-                       fields
-                       |> List.map(
-                            fun
-                            | InputField({name, loc}) => (
-                                {
-                                  Location.txt: Longident.parse(name),
-                                  loc: Location.none,
-                                },
-                                ident_from_string(name),
+                     let record =
+                       Ast_helper.(
+                         Exp.record(
+                           ~loc=loc |> conv_loc,
+                           fields
+                           |> List.map(
+                                fun
+                                | InputField({name, loc}) => (
+                                    {
+                                      Location.txt: Longident.parse(name),
+                                      loc: Location.none,
+                                    },
+                                    ident_from_string(name),
+                                  ),
                               ),
-                          ),
-                       None,
-                     )
-                   );
+                           None,
+                         )
+                       );
 
-                 let object_ =
-                   Ast_406.(
-                     Ast_helper.(
-                       Exp.extension((
-                         {txt: "bs.obj", loc: Location.none},
-                         PStr([[%stri [%e record]]]),
-                       ))
-                     )
-                   );
+                     let object_ =
+                       Ast_406.(
+                         Ast_helper.(
+                           Exp.extension((
+                             {txt: "bs.obj", loc: Location.none},
+                             PStr([[%stri [%e record]]]),
+                           ))
+                         )
+                       );
 
-                 let body =
-                   Ast_helper.(
-                     Exp.constraint_(
-                       config.records ? record : object_,
-                       Typ.constr(
-                         {
-                           txt:
-                             Longident.parse(
-                               switch (name) {
-                               | None => "t_variables"
-                               | Some(input_type_name) =>
-                                 "t_variables_" ++ input_type_name
-                               },
-                             ),
-                           loc: Location.none,
-                         },
-                         [],
-                       ),
-                     )
-                   );
+                     let body =
+                       Ast_helper.(
+                         Exp.constraint_(
+                           config.records ? record : object_,
+                           Typ.constr(
+                             {
+                               txt:
+                                 Longident.parse(
+                                   switch (name) {
+                                   | None => "t_variables"
+                                   | Some(input_type_name) =>
+                                     "t_variables_" ++ input_type_name
+                                   },
+                                 ),
+                               loc: Location.none,
+                             },
+                             [],
+                           ),
+                         )
+                       );
 
-                 switch (name) {
-                 | None =>
-                   Ast_helper.(
-                     make_labeled_fun_with_f(
-                       Exp.apply(
-                         Exp.ident({
-                           Location.txt:
-                             Longident.Lident("serializeVariables"),
-                           loc: Location.none,
-                         }),
-                         [(Nolabel, body)],
-                       ),
-                       fields,
-                     )
-                   )
+                     switch (name) {
+                     | None =>
+                       Ast_helper.(
+                         make_labeled_fun_with_f(
+                           Exp.apply(
+                             Exp.ident({
+                               Location.txt:
+                                 Longident.Lident("serializeVariables"),
+                               loc: Location.none,
+                             }),
+                             [(Nolabel, body)],
+                           ),
+                           fields,
+                         )
+                       )
 
-                 | Some(_) => make_labeled_fun(body, fields)
-                 };
-               },
+                     | Some(_) => make_labeled_fun(body, fields)
+                     };
+                   },
+                 ),
              ),
-         ),
+        )
+      ),
     )
-  );
+  };
 };
