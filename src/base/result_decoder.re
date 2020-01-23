@@ -258,7 +258,8 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
   }
 and unify_field = (error_marker, config, field_span, ty) => {
   let ast_field = field_span.item;
-  let field_meta = lookup_field(ty, ast_field.fd_name.item);
+  let field_name = ast_field.fd_name.item;
+  let field_meta = lookup_field(ty, field_name);
   let key = some_or(ast_field.fd_alias, ast_field.fd_name).item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
@@ -283,7 +284,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
         error_marker,
         config.map_loc,
         field_span.span,
-        "Unknown field on type " ++ type_name(ty),
+        "Unknown field '" ++ field_name ++ "' on type " ++ type_name(ty),
       )
     | Some(field_meta) =>
       let field_ty = to_native_type_ref(field_meta.fm_field_type);

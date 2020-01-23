@@ -122,15 +122,8 @@ let rec generate_type = (config, path) =>
         Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
       );
     }
-  | Res_error(loc, _) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=conv_loc(loc),
-          "An error result should not happen here",
-        ),
-      ),
-    )
+  | Res_error(loc, error) =>
+    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(loc, enum_meta) => {
       Ast_406.Parsetree.(
         Graphql_ppx_base__.Schema.(

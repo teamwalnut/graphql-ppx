@@ -101,7 +101,8 @@ let rec serialize_type =
                  | Some(c) => c
                  | None => Js.Json.null
                  }
-               ),
+               )
+            |> Js.Json.array,
           )
       )
     ]
@@ -126,7 +127,7 @@ let serialize_fun = (config, fields) => {
           fields
           |> List.map(
                fun
-               | InputField({name, type_}) => {
+               | InputField({name, type_, loc}) => {
                    %expr
                    {
                      (
@@ -142,7 +143,7 @@ let serialize_fun = (config, fields) => {
                              ident_from_string(arg),
                              {
                                Location.txt: Longident.Lident(name),
-                               loc: Location.none,
+                               loc: conv_loc(loc),
                              },
                            )
                          | false =>
@@ -192,10 +193,11 @@ let generate_serialize_variables =
           |> List.map(
                fun
                | InputObject({name, fields, loc}) =>
+                 [@metaloc conv_loc(loc)]
                  Vb.mk(
                    Pat.constraint_(
                      Pat.var({
-                       loc: Location.none,
+                       loc: conv_loc(loc),
                        txt:
                          switch (name) {
                          | None => "serializeVariables"
@@ -215,14 +217,14 @@ let generate_serialize_variables =
                                  "t_variables_" ++ input_object_name
                                },
                              ),
-                           loc: Location.none,
+                           loc: conv_loc(loc),
                          },
                          [],
                        ),
                        Typ.constr(
                          {
                            txt: Longident.parse("Js.Json.t"),
-                           loc: Location.none,
+                           loc: conv_loc(loc),
                          },
                          [],
                        ),
@@ -262,9 +264,10 @@ let generate_variable_constructors =
           |> List.map(
                fun
                | InputObject({name, fields, loc}) =>
+                 [@metaloc conv_loc(loc)]
                  Vb.mk(
                    Pat.var({
-                     loc: Location.none,
+                     loc: conv_loc(loc),
                      txt:
                        switch (name) {
                        | None => "makeVar"
@@ -322,7 +325,7 @@ let generate_variable_constructors =
                                 | InputField({name, loc}) => (
                                     {
                                       Location.txt: Longident.parse(name),
-                                      loc: Location.none,
+                                      loc: conv_loc(loc),
                                     },
                                     ident_from_string(name),
                                   ),
@@ -335,7 +338,7 @@ let generate_variable_constructors =
                        Ast_406.(
                          Ast_helper.(
                            Exp.extension((
-                             {txt: "bs.obj", loc: Location.none},
+                             {txt: "bs.obj", loc: conv_loc(loc)},
                              PStr([[%stri [%e record]]]),
                            ))
                          )
@@ -355,7 +358,7 @@ let generate_variable_constructors =
                                      "t_variables_" ++ input_type_name
                                    },
                                  ),
-                               loc: Location.none,
+                               loc: conv_loc(loc),
                              },
                              [],
                            ),
@@ -370,7 +373,7 @@ let generate_variable_constructors =
                              Exp.ident({
                                Location.txt:
                                  Longident.Lident("serializeVariables"),
-                               loc: Location.none,
+                               loc: conv_loc(loc),
                              }),
                              [(Nolabel, body)],
                            ),
