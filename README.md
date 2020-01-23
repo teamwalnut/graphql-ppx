@@ -1,4 +1,4 @@
-# graphql_ppx_re
+# graphql_ppx
 
 [![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
 
@@ -35,10 +35,10 @@ If you want to use native version edit your `esy.json` file
 ```json
 {
   "dependencies": {
-    "@baransu/graphql_ppx_re": "*"
+    "graphql_ppx": "*"
   },
   "resolutions": {
-    "@baransu/graphql_ppx_re": "baransu/graphql_ppx_re:esy.json#<use latest stable commit from master>"
+    "graphql_ppx": "reasonml-community/graphql_ppx:esy.json#<use latest stable commit from master>"
   }
 }
 ```
@@ -67,19 +67,19 @@ to your backend. One of tools helping with it is [graphql-cli](https://www.npmjs
 
 ## Ignore `.graphql_ppx_cache` in your version control
 
-`graphql_ppx_re` will generate a `.graphql_ppx_cache` folder alongside your JSON
+`graphql_ppx` will generate a `.graphql_ppx_cache` folder alongside your JSON
 schema to optimize parsing performance. If you're
 using a version control system, you don't need to check it in.
 
 # Limitations
 
-While `graphql_ppx_re` covers a large portion of the GraphQL spec, there are still
+While `graphql_ppx` covers a large portion of the GraphQL spec, there are still
 some unsupported areas:
 
 - Not all GraphQL validations are implemented. It will _not_ validate argument
   types and do other sanity-checking of the queries. The fact that a query
   compiles does not mean that it will pass server-side validation.
-- Fragment support is limited and not 100% safe - because `graphql_ppx_re` only can
+- Fragment support is limited and not 100% safe - because `graphql_ppx` only can
   perform local reasoning on queries, you can construct queries with fragments
   that are invalid.
 
@@ -103,7 +103,7 @@ some unsupported areas:
 
 # Extra features
 
-By using some directives prefixed `bs`, `graphql_ppx_re` lets you modify how the
+By using some directives prefixed `bs`, `graphql_ppx` lets you modify how the
 result of a query is parsed. All these directives will be removed from the query
 at compile time, so your server doesn't have to support them.
 
@@ -115,7 +115,7 @@ syntax or pattern match on their contents. Since they are not named, they also
 result in quite large type error messages when there are mismatches.
 
 Reason/OCaml records, on the other hand, can be pattern matched, created using the
-spread syntax, and give nicer error messages when they mismatch. `graphql_ppx_re`
+spread syntax, and give nicer error messages when they mismatch. `graphql_ppx`
 gives you the option to decode a field as a record using the `@bsRecord`
 directive:
 
@@ -138,7 +138,7 @@ module HeroQuery = [%graphql {|
 ```
 
 Note that the record has to already exist and be in scope for this to work.
-`graphql_ppx_re` will not _create_ the record. Even though this involves some
+`graphql_ppx` will not _create_ the record. Even though this involves some
 duplication of both names and types, type errors will be generated if there are
 any mismatches.
 
@@ -280,7 +280,7 @@ nodes {
 }
 ```
 
-This is because we allow querying union fields only in certain cases. GraphQL provides the `__typename` field but it's not present in GraphQL introspection query thus `graphql_ppx_re` doesn't know that this field exists.
+This is because we allow querying union fields only in certain cases. GraphQL provides the `__typename` field but it's not present in GraphQL introspection query thus `graphql_ppx` doesn't know that this field exists.
 To fix your query simply remove `__typename`. It's added behinds a scene as an implementation detail and serves us as a way to decide which case to select when parsing your query result.
 
 This is an example of a correct query:
@@ -300,11 +300,11 @@ nodes {
 
 # Configuration
 
-If you need to customize certain features of `graphql_ppx_re` you can provide ppx arguments to do so:
+If you need to customize certain features of `graphql_ppx` you can provide ppx arguments to do so:
 
 ### -apollo-mode
 
-By default `graphql_ppx_re` adds `__typename` only to fields on which we need those informations (Unions and Interfaces). If you want to add `__typename` on every object in a query you can specify it by using `-apollo-mode` in `ppx-flags`. It's usefull in case of using `apollo-client` because of it's cache.
+By default `graphql_ppx` adds `__typename` only to fields on which we need those informations (Unions and Interfaces). If you want to add `__typename` on every object in a query you can specify it by using `-apollo-mode` in `ppx-flags`. It's usefull in case of using `apollo-client` because of it's cache.
 
 ```json
 "ppx-flags": [
@@ -314,7 +314,7 @@ By default `graphql_ppx_re` adds `__typename` only to fields on which we need th
 
 ### -schema
 
-By default `graphql_ppx_re` uses `graphql_schema.json` file from your root directory. You can override it by providing `-schema` argument in `ppx-flags` to overriding it.
+By default `graphql_ppx` uses `graphql_schema.json` file from your root directory. You can override it by providing `-schema` argument in `ppx-flags` to overriding it.
 
 ```json
 "ppx-flags": [
@@ -348,7 +348,7 @@ This opens up the possibility to use multiple different GraphQL APIs in the same
 
 # Supported platforms
 
-`graphql_ppx_re` somes with prebuild binaries for `linux-x64`, `darwin-x64` and `win-x64`. If you need support for other platform, please open an issue.
+`graphql_ppx` somes with prebuild binaries for `linux-x64`, `darwin-x64` and `win-x64`. If you need support for other platform, please open an issue.
 
 # Contributing
 
