@@ -1,3 +1,13 @@
+## [0.6.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.5.0...v0.6.0) (2020-01-23)
+
+## Features
+
+- Lean parse available under experimental `-lean-parse` feature flag ([6e7224b](https://github.com/reasonml-community/graphql_ppx/commit/6e7224ba9789bc67a68aa9566e295eff70855dd0))
+
+## Other
+
+- Update repository to name and organization change ([5df9be8](https://github.com/reasonml-community/graphql_ppx/commit/5df9be88ef5bd7be77df551265834cb1bc31a011))
+
 ## [0.5.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.4.9...v0.5.0) (2020-01-11)
 
 ### Features
