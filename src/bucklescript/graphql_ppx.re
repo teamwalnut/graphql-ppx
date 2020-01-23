@@ -57,7 +57,7 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (loc, delim, query) => {
+let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -95,7 +95,7 @@ let rewrite_query = (loc, delim, query) => {
         delimiter: delim,
         full_document: document,
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema()),
+        schema: Lazy.force(Read_schema.get_schema(schema)),
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -117,90 +117,192 @@ let rewrite_query = (loc, delim, query) => {
   };
 };
 
-let mapper = (_config, _cookies) => {
+let extract_schema_from_config = config_fields => {
   open Ast_406;
-  open Ast_mapper;
-  open Parsetree;
   open Asttypes;
+  open Parsetree;
 
-  let () =
-    Ppx_config.(
-      set_config({
-        verbose_logging: false,
-        // switch (List.find((==)("-verbose"), argv)) {
-        // | _ => true
-        // | exception Not_found => false
-        // },
-        output_mode: Ppx_config.String,
-        // switch (List.find((==)("-ast-out"), argv)) {
-        // | _ => Ppx_config.Apollo_AST
-        // | exception Not_found =>
-        // },
-        verbose_error_handling:
-          switch (Sys.getenv("NODE_ENV")) {
-          | "production" => false
-          | _ => true
-          | exception Not_found => true
-          },
-        apollo_mode:
-          switch (Sys.getenv("GRAPHQL_PPX_APOLLO_MODE")) {
-          | "true" => true
-          | _ => false
-          | exception Not_found => false
-          },
-        root_directory: Sys.getcwd(),
-        schema_file:
-          switch (Sys.getenv("GRAPHQL_PPX_SCHEMA")) {
-          | arg => arg
-          | exception Not_found => "graphql_schema.json"
-          },
-        raise_error_with_loc: (loc, message) => {
-          let loc = conv_loc(loc);
-          raise(Location.Error(Location.error(~loc, message)));
-        },
-      })
-    );
-
-  {
-    ...default_mapper,
-    module_expr: (mapper, mexpr) =>
-      switch (mexpr) {
-      | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
-        switch (pstr) {
-        | PStr([
-            {
-              pstr_desc:
-                Pstr_eval(
-                  {
-                    pexp_loc: loc,
-                    pexp_desc: Pexp_constant(Pconst_string(query, delim)),
-                    _,
-                  },
-                  _,
-                ),
-              _,
+  let maybe_schema_field =
+    try(
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("schema"), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+              ) =>
+              true
+            | _ => false
             },
-          ]) =>
-          rewrite_query(conv_loc_from_ast(loc), delim, query)
-        | _ =>
-          raise(
-            Location.Error(
-              Location.error(
-                ~loc,
-                "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-              ),
-            ),
-          )
-        }
-      | other => default_mapper.module_expr(mapper, other)
-      },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_schema_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
+    Some(schema_name)
+  | _ => None
   };
 };
 
+// Default configuration
 let () =
-  Migrate_parsetree.Driver.register(
-    ~name="graphql",
-    ~args=[],
-    Migrate_parsetree.Versions.ocaml_406,
-    mapper,
+  Ppx_config.(
+    set_config({
+      verbose_logging: false,
+      output_mode: Ppx_config.String,
+      verbose_error_handling:
+        switch (Sys.getenv("NODE_ENV")) {
+        | "production" => false
+        | _ => true
+        | exception Not_found => true
+        },
+      apollo_mode: false,
+      schema_file: "graphql_schema.json",
+      root_directory: Sys.getcwd(),
+      raise_error_with_loc: (loc, message) => {
+        let loc = conv_loc(loc);
+        raise(Location.Error(Location.error(~loc, message)));
+      },
+    })
+  );
+
+let mapper = (_config, _cookies) => {
+  Ast_406.(
+    Ast_mapper.(
+      Parsetree.(
+        Asttypes.{
+          ...default_mapper,
+          module_expr: (mapper, mexpr) =>
+            switch (mexpr) {
+            | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
+              switch (pstr) {
+              | PStr([
+                  {
+                    pstr_desc:
+                      Pstr_eval(
+                        {
+                          pexp_loc: loc,
+                          pexp_desc:
+                            Pexp_constant(Pconst_string(query, delim)),
+                          _,
+                        },
+                        _,
+                      ),
+                    _,
+                  },
+                  {
+                    pstr_desc:
+                      Pstr_eval(
+                        {pexp_desc: Pexp_record(fields, None), _},
+                        _,
+                      ),
+                    _,
+                  },
+                ]) =>
+                rewrite_query(
+                  ~schema=?extract_schema_from_config(fields),
+                  ~loc=conv_loc_from_ast(loc),
+                  ~delim,
+                  ~query,
+                  (),
+                )
+              | PStr([
+                  {
+                    pstr_desc:
+                      Pstr_eval(
+                        {
+                          pexp_loc: loc,
+                          pexp_desc:
+                            Pexp_constant(Pconst_string(query, delim)),
+                          _,
+                        },
+                        _,
+                      ),
+                    _,
+                  },
+                ]) =>
+                rewrite_query(
+                  ~loc=conv_loc_from_ast(loc),
+                  ~delim,
+                  ~query,
+                  (),
+                )
+              | _ =>
+                raise(
+                  Location.Error(
+                    Location.error(
+                      ~loc,
+                      "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                    ),
+                  ),
+                )
+              }
+            | other => default_mapper.module_expr(mapper, other)
+            },
+        }
+      )
+    )
+  );
+};
+
+let args = [
+  (
+    "-verbose",
+    Arg.Unit(
+      () =>
+        Ppx_config.update_config(current =>
+          {...current, verbose_logging: true}
+        ),
+    ),
+    "Defines if logging should be verbose or not",
+  ),
+  (
+    "-apollo-mode",
+    Arg.Unit(
+      () =>
+        Ppx_config.update_config(current => {...current, apollo_mode: true}),
+    ),
+    "Defines if apply Apollo specific code generation",
+  ),
+  (
+    "-schema",
+    Arg.String(
+      schema_file =>
+        Ppx_config.update_config(current => {...current, schema_file}),
+    ),
+    "<path/to/schema.json>",
+  ),
+  (
+    "-ast-out",
+    Arg.Bool(
+      ast_out =>
+        Ppx_config.update_config(current =>
+          {
+            ...current,
+            output_mode: ast_out ? Ppx_config.Apollo_AST : Ppx_config.String,
+          }
+        ),
+    ),
+    "Defines if output string or AST",
+  ),
+  (
+    "-o",
+    Arg.Unit(
+      () =>
+        Ppx_config.update_config(current =>
+          {...current, verbose_error_handling: true}
+        ),
+    ),
+    "Verbose error handling. If not defined NODE_ENV will be used",
+  ),
+];
+
+let () =
+  Migrate_parsetree.(
+    Driver.register(~name="graphql", ~args, Versions.ocaml_406, mapper)
   );

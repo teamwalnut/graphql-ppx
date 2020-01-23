@@ -244,7 +244,11 @@ and generate_record_decoder = (config, loc, name, fields) => {
              Some(Pat.var({loc, txt: "field_" ++ field}))
            | Fr_fragment_spread(_) => None,
          )
-      |> Pat.tuple
+      |> (
+           fun
+           | [field_pattern] => field_pattern
+           | field_patterns => Pat.tuple(field_patterns)
+      )
     );
 
   let field_decoder_tuple =
@@ -280,7 +284,11 @@ and generate_record_decoder = (config, loc, name, fields) => {
              }
            | Fr_fragment_spread(_) => None,
          )
-      |> Exp.tuple
+      |> (
+           fun
+           | [field_decoder] => field_decoder
+           | field_decoders => Exp.tuple(field_decoders)
+      )
     );
 
   let record_fields =
