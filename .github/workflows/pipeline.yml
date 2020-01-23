@@ -1,4 +1,4 @@
-name: graphql_ppx_re pipeline
+name: graphql_ppx pipeline
 
 on: [push, pull_request]
 
