@@ -1,4 +1,5 @@
 const exec = require("child_process").exec;
+const fs = require("fs");
 
 function command(cmd) {
   console.log(cmd);
@@ -18,14 +19,40 @@ function command(cmd) {
 
 async function cleanup() {
   await command("rm -f package.json");
-  await command("rm -f bsconfig.json");
   await command("rm -f package-lock.json");
   await command("rm -rf node_modules");
+}
+
+function writeConfig(flags = []) {
+  fs.writeFileSync(
+    "bsconfig.json",
+    JSON.stringify({
+      name: "tests_bucklescript",
+      sources: ["__tests__"],
+      "ppx-flags": [
+        [
+          "../_build/default/src/bucklescript_bin/bin.exe",
+          ...flags,
+          "-schema ../graphql_schema.json"
+        ]
+      ],
+      "bs-dependencies": ["@glennsl/bs-jest"],
+      refmt: 3,
+      "bsc-flags": ["-bs-super-errors"],
+      warnings: {
+        number: "+A-48",
+        error: "+A-3-32-44"
+      }
+    })
+  );
 }
 
 async function test(folder) {
   await command(`cp ./${folder}/* .`);
   await command("npm install");
+  writeConfig(["-apollo-mode"]);
+  await command("npm run test");
+  writeConfig(["-apollo-mode", "-lean-parse"]);
   await command("npm run test");
   await cleanup();
 }

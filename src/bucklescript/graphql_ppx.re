@@ -167,6 +167,7 @@ let () =
         let loc = conv_loc(loc);
         raise(Location.Error(Location.error(~loc, message)));
       },
+      lean_parse: false,
     })
   );
 
@@ -298,6 +299,14 @@ let args = [
         ),
     ),
     "Verbose error handling. If not defined NODE_ENV will be used",
+  ),
+  (
+    "-lean-parse",
+    Arg.Unit(
+      () =>
+        Ppx_config.update_config(current => {...current, lean_parse: true}),
+    ),
+    "A leaner parse function (experimental)",
   ),
 ];
 
