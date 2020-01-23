@@ -185,7 +185,7 @@ let generate_default_operation =
               "parse": parse,
             }
           ],
-          [%stri let definition = (query, parse, makeVar)],
+          [%stri let definition = (parse, query, makeVar)],
           // [%stri let definition = [%e definition_tuple]],
         ],
       ]),

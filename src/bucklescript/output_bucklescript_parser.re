@@ -190,7 +190,7 @@ let rec generate_parser = config =>
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
   | Res_record(loc, name, fields) =>
-    generate_record_decoder(config, conv_loc(loc), name, fields)
+    generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_object(loc, name, fields) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
@@ -260,134 +260,12 @@ and generate_custom_decoder = (config, loc, ident, inner) => {
     );
   [@metaloc loc] [%expr [%e fn_expr]([%e generate_parser(config, inner)])];
 }
-and generate_record_decoder = (config, loc, name, fields) => {
-  /*
-     Given a selection set, this function first generates the resolvers,
-     binding the results to individual local variables. It then generates
-     a record containing each field bound to the corresponding variable.
-
-     While this might seem a bit convoluted, it lets us wrap the record in
-     a [%bs.obj ] extension to generate a JavaScript object without having
-     to worry about the record-in-javascript-object problem that BuckleScript has.
-
-     As an example, a selection set like "{ f1 f2 f3 }" will result in
-     let (field_f1, field_f2, field_f3) = (
-       match Js.Dict.get value "f1" with ... end
-       match Js.Dict.get value "f2" with ... end
-       match Js.Dict.get value "f3" with ... end
-     ) in { f1 = field_f1; f2 = field_f2; f3 = field_f3 }
-   */
-
-  let field_name_tuple_pattern =
-    Ast_helper.(
-      fields
-      |> filter_map(
-           fun
-           | Fr_named_field(field, _, _) =>
-             Some(Pat.var({loc, txt: "field_" ++ field}))
-           | Fr_fragment_spread(_) => None,
-         )
-      |> (
-        fun
-        | [field_pattern] => field_pattern
-        | field_patterns => Pat.tuple(field_patterns)
-      )
-    );
-
-  let field_decoder_tuple =
-    Ast_helper.(
-      fields
-      |> filter_map(
-           fun
-           | Fr_named_field(field, loc, inner) => {
-               let loc = conv_loc(loc);
-               [@metaloc loc]
-               Some(
-                 switch%expr (Js.Dict.get(value, [%e const_str_expr(field)])) {
-                 | Some(value) =>
-                   %e
-                   generate_parser(config, inner)
-                 | None =>
-                   if%e (can_be_absent_as_field(inner)) {
-                     %expr
-                     None;
-                   } else {
-                     make_error_raiser(
-                       [%expr
-                         "Field "
-                         ++ [%e const_str_expr(field)]
-                         ++ " on type "
-                         ++ [%e const_str_expr(name)]
-                         ++ " is missing"
-                       ],
-                     );
-                   }
-                 },
-               );
-             }
-           | Fr_fragment_spread(_) => None,
-         )
-      |> (
-        fun
-        | [field_decoder] => field_decoder
-        | field_decoders => Exp.tuple(field_decoders)
-      )
-    );
-
-  let record_fields =
-    Ast_helper.(
-      fields
-      |> List.map(
-           fun
-           | Fr_named_field(field, loc, _) => {
-               let loc = conv_loc(loc);
-               (
-                 {Location.loc, txt: Longident.Lident(field)},
-                 Exp.ident(
-                   ~loc,
-                   {loc, txt: Longident.Lident("field_" ++ field)},
-                 ),
-               );
-             }
-           | Fr_fragment_spread(field, loc, name, _) => {
-               let loc = conv_loc(loc);
-               (
-                 {Location.loc, txt: Longident.Lident(field)},
-                 [@metaloc loc]
-                 {
-                   let%expr value = Js.Json.object_(value);
-                   %e
-                   generate_solo_fragment_spread(loc, name);
-                 },
-               );
-             },
-         )
-    );
-  let record = Ast_helper.Exp.record(~loc, record_fields, None);
-
-  switch%expr (Js.Json.decodeObject(value)) {
-  | None =>
-    %e
-    make_error_raiser(
-      [%expr
-        "Expected object of type "
-        ++ [%e const_str_expr(name)]
-        ++ ", got "
-        ++ Js.Json.stringify(value)
-      ],
-    )
-  | Some(value) =>
-    let [%p field_name_tuple_pattern] = [%e field_decoder_tuple];
-    %e
-    record;
-  };
-}
 and generate_object_decoder = (config, loc, name, fields) => {
   let rec do_obj_constructor = () => {
     Ast_406.(
       Ast_helper.(
         Exp.extension((
-          {txt: "bs.obj", loc: Location.none},
+          {txt: "bs.obj", loc},
           PStr([[%stri [%e do_obj_constructor_lean()]]]),
         ))
       )
@@ -399,7 +277,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
       |> List.map(
            fun
            | Fr_named_field(key, _, inner) => (
-               {Location.txt: Longident.parse(key), loc: Location.none},
+               {Location.txt: Longident.parse(key), loc},
                {
                  let%expr value =
                    Js.Dict.unsafeGet(
@@ -412,7 +290,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
                },
              )
            | Fr_fragment_spread(key, loc, name, _) => (
-               {Location.txt: Longident.parse(key), loc: Location.none},
+               {Location.txt: Longident.parse(key), loc: conv_loc(loc)},
                {
                  let ident =
                    Ast_helper.Exp.ident({
@@ -428,13 +306,16 @@ and generate_object_decoder = (config, loc, name, fields) => {
     );
   }
   and obj_constructor = () => {
+    [@metaloc loc]
     let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
     %e
     do_obj_constructor();
   }
-  and obj_constructor_lean = () => {
-    do_obj_constructor_lean();
-  };
+  and obj_constructor_lean = () =>
+    [@metaloc loc]
+    {
+      do_obj_constructor_lean();
+    };
 
   config.records ? obj_constructor_lean() : obj_constructor();
 }
