@@ -1,6 +1,6 @@
 # graphql_ppx
 
-[![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx)
+[![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
 
 > Reason/OCaml PPX (PreProcessor eXtension) helping with creating type-safe, compile time validated GraphQL queries generating response decoders.
 
