@@ -402,11 +402,13 @@ let generate_input_object =
 };
 
 let generate_arg_types = (config, variable_defs) => {
-  extract_args(config, variable_defs)
+  let input_objects = extract_args(config, variable_defs);
+
+  input_objects
   |> List.map(
        fun
-       | InputObject({name: input_obj_name, fields}) => {
-           generate_input_object(config, input_obj_name, fields);
+       | InputObject({name, fields}) => {
+           generate_input_object(config, name, fields);
          },
      )
   |> Ast_helper.Str.type_(Recursive);

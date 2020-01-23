@@ -42,6 +42,7 @@ type arg_type_def =
       name: option(string),
       fields: list(input_object_field),
       loc: Source_pos.ast_location,
+      is_recursive: bool,
     });
 
 // function that generate types. It will output a nested list type descriptions
@@ -153,6 +154,37 @@ let generate_input_field_types =
   |> List.rev;
 };
 
+let rec get_inner_type = (type_: extracted_type) => {
+  switch (type_) {
+  | Type(_) => Some(type_)
+  | Nullable(inner) => get_inner_type(inner)
+  | List(inner) => get_inner_type(inner)
+  | TypeNotFound(_) => None
+  };
+};
+
+let get_input_object_name =
+  fun
+  | InputField({type_}) => {
+      let type_ = get_inner_type(type_);
+      switch (type_) {
+      | Some(Type(InputObject({iom_name}))) => Some(iom_name)
+      | _ => None
+      };
+    };
+
+let get_input_object_names = (fields: list(input_object_field)) => {
+  fields
+  |> List.map(get_input_object_name)
+  |> List.fold_left(
+       acc =>
+         fun
+         | Some(name) => [name, ...acc]
+         | _ => acc,
+       [],
+     );
+};
+
 let rec extract_input_object =
         (schema: Schema.schema, finalized_input_objects) => {
   fun
@@ -161,12 +193,17 @@ let rec extract_input_object =
       fields: list((string, Schema.type_ref, loc)),
       loc,
     ) => {
+      let gen_fields = generate_input_field_types(name, schema, fields);
+
+      let is_recursive =
+        switch (name) {
+        | None => false
+        | Some(name) =>
+          gen_fields |> get_input_object_names |> List.exists(f => f == name)
+        };
+
       [
-        InputObject({
-          name,
-          fields: generate_input_field_types(name, schema, fields),
-          loc,
-        }),
+        InputObject({name, fields: gen_fields, loc, is_recursive}),
         ...fields
            |> List.fold_left(
                 acc =>

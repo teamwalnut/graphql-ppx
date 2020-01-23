@@ -180,6 +180,10 @@ let serialize_fun = (config, fields) => {
   );
 };
 
+let is_recursive = input_objects => {
+  List.length(input_objects) > 1
+};
+
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
@@ -188,7 +192,7 @@ let generate_serialize_variables =
     Some(
       Ast_helper.(
         Str.value(
-          Recursive,
+          is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
           arg_type_defs
           |> List.map(
                fun
