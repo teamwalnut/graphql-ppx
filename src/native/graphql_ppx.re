@@ -187,6 +187,7 @@ let () =
       },
       lean_parse: false,
       records: false,
+      legacy: true,
     })
   );
 

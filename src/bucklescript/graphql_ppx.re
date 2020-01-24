@@ -218,6 +218,7 @@ let () =
       },
       lean_parse: true,
       records: false,
+      legacy: false,
     })
   );
 
@@ -365,6 +366,20 @@ let args = [
       () => Ppx_config.update_config(current => {...current, records: true}),
     ),
     "Compile to records instead of objects (experimental)",
+  ),
+  (
+    "-legacy",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: false}),
+    ),
+    "Legacy mode",
+  ),
+  (
+    "-modern",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: true}),
+    ),
+    "Modern mode",
   ),
 ];
 

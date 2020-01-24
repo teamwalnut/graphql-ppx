@@ -12,6 +12,7 @@ type config = {
   raise_error_with_loc: 'a. (Source_pos.ast_location, string) => 'a,
   lean_parse: bool,
   records: bool,
+  legacy: bool,
 };
 
 let config_ref = ref(None);
