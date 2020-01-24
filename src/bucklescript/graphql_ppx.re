@@ -105,16 +105,14 @@ let rewrite_query = (~schema=?, ~records=?, ~loc, ~delim, ~query, ()) => {
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
-        Mod.mk(
-          Pmod_structure(
-            errs
-            |> List.map(((loc, msg)) => {
-                 let loc = conv_loc(loc);
-                 %stri
-                 [%e make_error_expr(loc, msg)];
-               }),
-          ),
-        )
+        let errs =
+          errs
+          |> List.map(((loc, msg)) => {
+               let loc = conv_loc(loc);
+               %stri
+               [%e make_error_expr(loc, msg)];
+             });
+        [errs];
       | None =>
         Result_decoder.unify_document_schema(config, document)
         |> Output_bucklescript_module.generate_modules(config)
@@ -155,19 +153,19 @@ let extract_schema_from_config = config_fields => {
   };
 };
 
-let extract_records_from_config = config_fields => {
+let extract_bool_from_config = (config_fields, name) => {
   open Ast_406;
   open Asttypes;
   open Parsetree;
 
-  let maybe_records_field =
+  let maybe_field_value =
     try(
       Some(
         List.find(
           config_field =>
             switch (config_field) {
             | (
-                {txt: Longident.Lident("records"), _},
+                {txt: Longident.Lident(name), _},
                 {
                   pexp_desc:
                     Pexp_construct({txt: Longident.Lident(_value)}, _),
@@ -184,7 +182,7 @@ let extract_records_from_config = config_fields => {
     | _ => None
     };
 
-  switch (maybe_records_field) {
+  switch (maybe_field_value) {
   | Some((
       _,
       {pexp_desc: Pexp_construct({txt: Longident.Lident(value)}, _), _},
@@ -195,6 +193,14 @@ let extract_records_from_config = config_fields => {
     }
   | _ => None
   };
+};
+
+let extract_records_from_config = config_fields => {
+  extract_bool_from_config(config_fields, "records");
+};
+
+let extract_inline_from_config = config_fields => {
+  extract_bool_from_config(config_fields, "inline");
 };
 
 // Default configuration
@@ -254,14 +260,23 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                rewrite_query(
-                  ~schema=?extract_schema_from_config(fields),
-                  ~records=?extract_records_from_config(fields),
-                  ~loc=conv_loc_from_ast(loc),
-                  ~delim,
-                  ~query,
-                  (),
+                Ast_helper.(
+                  Mod.mk(
+                    Pmod_structure(
+                      List.concat(
+                        rewrite_query(
+                          ~schema=?extract_schema_from_config(fields),
+                          ~records=?extract_records_from_config(fields),
+                          ~loc=conv_loc_from_ast(loc),
+                          ~delim,
+                          ~query,
+                          (),
+                        ),
+                      ),
+                    ),
+                  )
                 )
+
               | PStr([
                   {
                     pstr_desc:
@@ -277,11 +292,19 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                rewrite_query(
-                  ~loc=conv_loc_from_ast(loc),
-                  ~delim,
-                  ~query,
-                  (),
+                Ast_helper.(
+                  Mod.mk(
+                    Pmod_structure(
+                      List.concat(
+                        rewrite_query(
+                          ~loc=conv_loc_from_ast(loc),
+                          ~delim,
+                          ~query,
+                          (),
+                        ),
+                      ),
+                    ),
+                  )
                 )
               | _ =>
                 raise(
@@ -295,6 +318,114 @@ let mapper = (_config, _cookies) => {
               }
             | other => default_mapper.module_expr(mapper, other)
             },
+          structure: (mapper, struc) => {
+            struc
+            |> List.fold_left(
+                 acc =>
+                   fun
+                   | {
+                       pstr_desc:
+                         Pstr_value(
+                           _,
+                           [
+                             {
+                               pvb_pat: {ppat_desc: _},
+                               pvb_expr: {
+                                 pexp_desc:
+                                   Pexp_extension((
+                                     {txt: "graphql", loc},
+                                     pstr,
+                                   )),
+                               },
+                             },
+                           ],
+                         ),
+                     } =>
+                     switch (pstr) {
+                     | PStr([
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {
+                                 pexp_loc: loc,
+                                 pexp_desc:
+                                   Pexp_constant(
+                                     Pconst_string(query, delim),
+                                   ),
+                                 _,
+                               },
+                               _,
+                             ),
+                           _,
+                         },
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {pexp_desc: Pexp_record(fields, None), _},
+                               _,
+                             ),
+                           _,
+                         },
+                       ]) =>
+                       List.append(
+                         acc,
+                         List.concat(
+                           rewrite_query(
+                             ~schema=?extract_schema_from_config(fields),
+                             ~records=?extract_records_from_config(fields),
+                             ~loc=conv_loc_from_ast(loc),
+                             ~delim,
+                             ~query,
+                             (),
+                           ),
+                         ),
+                       )
+                     | PStr([
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {
+                                 pexp_loc: loc,
+                                 pexp_desc:
+                                   Pexp_constant(
+                                     Pconst_string(query, delim),
+                                   ),
+                                 _,
+                               },
+                               _,
+                             ),
+                           _,
+                         },
+                       ]) =>
+                       List.append(
+                         acc,
+                         List.concat(
+                           rewrite_query(
+                             ~loc=conv_loc_from_ast(loc),
+                             ~delim,
+                             ~query,
+                             (),
+                           ),
+                         ),
+                       )
+                     | _ =>
+                       raise(
+                         Location.Error(
+                           Location.error(
+                             ~loc,
+                             "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                           ),
+                         ),
+                       )
+                     }
+                   | other =>
+                     List.append(
+                       acc,
+                       [default_mapper.structure_item(mapper, other)],
+                     ),
+                 [],
+               );
+          },
         }
       )
     )

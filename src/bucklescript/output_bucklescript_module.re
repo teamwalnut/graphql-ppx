@@ -144,53 +144,60 @@ let generate_default_operation =
       extracted_args,
     );
 
-  if (has_error) {
-    [[%stri let parse = value => [%e parse_fn]]];
-  } else {
-    let variable_constructors =
-      Output_bucklescript_serializer.generate_variable_constructors(
-        config,
-        extracted_args,
-      );
-    List.concat([
-      make_printed_query(config, [Graphql_ast.Operation(operation)]),
+  let contents =
+    if (has_error) {
+      [[%stri let parse = value => [%e parse_fn]]];
+    } else {
+      let variable_constructors =
+        Output_bucklescript_serializer.generate_variable_constructors(
+          config,
+          extracted_args,
+        );
       List.concat([
-        [[%stri type raw_t]],
-        [types],
-        switch (extracted_args) {
-        | [] => []
-        | _ => [arg_types]
-        },
-        [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
-        switch (serialize_variable_functions) {
-        | None => [[%stri let serializeVariables = _ => Js.Json.null]]
-        | Some(f) => [f]
-        },
-        switch (variable_constructors) {
-        | None => [[%stri let makeVar = (~f, ()) => f(Js.Json.null)]]
-        | Some(c) => [c]
-        },
-        [
-          [%stri let makeVariables = makeVar(~f=f => f)],
-          [%stri
-            let make =
-              makeVar(~f=variables => {
-                {"query": query, "variables": variables, "parse": parse}
-              })
+        make_printed_query(config, [Graphql_ast.Operation(operation)]),
+        List.concat([
+          [[%stri type raw_t]],
+          [types],
+          switch (extracted_args) {
+          | [] => []
+          | _ => [arg_types]
+          },
+          [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
+          switch (serialize_variable_functions) {
+          | None => [[%stri let serializeVariables = _ => Js.Json.null]]
+          | Some(f) => [f]
+          },
+          switch (variable_constructors) {
+          | None => [[%stri let makeVar = (~f, ()) => f(Js.Json.null)]]
+          | Some(c) => [c]
+          },
+          [
+            [%stri let makeVariables = makeVar(~f=f => f)],
+            [%stri
+              let make =
+                makeVar(~f=variables => {
+                  {"query": query, "variables": variables, "parse": parse}
+                })
+            ],
+            [%stri
+              let makeWithVariables = variables => {
+                "query": query,
+                "variables": serializeVariables(variables),
+                "parse": parse,
+              }
+            ],
+            [%stri let definition = (parse, query, makeVar)],
           ],
-          [%stri
-            let makeWithVariables = variables => {
-              "query": query,
-              "variables": serializeVariables(variables),
-              "parse": parse,
-            }
-          ],
-          [%stri let definition = (parse, query, makeVar)],
-          // [%stri let definition = [%e definition_tuple]],
-        ],
-      ]),
-    ]);
-  };
+        ]),
+      ]);
+    };
+
+  let name =
+    switch (operation) {
+    | {item: {o_name: Some({item: name})}} => Some(name)
+    | _ => None
+    };
+  (name, contents);
 };
 
 let generate_fragment_module =
@@ -261,6 +268,10 @@ let generate_fragment_module =
       ]);
     };
 
+  (Some(Generator_utils.capitalize_ascii(name)), contents);
+};
+
+let wrap_module = (name: string, contents) => {
   let m =
     Pstr_module({
       pmb_name: {
@@ -271,7 +282,6 @@ let generate_fragment_module =
       pmb_attributes: [],
       pmb_loc: Location.none,
     });
-
   [{pstr_desc: m, pstr_loc: Location.none}];
 };
 
@@ -290,6 +300,20 @@ let generate_operation = config =>
     );
 
 let generate_modules = (config, operations) => {
-  let generated = List.map(generate_operation(config), operations);
-  Mod.mk(Pmod_structure(List.concat(generated)));
+  switch (operations) {
+  | [] => []
+  | [a] =>
+    switch (generate_operation(config, a)) {
+    | (_, contents) => [contents]
+    }
+  | a =>
+    a
+    |> List.map(generate_operation(config))
+    |> List.mapi((i, (name, contents)) =>
+         switch (name) {
+         | Some(name) => wrap_module(name, contents)
+         | None => wrap_module("Untitled" ++ string_of_int(i), contents)
+         }
+       )
+  };
 };

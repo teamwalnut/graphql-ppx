@@ -480,7 +480,7 @@ let unify_operation = (error_marker, config) =>
 let rec unify_document_schema = (config, document) => {
   let error_marker = {Generator_utils.has_error: false};
   switch (document) {
-  | [Operation({item: {o_variable_definitions, _}, _} as op)] =>
+  | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
       Mod_default_operation(
@@ -489,6 +489,7 @@ let rec unify_document_schema = (config, document) => {
         op,
         structure,
       ),
+      ...unify_document_schema(config, rest),
     ];
   | [
       Fragment(
@@ -538,7 +539,5 @@ let rec unify_document_schema = (config, document) => {
       ...unify_document_schema(config, rest),
     ]
   | [] => []
-  | _ =>
-    raise @@ Unimplemented("unification with other than singular queries")
   };
 };
