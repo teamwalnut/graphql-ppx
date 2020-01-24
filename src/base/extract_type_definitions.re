@@ -45,6 +45,14 @@ type arg_type_def =
       is_recursive: bool,
     });
 
+let generate_type_name = (~prefix="t") =>
+  fun
+  | [] => prefix
+  | path => {
+      path
+      |> List.rev
+      |> List.fold_left((acc, item) => acc ++ "_" ++ item, prefix);
+    };
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
