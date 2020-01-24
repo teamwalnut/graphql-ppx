@@ -58,7 +58,17 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (~schema=?, ~records=?, ~loc, ~delim, ~query, ()) => {
+let rewrite_query =
+    (
+      ~schema=?,
+      ~records=?,
+      ~inline=?,
+      ~loc,
+      ~delim,
+      ~query,
+      ~module_definition,
+      (),
+    ) => {
   open Ast_406;
   open Ast_helper;
   open Parsetree;
@@ -100,6 +110,11 @@ let rewrite_query = (~schema=?, ~records=?, ~loc, ~delim, ~query, ()) => {
           | Some(value) => value
           | None => global_records()
           },
+        inline:
+          switch (inline) {
+          | Some(value) => value
+          | None => false
+          },
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
       };
@@ -115,7 +130,10 @@ let rewrite_query = (~schema=?, ~records=?, ~loc, ~delim, ~query, ()) => {
         [errs];
       | None =>
         Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(config)
+        |> Output_bucklescript_module.generate_modules(
+             config,
+             module_definition,
+           )
       };
     };
   };
@@ -153,7 +171,7 @@ let extract_schema_from_config = config_fields => {
   };
 };
 
-let extract_bool_from_config = (config_fields, name) => {
+let extract_bool_from_config = (name, config_fields) => {
   open Ast_406;
   open Asttypes;
   open Parsetree;
@@ -195,9 +213,8 @@ let extract_bool_from_config = (config_fields, name) => {
   };
 };
 
-let extract_records_from_config = config_fields => {
-  extract_bool_from_config(config_fields, "records");
-};
+let extract_records_from_config = extract_bool_from_config("records");
+let extract_inline_from_config = extract_bool_from_config("inline");
 
 // Default configuration
 let () =
@@ -263,9 +280,11 @@ let mapper = (_config, _cookies) => {
                         rewrite_query(
                           ~schema=?extract_schema_from_config(fields),
                           ~records=?extract_records_from_config(fields),
+                          ~inline=?extract_inline_from_config(fields),
                           ~loc=conv_loc_from_ast(loc),
                           ~delim,
                           ~query,
+                          ~module_definition=true,
                           (),
                         ),
                       ),
@@ -296,6 +315,7 @@ let mapper = (_config, _cookies) => {
                           ~loc=conv_loc_from_ast(loc),
                           ~delim,
                           ~query,
+                          ~module_definition=true,
                           (),
                         ),
                       ),
@@ -372,6 +392,7 @@ let mapper = (_config, _cookies) => {
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
+                             ~module_definition=false,
                              (),
                            ),
                          ),
@@ -400,6 +421,7 @@ let mapper = (_config, _cookies) => {
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
+                             ~module_definition=false,
                              (),
                            ),
                          ),

@@ -299,12 +299,15 @@ let generate_operation = config =>
       structure,
     );
 
-let generate_modules = (config, operations) => {
+let generate_modules = (config, module_definition, operations) => {
   switch (operations) {
   | [] => []
   | [a] =>
     switch (generate_operation(config, a)) {
-    | (_, contents) => [contents]
+    | (Some(name), contents) =>
+      config.inline || module_definition
+        ? [contents] : [wrap_module(name, contents)]
+    | (None, contents) => [contents]
     }
   | a =>
     a

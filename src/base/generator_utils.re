@@ -22,6 +22,7 @@ type output_config = {
   schema: Schema.schema,
   full_document: Graphql_ast.document,
   records: bool,
+  inline: bool,
 };
 
 let filter_map = (f, l) => {
