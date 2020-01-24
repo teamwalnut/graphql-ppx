@@ -44,6 +44,27 @@ let find_argument = (name, arguments) =>
        }
      );
 
+let find_fragment_arguments =
+    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
+  switch (directives |> List.find(d => d.item.d_name.item == "arguments")) {
+  | {item: {d_arguments: Some(arguments)}} =>
+    arguments.item
+    |> List.fold_left(
+         acc =>
+           fun
+           | ({item: name}, {item: Iv_variable(variable_name)})
+               when name == variable_name => [
+               name,
+               ...acc,
+             ]
+           | _ => acc,
+         [],
+       )
+  | _ => []
+  | exception Not_found => []
+  };
+};
+
 let rec unify_type =
         (
           error_marker,
@@ -477,6 +498,40 @@ let unify_operation = (error_marker, config) =>
       )
     };
 
+let getFragmentArgumentDefinitions =
+    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
+  switch (
+    directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
+  ) {
+  | {item: {d_arguments: Some(arguments)}} =>
+    arguments.item
+    |> List.fold_left(
+         acc =>
+           fun
+           | ({item: key, span}, {item: Iv_object(values)}) => {
+               let type_ =
+                 values
+                 |> List.fold_left(
+                      acc =>
+                        fun
+                        | ({item: "type"}, {item: Iv_string(type_)}) =>
+                          Some(type_)
+                        | _ => acc,
+                      None,
+                    );
+               switch (type_) {
+               | Some(type_) => [(key, type_, span), ...acc]
+               | _ => acc
+               };
+             }
+           | _ => acc,
+         [],
+       )
+  | _ => []
+  | exception Not_found => []
+  };
+};
+
 let rec unify_document_schema = (config, document) => {
   let error_marker = {Generator_utils.has_error: false};
   switch (document) {
@@ -502,11 +557,13 @@ let rec unify_document_schema = (config, document) => {
     ] => [
       {
         let is_record = has_directive("bsRecord", fg_directives);
+        let argumentDefinitions =
+          getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
           Mod_fragment(
             fg_name.item,
-            [],
+            argumentDefinitions,
             true,
             fg,
             make_error(

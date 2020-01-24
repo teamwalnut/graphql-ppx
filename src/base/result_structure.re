@@ -28,7 +28,13 @@ and t =
 type mod_ =
   | Mod_fragment(
       string,
-      list(string),
+      list(
+        (
+          string,
+          string,
+          (Source_pos.source_position, Source_pos.source_position),
+        ),
+      ),
       bool,
       Source_pos.spanning(Graphql_ast.fragment),
       t,

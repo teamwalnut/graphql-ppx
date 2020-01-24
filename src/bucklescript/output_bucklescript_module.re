@@ -7,6 +7,7 @@ open Asttypes;
 open Parsetree;
 open Ast_helper;
 open Extract_type_definitions;
+open Output_bucklescript_utils;
 
 module StringSet = Set.Make(String);
 module VariableFinderImpl = {
@@ -127,7 +128,7 @@ let make_printed_query = (config, document) => {
     | Ppx_config.String => emit_printed_query(source)
     };
 
-  [[%stri let query = [%e reprinted]]];
+  reprinted;
 };
 
 let generate_default_operation =
@@ -154,8 +155,17 @@ let generate_default_operation =
           extracted_args,
         );
       List.concat([
-        make_printed_query(config, [Graphql_ast.Operation(operation)]),
         List.concat([
+          [
+            [%stri
+              let query = [%e
+                make_printed_query(
+                  config,
+                  [Graphql_ast.Operation(operation)],
+                )
+              ]
+            ],
+          ],
           [[%stri type raw_t]],
           [types],
           switch (extracted_args) {
@@ -201,10 +211,39 @@ let generate_default_operation =
 };
 
 let generate_fragment_module =
-    (config, name, _required_variables, has_error, fragment, res_structure) => {
+    (config, name, required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_parser.generate_parser(config, [], res_structure);
   let types = Output_bucklescript_types.generate_types(config, res_structure);
+
+  let rec make_labeled_fun = body =>
+    fun
+    | [] => [%expr (() => [%e body])]
+    | [(name, type_, span), ...tl] => {
+        let loc = config.map_loc(span) |> conv_loc;
+        Ast_helper.(
+          Exp.fun_(
+            Labelled(name),
+            None,
+            Pat.constraint_(
+              Pat.var({txt: name, loc}),
+              Typ.tuple([
+                Typ.variant(
+                  [Rtag({txt: type_, loc}, [], true, [])],
+                  Closed,
+                  None,
+                ),
+              ]),
+            ),
+            make_labeled_fun(body, tl),
+          )
+        );
+      };
+
+  let body = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+  let query = [%stri
+    let query = [%e make_labeled_fun(body, required_variables)]
+  ];
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
@@ -236,8 +275,8 @@ let generate_fragment_module =
       ];
     } else {
       List.concat([
-        make_printed_query(config, [Graphql_ast.Fragment(fragment)]),
         [
+          query,
           types,
           [%stri type raw_t],
           Ast_helper.(
