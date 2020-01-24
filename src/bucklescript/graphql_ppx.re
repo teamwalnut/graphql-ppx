@@ -183,13 +183,14 @@ let extract_bool_from_config = (name, config_fields) => {
           config_field =>
             switch (config_field) {
             | (
-                {txt: Longident.Lident(name), _},
+                {txt: Longident.Lident(matched_name), _},
                 {
                   pexp_desc:
                     Pexp_construct({txt: Longident.Lident(_value)}, _),
                   _,
                 },
-              ) =>
+              )
+                when matched_name == name =>
               true
             | _ => false
             },
@@ -341,6 +342,16 @@ let mapper = (_config, _cookies) => {
                    fun
                    | {
                        pstr_desc:
+                         Pstr_eval(
+                           {
+                             pexp_desc:
+                               Pexp_extension(({txt: "graphql", loc}, pstr)),
+                           },
+                           _,
+                         ),
+                     }
+                   | {
+                       pstr_desc:
                          Pstr_value(
                            _,
                            [
@@ -389,6 +400,7 @@ let mapper = (_config, _cookies) => {
                            rewrite_query(
                              ~schema=?extract_schema_from_config(fields),
                              ~records=?extract_records_from_config(fields),
+                             ~inline=?extract_inline_from_config(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
