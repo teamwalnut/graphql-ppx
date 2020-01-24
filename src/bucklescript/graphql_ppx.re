@@ -199,10 +199,6 @@ let extract_records_from_config = config_fields => {
   extract_bool_from_config(config_fields, "records");
 };
 
-let extract_inline_from_config = config_fields => {
-  extract_bool_from_config(config_fields, "inline");
-};
-
 // Default configuration
 let () =
   Ppx_config.(
