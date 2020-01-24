@@ -11,8 +11,6 @@ open Output_bucklescript_utils;
 
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
-let lean_parse = () => Ppx_config.lean_parse();
-
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
@@ -74,14 +72,11 @@ let boolean_decoder = loc =>
   );
 let id_decoder = string_decoder;
 
-let string_decoder_lean = loc =>
-  [@metaloc loc] [%expr (Obj.magic(value): string)];
-let id_decoder_lean = string_decoder_lean;
-let float_decoder_lean = loc =>
-  [@metaloc loc] [%expr (Obj.magic(value): float)];
-let int_decoder_lean = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
-let boolean_decoder_lean = loc =>
-  [@metaloc loc] [%expr (Obj.magic(value): bool)];
+let string_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): string)];
+let id_decoder = string_decoder;
+let float_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): float)];
+let int_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
+let boolean_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): bool)];
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -161,29 +156,14 @@ let generate_error = (loc, message) => {
 let rec generate_parser = config =>
   fun
   | Res_nullable(loc, inner) =>
-    lean_parse()
-      ? generate_nullable_decoder_lean(config, conv_loc(loc), inner)
-      : generate_nullable_decoder(config, conv_loc(loc), inner)
+    generate_nullable_decoder(config, conv_loc(loc), inner)
   | Res_array(loc, inner) =>
-    lean_parse()
-      ? generate_array_decoder_lean(config, conv_loc(loc), inner)
-      : generate_array_decoder(config, conv_loc(loc), inner)
-  | Res_id(loc) =>
-    lean_parse()
-      ? id_decoder_lean(conv_loc(loc)) : id_decoder(conv_loc(loc))
-  | Res_string(loc) =>
-    lean_parse()
-      ? string_decoder_lean(conv_loc(loc)) : string_decoder(conv_loc(loc))
-  | Res_int(loc) =>
-    lean_parse()
-      ? int_decoder_lean(conv_loc(loc)) : int_decoder(conv_loc(loc))
-  | Res_float(loc) =>
-    lean_parse()
-      ? float_decoder_lean(conv_loc(loc)) : float_decoder(conv_loc(loc))
-  | Res_boolean(loc) =>
-    lean_parse()
-      ? boolean_decoder_lean(conv_loc(loc))
-      : boolean_decoder(conv_loc(loc))
+    generate_array_decoder(config, conv_loc(loc), inner)
+  | Res_id(loc) => id_decoder(conv_loc(loc))
+  | Res_string(loc) => string_decoder(conv_loc(loc))
+  | Res_int(loc) => int_decoder(conv_loc(loc))
+  | Res_float(loc) => float_decoder(conv_loc(loc))
+  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
@@ -212,7 +192,7 @@ let rec generate_parser = config =>
   | Res_solo_fragment_spread(loc, name) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
-and generate_nullable_decoder_lean = (config, loc, inner) =>
+and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
     switch%expr (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
@@ -222,26 +202,7 @@ and generate_nullable_decoder_lean = (config, loc, inner) =>
     // (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.null
     // || (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.undefined
   )
-and generate_nullable_decoder = (config, loc, inner) =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeNull(value)) {
-    | None => Some([%e generate_parser(config, inner)])
-    | Some(_) => None
-    }
-  )
 and generate_array_decoder = (config, loc, inner) =>
-  [@metaloc loc]
-  [%expr
-    value
-    |> Js.Json.decodeArray
-    |> Js.Option.getExn
-    |> Js.Array.map(value => {
-         %e
-         generate_parser(config, inner)
-       })
-  ]
-and generate_array_decoder_lean = (config, loc, inner) =>
   [@metaloc loc]
   [%expr
     Obj.magic(value)
@@ -266,12 +227,12 @@ and generate_object_decoder = (config, loc, name, fields) => {
       Ast_helper.(
         Exp.extension((
           {txt: "bs.obj", loc},
-          PStr([[%stri [%e do_obj_constructor_lean()]]]),
+          PStr([[%stri [%e do_obj_constructor_records()]]]),
         ))
       )
     );
   }
-  and do_obj_constructor_lean = () => {
+  and do_obj_constructor_records = () => {
     Ast_helper.Exp.record(
       fields
       |> List.map(
@@ -311,13 +272,13 @@ and generate_object_decoder = (config, loc, name, fields) => {
     %e
     do_obj_constructor();
   }
-  and obj_constructor_lean = () =>
+  and obj_constructor_records = () =>
     [@metaloc loc]
     {
-      do_obj_constructor_lean();
+      do_obj_constructor_records();
     };
 
-  config.records ? obj_constructor_lean() : obj_constructor();
+  config.records ? obj_constructor_records() : obj_constructor();
 }
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
