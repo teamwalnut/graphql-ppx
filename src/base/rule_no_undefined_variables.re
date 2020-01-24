@@ -5,11 +5,13 @@ module Visitor: Traversal_utils.VisitorSig = {
 
   include AbstractVisitor;
 
-  type t = Hashtbl.t(string, spanning(string));
+  type opts = {mutable active: bool};
+  type t = (opts, Hashtbl.t(string, spanning(string)));
 
-  let make_self = () => Hashtbl.create(0);
+  let make_self = () => ({active: false}, Hashtbl.create(0));
 
-  let enter_operation_definition = (self, _, def) => {
+  let enter_operation_definition = ((opts, self), _, def) => {
+    opts.active = true;
     let () = Hashtbl.clear(self);
     switch (def.item.o_variable_definitions) {
     | None => ()
@@ -18,8 +20,12 @@ module Visitor: Traversal_utils.VisitorSig = {
     };
   };
 
-  let enter_variable_value = (self, ctx, def) =>
-    if (!Hashtbl.mem(self, def.item)) {
+  let exit_operation_definition = ((opts, _), _, _) => {
+    opts.active = false;
+  };
+
+  let enter_variable_value = ((opts, self), ctx, def) =>
+    if (opts.active && !Hashtbl.mem(self, def.item)) {
       let message =
         Printf.sprintf(
           "Variable \"%s\" not found in operation. Make sure it's defined!",
