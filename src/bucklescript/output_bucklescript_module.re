@@ -134,7 +134,12 @@ let make_printed_query = (config, document) => {
 let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
-    Output_bucklescript_parser.generate_parser(config, [], res_structure);
+    Output_bucklescript_parser.generate_parser(
+      config,
+      [],
+      Graphql_ast.Operation(operation),
+      res_structure,
+    );
   let types = Output_bucklescript_types.generate_types(config, res_structure);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
@@ -213,12 +218,17 @@ let generate_default_operation =
 let generate_fragment_module =
     (config, name, required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
-    Output_bucklescript_parser.generate_parser(config, [], res_structure);
+    Output_bucklescript_parser.generate_parser(
+      config,
+      [],
+      Graphql_ast.Fragment(fragment),
+      res_structure,
+    );
   let types = Output_bucklescript_types.generate_types(config, res_structure);
 
   let rec make_labeled_fun = body =>
     fun
-    | [] => [%expr (() => [%e body])]
+    | [] => [%expr ((value: Js.Json.t) => [%e body])]
     | [(name, type_, span), ...tl] => {
         let loc = config.map_loc(span) |> conv_loc;
         Ast_helper.(
@@ -227,22 +237,31 @@ let generate_fragment_module =
             None,
             Pat.constraint_(
               Pat.var({txt: name, loc}),
-              Typ.tuple([
-                Typ.variant(
-                  [Rtag({txt: type_, loc}, [], true, [])],
-                  Closed,
-                  None,
-                ),
-              ]),
+              Typ.variant(
+                [
+                  Rtag(
+                    {
+                      txt:
+                        Output_bucklescript_parser.type_name_to_words(type_),
+                      loc,
+                    },
+                    [],
+                    true,
+                    [],
+                  ),
+                ],
+                Closed,
+                None,
+              ),
             ),
             make_labeled_fun(body, tl),
           )
         );
       };
 
-  let body = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-  let query = [%stri
-    let query = [%e make_labeled_fun(body, required_variables)]
+  let query = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+  let parse = [%stri
+    let parse = [%e make_labeled_fun(parse_fn, required_variables)]
   ];
 
   let variable_names =
@@ -276,7 +295,7 @@ let generate_fragment_module =
     } else {
       List.concat([
         [
-          query,
+          [%stri let query = [%e query]],
           types,
           [%stri type raw_t],
           Ast_helper.(
@@ -297,7 +316,8 @@ let generate_fragment_module =
               ],
             )
           ),
-          [%stri let parse: Js.Json.t => t = value => [%e parse_fn]],
+          // [%stri let parse: Js.Json.t => t = value => [%e parse_fn]],
+          parse,
           [%stri
             let name = [%e
               Ast_helper.Exp.constant(Pconst_string(name, None))

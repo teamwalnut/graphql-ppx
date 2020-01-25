@@ -186,7 +186,7 @@ let rec generate_decoder = config =>
       base,
       fragments,
     )
-  | Res_solo_fragment_spread(loc, name) =>
+  | Res_solo_fragment_spread(loc, name, _arguments) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
@@ -306,7 +306,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | Fr_fragment_spread(field, loc, name, _) => {
+           | Fr_fragment_spread(field, loc, name, _, _arguments) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -379,7 +379,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
                     },
                   ),
                 )
-              | Fr_fragment_spread(key, loc, name, _) => {
+              | Fr_fragment_spread(key, loc, name, _, _) => {
                   let loc = conv_loc(loc);
                   Cf.method(
                     {txt: key, loc: Location.none},

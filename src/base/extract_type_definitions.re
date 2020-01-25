@@ -71,7 +71,7 @@ let rec extract = path =>
          [],
        )
   | Res_custom_decoder(loc, ident, inner) => extract(path, inner)
-  | Res_solo_fragment_spread(loc, name) => []
+  | Res_solo_fragment_spread(loc, name, _) => []
   | Res_error(loc, message) => []
   | Res_id(loc) => []
   | Res_string(loc) => []
@@ -91,7 +91,7 @@ and create_object = (path, fields, force_record) => {
              fun
              | Fr_named_field(name, loc, type_) =>
                Field({loc, path: [name, ...path], type_})
-             | Fr_fragment_spread(key, _loc, name, type_name) =>
+             | Fr_fragment_spread(key, _loc, name, type_name, _arguments) =>
                Fragment({module_name: name, key, type_name}),
            ),
     }),
@@ -101,7 +101,7 @@ and create_object = (path, fields, force_record) => {
               fun
               | Fr_named_field(name, _loc, type_) =>
                 List.append(extract([name, ...path], type_), acc)
-              | Fr_fragment_spread(_key, _loc, _name, _) => acc,
+              | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
             [],
           ),
   ];

@@ -6,7 +6,7 @@ type loc = Source_pos.ast_location;
 
 type field_result =
   | Fr_named_field(string, loc, t)
-  | Fr_fragment_spread(string, loc, string, option(string))
+  | Fr_fragment_spread(string, loc, string, option(string), list(string))
 and t =
   | Res_nullable(loc, t)
   | Res_array(loc, t)
@@ -22,7 +22,7 @@ and t =
   | Res_object(loc, string, list(field_result))
   | Res_poly_variant_union(loc, string, list((string, t)), exhaustive_flag)
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
-  | Res_solo_fragment_spread(loc, string)
+  | Res_solo_fragment_spread(loc, string, list(string))
   | Res_error(loc, string);
 
 type mod_ =
@@ -62,7 +62,7 @@ let res_loc =
   | Res_object(loc, _, _)
   | Res_poly_variant_union(loc, _, _, _)
   | Res_poly_variant_interface(loc, _, _, _)
-  | Res_solo_fragment_spread(loc, _)
+  | Res_solo_fragment_spread(loc, _, _)
   | Res_error(loc, _) => loc;
 
 let can_be_absent_as_field =

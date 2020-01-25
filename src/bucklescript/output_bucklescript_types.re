@@ -93,7 +93,7 @@ let rec generate_type = (config, path) =>
         )
       );
     }
-  | Res_solo_fragment_spread(loc, module_name) =>
+  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
     base_type(module_name ++ ".t")
   | Res_poly_variant_interface(loc, name, base, fragments) => {
       let map_case_ty = ((name, res)) =>

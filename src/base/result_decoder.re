@@ -363,6 +363,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
   switch (selection) {
   | Field(field_span) => unify_field(error_marker, config, field_span, ty)
   | FragmentSpread({item: {fs_directives, fs_name}, span}) =>
+    let arguments = find_fragment_arguments(fs_directives);
     switch (find_directive("bsField", fs_directives)) {
     | None =>
       let key =
@@ -379,6 +380,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
         | Object({om_name}) => Some(om_name)
         | _ => None
         },
+        arguments,
       );
     | Some({item: {d_arguments, _}, span}) =>
       switch (find_argument("name", d_arguments)) {
@@ -397,6 +399,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
           | Object({om_name}) => Some(om_name)
           | _ => None
           },
+          arguments,
         )
       | Some(_) =>
         raise_error(
@@ -405,7 +408,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "The 'name' argument must be a string",
         )
       }
-    }
+    };
   | InlineFragment({span, _}) =>
     raise_error(
       config.map_loc,
@@ -423,7 +426,9 @@ and unify_selection_set =
       span,
       "Must select subfields on objects",
     )
-  | Some({item: [FragmentSpread({item, _})], _}) =>
+  | Some({item: [FragmentSpread({item: {fs_directives, fs_name}, _})], _}) =>
+    let arguments = find_fragment_arguments(fs_directives);
+
     if (as_record) {
       make_error(
         error_marker,
@@ -432,8 +437,12 @@ and unify_selection_set =
         "@bsRecord can not be used with fragment spreads, place @bsRecord on the fragment definition instead",
       );
     } else {
-      Res_solo_fragment_spread(config.map_loc(span), item.fs_name.item);
-    }
+      Res_solo_fragment_spread(
+        config.map_loc(span),
+        fs_name.item,
+        arguments,
+      );
+    };
   | Some({item, _}) when as_record =>
     Res_record(
       config.map_loc(span),
