@@ -517,7 +517,10 @@ let getFragmentArgumentDefinitions =
     |> List.fold_left(
          acc =>
            fun
-           | ({item: key, span}, {item: Iv_object(values)}) => {
+           | (
+               {item: key, span},
+               {item: Iv_object(values), span: type_span},
+             ) => {
                let type_ =
                  values
                  |> List.fold_left(
@@ -529,7 +532,7 @@ let getFragmentArgumentDefinitions =
                       None,
                     );
                switch (type_) {
-               | Some(type_) => [(key, type_, span), ...acc]
+               | Some(type_) => [(key, type_, span, type_span), ...acc]
                | _ => acc
                };
              }

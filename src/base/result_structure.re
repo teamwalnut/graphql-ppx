@@ -33,6 +33,7 @@ type mod_ =
           string,
           string,
           (Source_pos.source_position, Source_pos.source_position),
+          (Source_pos.source_position, Source_pos.source_position),
         ),
       ),
       bool,

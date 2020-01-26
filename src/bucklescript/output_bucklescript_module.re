@@ -229,21 +229,23 @@ let generate_fragment_module =
   let rec make_labeled_fun = body =>
     fun
     | [] => [%expr ((value: Js.Json.t) => [%e body])]
-    | [(name, type_, span), ...tl] => {
+    | [(name, type_, span, type_span), ...tl] => {
         let loc = config.map_loc(span) |> conv_loc;
+        let type_loc = config.map_loc(type_span) |> conv_loc;
         Ast_helper.(
           Exp.fun_(
+            ~loc,
             Labelled(name),
             None,
             Pat.constraint_(
-              Pat.var({txt: "_" ++ name, loc}),
+              Pat.var({txt: "_" ++ name, loc: type_loc}),
               Typ.variant(
                 [
                   Rtag(
                     {
                       txt:
                         Output_bucklescript_parser.type_name_to_words(type_),
-                      loc,
+                      loc: type_loc,
                     },
                     [],
                     true,
@@ -260,30 +262,18 @@ let generate_fragment_module =
       };
 
   let query = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-  let parse = [%stri
-    let parse = [%e make_labeled_fun(parse_fn, required_variables)]
-  ];
+  let parse =
+    [@metaloc conv_loc(config.map_loc(fragment.span))]
+    [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
 
   let variable_names =
     find_variables(config, [Graphql_ast.Fragment(fragment)])
     |> StringSet.elements;
 
-  let variable_fields =
-    variable_names
-    |> List.map(name =>
-         Otag(
-           {txt: name, loc: Location.none},
-           [],
-           Ast_helper.Typ.constr(
-             {txt: Longident.Lident("unit"), loc: Location.none},
-             [],
-           ),
-         )
-       );
   let variable_obj_type =
-    Ast_helper.Typ.constr(
-      {txt: Longident.parse("Js.t"), loc: Location.none},
-      [Ast_helper.Typ.object_(variable_fields, Open)],
+    Typ.constr(
+      {txt: Longident.Lident("t_variables"), loc: Location.none},
+      [],
     );
   let contents =
     if (has_error) {
@@ -330,17 +320,21 @@ let generate_fragment_module =
 };
 
 let wrap_module = (name: string, contents) => {
-  let m =
-    Pstr_module({
-      pmb_name: {
-        txt: Generator_utils.capitalize_ascii(name),
-        loc: Location.none,
-      },
-      pmb_expr: Mod.structure(contents),
-      pmb_attributes: [],
-      pmb_loc: Location.none,
-    });
-  [{pstr_desc: m, pstr_loc: Location.none}];
+  [
+    {
+      pstr_desc:
+        Pstr_module({
+          pmb_name: {
+            txt: Generator_utils.capitalize_ascii(name),
+            loc: Location.none,
+          },
+          pmb_expr: Mod.structure(contents),
+          pmb_attributes: [],
+          pmb_loc: Location.none,
+        }),
+      pstr_loc: Location.none,
+    },
+  ];
 };
 
 let generate_operation = config =>

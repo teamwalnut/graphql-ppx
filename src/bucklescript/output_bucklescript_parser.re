@@ -37,7 +37,7 @@ let type_name_to_words = type_name => {
        | ']' => str := str^ ++ "_OfList"
        | c => str := str^ ++ String.make(1, c),
      );
-  str^
+  str^;
 };
 
 let rec alternative_generate_poly_type_ref_name =
@@ -47,14 +47,27 @@ let rec alternative_generate_poly_type_ref_name =
 
 let get_variable_definitions = (definition: Graphql_ast.definition) => {
   switch (definition) {
+  | Fragment({item: {fg_directives: directives}}) =>
+    Result_decoder.getFragmentArgumentDefinitions(directives)
+    |> List.map(((name, type_, span, type_span)) =>
+         (name, type_name_to_words(type_), span, type_span)
+       )
   | Operation({item: {o_variable_definitions: Some({item: definitions})}}) =>
     Graphql_ast.(
       definitions
       |> List.fold_left(
            acc =>
              fun
-             | ({Source_pos.item: name}, {vd_type: {item: type_ref}}) => [
-                 (name, alternative_generate_poly_type_ref_name(type_ref)),
+             | (
+                 {Source_pos.item: name, span},
+                 {vd_type: {item: type_ref, span: type_span}},
+               ) => [
+                 (
+                   name,
+                   Graphql_printer.print_type(type_ref) |> type_name_to_words,
+                   span,
+                   type_span,
+                 ),
                  ...acc,
                ],
            [],
@@ -196,26 +209,34 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   };
 };
 
-let generate_fragment_parse_fun = (loc, name, arguments, definition) => {
+let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
   let ident =
     Ast_helper.Exp.ident({loc, txt: Longident.parse(name ++ ".parse")});
   let variable_defs = get_variable_definitions(definition);
   let labeled_args =
     variable_defs
-    |> List.filter(((name, _)) =>
+    |> List.filter(((name, _, _, _)) =>
          arguments |> List.exists(arg => arg == name)
        )
-    |> List.map(((arg_name, type_)) =>
-         (Labelled(arg_name), Ast_helper.Exp.variant(type_, None))
+    |> List.map(((arg_name, type_, _span, type_span)) =>
+         (
+           Labelled(arg_name),
+           Ast_helper.Exp.variant(
+             ~loc=config.map_loc(type_span) |> conv_loc,
+             type_,
+             None,
+           ),
+         )
        );
 
   Ast_helper.Exp.apply(
+    ~loc,
     ident,
     List.append(labeled_args, [(Nolabel, ident_from_string("value"))]),
   );
 };
-let generate_solo_fragment_spread = (loc, name, arguments, definition) => {
-  generate_fragment_parse_fun(loc, name, arguments, definition);
+let generate_solo_fragment_spread = (config, loc, name, arguments, definition) => {
+  generate_fragment_parse_fun(config, loc, name, arguments, definition);
 };
 
 let generate_error = (loc, message) => {
@@ -287,7 +308,13 @@ let rec generate_parser = (config, path: list(string), definition) =>
       definition,
     )
   | Res_solo_fragment_spread(loc, name, arguments) =>
-    generate_solo_fragment_spread(conv_loc(loc), name, arguments, definition)
+    generate_solo_fragment_spread(
+      config,
+      conv_loc(loc),
+      name,
+      arguments,
+      definition,
+    )
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]
@@ -359,14 +386,8 @@ and generate_object_decoder = (config, loc, name, fields, path, definition) => {
              | Fr_fragment_spread(key, loc, name, _, arguments) => (
                  {Location.txt: Longident.parse(key), loc: conv_loc(loc)},
                  {
-                   //  let ident =
-                   //    Ast_helper.Exp.ident({
-                   //      loc: conv_loc(loc),
-                   //      txt: Longident.parse(name ++ ".parse"),
-                   //    });
-                   //  %expr
-                   //  [%e ident](Obj.magic(value));
                    generate_fragment_parse_fun(
+                     config,
                      conv_loc(loc),
                      name,
                      arguments,
