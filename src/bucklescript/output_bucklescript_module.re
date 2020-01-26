@@ -236,7 +236,7 @@ let generate_fragment_module =
             Labelled(name),
             None,
             Pat.constraint_(
-              Pat.var({txt: name, loc}),
+              Pat.var({txt: "_" ++ name, loc}),
               Typ.variant(
                 [
                   Rtag(
@@ -316,7 +316,6 @@ let generate_fragment_module =
               ],
             )
           ),
-          // [%stri let parse: Js.Json.t => t = value => [%e parse_fn]],
           parse,
           [%stri
             let name = [%e

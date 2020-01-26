@@ -512,7 +512,7 @@ let getFragmentArgumentDefinitions =
   switch (
     directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
   ) {
-  | {item: {d_arguments: Some(arguments)}} =>
+  | {item: {d_arguments: Some(arguments)}, span} =>
     arguments.item
     |> List.fold_left(
          acc =>
@@ -592,10 +592,12 @@ let rec unify_document_schema = (config, document) => {
               ty,
               Some(fg_selection_set),
             );
+          let argumentDefinitions =
+            getFragmentArgumentDefinitions(fg_directives);
 
           Mod_fragment(
             fg_name.item,
-            [],
+            argumentDefinitions,
             error_marker.has_error,
             fg,
             structure,
