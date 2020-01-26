@@ -80,6 +80,8 @@ let is_internal_directive = d =>
   | "bsRecord"
   | "bsObject"
   | "decoder"
+  | "argumentDefinitions"
+  | "arguments"
   | "bsField" => true
   | _ => false
   };
