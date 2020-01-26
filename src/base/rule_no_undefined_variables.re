@@ -6,7 +6,7 @@ module Visitor: Traversal_utils.VisitorSig = {
   include AbstractVisitor;
 
   type opts = {mutable active: bool};
-  type t = (opts, Hashtbl.t(string, spanning(string)));
+  type t = (opts, Hashtbl.t(string, (source_position, source_position)));
 
   let make_self = () => ({active: false}, Hashtbl.create(0));
 
@@ -16,11 +16,25 @@ module Visitor: Traversal_utils.VisitorSig = {
     switch (def.item.o_variable_definitions) {
     | None => ()
     | Some({item, _}) =>
-      List.iter(((name, _)) => Hashtbl.add(self, name.item, name), item)
+      List.iter(
+        ((name, _)) => Hashtbl.add(self, name.item, name.span),
+        item,
+      )
     };
   };
 
   let exit_operation_definition = ((opts, _), _, _) => {
+    opts.active = false;
+  };
+
+  let enter_fragment_definition = ((opts, self), _, def) => {
+    opts.active = true;
+    let () = Hashtbl.clear(self);
+    Result_decoder.getFragmentArgumentDefinitions(def.item.fg_directives)
+    |> List.iter(((name, _, span, _)) => Hashtbl.add(self, name, span));
+  };
+
+  let exit_fragment_definition = ((opts, _), _, _) => {
     opts.active = false;
   };
 
