@@ -44,20 +44,21 @@ module Visitor: Traversal_utils.VisitorSig = {
 
   let exit_operation_definition = (self, ctx, def) =>
     Hashtbl.iter(
-      (v, span) => {
-        let message =
-          switch (def.item.o_name) {
-          | None => Printf.sprintf("Variable \"$%s\" is never used.", v)
-          | Some(name) =>
-            Printf.sprintf(
-              "Variable \"$%s\" is never used in operation \"%s\"",
-              v,
-              name.item,
-            )
-          };
+      (v, span) =>
+        if (v.[0] != '_') {
+          let message =
+            switch (def.item.o_name) {
+            | None => Printf.sprintf("Variable \"$%s\" is never used.", v)
+            | Some(name) =>
+              Printf.sprintf(
+                "Variable \"$%s\" is never used in operation \"%s\"",
+                v,
+                name.item,
+              )
+            };
 
-        Context.push_error(ctx, span, message);
-      },
+          Context.push_error(ctx, span, message);
+        },
       self,
     );
 
