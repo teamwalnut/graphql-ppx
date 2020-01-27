@@ -11,3 +11,5 @@ bs-ppx-css
 bsconfig.json
 package.json
 package-lock.json
+test*.re
+test*.ml
