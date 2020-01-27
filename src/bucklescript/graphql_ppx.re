@@ -175,17 +175,19 @@ let extract_template_literal_from_config = config_fields => {
     };
 
   switch (maybe_template_literal_field) {
-  // in case it's a single identifier: "graphql"
-  | Some((_, {pexp_desc: Pexp_ident({txt: Longident.Lident(f)})})) =>
-    Some(f)
-  // in case it's a dot identifier: "Gatsby.graphql"
-  // note we only pattern match on a single dot, so FirstModule.Gatsby.graphql
-  // wouldn't work
-  | Some((
-      _,
-      {pexp_desc: Pexp_ident({txt: Ldot(Longident.Lident(m), fn)})},
-    )) =>
-    Some(m ++ "." ++ fn)
+  | Some((_, {pexp_desc: Pexp_ident({txt: lident})})) =>
+    Some(
+      Longident.flatten(lident)
+      |> List.fold_left(
+           (acc, elem) =>
+             if (acc == "") {
+               elem;
+             } else {
+               acc ++ "." ++ elem;
+             },
+           "",
+         ),
+    )
   | _ => None
   };
 };
