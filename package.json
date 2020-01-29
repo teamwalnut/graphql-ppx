@@ -6,9 +6,13 @@
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+    "postinstall": "node ./copyPlatformBinaryInPlace.js",
+    "update-schema": "gqlschema schema.graphql -o graphql_schema.json"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "gql-tools": "^0.0.15"
   }
 }

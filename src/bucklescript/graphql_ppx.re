@@ -96,7 +96,14 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
       };
-      switch (Validations.run_validators(config, document)) {
+      let (errors, warnings) = Validations.run_validators(config, document);
+      warnings
+      |> List.iter(((loc, msg)) => {
+           let loc = conv_loc(loc);
+           %stri
+           [%e make_error_expr(loc, msg)];
+         });
+      switch (errors) {
       | Some(errs) =>
         Mod.mk(
           Pmod_structure(

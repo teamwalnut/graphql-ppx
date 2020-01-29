@@ -50,6 +50,7 @@ type Query {
   dogOrHuman: DogOrHuman!
 
   nestedObject: NestedObject!
+  deprecatedField: String! @deprecated(reason: "Use something else instead")
 }
 
 type Mutation {
