@@ -81,6 +81,8 @@ let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 let ident_from_string = (~loc=Location.none, ident) =>
   Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
 
+let lean_parse = () => Ppx_config.lean_parse();
+
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
@@ -259,7 +261,9 @@ let rec generate_parser = (config, path: list(string), definition) =>
   | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(conv_loc(loc), enum_meta)
+    lean_parse()
+      ? generate_poly_enum_decoder_lean(conv_loc(loc), enum_meta)
+      : generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(
       config,

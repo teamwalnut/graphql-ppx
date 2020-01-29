@@ -45,6 +45,30 @@ function writeConfig(flags = []) {
   );
 }
 
+function writeConfig(flags = []) {
+  fs.writeFileSync(
+    "bsconfig.json",
+    JSON.stringify({
+      name: "tests_bucklescript",
+      sources: ["__tests__"],
+      "ppx-flags": [
+        [
+          "../_build/default/src/bucklescript_bin/bin.exe",
+          ...flags,
+          "-schema ../graphql_schema.json"
+        ]
+      ],
+      "bs-dependencies": ["@glennsl/bs-jest"],
+      refmt: 3,
+      "bsc-flags": ["-bs-super-errors"],
+      warnings: {
+        number: "+A-48",
+        error: "+A-3-32-44"
+      }
+    })
+  );
+}
+
 async function test(folder) {
   // object tests currently don't work yet
 
