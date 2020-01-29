@@ -297,6 +297,16 @@ let rec generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
+  | Res_poly_variant_selection_set(loc, name, fields) =>
+    generate_poly_variant_selection_set(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+    )
+
   | Res_poly_variant_interface(loc, name, base, fragments) =>
     generate_poly_variant_interface(
       config,
