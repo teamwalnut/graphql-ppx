@@ -104,7 +104,7 @@ to create queries and fragments, and parse responses.
 
 You can define a query in your ReasonML file with the following code
 
-```
+```reason
 [%graphql {|
   query UserQuery {
     user {
@@ -167,7 +167,7 @@ friends of the user it would be called `t_user_friends`.
 
 When using GraphQL like this:
 
-```
+```reason
 module UserQuery = [%graphql {|
   query UserQuery {
     user {
@@ -183,7 +183,7 @@ query module.
 
 You can also do this:
 
-```
+```reason
 module UserQueries = {
   [%graphql {|
     query UserQuery {
@@ -205,7 +205,7 @@ point.
 If you do not want to put the query contents in a module, but to be in effect
 "opened" in the current module you can use the `inline` option:
 
-```
+```reason
 [%graphql {|
   query UserQuery {
     user {
@@ -268,6 +268,7 @@ When there is just the fragment spread and no other fields on an object, there
 is no special field for the fragment necessary. So if this is the query:
 
 ```reason
+[%graphql {|
   query UserQuery {
     user {
       ...Avatar_User
