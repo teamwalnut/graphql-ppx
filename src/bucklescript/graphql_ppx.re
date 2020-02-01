@@ -43,6 +43,7 @@ let fmt_lex_err = err =>
 let global_records = () => Ppx_config.records();
 let global_definition = () => Ppx_config.definition();
 let legacy = () => Ppx_config.legacy();
+let global_template_tag = () => Ppx_config.template_tag();
 
 let fmt_parse_err = err =>
   Graphql_parser.(
@@ -621,6 +622,16 @@ let args = [
         Ppx_config.update_config(current => {...current, definition: false}),
     ),
     "Legacy mode (make and makeWithVariables)",
+  ),
+  (
+    "-template-tag",
+    Arg.String(
+      template_tag =>
+        Ppx_config.update_config(current =>
+          {...current, template_tag: Some(template_tag)}
+        ),
+    ),
+    "graphql",
   ),
 ];
 

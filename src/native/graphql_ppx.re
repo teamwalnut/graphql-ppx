@@ -111,11 +111,11 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         full_document: document,
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
+        template_tag: None,
         records: false,
         inline: false,
         legacy: false,
         definition: true,
-        template_literal: None,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -193,6 +193,7 @@ let () =
       records: false,
       legacy: true,
       definition: true,
+      template_tag: None,
     })
   );
 
