@@ -1,3 +1,4 @@
+open Migrate_parsetree;
 open Graphql_ppx_base;
 open Source_pos;
 

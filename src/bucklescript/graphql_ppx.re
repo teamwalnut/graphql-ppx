@@ -1,3 +1,4 @@
+open Migrate_parsetree;
 open Graphql_ppx_base;
 open Source_pos;
 
@@ -71,7 +72,7 @@ let rewrite_query =
     ) => {
   open Ast_406;
   open Ast_helper;
-  open Parsetree;
+
   let lexer = Graphql_lexer.make(query);
   let delimLength =
     switch (delim) {

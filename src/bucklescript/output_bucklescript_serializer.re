@@ -1,3 +1,4 @@
+open Migrate_parsetree;
 open Graphql_ppx_base;
 open Graphql_ast;
 open Source_pos;
@@ -181,7 +182,7 @@ let serialize_fun = (config, fields) => {
 };
 
 let is_recursive = input_objects => {
-  List.length(input_objects) > 1
+  List.length(input_objects) > 1;
 };
 
 let generate_serialize_variables =

@@ -1,5 +1,6 @@
 {
   "name": "graphql_ppx",
+  "description": "Used to build for BuckleScript 5 using OCaml 4.02",
   "dependencies": {
     "@opam/dune": "*",
     "@opam/result": "*",
@@ -8,7 +9,6 @@
     "@opam/ppx_tools_versioned": "*",
     "@esy-ocaml/reason": "*",
     "refmterr": "*",
-    "ocaml": "~4.2.3",
     "@opam/menhir": "20171013"
   },
   "devDependencies": {

@@ -55,7 +55,7 @@ jobs:
       - name: test-bsb6
         run: |
           cd tests_bucklescript
-          node ./run.js bsb6
+          npm test
         env:
           CI: true
       - name: (only on release) Upload artifacts ${{ matrix.os }}
@@ -81,7 +81,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install esy
         run: |
-          npm install -g esy@latest
+          npm install -g esy@0.6.0
 
       - name: Get esy store path
         id: esy_cache_path
@@ -113,8 +113,8 @@ jobs:
       # OCaml 4.06 and BuckleScript 6
       - name: install-build
         run: |
-          esy install
-          esy b
+          esy "@406" install
+          esy "@406" b
       - name: test-native
         run: |
           esy b dune runtest -f
