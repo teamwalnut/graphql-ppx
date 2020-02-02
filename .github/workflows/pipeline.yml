@@ -44,14 +44,19 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      # OCaml 4.06 and BuckleScript 6
+      # Ocaml 4.08+
       - name: install-build
         run: |
-          esy install 
-          esy dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
+          esy install
       - name: test-native
         run: |
           esy b dune runtest -f
+
+      # OCaml 4.06 and BuckleScript 6
+      - name: install-build @406
+        run: |
+          esy @406 install 
+          esy @406 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb6
         run: |
           cd tests_bucklescript
@@ -128,14 +133,19 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      # OCaml 4.06 and BuckleScript 6
+      # Ocaml 4.08+
       - name: install-build
         run: |
           esy install
-          esy b
       - name: test-native
         run: |
           esy b dune runtest -f
+
+      # OCaml 4.06 and BuckleScript 6
+      - name: install-build
+        run: |
+          esy @406 install 
+          esy @406 b
       - name: test-bsb6
         run: |
           cd tests_bucklescript
@@ -208,7 +218,6 @@ jobs:
       - name: Move artifacts
         if: success()
         run: |
-          mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
@@ -238,6 +247,7 @@ jobs:
       - name: Move bsb artifacts
         if: success()
         run: |
+          mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
