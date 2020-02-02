@@ -65,24 +65,6 @@ jobs:
           name: ${{ matrix.os }}-bsb6
           path: _build/default/src/bucklescript_bin/bin.exe
 
-      # OCaml 4.02 and BuckleScript 5
-      - name: install-build @402
-        run: |
-          esy @402 install
-          esy @402 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
-      - name: test-bsb5
-        run: |
-          cd tests_bucklescript
-          node ./run.js bsb5
-        env:
-          CI: true
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}
-          path: _build/default/src/bucklescript_bin/bin.exe
-
   test_and_build:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
@@ -139,30 +121,12 @@ jobs:
       - name: test-bsb6
         run: |
           cd tests_bucklescript
-          node ./run.js bsb6
+          npm test
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}-bsb6
-          path: _build/default/src/bucklescript_bin/bin.exe
-
-      # OCaml 4.02 and BuckleScript 5
-      - name: install-build @402
-        run: |
-          esy @402 install
-          esy @402 b
-      - name: test-bsb5
-        run: |
-          cd tests_bucklescript
-          node ./run.js bsb5
-        env:
-          CI: true
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}
           path: _build/default/src/bucklescript_bin/bin.exe
 
   publish:
@@ -176,36 +140,6 @@ jobs:
         with:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
-
-      - name: Download linux artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: ubuntu-latest
-          path: binaries/linux
-
-      - name: Download macOS artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: macOS-latest
-          path: binaries/darwin
-
-      - name: Download windows artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest
-          path: binaries/windows
-
-      - name: Move artifacts
-        if: success()
-        run: |
-          mkdir -p bin/bsb6
-          mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
-          mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
-          rm -rf binaries
 
       - name: Download bsb6 linux artifacts
         if: success()
@@ -231,6 +165,7 @@ jobs:
       - name: Move bsb artifacts
         if: success()
         run: |
+          mkdir -p bin/bsb6
           mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
