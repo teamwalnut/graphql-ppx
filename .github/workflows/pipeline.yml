@@ -164,15 +164,6 @@ jobs:
           esy "@402" b
           cd tests_bucklescript
           node ./run.js bsb5
-
-      # OCaml 4.06 and BuckleScript 6+
-      - name: bucklescript6
-        run: |
-          esy "@406" install 
-          esy "@406" b
-          cd tests_bucklescript
-          node ./run.js bsb6
-
         env:
           CI: true
       - name: (only on release) Upload artifacts ${{ matrix.os }}
