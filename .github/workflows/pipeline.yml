@@ -99,7 +99,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install esy
         run: |
-          npm install -g esy@latest
+          npm install -g esy@0.6.0
 
       - name: Get esy store path
         id: esy_cache_path
