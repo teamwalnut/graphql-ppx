@@ -1,11 +1,15 @@
 open Jest;
-
-let dirname: option(string) = [%bs.node __dirname];
+open Expect;
+open! Expect.Operators;
 
 type options = {cwd: string};
 type buffer;
+
 [@bs.module "child_process"]
 external execSync: (string, options) => buffer = "execSync";
+[@bs.module "fs"]
+external readdirSync: string => array(string) = "readdirSync";
+
 [@bs.val] external dirname: string = "__dirname";
 [@bs.send] external toString: buffer => string = "toString";
 
@@ -14,26 +18,40 @@ let refmt =
   |> toString
   |> Js.String.trim;
 
-describe("objects", () => {
-  open Expect;
-  open! Expect.Operators;
+let run_ppx = (path, opts) => {
+  execSync(
+    "cat "
+    ++ path
+    ++ " | "
+    ++ refmt
+    ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
+    ++ opts
+    ++ " /dev/stdin /dev/stdout |  "
+    ++ refmt
+    ++ " --parse binary --print re --interface false",
+    {cwd: "."},
+  )
+  |> toString;
+};
 
-  let run_ppx = path => {
-    // let refmt = "~/.esy/3____________________________________________________________________/i/esy_ocaml__s__reason-3.5.2-7228114e/bin/refmt";
-    execSync(
-      "cat "
-      ++ path
-      ++ " | "
-      ++ refmt
-      ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json /dev/stdin /dev/stdout |  "
-      ++ refmt
-      ++ " --parse binary --print re --interface false",
-      {cwd: "."},
-    )
-    |> toString;
-  };
+let tests = readdirSync("operations");
 
-  test("argNamedQuery", () =>
-    expect(run_ppx("object-tests/argNamedQuery.re")) |> toMatchSnapshot
-  );
+describe("Objects (legacy)", () => {
+  tests
+  |> Array.map(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
+       )
+     })
+  |> ignore
+});
+
+describe("Records", () => {
+  tests
+  |> Array.map(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
+       )
+     })
+  |> ignore
 });

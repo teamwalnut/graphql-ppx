@@ -535,18 +535,9 @@ esy b
 
 ### BuckleScript
 
-For `bs-platform@5.x`:
-
 ```
 cd tests_bucklescript
-node run.js bsb5
-```
-
-Or you're using `bs-platform@6.x` or above:
-
-```
-cd tests_bucklescript
-node run.js bsb6
+npm test
 ```
 
 ### Native
