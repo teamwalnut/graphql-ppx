@@ -14,7 +14,7 @@ external readdirSync: string => array(string) = "readdirSync";
 [@bs.send] external toString: buffer => string = "toString";
 
 let refmt =
-  execSync("esy x /usr/bin/which refmt", {cwd: ".."})
+  execSync("esy @406 x /usr/bin/which refmt", {cwd: ".."})
   |> toString
   |> Js.String.trim;
 
@@ -26,9 +26,10 @@ let run_ppx = (path, opts) => {
     ++ refmt
     ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
     ++ opts
-    ++ " /dev/stdin /dev/stdout |  "
+    ++ " /dev/stdin /dev/stdout"
+    ++ " | "
     ++ refmt
-    ++ " --parse binary --print re --interface false",
+    ++ " --parse binary --print ml --interface false",
     {cwd: "."},
   )
   |> toString;

@@ -7,8 +7,7 @@
     "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": "1.2.0",
     "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "*",
-    "refmterr": "*",
+    "@opam/reason": "*",
     "@opam/menhir": "20171013"
   },
   "devDependencies": {

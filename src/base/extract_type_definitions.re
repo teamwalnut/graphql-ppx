@@ -58,28 +58,29 @@ let generate_type_name = (~prefix="t") =>
 // definitions
 let rec extract = path =>
   fun
-  | Res_nullable(loc, inner) => extract(path, inner)
-  | Res_array(loc, inner) => extract(path, inner)
-  | Res_object(loc, obj_name, fields) => create_object(path, fields, false)
-  | Res_record(loc, obj_name, fields) => create_object(path, fields, true)
-  | Res_poly_variant_union(loc, name, fragments, _)
-  | Res_poly_variant_interface(loc, name, _, fragments) =>
+  | Res_nullable(_loc, inner) => extract(path, inner)
+  | Res_array(_loc, inner) => extract(path, inner)
+  | Res_object(_loc, _obj_name, fields) => create_object(path, fields, false)
+  | Res_record(_loc, _obj_name, fields) => create_object(path, fields, true)
+  | Res_poly_variant_union(_loc, _name, fragments, _)
+  | Res_poly_variant_selection_set(_loc, _name, fragments)
+  | Res_poly_variant_interface(_loc, _name, _, fragments) =>
     fragments
     |> List.fold_left(
          (acc, (name, inner)) =>
            List.append(extract([name, ...path], inner), acc),
          [],
        )
-  | Res_custom_decoder(loc, ident, inner) => extract(path, inner)
-  | Res_solo_fragment_spread(loc, name, _) => []
-  | Res_error(loc, message) => []
-  | Res_id(loc) => []
-  | Res_string(loc) => []
-  | Res_int(loc) => []
-  | Res_float(loc) => []
-  | Res_boolean(loc) => []
+  | Res_custom_decoder(_loc, _ident, inner) => extract(path, inner)
+  | Res_solo_fragment_spread(_loc, _name, _) => []
+  | Res_error(_loc, _message) => []
+  | Res_id(_loc) => []
+  | Res_string(_loc) => []
+  | Res_int(_loc) => []
+  | Res_float(_loc) => []
+  | Res_boolean(_loc) => []
   | Res_raw_scalar(_) => []
-  | Res_poly_enum(loc, enum_meta) => []
+  | Res_poly_enum(_loc, _enum_meta) => []
 and create_object = (path, fields, force_record) => {
   [
     Object({
@@ -139,7 +140,7 @@ let rec convert_type_ref = schema =>
 
 let generate_input_field_types =
     (
-      input_obj_name,
+      _input_obj_name,
       schema: Schema.schema,
       fields: list((string, Schema.type_ref, Source_pos.ast_location)),
     ) => {
@@ -173,10 +174,10 @@ let rec get_inner_type = (type_: extracted_type) => {
 
 let get_input_object_name =
   fun
-  | InputField({type_}) => {
+  | InputField({type_, _}) => {
       let type_ = get_inner_type(type_);
       switch (type_) {
-      | Some(Type(InputObject({iom_name}))) => Some(iom_name)
+      | Some(Type(InputObject({iom_name, _}))) => Some(iom_name)
       | _ => None
       };
     };
@@ -216,10 +217,10 @@ let rec extract_input_object =
            |> List.fold_left(
                 acc =>
                   fun
-                  | (name, type_ref, loc) => {
-                      let (type_name, type_) = fetch_type(schema, type_ref);
+                  | (_name, type_ref, loc) => {
+                      let (_type_name, type_) = fetch_type(schema, type_ref);
                       switch (type_) {
-                      | Some(InputObject({iom_name, iom_input_fields})) =>
+                      | Some(InputObject({iom_name, iom_input_fields, _})) =>
                         if (List.exists(
                               f => f == iom_name,
                               finalized_input_objects,

@@ -1,0 +1,13 @@
+{
+  "name": "tests_bucklescript",
+  "sources": ["__tests__"],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "bs-dependencies": ["@glennsl/bs-jest"],
+  "refmt": 3,
+  "bsc-flags": ["-bs-super-errors"],
+  "warnings": { "number": "+A-48-30-42" }
+}

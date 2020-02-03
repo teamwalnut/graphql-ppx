@@ -47,12 +47,12 @@ let find_argument = (name, arguments) =>
 let find_fragment_arguments =
     (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
   switch (directives |> List.find(d => d.item.d_name.item == "arguments")) {
-  | {item: {d_arguments: Some(arguments)}} =>
+  | {item: {d_arguments: Some(arguments), _}, _} =>
     arguments.item
     |> List.fold_left(
          acc =>
            fun
-           | ({item: name}, {item: Iv_variable(variable_name)})
+           | ({item: name, _}, {item: Iv_variable(variable_name), _})
                when name == variable_name => [
                name,
                ...acc,
@@ -471,7 +471,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
         config.map_loc(span),
         fs_name.item,
         switch (ty) {
-        | Object({om_name}) => Some(om_name)
+        | Object({om_name, _}) => Some(om_name)
         | _ => None
         },
         arguments,
@@ -490,7 +490,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
           config.map_loc(span),
           fs_name.item,
           switch (ty) {
-          | Object({om_name}) => Some(om_name)
+          | Object({om_name, _}) => Some(om_name)
           | _ => None
           },
           arguments,
@@ -606,7 +606,7 @@ let getFragmentArgumentDefinitions =
   switch (
     directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
   ) {
-  | {item: {d_arguments: Some(arguments)}, span} =>
+  | {item: {d_arguments: Some(arguments), _}, _} =>
     arguments.item
     |> List.fold_left(
          acc =>
@@ -620,7 +620,7 @@ let getFragmentArgumentDefinitions =
                  |> List.fold_left(
                       acc =>
                         fun
-                        | ({item: "type"}, {item: Iv_string(type_)}) =>
+                        | ({item: "type", _}, {item: Iv_string(type_), _}) =>
                           Some(type_)
                         | _ => acc,
                       None,

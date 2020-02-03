@@ -299,25 +299,23 @@ let find_fragment_refs = parts =>
   |> StringSet.elements;
 
 let compress_parts = (parts: array(t)) => {
-  Graphql_printer.(
-    parts
-    |> Array.to_list
-    |> List.fold_left(
-         (acc, curr) => {
-           switch (acc, curr) {
-           | ([String(s1), ...rest], String(s2)) => [
-               String(s1 ++ s2),
-               ...rest,
-             ]
-           | (acc, Empty) => acc
-           | (acc, curr) => [curr, ...acc]
-           }
-         },
-         [],
-       )
-    |> List.rev
-    |> Array.of_list
-  );
+  parts
+  |> Array.to_list
+  |> List.fold_left(
+       (acc, curr) => {
+         switch (acc, curr) {
+         | ([String(s1), ...rest], String(s2)) => [
+             String(s1 ++ s2),
+             ...rest,
+           ]
+         | (acc, Empty) => acc
+         | (acc, curr) => [curr, ...acc]
+         }
+       },
+       [],
+     )
+  |> List.rev
+  |> Array.of_list;
 };
 
 let print_document = (schema, defs) => {
