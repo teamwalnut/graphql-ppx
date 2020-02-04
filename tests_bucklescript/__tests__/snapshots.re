@@ -18,7 +18,7 @@ external readdirSync: string => array(string) = "readdirSync";
 let win = platform() == "win32";
 let refmt =
   execSync(
-    "esy @406 x " ++ (win ? "where" : "/usr/bin/which") ++ " refmt",
+    "esy @406 build echo \"#{@opam/reason.bin / }refmt\"",
     {cwd: resolve(dirname, "../..")},
   )
   |> toString
