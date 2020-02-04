@@ -3,4 +3,4 @@ let log = msg =>
     print_endline(msg);
   };
 
-let must_log = print_endline;
+let error_log = prerr_endline;

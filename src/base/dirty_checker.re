@@ -44,9 +44,9 @@ let dirty_update = (hash, checker) => {
   switch (checker.dirty_callback(checker.src)) {
   | () =>
     write_hash(hash, checker.hash_path);
-    Log.must_log("[update ok]");
+    Log.log("[update ok]");
   | exception (Dirty_update_failure(msg)) =>
-    Log.must_log("[update error] " ++ msg)
+    Log.error_log("[update error] " ++ msg)
   };
 };
 

@@ -312,7 +312,7 @@ let create_dir_if_not_exist = abs_path =>
     switch (Unix.mkdir(abs_path, 493)) {
     | () => ()
     | exception (Unix.Unix_error(error, cmd, msg)) =>
-      Log.must_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
+      Log.error_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
       switch (error) {
       | Unix.EEXIST => () /* It's Ok since the build tool e.g. BuckleScript could be multi-threading */
       | error => raise(Unix.Unix_error(error, cmd, msg))
@@ -378,7 +378,7 @@ let create_marshaled_schema = (json_schema, data) => {
   Log.log("[write marshaled] " ++ marshaled_schema);
   switch (open_out_bin(marshaled_schema)) {
   | exception (Sys_error(msg)) =>
-    Log.must_log("[write marshaled][Sys_error]: " ++ msg);
+    Log.error_log("[write marshaled][Sys_error]: " ++ msg);
     raise(Sys_error(msg));
   | outc =>
     Marshal.to_channel(outc, data, []);
@@ -405,7 +405,7 @@ let rec read_marshaled_schema = json_schema => {
   Log.log("[read marshaled] " ++ marshaled_schema);
   switch (open_in_bin(marshaled_schema)) {
   | exception (Sys_error(msg)) =>
-    Log.must_log("[read marshaled][Sys_error]: " ++ msg);
+    Log.error_log("[read marshaled][Sys_error]: " ++ msg);
     raise(Sys_error(msg));
   | file =>
     let data =
@@ -419,7 +419,7 @@ let rec read_marshaled_schema = json_schema => {
   };
 }
 and recovery_build = json_schema => {
-  let () = Log.must_log("Marshaled file is broken. Doing recovery build...");
+  let () = Log.error_log("Marshaled file is broken. Doing recovery build...");
   let () = Sys.remove(get_hash_path(json_schema));
   /* we don't remove marshal file since it might result in race condition,
    * we simply let every thread noticed the broken marshal file rewrite to it */
