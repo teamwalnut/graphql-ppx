@@ -44,7 +44,7 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      - name: install-build
+      - name: Add python
         run: |
           apk add python
       # Ocaml 4.08+
@@ -59,13 +59,15 @@ jobs:
       - name: install-build @406
         run: |
           esy @406 install
-          esy @406 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
       - name: test-bsb6
         working-directory: ./tests_bucklescript
         run: |
           npm install --no-optional && npm test
         env:
           CI: true
+      - name: install-build @406 (static release)
+        run: |
+          esy @406 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
