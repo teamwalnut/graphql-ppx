@@ -137,6 +137,7 @@ jobs:
           esy @406 b
       - name: test-bsb6
         working-directory: ./tests_bucklescript
+        shell: bash
         run: |
           npm install --no-optional
           npm test
