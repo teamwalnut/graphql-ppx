@@ -44,6 +44,9 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
+      - name: install-build
+        run: |
+          apk add python
       # Ocaml 4.08+
       - name: install-build
         run: |
