@@ -2,7 +2,10 @@ open Jest;
 open Expect;
 open! Expect.Operators;
 
-type options = {cwd: string};
+type options = {
+  cwd: string,
+  shell: string,
+};
 type buffer;
 
 [@bs.module "child_process"]
@@ -14,7 +17,7 @@ external readdirSync: string => array(string) = "readdirSync";
 [@bs.send] external toString: buffer => string = "toString";
 
 let refmt =
-  execSync("esy @406 x /usr/bin/which refmt", {cwd: ".."})
+  execSync("esy @406 x /usr/bin/which refmt", {cwd: "..", shell: "bash"})
   |> toString
   |> Js.String.trim;
 
@@ -30,7 +33,7 @@ let run_ppx = (path, opts) => {
     ++ " | "
     ++ refmt
     ++ " --parse binary --print ml --interface false",
-    {cwd: "."},
+    {cwd: ".", shell: "bash"},
   )
   |> toString;
 };
