@@ -135,11 +135,11 @@ jobs:
         run: |
           esy @406 install
           esy @406 b
-      - name: test-bsb6
-        working-directory: ./tests_bucklescript
-        run: |
-          npm install --no-optional
-          npm test
+      # - name: test-bsb6
+      #   working-directory: ./tests_bucklescript
+      #   run: |
+      #     npm install --no-optional
+      #     npm test
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
