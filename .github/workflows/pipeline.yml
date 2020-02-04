@@ -59,6 +59,7 @@ jobs:
       - name: install-build @406
         run: |
           esy @406 install
+          esy @406 b
       - name: test-bsb6
         working-directory: ./tests_bucklescript
         run: |
