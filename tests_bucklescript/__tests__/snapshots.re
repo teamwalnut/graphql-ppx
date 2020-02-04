@@ -4,6 +4,8 @@ open Expect;
 type options = {cwd: string};
 type buffer;
 
+[@bs.module "path"] external resolve: (string, string) => string = "resolve";
+
 [@bs.module "child_process"]
 external execSync: (string, options) => buffer = "execSync";
 [@bs.module "fs"]
@@ -17,7 +19,7 @@ let win = platform() == "win32";
 let refmt =
   execSync(
     "esy @406 x " ++ (win ? "where" : "/usr/bin/which") ++ " refmt",
-    {cwd: ".."},
+    {cwd: resolve(dirname, "../..")},
   )
   |> toString
   |> Js.String.trim;
@@ -34,7 +36,7 @@ let run_ppx = (path, opts) => {
     ++ " | "
     ++ refmt
     ++ " --parse binary --print ml --interface false",
-    {cwd: "."},
+    {cwd: resolve(dirname, "..")},
   )
   |> toString;
 };
