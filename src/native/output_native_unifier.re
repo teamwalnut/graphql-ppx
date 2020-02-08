@@ -14,7 +14,7 @@ open Output_native_utils;
 exception Unimplemented(string);
 
 let make_make_fun = (config, variable_defs) => {
-  let make_tuple = (loc, variables, compose) => [%expr
+  let make_tuple = (_loc, _variables, compose) => [%expr
     (
       parse,
       ppx_printed_query,
