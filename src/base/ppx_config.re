@@ -10,11 +10,14 @@ type config = {
   root_directory: string,
   schema_file: string,
   raise_error_with_loc: 'a. (Source_pos.ast_location, string) => 'a,
+  lean_parse: bool,
 };
 
 let config_ref = ref(None);
 
 let set_config = config => config_ref := Some(config);
+
+let update_config = update => config_ref := config_ref^ |> Option.map(update);
 
 let verbose_logging = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_logging;
@@ -22,6 +25,8 @@ let verbose_logging = () =>
 let output_mode = () => (config_ref^ |> Option.unsafe_unwrap).output_mode;
 
 let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
+
+let lean_parse = () => (config_ref^ |> Option.unsafe_unwrap).lean_parse;
 
 let verbose_error_handling = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_error_handling;

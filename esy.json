@@ -1,19 +1,18 @@
 {
   "name": "graphql_ppx",
+  "description": "Used for native Reason/OCaml using latest version of OCaml",
   "dependencies": {
     "@opam/dune": "<2.0",
     "@opam/result": "*",
     "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": "*",
     "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "*",
-    "@opam/menhir": "20171013"
+    "@opam/reason": "*",
+    "@opam/menhir": "*"
   },
   "devDependencies": {
     "@opam/alcotest": "*",
-    "@opam/merlin": "*",
-    "ocaml": "<4.9.0",
-    "refmterr": "*"
+    "ocaml": "~4.9.0"
   },
   "peerDependencies": {
     "ocaml": ">=4.6.0 & <4.9.0"

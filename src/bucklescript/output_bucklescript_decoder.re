@@ -1,3 +1,4 @@
+open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Schema;
@@ -10,6 +11,8 @@ open Generator_utils;
 open Output_bucklescript_utils;
 
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
+
+let lean_parse = () => Ppx_config.lean_parse();
 
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -32,9 +35,6 @@ let string_decoder = loc =>
     | Some(value) => (value: string)
     }
   );
-
-let id_decoder = string_decoder;
-
 let float_decoder = loc =>
   [@metaloc loc]
   (
@@ -73,6 +73,16 @@ let boolean_decoder = loc =>
     | Some(value) => value
     }
   );
+let id_decoder = string_decoder;
+
+let string_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): string)];
+let id_decoder_lean = string_decoder_lean;
+let float_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): float)];
+let int_decoder_lean = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
+let boolean_decoder_lean = loc =>
+  [@metaloc loc] [%expr (Obj.magic(value): bool)];
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -135,6 +145,43 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   };
 };
 
+let generate_poly_enum_decoder_lean = (loc, enum_meta) => {
+  let enum_match_arms =
+    Ast_helper.(
+      enum_meta.em_values
+      |> List.mapi((i, {evm_name, _}) =>
+           if (i == List.length(enum_meta.em_values) - 1) {
+             Exp.case(Pat.any(), Exp.variant(evm_name, None));
+           } else {
+             Exp.case(
+               Pat.constant(Pconst_string(evm_name, None)),
+               Exp.variant(evm_name, None),
+             );
+           }
+         )
+    );
+
+  let result =
+    Ast_helper.(
+      Exp.constraint_(
+        Exp.match([%expr (Obj.magic(value): string)], enum_match_arms),
+        Typ.variant(
+          enum_meta.em_values
+          |> List.map(({evm_name, _}) =>
+               Rtag({txt: evm_name, loc}, [], true, [])
+             ),
+          Closed,
+          None,
+        ),
+      )
+    );
+
+  [@metaloc loc]
+  let%expr value: string = Obj.magic(value);
+  %e
+  result;
+};
+
 let generate_solo_fragment_spread = (loc, name) => {
   let ident =
     Ast_helper.Exp.ident({loc, txt: Longident.parse(name ++ ".parse")});
@@ -152,17 +199,34 @@ let generate_error = (loc, message) => {
 let rec generate_decoder = config =>
   fun
   | Res_nullable(loc, inner) =>
-    generate_nullable_decoder(config, conv_loc(loc), inner)
+    lean_parse()
+      ? generate_nullable_decoder_lean(config, conv_loc(loc), inner)
+      : generate_nullable_decoder(config, conv_loc(loc), inner)
   | Res_array(loc, inner) =>
-    generate_array_decoder(config, conv_loc(loc), inner)
-  | Res_id(loc) => id_decoder(conv_loc(loc))
-  | Res_string(loc) => string_decoder(conv_loc(loc))
-  | Res_int(loc) => int_decoder(conv_loc(loc))
-  | Res_float(loc) => float_decoder(conv_loc(loc))
-  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
+    lean_parse()
+      ? generate_array_decoder_lean(config, conv_loc(loc), inner)
+      : generate_array_decoder(config, conv_loc(loc), inner)
+  | Res_id(loc) =>
+    lean_parse()
+      ? id_decoder_lean(conv_loc(loc)) : id_decoder(conv_loc(loc))
+  | Res_string(loc) =>
+    lean_parse()
+      ? string_decoder_lean(conv_loc(loc)) : string_decoder(conv_loc(loc))
+  | Res_int(loc) =>
+    lean_parse()
+      ? int_decoder_lean(conv_loc(loc)) : int_decoder(conv_loc(loc))
+  | Res_float(loc) =>
+    lean_parse()
+      ? float_decoder_lean(conv_loc(loc)) : float_decoder(conv_loc(loc))
+  | Res_boolean(loc) =>
+    lean_parse()
+      ? boolean_decoder_lean(conv_loc(loc))
+      : boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(conv_loc(loc), enum_meta)
+    lean_parse()
+      ? generate_poly_enum_decoder_lean(conv_loc(loc), enum_meta)
+      : generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
   | Res_record(loc, name, fields) =>
@@ -190,6 +254,14 @@ let rec generate_decoder = config =>
   | Res_solo_fragment_spread(loc, name) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
+and generate_nullable_decoder_lean = (config, loc, inner) =>
+  [@metaloc loc]
+  (
+    switch%expr (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+    | Some(_) => Some([%e generate_decoder(config, inner)])
+    | None => None
+    }
+  )
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
@@ -204,6 +276,15 @@ and generate_array_decoder = (config, loc, inner) =>
     value
     |> Js.Json.decodeArray
     |> Js.Option.getExn
+    |> Js.Array.map(value => {
+         %e
+         generate_decoder(config, inner)
+       })
+  ]
+and generate_array_decoder_lean = (config, loc, inner) =>
+  [@metaloc loc]
+  [%expr
+    Obj.magic(value)
     |> Js.Array.map(value => {
          %e
          generate_decoder(config, inner)
@@ -244,9 +325,9 @@ and generate_record_decoder = (config, loc, name, fields) => {
            | Fr_fragment_spread(_) => None,
          )
       |> (
-           fun
-           | [field_pattern] => field_pattern
-           | field_patterns => Pat.tuple(field_patterns)
+        fun
+        | [field_pattern] => field_pattern
+        | field_patterns => Pat.tuple(field_patterns)
       )
     );
 
@@ -284,9 +365,9 @@ and generate_record_decoder = (config, loc, name, fields) => {
            | Fr_fragment_spread(_) => None,
          )
       |> (
-           fun
-           | [field_decoder] => field_decoder
-           | field_decoders => Exp.tuple(field_decoders)
+        fun
+        | [field_decoder] => field_decoder
+        | field_decoders => Exp.tuple(field_decoders)
       )
     );
 
@@ -350,32 +431,7 @@ and generate_object_decoder = (config, loc, name, fields) => {
          )
        );
 
-  let rec make_obj_constructor_fn = i =>
-    fun
-    | [] =>
-      Ast_helper.Typ.arrow(
-        Nolabel,
-        Ast_helper.Typ.constr(
-          {txt: Longident.Lident("unit"), loc: Location.none},
-          [],
-        ),
-        Ast_helper.Typ.constr(
-          {txt: Longident.parse("Js.t"), loc: Location.none},
-          [Ast_helper.Typ.object_(ctor_result_type, Closed)],
-        ),
-      )
-    | [Fr_fragment_spread(key, _, _), ...next]
-    | [Fr_named_field(key, _, _), ...next] =>
-      Ast_helper.Typ.arrow(
-        Labelled(key),
-        Ast_helper.Typ.var("a" ++ string_of_int(i)),
-        make_obj_constructor_fn(i + 1, next),
-      );
-  [@metaloc loc]
-  {
-    let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-
-    %e
+  let rec do_obj_constructor = () => {
     Ast_helper.Exp.letmodule(
       {txt: "GQL", loc: Location.none},
       Ast_helper.Mod.structure([
@@ -448,7 +504,105 @@ and generate_object_decoder = (config, loc, name, fields) => {
         ),
       ),
     );
-  };
+  }
+  and do_obj_constructor_lean = () => {
+    Ast_helper.Exp.letmodule(
+      {txt: "GQL", loc: Location.none},
+      Ast_helper.Mod.structure([
+        Ast_helper.Str.primitive({
+          pval_name: {
+            txt: "make_obj",
+            loc: Location.none,
+          },
+          pval_type: make_obj_constructor_fn(0, fields),
+          pval_prim: [""],
+          pval_attributes: [
+            ({txt: "bs.obj", loc: Location.none}, PStr([])),
+          ],
+          pval_loc: Location.none,
+        }),
+      ]),
+      Ast_helper.Exp.apply(
+        Ast_helper.Exp.ident({
+          txt: Longident.parse("GQL.make_obj"),
+          loc: Location.none,
+        }),
+        List.append(
+          fields
+          |> List.map(
+               fun
+               | Fr_named_field(key, _, inner) => (
+                   Labelled(key),
+                   {
+                     let%expr value: 'a =
+                       Obj.magic(
+                         Js.Dict.unsafeGet(value, [%e const_str_expr(key)]): 'a,
+                       );
+
+                     %e
+                     generate_decoder(config, inner);
+                   },
+                 )
+               | Fr_fragment_spread(key, loc, name) => {
+                   let loc = conv_loc(loc);
+                   (
+                     Labelled(key),
+                     {
+                       let%expr value = Js.Json.object_(value);
+                       %e
+                       generate_solo_fragment_spread(loc, name);
+                     },
+                   );
+                 },
+             ),
+          [
+            (
+              Nolabel,
+              Ast_helper.Exp.construct(
+                {txt: Longident.Lident("()"), loc: Location.none},
+                None,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  and obj_constructor = () => {
+    [@metaloc loc]
+    let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+    %e
+    do_obj_constructor();
+  }
+  and obj_constructor_lean = () => {
+    [@metaloc loc]
+    let%expr value: Js.Dict.t(Js.Json.t) = Obj.magic(value: Js.Json.t);
+    %e
+    do_obj_constructor_lean();
+  }
+  and make_obj_constructor_fn = i =>
+    fun
+    | [] =>
+      Ast_helper.Typ.arrow(
+        Nolabel,
+        Ast_helper.Typ.constr(
+          {txt: Longident.Lident("unit"), loc: Location.none},
+          [],
+        ),
+        Ast_helper.Typ.constr(
+          {txt: Longident.parse("Js.t"), loc: Location.none},
+          [Ast_helper.Typ.object_(ctor_result_type, Closed)],
+        ),
+      )
+    | [Fr_fragment_spread(key, _, _), ...next]
+    | [Fr_named_field(key, _, _), ...next] =>
+      Ast_helper.Typ.arrow(
+        Labelled(key),
+        Ast_helper.Typ.var("a" ++ string_of_int(i)),
+        make_obj_constructor_fn(i + 1, next),
+      );
+  lean_parse() ? obj_constructor_lean() : obj_constructor();
 }
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =

@@ -1,6 +1,5 @@
 module NullVisitor: Traversal_utils.VisitorSig = {
-  type t =
-    | ();
+  type t = unit;
   include Traversal_utils.AbstractVisitor;
   let make_self = _ => ();
 };
