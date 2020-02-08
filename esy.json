@@ -12,13 +12,12 @@
   },
   "devDependencies": {
     "@opam/alcotest": "*",
-    "ocaml": "~4.9.0"
-  },
-  "peerDependencies": {
-    "ocaml": ">= 4.6.0"
+    "ocaml": "~4.9.0",
+    "refmterr": "*"
   },
   "esy": {
     "build": [["dune", "build", "-p", "#{self.name}"]],
+    "buildDev": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }
