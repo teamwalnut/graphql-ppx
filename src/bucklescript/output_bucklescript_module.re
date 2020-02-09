@@ -277,10 +277,6 @@ let generate_fragment_module =
     [@metaloc conv_loc(config.map_loc(fragment.span))]
     [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
 
-  let variable_names =
-    find_variables(config, [Graphql_ast.Fragment(fragment)])
-    |> StringSet.elements;
-
   let variable_obj_type =
     Typ.constr(
       {txt: Longident.Lident("t_variables"), loc: Location.none},
