@@ -180,30 +180,40 @@ let generate_default_operation =
           },
           [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
           switch (serialize_variable_functions) {
-          | None => [[%stri let serializeVariables = _ => Js.Json.null]]
+          | None => []
           | Some(f) => [f]
           },
-          switch (variable_constructors) {
-          | None => [[%stri let makeVar = (~f, ()) => f(Js.Json.null)]]
-          | Some(c) => [c]
+          switch (variable_constructors, config.legacy, config.definition) {
+          | (None, true, _)
+          | (None, _, true) => [
+              [%stri let makeVar = (~f, ()) => f(Js.Json.null)],
+            ]
+          | (None, _, _) => []
+          | (Some(c), _, _) => [c]
           },
-          [
-            [%stri let makeVariables = makeVar(~f=f => f)],
-            [%stri
-              let make =
-                makeVar(~f=variables => {
-                  {"query": query, "variables": variables, "parse": parse}
-                })
-            ],
-            [%stri
-              let makeWithVariables = variables => {
-                "query": query,
-                "variables": serializeVariables(variables),
-                "parse": parse,
-              }
-            ],
-            [%stri let definition = (parse, query, makeVar)],
-          ],
+          config.legacy
+            ? [
+              [%stri
+                let make =
+                  makeVar(~f=variables => {
+                    {"query": query, "variables": variables, "parse": parse}
+                  })
+              ],
+              [%stri
+                let makeWithVariables = variables => {
+                  "query": query,
+                  "variables": serializeVariables(variables),
+                  "parse": parse,
+                }
+              ],
+            ]
+            : [],
+          config.definition
+            ? [[%stri let definition = (parse, query, makeVar)]] : [],
+          switch (extracted_args) {
+          | [] => []
+          | _ => [[%stri let makeVariables = makeVar(~f=f => f)]]
+          },
         ]),
       ]);
     };

@@ -23,6 +23,8 @@ type output_config = {
   full_document: Graphql_ast.document,
   records: bool,
   inline: bool,
+  legacy: bool,
+  definition: bool,
 };
 
 let filter_map = (f, l) => {

@@ -113,6 +113,8 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         schema: Lazy.force(Read_schema.get_schema(schema)),
         records: false,
         inline: false,
+        legacy: false,
+        definition: true,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -189,6 +191,7 @@ let () =
       },
       records: false,
       legacy: true,
+      definition: true,
     })
   );
 
