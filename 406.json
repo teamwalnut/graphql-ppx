@@ -2,14 +2,14 @@
   "name": "graphql_ppx",
   "description": "Used to build for BuckleScript 6+ using OCaml 4.06",
   "dependencies": {
-    "@opam/dune": "*",
+    "@esy-ocaml/reason": "*",
+    "@opam/dune": "~1.11.0",
+    "@opam/menhir": "20171013",
+    "@opam/ocaml-migrate-parsetree": "1.4.0",
+    "@opam/ppx_tools_versioned": "5.2.3",
     "@opam/result": "*",
     "@opam/yojson": "*",
-    "@opam/ocaml-migrate-parsetree": "1.2.0",
-    "@opam/ppx_tools_versioned": "*",
-    "@esy-ocaml/reason": "*",
-    "refmterr": "*",
-    "@opam/menhir": "20171013"
+    "refmterr": "*"
   },
   "devDependencies": {
     "@opam/alcotest": "*",

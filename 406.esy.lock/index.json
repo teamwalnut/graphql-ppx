@@ -1,20 +1,20 @@
 {
-  "checksum": "773794fe659917906b251e5b59843c24",
-  "root": "406@link-dev:./406.json",
+  "checksum": "efb28fc6e38bf8077a0c9533352b4d4f",
+  "root": "graphql_ppx@link-dev:./406.json",
   "node": {
-    "refmterr@3.2.2@d41d8cd9": {
-      "id": "refmterr@3.2.2@d41d8cd9",
+    "refmterr@3.3.0@d41d8cd9": {
+      "id": "refmterr@3.3.0@d41d8cd9",
       "name": "refmterr",
-      "version": "3.2.2",
+      "version": "3.3.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/refmterr/-/refmterr-3.2.2.tgz#sha1:b7d6c5df6a37633ec82d339dc609b1867e54e55e"
+          "archive:https://registry.npmjs.org/refmterr/-/refmterr-3.3.0.tgz#sha1:45adde80205093c201b491b3c37dd7740c9b036b"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.6.1000@d41d8cd9", "@reason-native/pastel@0.2.2@d41d8cd9",
+        "ocaml@4.6.1000@d41d8cd9", "@reason-native/pastel@0.3.0@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/atdgen@opam:2.0.0@46af0360",
@@ -36,14 +36,32 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "@reason-native/pastel@0.2.2@d41d8cd9": {
-      "id": "@reason-native/pastel@0.2.2@d41d8cd9",
+    "graphql_ppx@link-dev:./406.json": {
+      "id": "graphql_ppx@link-dev:./406.json",
+      "name": "graphql_ppx",
+      "version": "link-dev:./406.json",
+      "source": { "type": "link-dev", "path": ".", "manifest": "406.json" },
+      "overrides": [],
+      "dependencies": [
+        "refmterr@3.3.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/result@opam:1.4@dc720aef",
+        "@opam/ppx_tools_versioned@opam:5.2.3@4994ec80",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3",
+        "@opam/menhir@opam:20171013@e2d3ef03",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.6.1000@d41d8cd9", "@opam/alcotest@opam:0.8.5@68e6c66c"
+      ]
+    },
+    "@reason-native/pastel@0.3.0@d41d8cd9": {
+      "id": "@reason-native/pastel@0.3.0@d41d8cd9",
       "name": "@reason-native/pastel",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native/pastel/-/pastel-0.2.2.tgz#sha1:a1f7fe266223aaf7915a71f5c8b9ee58e065c62a"
+          "archive:https://registry.npmjs.org/@reason-native/pastel/-/pastel-0.3.0.tgz#sha1:07da3c5a0933e61bc3b353bc85aa71ac7c0f311c"
         ]
       },
       "overrides": [],
@@ -175,20 +193,20 @@
         "ocaml@4.6.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/seq@opam:0.2@35c16df8": {
-      "id": "@opam/seq@opam:0.2@35c16df8",
+    "@opam/seq@opam:0.2.2@e9144e45": {
+      "id": "@opam/seq@opam:0.2.2@e9144e45",
       "name": "@opam/seq",
-      "version": "opam:0.2",
+      "version": "opam:0.2.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/1d/1d5a9d0aba27b22433f518cdc495d0fd#md5:1d5a9d0aba27b22433f518cdc495d0fd",
-          "archive:https://github.com/c-cube/seq/archive/0.2.tar.gz#md5:1d5a9d0aba27b22433f518cdc495d0fd"
+          "archive:https://opam.ocaml.org/cache/md5/90/9033e02283aa3bde9f97f24e632902e3#md5:9033e02283aa3bde9f97f24e632902e3",
+          "archive:https://github.com/c-cube/seq/archive/0.2.2.tar.gz#md5:9033e02283aa3bde9f97f24e632902e3"
         ],
         "opam": {
           "name": "seq",
-          "version": "0.2",
-          "path": "406.esy.lock/opam/seq.0.2"
+          "version": "0.2.2",
+          "path": "406.esy.lock/opam/seq.0.2.2"
         }
       },
       "overrides": [],
@@ -243,39 +261,39 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.6.1000@d41d8cd9", "@opam/seq@opam:0.2@35c16df8",
+        "ocaml@4.6.1000@d41d8cd9", "@opam/seq@opam:0.2.2@e9144e45",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.6.1000@d41d8cd9", "@opam/seq@opam:0.2@35c16df8",
+        "ocaml@4.6.1000@d41d8cd9", "@opam/seq@opam:0.2.2@e9144e45",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/ppx_tools_versioned@opam:5.2.2@8d1998c4": {
-      "id": "@opam/ppx_tools_versioned@opam:5.2.2@8d1998c4",
+    "@opam/ppx_tools_versioned@opam:5.2.3@4994ec80": {
+      "id": "@opam/ppx_tools_versioned@opam:5.2.3@4994ec80",
       "name": "@opam/ppx_tools_versioned",
-      "version": "opam:5.2.2",
+      "version": "opam:5.2.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/f7/f78a3c2b4cc3b92702e1f7096a6125fa#md5:f78a3c2b4cc3b92702e1f7096a6125fa",
-          "archive:https://github.com/ocaml-ppx/ppx_tools_versioned/archive/5.2.2.tar.gz#md5:f78a3c2b4cc3b92702e1f7096a6125fa"
+          "archive:https://opam.ocaml.org/cache/md5/b1/b1455e5a4a1bcd9ddbfcf712ccbd4262#md5:b1455e5a4a1bcd9ddbfcf712ccbd4262",
+          "archive:https://github.com/ocaml-ppx/ppx_tools_versioned/archive/5.2.3.tar.gz#md5:b1455e5a4a1bcd9ddbfcf712ccbd4262"
         ],
         "opam": {
           "name": "ppx_tools_versioned",
-          "version": "5.2.2",
-          "path": "406.esy.lock/opam/ppx_tools_versioned.5.2.2"
+          "version": "5.2.3",
+          "path": "406.esy.lock/opam/ppx_tools_versioned.5.2.3"
         }
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.6.1000@d41d8cd9",
-        "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.6.1000@d41d8cd9",
-        "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
@@ -360,20 +378,20 @@
       ],
       "devDependencies": [ "ocaml@4.6.1000@d41d8cd9" ]
     },
-    "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e": {
-      "id": "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e",
+    "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3": {
+      "id": "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3",
       "name": "@opam/ocaml-migrate-parsetree",
-      "version": "opam:1.2.0",
+      "version": "opam:1.4.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/cc/cc6fb09ad6f99156c7dba47711c62c6f#md5:cc6fb09ad6f99156c7dba47711c62c6f",
-          "archive:https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.2.0/ocaml-migrate-parsetree-v1.2.0.tbz#md5:cc6fb09ad6f99156c7dba47711c62c6f"
+          "archive:https://opam.ocaml.org/cache/sha256/23/231fbdc205187b3ee266b535d9cfe44b599067b2f6e97883c782ea7bb577d3b8#sha256:231fbdc205187b3ee266b535d9cfe44b599067b2f6e97883c782ea7bb577d3b8",
+          "archive:https://github.com/ocaml-ppx/ocaml-migrate-parsetree/releases/download/v1.4.0/ocaml-migrate-parsetree-v1.4.0.tbz#sha256:231fbdc205187b3ee266b535d9cfe44b599067b2f6e97883c782ea7bb577d3b8"
         ],
         "opam": {
           "name": "ocaml-migrate-parsetree",
-          "version": "1.2.0",
-          "path": "406.esy.lock/opam/ocaml-migrate-parsetree.1.2.0"
+          "version": "1.4.0",
+          "path": "406.esy.lock/opam/ocaml-migrate-parsetree.1.4.0"
         }
       },
       "overrides": [],
@@ -486,7 +504,8 @@
       "dependencies": [
         "ocaml@4.6.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
         "@opam/stdlib-shims@opam:0.1.0@d957c903",
-        "@opam/seq@opam:0.2@35c16df8", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/seq@opam:0.2.2@e9144e45",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@opam/base-unix@opam:base@87d0b2eb",
@@ -494,7 +513,7 @@
       ],
       "devDependencies": [
         "ocaml@4.6.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
-        "@opam/seq@opam:0.2@35c16df8"
+        "@opam/seq@opam:0.2.2@e9144e45"
       ]
     },
     "@opam/easy-format@opam:1.3.2@0484b3c4": {
@@ -875,30 +894,12 @@
       "dependencies": [
         "ocaml@4.6.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef",
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e",
+        "@opam/ocaml-migrate-parsetree@opam:1.4.0@12deb6f3",
         "@opam/merlin-extend@opam:0.5@a5dd7d4b",
         "@opam/menhir@opam:20171013@e2d3ef03",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ],
       "devDependencies": []
-    },
-    "406@link-dev:./406.json": {
-      "id": "406@link-dev:./406.json",
-      "name": "406",
-      "version": "link-dev:./406.json",
-      "source": { "type": "link-dev", "path": ".", "manifest": "406.json" },
-      "overrides": [],
-      "dependencies": [
-        "refmterr@3.2.2@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/result@opam:1.4@dc720aef",
-        "@opam/ppx_tools_versioned@opam:5.2.2@8d1998c4",
-        "@opam/ocaml-migrate-parsetree@opam:1.2.0@f717a85e",
-        "@opam/menhir@opam:20171013@e2d3ef03",
-        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.6.1000@d41d8cd9", "@opam/alcotest@opam:0.8.5@68e6c66c"
-      ]
     }
   }
 }
