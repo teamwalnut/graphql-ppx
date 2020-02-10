@@ -3,7 +3,7 @@ open Graphql_ppx_base;
 open Result_structure;
 open Schema;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 open Parsetree;
 
@@ -123,7 +123,11 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       Typ.variant(
         enum_meta.em_values
         |> List.map(({evm_name, _}) =>
-             Rtag({txt: evm_name, loc}, [], true, [])
+             {
+               prf_desc: Rtag({txt: evm_name, loc}, true, []),
+               prf_loc: loc,
+               prf_attributes: [],
+             }
            ),
         Closed,
         None,
@@ -168,7 +172,11 @@ let generate_poly_enum_decoder_lean = (loc, enum_meta) => {
         Typ.variant(
           enum_meta.em_values
           |> List.map(({evm_name, _}) =>
-               Rtag({txt: evm_name, loc}, [], true, [])
+               {
+                 prf_desc: Rtag({txt: evm_name, loc}, true, []),
+                 prf_loc: loc,
+                 prf_attributes: [],
+               }
              ),
           Closed,
           None,
@@ -424,11 +432,15 @@ and generate_object_decoder = (config, loc, name, fields) => {
     fields
     |> List.mapi(
          (i, Fr_named_field(key, _, _) | Fr_fragment_spread(key, _, _)) =>
-         Otag(
-           {txt: key, loc},
-           [],
-           Ast_helper.Typ.var("a" ++ string_of_int(i)),
-         )
+         {
+           pof_desc:
+             Otag(
+               {txt: key, loc},
+               Ast_helper.Typ.var("a" ++ string_of_int(i)),
+             ),
+           pof_loc: loc,
+           pof_attributes: [],
+         }
        );
 
   let rec do_obj_constructor = () => {
@@ -443,7 +455,14 @@ and generate_object_decoder = (config, loc, name, fields) => {
           pval_type: make_obj_constructor_fn(0, fields),
           pval_prim: [""],
           pval_attributes: [
-            ({txt: "bs.obj", loc: Location.none}, PStr([])),
+            {
+              attr_name: {
+                txt: "bs.obj",
+                loc: Location.none,
+              },
+              attr_payload: PStr([]),
+              attr_loc: loc,
+            },
           ],
           pval_loc: Location.none,
         }),
@@ -517,7 +536,14 @@ and generate_object_decoder = (config, loc, name, fields) => {
           pval_type: make_obj_constructor_fn(0, fields),
           pval_prim: [""],
           pval_attributes: [
-            ({txt: "bs.obj", loc: Location.none}, PStr([])),
+            {
+              attr_name: {
+                txt: "bs.obj",
+                loc: Location.none,
+              },
+              attr_payload: PStr([]),
+              attr_loc: loc,
+            },
           ],
           pval_loc: Location.none,
         }),
@@ -652,18 +678,24 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
       Typ.variant(
         fields
         |> List.map(((name, _)) =>
-             Rtag(
-               {txt: Compat.capitalize_ascii(name), loc},
-               [],
-               false,
-               [
-                 {
-                   ptyp_desc: Ptyp_any,
-                   ptyp_attributes: [],
-                   ptyp_loc: Location.none,
-                 },
-               ],
-             )
+             {
+               prf_desc:
+                 Rtag(
+                   {txt: Compat.capitalize_ascii(name), loc},
+                   false,
+                   [
+                     {
+                       ptyp_desc: Ptyp_any,
+                       ptyp_attributes: [],
+                       ptyp_loc_stack: [],
+                       ptyp_loc: Location.none,
+                     },
+                   ],
+                 ),
+
+               prf_loc: loc,
+               prf_attributes: [],
+             }
            ),
         Closed,
         None,
@@ -699,13 +731,23 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
     Exp.variant(type_name, Some(generate_decoder(config, inner)))
     |> Exp.case(name_pattern);
   };
-  let map_case_ty = ((name, _)) =>
-    Rtag(
-      {txt: name, loc},
-      [],
-      false,
-      [{ptyp_desc: Ptyp_any, ptyp_attributes: [], ptyp_loc: Location.none}],
-    );
+  let map_case_ty = ((name, _)) => {
+    prf_desc:
+      Rtag(
+        {txt: name, loc},
+        false,
+        [
+          {
+            ptyp_desc: Ptyp_any,
+            ptyp_attributes: [],
+            ptyp_loc_stack: [],
+            ptyp_loc: Location.none,
+          },
+        ],
+      ),
+    prf_loc: loc,
+    prf_attributes: [],
+  };
 
   let fragment_cases = List.map(map_case, fragments);
   let fallback_case = map_fallback_case(base);
@@ -796,25 +838,36 @@ and generate_poly_variant_union =
         )
       | Nonexhaustive => (
           Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [Rtag({txt: "Nonexhaustive", loc}, [], true, [])],
+          [
+            {
+              prf_desc: Rtag({txt: "Nonexhaustive", loc}, true, []),
+              prf_loc: loc,
+              prf_attributes: [],
+            },
+          ],
         )
       }
     );
   let fragment_case_tys =
     fragments
     |> List.map(((name, _)) =>
-         Rtag(
-           {txt: name, loc},
-           [],
-           false,
-           [
-             {
-               ptyp_desc: Ptyp_any,
-               ptyp_attributes: [],
-               ptyp_loc: Location.none,
-             },
-           ],
-         )
+         {
+           prf_desc:
+             Rtag(
+               {txt: name, loc},
+               false,
+               [
+                 {
+                   ptyp_desc: Ptyp_any,
+                   ptyp_attributes: [],
+                   ptyp_loc: Location.none,
+                   ptyp_loc_stack: [],
+                 },
+               ],
+             ),
+           prf_loc: loc,
+           prf_attributes: [],
+         }
        );
 
   let union_ty =

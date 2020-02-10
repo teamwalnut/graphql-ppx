@@ -4,7 +4,7 @@ open Graphql_ast;
 open Source_pos;
 open Generator_utils;
 
-open Ast_406;
+open Ast_408;
 open Parsetree;
 open Asttypes;
 

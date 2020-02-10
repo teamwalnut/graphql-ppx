@@ -51,14 +51,14 @@ let fmt_parse_err = err =>
   );
 
 let make_error_expr = (loc, message) => {
-  Ast_406.(
+  Ast_408.(
     Ast_mapper.extension_of_error(Location.error(~loc, message))
     |> Ast_helper.Exp.extension(~loc)
   );
 };
 
 let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
-  open Ast_406;
+  open Ast_408;
   open Ast_helper;
   open Parsetree;
   let lexer = Graphql_lexer.make(query);
@@ -118,7 +118,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
 };
 
 let extract_schema_from_config = config_fields => {
-  open Ast_406;
+  open Ast_408;
   open Asttypes;
   open Parsetree;
 
@@ -173,7 +173,7 @@ let () =
   );
 
 let mapper = (_config, _cookies) => {
-  Ast_406.(
+  Ast_408.(
     Ast_mapper.(
       Parsetree.(
         Asttypes.{
@@ -313,5 +313,5 @@ let args = [
 
 let () =
   Migrate_parsetree.(
-    Driver.register(~name="graphql", ~args, Versions.ocaml_406, mapper)
+    Driver.register(~name="graphql", ~args, Versions.ocaml_408, mapper)
   );
