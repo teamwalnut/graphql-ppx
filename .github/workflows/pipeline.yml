@@ -1,6 +1,10 @@
 name: graphql_ppx pipeline
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   test_and_build_linux:
