@@ -61,84 +61,6 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query =
-    (
-      ~schema=?,
-      ~records=?,
-      ~inline=?,
-      ~template_literal=?,
-      ~definition=?,
-      ~loc,
-      ~delim,
-      ~query,
-      ~module_definition,
-      (),
-    ) => {
-  open Ast_408;
-  open Ast_helper;
-
-  let lexer = Graphql_lexer.make(query);
-  let delimLength =
-    switch (delim) {
-    | Some(s) => 2 + String.length(s)
-    | None => 1
-    };
-  switch (Graphql_lexer.consume(lexer)) {
-  | Result.Error(e) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-          fmt_lex_err(e.item),
-        ),
-      ),
-    )
-  | Result.Ok(tokens) =>
-    let parser = Graphql_parser.make(tokens);
-    switch (Graphql_parser_document.parse_document(parser)) {
-    | Result.Error(e) =>
-      raise(
-        Location.Error(
-          Location.error(
-            ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-            fmt_parse_err(e.item),
-          ),
-        ),
-      )
-    | Result.Ok(document) =>
-      let config = {
-        Generator_utils.map_loc: add_loc(delimLength, loc),
-        delimiter: delim,
-        full_document: document,
-        records: records |> Option.get_or_else(global_records()),
-        inline: inline |> Option.get_or_else(false),
-        definition: definition |> Option.get_or_else(global_definition()),
-        legacy: legacy(),
-        /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(schema)),
-        template_literal,
-      };
-      switch (Validations.run_validators(config, document)) {
-      | Some(errs) =>
-        let errs =
-          errs
-          |> List.map(((loc, msg)) => {
-               let loc = conv_loc(loc);
-               %stri
-               [%e make_error_expr(loc, msg)];
-             });
-        [errs];
-      | None =>
-        Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(
-             config,
-             module_definition,
-           )
-      };
-    };
-  };
-};
-
 let extract_schema_from_config = config_fields => {
   open Ast_408;
   open Asttypes;
@@ -262,6 +184,127 @@ let extract_bool_from_config = (name, config_fields) => {
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_inline_from_config = extract_bool_from_config("inline");
 let extract_definition_from_config = extract_bool_from_config("definition");
+let extract_tagged_template_config =
+  extract_bool_from_config("taggedTemplate");
+
+type query_config = {
+  schema: option(string),
+  records: option(bool),
+  inline: option(bool),
+  definition: option(bool),
+  template_tag: option(string),
+  tagged_template: option(bool),
+};
+
+let get_query_config = fields => {
+  {
+    schema: extract_schema_from_config(fields),
+    records: extract_records_from_config(fields),
+    inline: extract_inline_from_config(fields),
+    definition: extract_definition_from_config(fields),
+    template_tag: extract_template_tag_from_config(fields),
+    tagged_template: extract_tagged_template_config(fields),
+  };
+};
+let empty_query_config = {
+  schema: None,
+  records: None,
+  inline: None,
+  definition: None,
+  template_tag: None,
+  tagged_template: None,
+};
+
+let rewrite_query =
+    (
+      ~query_config: query_config,
+      ~loc,
+      ~delim,
+      ~query,
+      ~module_definition,
+      (),
+    ) => {
+  open Ast_406;
+  open Ast_helper;
+
+  let lexer = Graphql_lexer.make(query);
+  let delimLength =
+    switch (delim) {
+    | Some(s) => 2 + String.length(s)
+    | None => 1
+    };
+  switch (Graphql_lexer.consume(lexer)) {
+  | Result.Error(e) =>
+    raise(
+      Location.Error(
+        Location.error(
+          ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
+          fmt_lex_err(e.item),
+        ),
+      ),
+    )
+  | Result.Ok(tokens) =>
+    let parser = Graphql_parser.make(tokens);
+    switch (Graphql_parser_document.parse_document(parser)) {
+    | Result.Error(e) =>
+      raise(
+        Location.Error(
+          Location.error(
+            ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
+            fmt_parse_err(e.item),
+          ),
+        ),
+      )
+    | Result.Ok(document) =>
+      let config = {
+        Generator_utils.map_loc: add_loc(delimLength, loc),
+        delimiter: delim,
+        full_document: document,
+        records:
+          switch (query_config.records) {
+          | Some(value) => value
+          | None => global_records()
+          },
+        inline:
+          switch (query_config.inline) {
+          | Some(value) => value
+          | None => false
+          },
+        definition:
+          switch (query_config.definition) {
+          | Some(value) => value
+          | None => global_definition()
+          },
+        legacy: legacy(),
+        /*  the only call site of schema, make it lazy! */
+        schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
+        template_tag:
+          switch (query_config.tagged_template, query_config.template_tag) {
+          | (_, Some(value)) => Some(value)
+          | (Some(false), _) => None
+          | (_, None) => global_template_tag()
+          },
+      };
+      switch (Validations.run_validators(config, document)) {
+      | Some(errs) =>
+        let errs =
+          errs
+          |> List.map(((loc, msg)) => {
+               let loc = conv_loc(loc);
+               %stri
+               [%e make_error_expr(loc, msg)];
+             });
+        [errs];
+      | None =>
+        Result_decoder.unify_document_schema(config, document)
+        |> Output_bucklescript_module.generate_modules(
+             config,
+             module_definition,
+           )
+      };
+    };
+  };
+};
 
 // Default configuration
 let () =
@@ -326,11 +369,7 @@ let mapper = (_config, _cookies) => {
                     Pmod_structure(
                       List.concat(
                         rewrite_query(
-                          ~schema=?extract_schema_from_config(fields),
-                          ~records=?extract_records_from_config(fields),
-                          ~inline=?extract_inline_from_config(fields),
-                          ~definition=?extract_definition_from_config(fields),
-                          ~template_literal=?extract_template_literal_from_config(fields),
+                          ~query_config=get_query_config(fields),
                           ~loc=conv_loc_from_ast(loc),
                           ~delim,
                           ~query,
@@ -362,6 +401,7 @@ let mapper = (_config, _cookies) => {
                     Pmod_structure(
                       List.concat(
                         rewrite_query(
+                          ~query_config=empty_query_config,
                           ~loc=conv_loc_from_ast(loc),
                           ~delim,
                           ~query,
@@ -447,12 +487,7 @@ let mapper = (_config, _cookies) => {
                          acc,
                          List.concat(
                            rewrite_query(
-                             ~schema=?extract_schema_from_config(fields),
-                             ~records=?extract_records_from_config(fields),
-                             ~inline=?extract_inline_from_config(fields),
-                             ~definition=?
-                               extract_definition_from_config(fields),
-                             ~template_literal=?extract_template_literal_from_config(fields),
+                             ~query_config=get_query_config(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
@@ -482,6 +517,7 @@ let mapper = (_config, _cookies) => {
                          acc,
                          List.concat(
                            rewrite_query(
+                             ~query_config=empty_query_config,
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
