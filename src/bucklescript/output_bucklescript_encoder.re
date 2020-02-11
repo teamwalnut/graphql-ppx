@@ -4,7 +4,7 @@ open Graphql_ast;
 open Source_pos;
 open Schema;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 
 open Type_utils;

@@ -3,7 +3,7 @@ open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 open Parsetree;
 open Ast_helper;
@@ -45,7 +45,7 @@ let ret_type_magic = [
 ];
 
 let emit_printed_query = parts => {
-  open Ast_406;
+  open Ast_408;
   open Graphql_printer;
   let generate_expr = acc =>
     fun
@@ -104,13 +104,13 @@ let emit_printed_query = parts => {
 
   Array.fold_left(
     generate_expr,
-    Ast_406.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
+    Ast_408.(Ast_helper.Exp.constant(Parsetree.Pconst_string("", None))),
     parts,
   );
 };
 
 let rec emit_json =
-  Ast_406.(
+  Ast_408.(
     fun
     | `Assoc(vs) => {
         let pairs =
@@ -227,14 +227,18 @@ let generate_fragment_module =
   let variable_fields =
     variable_names
     |> List.map(name =>
-         Otag(
-           {txt: name, loc: Location.none},
-           [],
-           Ast_helper.Typ.constr(
-             {txt: Longident.Lident("unit"), loc: Location.none},
-             [],
-           ),
-         )
+         {
+           pof_desc:
+             Otag(
+               {txt: name, loc: Location.none},
+               Ast_helper.Typ.constr(
+                 {txt: Longident.Lident("unit"), loc: Location.none},
+                 [],
+               ),
+             ),
+           pof_loc: Location.none,
+           pof_attributes: [],
+         }
        );
   let variable_obj_type =
     Ast_helper.Typ.constr(

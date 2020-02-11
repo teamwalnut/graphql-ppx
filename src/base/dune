@@ -2,7 +2,7 @@
  (name graphql_ppx_base)
  (public_name graphql_ppx.base)
  (libraries unix result yojson)
- (preprocess (pps ppx_tools_versioned.metaquot_406)))
+ (preprocess (pps ppx_tools_versioned.metaquot_408)))
 
 (rule
  (targets build_config.ml)
