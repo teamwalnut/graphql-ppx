@@ -54,15 +54,10 @@ and update your `dune` file:
 This plugin requires a `graphql_schema.json` file to exist somewhere in the
 project hierarchy, containing the result of sending an [introspection
 query](https://github.com/graphql/graphql-js/blob/master/src/utilities/introspectionQuery.js)
-to your backend. One of tools helping with it is [graphql-cli](https://www.npmjs.com/package/graphql-cli). When you already have `schema.graphql` file you have to convert it to `*.json` file. You can use [gql-tools](https://www.npmjs.com/package/gql-tools) to convert your `schema.graphql` to `graphql_schema.json` file. It's convenient to keep those two steps separated in `package.json`. It will help you when you have to change your local schema without sync with your backend.
+to your backend. The easiest way to do this is by using `get-graphql-schema`:
 
-```json
-{
-  "scripts": {
-    "sync-schema": "graphql get-schema && node ./generateFragmentTypes.js",
-    "generate-ppx-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o graphql_schema.json schema.graphql"
-  }
-}
+```sh
+npx get-graphql-schema ENDPOINT_URL -j > graphql_schema.json
 ```
 
 ## Ignore `.graphql_ppx_cache` in your version control
