@@ -109,21 +109,9 @@ let rewrite_query =
         Generator_utils.map_loc: add_loc(delimLength, loc),
         delimiter: delim,
         full_document: document,
-        records:
-          switch (records) {
-          | Some(value) => value
-          | None => global_records()
-          },
-        inline:
-          switch (inline) {
-          | Some(value) => value
-          | None => false
-          },
-        definition:
-          switch (definition) {
-          | Some(value) => value
-          | None => global_definition()
-          },
+        records: records |> Option.get_or_else(global_records()),
+        inline: inline |> Option.get_or_else(false),
+        definition: definition |> Option.get_or_else(global_definition()),
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),

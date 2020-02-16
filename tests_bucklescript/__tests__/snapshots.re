@@ -45,20 +45,18 @@ let tests = readdirSync("operations");
 
 describe("Objects (legacy)", () => {
   tests
-  |> Array.map(t => {
+  |> Array.iter(t => {
        test(t, () =>
          expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
        )
      })
-  |> ignore
 });
 
 describe("Records", () => {
   tests
-  |> Array.map(t => {
+  |> Array.iter(t => {
        test(t, () =>
          expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
        )
      })
-  |> ignore
 });

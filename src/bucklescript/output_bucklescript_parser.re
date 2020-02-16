@@ -41,11 +41,6 @@ let type_name_to_words = type_name => {
   str^;
 };
 
-let rec alternative_generate_poly_type_ref_name =
-        (type_ref: Graphql_ast.type_ref) => {
-  Graphql_printer.print_type(type_ref) |> type_name_to_words;
-};
-
 let get_variable_definitions = (definition: Graphql_ast.definition) => {
   switch (definition) {
   | Fragment({item: {fg_directives: directives}}) =>
@@ -57,20 +52,22 @@ let get_variable_definitions = (definition: Graphql_ast.definition) => {
     Graphql_ast.(
       definitions
       |> List.fold_left(
-           acc =>
-             fun
-             | (
-                 {Source_pos.item: name, span},
-                 {vd_type: {item: type_ref, span: type_span}},
-               ) => [
-                 (
-                   name,
-                   Graphql_printer.print_type(type_ref) |> type_name_to_words,
-                   span,
-                   type_span,
-                 ),
-                 ...acc,
-               ],
+           (
+             acc,
+             (
+               {Source_pos.item: name, span},
+               {vd_type: {item: type_ref, span: type_span}},
+             ),
+           ) =>
+             [
+               (
+                 name,
+                 Graphql_printer.print_type(type_ref) |> type_name_to_words,
+                 span,
+                 type_span,
+               ),
+               ...acc,
+             ],
            [],
          )
     )
@@ -90,58 +87,6 @@ let make_error_raiser = message =>
     %expr
     Js.Exn.raiseError("Unexpected GraphQL query response");
   };
-
-let string_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeString(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected string, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => (value: string)
-    }
-  );
-let float_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeNumber(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected float, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => value
-    }
-  );
-
-let int_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeNumber(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected int, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => int_of_float(value)
-    }
-  );
-
-let boolean_decoder = loc =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeBoolean(value)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr "Expected boolean, got " ++ Js.Json.stringify(value)],
-      )
-    | Some(value) => value
-    }
-  );
-let id_decoder = string_decoder;
 
 let string_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): string)];
 let id_decoder = string_decoder;
@@ -177,7 +122,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   let match_expr =
     Ast_helper.(
       Exp.match(
-        [%expr value],
+        [%expr Obj.magic(value: string)],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
@@ -195,19 +140,8 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       )
     );
 
-  switch%expr (Js.Json.decodeString(value)) {
-  | None =>
-    %e
-    make_error_raiser(
-      [%expr
-        "Expected enum value for "
-        ++ [%e const_str_expr(enum_meta.em_name)]
-        ++ ", got "
-        ++ Js.Json.stringify(value)
-      ],
-    )
-  | Some(value) => ([%e match_expr]: [%t enum_ty])
-  };
+  %expr
+  ([%e match_expr]: [%t enum_ty]);
 };
 
 let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
@@ -334,8 +268,6 @@ and generate_nullable_decoder = (config, loc, inner, path, definition) =>
     | Some(_) => Some([%e generate_parser(config, path, definition, inner)])
     | None => None
     }
-    // (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.null
-    // || (Obj.magic(value): Js.Nullable.t('a)) == Js.Nullable.undefined
   )
 and generate_array_decoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]

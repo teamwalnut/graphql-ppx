@@ -70,12 +70,9 @@ let emit_printed_query = parts => {
       Some(join(acc, make_fragment_query(f)))
     };
 
-  let result = parts |> Array.fold_left(generate_expr, None);
-
-  switch (result) {
-  | None => make_string("")
-  | Some(e) => e
-  };
+  parts
+  |> Array.fold_left(generate_expr, None)
+  |> Option.get_or_else(make_string(""));
 };
 
 let rec emit_json =
