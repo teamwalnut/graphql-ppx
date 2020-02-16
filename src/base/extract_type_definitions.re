@@ -146,18 +146,12 @@ let generate_input_field_types =
     ) => {
   fields
   |> List.fold_left(
-       acc =>
-         fun
-         | (name, type_ref, loc) => {
-             [
-               InputField({
-                 name,
-                 type_: convert_type_ref(schema, type_ref),
-                 loc,
-               }),
-               ...acc,
-             ];
-           },
+       (acc, (name, type_ref, loc)) => {
+         [
+           InputField({name, type_: convert_type_ref(schema, type_ref), loc}),
+           ...acc,
+         ]
+       },
        [],
      )
   |> List.rev;
@@ -195,61 +189,57 @@ let get_input_object_names = (fields: list(input_object_field)) => {
 };
 
 let rec extract_input_object =
-        (schema: Schema.schema, finalized_input_objects) => {
-  fun
-  | (
-      name: option(string),
-      fields: list((string, Schema.type_ref, loc)),
-      loc,
-    ) => {
-      let gen_fields = generate_input_field_types(name, schema, fields);
+        (
+          schema: Schema.schema,
+          finalized_input_objects,
+          (
+            name: option(string),
+            fields: list((string, Schema.type_ref, loc)),
+            loc,
+          ),
+        ) => {
+  let gen_fields = generate_input_field_types(name, schema, fields);
 
-      let is_recursive =
-        switch (name) {
-        | None => false
-        | Some(name) =>
-          gen_fields |> get_input_object_names |> List.exists(f => f == name)
-        };
-
-      [
-        InputObject({name, fields: gen_fields, loc, is_recursive}),
-        ...fields
-           |> List.fold_left(
-                acc =>
-                  fun
-                  | (_name, type_ref, loc) => {
-                      let (_type_name, type_) = fetch_type(schema, type_ref);
-                      switch (type_) {
-                      | Some(InputObject({iom_name, iom_input_fields, _})) =>
-                        if (List.exists(
-                              f => f == iom_name,
-                              finalized_input_objects,
-                            )) {
-                          // we already generated this input object
-                          acc;
-                        } else {
-                          let fields =
-                            iom_input_fields
-                            |> List.map(field =>
-                                 (field.am_name, field.am_arg_type, loc)
-                               );
-
-                          let result =
-                            extract_input_object(
-                              schema,
-                              [iom_name, ...finalized_input_objects],
-                              (Some(iom_name), fields, loc),
-                            );
-
-                          List.append(acc, result);
-                        }
-                      | _ => acc
-                      };
-                    },
-                [],
-              ),
-      ];
+  let is_recursive =
+    switch (name) {
+    | None => false
+    | Some(name) =>
+      gen_fields |> get_input_object_names |> List.exists(f => f == name)
     };
+
+  [
+    InputObject({name, fields: gen_fields, loc, is_recursive}),
+    ...fields
+       |> List.fold_left(
+            (acc, (_name, type_ref, loc)) => {
+              let (_type_name, type_) = fetch_type(schema, type_ref);
+              switch (type_) {
+              | Some(InputObject({iom_name, iom_input_fields, _})) =>
+                if (List.exists(f => f == iom_name, finalized_input_objects)) {
+                  // we already generated this input object
+                  acc;
+                } else {
+                  let fields =
+                    iom_input_fields
+                    |> List.map(field =>
+                         (field.am_name, field.am_arg_type, loc)
+                       );
+
+                  let result =
+                    extract_input_object(
+                      schema,
+                      [iom_name, ...finalized_input_objects],
+                      (Some(iom_name), fields, loc),
+                    );
+
+                  List.append(acc, result);
+                }
+              | _ => acc
+              };
+            },
+            [],
+          ),
+  ];
 };
 
 let extract_args:
@@ -267,15 +257,17 @@ let extract_args:
           None,
           item
           |> List.map(
-               fun
-               | (
+               (
+                 (
                    {item: name, span},
                    {Graphql_ast.vd_type: variable_type, _},
-                 ) => (
-                   name,
-                   Type_utils.to_schema_type_ref(variable_type.item),
-                   config.map_loc(span),
                  ),
+               ) =>
+               (
+                 name,
+                 Type_utils.to_schema_type_ref(variable_type.item),
+                 config.map_loc(span),
+               )
              ),
           config.map_loc(span),
         )
