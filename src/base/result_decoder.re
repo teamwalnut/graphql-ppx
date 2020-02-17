@@ -613,7 +613,6 @@ let rec unify_document_schema = (config, document) => {
           };
 
         let is_record = has_directive("bsRecord", fg_directives);
-
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
           Mod_fragment(
