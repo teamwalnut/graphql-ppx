@@ -575,7 +575,45 @@ let rec unify_document_schema = (config, document) => {
       ...rest,
     ] => [
       {
+        let with_decoder =
+          switch (fg_directives |> find_directive("bsDecoder")) {
+          | None => Ok(None)
+          | Some({item: {d_arguments, _}, span}) =>
+            switch (find_argument("fn", d_arguments)) {
+            | None =>
+              Error(
+                make_error(
+                  error_marker,
+                  config.map_loc,
+                  span,
+                  "bsDecoder must be given 'fn' argument",
+                ),
+              )
+            | Some((_, {item: Iv_string(fn_name), span})) =>
+              Ok(
+                Some(
+                  structure =>
+                    Res_custom_decoder(
+                      config.map_loc(span),
+                      fn_name,
+                      structure,
+                    ),
+                ),
+              )
+            | Some((_, {span, _})) =>
+              Error(
+                make_error(
+                  error_marker,
+                  config.map_loc,
+                  span,
+                  "The 'fn' argument must be a string",
+                ),
+              )
+            }
+          };
+
         let is_record = has_directive("bsRecord", fg_directives);
+
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
           Mod_fragment(
@@ -601,13 +639,20 @@ let rec unify_document_schema = (config, document) => {
               Some(fg_selection_set),
             );
 
-          Mod_fragment(
-            fg_name.item,
-            [],
-            error_marker.has_error,
-            fg,
-            structure,
-          );
+          switch (with_decoder) {
+          | Error(err) => Mod_fragment(fg_name.item, [], true, fg, err)
+          | Ok(decoder) =>
+            Mod_fragment(
+              fg_name.item,
+              [],
+              error_marker.has_error,
+              fg,
+              switch (decoder) {
+              | Some(decoder) => decoder(structure)
+              | None => structure
+              },
+            )
+          };
         };
       },
       ...unify_document_schema(config, rest),

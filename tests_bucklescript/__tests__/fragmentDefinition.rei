@@ -1,3 +1,8 @@
+type record = {
+  nullableOfNullable: option(array(option(string))),
+  nullableOfNonNullable: option(array(string)),
+};
+
 module Fragments: {
   module ListFragment: {
     type t = {
@@ -33,6 +38,7 @@ module MyQuery: {
         "nullableOfNonNullable": option(array(string)),
       },
     },
+    "l3": array(string),
   };
 
   let make:
