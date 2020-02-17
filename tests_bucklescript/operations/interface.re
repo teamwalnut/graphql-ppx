@@ -1,4 +1,5 @@
-module QueryWithFragments = [%graphql
+/* TODO: fix */
+/* module QueryWithFragments = [%graphql
   {|
    query {
     users {
@@ -22,4 +23,4 @@ module QueryWithoutFragments = [%graphql
     }
   }
 |}
-];
+]; */

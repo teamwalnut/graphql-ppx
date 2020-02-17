@@ -41,7 +41,8 @@ let run_ppx = (path, opts) => {
   |> toString;
 };
 
-let tests = readdirSync("operations");
+let tests =
+  readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
 describe("Objects (legacy)", () => {
   tests

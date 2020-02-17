@@ -1,7 +1,13 @@
+// TODO: we're flattening module when there is only one fragment. This seems misleading
 module Fragments = [%graphql
   {|
   fragment ListFragment on Lists {
     nullableOfNullable
+    nullableOfNonNullable
+  }
+
+  # remove as soon as ListFragment is available via Fragments.ListFragment
+  fragment Another on Lists {
     nullableOfNonNullable
   }
 |}
