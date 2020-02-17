@@ -575,6 +575,8 @@ let rec unify_document_schema = (config, document) => {
       ...rest,
     ] => [
       {
+        open Result;
+
         let with_decoder =
           switch (fg_directives |> find_directive("bsDecoder")) {
           | None => Ok(None)
