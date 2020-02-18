@@ -166,15 +166,13 @@ let rec get_inner_type = (type_: extracted_type) => {
   };
 };
 
-let get_input_object_name =
-  fun
-  | InputField({type_, _}) => {
-      let type_ = get_inner_type(type_);
-      switch (type_) {
-      | Some(Type(InputObject({iom_name, _}))) => Some(iom_name)
-      | _ => None
-      };
-    };
+let get_input_object_name = (InputField({type_, _})) => {
+  let type_ = get_inner_type(type_);
+  switch (type_) {
+  | Some(Type(InputObject({iom_name, _}))) => Some(iom_name)
+  | _ => None
+  };
+};
 
 let get_input_object_names = (fields: list(input_object_field)) => {
   fields
@@ -242,36 +240,32 @@ let rec extract_input_object =
   ];
 };
 
-let extract_args:
-  (
-    output_config,
-    option(
-      spanning(list((spanning(string), Graphql_ast.variable_definition))),
+let extract_args =
+    (
+      config: output_config,
+      args:
+        option(
+          spanning(
+            list((spanning(string), Graphql_ast.variable_definition)),
+          ),
+        ),
     )
-  ) =>
-  list(arg_type_def) =
-  config => {
-    fun
-    | Some({item, span}) => {
-        (
-          None,
-          item
-          |> List.map(
-               (
-                 (
-                   {item: name, span},
-                   {Graphql_ast.vd_type: variable_type, _},
-                 ),
-               ) =>
-               (
-                 name,
-                 Type_utils.to_schema_type_ref(variable_type.item),
-                 config.map_loc(span),
-               )
-             ),
-          config.map_loc(span),
-        )
-        |> extract_input_object(config.schema, []);
-      }
-    | _ => [];
+    : list(arg_type_def) =>
+  switch (args) {
+  | Some({item, span}) =>
+    (
+      None,
+      item
+      |> List.map(
+           (({item: name, span}, {Graphql_ast.vd_type: variable_type, _})) =>
+           (
+             name,
+             Type_utils.to_schema_type_ref(variable_type.item),
+             config.map_loc(span),
+           )
+         ),
+      config.map_loc(span),
+    )
+    |> extract_input_object(config.schema, [])
+  | _ => []
   };

@@ -358,15 +358,15 @@ let generate_operation = config =>
 let generate_modules = (config, module_definition, operations) => {
   switch (operations) {
   | [] => []
-  | [a] =>
-    switch (generate_operation(config, a)) {
+  | [operation] =>
+    switch (generate_operation(config, operation)) {
     | (Some(name), contents) =>
       config.inline || module_definition
         ? [contents] : [wrap_module(name, contents)]
     | (None, contents) => [contents]
     }
-  | a =>
-    a
+  | operations =>
+    operations
     |> List.map(generate_operation(config))
     |> List.mapi((i, (name, contents)) =>
          switch (name) {

@@ -36,5 +36,6 @@ let filter_map = (f, l) => {
       | None => loop(acc, tail)
       | Some(v) => loop([v, ...acc], tail)
       };
+
   loop([], l);
 };

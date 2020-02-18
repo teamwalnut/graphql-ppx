@@ -105,6 +105,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
            )
          )
     );
+
   let fallback_arm =
     Ast_helper.(
       Exp.case(
@@ -119,6 +120,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
         ),
       )
     );
+
   let match_expr =
     Ast_helper.(
       Exp.match(
@@ -286,6 +288,7 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) => {
         txt: Longident.parse(ident ++ ".parse"),
       })
     );
+
   [@metaloc loc]
   [%expr
     [%e fn_expr]([%e generate_parser(config, path, definition, inner)])
