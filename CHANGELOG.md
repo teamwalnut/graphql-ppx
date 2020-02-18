@@ -1,10 +1,24 @@
+## [0.6.2](https://github.com/reasonml-community/graphql_ppx/compare/v0.6.1...v0.6.2) (2020-02-18)
+
+### Features
+
+- feat: decoder support on fragment definition ([77d8c45](https://github.com/reasonml-community/graphql_ppx/commit/77d8c452f4aa482585967dd8a33d6ebb262f6e37))
+- feat(native): add unified definition ([e240bf3](https://github.com/reasonml-community/graphql_ppx/commit/e240bf3e58b4d14d663cf83d5bb51b40022ba49d))
+- chore: support OCaml 4.08 on native ([c533986](https://github.com/reasonml-community/graphql_ppx/commit/c5339868021aa3235e390fc282e5c9d6927cecf3))
+
+### Other
+
+- chore: use internally AST 4.08 ([6acea38](https://github.com/reasonml-community/graphql_ppx/commit/6acea380923c5a698ae151aee93d7f87bea91915))
+
+* feat: decoder support on fragment definition ([77d8c45](https://github.com/reasonml-community/graphql_ppx/commit/77d8c452f4aa482585967dd8a33d6ebb262f6e37))
+
 ## [0.6.1](https://github.com/reasonml-community/graphql_ppx/compare/v0.5.0...v0.6.1) (2020-01-23)
 
-## Features
+### Features
 
 - Lean parse available under experimental `-lean-parse` feature flag ([6e7224b](https://github.com/reasonml-community/graphql_ppx/commit/6e7224ba9789bc67a68aa9566e295eff70855dd0))
 
-## Other
+### Other
 
 - Update repository to name and organization change ([5df9be8](https://github.com/reasonml-community/graphql_ppx/commit/5df9be88ef5bd7be77df551265834cb1bc31a011))
 
