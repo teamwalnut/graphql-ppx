@@ -199,7 +199,7 @@ module UserQueries = {
 This will create a parent module (the query now will be:
 `UserQueries.UserQuery`)
 
-You can define multiple queries or fragment in within a single GraphQL extension
+You can define multiple operations or fragments within a single GraphQL extension
 point.
 
 If you do not want to put the query contents in a module, but to be in effect
