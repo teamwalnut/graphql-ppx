@@ -313,7 +313,7 @@ they have nothing to do with the relay client (we just re-use this convention).
 
 Note that you cannot rename variables in the `@arguments` directive so the name
 of the variable and the name of the key must be the same. This is because
-GraphQL PPX does not manipulaate variable names and just makes use of the fact
+GraphQL PPX does not manipulate variable names and just makes use of the fact
 that fragments can use variables declared in the query.
 
 There is a compile error raised if you define variables that are unused. If you
