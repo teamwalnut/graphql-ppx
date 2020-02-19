@@ -325,7 +325,7 @@ with an underscore.
 An ecape hatch for when you don't want GraphQL PPX to create a record type, you
 can supply one yourself. This also makes reusability possible. We recommend
 fragments however in most cases as they are easier to work, are safer and don't
-require defining seperate types types.
+require defining separate types.
 
 ```reason
 type t_user = {
