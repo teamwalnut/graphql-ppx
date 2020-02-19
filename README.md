@@ -369,7 +369,7 @@ module HeroQuery = [%graphql {|
 ```
 
 In this example, `height` will be converted from a float to a string in the
-result. Using the `modulel` argument, you can specify any decoder module with
+result. Using the `module` argument, you can specify any decoder module with
 the functions `parse`, `serialize` and type `t`.
 
 ### Non-union variant conversion
