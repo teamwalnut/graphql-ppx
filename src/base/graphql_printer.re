@@ -80,6 +80,7 @@ let is_internal_directive = d =>
   | "bsRecord"
   | "bsObject"
   | "ppxDecoder"
+  | "ppxAs"
   | "argumentDefinitions"
   | "arguments"
   | "bsField" => true

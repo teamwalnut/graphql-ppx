@@ -65,6 +65,17 @@ let find_fragment_arguments =
   };
 };
 
+let get_ppx_as = directives => {
+  switch (directives |> find_directive("ppxAs")) {
+  | None => None
+  | Some({item: {d_arguments, _}, span}) =>
+    switch (find_argument("type", d_arguments)) {
+    | Some((_, {item: Iv_string(type_name), span})) => Some(type_name)
+    | _ => None
+    }
+  };
+};
+
 let rec unify_type =
         (
           error_marker,
@@ -101,6 +112,7 @@ let rec unify_type =
       unify_selection_set(
         error_marker,
         as_record,
+        None,
         config,
         span,
         ty,
@@ -169,6 +181,7 @@ and unify_interface =
         config.map_loc(span),
         name,
         List.map(unify_selection(error_marker, config, ty), selection),
+        None,
       ),
     );
     let generate_fragment_case =
@@ -248,10 +261,13 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
           };
 
         let is_record = has_directive("bsRecord", if_directives);
+        let existing_record = get_ppx_as(if_directives);
+
         let result_decoder =
           unify_selection_set(
             error_marker,
             is_record,
+            existing_record,
             config,
             if_selection_set.span,
             type_cond_ty,
@@ -532,7 +548,15 @@ and unify_selection = (error_marker, config, ty, selection) =>
     )
   }
 and unify_selection_set =
-    (error_marker, as_record, config, span, ty, selection_set) =>
+    (
+      error_marker,
+      as_record,
+      existing_record,
+      config,
+      span,
+      ty,
+      selection_set,
+    ) =>
   switch (selection_set) {
   | None =>
     make_error(
@@ -563,12 +587,14 @@ and unify_selection_set =
       config.map_loc(span),
       type_name(ty),
       List.map(unify_selection(error_marker, config, ty), item),
+      existing_record,
     )
   | Some({item, _}) =>
     Res_object(
       config.map_loc(span),
       type_name(ty),
       List.map(unify_selection(error_marker, config, ty), item),
+      existing_record,
     )
   };
 
@@ -578,6 +604,7 @@ let unify_operation = (error_marker, config) =>
     unify_selection_set(
       error_marker,
       false,
+      None,
       config,
       span,
       query_type(config.schema),
@@ -589,6 +616,7 @@ let unify_operation = (error_marker, config) =>
       unify_selection_set(
         error_marker,
         false,
+        None,
         config,
         span,
         mutation_type,
@@ -608,6 +636,7 @@ let unify_operation = (error_marker, config) =>
       unify_selection_set(
         error_marker,
         false,
+        None,
         config,
         span,
         subscription_type,
@@ -684,6 +713,8 @@ let rec unify_document_schema = (config, document) => {
     ] => [
       {
         let is_record = has_directive("bsRecord", fg_directives);
+        let existing_record = get_ppx_as(fg_directives);
+
         let argumentDefinitions =
           getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
@@ -705,6 +736,7 @@ let rec unify_document_schema = (config, document) => {
             unify_selection_set(
               error_marker,
               is_record,
+              existing_record,
               config,
               span,
               ty,

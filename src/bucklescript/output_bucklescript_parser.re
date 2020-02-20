@@ -206,7 +206,7 @@ let rec generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_record(loc, name, fields) =>
+  | Res_record(loc, name, fields, existing_record) =>
     generate_object_decoder(
       config,
       conv_loc(loc),
@@ -214,8 +214,9 @@ let rec generate_parser = (config, path: list(string), definition) =>
       fields,
       path,
       definition,
+      existing_record,
     )
-  | Res_object(loc, name, fields) =>
+  | Res_object(loc, name, fields, existing_record) =>
     generate_object_decoder(
       config,
       conv_loc(loc),
@@ -223,6 +224,7 @@ let rec generate_parser = (config, path: list(string), definition) =>
       fields,
       path,
       definition,
+      existing_record,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union(
@@ -294,7 +296,8 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) => {
     [%e fn_expr]([%e generate_parser(config, path, definition, inner)])
   ];
 }
-and generate_object_decoder = (config, loc, name, fields, path, definition) => {
+and generate_object_decoder =
+    (config, loc, name, fields, path, definition, existing_record) => {
   let rec do_obj_constructor = () => {
     Ast_406.(
       Ast_helper.(
@@ -353,9 +356,14 @@ and generate_object_decoder = (config, loc, name, fields, path, definition) => {
         Ast_helper.Typ.constr(
           {
             txt:
-              Longident.Lident(
-                Extract_type_definitions.generate_type_name(path),
-              ),
+              switch (existing_record) {
+              | None =>
+                Longident.Lident(
+                  Extract_type_definitions.generate_type_name(path),
+                )
+              | Some(type_name) => Longident.parse(type_name)
+              },
+
             loc: Location.none,
           },
           [],

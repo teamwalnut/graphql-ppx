@@ -167,9 +167,9 @@ let rec generate_decoder = config =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
-  | Res_record(loc, name, fields) =>
+  | Res_record(loc, name, fields, _) =>
     generate_record_decoder(config, conv_loc(loc), name, fields)
-  | Res_object(loc, name, fields) =>
+  | Res_object(loc, name, fields, _) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_poly_variant_selection_set(loc, name, fields) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)

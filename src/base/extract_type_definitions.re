@@ -60,8 +60,12 @@ let rec extract = path =>
   fun
   | Res_nullable(_loc, inner) => extract(path, inner)
   | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _obj_name, fields) => create_object(path, fields, false)
-  | Res_record(_loc, _obj_name, fields) => create_object(path, fields, true)
+  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
+  | Res_object(_loc, _name, fields, None) =>
+    create_object(path, fields, false)
+  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
+  | Res_record(_loc, _name, fields, None) =>
+    create_object(path, fields, true)
   | Res_poly_variant_union(_loc, _name, fragments, _)
   | Res_poly_variant_selection_set(_loc, _name, fragments)
   | Res_poly_variant_interface(_loc, _name, _, fragments) =>
@@ -81,6 +85,18 @@ let rec extract = path =>
   | Res_boolean(_loc) => []
   | Res_raw_scalar(_) => []
   | Res_poly_enum(_loc, _enum_meta) => []
+
+and create_children = (path, fields) => {
+  fields
+  |> List.fold_left(
+       acc =>
+         fun
+         | Fr_named_field(name, _loc, type_) =>
+           List.append(extract([name, ...path], type_), acc)
+         | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
+       [],
+     );
+}
 and create_object = (path, fields, force_record) => {
   [
     Object({
@@ -96,15 +112,7 @@ and create_object = (path, fields, force_record) => {
                Fragment({module_name: name, key, type_name}),
            ),
     }),
-    ...fields
-       |> List.fold_left(
-            acc =>
-              fun
-              | Fr_named_field(name, _loc, type_) =>
-                List.append(extract([name, ...path], type_), acc)
-              | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
-            [],
-          ),
+    ...create_children(path, fields),
   ];
 };
 

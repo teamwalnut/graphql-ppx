@@ -41,8 +41,10 @@ let rec generate_type = (config, path) =>
   | Res_float(loc) => base_type("float")
   | Res_boolean(loc) => base_type("bool")
   | Res_raw_scalar(loc) => base_type("Js.Json.t")
-  | Res_object(_loc, name, _fields)
-  | Res_record(_loc, name, _fields) => base_type(generate_type_name(path))
+  | Res_object(_loc, name, _fields, Some(type_name))
+  | Res_record(_loc, name, _fields, Some(type_name)) => base_type(type_name)
+  | Res_object(_loc, name, _fields, None)
+  | Res_record(_loc, name, _fields, None) => base_type(generate_type_name(path))
   | Res_poly_variant_selection_set(loc, name, fields) =>
     Ast_helper.(
       Typ.variant(
