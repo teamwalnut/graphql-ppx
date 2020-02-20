@@ -434,11 +434,32 @@ and unify_field = (error_marker, config, field_span, ty) => {
         ),
       )
     | Some((_, {item: Iv_string(module_name), span})) =>
-      Fr_named_field(
-        key,
-        loc,
-        Res_custom_decoder(config.map_loc(span), module_name, parser_expr),
-      )
+      switch (parser_expr) {
+      | Res_nullable(loc, t) =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_nullable(
+            loc,
+            Res_custom_decoder(config.map_loc(span), module_name, t),
+          ),
+        )
+      | Res_array(loc, t) =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_array(
+            loc,
+            Res_custom_decoder(config.map_loc(span), module_name, t),
+          ),
+        )
+      | _ =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_custom_decoder(config.map_loc(span), module_name, parser_expr),
+        )
+      }
     | Some((_, {span, _})) =>
       Fr_named_field(
         key,
@@ -447,7 +468,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
           error_marker,
           config.map_loc,
           span,
-          "The 'fn' argument must be a string",
+          "The 'module' argument must be a string",
         ),
       )
     }
