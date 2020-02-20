@@ -11,8 +11,8 @@ module MyQuery = [%graphql
   {|
   {
     variousScalars {
-      string @decoder(module: "IntOfString")
-      int @decoder(module: "StringOfInt")
+      string @ppxDecoder(module: "IntOfString")
+      int @ppxDecoder(module: "StringOfInt")
     }
   }
 |}

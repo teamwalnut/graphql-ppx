@@ -79,7 +79,7 @@ let is_internal_directive = d =>
   | "bsVariant"
   | "bsRecord"
   | "bsObject"
-  | "decoder"
+  | "ppxDecoder"
   | "argumentDefinitions"
   | "arguments"
   | "bsField" => true

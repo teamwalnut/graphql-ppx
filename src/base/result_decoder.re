@@ -418,7 +418,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     };
 
   let loc = config.map_loc(field_span.span);
-  switch (ast_field.fd_directives |> find_directive("decoder")) {
+  switch (ast_field.fd_directives |> find_directive("ppxDecoder")) {
   | None => Fr_named_field(key, loc, parser_expr)
   | Some({item: {d_arguments, _}, span}) =>
     switch (find_argument("module", d_arguments)) {
@@ -430,7 +430,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
           error_marker,
           config.map_loc,
           span,
-          "decoder must be given 'module' argument",
+          "pxxDecoder must be given 'module' argument",
         ),
       )
     | Some((_, {item: Iv_string(module_name), span})) =>

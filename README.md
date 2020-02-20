@@ -80,7 +80,7 @@ using a version control system, you don't need to check it in.
   variants](https://2ality.com/2018/01/polymorphic-variants-reasonml.html)
 - Floats, ints, strings, booleans, id are converted into their corresponding native
   Reason/OCaml types.
-- Custom scalars are parsed as `Js.Json.t`, and can be parsed using the `@decoder` directive
+- Custom scalars are parsed as `Js.Json.t`, and can be parsed using the `@ppxDecoder` directive
 - Arguments with input objects
 - Using `@skip` and `@include` will force non-optional fields to become
   optional.
@@ -346,7 +346,7 @@ type t_user = {
 ### Custom field decoders
 
 If you've got a custom scalar, or just want to convert e.g. an integer to a
-string to properly fit a record type (see above), you can use the `@decoder`
+string to properly fit a record type (see above), you can use the `@ppxDecoder`
 directive to insert a custom function in the decoder:
 
 ```reason
@@ -361,7 +361,7 @@ module HeroQuery = [%graphql {|
 {
   hero {
     name
-    height @decoder(module: "StringHeight")
+    height @ppxDecoder(module: "StringHeight")
     mass
   }
 }
