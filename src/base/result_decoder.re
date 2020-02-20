@@ -80,6 +80,7 @@ let rec unify_type =
         (
           error_marker,
           as_record,
+          existing_record,
           config,
           span,
           ty,
@@ -89,12 +90,28 @@ let rec unify_type =
   | Ntr_nullable(t) =>
     Res_nullable(
       config.map_loc(span),
-      unify_type(error_marker, as_record, config, span, t, selection_set),
+      unify_type(
+        error_marker,
+        as_record,
+        existing_record,
+        config,
+        span,
+        t,
+        selection_set,
+      ),
     )
   | Ntr_list(t) =>
     Res_array(
       config.map_loc(span),
-      unify_type(error_marker, as_record, config, span, t, selection_set),
+      unify_type(
+        error_marker,
+        as_record,
+        existing_record,
+        config,
+        span,
+        t,
+        selection_set,
+      ),
     )
   | Ntr_named(n) =>
     switch (lookup_type(config.schema, n)) {
@@ -112,7 +129,7 @@ let rec unify_type =
       unify_selection_set(
         error_marker,
         as_record,
-        None,
+        existing_record,
         config,
         span,
         ty,
@@ -261,13 +278,12 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
           };
 
         let is_record = has_directive("bsRecord", if_directives);
-        let existing_record = get_ppx_as(if_directives);
 
         let result_decoder =
           unify_selection_set(
             error_marker,
             is_record,
-            existing_record,
+            None,
             config,
             if_selection_set.span,
             type_cond_ty,
@@ -365,6 +381,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                      unify_type(
                        error_marker,
                        false,
+                       None,
                        config,
                        span,
                        inner_type,
@@ -398,6 +415,8 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let key = some_or(ast_field.fd_alias, ast_field.fd_name).item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let existing_record = get_ppx_as(ast_field.fd_directives);
+
   let has_skip =
     has_directive("skip", ast_field.fd_directives)
     || has_directive("include", ast_field.fd_directives);
@@ -405,7 +424,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     if (is_variant) {
       unify_variant(error_marker);
     } else {
-      unify_type(error_marker, is_record);
+      unify_type(error_marker, is_record, existing_record);
     };
 
   let parser_expr =
@@ -713,7 +732,6 @@ let rec unify_document_schema = (config, document) => {
     ] => [
       {
         let is_record = has_directive("bsRecord", fg_directives);
-        let existing_record = get_ppx_as(fg_directives);
 
         let argumentDefinitions =
           getFragmentArgumentDefinitions(fg_directives);
@@ -736,7 +754,7 @@ let rec unify_document_schema = (config, document) => {
             unify_selection_set(
               error_marker,
               is_record,
-              existing_record,
+              None,
               config,
               span,
               ty,

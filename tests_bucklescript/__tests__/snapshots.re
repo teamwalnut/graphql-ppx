@@ -35,7 +35,7 @@ let run_ppx = (path, opts) => {
     ++ (win ? " - -o -" : " /dev/stdin /dev/stdout")
     ++ " | "
     ++ refmt
-    ++ " --parse binary --print ml --interface false",
+    ++ " --parse binary --print re --interface false",
     {cwd: resolve(dirname, "..")},
   )
   |> toString;

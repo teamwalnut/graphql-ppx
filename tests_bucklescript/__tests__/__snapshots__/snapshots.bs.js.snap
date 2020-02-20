@@ -1330,10 +1330,7 @@ module MyQuery =
   struct
     let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\"
     type raw_t
-    type t = < variousScalars: t_variousScalars   >  Js.t
-    and t_variousScalars = {
-      string: string ;
-      int: int }
+    type t = < variousScalars: scalars   >  Js.t
     let parse =
       (fun value ->
          let value = (value |> Js.Json.decodeObject) |> Js.Option.getExn
@@ -3828,10 +3825,7 @@ module MyQuery =
   struct
     let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\"
     type raw_t
-    type t = < variousScalars: t_variousScalars   >  Js.t
-    and t_variousScalars = {
-      string: string ;
-      int: int }
+    type t = < variousScalars: scalars   >  Js.t
     let parse =
       (fun value ->
          let value = (value |> Js.Json.decodeObject) |> Js.Option.getExn
@@ -6250,10 +6244,7 @@ module MyQuery =
     let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\"
     type raw_t
     type t = {
-      variousScalars: t_variousScalars }
-    and t_variousScalars = {
-      string: string ;
-      int: int }
+      variousScalars: scalars }
     let parse =
       (fun value ->
          ({
@@ -6267,7 +6258,7 @@ module MyQuery =
                   int =
                     (let value = Js.Dict.unsafeGet (Obj.magic value) \\"int\\" in
                      (Obj.magic value : int))
-                } : t_variousScalars))
+                } : scalars))
           } : t) : Js.Json.t -> t)
   end
 module OneFieldQuery =
@@ -8585,10 +8576,7 @@ module MyQuery =
     let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\"
     type raw_t
     type t = {
-      variousScalars: t_variousScalars }
-    and t_variousScalars = {
-      string: string ;
-      int: int }
+      variousScalars: scalars }
     let parse =
       (fun value ->
          ({
@@ -8602,7 +8590,7 @@ module MyQuery =
                   int =
                     (let value = Js.Dict.unsafeGet (Obj.magic value) \\"int\\" in
                      (Obj.magic value : int))
-                } : t_variousScalars))
+                } : scalars))
           } : t) : Js.Json.t -> t)
     let makeVar ~f  () = f Js.Json.null
     let definition = (parse, query, makeVar)
