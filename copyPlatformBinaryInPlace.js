@@ -14,7 +14,8 @@ if (platform === "win32") {
 }
 
 copyBinary("bin/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx");
-copyBinary("bin/bsb6/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx6");
+// for backward compatibility - remove with 1.0 release
+copyBinary("bin/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx6");
 
 function copyBinary(filename, destFilename) {
   var supported = fs.existsSync(filename);
@@ -22,11 +23,15 @@ function copyBinary(filename, destFilename) {
   if (!supported) {
     console.error("graphql_ppx does not support this platform :(");
     console.error("");
-    console.error("graphql_ppx comes prepacked as built binaries to avoid large");
+    console.error(
+      "graphql_ppx comes prepacked as built binaries to avoid large"
+    );
     console.error("dependencies at build-time.");
     console.error("");
     console.error("If you want graphql_ppx to support this platform natively,");
-    console.error("please open an issue at our repository, linked above. Please");
+    console.error(
+      "please open an issue at our repository, linked above. Please"
+    );
     console.error("specify that you are on the " + platform + " platform,");
     console.error("on the " + arch + " architecture.");
 
@@ -47,7 +52,7 @@ function copyBinary(filename, destFilename) {
     fs.chmodSync(destFilename, 0755);
   }
 
-  var destFilenameExe = destFilename + ".exe"
+  var destFilenameExe = destFilename + ".exe";
   if (!fs.existsSync(destFilenameExe)) {
     copyFileSync(filename, destFilenameExe);
     fs.chmodSync(destFilenameExe, 0755);

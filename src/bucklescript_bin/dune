@@ -1,6 +1,5 @@
 (executable
-  (name bin)
-  (public_name graphql_ppx)
-  (libraries graphql_ppx_bucklescript)
-  (ocamlopt_flags ( -linkall ))
-)
+ (name bin)
+ (public_name graphql_ppx)
+ (libraries graphql_ppx_bucklescript)
+ (ocamlopt_flags (-linkall)))

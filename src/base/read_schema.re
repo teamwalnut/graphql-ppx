@@ -332,7 +332,7 @@ let ppx_cache_dir = ".graphql_ppx_cache/";
 
 let get_ppx_cache_path = (suffix, relative_to) => {
   let dir =
-    try (Sys.getenv("cur__target_dir")) {
+    try(Sys.getenv("cur__target_dir")) {
     | _ => Filename.dirname(relative_to)
     };
 
@@ -429,7 +429,7 @@ and recovery_build = json_schema => {
 
 /* lazily read schema and check if schema file existed */
 let get_schema = maybe_schema =>
-  lazy (
+  lazy(
     switch (
       find_file_towards_root(
         Ppx_config.root_directory(),

@@ -78,7 +78,7 @@ let is_internal_directive = d =>
   switch (d.item.d_name.item) {
   | "bsVariant"
   | "bsRecord"
-  | "bsDecoder" 
+  | "bsDecoder"
   | "bsField" => true
   | _ => false
   };

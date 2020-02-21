@@ -44,43 +44,20 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      # Ocaml 4.08+
-      - name: install-build
+      - name: install
         run: |
           esy install
-      - name: test-native
+      - name: build
         run: |
-          esy b dune runtest -f
-
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build @406
+          esy release-static
+      - name: test
         run: |
-          esy @406 install 
-          esy @406 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
-      - name: test-bsb6
-        run: |
+          esy dune runtest -f
           cd tests_bucklescript
-          node ./run.js bsb6
+          npm test
         env:
           CI: true
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}-bsb6
-          path: _build/default/src/bucklescript_bin/bin.exe
 
-      # OCaml 4.02 and BuckleScript 5
-      - name: install-build @402
-        run: |
-          esy @402 install
-          esy @402 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
-      - name: test-bsb5
-        run: |
-          cd tests_bucklescript
-          node ./run.js bsb5
-        env:
-          CI: true
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
@@ -134,38 +111,20 @@ jobs:
             v1-esy-${{ matrix.os }}-
 
       # Ocaml 4.08+
-      - name: install-build
+      - name: install
         run: |
           esy install
-      - name: test-native
+      - name: build
         run: |
-          esy b dune runtest -f
-
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build
+          esy b
+      - name: test
         run: |
-          esy @406 install 
-          esy @406 b
-      - name: test-bsb6
-        run: |
+          esy dune runtest -f
           cd tests_bucklescript
-          node ./run.js bsb6
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}-bsb6
-          path: _build/default/src/bucklescript_bin/bin.exe
-
-      # OCaml 4.02 and BuckleScript 5
-      - name: bucklescript5
-        run: |
-          esy "@402" install
-          esy "@402" b
-          cd tests_bucklescript
-          node ./run.js bsb5
+          npm run
         env:
           CI: true
+
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
@@ -213,36 +172,6 @@ jobs:
           mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
           mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
-          rm -rf binaries
-
-      - name: Download bsb6 linux artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: ubuntu-latest-bsb6
-          path: binaries/linux
-
-      - name: Download bsb6 macOS artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: macOS-latest-bsb6
-          path: binaries/darwin
-
-      - name: Download bsb6 windows artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest-bsb6
-          path: binaries/windows
-
-      - name: Move bsb artifacts
-        if: success()
-        run: |
-          mkdir -p bin/bsb6
-          mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
-          mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
 
       - name: Publish
         if: success()
