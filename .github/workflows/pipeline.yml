@@ -47,7 +47,6 @@ jobs:
       - name: install
         run: |
           esy install
-      - name: test-native
         run: |
           esy b dune runtest -f
         env:
@@ -56,6 +55,7 @@ jobs:
         run: |
           esy release-static
           cd tests_bucklescript
+          npm install
           npm test
         env:
           CI: true
@@ -124,6 +124,7 @@ jobs:
         run: |
           esy b
           cd tests_bucklescript
+          npm install
           npm test
         env:
           CI: true
