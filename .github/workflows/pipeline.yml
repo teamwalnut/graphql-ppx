@@ -110,7 +110,6 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      # Ocaml 4.08+
       - name: install
         run: |
           esy install
