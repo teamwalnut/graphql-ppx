@@ -47,6 +47,7 @@ jobs:
       - name: install
         run: |
           esy install
+      - name: test-native
         run: |
           esy b dune runtest -f
         env:
