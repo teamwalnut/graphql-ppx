@@ -22,12 +22,6 @@ Second, add it to `ppx-flags` in your `bsconfig.json`:
 "ppx-flags": ["@baransu/graphql_ppx_re/ppx"]
 ```
 
-If you're using bs-platform 6.x or above, add this to `bsconfig.json` instead:
-
-```json
-"ppx-flags": ["@baransu/graphql_ppx_re/ppx6"]
-```
-
 ## Native
 
 If you want to use native version edit your `esy.json` file
@@ -351,29 +345,17 @@ This opens up the possibility to use multiple different GraphQL APIs in the same
 
 ```
 npm install -g esy@latest
-esy @402 install
-esy @402 b
-# or
 esy install
-esy b
+esy build
 ```
 
 ## Running tests
 
 ### BuckleScript
 
-For `bs-platform@5.x`:
-
 ```
 cd tests_bucklescript
-node run.js bsb5
-```
-
-Or you're using `bs-platform@6.x` or above:
-
-```
-cd tests_bucklescript
-node run.js bsb6
+npm test
 ```
 
 ### Native
