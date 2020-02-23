@@ -1,5 +1,5 @@
 {
-  "checksum": "bcaf886c2bacf01a76836c08349c0a3e",
+  "checksum": "a72e67416ed2a8deced8cf6106ffced0",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "refmterr@3.3.0@d41d8cd9": {
@@ -48,7 +48,7 @@
         "@opam/ppx_tools_versioned@opam:5.2.3@4994ec80",
         "@opam/ocaml-migrate-parsetree@opam:1.6.0@da2643e7",
         "@opam/menhir@opam:20200211@90483d81",
-        "@opam/fmt@opam:0.8.8@01c3a23c", "@opam/dune@opam:2.3.0@3dc35de7"
+        "@opam/dune@opam:2.3.0@3dc35de7"
       ],
       "devDependencies": [
         "refmterr@3.3.0@d41d8cd9", "ocaml@4.9.0@d41d8cd9",

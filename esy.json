@@ -6,7 +6,6 @@
     "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static"
   },
   "dependencies": {
-    "@opam/fmt": "*",
     "@opam/dune": "*",
     "@opam/result": "*",
     "@opam/yojson": "*",
