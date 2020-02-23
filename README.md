@@ -2,6 +2,8 @@
 
 [![npm version](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg)](https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re)
 
+## ⚠️🚧️⚠️🚧⚠️ This is README for the upcoming 1.0 release. It's available via "@baransu/graphql_ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql_ppx/blob/master/README.md) ⚠️🚧️⚠️🚧⚠️
+
 > Reason/OCaml PPX (PreProcessor eXtension) helping with creating type-safe, compile time validated GraphQL queries
 > generating response decoders.
 
