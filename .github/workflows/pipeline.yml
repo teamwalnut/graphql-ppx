@@ -56,8 +56,8 @@ jobs:
         run: |
           esy release-static
           cd tests_bucklescript
-          npm install
-          npm test
+          npm ci --no-optional
+          npm run test
         env:
           CI: true
 
@@ -125,8 +125,8 @@ jobs:
         run: |
           esy b
           cd tests_bucklescript
-          npm install
-          npm test
+          npm ci --no-optional
+          npm run test
         env:
           CI: true
 

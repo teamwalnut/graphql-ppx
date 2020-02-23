@@ -312,11 +312,12 @@ let create_dir_if_not_exist = abs_path =>
     switch (Unix.mkdir(abs_path, 493)) {
     | () => ()
     | exception (Unix.Unix_error(error, cmd, msg)) =>
-      Log.must_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
       switch (error) {
       | Unix.EEXIST => () /* It's Ok since the build tool e.g. BuckleScript could be multi-threading */
-      | error => raise(Unix.Unix_error(error, cmd, msg))
-      };
+      | error =>
+        Log.must_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
+        raise(Unix.Unix_error(error, cmd, msg));
+      }
     };
   };
 
