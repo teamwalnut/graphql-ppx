@@ -13,7 +13,7 @@ if (platform === "win32") {
   platform = "win";
 }
 
-copyBinary("bin/bsb6/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx6");
+copyBinary("bin/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx");
 
 function copyBinary(filename, destFilename) {
   var supported = fs.existsSync(filename);

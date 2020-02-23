@@ -5,7 +5,7 @@ open Extract_type_definitions;
 open Source_pos;
 open Output_bucklescript_utils;
 
-open Ast_406;
+open Ast_408;
 open Parsetree;
 
 // duplicate of ouput_bucklescript_decoder
@@ -44,24 +44,30 @@ let rec generate_type = (config, path) =>
   | Res_object(_loc, name, _fields, Some(type_name))
   | Res_record(_loc, name, _fields, Some(type_name)) => base_type(type_name)
   | Res_object(_loc, name, _fields, None)
-  | Res_record(_loc, name, _fields, None) => base_type(generate_type_name(path))
+  | Res_record(_loc, name, _fields, None) =>
+    base_type(generate_type_name(path))
   | Res_poly_variant_selection_set(loc, name, fields) =>
     Ast_helper.(
       Typ.variant(
         fields
         |> List.map(((name, _)) =>
-             Rtag(
-               {txt: Compat.capitalize_ascii(name), loc: conv_loc(loc)},
-               [],
-               false,
-               [
-                 {
-                   ptyp_desc: Ptyp_any,
-                   ptyp_attributes: [],
-                   ptyp_loc: Location.none,
-                 },
-               ],
-             )
+             {
+               prf_desc:
+                 Rtag(
+                   {txt: Compat.capitalize_ascii(name), loc: conv_loc(loc)},
+                   false,
+                   [
+                     {
+                       ptyp_desc: Ptyp_any,
+                       ptyp_attributes: [],
+                       ptyp_loc_stack: [],
+                       ptyp_loc: Location.none,
+                     },
+                   ],
+                 ),
+               prf_loc: Location.none,
+               prf_attributes: [],
+             }
            ),
         Closed,
         None,
@@ -89,12 +95,16 @@ let rec generate_type = (config, path) =>
           | Nonexhaustive => (
               Exp.case(Pat.any(), [%expr `Nonexhaustive]),
               [
-                Rtag(
-                  {txt: "Nonexhaustive", loc: conv_loc(loc)},
-                  [],
-                  true,
-                  [],
-                ),
+                {
+                  prf_desc:
+                    Rtag(
+                      {txt: "Nonexhaustive", loc: conv_loc(loc)},
+                      true,
+                      [],
+                    ),
+                  prf_loc: conv_loc(loc),
+                  prf_attributes: [],
+                },
               ],
             )
           }
@@ -103,12 +113,16 @@ let rec generate_type = (config, path) =>
       let fragment_case_tys =
         fragments
         |> List.map(((name, res)) =>
-             Rtag(
-               {txt: name, loc: conv_loc(loc)},
-               [],
-               false,
-               [generate_type(config, [name, ...path], res)],
-             )
+             {
+               prf_desc:
+                 Rtag(
+                   {txt: name, loc: conv_loc(loc)},
+                   false,
+                   [generate_type(config, [name, ...path], res)],
+                 ),
+               prf_loc: conv_loc(loc),
+               prf_attributes: [],
+             }
            );
       Ast_helper.(
         Typ.variant(
@@ -121,13 +135,16 @@ let rec generate_type = (config, path) =>
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
     base_type(module_name ++ ".t")
   | Res_poly_variant_interface(loc, name, base, fragments) => {
-      let map_case_ty = ((name, res)) =>
-        Rtag(
-          {txt: name, loc: conv_loc(loc)},
-          [],
-          false,
-          [generate_type(config, [name, ...path], res)],
-        );
+      let map_case_ty = ((name, res)) => {
+        prf_desc:
+          Rtag(
+            {txt: name, loc: conv_loc(loc)},
+            false,
+            [generate_type(config, [name, ...path], res)],
+          ),
+        prf_loc: conv_loc(loc),
+        prf_attributes: [],
+      };
 
       let fallback_case_ty = map_case_ty(base);
       let fragment_case_tys = fragments |> List.map(map_case_ty);
@@ -145,7 +162,12 @@ let rec generate_type = (config, path) =>
           Typ.variant(
             enum_meta.em_values
             |> List.map(({evm_name, _}) =>
-                 Rtag({txt: evm_name, loc: conv_loc(loc)}, [], true, [])
+                 {
+                   prf_desc:
+                     Rtag({txt: evm_name, loc: conv_loc(loc)}, true, []),
+                   prf_loc: conv_loc(loc),
+                   prf_attributes: [],
+                 }
                ),
             Closed,
             None,
@@ -213,34 +235,40 @@ let generate_object_type = (config, fields, obj_path) => {
               fields
               |> List.map(
                    fun
-                   | Fragment({key, module_name, type_name}) =>
-                     Otag(
-                       {txt: key, loc: Location.none},
-                       [],
-                       Ast_helper.Typ.constr(
-                         {
-                           Location.txt:
-                             Longident.parse(
-                               module_name
-                               ++ ".t"
-                               ++ (
-                                 switch (type_name) {
-                                 | None => ""
-                                 | Some(type_name) => "_" ++ type_name
-                                 }
-                               ),
-                             ),
-                           loc: Location.none,
-                         },
-                         [],
-                       ),
-                     )
-                   | Field({path: [name, ...path], type_}) =>
-                     Otag(
-                       {txt: name, loc: Location.none},
-                       [],
-                       generate_type(config, [name, ...path], type_),
-                     )
+                   | Fragment({key, module_name, type_name}) => {
+                       pof_desc:
+                         Otag(
+                           {txt: key, loc: Location.none},
+                           Ast_helper.Typ.constr(
+                             {
+                               Location.txt:
+                                 Longident.parse(
+                                   module_name
+                                   ++ ".t"
+                                   ++ (
+                                     switch (type_name) {
+                                     | None => ""
+                                     | Some(type_name) => "_" ++ type_name
+                                     }
+                                   ),
+                                 ),
+                               loc: Location.none,
+                             },
+                             [],
+                           ),
+                         ),
+                       pof_loc: Location.none,
+                       pof_attributes: [],
+                     }
+                   | Field({path: [name, ...path], type_}) => {
+                       pof_desc:
+                         Otag(
+                           {txt: name, loc: Location.none},
+                           generate_type(config, [name, ...path], type_),
+                         ),
+                       pof_loc: Location.none,
+                       pof_attributes: [],
+                     }
                    | Field({path: [], loc}) =>
                      // I don't think this should ever happen but we need to
                      // cover this case, perhaps we can constrain the type
@@ -292,7 +320,12 @@ let rec generate_arg_type = loc =>
         Typ.variant(
           enum_meta.em_values
           |> List.map(({evm_name, _}) =>
-               Rtag({txt: evm_name, loc: Location.none}, [], true, [])
+               {
+                 prf_desc:
+                   Rtag({txt: evm_name, loc: Location.none}, true, []),
+                 prf_loc: Location.none,
+                 prf_attributes: [],
+               }
              ),
           Closed,
           None,
@@ -373,11 +406,15 @@ let generate_object_input_object = (input_obj_name, fields) => {
             Ast_helper.Typ.object_(
               fields
               |> List.map((InputField({name, type_, loc})) =>
-                   Otag(
-                     {txt: name, loc: Location.none},
-                     [],
-                     generate_arg_type(loc, type_),
-                   )
+                   {
+                     pof_desc:
+                       Otag(
+                         {txt: name, loc: Location.none},
+                         generate_arg_type(loc, type_),
+                       ),
+                     pof_loc: Location.none,
+                     pof_attributes: [],
+                   }
                  ),
               Closed,
             ),

@@ -1,6 +1,6 @@
 name: graphql_ppx pipeline
 
-on: [push, pull_request]
+on: [pull_request, push]
 
 jobs:
   test_and_build_linux:
@@ -44,32 +44,23 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      - name: Add python
-        run: |
-          apk add python
-      # Ocaml 4.08+
-      - name: install-build
+      - name: install
         run: |
           esy install
       - name: test-native
         run: |
           esy b dune runtest -f
-
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build @406
-        run: |
-          esy @406 install
-          esy @406 b
-      - name: test-bsb6
-        working-directory: ./tests_bucklescript
-        run: |
-          npm install --no-optional
-          npm test
         env:
           CI: true
-      - name: install-build @406 (static release)
+      - name: test-bucklescript
         run: |
-          esy @406 dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
+          esy release-static
+          cd tests_bucklescript
+          npm ci --no-optional
+          npm run test
+        env:
+          CI: true
+
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
@@ -122,29 +113,28 @@ jobs:
           restore-keys: |
             v1-esy-${{ matrix.os }}-
 
-      # Ocaml 4.08+
-      - name: install-build
+      - name: install
         run: |
           esy install
       - name: test-native
         run: |
           esy b dune runtest -f
+        env:
+          CI: true
+      - name: test-bucklescript
+        run: |
+          esy b
+          cd tests_bucklescript
+          npm ci --no-optional
+          npm run test
+        env:
+          CI: true
 
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build
-        run: |
-          esy @406 install
-          esy @406 b
-      - name: test-bsb6
-        working-directory: ./tests_bucklescript
-        run: |
-          npm install --no-optional
-          npm test
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
-          name: ${{ matrix.os }}-bsb6
+          name: ${{ matrix.os }}
           path: _build/default/src/bucklescript_bin/bin.exe
 
   publish:
@@ -159,34 +149,34 @@ jobs:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Download bsb6 linux artifacts
+      - name: Download linux artifacts
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-latest-bsb6
+          name: ubuntu-latest
           path: binaries/linux
 
-      - name: Download bsb6 macOS artifacts
+      - name: Download macOS artifacts
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: macOS-latest-bsb6
+          name: macOS-latest
           path: binaries/darwin
 
-      - name: Download bsb6 windows artifacts
+      - name: Download windows artifacts
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: windows-latest-bsb6
+          name: windows-latest
           path: binaries/windows
 
-      - name: Move bsb artifacts
+      - name: Move artifacts
         if: success()
         run: |
-          mkdir -p bin/bsb6
-          mv binaries/darwin/bin.exe bin/bsb6/graphql_ppx-darwin-x64.exe
-          mv binaries/windows/bin.exe bin/bsb6/graphql_ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/bsb6/graphql_ppx-linux-x64.exe
+          mkdir -p bin
+          mv binaries/darwin/bin.exe bin/graphql_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/graphql_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/graphql_ppx-linux-x64.exe
 
       - name: Publish
         if: success()

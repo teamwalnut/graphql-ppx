@@ -6,9 +6,19 @@
     "in-source": true
   },
   "suffix": ".bs.js",
+  "ppx-flags": [
+    [
+      "../_build/default/src/bucklescript_bin/bin.exe",
+      "-apollo-mode",
+      "-records",
+      "-schema ../graphql_schema.json"
+    ]
+  ],
   "bs-dependencies": ["@glennsl/bs-jest"],
   "refmt": 3,
   "bsc-flags": ["-bs-super-errors"],
-  "ppx-flags": [["../_build/default/src/bucklescript_bin/bin.exe", "-records"]],
-  "warnings": { "number": "+A-48-30-42" }
+  "warnings": {
+    "number": "+A-48-30-42-40",
+    "error": "+A-3-32-44"
+  }
 }

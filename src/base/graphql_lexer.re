@@ -208,7 +208,7 @@ let scan_digits = lexer => {
       };
 
     let end_idx = scan_loop(start_idx);
-    try (
+    try(
       Ok(
         int_of_string(
           String.sub(lexer.source, start_idx, end_idx - start_idx + 1),

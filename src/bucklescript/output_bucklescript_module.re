@@ -3,7 +3,7 @@ open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 open Parsetree;
 open Ast_helper;
@@ -40,7 +40,7 @@ let join = (part1, part2) => {
 };
 
 let emit_printed_query = parts => {
-  open Ast_406;
+  open Ast_408;
   let make_string = s => {
     Exp.constant(Parsetree.Pconst_string(s, None));
   };
@@ -76,7 +76,7 @@ let emit_printed_query = parts => {
 };
 
 let rec emit_json =
-  Ast_406.(
+  Ast_408.(
     fun
     | `Assoc(vs) => {
         let pairs =
@@ -249,16 +249,22 @@ let generate_fragment_module =
               Pat.var({txt: "_" ++ name, loc: type_loc}),
               Typ.variant(
                 [
-                  Rtag(
-                    {
-                      txt:
-                        Output_bucklescript_parser.type_name_to_words(type_),
-                      loc: type_loc,
-                    },
-                    [],
-                    true,
-                    [],
-                  ),
+                  {
+                    prf_desc:
+                      Rtag(
+                        {
+                          txt:
+                            Output_bucklescript_parser.type_name_to_words(
+                              type_,
+                            ),
+                          loc: type_loc,
+                        },
+                        true,
+                        [],
+                      ),
+                    prf_loc: type_loc,
+                    prf_attributes: [],
+                  },
                 ],
                 Closed,
                 None,

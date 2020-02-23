@@ -312,11 +312,12 @@ let create_dir_if_not_exist = abs_path =>
     switch (Unix.mkdir(abs_path, 493)) {
     | () => ()
     | exception (Unix.Unix_error(error, cmd, msg)) =>
-      Log.error_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
       switch (error) {
       | Unix.EEXIST => () /* It's Ok since the build tool e.g. BuckleScript could be multi-threading */
-      | error => raise(Unix.Unix_error(error, cmd, msg))
-      };
+      | error =>
+        Log.error_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
+        raise(Unix.Unix_error(error, cmd, msg));
+      }
     };
   };
 
@@ -332,7 +333,7 @@ let ppx_cache_dir = ".graphql_ppx_cache/";
 
 let get_ppx_cache_path = (suffix, relative_to) => {
   let dir =
-    try (Sys.getenv("cur__target_dir")) {
+    try(Sys.getenv("cur__target_dir")) {
     | _ => Filename.dirname(relative_to)
     };
 
@@ -429,7 +430,7 @@ and recovery_build = json_schema => {
 
 /* lazily read schema and check if schema file existed */
 let get_schema = maybe_schema =>
-  lazy (
+  lazy(
     switch (
       find_file_towards_root(
         Ppx_config.root_directory(),

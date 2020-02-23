@@ -1,7 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Objects (legacy) argNamedQuery.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type raw_t;
@@ -51,7 +68,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) comment.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -172,7 +206,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) customDecoder.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module StringOfInt = {
   let parse = string_of_int;
   type t = string;
@@ -225,7 +276,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) customScalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -317,7 +385,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) enumInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -383,7 +468,25 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) fragmentDefinition.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
 module Fragments = {
   module ListFragment = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -526,12 +629,46 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) interface.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 "
 `;
 
 exports[`Objects (legacy) lists.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -624,7 +761,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) listsArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type raw_t;
@@ -806,7 +960,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) listsInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -1010,7 +1181,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) mutation.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -1124,7 +1312,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) mutationWithArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type raw_t;
@@ -1175,7 +1380,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) nested.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 type record = {
   f1: string,
   f2: string,
@@ -1340,7 +1562,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) nonrecursiveInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -1461,7 +1700,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) pokedexApolloMode.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -1519,7 +1775,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) pokedexScalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -1633,7 +1906,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) record.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 type scalars = {
   string,
   int,
@@ -1975,7 +2265,24 @@ module UnionExternalFragmentQuery = {
 `;
 
 exports[`Objects (legacy) recursiveInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -2111,7 +2418,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) scalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -2229,7 +2553,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) scalarsArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type raw_t;
@@ -2389,7 +2730,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) scalarsInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -2575,7 +2933,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) skipDirectives.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -2687,7 +3062,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) subscription.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -2805,7 +3197,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) typename.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -2921,7 +3330,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) union.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -3049,7 +3475,24 @@ module MyQuery = {
 `;
 
 exports[`Objects (legacy) unionPartial.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -3149,7 +3592,24 @@ module MyQuery = {
 `;
 
 exports[`Records argNamedQuery.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type raw_t;
@@ -3197,7 +3657,24 @@ module MyQuery = {
 `;
 
 exports[`Records comment.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -3315,7 +3792,24 @@ module MyQuery = {
 `;
 
 exports[`Records customDecoder.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module StringOfInt = {
   let parse = string_of_int;
   type t = string;
@@ -3365,7 +3859,24 @@ module MyQuery = {
 `;
 
 exports[`Records customScalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -3454,7 +3965,24 @@ module MyQuery = {
 `;
 
 exports[`Records enumInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -3518,7 +4046,25 @@ module MyQuery = {
 `;
 
 exports[`Records fragmentDefinition.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
 module Fragments = {
   module ListFragment = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -3648,12 +4194,46 @@ module MyQuery = {
 `;
 
 exports[`Records interface.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 "
 `;
 
 exports[`Records lists.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -3751,7 +4331,24 @@ module MyQuery = {
 `;
 
 exports[`Records listsArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type raw_t;
@@ -3930,7 +4527,24 @@ module MyQuery = {
 `;
 
 exports[`Records listsInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -4129,7 +4743,24 @@ module MyQuery = {
 `;
 
 exports[`Records mutation.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -4239,7 +4870,24 @@ module MyQuery = {
 `;
 
 exports[`Records mutationWithArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type raw_t;
@@ -4288,7 +4936,24 @@ module MyQuery = {
 `;
 
 exports[`Records nested.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 type record = {
   f1: string,
   f2: string,
@@ -4420,7 +5085,24 @@ module MyQuery = {
 `;
 
 exports[`Records nonrecursiveInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -4538,7 +5220,24 @@ module MyQuery = {
 `;
 
 exports[`Records pokedexApolloMode.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -4587,7 +5286,24 @@ module MyQuery = {
 `;
 
 exports[`Records pokedexScalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -4691,7 +5407,24 @@ module MyQuery = {
 `;
 
 exports[`Records record.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 type scalars = {
   string,
   int,
@@ -5010,7 +5743,24 @@ module UnionExternalFragmentQuery = {
 `;
 
 exports[`Records recursiveInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -5143,7 +5893,24 @@ module MyQuery = {
 `;
 
 exports[`Records scalars.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -5260,7 +6027,24 @@ module MyQuery = {
 `;
 
 exports[`Records scalarsArgs.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type raw_t;
@@ -5417,7 +6201,24 @@ module MyQuery = {
 `;
 
 exports[`Records scalarsInput.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type raw_t;
@@ -5600,7 +6401,24 @@ module MyQuery = {
 `;
 
 exports[`Records skipDirectives.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -5707,7 +6525,24 @@ module MyQuery = {
 `;
 
 exports[`Records subscription.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -5812,7 +6647,24 @@ module MyQuery = {
 `;
 
 exports[`Records typename.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -5912,7 +6764,24 @@ module MyQuery = {
 `;
 
 exports[`Records union.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
@@ -6026,7 +6895,24 @@ module MyQuery = {
 `;
 
 exports[`Records unionPartial.re 1`] = `
-"[@ocaml.ppx.context {cookies: []}];
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;

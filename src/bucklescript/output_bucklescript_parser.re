@@ -3,7 +3,7 @@ open Graphql_ppx_base;
 open Result_structure;
 open Schema;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 open Parsetree;
 
@@ -135,7 +135,11 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       Typ.variant(
         enum_meta.em_values
         |> List.map(({evm_name, _}) =>
-             Rtag({txt: evm_name, loc}, [], true, [])
+             {
+               prf_desc: Rtag({txt: evm_name, loc}, true, []),
+               prf_loc: loc,
+               prf_attributes: [],
+             }
            ),
         Closed,
         None,
@@ -299,7 +303,7 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) => {
 and generate_object_decoder =
     (config, loc, name, fields, path, definition, existing_record) => {
   let rec do_obj_constructor = () => {
-    Ast_406.(
+    Ast_408.(
       Ast_helper.(
         Exp.extension((
           {txt: "bs.obj", loc},
@@ -443,18 +447,23 @@ and generate_poly_variant_selection_set =
       Typ.variant(
         fields
         |> List.map(((name, _)) =>
-             Rtag(
-               {txt: Compat.capitalize_ascii(name), loc},
-               [],
-               false,
-               [
-                 {
-                   ptyp_desc: Ptyp_any,
-                   ptyp_attributes: [],
-                   ptyp_loc: Location.none,
-                 },
-               ],
-             )
+             {
+               prf_desc:
+                 Rtag(
+                   {txt: Compat.capitalize_ascii(name), loc},
+                   false,
+                   [
+                     {
+                       ptyp_desc: Ptyp_any,
+                       ptyp_loc_stack: [],
+                       ptyp_attributes: [],
+                       ptyp_loc: Location.none,
+                     },
+                   ],
+                 ),
+               prf_loc: loc,
+               prf_attributes: [],
+             }
            ),
         Closed,
         None,
@@ -501,13 +510,26 @@ and generate_poly_variant_interface =
     )
     |> Exp.case(name_pattern);
   };
-  let map_case_ty = ((name, _)) =>
-    Rtag(
-      {txt: name, loc},
-      [],
-      false,
-      [{ptyp_desc: Ptyp_any, ptyp_attributes: [], ptyp_loc: Location.none}],
-    );
+
+  let map_case_ty = ((name, _)) => {
+    {
+      prf_desc:
+        Rtag(
+          {txt: name, loc},
+          false,
+          [
+            {
+              ptyp_desc: Ptyp_any,
+              ptyp_attributes: [],
+              ptyp_loc: Location.none,
+              ptyp_loc_stack: [],
+            },
+          ],
+        ),
+      prf_loc: Location.none,
+      prf_attributes: [],
+    };
+  };
 
   let fragment_cases = List.map(map_case, fragments);
   let fallback_case = map_fallback_case(base);
@@ -608,25 +630,36 @@ and generate_poly_variant_union =
         )
       | Nonexhaustive => (
           Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [Rtag({txt: "Nonexhaustive", loc}, [], true, [])],
+          [
+            {
+              prf_desc: Rtag({txt: "Nonexhaustive", loc}, true, []),
+              prf_loc: loc,
+              prf_attributes: [],
+            },
+          ],
         )
       }
     );
   let fragment_case_tys =
     fragments
     |> List.map(((name, _)) =>
-         Rtag(
-           {txt: name, loc},
-           [],
-           false,
-           [
-             {
-               ptyp_desc: Ptyp_any,
-               ptyp_attributes: [],
-               ptyp_loc: Location.none,
-             },
-           ],
-         )
+         {
+           prf_desc:
+             Rtag(
+               {txt: name, loc},
+               false,
+               [
+                 {
+                   ptyp_desc: Ptyp_any,
+                   ptyp_attributes: [],
+                   ptyp_loc_stack: [],
+                   ptyp_loc: Location.none,
+                 },
+               ],
+             ),
+           prf_attributes: [],
+           prf_loc: Location.none,
+         }
        );
 
   let union_ty =

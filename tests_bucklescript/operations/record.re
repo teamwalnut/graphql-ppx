@@ -1,4 +1,4 @@
-type scalars = {
+type scalars  = {
   string,
   int,
 };

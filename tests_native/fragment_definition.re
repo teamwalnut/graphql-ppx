@@ -1,8 +1,43 @@
 open Test_shared;
 
+type record = {
+  nullableOfNullable: option(array(option(string))),
+  nullableOfNonNullable: option(array(string)),
+};
+
+let concat = ({nullableOfNullable, nullableOfNonNullable}) => {
+  let x =
+    switch (nullableOfNullable) {
+    | None => [||]
+    | Some(arr) =>
+      arr
+      |> Array.map(v =>
+           switch (v) {
+           | None => [||]
+           | Some(s) => [|s|]
+           }
+         )
+      |> Array.to_list
+      |> Array.concat
+    };
+
+  let y =
+    switch (nullableOfNonNullable) {
+    | None => [||]
+    | Some(a) => a
+    };
+
+  Array.append(x, y);
+};
+
 module Fragments = [%graphql
   {|
   fragment listFragment on Lists {
+    nullableOfNullable
+    nullableOfNonNullable
+  }
+
+  fragment concatFragment on Lists @bsRecord @bsDecoder(fn: "concat") {
     nullableOfNullable
     nullableOfNonNullable
   }
@@ -26,6 +61,10 @@ module MyQuery = [%graphql
       ...Fragments.ListFragment @bsField(name: "frag1")
       ...Fragments.ListFragment @bsField(name: "frag2")
     }
+
+    l3: lists {
+      ...Fragments.ConcatFragment
+    }
   }
 |}
 ];
@@ -38,6 +77,7 @@ type qt = {
     frag1: ft,
     frag2: ft,
   },
+  l3: array(string),
 };
 
 let print_fragment = (formatter, obj: ft) =>
@@ -84,7 +124,8 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
      let equal = (a, b) =>
        fragment_equal(a#l1, b#l1)
        && fragment_equal(a#l2#frag1, b#l2#frag1)
-       && fragment_equal(a#l2#frag2, b#l2#frag2);
+       && fragment_equal(a#l2#frag2, b#l2#frag2)
+       && a#l3 == b#l3;
    });
 
 let decodes_the_fragment = () =>
@@ -96,7 +137,11 @@ let decodes_the_fragment = () =>
         {|
       {
         "l1": {"nullableOfNullable": ["a", null, "b"]},
-        "l2": {"nullableOfNullable": ["a", null, "b"]}
+        "l2": {"nullableOfNullable": ["a", null, "b"]},
+        "l3": {
+          "nullableOfNullable": ["a", null, "b", null, "c"],
+          "nullableOfNonNullable": ["d", "e"]
+        }
       }|},
       ),
     ),
@@ -119,7 +164,8 @@ let decodes_the_fragment = () =>
           pub nullableOfNullable = Some([|Some("a"), None, Some("b")|]);
           pub nullableOfNonNullable = None
         }
-      }
+      };
+      pub l3 = [|"a", "b", "c", "d", "e"|]
     },
   );
 

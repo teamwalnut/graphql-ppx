@@ -8,8 +8,6 @@ module StringOfInt = {
   type t = string;
 };
 
-
-
 module My_query = [%graphql
   {|
   {

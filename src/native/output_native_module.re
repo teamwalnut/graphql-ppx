@@ -3,7 +3,7 @@ open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
 
-open Ast_406;
+open Ast_408;
 open Asttypes;
 open Parsetree;
 open Ast_helper;
@@ -109,7 +109,7 @@ let emit_printed_query = parts => {
 };
 
 let rec emit_json =
-  Ast_406.(
+  Ast_408.(
     fun
     | `Assoc(vs) => {
         let pairs =
@@ -178,7 +178,7 @@ let generate_default_operation =
         Result_structure.res_loc(res_structure),
         variable_defs,
       );
-    let (make_fn, make_with_variables_fn, make_variables_fn) =
+    let (make_fn, make_with_variables_fn, make_variables_fn, definition_tuple) =
       Output_native_unifier.make_make_fun(config, variable_defs);
     List.concat([
       make_printed_query(config, [Graphql_ast.Operation(operation)]),
@@ -205,6 +205,7 @@ let generate_default_operation =
           [%stri let make = [%e make_fn]],
           [%stri let makeWithVariables = [%e make_with_variables_fn]],
           [%stri let makeVariables = [%e make_variables_fn]],
+          [%stri let definition = [%e definition_tuple]],
         ],
       ]),
       ret_type_magic,
@@ -223,14 +224,18 @@ let generate_fragment_module =
   let variable_fields =
     variable_names
     |> List.map(name =>
-         Otag(
-           {txt: name, loc},
-           [],
-           Ast_helper.Typ.constr(
-             {txt: Longident.Lident("unit"), loc: Location.none},
-             [],
-           ),
-         )
+         {
+           pof_desc:
+             Otag(
+               {txt: name, loc},
+               Ast_helper.Typ.constr(
+                 {txt: Longident.Lident("unit"), loc: Location.none},
+                 [],
+               ),
+             ),
+           pof_loc: Location.none,
+           pof_attributes: [],
+         }
        );
   let variable_obj_type =
     Ast_helper.Typ.constr(
