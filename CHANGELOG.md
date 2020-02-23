@@ -10,8 +10,6 @@
 
 - chore: use internally AST 4.08 ([6acea38](https://github.com/reasonml-community/graphql_ppx/commit/6acea380923c5a698ae151aee93d7f87bea91915))
 
-* feat: decoder support on fragment definition ([77d8c45](https://github.com/reasonml-community/graphql_ppx/commit/77d8c452f4aa482585967dd8a33d6ebb262f6e37))
-
 ## [0.6.1](https://github.com/reasonml-community/graphql_ppx/compare/v0.5.0...v0.6.1) (2020-01-23)
 
 ### Features
