@@ -172,9 +172,9 @@ let rec generate_decoder = config =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
-  | Res_record(loc, name, fields) =>
+  | Res_record(loc, name, fields, _) =>
     generate_record_decoder(config, conv_loc(loc), name, fields)
-  | Res_object(loc, name, fields) =>
+  | Res_object(loc, name, fields, _) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_poly_variant_selection_set(loc, name, fields) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
@@ -194,7 +194,7 @@ let rec generate_decoder = config =>
       base,
       fragments,
     )
-  | Res_solo_fragment_spread(loc, name) =>
+  | Res_solo_fragment_spread(loc, name, _arguments) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
@@ -229,7 +229,10 @@ and generate_array_decoder = (config, loc, inner) =>
 and generate_custom_decoder = (config, loc, ident, inner) => {
   let fn_expr =
     Ast_helper.(
-      Exp.ident({loc: Location.none, txt: Longident.parse(ident)})
+      Exp.ident({
+        loc: Location.none,
+        txt: Longident.parse(ident ++ ".parse"),
+      })
     );
   [@metaloc loc] [%expr [%e fn_expr]([%e generate_decoder(config, inner)])];
 }
@@ -314,7 +317,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | Fr_fragment_spread(field, loc, name) => {
+           | Fr_fragment_spread(field, loc, name, _, _arguments) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -387,7 +390,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
                     },
                   ),
                 )
-              | Fr_fragment_spread(key, loc, name) => {
+              | Fr_fragment_spread(key, loc, name, _, _) => {
                   let loc = conv_loc(loc);
                   Cf.method(
                     {txt: key, loc: Location.none},

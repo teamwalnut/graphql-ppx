@@ -44,10 +44,43 @@ let find_argument = (name, arguments) =>
        }
      );
 
+let find_fragment_arguments =
+    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
+  switch (directives |> List.find(d => d.item.d_name.item == "arguments")) {
+  | {item: {d_arguments: Some(arguments), _}, _} =>
+    arguments.item
+    |> List.fold_left(
+         acc =>
+           fun
+           | ({item: name, _}, {item: Iv_variable(variable_name), _})
+               when name == variable_name => [
+               name,
+               ...acc,
+             ]
+           | _ => acc,
+         [],
+       )
+  | _ => []
+  | exception Not_found => []
+  };
+};
+
+let get_ppx_as = directives => {
+  switch (directives |> find_directive("ppxAs")) {
+  | None => None
+  | Some({item: {d_arguments, _}, _}) =>
+    switch (find_argument("type", d_arguments)) {
+    | Some((_, {item: Iv_string(type_name), _})) => Some(type_name)
+    | _ => None
+    }
+  };
+};
+
 let rec unify_type =
         (
           error_marker,
           as_record,
+          existing_record,
           config,
           span,
           ty,
@@ -57,12 +90,28 @@ let rec unify_type =
   | Ntr_nullable(t) =>
     Res_nullable(
       config.map_loc(span),
-      unify_type(error_marker, as_record, config, span, t, selection_set),
+      unify_type(
+        error_marker,
+        as_record,
+        existing_record,
+        config,
+        span,
+        t,
+        selection_set,
+      ),
     )
   | Ntr_list(t) =>
     Res_array(
       config.map_loc(span),
-      unify_type(error_marker, as_record, config, span, t, selection_set),
+      unify_type(
+        error_marker,
+        as_record,
+        existing_record,
+        config,
+        span,
+        t,
+        selection_set,
+      ),
     )
   | Ntr_named(n) =>
     switch (lookup_type(config.schema, n)) {
@@ -80,6 +129,7 @@ let rec unify_type =
       unify_selection_set(
         error_marker,
         as_record,
+        existing_record,
         config,
         span,
         ty,
@@ -148,6 +198,7 @@ and unify_interface =
         config.map_loc(span),
         name,
         List.map(unify_selection(error_marker, config, ty), selection),
+        None,
       ),
     );
     let generate_fragment_case =
@@ -227,10 +278,12 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
           };
 
         let is_record = has_directive("bsRecord", if_directives);
+
         let result_decoder =
           unify_selection_set(
             error_marker,
             is_record,
+            None,
             config,
             if_selection_set.span,
             type_cond_ty,
@@ -328,6 +381,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                      unify_type(
                        error_marker,
                        false,
+                       None,
                        config,
                        span,
                        inner_type,
@@ -356,10 +410,13 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
   }
 and unify_field = (error_marker, config, field_span, ty) => {
   let ast_field = field_span.item;
-  let field_meta = lookup_field(ty, ast_field.fd_name.item);
+  let field_name = ast_field.fd_name.item;
+  let field_meta = lookup_field(ty, field_name);
   let key = some_or(ast_field.fd_alias, ast_field.fd_name).item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let existing_record = get_ppx_as(ast_field.fd_directives);
+
   let has_skip =
     has_directive("skip", ast_field.fd_directives)
     || has_directive("include", ast_field.fd_directives);
@@ -367,7 +424,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     if (is_variant) {
       unify_variant(error_marker);
     } else {
-      unify_type(error_marker, is_record);
+      unify_type(error_marker, is_record, existing_record);
     };
 
   let parser_expr =
@@ -377,7 +434,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
         error_marker,
         config.map_loc,
         field_span.span,
-        "Unknown field on type " ++ type_name(ty),
+        "Unknown field '" ++ field_name ++ "' on type " ++ type_name(ty),
       )
     | Some(field_meta) =>
       let field_ty = to_native_type_ref(field_meta.fm_field_type);
@@ -396,10 +453,10 @@ and unify_field = (error_marker, config, field_span, ty) => {
     };
 
   let loc = config.map_loc(field_span.span);
-  switch (ast_field.fd_directives |> find_directive("bsDecoder")) {
+  switch (ast_field.fd_directives |> find_directive("ppxDecoder")) {
   | None => Fr_named_field(key, loc, parser_expr)
   | Some({item: {d_arguments, _}, span}) =>
-    switch (find_argument("fn", d_arguments)) {
+    switch (find_argument("module", d_arguments)) {
     | None =>
       Fr_named_field(
         key,
@@ -408,15 +465,36 @@ and unify_field = (error_marker, config, field_span, ty) => {
           error_marker,
           config.map_loc,
           span,
-          "bsDecoder must be given 'fn' argument",
+          "pxxDecoder must be given 'module' argument",
         ),
       )
-    | Some((_, {item: Iv_string(fn_name), span})) =>
-      Fr_named_field(
-        key,
-        loc,
-        Res_custom_decoder(config.map_loc(span), fn_name, parser_expr),
-      )
+    | Some((_, {item: Iv_string(module_name), span})) =>
+      switch (parser_expr) {
+      | Res_nullable(loc, t) =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_nullable(
+            loc,
+            Res_custom_decoder(config.map_loc(span), module_name, t),
+          ),
+        )
+      | Res_array(loc, t) =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_array(
+            loc,
+            Res_custom_decoder(config.map_loc(span), module_name, t),
+          ),
+        )
+      | _ =>
+        Fr_named_field(
+          key,
+          loc,
+          Res_custom_decoder(config.map_loc(span), module_name, parser_expr),
+        )
+      }
     | Some((_, {span, _})) =>
       Fr_named_field(
         key,
@@ -425,7 +503,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
           error_marker,
           config.map_loc,
           span,
-          "The 'fn' argument must be a string",
+          "The 'module' argument must be a string",
         ),
       )
     }
@@ -435,13 +513,25 @@ and unify_selection = (error_marker, config, ty, selection) =>
   switch (selection) {
   | Field(field_span) => unify_field(error_marker, config, field_span, ty)
   | FragmentSpread({item: {fs_directives, fs_name}, span}) =>
+    let arguments = find_fragment_arguments(fs_directives);
     switch (find_directive("bsField", fs_directives)) {
     | None =>
-      raise_error(
-        config.map_loc,
-        span,
-        "You must use @bsField(name: \"fieldName\") to use fragment spreads",
-      )
+      let key =
+        fs_name.item
+        |> String.split_on_char('.')
+        |> List.rev
+        |> List.hd
+        |> String.uncapitalize_ascii;
+      Fr_fragment_spread(
+        key,
+        config.map_loc(span),
+        fs_name.item,
+        switch (ty) {
+        | Object({om_name, _}) => Some(om_name)
+        | _ => None
+        },
+        arguments,
+      );
     | Some({item: {d_arguments, _}, span}) =>
       switch (find_argument("name", d_arguments)) {
       | None =>
@@ -451,7 +541,16 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "bsField must be given 'name' argument",
         )
       | Some((_, {item: Iv_string(key), span})) =>
-        Fr_fragment_spread(key, config.map_loc(span), fs_name.item)
+        Fr_fragment_spread(
+          key,
+          config.map_loc(span),
+          fs_name.item,
+          switch (ty) {
+          | Object({om_name, _}) => Some(om_name)
+          | _ => None
+          },
+          arguments,
+        )
       | Some(_) =>
         raise_error(
           config.map_loc,
@@ -459,7 +558,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "The 'name' argument must be a string",
         )
       }
-    }
+    };
   | InlineFragment({span, _}) =>
     raise_error(
       config.map_loc,
@@ -468,7 +567,15 @@ and unify_selection = (error_marker, config, ty, selection) =>
     )
   }
 and unify_selection_set =
-    (error_marker, as_record, config, span, ty, selection_set) =>
+    (
+      error_marker,
+      as_record,
+      existing_record,
+      config,
+      span,
+      ty,
+      selection_set,
+    ) =>
   switch (selection_set) {
   | None =>
     make_error(
@@ -477,7 +584,9 @@ and unify_selection_set =
       span,
       "Must select subfields on objects",
     )
-  | Some({item: [FragmentSpread({item, _})], _}) =>
+  | Some({item: [FragmentSpread({item: {fs_directives, fs_name}, _})], _}) =>
+    let arguments = find_fragment_arguments(fs_directives);
+
     if (as_record) {
       make_error(
         error_marker,
@@ -486,19 +595,25 @@ and unify_selection_set =
         "@bsRecord can not be used with fragment spreads, place @bsRecord on the fragment definition instead",
       );
     } else {
-      Res_solo_fragment_spread(config.map_loc(span), item.fs_name.item);
-    }
+      Res_solo_fragment_spread(
+        config.map_loc(span),
+        fs_name.item,
+        arguments,
+      );
+    };
   | Some({item, _}) when as_record =>
     Res_record(
       config.map_loc(span),
       type_name(ty),
       List.map(unify_selection(error_marker, config, ty), item),
+      existing_record,
     )
   | Some({item, _}) =>
     Res_object(
       config.map_loc(span),
       type_name(ty),
       List.map(unify_selection(error_marker, config, ty), item),
+      existing_record,
     )
   };
 
@@ -508,6 +623,7 @@ let unify_operation = (error_marker, config) =>
     unify_selection_set(
       error_marker,
       false,
+      None,
       config,
       span,
       query_type(config.schema),
@@ -519,6 +635,7 @@ let unify_operation = (error_marker, config) =>
       unify_selection_set(
         error_marker,
         false,
+        None,
         config,
         span,
         mutation_type,
@@ -538,6 +655,7 @@ let unify_operation = (error_marker, config) =>
       unify_selection_set(
         error_marker,
         false,
+        None,
         config,
         span,
         subscription_type,
@@ -552,10 +670,47 @@ let unify_operation = (error_marker, config) =>
       )
     };
 
+let getFragmentArgumentDefinitions =
+    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
+  switch (
+    directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
+  ) {
+  | {item: {d_arguments: Some(arguments), _}, _} =>
+    arguments.item
+    |> List.fold_left(
+         acc =>
+           fun
+           | (
+               {item: key, span},
+               {item: Iv_object(values), span: type_span},
+             ) => {
+               let type_ =
+                 values
+                 |> List.fold_left(
+                      acc =>
+                        fun
+                        | ({item: "type", _}, {item: Iv_string(type_), _}) =>
+                          Some(type_)
+                        | _ => acc,
+                      None,
+                    );
+               switch (type_) {
+               | Some(type_) => [(key, type_, span, type_span), ...acc]
+               | _ => acc
+               };
+             }
+           | _ => acc,
+         [],
+       )
+  | _ => []
+  | exception Not_found => []
+  };
+};
+
 let rec unify_document_schema = (config, document) => {
   let error_marker = {Generator_utils.has_error: false};
   switch (document) {
-  | [Operation({item: {o_variable_definitions, _}, _} as op)] =>
+  | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
       Mod_default_operation(
@@ -564,6 +719,7 @@ let rec unify_document_schema = (config, document) => {
         op,
         structure,
       ),
+      ...unify_document_schema(config, rest),
     ];
   | [
       Fragment(
@@ -615,11 +771,14 @@ let rec unify_document_schema = (config, document) => {
           };
 
         let is_record = has_directive("bsRecord", fg_directives);
+
+        let argumentDefinitions =
+          getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
           Mod_fragment(
             fg_name.item,
-            [],
+            argumentDefinitions,
             true,
             fg,
             make_error(
@@ -634,18 +793,22 @@ let rec unify_document_schema = (config, document) => {
             unify_selection_set(
               error_marker,
               is_record,
+              None,
               config,
               span,
               ty,
               Some(fg_selection_set),
             );
 
+          let argumentDefinitions =
+            getFragmentArgumentDefinitions(fg_directives);
+
           switch (with_decoder) {
-          | Error(err) => Mod_fragment(fg_name.item, [], true, fg, err)
+          | Error(err) => Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
           | Ok(decoder) =>
             Mod_fragment(
               fg_name.item,
-              [],
+              argumentDefinitions,
               error_marker.has_error,
               fg,
               switch (decoder) {
@@ -659,7 +822,5 @@ let rec unify_document_schema = (config, document) => {
       ...unify_document_schema(config, rest),
     ]
   | [] => []
-  | _ =>
-    raise @@ Unimplemented("unification with other than singular queries")
   };
 };

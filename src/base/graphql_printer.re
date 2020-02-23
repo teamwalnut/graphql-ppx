@@ -78,7 +78,11 @@ let is_internal_directive = d =>
   switch (d.item.d_name.item) {
   | "bsVariant"
   | "bsRecord"
-  | "bsDecoder" 
+  | "bsObject"
+  | "ppxDecoder"
+  | "ppxAs"
+  | "argumentDefinitions"
+  | "arguments"
   | "bsField" => true
   | _ => false
   };
@@ -295,11 +299,32 @@ let find_fragment_refs = parts =>
      )
   |> StringSet.elements;
 
+let compress_parts = (parts: array(t)) => {
+  parts
+  |> Array.to_list
+  |> List.fold_left(
+       (acc, curr) => {
+         switch (acc, curr) {
+         | ([String(s1), ...rest], String(s2)) => [
+             String(s1 ++ s2),
+             ...rest,
+           ]
+         | (acc, Empty) => acc
+         | (acc, curr) => [curr, ...acc]
+         }
+       },
+       [],
+     )
+  |> List.rev
+  |> Array.of_list;
+};
+
 let print_document = (schema, defs) => {
   let parts = defs |> List.map(print_definition(schema)) |> Array.concat;
   let fragment_refs = find_fragment_refs(parts);
   Array.concat([
     parts,
     fragment_refs |> Array.of_list |> Array.map(ref => FragmentQueryRef(ref)),
-  ]);
+  ])
+  |> compress_parts;
 };

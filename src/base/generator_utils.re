@@ -21,6 +21,10 @@ type output_config = {
   delimiter: option(string),
   schema: Schema.schema,
   full_document: Graphql_ast.document,
+  records: bool,
+  inline: bool,
+  legacy: bool,
+  definition: bool,
 };
 
 let filter_map = (f, l) => {
@@ -32,5 +36,6 @@ let filter_map = (f, l) => {
       | None => loop(acc, tail)
       | Some(v) => loop([v, ...acc], tail)
       };
+
   loop([], l);
 };

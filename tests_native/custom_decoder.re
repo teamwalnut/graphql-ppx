@@ -1,9 +1,19 @@
+module IntOfString = {
+  let parse = int_of_string;
+  type t = int;
+};
+
+module StringOfInt = {
+  let parse = string_of_int;
+  type t = string;
+};
+
 module My_query = [%graphql
   {|
   {
     variousScalars {
-      string @bsDecoder(fn: "int_of_string")
-      int @bsDecoder(fn: "string_of_int")
+      string @ppxDecoder(module: "IntOfString")
+      int @ppxDecoder(module: "StringOfInt")
     }
   }
 |}

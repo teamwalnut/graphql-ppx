@@ -40,6 +40,10 @@ let fmt_lex_err = err =>
     }
   );
 
+let global_records = () => Ppx_config.records();
+let global_definition = () => Ppx_config.definition();
+let legacy = () => Ppx_config.legacy();
+
 let fmt_parse_err = err =>
   Graphql_parser.(
     switch (err) {
@@ -57,10 +61,21 @@ let make_error_expr = (loc, message) => {
   );
 };
 
-let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
+let rewrite_query =
+    (
+      ~schema=?,
+      ~records=?,
+      ~inline=?,
+      ~definition=?,
+      ~loc,
+      ~delim,
+      ~query,
+      ~module_definition,
+      (),
+    ) => {
   open Ast_408;
   open Ast_helper;
-  open Parsetree;
+
   let lexer = Graphql_lexer.make(query);
   let delimLength =
     switch (delim) {
@@ -94,24 +109,29 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         Generator_utils.map_loc: add_loc(delimLength, loc),
         delimiter: delim,
         full_document: document,
+        records: records |> Option.get_or_else(global_records()),
+        inline: inline |> Option.get_or_else(false),
+        definition: definition |> Option.get_or_else(global_definition()),
+        legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
-        Mod.mk(
-          Pmod_structure(
-            errs
-            |> List.map(((loc, msg)) => {
-                 let loc = conv_loc(loc);
-                 %stri
-                 [%e make_error_expr(loc, msg)];
-               }),
-          ),
-        )
+        let errs =
+          errs
+          |> List.map(((loc, msg)) => {
+               let loc = conv_loc(loc);
+               %stri
+               [%e make_error_expr(loc, msg)];
+             });
+        [errs];
       | None =>
         Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(config)
+        |> Output_bucklescript_module.generate_modules(
+             config,
+             module_definition,
+           )
       };
     };
   };
@@ -149,6 +169,54 @@ let extract_schema_from_config = config_fields => {
   };
 };
 
+let extract_bool_from_config = (name, config_fields) => {
+  open Ast_408;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_field_value =
+    try(
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident(matched_name), _},
+                {
+                  pexp_desc:
+                    Pexp_construct({txt: Longident.Lident(_value)}, _),
+                  _,
+                },
+              )
+                when matched_name == name =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_field_value) {
+  | Some((
+      _,
+      {pexp_desc: Pexp_construct({txt: Longident.Lident(value)}, _), _},
+    )) =>
+    switch (value) {
+    | "true" => Some(true)
+    | "false" => Some(false)
+    | _ => None
+    }
+  | _ => None
+  };
+};
+
+let extract_records_from_config = extract_bool_from_config("records");
+let extract_inline_from_config = extract_bool_from_config("inline");
+let extract_definition_from_config = extract_bool_from_config("definition");
+
 // Default configuration
 let () =
   Ppx_config.(
@@ -168,7 +236,9 @@ let () =
         let loc = conv_loc(loc);
         raise(Location.Error(Location.error(~loc, message)));
       },
-      lean_parse: false,
+      records: false,
+      legacy: false,
+      definition: true,
     })
   );
 
@@ -205,13 +275,26 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                rewrite_query(
-                  ~schema=?extract_schema_from_config(fields),
-                  ~loc=conv_loc_from_ast(loc),
-                  ~delim,
-                  ~query,
-                  (),
+                Ast_helper.(
+                  Mod.mk(
+                    Pmod_structure(
+                      List.concat(
+                        rewrite_query(
+                          ~schema=?extract_schema_from_config(fields),
+                          ~records=?extract_records_from_config(fields),
+                          ~inline=?extract_inline_from_config(fields),
+                          ~definition=?extract_definition_from_config(fields),
+                          ~loc=conv_loc_from_ast(loc),
+                          ~delim,
+                          ~query,
+                          ~module_definition=true,
+                          (),
+                        ),
+                      ),
+                    ),
+                  )
                 )
+
               | PStr([
                   {
                     pstr_desc:
@@ -227,11 +310,20 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                rewrite_query(
-                  ~loc=conv_loc_from_ast(loc),
-                  ~delim,
-                  ~query,
-                  (),
+                Ast_helper.(
+                  Mod.mk(
+                    Pmod_structure(
+                      List.concat(
+                        rewrite_query(
+                          ~loc=conv_loc_from_ast(loc),
+                          ~delim,
+                          ~query,
+                          ~module_definition=true,
+                          (),
+                        ),
+                      ),
+                    ),
+                  )
                 )
               | _ =>
                 raise(
@@ -245,6 +337,129 @@ let mapper = (_config, _cookies) => {
               }
             | other => default_mapper.module_expr(mapper, other)
             },
+          structure: (mapper, struc) => {
+            struc
+            |> List.fold_left(
+                 acc =>
+                   fun
+                   | {
+                       pstr_desc:
+                         Pstr_eval(
+                           {
+                             pexp_desc:
+                               Pexp_extension(({txt: "graphql", loc}, pstr)),
+                           },
+                           _,
+                         ),
+                     }
+                   | {
+                       pstr_desc:
+                         Pstr_value(
+                           _,
+                           [
+                             {
+                               pvb_pat: {ppat_desc: _},
+                               pvb_expr: {
+                                 pexp_desc:
+                                   Pexp_extension((
+                                     {txt: "graphql", loc},
+                                     pstr,
+                                   )),
+                               },
+                             },
+                           ],
+                         ),
+                     } =>
+                     switch (pstr) {
+                     | PStr([
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {
+                                 pexp_loc: loc,
+                                 pexp_desc:
+                                   Pexp_constant(
+                                     Pconst_string(query, delim),
+                                   ),
+                                 _,
+                               },
+                               _,
+                             ),
+                           _,
+                         },
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {pexp_desc: Pexp_record(fields, None), _},
+                               _,
+                             ),
+                           _,
+                         },
+                       ]) =>
+                       List.append(
+                         acc,
+                         List.concat(
+                           rewrite_query(
+                             ~schema=?extract_schema_from_config(fields),
+                             ~records=?extract_records_from_config(fields),
+                             ~inline=?extract_inline_from_config(fields),
+                             ~definition=?
+                               extract_definition_from_config(fields),
+                             ~loc=conv_loc_from_ast(loc),
+                             ~delim,
+                             ~query,
+                             ~module_definition=false,
+                             (),
+                           ),
+                         ),
+                       )
+                     | PStr([
+                         {
+                           pstr_desc:
+                             Pstr_eval(
+                               {
+                                 pexp_loc: loc,
+                                 pexp_desc:
+                                   Pexp_constant(
+                                     Pconst_string(query, delim),
+                                   ),
+                                 _,
+                               },
+                               _,
+                             ),
+                           _,
+                         },
+                       ]) =>
+                       List.append(
+                         acc,
+                         List.concat(
+                           rewrite_query(
+                             ~loc=conv_loc_from_ast(loc),
+                             ~delim,
+                             ~query,
+                             ~module_definition=false,
+                             (),
+                           ),
+                         ),
+                       )
+                     | _ =>
+                       raise(
+                         Location.Error(
+                           Location.error(
+                             ~loc,
+                             "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                           ),
+                         ),
+                       )
+                     }
+                   | other =>
+                     List.append(
+                       acc,
+                       [default_mapper.structure_item(mapper, other)],
+                     ),
+                 [],
+               );
+          },
         }
       )
     )
@@ -302,12 +517,26 @@ let args = [
     "Verbose error handling. If not defined NODE_ENV will be used",
   ),
   (
-    "-lean-parse",
+    "-records",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: true}),
+    ),
+    "Compile to records instead of objects (experimental)",
+  ),
+  (
+    "-legacy",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: false}),
+    ),
+    "Legacy mode (make and makeWithVariables)",
+  ),
+  (
+    "-no-definition",
     Arg.Unit(
       () =>
-        Ppx_config.update_config(current => {...current, lean_parse: true}),
+        Ppx_config.update_config(current => {...current, definition: false}),
     ),
-    "A leaner parse function (experimental)",
+    "Legacy mode (make and makeWithVariables)",
   ),
 ];
 

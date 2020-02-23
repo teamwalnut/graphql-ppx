@@ -1,0 +1,71 @@
+[@@@ocaml.ppx.context { cookies = [] }]
+type scalars = {
+  string: string ;
+  int: int }
+type dog = {
+  name: string ;
+  barkVolume: float }
+type oneFieldQuery = {
+  nullableString: string option }
+module MyQuery =
+  struct
+    let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n"
+    type raw_t
+    type t = {
+      variousScalars: t_variousScalars }
+    and t_variousScalars = {
+      string: string ;
+      int: int }
+    let parse =
+      (fun value ->
+         ({
+            variousScalars =
+              (let value =
+                 Js.Dict.unsafeGet (Obj.magic value) "variousScalars" in
+               ({
+                  string =
+                    (let value = Js.Dict.unsafeGet (Obj.magic value) "string" in
+                     (Obj.magic value : string));
+                  int =
+                    (let value = Js.Dict.unsafeGet (Obj.magic value) "int" in
+                     (Obj.magic value : int))
+                } : t_variousScalars))
+          } : t) : Js.Json.t -> t)
+    let makeVar ~f  () = f Js.Json.null
+    let definition = (parse, query, makeVar)
+  end
+module OneFieldQuery =
+  struct
+    let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n"
+    type raw_t
+    type t = {
+      variousScalars: t_variousScalars }
+    and t_variousScalars = {
+      nullableString: string option }
+    let parse =
+      (fun value ->
+         ({
+            variousScalars =
+              (let value =
+                 Js.Dict.unsafeGet (Obj.magic value) "variousScalars" in
+               ({
+                  nullableString =
+                    (let value =
+                       Js.Dict.unsafeGet (Obj.magic value) "nullableString" in
+                     match Js.toOption (Obj.magic value : 'a Js.Nullable.t)
+                     with
+                     | Some _ -> ((Some ((Obj.magic value : string)))
+                         [@explicit_arity ])
+                     | None -> None)
+                } : t_variousScalars))
+          } : t) : Js.Json.t -> t)
+    let makeVar ~f  () = f Js.Json.null
+    let definition = (parse, query, makeVar)
+  end
+module ExternalFragmentQuery =
+  struct
+    module Fragment =
+      struct
+        let query =
+          "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n"
+        

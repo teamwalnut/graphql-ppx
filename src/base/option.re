@@ -15,7 +15,7 @@ let unsafe_unwrap =
   | None => raise(Option_unwrap_error)
   | Some(v) => v;
 
-let get_or_else = default => 
+let get_or_else = default =>
   fun
   | None => default
   | Some(v) => v;

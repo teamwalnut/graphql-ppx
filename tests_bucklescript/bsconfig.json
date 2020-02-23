@@ -1,0 +1,24 @@
+{
+  "name": "tests_bucklescript",
+  "sources": ["__tests__", "operations"],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "ppx-flags": [
+    [
+      "../_build/default/src/bucklescript_bin/bin.exe",
+      "-apollo-mode",
+      "-records",
+      "-schema ../graphql_schema.json"
+    ]
+  ],
+  "bs-dependencies": ["@glennsl/bs-jest"],
+  "refmt": 3,
+  "bsc-flags": ["-bs-super-errors"],
+  "warnings": {
+    "number": "+A-48-30-42-40",
+    "error": "+A-3-32-44"
+  }
+}

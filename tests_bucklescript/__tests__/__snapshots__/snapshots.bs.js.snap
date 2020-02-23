@@ -1,0 +1,7004 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Objects (legacy) argNamedQuery.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"argNamedQuery\\": int};
+  type t_variables = {. \\"query\\": string};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"argNamedQuery\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"argNamedQuery\\");
+
+          (Obj.magic(value): int);
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"query\\", (a => Some(Js.Json.string(a)))(inp##query))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~query, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"query\\": query,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) comment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"nonrecursiveInput\\": string};
+  type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+  and t_variables_NonrecursiveInput = {
+    .
+    \\"field\\": option(string),
+    \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"nonrecursiveInput\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nonrecursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"field\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##field,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectNonrecursiveInput =
+      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+
+    \\"field\\": field,
+
+    \\"enum\\": enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) customDecoder.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module StringOfInt = {
+  let parse = string_of_int;
+  type t = string;
+};
+module IntOfString = {
+  let parse = int_of_string;
+  type t = int;
+};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"variousScalars\\": t_variousScalars}
+  and t_variousScalars = {
+    .
+    \\"string\\": IntOfString.t,
+    \\"int\\": StringOfInt.t,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"variousScalars\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"string\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+              IntOfString.parse(Obj.magic(value): string);
+            },
+
+            \\"int\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+              StringOfInt.parse(Obj.magic(value): int);
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) customScalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"customScalarField\\": t_customScalarField}
+  and t_customScalarField = {
+    .
+    \\"nullable\\": option(Js.Json.t),
+    \\"nonNullable\\": Js.Json.t,
+  };
+  type t_variables = {
+    .
+    \\"opt\\": option(Js.Json.t),
+    \\"req\\": Js.Json.t,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"customScalarField\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"customScalarField\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullable\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"nullable\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(value)
+              | None => None
+              };
+            },
+
+            \\"nonNullable\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"nonNullable\\");
+              value;
+            },
+          };
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"opt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(a))(b)
+              }
+          )(
+            inp##opt,
+          ),
+        ),
+        (\\"req\\", (a => Some(a))(inp##req)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~opt=?, ~req, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"opt\\": opt,
+
+          \\"req\\": req,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) enumInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"enumInput\\": string};
+  type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"enumInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"enumInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (
+            a =>
+              Some(
+                switch (a) {
+                | \`FIRST => Js.Json.string(\\"FIRST\\")
+                | \`SECOND => Js.Json.string(\\"SECOND\\")
+                | \`THIRD => Js.Json.string(\\"THIRD\\")
+                },
+              )
+          )(
+            inp##arg,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) fragmentDefinition.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module Fragments = {
+  module ListFragment = {
+    let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+    type t = {
+      .
+      \\"nullableOfNullable\\": option(array(option(string))),
+      \\"nullableOfNonNullable\\": option(array(string)),
+    };
+    type raw_t;
+    type t_Lists = t;
+
+    let parse = (value: Js.Json.t) => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"nullableOfNullable\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              Obj.magic(value)
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                   | Some(_) => Some(Obj.magic(value): string)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        },
+
+        \\"nullableOfNonNullable\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNonNullable\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              Obj.magic(value)
+              |> Js.Array.map((value) => (Obj.magic(value): string)),
+            )
+          | None => None
+          };
+        },
+      };
+    };
+    let name = \\"ListFragment\\";
+  };
+  module Another = {
+    let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+    type t = {. \\"nullableOfNonNullable\\": option(array(string))};
+    type raw_t;
+    type t_Lists = t;
+
+    let parse = (value: Js.Json.t) => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"nullableOfNonNullable\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNonNullable\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              Obj.magic(value)
+              |> Js.Array.map((value) => (Obj.magic(value): string)),
+            )
+          | None => None
+          };
+        },
+      };
+    };
+    let name = \\"Another\\";
+  };
+};
+
+module MyQuery = {
+  let query =
+    (
+      (
+        (
+          (
+            (
+              (\\"query   {\\\\nl1: lists  {\\\\n...\\" ++ Fragments.ListFragment.name)
+              ++ \\"   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...\\"
+            )
+            ++ Fragments.ListFragment.name
+          )
+          ++ \\"   \\\\n...\\"
+        )
+        ++ Fragments.ListFragment.name
+      )
+      ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
+    )
+    ++ Fragments.ListFragment.query;
+  type raw_t;
+  type t = {
+    .
+    \\"l1\\": Fragments.ListFragment.t,
+    \\"l2\\": t_l2,
+  }
+  and t_l2 = {
+    .
+    \\"frag1\\": Fragments.ListFragment.t_Lists,
+    \\"frag2\\": Fragments.ListFragment.t_Lists,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"l1\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"l1\\");
+
+          Fragments.ListFragment.parse(value);
+        },
+
+        \\"l2\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"l2\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+            \\"frag1\\": Fragments.ListFragment.parse(value),
+            \\"frag2\\": Fragments.ListFragment.parse(value),
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) interface.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+"
+`;
+
+exports[`Objects (legacy) lists.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"lists\\": t_lists}
+  and t_lists = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"nullableOfNonNullable\\": option(array(string)),
+    \\"nonNullableOfNullable\\": array(option(string)),
+    \\"nonNullableOfNonNullable\\": array(string),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"lists\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"lists\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullableOfNullable\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  Obj.magic(value)
+                  |> Js.Array.map(value =>
+                       switch (
+                         Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                       ) {
+                       | Some(_) => Some(Obj.magic(value): string)
+                       | None => None
+                       }
+                     ),
+                )
+              | None => None
+              };
+            },
+
+            \\"nullableOfNonNullable\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNonNullable\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  Obj.magic(value)
+                  |> Js.Array.map((value) => (Obj.magic(value): string)),
+                )
+              | None => None
+              };
+            },
+
+            \\"nonNullableOfNullable\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nonNullableOfNullable\\");
+
+              Obj.magic(value)
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                   | Some(_) => Some(Obj.magic(value): string)
+                   | None => None
+                   }
+                 );
+            },
+
+            \\"nonNullableOfNonNullable\\": {
+              let value =
+                Js.Dict.unsafeGet(
+                  Obj.magic(value),
+                  \\"nonNullableOfNonNullable\\",
+                );
+
+              Obj.magic(value)
+              |> Js.Array.map((value) => (Obj.magic(value): string));
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) listsArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"listsInput\\": string};
+  type t_variables = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"nullableOfNonNullable\\": option(array(string)),
+    \\"nonNullableOfNullable\\": array(option(string)),
+    \\"nonNullableOfNonNullable\\": array(string),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"listsInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"listsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableOfNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch (
+                             (
+                               a =>
+                                 switch (a) {
+                                 | None => None
+                                 | Some(b) =>
+                                   (a => Some(Js.Json.string(a)))(b)
+                                 }
+                             )(
+                               b,
+                             )
+                           ) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##nullableOfNullable,
+          ),
+        ),
+        (
+          \\"nullableOfNonNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch ((a => Some(Js.Json.string(a)))(b)) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##nullableOfNonNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch (
+                       (
+                         a =>
+                           switch (a) {
+                           | None => None
+                           | Some(b) => (a => Some(Js.Json.string(a)))(b)
+                           }
+                       )(
+                         b,
+                       )
+                     ) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp##nonNullableOfNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNonNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch ((a => Some(Js.Json.string(a)))(b)) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp##nonNullableOfNonNullable,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar =
+      (
+        ~f,
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      ) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"nullableOfNullable\\": nullableOfNullable,
+
+          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+
+          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+
+          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) listsInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"listsInput\\": string};
+  type t_variables = {. \\"arg\\": t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"nullableOfNonNullable\\": option(array(string)),
+    \\"nonNullableOfNullable\\": array(option(string)),
+    \\"nonNullableOfNonNullable\\": array(string),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"listsInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"listsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (\\"arg\\", (a => Some(serializeInputObjectListsInput(a)))(inp##arg)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectListsInput: t_variables_ListsInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableOfNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch (
+                             (
+                               a =>
+                                 switch (a) {
+                                 | None => None
+                                 | Some(b) =>
+                                   (a => Some(Js.Json.string(a)))(b)
+                                 }
+                             )(
+                               b,
+                             )
+                           ) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##nullableOfNullable,
+          ),
+        ),
+        (
+          \\"nullableOfNonNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch ((a => Some(Js.Json.string(a)))(b)) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##nullableOfNonNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch (
+                       (
+                         a =>
+                           switch (a) {
+                           | None => None
+                           | Some(b) => (a => Some(Js.Json.string(a)))(b)
+                           }
+                       )(
+                         b,
+                       )
+                     ) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp##nonNullableOfNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNonNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch ((a => Some(Js.Json.string(a)))(b)) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp##nonNullableOfNonNullable,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectListsInput =
+      (
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      )
+      : t_variables_ListsInput => {
+
+    \\"nullableOfNullable\\": nullableOfNullable,
+
+    \\"nullableOfNonNullable\\": nullableOfNonNullable,
+
+    \\"nonNullableOfNullable\\": nonNullableOfNullable,
+
+    \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) mutation.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"mutationWithError\\": t_mutationWithError}
+  and t_mutationWithError = {
+    .
+    \\"value\\": option(t_mutationWithError_value),
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  }
+  and t_mutationWithError_errors = {
+    .
+    \\"field\\": [ | \`FIRST | \`SECOND | \`THIRD],
+    \\"message\\": string,
+  }
+  and t_mutationWithError_value = {. \\"stringField\\": string};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"mutationWithError\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"mutationWithError\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"value\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"value\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  {
+                    [@metaloc loc]
+                    let value =
+                      value |> Js.Json.decodeObject |> Js.Option.getExn;
+                    {
+
+                      \\"stringField\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"stringField\\");
+
+                        (Obj.magic(value): string);
+                      },
+                    };
+                  },
+                )
+              | None => None
+              };
+            },
+
+            \\"errors\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"errors\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  Obj.magic(value)
+                  |> Js.Array.map(value =>
+                       [@metaloc loc]
+                       let value =
+                         value |> Js.Json.decodeObject |> Js.Option.getExn;
+                       {
+
+                         \\"field\\": {
+                           let value =
+                             Js.Dict.unsafeGet(Obj.magic(value), \\"field\\");
+                           (
+                             switch (Obj.magic(value: string)) {
+                             | \\"FIRST\\" => \`FIRST
+                             | \\"SECOND\\" => \`SECOND
+                             | \\"THIRD\\" => \`THIRD
+                             | _ =>
+                               Js.Exn.raiseError(
+                                 \\"graphql_ppx: \\"
+                                 ++ \\"Unknown enum variant for \\"
+                                 ++ \\"SampleField\\"
+                                 ++ \\": \\"
+                                 ++ value,
+                               )
+                             }: [
+                               | \`FIRST
+                               | \`SECOND
+                               | \`THIRD
+                             ]
+                           );
+                         },
+
+                         \\"message\\": {
+                           let value =
+                             Js.Dict.unsafeGet(Obj.magic(value), \\"message\\");
+
+                           (Obj.magic(value): string);
+                         },
+                       };
+                     ),
+                )
+              | None => None
+              };
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) mutationWithArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"optionalInputArgs\\": string};
+  type t_variables = {. \\"required\\": string};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"optionalInputArgs\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"optionalInputArgs\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"required\\", (a => Some(Js.Json.string(a)))(inp##required))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~required, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"required\\": required,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) nested.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+type record = {
+  f1: string,
+  f2: string,
+};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    .
+    \\"first\\": t_first,
+    \\"second\\": t_second,
+  }
+  and t_second = {. \\"inner\\": option(t_second_inner)}
+  and t_second_inner = {. \\"inner\\": option(t_second_inner_inner)}
+  and t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  }
+  and t_first = {. \\"inner\\": option(t_first_inner)}
+  and t_first_inner = {. \\"inner\\": option(t_first_inner_inner)}
+  and t_first_inner_inner = {. \\"field\\": string};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"first\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"first\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"inner\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  {
+                    [@metaloc loc]
+                    let value =
+                      value |> Js.Json.decodeObject |> Js.Option.getExn;
+                    {
+
+                      \\"inner\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+                              [@metaloc loc]
+                              let value =
+                                value
+                                |> Js.Json.decodeObject
+                                |> Js.Option.getExn;
+                              {
+
+                                \\"field\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"field\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+                              };
+                            },
+                          )
+                        | None => None
+                        };
+                      },
+                    };
+                  },
+                )
+              | None => None
+              };
+            },
+          };
+        },
+
+        \\"second\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"second\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"inner\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  {
+                    [@metaloc loc]
+                    let value =
+                      value |> Js.Json.decodeObject |> Js.Option.getExn;
+                    {
+
+                      \\"inner\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+                              [@metaloc loc]
+                              let value =
+                                value
+                                |> Js.Json.decodeObject
+                                |> Js.Option.getExn;
+                              {
+
+                                \\"f1\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"f1\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+
+                                \\"f2\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"f2\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+                              };
+                            },
+                          )
+                        | None => None
+                        };
+                      },
+                    };
+                  },
+                )
+              | None => None
+              };
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) nonrecursiveInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"nonrecursiveInput\\": string};
+  type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+  and t_variables_NonrecursiveInput = {
+    .
+    \\"field\\": option(string),
+    \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"nonrecursiveInput\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nonrecursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"field\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##field,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectNonrecursiveInput =
+      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+
+    \\"field\\": field,
+
+    \\"enum\\": enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) pokedexApolloMode.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"pokemon\\": option(t_pokemon)}
+  and t_pokemon = {
+    .
+    \\"id\\": string,
+    \\"name\\": option(string),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"pokemon\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"pokemon\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              {
+                [@metaloc loc]
+                let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+                {
+
+                  \\"id\\": {
+                    let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+                    (Obj.magic(value): string);
+                  },
+
+                  \\"name\\": {
+                    let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                    switch (
+                      Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                    ) {
+                    | Some(_) => Some(Obj.magic(value): string)
+                    | None => None
+                    };
+                  },
+                };
+              },
+            )
+          | None => None
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) pokedexScalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"pokemon\\": option(t_pokemon)}
+  and t_pokemon = {
+    .
+    \\"id\\": string,
+    \\"name\\": option(string),
+  };
+  type t_variables = {
+    .
+    \\"id\\": option(string),
+    \\"name\\": option(string),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"pokemon\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"pokemon\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              {
+                [@metaloc loc]
+                let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+                {
+
+                  \\"id\\": {
+                    let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+                    (Obj.magic(value): string);
+                  },
+
+                  \\"name\\": {
+                    let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                    switch (
+                      Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                    ) {
+                    | Some(_) => Some(Obj.magic(value): string)
+                    | None => None
+                    };
+                  },
+                };
+              },
+            )
+          | None => None
+          };
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"id\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##id,
+          ),
+        ),
+        (
+          \\"name\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##name,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~id=?, ~name=?, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"id\\": id,
+
+          \\"name\\": name,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) record.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+type scalars = {
+  string,
+  int,
+};
+
+type dog = {
+  name: string,
+  barkVolume: float,
+};
+
+type oneFieldQuery = {nullableString: option(string)};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"variousScalars\\": scalars};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"variousScalars\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"string\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+              (Obj.magic(value): string);
+            },
+
+            \\"int\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+              (Obj.magic(value): int);
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module OneFieldQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"variousScalars\\": t_variousScalars}
+  and t_variousScalars = {nullableString: option(string)};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"variousScalars\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullableString\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module ExternalFragmentQuery = {
+  module Fragment = {
+    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+    type t = {
+      string,
+      int,
+    };
+    type raw_t;
+    type t_VariousScalars = t;
+
+    let parse = (value: Js.Json.t) => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"string\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+          (Obj.magic(value): string);
+        },
+
+        \\"int\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+          (Obj.magic(value): int);
+        },
+      };
+    };
+    let name = \\"Fragment\\";
+  };
+  module Untitled1 = {
+    let query =
+      (
+        (\\"query   {\\\\nvariousScalars  {\\\\n...\\" ++ Fragment.name)
+        ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
+      )
+      ++ Fragment.query;
+    type raw_t;
+    type t = {. \\"variousScalars\\": Fragment.t};
+    let parse: Js.Json.t => t =
+      value => {
+        [@metaloc loc]
+        let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+        {
+
+          \\"variousScalars\\": {
+            let value =
+              Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+
+            Fragment.parse(value);
+          },
+        };
+      };
+    let makeVar = (~f, ()) => f(Js.Json.null);
+    let definition = (parse, query, makeVar);
+  };
+};
+
+module InlineFragmentQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  and t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"dogOrHuman\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+
+                          \\"barkVolume\\": {
+                            let value =
+                              Js.Dict.unsafeGet(
+                                Obj.magic(value),
+                                \\"barkVolume\\",
+                              );
+
+                            (Obj.magic(value): float);
+                          },
+                        };
+                      },
+                    )
+                  | _ => \`Nonexhaustive
+                  }: [
+                    | \`Nonexhaustive
+                    | \`Dog(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module UnionExternalFragmentQuery = {
+  module DogFragment = {
+    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+    type t = {
+      name: string,
+      barkVolume: float,
+    };
+    type raw_t;
+    type t_Dog = t;
+
+    let parse = (value: Js.Json.t) => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"name\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+          (Obj.magic(value): string);
+        },
+
+        \\"barkVolume\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"barkVolume\\");
+
+          (Obj.magic(value): float);
+        },
+      };
+    };
+    let name = \\"DogFragment\\";
+  };
+  module Untitled1 = {
+    let query =
+      (
+        (
+          \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n...\\"
+          ++ DogFragment.name
+        )
+        ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\"
+      )
+      ++ DogFragment.query;
+    type raw_t;
+    type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(DogFragment.t)]};
+    let parse: Js.Json.t => t =
+      value => {
+        [@metaloc loc]
+        let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+        {
+
+          \\"dogOrHuman\\": {
+            let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+            switch (Js.Json.decodeObject(value)) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Expected union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" to be an object, got \\"
+                ++ Js.Json.stringify(value),
+              )
+
+            | Some(typename_obj) =>
+              switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" is missing the __typename field\\",
+                )
+
+              | Some(typename) =>
+                switch (Js.Json.decodeString(typename)) {
+
+                | None =>
+                  Js.Exn.raiseError(
+                    \\"graphql_ppx: \\"
+                    ++ \\"Union \\"
+                    ++ \\"DogOrHuman\\"
+                    ++ \\" has a __typename field that is not a string\\",
+                  )
+
+                | Some(typename) => (
+                    switch (typename) {
+                    | \\"Dog\\" => \`Dog(DogFragment.parse(value))
+                    | _ => \`Nonexhaustive
+                    }: [
+                      | \`Nonexhaustive
+                      | \`Dog(_)
+                    ]
+                  )
+                }
+              }
+            };
+          },
+        };
+      };
+    let makeVar = (~f, ()) => f(Js.Json.null);
+    let definition = (parse, query, makeVar);
+  };
+};
+"
+`;
+
+exports[`Objects (legacy) recursiveInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"recursiveInput\\": string};
+  type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
+  and t_variables_RecursiveInput = {
+    .
+    \\"otherField\\": option(string),
+    \\"inner\\": option(t_variables_RecursiveInput),
+    \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"recursiveInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"recursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectRecursiveInput(a)))(inp##arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectRecursiveInput:
+    t_variables_RecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"otherField\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##otherField,
+          ),
+        ),
+        (
+          \\"inner\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (a => Some(serializeInputObjectRecursiveInput(a)))(b)
+              }
+          )(
+            inp##inner,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp##enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectRecursiveInput =
+      (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
+
+    \\"otherField\\": otherField,
+
+    \\"inner\\": inner,
+
+    \\"enum\\": enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) scalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"variousScalars\\": t_variousScalars}
+  and t_variousScalars = {
+    .
+    \\"nullableString\\": option(string),
+    \\"string\\": string,
+    \\"nullableInt\\": option(int),
+    \\"int\\": int,
+    \\"nullableFloat\\": option(float),
+    \\"float\\": float,
+    \\"nullableBoolean\\": option(bool),
+    \\"boolean\\": bool,
+    \\"nullableID\\": option(string),
+    \\"id\\": string,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"variousScalars\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullableString\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+
+            \\"string\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+              (Obj.magic(value): string);
+            },
+
+            \\"nullableInt\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"nullableInt\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): int)
+              | None => None
+              };
+            },
+
+            \\"int\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+              (Obj.magic(value): int);
+            },
+
+            \\"nullableFloat\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableFloat\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): float)
+              | None => None
+              };
+            },
+
+            \\"float\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"float\\");
+
+              (Obj.magic(value): float);
+            },
+
+            \\"nullableBoolean\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableBoolean\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): bool)
+              | None => None
+              };
+            },
+
+            \\"boolean\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"boolean\\");
+
+              (Obj.magic(value): bool);
+            },
+
+            \\"nullableID\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"nullableID\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+
+            \\"id\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+              (Obj.magic(value): string);
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) scalarsArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"scalarsInput\\": string};
+  type t_variables = {
+    .
+    \\"nullableString\\": option(string),
+    \\"string\\": string,
+    \\"nullableInt\\": option(int),
+    \\"int\\": int,
+    \\"nullableFloat\\": option(float),
+    \\"float\\": float,
+    \\"nullableBoolean\\": option(bool),
+    \\"boolean\\": bool,
+    \\"nullableID\\": option(string),
+    \\"id\\": string,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"scalarsInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"scalarsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableString\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##nullableString,
+          ),
+        ),
+        (\\"string\\", (a => Some(Js.Json.string(a)))(inp##string)),
+        (
+          \\"nullableInt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(float_of_int(a))))(b)
+              }
+          )(
+            inp##nullableInt,
+          ),
+        ),
+        (\\"int\\", (a => Some(Js.Json.number(float_of_int(a))))(inp##int)),
+        (
+          \\"nullableFloat\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(a)))(b)
+              }
+          )(
+            inp##nullableFloat,
+          ),
+        ),
+        (\\"float\\", (a => Some(Js.Json.number(a)))(inp##float)),
+        (
+          \\"nullableBoolean\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.boolean(a)))(b)
+              }
+          )(
+            inp##nullableBoolean,
+          ),
+        ),
+        (\\"boolean\\", (a => Some(Js.Json.boolean(a)))(inp##boolean)),
+        (
+          \\"nullableID\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##nullableID,
+          ),
+        ),
+        (\\"id\\", (a => Some(Js.Json.string(a)))(inp##id)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar =
+      (
+        ~f,
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      ) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"nullableString\\": nullableString,
+
+          \\"string\\": string,
+
+          \\"nullableInt\\": nullableInt,
+
+          \\"int\\": int,
+
+          \\"nullableFloat\\": nullableFloat,
+
+          \\"float\\": float,
+
+          \\"nullableBoolean\\": nullableBoolean,
+
+          \\"boolean\\": boolean,
+
+          \\"nullableID\\": nullableID,
+
+          \\"id\\": id,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) scalarsInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"scalarsInput\\": string};
+  type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
+  and t_variables_VariousScalarsInput = {
+    .
+    \\"nullableString\\": option(string),
+    \\"string\\": string,
+    \\"nullableInt\\": option(int),
+    \\"int\\": int,
+    \\"nullableFloat\\": option(float),
+    \\"float\\": float,
+    \\"nullableBoolean\\": option(bool),
+    \\"boolean\\": bool,
+    \\"nullableID\\": option(string),
+    \\"id\\": string,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"scalarsInput\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"scalarsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      };
+    };
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp##arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectVariousScalarsInput:
+    t_variables_VariousScalarsInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableString\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##nullableString,
+          ),
+        ),
+        (\\"string\\", (a => Some(Js.Json.string(a)))(inp##string)),
+        (
+          \\"nullableInt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(float_of_int(a))))(b)
+              }
+          )(
+            inp##nullableInt,
+          ),
+        ),
+        (\\"int\\", (a => Some(Js.Json.number(float_of_int(a))))(inp##int)),
+        (
+          \\"nullableFloat\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(a)))(b)
+              }
+          )(
+            inp##nullableFloat,
+          ),
+        ),
+        (\\"float\\", (a => Some(Js.Json.number(a)))(inp##float)),
+        (
+          \\"nullableBoolean\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.boolean(a)))(b)
+              }
+          )(
+            inp##nullableBoolean,
+          ),
+        ),
+        (\\"boolean\\", (a => Some(Js.Json.boolean(a)))(inp##boolean)),
+        (
+          \\"nullableID\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp##nullableID,
+          ),
+        ),
+        (\\"id\\", (a => Some(Js.Json.string(a)))(inp##id)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"arg\\": arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectVariousScalarsInput =
+      (
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      )
+      : t_variables_VariousScalarsInput => {
+
+    \\"nullableString\\": nullableString,
+
+    \\"string\\": string,
+
+    \\"nullableInt\\": nullableInt,
+
+    \\"int\\": int,
+
+    \\"nullableFloat\\": nullableFloat,
+
+    \\"float\\": float,
+
+    \\"nullableBoolean\\": nullableBoolean,
+
+    \\"boolean\\": boolean,
+
+    \\"nullableID\\": nullableID,
+
+    \\"id\\": id,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) skipDirectives.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    .
+    \\"v1\\": t_v1,
+    \\"v2\\": t_v2,
+  }
+  and t_v2 = {
+    .
+    \\"nullableString\\": option(string),
+    \\"string\\": option(string),
+  }
+  and t_v1 = {
+    .
+    \\"nullableString\\": option(string),
+    \\"string\\": option(string),
+  };
+  type t_variables = {. \\"var\\": bool};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"v1\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"v1\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullableString\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+
+            \\"string\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+          };
+        },
+
+        \\"v2\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"v2\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"nullableString\\": {
+              let value =
+                Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+
+            \\"string\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) => Some(Obj.magic(value): string)
+              | None => None
+              };
+            },
+          };
+        },
+      };
+    };
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"var\\", (a => Some(Js.Json.boolean(a)))(inp##var))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~var, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          \\"var\\": var,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Objects (legacy) subscription.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    .
+    \\"simpleSubscription\\": [
+      | \`Dog(t_simpleSubscription_Dog)
+      | \`Human(t_simpleSubscription_Human)
+    ],
+  }
+  and t_simpleSubscription_Human = {. \\"name\\": string}
+  and t_simpleSubscription_Dog = {. \\"name\\": string};
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"simpleSubscription\\": {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"simpleSubscription\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+                        };
+                      },
+                    )
+                  | \\"Human\\" =>
+                    \`Human(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+                        };
+                      },
+                    )
+                  | typename =>
+                    Js.Exn.raiseError(
+                      \\"graphql_ppx: \\"
+                      ++ \\"Union \\"
+                      ++ \\"DogOrHuman\\"
+                      ++ \\" returned unknown type \\"
+                      ++ typename,
+                    )
+                  }: [
+                    | \`Dog(_)
+                    | \`Human(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) typename.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"first\\": t_first}
+  and t_first = {
+    .
+    \\"__typename\\": string,
+    \\"inner\\": option(t_first_inner),
+  }
+  and t_first_inner = {
+    .
+    \\"__typename\\": string,
+    \\"inner\\": option(t_first_inner_inner),
+  }
+  and t_first_inner_inner = {
+    .
+    \\"__typename\\": string,
+    \\"field\\": string,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"first\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"first\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"__typename\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\");
+
+              (Obj.magic(value): string);
+            },
+
+            \\"inner\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  {
+                    [@metaloc loc]
+                    let value =
+                      value |> Js.Json.decodeObject |> Js.Option.getExn;
+                    {
+
+                      \\"__typename\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\");
+
+                        (Obj.magic(value): string);
+                      },
+
+                      \\"inner\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+                              [@metaloc loc]
+                              let value =
+                                value
+                                |> Js.Json.decodeObject
+                                |> Js.Option.getExn;
+                              {
+
+                                \\"__typename\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"__typename\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+
+                                \\"field\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"field\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+                              };
+                            },
+                          )
+                        | None => None
+                        };
+                      },
+                    };
+                  },
+                )
+              | None => None
+              };
+            },
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) union.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    .
+    \\"dogOrHuman\\": [ | \`Dog(t_dogOrHuman_Dog) | \`Human(t_dogOrHuman_Human)],
+  }
+  and t_dogOrHuman_Human = {. \\"name\\": string}
+  and t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"dogOrHuman\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+
+                          \\"barkVolume\\": {
+                            let value =
+                              Js.Dict.unsafeGet(
+                                Obj.magic(value),
+                                \\"barkVolume\\",
+                              );
+
+                            (Obj.magic(value): float);
+                          },
+                        };
+                      },
+                    )
+                  | \\"Human\\" =>
+                    \`Human(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+                        };
+                      },
+                    )
+                  | typename =>
+                    Js.Exn.raiseError(
+                      \\"graphql_ppx: \\"
+                      ++ \\"Union \\"
+                      ++ \\"DogOrHuman\\"
+                      ++ \\" returned unknown type \\"
+                      ++ typename,
+                    )
+                  }: [
+                    | \`Dog(_)
+                    | \`Human(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Objects (legacy) unionPartial.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  and t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  let parse: Js.Json.t => t =
+    value => {
+      [@metaloc loc]
+      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+      {
+
+        \\"dogOrHuman\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+                        [@metaloc loc]
+                        let value =
+                          value |> Js.Json.decodeObject |> Js.Option.getExn;
+                        {
+
+                          \\"name\\": {
+                            let value =
+                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                            (Obj.magic(value): string);
+                          },
+
+                          \\"barkVolume\\": {
+                            let value =
+                              Js.Dict.unsafeGet(
+                                Obj.magic(value),
+                                \\"barkVolume\\",
+                              );
+
+                            (Obj.magic(value): float);
+                          },
+                        };
+                      },
+                    )
+                  | _ => \`Nonexhaustive
+                  }: [
+                    | \`Nonexhaustive
+                    | \`Dog(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      };
+    };
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records argNamedQuery.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {argNamedQuery: int};
+  type t_variables = {query: string};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        argNamedQuery: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"argNamedQuery\\");
+
+          (Obj.magic(value): int);
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"query\\", (a => Some(Js.Json.string(a)))(inp.query))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~query, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          query: query,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records comment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {nonrecursiveInput: string};
+  type t_variables = {arg: t_variables_NonrecursiveInput}
+  and t_variables_NonrecursiveInput = {
+    field: option(string),
+    enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        nonrecursiveInput: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nonrecursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp.arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"field\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.field,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectNonrecursiveInput =
+      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+
+    field,
+
+    enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records customDecoder.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module StringOfInt = {
+  let parse = string_of_int;
+  type t = string;
+};
+module IntOfString = {
+  let parse = int_of_string;
+  type t = int;
+};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {variousScalars: t_variousScalars}
+  and t_variousScalars = {
+    string: IntOfString.t,
+    int: StringOfInt.t,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          (
+            {
+
+              string: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+                IntOfString.parse(Obj.magic(value): string);
+              },
+
+              int: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+                StringOfInt.parse(Obj.magic(value): int);
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records customScalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {customScalarField: t_customScalarField}
+  and t_customScalarField = {
+    nullable: option(Js.Json.t),
+    nonNullable: Js.Json.t,
+  };
+  type t_variables = {
+    opt: option(Js.Json.t),
+    req: Js.Json.t,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        customScalarField: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"customScalarField\\");
+          (
+            {
+
+              nullable: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"nullable\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(value)
+                | None => None
+                };
+              },
+
+              nonNullable: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nonNullable\\");
+                value;
+              },
+            }: t_customScalarField
+          );
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"opt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(a))(b)
+              }
+          )(
+            inp.opt,
+          ),
+        ),
+        (\\"req\\", (a => Some(a))(inp.req)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~opt=?, ~req, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          opt,
+
+          req,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records enumInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {enumInput: string};
+  type t_variables = {arg: [ | \`FIRST | \`SECOND | \`THIRD]};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        enumInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"enumInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (
+            a =>
+              Some(
+                switch (a) {
+                | \`FIRST => Js.Json.string(\\"FIRST\\")
+                | \`SECOND => Js.Json.string(\\"SECOND\\")
+                | \`THIRD => Js.Json.string(\\"THIRD\\")
+                },
+              )
+          )(
+            inp.arg,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records fragmentDefinition.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module Fragments = {
+  module ListFragment = {
+    let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+    type t = {
+      nullableOfNullable: option(array(option(string))),
+      nullableOfNonNullable: option(array(string)),
+    };
+    type raw_t;
+    type t_Lists = t;
+
+    let parse = (value: Js.Json.t): t => {
+
+      nullableOfNullable: {
+        let value =
+          Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\");
+
+        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+        | Some(_) =>
+          Some(
+            Obj.magic(value)
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                 | Some(_) => Some(Obj.magic(value): string)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+
+      nullableOfNonNullable: {
+        let value =
+          Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNonNullable\\");
+
+        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+        | Some(_) =>
+          Some(
+            Obj.magic(value)
+            |> Js.Array.map((value) => (Obj.magic(value): string)),
+          )
+        | None => None
+        };
+      },
+    };
+    let name = \\"ListFragment\\";
+  };
+  module Another = {
+    let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+    type t = {nullableOfNonNullable: option(array(string))};
+    type raw_t;
+    type t_Lists = t;
+
+    let parse = (value: Js.Json.t): t => {
+
+      nullableOfNonNullable: {
+        let value =
+          Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNonNullable\\");
+
+        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+        | Some(_) =>
+          Some(
+            Obj.magic(value)
+            |> Js.Array.map((value) => (Obj.magic(value): string)),
+          )
+        | None => None
+        };
+      },
+    };
+    let name = \\"Another\\";
+  };
+};
+
+module MyQuery = {
+  let query =
+    (
+      (
+        (
+          (
+            (
+              (\\"query   {\\\\nl1: lists  {\\\\n...\\" ++ Fragments.ListFragment.name)
+              ++ \\"   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...\\"
+            )
+            ++ Fragments.ListFragment.name
+          )
+          ++ \\"   \\\\n...\\"
+        )
+        ++ Fragments.ListFragment.name
+      )
+      ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
+    )
+    ++ Fragments.ListFragment.query;
+  type raw_t;
+  type t = {
+    l1: Fragments.ListFragment.t,
+    l2: t_l2,
+  }
+  and t_l2 = {
+    frag1: Fragments.ListFragment.t_Lists,
+    frag2: Fragments.ListFragment.t_Lists,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        l1: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"l1\\");
+
+          Fragments.ListFragment.parse(value);
+        },
+
+        l2: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"l2\\");
+          (
+            {
+              frag1: Fragments.ListFragment.parse(value),
+              frag2: Fragments.ListFragment.parse(value),
+            }: t_l2
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records interface.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+"
+`;
+
+exports[`Records lists.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {lists: t_lists}
+  and t_lists = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        lists: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"lists\\");
+          (
+            {
+
+              nullableOfNullable: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    Obj.magic(value)
+                    |> Js.Array.map(value =>
+                         switch (
+                           Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                         ) {
+                         | Some(_) => Some(Obj.magic(value): string)
+                         | None => None
+                         }
+                       ),
+                  )
+                | None => None
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value =
+                  Js.Dict.unsafeGet(
+                    Obj.magic(value),
+                    \\"nullableOfNonNullable\\",
+                  );
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    Obj.magic(value)
+                    |> Js.Array.map((value) => (Obj.magic(value): string)),
+                  )
+                | None => None
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value =
+                  Js.Dict.unsafeGet(
+                    Obj.magic(value),
+                    \\"nonNullableOfNullable\\",
+                  );
+
+                Obj.magic(value)
+                |> Js.Array.map(value =>
+                     switch (
+                       Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                     ) {
+                     | Some(_) => Some(Obj.magic(value): string)
+                     | None => None
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value =
+                  Js.Dict.unsafeGet(
+                    Obj.magic(value),
+                    \\"nonNullableOfNonNullable\\",
+                  );
+
+                Obj.magic(value)
+                |> Js.Array.map((value) => (Obj.magic(value): string));
+              },
+            }: t_lists
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records listsArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {listsInput: string};
+  type t_variables = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        listsInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"listsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableOfNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch (
+                             (
+                               a =>
+                                 switch (a) {
+                                 | None => None
+                                 | Some(b) =>
+                                   (a => Some(Js.Json.string(a)))(b)
+                                 }
+                             )(
+                               b,
+                             )
+                           ) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.nullableOfNullable,
+          ),
+        ),
+        (
+          \\"nullableOfNonNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch ((a => Some(Js.Json.string(a)))(b)) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.nullableOfNonNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch (
+                       (
+                         a =>
+                           switch (a) {
+                           | None => None
+                           | Some(b) => (a => Some(Js.Json.string(a)))(b)
+                           }
+                       )(
+                         b,
+                       )
+                     ) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp.nonNullableOfNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNonNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch ((a => Some(Js.Json.string(a)))(b)) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp.nonNullableOfNonNullable,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar =
+      (
+        ~f,
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      ) =>
+    f(
+      serializeVariables(
+        {
+
+          nullableOfNullable,
+
+          nullableOfNonNullable,
+
+          nonNullableOfNullable,
+
+          nonNullableOfNonNullable,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records listsInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {listsInput: string};
+  type t_variables = {arg: t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        listsInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"listsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"arg\\", (a => Some(serializeInputObjectListsInput(a)))(inp.arg))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectListsInput: t_variables_ListsInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableOfNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch (
+                             (
+                               a =>
+                                 switch (a) {
+                                 | None => None
+                                 | Some(b) =>
+                                   (a => Some(Js.Json.string(a)))(b)
+                                 }
+                             )(
+                               b,
+                             )
+                           ) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.nullableOfNullable,
+          ),
+        ),
+        (
+          \\"nullableOfNonNullable\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      a
+                      |> Array.map(b =>
+                           switch ((a => Some(Js.Json.string(a)))(b)) {
+                           | Some(c) => c
+                           | None => Js.Json.null
+                           }
+                         )
+                      |> Js.Json.array,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.nullableOfNonNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch (
+                       (
+                         a =>
+                           switch (a) {
+                           | None => None
+                           | Some(b) => (a => Some(Js.Json.string(a)))(b)
+                           }
+                       )(
+                         b,
+                       )
+                     ) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp.nonNullableOfNullable,
+          ),
+        ),
+        (
+          \\"nonNullableOfNonNullable\\",
+          (
+            a =>
+              Some(
+                a
+                |> Array.map(b =>
+                     switch ((a => Some(Js.Json.string(a)))(b)) {
+                     | Some(c) => c
+                     | None => Js.Json.null
+                     }
+                   )
+                |> Js.Json.array,
+              )
+          )(
+            inp.nonNullableOfNonNullable,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectListsInput =
+      (
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      )
+      : t_variables_ListsInput => {
+
+    nullableOfNullable,
+
+    nullableOfNonNullable,
+
+    nonNullableOfNullable,
+
+    nonNullableOfNonNullable,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records mutation.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {mutationWithError: t_mutationWithError}
+  and t_mutationWithError = {
+    value: option(t_mutationWithError_value),
+    errors: option(array(t_mutationWithError_errors)),
+  }
+  and t_mutationWithError_errors = {
+    field: [ | \`FIRST | \`SECOND | \`THIRD],
+    message: string,
+  }
+  and t_mutationWithError_value = {stringField: string};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        mutationWithError: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"mutationWithError\\");
+          (
+            {
+
+              value: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"value\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    {
+
+                      stringField: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"stringField\\");
+
+                        (Obj.magic(value): string);
+                      },
+                    }: t_mutationWithError_value,
+                  )
+                | None => None
+                };
+              },
+
+              errors: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"errors\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    Obj.magic(value)
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+
+                             field: {
+                               let value =
+                                 Js.Dict.unsafeGet(
+                                   Obj.magic(value),
+                                   \\"field\\",
+                                 );
+                               (
+                                 switch (Obj.magic(value: string)) {
+                                 | \\"FIRST\\" => \`FIRST
+                                 | \\"SECOND\\" => \`SECOND
+                                 | \\"THIRD\\" => \`THIRD
+                                 | _ =>
+                                   Js.Exn.raiseError(
+                                     \\"graphql_ppx: \\"
+                                     ++ \\"Unknown enum variant for \\"
+                                     ++ \\"SampleField\\"
+                                     ++ \\": \\"
+                                     ++ value,
+                                   )
+                                 }: [
+                                   | \`FIRST
+                                   | \`SECOND
+                                   | \`THIRD
+                                 ]
+                               );
+                             },
+
+                             message: {
+                               let value =
+                                 Js.Dict.unsafeGet(
+                                   Obj.magic(value),
+                                   \\"message\\",
+                                 );
+
+                               (Obj.magic(value): string);
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records mutationWithArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {optionalInputArgs: string};
+  type t_variables = {required: string};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        optionalInputArgs: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"optionalInputArgs\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"required\\", (a => Some(Js.Json.string(a)))(inp.required))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~required, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          required: required,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records nested.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+type record = {
+  f1: string,
+  f2: string,
+};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    first: t_first,
+    second: t_second,
+  }
+  and t_second = {inner: option(t_second_inner)}
+  and t_second_inner = {inner: option(t_second_inner_inner)}
+  and t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  }
+  and t_first = {inner: option(t_first_inner)}
+  and t_first_inner = {inner: option(t_first_inner_inner)}
+  and t_first_inner_inner = {field: string};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        first: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"first\\");
+          (
+            {
+
+              inner: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    {
+
+                      inner: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+
+                              field: {
+                                let value =
+                                  Js.Dict.unsafeGet(
+                                    Obj.magic(value),
+                                    \\"field\\",
+                                  );
+
+                                (Obj.magic(value): string);
+                              },
+                            }: t_first_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_first_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_first
+          );
+        },
+
+        second: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"second\\");
+          (
+            {
+
+              inner: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    {
+
+                      inner: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+
+                              f1: {
+                                let value =
+                                  Js.Dict.unsafeGet(Obj.magic(value), \\"f1\\");
+
+                                (Obj.magic(value): string);
+                              },
+
+                              f2: {
+                                let value =
+                                  Js.Dict.unsafeGet(Obj.magic(value), \\"f2\\");
+
+                                (Obj.magic(value): string);
+                              },
+                            }: t_second_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_second_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_second
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records nonrecursiveInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {nonrecursiveInput: string};
+  type t_variables = {arg: t_variables_NonrecursiveInput}
+  and t_variables_NonrecursiveInput = {
+    field: option(string),
+    enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        nonrecursiveInput: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nonrecursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp.arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"field\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.field,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectNonrecursiveInput =
+      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+
+    field,
+
+    enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records pokedexApolloMode.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {pokemon: option(t_pokemon)}
+  and t_pokemon = {
+    id: string,
+    name: option(string),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        pokemon: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"pokemon\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              {
+
+                id: {
+                  let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+                  (Obj.magic(value): string);
+                },
+
+                name: {
+                  let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                  switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                  | Some(_) => Some(Obj.magic(value): string)
+                  | None => None
+                  };
+                },
+              }: t_pokemon,
+            )
+          | None => None
+          };
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records pokedexScalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {pokemon: option(t_pokemon)}
+  and t_pokemon = {
+    id: string,
+    name: option(string),
+  };
+  type t_variables = {
+    id: option(string),
+    name: option(string),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        pokemon: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"pokemon\\");
+
+          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+          | Some(_) =>
+            Some(
+              {
+
+                id: {
+                  let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+                  (Obj.magic(value): string);
+                },
+
+                name: {
+                  let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                  switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                  | Some(_) => Some(Obj.magic(value): string)
+                  | None => None
+                  };
+                },
+              }: t_pokemon,
+            )
+          | None => None
+          };
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"id\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.id,
+          ),
+        ),
+        (
+          \\"name\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.name,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~id=?, ~name=?, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          id,
+
+          name,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records record.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+type scalars = {
+  string,
+  int,
+};
+
+type dog = {
+  name: string,
+  barkVolume: float,
+};
+
+type oneFieldQuery = {nullableString: option(string)};
+
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {variousScalars: scalars};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          (
+            {
+
+              string: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+                (Obj.magic(value): string);
+              },
+
+              int: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+                (Obj.magic(value): int);
+              },
+            }: scalars
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module OneFieldQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {variousScalars: t_variousScalars}
+  and t_variousScalars = {nullableString: option(string)};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          (
+            {
+
+              nullableString: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module ExternalFragmentQuery = {
+  module Fragment = {
+    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+    type t = {
+      string,
+      int,
+    };
+    type raw_t;
+    type t_VariousScalars = t;
+
+    let parse = (value: Js.Json.t): t => {
+
+      string: {
+        let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+        (Obj.magic(value): string);
+      },
+
+      int: {
+        let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+        (Obj.magic(value): int);
+      },
+    };
+    let name = \\"Fragment\\";
+  };
+  module Untitled1 = {
+    let query =
+      (
+        (\\"query   {\\\\nvariousScalars  {\\\\n...\\" ++ Fragment.name)
+        ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
+      )
+      ++ Fragment.query;
+    type raw_t;
+    type t = {variousScalars: Fragment.t};
+    let parse: Js.Json.t => t =
+      (value) => (
+        {
+
+          variousScalars: {
+            let value =
+              Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+
+            Fragment.parse(value);
+          },
+        }: t
+      );
+    let makeVar = (~f, ()) => f(Js.Json.null);
+    let definition = (parse, query, makeVar);
+  };
+};
+
+module InlineFragmentQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  and t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+
+                        barkVolume: {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
+
+                          (Obj.magic(value): float);
+                        },
+                      }: t_dogOrHuman_Dog,
+                    )
+                  | _ => \`Nonexhaustive
+                  }: [
+                    | \`Nonexhaustive
+                    | \`Dog(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+
+module UnionExternalFragmentQuery = {
+  module DogFragment = {
+    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+    type t = {
+      name: string,
+      barkVolume: float,
+    };
+    type raw_t;
+    type t_Dog = t;
+
+    let parse = (value: Js.Json.t): t => {
+
+      name: {
+        let value = Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+        (Obj.magic(value): string);
+      },
+
+      barkVolume: {
+        let value = Js.Dict.unsafeGet(Obj.magic(value), \\"barkVolume\\");
+
+        (Obj.magic(value): float);
+      },
+    };
+    let name = \\"DogFragment\\";
+  };
+  module Untitled1 = {
+    let query =
+      (
+        (
+          \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n...\\"
+          ++ DogFragment.name
+        )
+        ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\"
+      )
+      ++ DogFragment.query;
+    type raw_t;
+    type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(DogFragment.t)]};
+    let parse: Js.Json.t => t =
+      (value) => (
+        {
+
+          dogOrHuman: {
+            let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+            switch (Js.Json.decodeObject(value)) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Expected union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" to be an object, got \\"
+                ++ Js.Json.stringify(value),
+              )
+
+            | Some(typename_obj) =>
+              switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" is missing the __typename field\\",
+                )
+
+              | Some(typename) =>
+                switch (Js.Json.decodeString(typename)) {
+
+                | None =>
+                  Js.Exn.raiseError(
+                    \\"graphql_ppx: \\"
+                    ++ \\"Union \\"
+                    ++ \\"DogOrHuman\\"
+                    ++ \\" has a __typename field that is not a string\\",
+                  )
+
+                | Some(typename) => (
+                    switch (typename) {
+                    | \\"Dog\\" => \`Dog(DogFragment.parse(value))
+                    | _ => \`Nonexhaustive
+                    }: [
+                      | \`Nonexhaustive
+                      | \`Dog(_)
+                    ]
+                  )
+                }
+              }
+            };
+          },
+        }: t
+      );
+    let makeVar = (~f, ()) => f(Js.Json.null);
+    let definition = (parse, query, makeVar);
+  };
+};
+"
+`;
+
+exports[`Records recursiveInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {recursiveInput: string};
+  type t_variables = {arg: t_variables_RecursiveInput}
+  and t_variables_RecursiveInput = {
+    otherField: option(string),
+    inner: option(t_variables_RecursiveInput),
+    enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        recursiveInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"recursiveInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectRecursiveInput(a)))(inp.arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectRecursiveInput:
+    t_variables_RecursiveInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"otherField\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.otherField,
+          ),
+        ),
+        (
+          \\"inner\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (a => Some(serializeInputObjectRecursiveInput(a)))(b)
+              }
+          )(
+            inp.inner,
+          ),
+        ),
+        (
+          \\"enum\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) =>
+                (
+                  a =>
+                    Some(
+                      switch (a) {
+                      | \`FIRST => Js.Json.string(\\"FIRST\\")
+                      | \`SECOND => Js.Json.string(\\"SECOND\\")
+                      | \`THIRD => Js.Json.string(\\"THIRD\\")
+                      },
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            inp.enum,
+          ),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectRecursiveInput =
+      (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
+
+    otherField,
+
+    inner,
+
+    enum,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records scalars.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {variousScalars: t_variousScalars}
+  and t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"variousScalars\\");
+          (
+            {
+
+              nullableString: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+
+              string: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+                (Obj.magic(value): string);
+              },
+
+              nullableInt: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableInt\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): int)
+                | None => None
+                };
+              },
+
+              int: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"int\\");
+
+                (Obj.magic(value): int);
+              },
+
+              nullableFloat: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableFloat\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): float)
+                | None => None
+                };
+              },
+
+              float: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"float\\");
+
+                (Obj.magic(value): float);
+              },
+
+              nullableBoolean: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableBoolean\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): bool)
+                | None => None
+                };
+              },
+
+              boolean: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"boolean\\");
+
+                (Obj.magic(value): bool);
+              },
+
+              nullableID: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableID\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+
+              id: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"id\\");
+
+                (Obj.magic(value): string);
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records scalarsArgs.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {scalarsInput: string};
+  type t_variables = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        scalarsInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"scalarsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableString\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.nullableString,
+          ),
+        ),
+        (\\"string\\", (a => Some(Js.Json.string(a)))(inp.string)),
+        (
+          \\"nullableInt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(float_of_int(a))))(b)
+              }
+          )(
+            inp.nullableInt,
+          ),
+        ),
+        (\\"int\\", (a => Some(Js.Json.number(float_of_int(a))))(inp.int)),
+        (
+          \\"nullableFloat\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(a)))(b)
+              }
+          )(
+            inp.nullableFloat,
+          ),
+        ),
+        (\\"float\\", (a => Some(Js.Json.number(a)))(inp.float)),
+        (
+          \\"nullableBoolean\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.boolean(a)))(b)
+              }
+          )(
+            inp.nullableBoolean,
+          ),
+        ),
+        (\\"boolean\\", (a => Some(Js.Json.boolean(a)))(inp.boolean)),
+        (
+          \\"nullableID\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.nullableID,
+          ),
+        ),
+        (\\"id\\", (a => Some(Js.Json.string(a)))(inp.id)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar =
+      (
+        ~f,
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      ) =>
+    f(
+      serializeVariables(
+        {
+
+          nullableString,
+
+          string,
+
+          nullableInt,
+
+          int,
+
+          nullableFloat,
+
+          float,
+
+          nullableBoolean,
+
+          boolean,
+
+          nullableID,
+
+          id,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records scalarsInput.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
+  type raw_t;
+  type t = {scalarsInput: string};
+  type t_variables = {arg: t_variables_VariousScalarsInput}
+  and t_variables_VariousScalarsInput = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        scalarsInput: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"scalarsInput\\");
+
+          (Obj.magic(value): string);
+        },
+      }: t
+    );
+  let rec serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"arg\\",
+          (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp.arg),
+        ),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_
+  and serializeInputObjectVariousScalarsInput:
+    t_variables_VariousScalarsInput => Js.Json.t =
+    inp =>
+      [|
+        (
+          \\"nullableString\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.nullableString,
+          ),
+        ),
+        (\\"string\\", (a => Some(Js.Json.string(a)))(inp.string)),
+        (
+          \\"nullableInt\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(float_of_int(a))))(b)
+              }
+          )(
+            inp.nullableInt,
+          ),
+        ),
+        (\\"int\\", (a => Some(Js.Json.number(float_of_int(a))))(inp.int)),
+        (
+          \\"nullableFloat\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.number(a)))(b)
+              }
+          )(
+            inp.nullableFloat,
+          ),
+        ),
+        (\\"float\\", (a => Some(Js.Json.number(a)))(inp.float)),
+        (
+          \\"nullableBoolean\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.boolean(a)))(b)
+              }
+          )(
+            inp.nullableBoolean,
+          ),
+        ),
+        (\\"boolean\\", (a => Some(Js.Json.boolean(a)))(inp.boolean)),
+        (
+          \\"nullableID\\",
+          (
+            a =>
+              switch (a) {
+              | None => None
+              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+              }
+          )(
+            inp.nullableID,
+          ),
+        ),
+        (\\"id\\", (a => Some(Js.Json.string(a)))(inp.id)),
+      |]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~arg, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          arg: arg,
+        }: t_variables,
+      ),
+    )
+  and makeInputObjectVariousScalarsInput =
+      (
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      )
+      : t_variables_VariousScalarsInput => {
+
+    nullableString,
+
+    string,
+
+    nullableInt,
+
+    int,
+
+    nullableFloat,
+
+    float,
+
+    nullableBoolean,
+
+    boolean,
+
+    nullableID,
+
+    id,
+  };
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records skipDirectives.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    v1: t_v1,
+    v2: t_v2,
+  }
+  and t_v2 = {
+    nullableString: option(string),
+    string: option(string),
+  }
+  and t_v1 = {
+    nullableString: option(string),
+    string: option(string),
+  };
+  type t_variables = {var: bool};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        v1: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"v1\\");
+          (
+            {
+
+              nullableString: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+
+              string: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+            }: t_v1
+          );
+        },
+
+        v2: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"v2\\");
+          (
+            {
+
+              nullableString: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"nullableString\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+
+              string: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"string\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) => Some(Obj.magic(value): string)
+                | None => None
+                };
+              },
+            }: t_v2
+          );
+        },
+      }: t
+    );
+  let serializeVariables: t_variables => Js.Json.t =
+    inp =>
+      [|(\\"var\\", (a => Some(Js.Json.boolean(a)))(inp.var))|]
+      |> Js.Array.filter(
+           fun
+           | (_, None) => false
+           | (_, Some(_)) => true,
+         )
+      |> Js.Array.map(
+           fun
+           | (k, Some(v)) => (k, v)
+           | (k, None) => (k, Js.Json.null),
+         )
+      |> Js.Dict.fromArray
+      |> Js.Json.object_;
+  let makeVar = (~f, ~var, ()) =>
+    f(
+      serializeVariables(
+        {
+
+          var: var,
+        }: t_variables,
+      ),
+    );
+  let definition = (parse, query, makeVar);
+  let makeVariables = makeVar(~f=f => f);
+};
+"
+`;
+
+exports[`Records subscription.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    simpleSubscription: [
+      | \`Dog(t_simpleSubscription_Dog)
+      | \`Human(t_simpleSubscription_Human)
+    ],
+  }
+  and t_simpleSubscription_Human = {name: string}
+  and t_simpleSubscription_Dog = {name: string};
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        simpleSubscription: {
+          let value =
+            Js.Dict.unsafeGet(Obj.magic(value), \\"simpleSubscription\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+                      }: t_simpleSubscription_Dog,
+                    )
+                  | \\"Human\\" =>
+                    \`Human(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+                      }: t_simpleSubscription_Human,
+                    )
+                  | typename =>
+                    Js.Exn.raiseError(
+                      \\"graphql_ppx: \\"
+                      ++ \\"Union \\"
+                      ++ \\"DogOrHuman\\"
+                      ++ \\" returned unknown type \\"
+                      ++ typename,
+                    )
+                  }: [
+                    | \`Dog(_)
+                    | \`Human(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records typename.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {first: t_first}
+  and t_first = {
+    __typename: string,
+    inner: option(t_first_inner),
+  }
+  and t_first_inner = {
+    __typename: string,
+    inner: option(t_first_inner_inner),
+  }
+  and t_first_inner_inner = {
+    __typename: string,
+    field: string,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        first: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"first\\");
+          (
+            {
+
+              __typename: {
+                let value =
+                  Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\");
+
+                (Obj.magic(value): string);
+              },
+
+              inner: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    {
+
+                      __typename: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\");
+
+                        (Obj.magic(value): string);
+                      },
+
+                      inner: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+
+                              __typename: {
+                                let value =
+                                  Js.Dict.unsafeGet(
+                                    Obj.magic(value),
+                                    \\"__typename\\",
+                                  );
+
+                                (Obj.magic(value): string);
+                              },
+
+                              field: {
+                                let value =
+                                  Js.Dict.unsafeGet(
+                                    Obj.magic(value),
+                                    \\"field\\",
+                                  );
+
+                                (Obj.magic(value): string);
+                              },
+                            }: t_first_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_first_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_first
+          );
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records union.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {
+    dogOrHuman: [ | \`Dog(t_dogOrHuman_Dog) | \`Human(t_dogOrHuman_Human)],
+  }
+  and t_dogOrHuman_Human = {name: string}
+  and t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+
+                        barkVolume: {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
+
+                          (Obj.magic(value): float);
+                        },
+                      }: t_dogOrHuman_Dog,
+                    )
+                  | \\"Human\\" =>
+                    \`Human(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+                      }: t_dogOrHuman_Human,
+                    )
+                  | typename =>
+                    Js.Exn.raiseError(
+                      \\"graphql_ppx: \\"
+                      ++ \\"Union \\"
+                      ++ \\"DogOrHuman\\"
+                      ++ \\" returned unknown type \\"
+                      ++ typename,
+                    )
+                  }: [
+                    | \`Dog(_)
+                    | \`Human(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;
+
+exports[`Records unionPartial.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery = {
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type raw_t;
+  type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  and t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  let parse: Js.Json.t => t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"dogOrHuman\\");
+
+          switch (Js.Json.decodeObject(value)) {
+
+          | None =>
+            Js.Exn.raiseError(
+              \\"graphql_ppx: \\"
+              ++ \\"Expected union \\"
+              ++ \\"DogOrHuman\\"
+              ++ \\" to be an object, got \\"
+              ++ Js.Json.stringify(value),
+            )
+
+          | Some(typename_obj) =>
+            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+
+            | None =>
+              Js.Exn.raiseError(
+                \\"graphql_ppx: \\"
+                ++ \\"Union \\"
+                ++ \\"DogOrHuman\\"
+                ++ \\" is missing the __typename field\\",
+              )
+
+            | Some(typename) =>
+              switch (Js.Json.decodeString(typename)) {
+
+              | None =>
+                Js.Exn.raiseError(
+                  \\"graphql_ppx: \\"
+                  ++ \\"Union \\"
+                  ++ \\"DogOrHuman\\"
+                  ++ \\" has a __typename field that is not a string\\",
+                )
+
+              | Some(typename) => (
+                  switch (typename) {
+                  | \\"Dog\\" =>
+                    \`Dog(
+                      {
+
+                        name: {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+
+                          (Obj.magic(value): string);
+                        },
+
+                        barkVolume: {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
+
+                          (Obj.magic(value): float);
+                        },
+                      }: t_dogOrHuman_Dog,
+                    )
+                  | _ => \`Nonexhaustive
+                  }: [
+                    | \`Nonexhaustive
+                    | \`Dog(_)
+                  ]
+                )
+              }
+            }
+          };
+        },
+      }: t
+    );
+  let makeVar = (~f, ()) => f(Js.Json.null);
+  let definition = (parse, query, makeVar);
+};
+"
+`;

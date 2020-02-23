@@ -7,6 +7,5 @@ node_modules
 /build/
 bs-ppx-css
 *.bs.js
-bsconfig.json
-package.json
-package-lock.json
+test*.re
+test*.ml

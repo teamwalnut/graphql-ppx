@@ -1,23 +1,27 @@
 {
   "name": "graphql_ppx",
   "description": "Used for native Reason/OCaml using latest version of OCaml",
+  "scripts": {
+    "format": "dune build @fmt --auto-promote --root .",
+    "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static"
+  },
   "dependencies": {
     "@opam/dune": "*",
     "@opam/result": "*",
     "@opam/yojson": "*",
-    "@opam/ocaml-migrate-parsetree": "*",
-    "@opam/ppx_tools_versioned": "*",
-    "@opam/reason": "*",
+    "@opam/ocaml-migrate-parsetree": ">=1.6.0",
+    "@opam/ppx_tools_versioned": "5.2.3",
+    "@opam/reason": "3.5.2",
     "@opam/menhir": "*"
   },
   "devDependencies": {
+    "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
     "ocaml": "~4.9.0",
     "refmterr": "*"
   },
   "esy": {
-    "build": [["dune", "build", "-p", "#{self.name}"]],
-    "buildDev": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
+    "build": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }

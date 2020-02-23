@@ -312,11 +312,12 @@ let create_dir_if_not_exist = abs_path =>
     switch (Unix.mkdir(abs_path, 493)) {
     | () => ()
     | exception (Unix.Unix_error(error, cmd, msg)) =>
-      Log.must_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
       switch (error) {
       | Unix.EEXIST => () /* It's Ok since the build tool e.g. BuckleScript could be multi-threading */
-      | error => raise(Unix.Unix_error(error, cmd, msg))
-      };
+      | error =>
+        Log.error_log(Unix.error_message(error) ++ " " ++ cmd ++ " " ++ msg);
+        raise(Unix.Unix_error(error, cmd, msg));
+      }
     };
   };
 
@@ -332,7 +333,7 @@ let ppx_cache_dir = ".graphql_ppx_cache/";
 
 let get_ppx_cache_path = (suffix, relative_to) => {
   let dir =
-    try (Sys.getenv("cur__target_dir")) {
+    try(Sys.getenv("cur__target_dir")) {
     | _ => Filename.dirname(relative_to)
     };
 
@@ -378,7 +379,7 @@ let create_marshaled_schema = (json_schema, data) => {
   Log.log("[write marshaled] " ++ marshaled_schema);
   switch (open_out_bin(marshaled_schema)) {
   | exception (Sys_error(msg)) =>
-    Log.must_log("[write marshaled][Sys_error]: " ++ msg);
+    Log.error_log("[write marshaled][Sys_error]: " ++ msg);
     raise(Sys_error(msg));
   | outc =>
     Marshal.to_channel(outc, data, []);
@@ -405,7 +406,7 @@ let rec read_marshaled_schema = json_schema => {
   Log.log("[read marshaled] " ++ marshaled_schema);
   switch (open_in_bin(marshaled_schema)) {
   | exception (Sys_error(msg)) =>
-    Log.must_log("[read marshaled][Sys_error]: " ++ msg);
+    Log.error_log("[read marshaled][Sys_error]: " ++ msg);
     raise(Sys_error(msg));
   | file =>
     let data =
@@ -419,7 +420,7 @@ let rec read_marshaled_schema = json_schema => {
   };
 }
 and recovery_build = json_schema => {
-  let () = Log.must_log("Marshaled file is broken. Doing recovery build...");
+  let () = Log.error_log("Marshaled file is broken. Doing recovery build...");
   let () = Sys.remove(get_hash_path(json_schema));
   /* we don't remove marshal file since it might result in race condition,
    * we simply let every thread noticed the broken marshal file rewrite to it */
@@ -429,7 +430,7 @@ and recovery_build = json_schema => {
 
 /* lazily read schema and check if schema file existed */
 let get_schema = maybe_schema =>
-  lazy (
+  lazy(
     switch (
       find_file_towards_root(
         Ppx_config.root_directory(),
