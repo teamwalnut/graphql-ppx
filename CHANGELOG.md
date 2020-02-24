@@ -1,3 +1,9 @@
+## [0.7.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.6.4...v0.7.0) (2020-02-24)
+
+### Other
+
+- use OMP (ocaml-migrate-parsetree) 1.6.0 ([f7ded8d](https://github.com/reasonml-community/graphql_ppx/commit/f7ded8d2c44bfb53e7308dbcd1c54fa2d1fff7e4))
+
 ## [0.6.2](https://github.com/reasonml-community/graphql_ppx/compare/v0.6.1...v0.6.2) (2020-02-18)
 
 ### Features
