@@ -6,18 +6,26 @@ type record = {
 };
 
 let concat = ({nullableOfNullable, nullableOfNonNullable}) => {
-  let x = switch (nullableOfNullable) {
+  let x =
+    switch (nullableOfNullable) {
     | None => [||]
-    | Some(arr) => arr |> Array.map(v => switch(v) { 
-      | None => [||]
-      | Some(s) => [|s|]
-    }) |> Array.to_list |> Array.concat
-  };
+    | Some(arr) =>
+      arr
+      |> Array.map(v =>
+           switch (v) {
+           | None => [||]
+           | Some(s) => [|s|]
+           }
+         )
+      |> Array.to_list
+      |> Array.concat
+    };
 
-  let y = switch (nullableOfNonNullable) {
+  let y =
+    switch (nullableOfNonNullable) {
     | None => [||]
     | Some(a) => a
-  };
+    };
 
   Array.append(x, y);
 };
@@ -69,7 +77,7 @@ type qt = {
     frag1: ft,
     frag2: ft,
   },
-  l3: array(string)
+  l3: array(string),
 };
 
 let print_fragment = (formatter, obj: ft) =>

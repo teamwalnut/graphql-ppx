@@ -1,0 +1,20 @@
+{
+  "name": "ppx_example",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "bsb -clean-world -make-world && jest --verbose lib/js",
+    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o graphql_schema.json schema.graphql"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@glennsl/bs-jest": "~0.4.9",
+    "bs-platform": "~7.1.1",
+    "gql-tools": "^0.0.15",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.6.1",
+    "graphql-tools": "^4.0.3"
+  }
+}
