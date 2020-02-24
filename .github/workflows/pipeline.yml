@@ -91,7 +91,7 @@ jobs:
         shell: bash
         run: |
           # COMPUTE THE ESY INSTALL CACHE LOCATION AHEAD OF TIME
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          if [ "${{ matrix.os }}" == "windows-2016" ]; then
             THE_ESY__CACHE_INSTALL_PATH=$HOME/.esy/3_/i
             THE_ESY__CACHE_INSTALL_PATH=$( cygpath --mixed --absolute "$THE_ESY__CACHE_INSTALL_PATH")
           else
@@ -167,7 +167,7 @@ jobs:
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: windows-latest
+          name: windows-2016
           path: binaries/windows
 
       - name: Move artifacts
