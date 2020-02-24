@@ -19,6 +19,6 @@
   "bsc-flags": ["-bs-super-errors"],
   "warnings": {
     "number": "+A-48-30-42-40",
-    "error": "+A-3-32-44"
+    "error": "+A"
   }
 }
