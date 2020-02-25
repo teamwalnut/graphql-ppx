@@ -37,7 +37,7 @@ let run_ppx = (path, opts) => {
       ++ refmt
       ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
       ++ opts
-      ++ (win ? " - -o -" : " /dev/stdin /dev/stdout")
+      ++ (win ? " -o - -" : " /dev/stdin /dev/stdout")
       ++ " | "
       ++ refmt
       ++ " --parse binary --interface false",
