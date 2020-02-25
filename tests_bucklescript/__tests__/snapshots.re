@@ -24,18 +24,24 @@ let refmt =
   |> toString
   |> Js.String.trim;
 
+let replaceSlashWin = str => {
+  win ? Js.String.replaceByRe([%re "/\\//g"], "\\", str) : str;
+};
+
 let run_ppx = (path, opts) => {
   execSync(
-    (win ? "type " : "cat ")
-    ++ path
-    ++ " | "
-    ++ refmt
-    ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
-    ++ opts
-    ++ (win ? " - -o -" : " /dev/stdin /dev/stdout")
-    ++ " | "
-    ++ refmt
-    ++ " --parse binary --interface false",
+    replaceSlashWin(
+      (win ? "type " : "cat ")
+      ++ path
+      ++ " | "
+      ++ refmt
+      ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
+      ++ opts
+      ++ (win ? " - -o -" : " /dev/stdin /dev/stdout")
+      ++ " | "
+      ++ refmt
+      ++ " --parse binary --interface false",
+    ),
     {cwd: resolve(dirname, "..")},
   )
   |> toString;
