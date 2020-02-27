@@ -3,6 +3,6 @@
       "@opam/reason": "*"
     },
     "resolutions": {
-      "@opam/reason": "github:Et7f3/reason#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb"
+      "@opam/reason": "github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb"
     }
 }
