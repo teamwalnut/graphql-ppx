@@ -24,6 +24,7 @@ let refmt =
   )
   |> toString
   |> Js.String.trim;
+let refmt = "\"" ++ refmt ++ "\"";
 
 let ppx = {|"../_build/default/src/bucklescript_bin/bin.exe"|};
 
