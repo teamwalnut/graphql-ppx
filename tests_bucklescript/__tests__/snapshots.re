@@ -18,7 +18,7 @@ external readdirSync: string => array(string) = "readdirSync";
 let win = platform() == "win32";
 let refmt =
   execSync(
-    "esy @wait_pr_to_be_merged build echo \"#{@opam/reason.bin / }refmt\"",
+    "esy -P wait_pr_to_be_merged build echo \"#{@opam/reason.bin / }refmt\"",
     {cwd: resolve(dirname, "../..")},
   )
   |> toString
