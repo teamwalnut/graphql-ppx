@@ -16,7 +16,7 @@ external readdirSync: string => array(string) = "readdirSync";
 [@bs.send] external toString: buffer => string = "toString";
 
 let win = platform() == "win32";
-let refmt = execSync("esy install -P wait_pr_to_be_merged", {cwd: resolve(dirname, "../..")},);
+let _:buffer = execSync("esy install -P wait_pr_to_be_merged", {cwd: resolve(dirname, "../..")},);
 let refmt =
   execSync(
     "esy build -P wait_pr_to_be_merged echo \"#{@opam/reason.bin / }refmt\"",
