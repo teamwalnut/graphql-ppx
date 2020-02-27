@@ -18,7 +18,7 @@ external readdirSync: string => array(string) = "readdirSync";
 let win = platform() == "win32";
 let refmt =
   execSync(
-    "esy -P wait_pr_to_be_merged build echo \"#{@opam/reason.bin / }refmt\"",
+    "esy build -P wait_pr_to_be_merged echo \"#{@opam/reason.bin / }refmt\"",
     {cwd: resolve(dirname, "../..")},
   )
   |> toString
@@ -30,12 +30,8 @@ let replaceSlashWin = str => {
 
 let run_ppx = (path, opts) => {
   execSync(
-    replaceSlashWin(
-      (win ? "type " : "cat ")
-      ++ path
-      ++ " | "
-      ++ refmt
-      ++ " --parse re --print binary | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
+    replaceSlashWin(refmt
+      ++ " --parse re --print binary " ++ path ++ " | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
       ++ opts
       ++ (win ? " -o - -" : " /dev/stdin /dev/stdout")
       ++ " | "
