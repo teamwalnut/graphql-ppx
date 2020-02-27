@@ -24,23 +24,17 @@ let refmt =
   |> toString
   |> Js.String.trim;
 
-let replaceSlashWin = str => {
-  win ? Js.String.replaceByRe([%re "/\\//g"], "\\", str) : str;
-};
+let ppx = {|"../_build/default/src/bucklescript_bin/bin.exe"|};
+
+let rm = win ? "del" : "rm";
 
 let run_ppx = (path, opts) => {
-  execSync(
-    replaceSlashWin(refmt
-      ++ " --parse re --print binary " ++ path ++ " | ../_build/default/src/bucklescript_bin/bin.exe -schema ../graphql_schema.json "
-      ++ opts
-      ++ (win ? " -o - -" : " /dev/stdin /dev/stdout")
-      ++ " | "
-      ++ refmt
-      ++ " --parse binary --interface false",
-    ),
-    {cwd: resolve(dirname, "..")},
-  )
+  let _:buffer = execSync(refmt ++ " --parse re --print binary " ++ path ++ " > " ++ path ++ ".ml", {cwd: resolve(dirname, "..")});
+  let _:buffer = execSync(ppx ++ " -schema ../graphql_schema.json --dump-ast " ++ opts ++ " " ++ path ++ ".ml " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")});
+  let ret = execSync(refmt ++ " --parse binary --print re " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")})
   |> toString;
+  // here we should clean file.
+  ret;
 };
 
 let tests =
