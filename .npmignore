@@ -3,12 +3,9 @@
 /.vscode
 /node_modules
 /ppx
-/graphql_ppx.*
-/.ci
-/src
+/.github
 /tests
 /esy.lock
 /402.esy.lock
 /binaries
 esy.json
-dune-project
