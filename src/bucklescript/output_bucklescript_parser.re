@@ -9,6 +9,7 @@ open Parsetree;
 
 open Generator_utils;
 open Output_bucklescript_utils;
+open Output_bucklescript_types;
 
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
@@ -109,15 +110,8 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   let fallback_arm =
     Ast_helper.(
       Exp.case(
-        Pat.any(),
-        make_error_raiser(
-          [%expr
-            "Unknown enum variant for "
-            ++ [%e const_str_expr(enum_meta.em_name)]
-            ++ ": "
-            ++ value
-          ],
-        ),
+        Pat.constant(Pconst_string("other", None)),
+        Exp.variant("FutureProof", Some(const_str_expr("other"))),
       )
     );
 
@@ -129,22 +123,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       )
     );
 
-  let enum_ty =
-    [@metaloc loc]
-    Ast_helper.(
-      Typ.variant(
-        enum_meta.em_values
-        |> List.map(({evm_name, _}) =>
-             {
-               prf_desc: Rtag({txt: evm_name, loc}, true, []),
-               prf_loc: loc,
-               prf_attributes: [],
-             }
-           ),
-        Closed,
-        None,
-      )
-    );
+  let enum_ty = generate_enum_type(loc, enum_meta);
 
   %expr
   ([%e match_expr]: [%t enum_ty]);
@@ -200,7 +179,7 @@ let rec generate_parser = (config, path: list(string), definition) =>
   | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_) => [%expr value]
   | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(conv_loc(loc), enum_meta)
+    generate_poly_enum_decoder(loc, enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(
       config,

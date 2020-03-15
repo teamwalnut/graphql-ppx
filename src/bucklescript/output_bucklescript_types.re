@@ -27,6 +27,39 @@ let base_type = (~inner=[], name) => {
   );
 };
 
+let generate_enum_type = (loc, enum_meta) => {
+  Graphql_ppx_base__.Schema.(
+    [@metaloc conv_loc(loc)]
+    Ast_helper.(
+      Typ.variant(
+        [
+          {
+            prf_desc:
+              Rtag(
+                {txt: "FutureProof", loc: conv_loc(loc)},
+                false,
+                [base_type("string")],
+              ),
+            prf_loc: conv_loc(loc),
+            prf_attributes: [],
+          },
+          ...enum_meta.em_values
+             |> List.map(({evm_name, _}) =>
+                  {
+                    prf_desc:
+                      Rtag({txt: evm_name, loc: conv_loc(loc)}, true, []),
+                    prf_loc: conv_loc(loc),
+                    prf_attributes: [],
+                  }
+                ),
+        ],
+        Closed,
+        None,
+      )
+    )
+  );
+};
+
 // generate the type definition, including nullables, arrays etc.
 let rec generate_type = (config, path) =>
   fun
@@ -156,24 +189,7 @@ let rec generate_type = (config, path) =>
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(loc, enum_meta) => {
-      Graphql_ppx_base__.Schema.(
-        [@metaloc conv_loc(loc)]
-        Ast_helper.(
-          Typ.variant(
-            enum_meta.em_values
-            |> List.map(({evm_name, _}) =>
-                 {
-                   prf_desc:
-                     Rtag({txt: evm_name, loc: conv_loc(loc)}, true, []),
-                   prf_loc: conv_loc(loc),
-                   prf_attributes: [],
-                 }
-               ),
-            Closed,
-            None,
-          )
-        )
-      );
+      generate_enum_type(loc, enum_meta);
     };
 
 let generate_record_type = (config, fields, obj_path) => {
