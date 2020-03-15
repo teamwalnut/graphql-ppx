@@ -110,8 +110,16 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   let fallback_arm =
     Ast_helper.(
       Exp.case(
-        Pat.constant(Pconst_string("other", None)),
-        Exp.variant("FutureProof", Some(const_str_expr("other"))),
+        Pat.var({loc: conv_loc(loc), txt: "other"}),
+        Exp.variant(
+          "FutureAddedValue",
+          Some(
+            Exp.ident({
+              Location.txt: Longident.parse("other"),
+              loc: conv_loc(loc),
+            }),
+          ),
+        ),
       )
     );
 

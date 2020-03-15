@@ -1210,7 +1210,7 @@ module MyQuery = {
   }
   and t_mutationWithError_errors = {
     .
-    \\"field\\": [ | \`FutureProof(string) | \`FIRST | \`SECOND | \`THIRD],
+    \\"field\\": [ | \`FutureAddedValue(string) | \`FIRST | \`SECOND | \`THIRD],
     \\"message\\": string,
   }
   and t_mutationWithError_value = {. \\"stringField\\": string};
@@ -1273,9 +1273,9 @@ module MyQuery = {
                              | \\"FIRST\\" => \`FIRST
                              | \\"SECOND\\" => \`SECOND
                              | \\"THIRD\\" => \`THIRD
-                             | \\"other\\" => \`FutureProof(\\"other\\")
+                             | other => \`FutureAddedValue(other)
                              }: [
-                               | \`FutureProof(string)
+                               | \`FutureAddedValue(string)
                                | \`FIRST
                                | \`SECOND
                                | \`THIRD
@@ -4764,7 +4764,7 @@ module MyQuery = {
     errors: option(array(t_mutationWithError_errors)),
   }
   and t_mutationWithError_errors = {
-    field: [ | \`FutureProof(string) | \`FIRST | \`SECOND | \`THIRD],
+    field: [ | \`FutureAddedValue(string) | \`FIRST | \`SECOND | \`THIRD],
     message: string,
   }
   and t_mutationWithError_value = {stringField: string};
@@ -4820,9 +4820,9 @@ module MyQuery = {
                                  | \\"FIRST\\" => \`FIRST
                                  | \\"SECOND\\" => \`SECOND
                                  | \\"THIRD\\" => \`THIRD
-                                 | \\"other\\" => \`FutureProof(\\"other\\")
+                                 | other => \`FutureAddedValue(other)
                                  }: [
-                                   | \`FutureProof(string)
+                                   | \`FutureAddedValue(string)
                                    | \`FIRST
                                    | \`SECOND
                                    | \`THIRD

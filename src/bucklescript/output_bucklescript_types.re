@@ -36,7 +36,7 @@ let generate_enum_type = (loc, enum_meta) => {
           {
             prf_desc:
               Rtag(
-                {txt: "FutureProof", loc: conv_loc(loc)},
+                {txt: "FutureAddedValue", loc: conv_loc(loc)},
                 false,
                 [base_type("string")],
               ),
