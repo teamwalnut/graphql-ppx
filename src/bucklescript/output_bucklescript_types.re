@@ -8,6 +8,78 @@ open Output_bucklescript_utils;
 open Ast_408;
 open Parsetree;
 
+let to_valid_ident = ident =>
+  if (ident.[0] >= '0' && ident.[0] <= '9') {
+    "_" ++ ident;
+  } else {
+    [
+      "and",
+      "as",
+      "asr",
+      "assert",
+      "begin",
+      "class",
+      "constraint",
+      "do",
+      "done",
+      "downto",
+      "else",
+      "end",
+      "esfun",
+      "exception",
+      "external",
+      "false",
+      "for",
+      "fun",
+      "function",
+      "functor",
+      "if",
+      "in",
+      "include",
+      "inherit",
+      "initializer",
+      "land",
+      "lazy",
+      "let",
+      "lor",
+      "lsl",
+      "lsr",
+      "lxor",
+      "match",
+      "method",
+      "mod",
+      "module",
+      "mutable",
+      "new",
+      "nonrec",
+      "object",
+      "of",
+      "open",
+      "open!",
+      "or",
+      "pri",
+      "private",
+      "pub",
+      "public",
+      "rec",
+      "sig",
+      "struct",
+      "switch",
+      "then",
+      "to",
+      "true",
+      "try",
+      "type",
+      "val",
+      "virtual",
+      "when",
+      "while",
+      "with",
+    ]
+    |> List.exists(reserved_word => ident == reserved_word)
+      ? ident ++ "_" : ident;
+  };
+
 // duplicate of ouput_bucklescript_decoder
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -47,7 +119,11 @@ let generate_enum_type = (loc, enum_meta) => {
              |> List.map(({evm_name, _}) =>
                   {
                     prf_desc:
-                      Rtag({txt: evm_name, loc: conv_loc(loc)}, true, []),
+                      Rtag(
+                        {txt: to_valid_ident(evm_name), loc: conv_loc(loc)},
+                        true,
+                        [],
+                      ),
                     prf_loc: conv_loc(loc),
                     prf_attributes: [],
                   }
@@ -222,7 +298,7 @@ let generate_record_type = (config, fields, obj_path) => {
                )
              | Field({path: [name, ...path], type_}) =>
                Ast_helper.Type.field(
-                 {Location.txt: name, loc: Location.none},
+                 {Location.txt: to_valid_ident(name), loc: Location.none},
                  generate_type(config, [name, ...path], type_),
                )
              | Field({path: [], loc}) =>
@@ -279,7 +355,7 @@ let generate_object_type = (config, fields, obj_path) => {
                    | Field({path: [name, ...path], type_}) => {
                        pof_desc:
                          Otag(
-                           {txt: name, loc: Location.none},
+                           {txt: to_valid_ident(name), loc: Location.none},
                            generate_type(config, [name, ...path], type_),
                          ),
                        pof_loc: Location.none,

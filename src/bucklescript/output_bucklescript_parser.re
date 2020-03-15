@@ -102,7 +102,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       |> List.map(({evm_name, _}) =>
            Exp.case(
              Pat.constant(Pconst_string(evm_name, None)),
-             Exp.variant(evm_name, None),
+             Exp.variant(to_valid_ident(evm_name), None),
            )
          )
     );
@@ -306,7 +306,7 @@ and generate_object_decoder =
         |> List.map(
              fun
              | Fr_named_field(key, _, inner) => (
-                 {Location.txt: Longident.parse(key), loc},
+                 {Location.txt: Longident.parse(to_valid_ident(key)), loc},
                  {
                    let%expr value =
                      Js.Dict.unsafeGet(

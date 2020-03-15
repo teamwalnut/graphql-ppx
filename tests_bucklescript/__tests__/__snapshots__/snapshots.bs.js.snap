@@ -1398,13 +1398,17 @@ type record = {
 };
 
 module MyQuery = {
-  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
   type t = {
     .
     \\"first\\": t_first,
     \\"second\\": t_second,
+    \\"let_\\": t_let,
   }
+  and t_let = {. \\"inner\\": option(t_let_inner)}
+  and t_let_inner = {. \\"inner\\": option(t_let_inner_inner)}
+  and t_let_inner_inner = {. \\"field\\": string}
   and t_second = {. \\"inner\\": option(t_second_inner)}
   and t_second_inner = {. \\"inner\\": option(t_second_inner_inner)}
   and t_second_inner_inner = {
@@ -1529,6 +1533,65 @@ module MyQuery = {
                                     Js.Dict.unsafeGet(
                                       Obj.magic(value),
                                       \\"f2\\",
+                                    );
+
+                                  (Obj.magic(value): string);
+                                },
+                              };
+                            },
+                          )
+                        | None => None
+                        };
+                      },
+                    };
+                  },
+                )
+              | None => None
+              };
+            },
+          };
+        },
+
+        \\"let_\\": {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"let\\");
+          [@metaloc loc]
+          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
+          {
+
+            \\"inner\\": {
+              let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+              | Some(_) =>
+                Some(
+                  {
+                    [@metaloc loc]
+                    let value =
+                      value |> Js.Json.decodeObject |> Js.Option.getExn;
+                    {
+
+                      \\"inner\\": {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+                              [@metaloc loc]
+                              let value =
+                                value
+                                |> Js.Json.decodeObject
+                                |> Js.Option.getExn;
+                              {
+
+                                \\"field\\": {
+                                  let value =
+                                    Js.Dict.unsafeGet(
+                                      Obj.magic(value),
+                                      \\"field\\",
                                     );
 
                                   (Obj.magic(value): string);
@@ -4948,12 +5011,16 @@ type record = {
 };
 
 module MyQuery = {
-  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
   type t = {
     first: t_first,
     second: t_second,
+    let_: t_let,
   }
+  and t_let = {inner: option(t_let_inner)}
+  and t_let_inner = {inner: option(t_let_inner_inner)}
+  and t_let_inner_inner = {field: string}
   and t_second = {inner: option(t_second_inner)}
   and t_second_inner = {inner: option(t_second_inner_inner)}
   and t_second_inner_inner = {
@@ -5062,6 +5129,53 @@ module MyQuery = {
                 };
               },
             }: t_second
+          );
+        },
+
+        let_: {
+          let value = Js.Dict.unsafeGet(Obj.magic(value), \\"let\\");
+          (
+            {
+
+              inner: {
+                let value = Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
+                | Some(_) =>
+                  Some(
+                    {
+
+                      inner: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"inner\\");
+
+                        switch (
+                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
+                        ) {
+                        | Some(_) =>
+                          Some(
+                            {
+
+                              field: {
+                                let value =
+                                  Js.Dict.unsafeGet(
+                                    Obj.magic(value),
+                                    \\"field\\",
+                                  );
+
+                                (Obj.magic(value): string);
+                              },
+                            }: t_let_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_let_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_let
           );
         },
       }: t
