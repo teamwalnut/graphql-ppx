@@ -94,12 +94,12 @@ let extract_schema_from_config = config_fields => {
   };
 };
 
-let extract_template_literal_from_config = config_fields => {
+let extract_template_tag_from_config = config_fields => {
   open Ast_408;
   open Asttypes;
   open Parsetree;
 
-  let maybe_template_literal_field =
+  let maybe_template_tag_field =
     try(
       Some(
         List.find(
@@ -119,7 +119,7 @@ let extract_template_literal_from_config = config_fields => {
     | _ => None
     };
 
-  switch (maybe_template_literal_field) {
+  switch (maybe_template_tag_field) {
   | Some((_, {pexp_desc: Pexp_ident({txt: lident})})) =>
     Some(
       Longident.flatten(lident)
@@ -136,7 +136,6 @@ let extract_template_literal_from_config = config_fields => {
   | _ => None
   };
 };
-
 
 let extract_bool_from_config = (name, config_fields) => {
   open Ast_408;
@@ -182,6 +181,7 @@ let extract_bool_from_config = (name, config_fields) => {
   };
 };
 
+
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_inline_from_config = extract_bool_from_config("inline");
 let extract_definition_from_config = extract_bool_from_config("definition");
@@ -225,7 +225,7 @@ let rewrite_query =
       ~module_definition,
       (),
     ) => {
-  open Ast_406;
+  open Ast_408;
   open Ast_helper;
 
   let lexer = Graphql_lexer.make(query);
@@ -328,6 +328,7 @@ let () =
       },
       records: false,
       legacy: false,
+      template_tag: None,
       definition: true,
     })
   );
@@ -381,7 +382,6 @@ let mapper = (_config, _cookies) => {
                     ),
                   )
                 )
-
               | PStr([
                   {
                     pstr_desc:
