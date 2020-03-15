@@ -25,6 +25,7 @@ type output_config = {
   inline: bool,
   legacy: bool,
   definition: bool,
+  template_literal: option(string),
 };
 
 let filter_map = (f, l) => {

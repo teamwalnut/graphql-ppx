@@ -39,6 +39,83 @@ let join = (part1, part2) => {
   );
 };
 
+let pretty_print = (query: string): string => {
+  let indent = ref(1);
+
+  let str =
+    query
+    |> String.split_on_char('\n')
+    |> List.map(l => String.trim(l))
+    |> List.filter(l => l != "")
+    |> List.map(line => {
+         if (String.contains(line, '}')) {
+           indent := indent^ - 1;
+         };
+         let line = String.make(indent^ * 2, ' ') ++ line;
+         if (String.contains(line, '{')) {
+           indent := indent^ + 1;
+         };
+         line;
+       })
+    |> String.concat("\n");
+
+  str ++ "\n";
+};
+
+let compress_parts = (parts: array(Graphql_printer.t)) => {
+  Graphql_printer.(
+    parts
+    |> Array.to_list
+    |> List.fold_left(
+         (acc, curr) => {
+           switch (acc, curr) {
+           | ([String(s1), ...rest], String(s2)) => [
+               String(s1 ++ s2),
+               ...rest,
+             ]
+           | (acc, Empty) => acc
+           | (acc, curr) => [curr, ...acc]
+           }
+         },
+         [],
+       )
+    |> List.rev
+    |> Array.of_list
+  );
+};
+
+let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
+  switch (parts) {
+  | [|String(s)|] => s
+  | [||] => ""
+  | parts =>
+    Graphql_printer.(
+      Array.fold_left(
+        acc =>
+          fun
+          | Empty => acc
+          | String(s) => acc ++ s
+          | FragmentNameRef(f) => {
+              let name =
+                switch (String.split_on_char('.', f) |> List.rev) {
+                | [name, ..._] => name
+                | [] => assert(false)
+                };
+              acc ++ name;
+            }
+          // This is the code to make the template tag compatible with Apollo
+          // we can expose this as an option later. (we need to wait for new
+          // %raw functionality to properly do template literals. So in current
+          // state it is not possible to make it compatible with Apollo.
+          // | FragmentQueryRef(f) => acc ++ "${" ++ f ++ ".query" ++ "}",
+          | FragmentQueryRef(f) => acc,
+        "",
+        parts,
+      )
+    )
+  };
+};
+
 let emit_printed_query = parts => {
   open Ast_408;
   let make_string = s => {
@@ -70,9 +147,12 @@ let emit_printed_query = parts => {
       Some(join(acc, make_fragment_query(f)))
     };
 
-  parts
-  |> Array.fold_left(generate_expr, None)
-  |> Option.get_or_else(make_string(""));
+  let result = parts |> Array.fold_left(generate_expr, None);
+
+  switch (result) {
+  | None => make_string("")
+  | Some(e) => e
+  };
 };
 
 let rec emit_json =
@@ -123,7 +203,38 @@ let make_printed_query = (config, document) => {
     switch (Ppx_config.output_mode()) {
     | Ppx_config.Apollo_AST =>
       Ast_serializer_apollo.serialize_document(source, document) |> emit_json
-    | Ppx_config.String => emit_printed_query(source)
+    | Ppx_config.String =>
+      Ast_408.(
+        Ast_helper.(
+          switch (config.template_tag) {
+          | None => emit_printed_query(source)
+          | Some(template_tag) =>
+            // if the template literal is: "graphql"
+            // a string is created like this: graphql`[query]`
+            let contents =
+              template_tag
+              ++ "`\n"
+              ++ pretty_print(emit_printed_template_query(source))
+              ++ "`";
+
+            // the only way to emit a template literal for now, using thebs.raw
+            // extension
+            Exp.extension((
+              {txt: "bs.raw", loc: Location.none},
+              PStr([
+                {
+                  pstr_desc:
+                    Pstr_eval(
+                      Exp.constant(Parsetree.Pconst_string(contents, None)),
+                      [],
+                    ),
+                  pstr_loc: Location.none,
+                },
+              ]),
+            ));
+          }
+        )
+      )
     };
 
   reprinted;

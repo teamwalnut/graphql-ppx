@@ -66,6 +66,7 @@ let rewrite_query =
       ~schema=?,
       ~records=?,
       ~inline=?,
+      ~template_literal=?,
       ~definition=?,
       ~loc,
       ~delim,
@@ -115,6 +116,7 @@ let rewrite_query =
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
+        template_literal,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -168,6 +170,50 @@ let extract_schema_from_config = config_fields => {
   | _ => None
   };
 };
+
+let extract_template_literal_from_config = config_fields => {
+  open Ast_408;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_template_literal_field =
+    try(
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident("templateTag"), _},
+                {pexp_desc: Pexp_ident({txt: _}), _},
+              ) =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_template_literal_field) {
+  | Some((_, {pexp_desc: Pexp_ident({txt: lident})})) =>
+    Some(
+      Longident.flatten(lident)
+      |> List.fold_left(
+           (acc, elem) =>
+             if (acc == "") {
+               elem;
+             } else {
+               acc ++ "." ++ elem;
+             },
+           "",
+         ),
+    )
+  | _ => None
+  };
+};
+
 
 let extract_bool_from_config = (name, config_fields) => {
   open Ast_408;
@@ -284,6 +330,7 @@ let mapper = (_config, _cookies) => {
                           ~records=?extract_records_from_config(fields),
                           ~inline=?extract_inline_from_config(fields),
                           ~definition=?extract_definition_from_config(fields),
+                          ~template_literal=?extract_template_literal_from_config(fields),
                           ~loc=conv_loc_from_ast(loc),
                           ~delim,
                           ~query,
@@ -405,6 +452,7 @@ let mapper = (_config, _cookies) => {
                              ~inline=?extract_inline_from_config(fields),
                              ~definition=?
                                extract_definition_from_config(fields),
+                             ~template_literal=?extract_template_literal_from_config(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
