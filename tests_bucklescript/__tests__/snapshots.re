@@ -52,6 +52,10 @@ describe("Objects (legacy)", () =>
            expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
          )
        });
+  } else {
+    test("dummy", () =>
+      expect("dummy") |> toMatch("dummy")
+    );
   }
 );
 
@@ -63,5 +67,9 @@ describe("Records", () =>
            expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
          )
        });
+  } else {
+    test("dummy", () =>
+      expect("dummy") |> toMatch("dummy")
+    );
   }
 );
