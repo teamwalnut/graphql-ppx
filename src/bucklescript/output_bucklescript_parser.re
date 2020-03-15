@@ -391,6 +391,7 @@ and generate_poly_variant_selection_set =
 
         let%expr temp =
           Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
+
         switch (Js.Json.decodeNull(temp)) {
         | None =>
           let value = temp;
@@ -410,33 +411,6 @@ and generate_poly_variant_selection_set =
         ],
       );
 
-  let variant_type =
-    Ast_helper.(
-      Typ.variant(
-        fields
-        |> List.map(((name, _)) =>
-             {
-               prf_desc:
-                 Rtag(
-                   {txt: Compat.capitalize_ascii(name), loc},
-                   false,
-                   [
-                     {
-                       ptyp_desc: Ptyp_any,
-                       ptyp_loc_stack: [],
-                       ptyp_attributes: [],
-                       ptyp_loc: Location.none,
-                     },
-                   ],
-                 ),
-               prf_loc: loc,
-               prf_attributes: [],
-             }
-           ),
-        Closed,
-        None,
-      )
-    );
   [@metaloc loc]
   (
     switch%expr (Js.Json.decodeObject(value)) {
@@ -447,7 +421,9 @@ and generate_poly_variant_selection_set =
           "Expected type " ++ [%e const_str_expr(name)] ++ " to be an object"
         ],
       )
-    | Some(value) => ([%e generator_loop(fields)]: [%t variant_type])
+    | Some(value) =>
+      %e
+      generator_loop(fields)
     }
   );
 }
