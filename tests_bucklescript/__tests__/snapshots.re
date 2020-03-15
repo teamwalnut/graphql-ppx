@@ -41,6 +41,14 @@ let run_ppx = (path, opts) => {
   |> toString;
 };
 
+if (win) {
+  execSync(
+    "del __tests__\\__snapshots__\\snapshots.bs.js.snap",
+    {cwd: resolve(dirname, "..")},
+  )
+  ->ignore;
+};
+
 let tests =
   readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
