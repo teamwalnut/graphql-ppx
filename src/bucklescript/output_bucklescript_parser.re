@@ -388,28 +388,17 @@ and generate_poly_variant_selection_set =
               ),
             )
           );
-        switch%expr (Js.Dict.get(value, [%e const_str_expr(field)])) {
+
+        let%expr temp =
+          Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
+        switch (Js.Json.decodeNull(temp)) {
         | None =>
+          let value = temp;
           %e
-          make_error_raiser(
-            [%expr
-              "Field "
-              ++ [%e const_str_expr(field)]
-              ++ " on type "
-              ++ [%e const_str_expr(name)]
-              ++ " is missing"
-            ],
-          )
-        | Some(temp) =>
-          switch (Js.Json.decodeNull(temp)) {
-          | None =>
-            let value = temp;
-            %e
-            variant_decoder;
-          | Some(_) =>
-            %e
-            generator_loop(next)
-          }
+          variant_decoder;
+        | Some(_) =>
+          %e
+          generator_loop(next)
         };
       }
     | [] =>
