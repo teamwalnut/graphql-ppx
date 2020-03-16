@@ -12,16 +12,17 @@
     "@opam/ocaml-migrate-parsetree": ">=1.6.0",
     "@opam/ppx_tools_versioned": "5.2.3",
     "@opam/reason": "3.5.2",
-    "@opam/menhir": "*",
-    "refmterr": "*"
+    "@opam/menhir": "*"
   },
   "devDependencies": {
     "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.9.0"
+    "ocaml": "~4.9.0",
+    "refmterr": "*"
   },
   "esy": {
-    "build": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
+    "build": [["dune", "build", "-p", "#{self.name}"]],
+    "buildDev": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
     "buildsInSource": "_build"
   }
 }
