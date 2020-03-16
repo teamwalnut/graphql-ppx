@@ -65,7 +65,7 @@ jobs:
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
-          name: ${{ matrix.os }}-bsb6
+          name: ${{ matrix.os }}
           path: _build/default/src/bucklescript_bin/bin.exe
 
   test_and_build:
