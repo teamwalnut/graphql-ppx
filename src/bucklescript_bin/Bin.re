@@ -1,5 +1,3 @@
-open Migrate_parsetree;
-
 let argv =
   switch (Sys.argv |> Array.to_list) {
   | [program, ...rest] =>
