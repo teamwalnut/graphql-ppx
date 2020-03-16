@@ -22,7 +22,18 @@
   },
   "esy": {
     "build": [["dune", "build", "-p", "#{self.name}"]],
-    "buildDev": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
+    "buildDev": [
+      [
+        "refmterr",
+        "dune",
+        "build",
+        "--promote-install-files",
+        "--root",
+        ".",
+        "--only-package",
+        "#{self.name}"
+      ]
+    ],
     "buildsInSource": "_build"
   }
 }
