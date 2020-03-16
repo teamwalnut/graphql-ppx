@@ -121,9 +121,12 @@ jobs:
       #     esy b dune runtest -f
       #   env:
       #     CI: true
-      - name: test-bucklescript
+      - name: build
         run: |
           esy b
+      - name: test-bucklescript
+        if: runner.os != 'Windows'
+        run: |
           cd tests_bucklescript
           npm ci --no-optional
           npm run test

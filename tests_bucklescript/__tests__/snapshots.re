@@ -41,43 +41,23 @@ let run_ppx = (path, opts) => {
   |> toString;
 };
 
-if (win) {
-  execSync(
-    "del __tests__\\__snapshots__\\snapshots.bs.js.snap",
-    {cwd: resolve(dirname, "..")},
-  )
-  ->ignore;
-};
-
 let tests =
   readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
 describe("Objects (legacy)", () =>
-  if (!win) {
-    tests
-    |> Array.iter(t => {
-         test(t, () =>
-           expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
-         )
-       });
-  } else {
-    test("dummy", () =>
-      expect("dummy") |> toMatch("dummy")
-    );
-  }
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
+       )
+     })
 );
 
 describe("Records", () =>
-  if (!win) {
-    tests
-    |> Array.iter(t => {
-         test(t, () =>
-           expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
-         )
-       });
-  } else {
-    test("dummy", () =>
-      expect("dummy") |> toMatch("dummy")
-    );
-  }
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
+       )
+     })
 );
