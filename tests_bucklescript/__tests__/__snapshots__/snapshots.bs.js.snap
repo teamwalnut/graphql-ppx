@@ -2123,7 +2123,10 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
-  type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  type t = {
+    .
+    \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
+  }
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -2170,41 +2173,37 @@ module InlineFragmentQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
+                          (Obj.magic(value): string);
+                        },
 
-                          \\"barkVolume\\": {
-                            let value =
-                              Js.Dict.unsafeGet(
-                                Obj.magic(value),
-                                \\"barkVolume\\",
-                              );
+                        \\"barkVolume\\": {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
 
-                            (Obj.magic(value): float);
-                          },
-                        };
-                      },
-                    )
-                  | _ => \`Nonexhaustive
-                  }: [
-                    | \`Nonexhaustive
-                    | \`Dog(_)
-                  ]
-                )
+                          (Obj.magic(value): float);
+                        },
+                      };
+                    },
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -2256,7 +2255,10 @@ module UnionExternalFragmentQuery = {
       )
       ++ DogFragment.query;
     type raw_t;
-    type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(DogFragment.t)]};
+    type t = {
+      .
+      \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(DogFragment.t)],
+    };
     let parse: Js.Json.t => t =
       value => {
         [@metaloc loc]
@@ -2299,15 +2301,11 @@ module UnionExternalFragmentQuery = {
                     ++ \\" has a __typename field that is not a string\\",
                   )
 
-                | Some(typename) => (
-                    switch (typename) {
-                    | \\"Dog\\" => \`Dog(DogFragment.parse(value))
-                    | _ => \`Nonexhaustive
-                    }: [
-                      | \`Nonexhaustive
-                      | \`Dog(_)
-                    ]
-                  )
+                | Some(typename) =>
+                  switch (typename) {
+                  | \\"Dog\\" => \`Dog(DogFragment.parse(value))
+                  | typename => \`FutureAddedValue(value)
+                  }
                 }
               }
             };
@@ -3143,6 +3141,7 @@ module MyQuery = {
   type t = {
     .
     \\"simpleSubscription\\": [
+      | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_simpleSubscription_Dog)
       | \`Human(t_simpleSubscription_Human)
     ],
@@ -3192,55 +3191,44 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
-                        };
-                      },
-                    )
-                  | \\"Human\\" =>
-                    \`Human(
+                          (Obj.magic(value): string);
+                        },
+                      };
+                    },
+                  )
+                | \\"Human\\" =>
+                  \`Human(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
-                        };
-                      },
-                    )
-                  | typename =>
-                    Js.Exn.raiseError(
-                      \\"graphql_ppx: \\"
-                      ++ \\"Union \\"
-                      ++ \\"DogOrHuman\\"
-                      ++ \\" returned unknown type \\"
-                      ++ typename,
-                    )
-                  }: [
-                    | \`Dog(_)
-                    | \`Human(_)
-                  ]
-                )
+                          (Obj.magic(value): string);
+                        },
+                      };
+                    },
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -3410,7 +3398,11 @@ module MyQuery = {
   type raw_t;
   type t = {
     .
-    \\"dogOrHuman\\": [ | \`Dog(t_dogOrHuman_Dog) | \`Human(t_dogOrHuman_Human)],
+    \\"dogOrHuman\\": [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+      | \`Human(t_dogOrHuman_Human)
+    ],
   }
   and t_dogOrHuman_Human = {. \\"name\\": string}
   and t_dogOrHuman_Dog = {
@@ -3460,65 +3452,54 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
+                          (Obj.magic(value): string);
+                        },
 
-                          \\"barkVolume\\": {
-                            let value =
-                              Js.Dict.unsafeGet(
-                                Obj.magic(value),
-                                \\"barkVolume\\",
-                              );
+                        \\"barkVolume\\": {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
 
-                            (Obj.magic(value): float);
-                          },
-                        };
-                      },
-                    )
-                  | \\"Human\\" =>
-                    \`Human(
+                          (Obj.magic(value): float);
+                        },
+                      };
+                    },
+                  )
+                | \\"Human\\" =>
+                  \`Human(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
-                        };
-                      },
-                    )
-                  | typename =>
-                    Js.Exn.raiseError(
-                      \\"graphql_ppx: \\"
-                      ++ \\"Union \\"
-                      ++ \\"DogOrHuman\\"
-                      ++ \\" returned unknown type \\"
-                      ++ typename,
-                    )
-                  }: [
-                    | \`Dog(_)
-                    | \`Human(_)
-                  ]
-                )
+                          (Obj.magic(value): string);
+                        },
+                      };
+                    },
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -3553,7 +3534,10 @@ exports[`Objects (legacy) unionPartial.re 1`] = `
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
-  type t = {. \\"dogOrHuman\\": [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  type t = {
+    .
+    \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
+  }
   and t_dogOrHuman_Dog = {
     .
     \\"name\\": string,
@@ -3601,41 +3585,37 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
+                      [@metaloc loc]
+                      let value =
+                        value |> Js.Json.decodeObject |> Js.Option.getExn;
                       {
-                        [@metaloc loc]
-                        let value =
-                          value |> Js.Json.decodeObject |> Js.Option.getExn;
-                        {
 
-                          \\"name\\": {
-                            let value =
-                              Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                        \\"name\\": {
+                          let value =
+                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                            (Obj.magic(value): string);
-                          },
+                          (Obj.magic(value): string);
+                        },
 
-                          \\"barkVolume\\": {
-                            let value =
-                              Js.Dict.unsafeGet(
-                                Obj.magic(value),
-                                \\"barkVolume\\",
-                              );
+                        \\"barkVolume\\": {
+                          let value =
+                            Js.Dict.unsafeGet(
+                              Obj.magic(value),
+                              \\"barkVolume\\",
+                            );
 
-                            (Obj.magic(value): float);
-                          },
-                        };
-                      },
-                    )
-                  | _ => \`Nonexhaustive
-                  }: [
-                    | \`Nonexhaustive
-                    | \`Dog(_)
-                  ]
-                )
+                          (Obj.magic(value): float);
+                        },
+                      };
+                    },
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -5659,7 +5639,9 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
-  type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  type t = {
+    dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
+  }
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -5704,36 +5686,29 @@ module InlineFragmentQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
-                      {
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
+                        (Obj.magic(value): string);
+                      },
 
-                        barkVolume: {
-                          let value =
-                            Js.Dict.unsafeGet(
-                              Obj.magic(value),
-                              \\"barkVolume\\",
-                            );
+                      barkVolume: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"barkVolume\\");
 
-                          (Obj.magic(value): float);
-                        },
-                      }: t_dogOrHuman_Dog,
-                    )
-                  | _ => \`Nonexhaustive
-                  }: [
-                    | \`Nonexhaustive
-                    | \`Dog(_)
-                  ]
-                )
+                        (Obj.magic(value): float);
+                      },
+                    }: t_dogOrHuman_Dog,
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -5781,7 +5756,9 @@ module UnionExternalFragmentQuery = {
       )
       ++ DogFragment.query;
     type raw_t;
-    type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(DogFragment.t)]};
+    type t = {
+      dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(DogFragment.t)],
+    };
     let parse: Js.Json.t => t =
       (value) => (
         {
@@ -5822,15 +5799,11 @@ module UnionExternalFragmentQuery = {
                     ++ \\" has a __typename field that is not a string\\",
                   )
 
-                | Some(typename) => (
-                    switch (typename) {
-                    | \\"Dog\\" => \`Dog(DogFragment.parse(value))
-                    | _ => \`Nonexhaustive
-                    }: [
-                      | \`Nonexhaustive
-                      | \`Dog(_)
-                    ]
-                  )
+                | Some(typename) =>
+                  switch (typename) {
+                  | \\"Dog\\" => \`Dog(DogFragment.parse(value))
+                  | typename => \`FutureAddedValue(value)
+                  }
                 }
               }
             };
@@ -6650,6 +6623,7 @@ module MyQuery = {
   type raw_t;
   type t = {
     simpleSubscription: [
+      | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_simpleSubscription_Dog)
       | \`Human(t_simpleSubscription_Human)
     ],
@@ -6697,45 +6671,34 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
-                      {
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
-                      }: t_simpleSubscription_Dog,
-                    )
-                  | \\"Human\\" =>
-                    \`Human(
-                      {
+                        (Obj.magic(value): string);
+                      },
+                    }: t_simpleSubscription_Dog,
+                  )
+                | \\"Human\\" =>
+                  \`Human(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
-                      }: t_simpleSubscription_Human,
-                    )
-                  | typename =>
-                    Js.Exn.raiseError(
-                      \\"graphql_ppx: \\"
-                      ++ \\"Union \\"
-                      ++ \\"DogOrHuman\\"
-                      ++ \\" returned unknown type \\"
-                      ++ typename,
-                    )
-                  }: [
-                    | \`Dog(_)
-                    | \`Human(_)
-                  ]
-                )
+                        (Obj.magic(value): string);
+                      },
+                    }: t_simpleSubscription_Human,
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -6888,7 +6851,11 @@ module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
   type t = {
-    dogOrHuman: [ | \`Dog(t_dogOrHuman_Dog) | \`Human(t_dogOrHuman_Human)],
+    dogOrHuman: [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+      | \`Human(t_dogOrHuman_Human)
+    ],
   }
   and t_dogOrHuman_Human = {name: string}
   and t_dogOrHuman_Dog = {
@@ -6935,55 +6902,41 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
-                      {
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
+                        (Obj.magic(value): string);
+                      },
 
-                        barkVolume: {
-                          let value =
-                            Js.Dict.unsafeGet(
-                              Obj.magic(value),
-                              \\"barkVolume\\",
-                            );
+                      barkVolume: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"barkVolume\\");
 
-                          (Obj.magic(value): float);
-                        },
-                      }: t_dogOrHuman_Dog,
-                    )
-                  | \\"Human\\" =>
-                    \`Human(
-                      {
+                        (Obj.magic(value): float);
+                      },
+                    }: t_dogOrHuman_Dog,
+                  )
+                | \\"Human\\" =>
+                  \`Human(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
-                      }: t_dogOrHuman_Human,
-                    )
-                  | typename =>
-                    Js.Exn.raiseError(
-                      \\"graphql_ppx: \\"
-                      ++ \\"Union \\"
-                      ++ \\"DogOrHuman\\"
-                      ++ \\" returned unknown type \\"
-                      ++ typename,
-                    )
-                  }: [
-                    | \`Dog(_)
-                    | \`Human(_)
-                  ]
-                )
+                        (Obj.magic(value): string);
+                      },
+                    }: t_dogOrHuman_Human,
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };
@@ -7018,7 +6971,9 @@ exports[`Records unionPartial.re 1`] = `
 module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type raw_t;
-  type t = {dogOrHuman: [ | \`Nonexhaustive | \`Dog(t_dogOrHuman_Dog)]}
+  type t = {
+    dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
+  }
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -7063,36 +7018,29 @@ module MyQuery = {
                   ++ \\" has a __typename field that is not a string\\",
                 )
 
-              | Some(typename) => (
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
-                      {
+              | Some(typename) =>
+                switch (typename) {
+                | \\"Dog\\" =>
+                  \`Dog(
+                    {
 
-                        name: {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
+                      name: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"name\\");
 
-                          (Obj.magic(value): string);
-                        },
+                        (Obj.magic(value): string);
+                      },
 
-                        barkVolume: {
-                          let value =
-                            Js.Dict.unsafeGet(
-                              Obj.magic(value),
-                              \\"barkVolume\\",
-                            );
+                      barkVolume: {
+                        let value =
+                          Js.Dict.unsafeGet(Obj.magic(value), \\"barkVolume\\");
 
-                          (Obj.magic(value): float);
-                        },
-                      }: t_dogOrHuman_Dog,
-                    )
-                  | _ => \`Nonexhaustive
-                  }: [
-                    | \`Nonexhaustive
-                    | \`Dog(_)
-                  ]
-                )
+                        (Obj.magic(value): float);
+                      },
+                    }: t_dogOrHuman_Dog,
+                  )
+                | typename => \`FutureAddedValue(value)
+                }
               }
             }
           };

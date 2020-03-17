@@ -546,82 +546,41 @@ and generate_poly_variant_union =
     Ast_helper.(
       fragments
       |> List.map(((type_name, inner)) => {
-           let name_pattern = Pat.constant(Pconst_string(type_name, None));
            Ast_helper.(
-             Exp.variant(
-               type_name,
-               Some(
-                 generate_parser(
-                   config,
-                   [type_name, ...path],
-                   definition,
-                   inner,
+             Exp.case(
+               Pat.constant(Pconst_string(type_name, None)),
+               Exp.variant(
+                 type_name,
+                 Some(
+                   generate_parser(
+                     config,
+                     [type_name, ...path],
+                     definition,
+                     inner,
+                   ),
                  ),
                ),
              )
            )
-           |> Exp.case(name_pattern);
          })
     );
   let (fallback_case, fallback_case_ty) =
     Ast_helper.(
-      switch (exhaustive_flag) {
-      | Result_structure.Exhaustive => (
-          Exp.case(
-            Pat.var({loc: Location.none, txt: "typename"}),
-            make_error_raiser(
-              [%expr
-                "Union "
-                ++ [%e const_str_expr(name)]
-                ++ " returned unknown type "
-                ++ typename
-              ],
-            ),
+      Exp.case(
+        Pat.var({loc: Location.none, txt: "typename"}),
+        Exp.variant(
+          "FutureAddedValue",
+          Some(
+            Exp.ident({
+              Location.txt: Longident.parse("value"),
+              loc: Location.none,
+            }),
           ),
-          [],
-        )
-      | Nonexhaustive => (
-          Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-          [
-            {
-              prf_desc: Rtag({txt: "Nonexhaustive", loc}, true, []),
-              prf_loc: loc,
-              prf_attributes: [],
-            },
-          ],
-        )
-      }
+        ),
+      ),
+      [],
     );
-  let fragment_case_tys =
-    fragments
-    |> List.map(((name, _)) =>
-         {
-           prf_desc:
-             Rtag(
-               {txt: name, loc},
-               false,
-               [
-                 {
-                   ptyp_desc: Ptyp_any,
-                   ptyp_attributes: [],
-                   ptyp_loc_stack: [],
-                   ptyp_loc: Location.none,
-                 },
-               ],
-             ),
-           prf_attributes: [],
-           prf_loc: Location.none,
-         }
-       );
 
-  let union_ty =
-    Ast_helper.(
-      Typ.variant(
-        List.concat([fallback_case_ty, fragment_case_tys]),
-        Closed,
-        None,
-      )
-    );
   let typename_matcher =
     Ast_helper.(
       Exp.match(
@@ -664,7 +623,9 @@ and generate_poly_variant_union =
               ++ " has a __typename field that is not a string"
             ],
           )
-        | Some(typename) => ([%e typename_matcher]: [%t union_ty])
+        | Some(typename) =>
+          %e
+          typename_matcher
         }
       }
     }

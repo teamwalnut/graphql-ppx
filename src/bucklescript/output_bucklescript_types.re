@@ -92,9 +92,16 @@ let make_error_raiser = message =>
 // duplicate of ouput_bucklescript_decoder
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 
-let base_type = (~inner=[], name) => {
+let base_type = (~inner=[], ~loc=?, name) => {
   Ast_helper.Typ.constr(
-    {Location.txt: Longident.parse(name), loc: Location.none},
+    {
+      Location.txt: Longident.parse(name),
+      loc:
+        switch (loc) {
+        | None => Location.none
+        | Some(loc) => loc
+        },
+    },
     inner,
   );
 };
@@ -139,22 +146,32 @@ let generate_enum_type = (loc, enum_meta) => {
 // generate the type definition, including nullables, arrays etc.
 let rec generate_type = (config, path) =>
   fun
-  | Res_string(loc) => base_type("string")
-  | Res_nullable(_loc, inner) =>
-    base_type(~inner=[generate_type(config, path, inner)], "option")
-  | Res_array(_loc, inner) =>
-    base_type(~inner=[generate_type(config, path, inner)], "array")
-  | Res_custom_decoder(loc, module_name, _) => base_type(module_name ++ ".t")
-  | Res_id(loc) => base_type("string")
-  | Res_int(loc) => base_type("int")
-  | Res_float(loc) => base_type("float")
-  | Res_boolean(loc) => base_type("bool")
-  | Res_raw_scalar(loc) => base_type("Js.Json.t")
-  | Res_object(_loc, name, _fields, Some(type_name))
-  | Res_record(_loc, name, _fields, Some(type_name)) => base_type(type_name)
-  | Res_object(_loc, name, _fields, None)
-  | Res_record(_loc, name, _fields, None) =>
-    base_type(generate_type_name(path))
+  | Res_string(loc) => base_type(~loc=conv_loc(loc), "string")
+  | Res_nullable(loc, inner) =>
+    base_type(
+      ~loc=conv_loc(loc),
+      ~inner=[generate_type(config, path, inner)],
+      "option",
+    )
+  | Res_array(loc, inner) =>
+    base_type(
+      ~loc=conv_loc(loc),
+      ~inner=[generate_type(config, path, inner)],
+      "array",
+    )
+  | Res_custom_decoder(loc, module_name, _) =>
+    base_type(~loc=conv_loc(loc), module_name ++ ".t")
+  | Res_id(loc) => base_type(~loc=conv_loc(loc), "string")
+  | Res_int(loc) => base_type(~loc=conv_loc(loc), "int")
+  | Res_float(loc) => base_type(~loc=conv_loc(loc), "float")
+  | Res_boolean(loc) => base_type(~loc=conv_loc(loc), "bool")
+  | Res_raw_scalar(loc) => base_type(~loc=conv_loc(loc), "Js.Json.t")
+  | Res_object(loc, name, _fields, Some(type_name))
+  | Res_record(loc, name, _fields, Some(type_name)) =>
+    base_type(~loc=conv_loc(loc), type_name)
+  | Res_object(loc, name, _fields, None)
+  | Res_record(loc, name, _fields, None) =>
+    base_type(~loc=conv_loc(loc), generate_type_name(path))
   | Res_poly_variant_selection_set(loc, name, fields) =>
     Ast_helper.(
       Typ.variant(
@@ -183,41 +200,19 @@ let rec generate_type = (config, path) =>
       )
     )
 
-  | Res_poly_variant_union(loc, name, fragments, exhaustive_flag) => {
-      let (fallback_case, fallback_case_ty) =
-        Ast_helper.(
-          switch (exhaustive_flag) {
-          | Result_structure.Exhaustive => (
-              Exp.case(
-                Pat.var({loc: Location.none, txt: "typename"}),
-                make_error_raiser(
-                  [%expr
-                    "Union "
-                    ++ [%e const_str_expr(name)]
-                    ++ " returned unknown type "
-                    ++ typename
-                  ],
-                ),
-              ),
-              [],
-            )
-          | Nonexhaustive => (
-              Exp.case(Pat.any(), [%expr `Nonexhaustive]),
-              [
-                {
-                  prf_desc:
-                    Rtag(
-                      {txt: "Nonexhaustive", loc: conv_loc(loc)},
-                      true,
-                      [],
-                    ),
-                  prf_loc: conv_loc(loc),
-                  prf_attributes: [],
-                },
-              ],
-            )
-          }
-        );
+  | Res_poly_variant_union(loc, name, fragments, _exhaustive_flag) => {
+      let fallback_case_ty = [
+        {
+          prf_desc:
+            Rtag(
+              {txt: "FutureAddedValue", loc: conv_loc(loc)},
+              false,
+              [base_type("Js.Json.t")],
+            ),
+          prf_loc: conv_loc(loc),
+          prf_attributes: [],
+        },
+      ];
 
       let fragment_case_tys =
         fragments
