@@ -197,41 +197,73 @@ let rec emit_json =
       ]
   );
 
+let pre_template_tag = (~location=?, ~import=?, template_tag) => {
+  switch (location, import) {
+  | (Some(location), Some(import)) =>
+    Some(
+      "let { "
+      ++ import
+      ++ ": "
+      ++ template_tag
+      ++ " } = require(\""
+      ++ location
+      ++ "\")",
+    )
+  | _ => None
+  };
+};
+
+let wrap_template_tag = (template_tag, source) => {
+  // if the template literal is: "graphql"
+  // a string is created like this: graphql`[query]`
+  template_tag ++ "`\n" ++ source ++ "`";
+};
+
+let wrap_raw = contents => {
+  Exp.extension((
+    {txt: "bs.raw", loc: Location.none},
+    PStr([
+      {
+        pstr_desc:
+          Pstr_eval(
+            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            [],
+          ),
+        pstr_loc: Location.none,
+      },
+    ]),
+  ));
+};
+
 let make_printed_query = (config, document) => {
   let source = Graphql_printer.print_document(config.schema, document);
   let reprinted =
     switch (Ppx_config.output_mode()) {
-    | Ppx_config.Apollo_AST =>
-      Ast_serializer_apollo.serialize_document(source, document) |> emit_json
+    | Ppx_config.Apollo_AST => (
+        None,
+        Ast_serializer_apollo.serialize_document(source, document)
+        |> emit_json,
+      )
     | Ppx_config.String =>
       Ast_408.(
         Ast_helper.(
           switch (config.template_tag) {
-          | None => emit_printed_query(source)
-          | Some(template_tag) =>
-            // if the template literal is: "graphql"
-            // a string is created like this: graphql`[query]`
-            let contents =
-              template_tag
-              ++ "`\n"
-              ++ pretty_print(emit_printed_template_query(source))
-              ++ "`";
-
+          | (None, _, _) => (None, emit_printed_query(source))
+          | (Some(template_tag), location, import) =>
             // the only way to emit a template literal for now, using thebs.raw
             // extension
-            Exp.extension((
-              {txt: "bs.raw", loc: Location.none},
-              PStr([
-                {
-                  pstr_desc:
-                    Pstr_eval(
-                      Exp.constant(Parsetree.Pconst_string(contents, None)),
-                      [],
-                    ),
-                  pstr_loc: Location.none,
-                },
-              ]),
-            ));
+            (
+              switch (pre_template_tag(~location?, ~import?, template_tag)) {
+              | Some(contents) => Some(wrap_raw(contents))
+              | None => None
+              },
+              wrap_raw(
+                wrap_template_tag(
+                  template_tag,
+                  pretty_print(emit_printed_template_query(source)),
+                ),
+              ),
+            )
           }
         )
       )
@@ -268,18 +300,17 @@ let generate_default_operation =
           config,
           extracted_args,
         );
+
+      let (pre_printed_query, printed_query) =
+        make_printed_query(config, [Graphql_ast.Operation(operation)]);
+
       List.concat([
         List.concat([
-          [
-            [%stri
-              let query = [%e
-                make_printed_query(
-                  config,
-                  [Graphql_ast.Operation(operation)],
-                )
-              ]
-            ],
-          ],
+          switch (pre_printed_query) {
+          | Some(pre_printed_query) => [[%stri [%e pre_printed_query]]]
+          | None => []
+          },
+          [[%stri let query = [%e printed_query]]],
           [[%stri type raw_t]],
           [types],
           switch (extracted_args) {
@@ -386,7 +417,8 @@ let generate_fragment_module =
         );
       };
 
-  let query = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+  let (pre_printed_query, printed_query) =
+    make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
   let parse =
     [@metaloc conv_loc(config.map_loc(fragment.span))]
     [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
@@ -404,37 +436,47 @@ let generate_fragment_module =
         ],
       ];
     } else {
-      List.concat([
-        [
-          [%stri let query = [%e query]],
-          types,
-          [%stri type raw_t],
-          Ast_helper.(
-            Str.type_(
-              Recursive,
-              [
-                Type.mk(
-                  ~manifest=
-                    Typ.constr(
-                      {loc: Location.none, txt: Longident.Lident("t")},
-                      [],
+      List.concat(
+        List.concat([
+          [
+            switch (pre_printed_query) {
+            | Some(pre_printed_query) => [[%stri [%e pre_printed_query]]]
+            | None => []
+            },
+            [[%stri let query = [%e printed_query]]],
+            [types],
+            [[%stri type raw_t]],
+            [
+              Ast_helper.(
+                Str.type_(
+                  Recursive,
+                  [
+                    Type.mk(
+                      ~manifest=
+                        Typ.constr(
+                          {loc: Location.none, txt: Longident.Lident("t")},
+                          [],
+                        ),
+                      {
+                        loc: Location.none,
+                        txt: "t_" ++ fragment.item.fg_type_condition.item,
+                      },
                     ),
-                  {
-                    loc: Location.none,
-                    txt: "t_" ++ fragment.item.fg_type_condition.item,
-                  },
-                ),
+                  ],
+                )
+              ),
+            ],
+            [parse],
+            [
+              [%stri
+                let name = [%e
+                  Ast_helper.Exp.constant(Pconst_string(name, None))
+                ]
               ],
-            )
-          ),
-          parse,
-          [%stri
-            let name = [%e
-              Ast_helper.Exp.constant(Pconst_string(name, None))
-            ]
+            ],
           ],
-        ],
-      ]);
+        ]),
+      );
     };
 
   (Some(Generator_utils.capitalize_ascii(name)), contents);

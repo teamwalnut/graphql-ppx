@@ -44,6 +44,8 @@ let global_records = () => Ppx_config.records();
 let global_definition = () => Ppx_config.definition();
 let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
+let global_template_tag_import = () => Ppx_config.template_tag_import();
+let global_template_tag_location = () => Ppx_config.template_tag_location();
 
 let fmt_parse_err = err =>
   Graphql_parser.(
@@ -181,6 +183,43 @@ let extract_bool_from_config = (name, config_fields) => {
   };
 };
 
+let extract_string_from_config = (name, config_fields) => {
+  open Ast_408;
+  open Asttypes;
+  open Parsetree;
+
+  let maybe_string_field =
+    try(
+      Some(
+        List.find(
+          config_field =>
+            switch (config_field) {
+            | (
+                {txt: Longident.Lident(matched_name), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+              )
+                when matched_name == name =>
+              true
+            | _ => false
+            },
+          config_fields,
+        ),
+      )
+    ) {
+    | _ => None
+    };
+
+  switch (maybe_string_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(value, _)), _})) =>
+    Some(value)
+  | _ => None
+  };
+};
+
+let extract_template_tag_location_from_config =
+  extract_string_from_config("templateTagLocation");
+let extract_template_tag_import_from_config =
+  extract_string_from_config("templateTagImport");
 
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_inline_from_config = extract_bool_from_config("inline");
@@ -194,6 +233,8 @@ type query_config = {
   inline: option(bool),
   definition: option(bool),
   template_tag: option(string),
+  template_tag_location: option(string),
+  template_tag_import: option(string),
   tagged_template: option(bool),
 };
 
@@ -204,6 +245,8 @@ let get_query_config = fields => {
     inline: extract_inline_from_config(fields),
     definition: extract_definition_from_config(fields),
     template_tag: extract_template_tag_from_config(fields),
+    template_tag_import: extract_template_tag_import_from_config(fields),
+    template_tag_location: extract_template_tag_location_from_config(fields),
     tagged_template: extract_tagged_template_config(fields),
   };
 };
@@ -212,8 +255,17 @@ let empty_query_config = {
   records: None,
   inline: None,
   definition: None,
-  template_tag: None,
   tagged_template: None,
+  template_tag: None,
+  template_tag_location: None,
+  template_tag_import: None,
+};
+
+let get_with_default = (value, default_value) => {
+  switch (value) {
+  | Some(value) => Some(value)
+  | None => default_value
+  };
 };
 
 let rewrite_query =
@@ -257,6 +309,45 @@ let rewrite_query =
         ),
       )
     | Result.Ok(document) =>
+      let template_tag =
+        switch (query_config.tagged_template) {
+        | Some(false) => (None, None, None)
+        | _ =>
+          switch (
+            get_with_default(
+              query_config.template_tag,
+              global_template_tag(),
+            ),
+            get_with_default(
+              query_config.template_tag_location,
+              global_template_tag_location(),
+            ),
+            get_with_default(
+              query_config.template_tag_import,
+              global_template_tag_import(),
+            ),
+          ) {
+          | (Some(tag), Some(location), Some(import)) => (
+              Some(tag),
+              Some(location),
+              Some(import),
+            )
+          | (None, Some(location), Some(import)) => (
+              Some(import),
+              Some(location),
+              Some(import),
+            )
+          | (Some(tag), Some(location), None) => (
+              Some(tag),
+              Some(location),
+              Some("default"),
+            )
+          | (Some(tag), None, Some(_))
+          | (Some(tag), None, None) => (Some(tag), None, None)
+          | (None, _, _) => (None, None, None)
+          }
+        };
+
       let config = {
         Generator_utils.map_loc: add_loc(delimLength, loc),
         delimiter: delim,
@@ -279,12 +370,7 @@ let rewrite_query =
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
-        template_tag:
-          switch (query_config.tagged_template, query_config.template_tag) {
-          | (_, Some(value)) => Some(value)
-          | (Some(false), _) => None
-          | (_, None) => global_template_tag()
-          },
+        template_tag,
       };
       switch (Validations.run_validators(config, document)) {
       | Some(errs) =>
@@ -329,6 +415,8 @@ let () =
       records: false,
       legacy: false,
       template_tag: None,
+      template_tag_location: None,
+      template_tag_import: None,
       definition: true,
     })
   );
@@ -631,7 +719,27 @@ let args = [
           {...current, template_tag: Some(template_tag)}
         ),
     ),
-    "graphql",
+    "Template tag to use",
+  ),
+  (
+    "-template-tag-import",
+    Arg.String(
+      template_tag_import =>
+        Ppx_config.update_config(current =>
+          {...current, template_tag_import: Some(template_tag_import)}
+        ),
+    ),
+    "the import to use for the template tag (default is \"default\"",
+  ),
+  (
+    "-template-tag-location",
+    Arg.String(
+      template_tag_location =>
+        Ppx_config.update_config(current =>
+          {...current, template_tag_location: Some(template_tag_location)}
+        ),
+    ),
+    "the import location for the template tag (default is \"default\"",
   ),
 ];
 

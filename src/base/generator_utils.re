@@ -21,7 +21,7 @@ type output_config = {
   delimiter: option(string),
   schema: Schema.schema,
   full_document: Graphql_ast.document,
-  template_tag: option(string),
+  template_tag: (option(string), option(string), option(string)),
   records: bool,
   inline: bool,
   legacy: bool,
