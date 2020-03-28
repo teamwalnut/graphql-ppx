@@ -205,11 +205,16 @@ let pre_template_tag = (~location=?, ~import=?, template_tag) => {
   switch (import, location) {
   | (Some(import), Some(location)) =>
     Some(
-      "let { "
-      ++ import
-      ++ ": "
-      ++ template_tag
-      ++ " } = "
+      (
+        switch (import, template_tag) {
+        | ("default", template_tag) => "let " ++ template_tag
+        | (import, template_tag) when import == template_tag =>
+          "let { " ++ template_tag ++ " }"
+        | (import, template_tag) =>
+          "let { " ++ import ++ ": " ++ template_tag ++ " }"
+        }
+      )
+      ++ " = "
       ++ "require(\""
       ++ location
       ++ "\")",
@@ -218,20 +223,10 @@ let pre_template_tag = (~location=?, ~import=?, template_tag) => {
   };
 };
 
-let wrap_template_tag = (~import=?, template_tag, source) => {
+let wrap_template_tag = (template_tag, source) => {
   // if the template literal is: "graphql"
   // a string is created like this: graphql`[query]`
-  (
-    switch (import) {
-    | None
-    | Some("default") => ""
-    | Some(import) => import ++ "."
-    }
-  )
-  ++ template_tag
-  ++ "`\n"
-  ++ source
-  ++ "`";
+  template_tag ++ "`\n" ++ source ++ "`";
 };
 
 let wrap_structure_raw = contents => {
@@ -290,7 +285,6 @@ let make_printed_query = (config, document) => {
               },
               wrap_raw(
                 wrap_template_tag(
-                  ~import?,
                   template_tag,
                   pretty_print(emit_printed_template_query(source)),
                 ),
