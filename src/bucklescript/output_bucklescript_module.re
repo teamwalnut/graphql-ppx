@@ -200,36 +200,16 @@ let rec emit_json =
       ]
   );
 
-// we need to add a require statement because we cannot output the js value of
-// a bucklescript identifier in the raw statement yet. This is a feature that
-// should be coming, so then we don't need templateTagImport and templateTagLocatino
-// anymore (and also this require statement will not be necessary anymore)
-let pre_template_tag = (~location=?, ~import=?, template_tag) => {
-  switch (import, location) {
-  | (Some(import), Some(location)) =>
-    Some(
-      (
-        switch (import, template_tag) {
-        | ("default", template_tag) => "let " ++ template_tag
-        | (import, template_tag) when import == template_tag =>
-          "let { " ++ template_tag ++ " }"
-        | (import, template_tag) =>
-          "let { " ++ import ++ ": " ++ template_tag ++ " }"
-        }
-      )
-      ++ " = "
-      ++ "require(\""
-      ++ location
-      ++ "\")",
-    )
-  | _ => None
+let wrap_template_tag = (~import=?, ~location=?, ~template_tag=?, source) => {
+  switch (import, location, template_tag) {
+  | (None, Some(location), _)
+  | (Some("default"), Some(location), _) =>
+    "require(\"" ++ location ++ "\")" ++ "`\n" ++ source ++ "`"
+  | (Some(import), Some(location), _) =>
+    "require(\"" ++ location ++ "\")." ++ import ++ "`\n" ++ source ++ "`"
+  | (_, _, Some(template_tag)) => template_tag ++ "`\n" ++ source ++ "`"
+  | _ => source
   };
-};
-
-let wrap_template_tag = (template_tag, source) => {
-  // if the template literal is: "graphql"
-  // a string is created like this: graphql`[query]`
-  template_tag ++ "`\n" ++ source ++ "`";
 };
 
 let wrap_structure_raw = contents => {
@@ -275,22 +255,22 @@ let make_printed_query = (config, document) => {
       )
     | Ppx_config.String =>
       switch (config.template_tag) {
-      | (None, _, _) => (None, emit_printed_query(source))
-      | (Some(template_tag), location, import) =>
+      | (template_tag, location, import)
+          when template_tag != None || location != None =>
         // the only way to emit a template literal for now, using the bs.raw
         // extension
         (
-          switch (pre_template_tag(~location?, ~import?, template_tag)) {
-          | Some(contents) => Some(wrap_structure_raw(contents))
-          | None => None
-          },
+          None,
           wrap_raw(
             wrap_template_tag(
-              template_tag,
+              ~template_tag?,
+              ~location?,
+              ~import?,
               pretty_print(emit_printed_template_query(source)),
             ),
           ),
         )
+      | (_, _, _) => (None, emit_printed_query(source))
       }
     };
 

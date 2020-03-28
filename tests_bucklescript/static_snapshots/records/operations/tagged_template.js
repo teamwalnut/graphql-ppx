@@ -90,10 +90,7 @@ var MyQuery = {
 
 var Raw$1 = { };
 
-let { graphql } = require("gatsby")
-;
-
-var query = (graphql`
+var query = (require("gatsby").graphql`
   query   {
     variousScalars  {
       nullableString
@@ -196,10 +193,7 @@ var MyQuery2 = {
 
 var Raw$2 = { };
 
-let { graphql } = require("gatsby")
-;
-
-var query$1 = (graphql`
+var query$1 = (require("gatsby").graphql`
   query   {
     variousScalars  {
       nullableString
@@ -302,10 +296,7 @@ var MyQuery3 = {
 
 var Raw$3 = { };
 
-let graphql = require("gatsby")
-;
-
-var query$2 = (graphql`
+var query$2 = (require("gatsby")`
   query   {
     variousScalars  {
       nullableString
@@ -410,4 +401,4 @@ exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 exports.MyQuery3 = MyQuery3;
 exports.MyQuery4 = MyQuery4;
-/*  Not a pure module */
+/* query Not a pure module */

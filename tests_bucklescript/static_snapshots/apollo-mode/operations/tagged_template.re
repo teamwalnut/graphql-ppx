@@ -272,11 +272,9 @@ module MyQuery2 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  %raw
-  "let { graphql } = require(\"gatsby\")";
   /**The GraphQL query string*/
   let query = [%raw
-    "graphql`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type t_variousScalars = {
     __typename: string,
@@ -514,11 +512,9 @@ module MyQuery3 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  %raw
-  "let { graphql } = require(\"gatsby\")";
   /**The GraphQL query string*/
   let query = [%raw
-    "graphql`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type t_variousScalars = {
     __typename: string,
@@ -756,11 +752,9 @@ module MyQuery4 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  %raw
-  "let graphql = require(\"gatsby\")";
   /**The GraphQL query string*/
   let query = [%raw
-    "graphql`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+    "require(\"gatsby\")`\n  query   {\n    variousScalars  {\n      __typename\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type t_variousScalars = {
     __typename: string,
