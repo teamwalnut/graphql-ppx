@@ -130,9 +130,9 @@ module MyQuery = {
 };
 
 module MyQuery2 = {
-  %bs.raw
+  %raw
   "let { graphql: graphql } = require(\"gatsby\")";
-  let query = [%bs.raw
+  let query = [%raw
     "graphql.graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type raw_t;
@@ -247,9 +247,9 @@ module MyQuery2 = {
 };
 
 module MyQuery3 = {
-  %bs.raw
+  %raw
   "let { graphql: graphql } = require(\"gatsby\")";
-  let query = [%bs.raw
+  let query = [%raw
     "graphql.graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type raw_t;
@@ -364,9 +364,9 @@ module MyQuery3 = {
 };
 
 module MyQuery4 = {
-  %bs.raw
+  %raw
   "let { default: graphql } = require(\"gatsby\")";
-  let query = [%bs.raw
+  let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type raw_t;
