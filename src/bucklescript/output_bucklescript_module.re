@@ -201,13 +201,11 @@ let pre_template_tag = (~location=?, ~import=?, template_tag) => {
   switch (location, import) {
   | (Some(location), Some(import)) =>
     Some(
-      "let { "
-      ++ import
-      ++ ": "
-      ++ template_tag
-      ++ " } = require(\""
-      ++ location
-      ++ "\")",
+      // "( var "
+      // ++ template_tag
+      // ++ " = "
+      "require(\"" ++ location ++ "\")." ++ import,
+      // ++ " )",
     )
   | _ => None
   };
@@ -254,7 +252,7 @@ let make_printed_query = (config, document) => {
             // extension
             (
               switch (pre_template_tag(~location?, ~import?, template_tag)) {
-              | Some(contents) => Some(wrap_raw(contents))
+              | Some(contents) => Some((template_tag, wrap_raw(contents)))
               | None => None
               },
               wrap_raw(
@@ -307,7 +305,17 @@ let generate_default_operation =
       List.concat([
         List.concat([
           switch (pre_printed_query) {
-          | Some(pre_printed_query) => [[%stri [%e pre_printed_query]]]
+          | Some((tag, pre_printed_query)) => [
+              Str.value(
+                Nonrecursive,
+                [
+                  Vb.mk(
+                    Pat.var({loc: Location.none, txt: tag}),
+                    pre_printed_query,
+                  ),
+                ],
+              ),
+            ]
           | None => []
           },
           [[%stri let query = [%e printed_query]]],
@@ -440,7 +448,17 @@ let generate_fragment_module =
         List.concat([
           [
             switch (pre_printed_query) {
-            | Some(pre_printed_query) => [[%stri [%e pre_printed_query]]]
+            | Some((tag, pre_printed_query)) => [
+                Str.value(
+                  Nonrecursive,
+                  [
+                    Vb.mk(
+                      Pat.var({loc: Location.none, txt: tag}),
+                      pre_printed_query,
+                    ),
+                  ],
+                ),
+              ]
             | None => []
             },
             [[%stri let query = [%e printed_query]]],
