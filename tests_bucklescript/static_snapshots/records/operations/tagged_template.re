@@ -130,9 +130,10 @@ module MyQuery = {
 };
 
 module MyQuery2 = {
-  let graphql = [%bs.raw "require(\"gatsby\").graphql"];
+  %bs.raw
+  "let { graphql: graphql } = require(\"gatsby\")";
   let query = [%bs.raw
-    "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+    "graphql.graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type raw_t;
   type t = {variousScalars: t_variousScalars}
@@ -246,9 +247,10 @@ module MyQuery2 = {
 };
 
 module MyQuery3 = {
-  let graphql = [%bs.raw "require(\"gatsby\").graphql"];
+  %bs.raw
+  "let { graphql: graphql } = require(\"gatsby\")";
   let query = [%bs.raw
-    "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+    "graphql.graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type raw_t;
   type t = {variousScalars: t_variousScalars}
@@ -362,7 +364,8 @@ module MyQuery3 = {
 };
 
 module MyQuery4 = {
-  let graphql = [%bs.raw "require(\"gatsby\").default"];
+  %bs.raw
+  "let { default: graphql } = require(\"gatsby\")";
   let query = [%bs.raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];

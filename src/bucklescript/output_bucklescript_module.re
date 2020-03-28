@@ -197,29 +197,62 @@ let rec emit_json =
       ]
   );
 
+// we need to add a require statement because we cannot output the js value of
+// a bucklescript identifier in the raw statement yet. This is a feature that
+// should be coming, so then we don't need templateTagImport and templateTagLocatino
+// anymore (and also this require statement will not be necessary anymore)
 let pre_template_tag = (~location=?, ~import=?, template_tag) => {
-  switch (location, import) {
-  | (Some(location), Some(import)) =>
+  switch (import, location) {
+  | (Some(import), Some(location)) =>
     Some(
-      // "( var "
-      // ++ template_tag
-      // ++ " = "
-      "require(\"" ++ location ++ "\")." ++ import,
-      // ++ " )",
+      "let { "
+      ++ import
+      ++ ": "
+      ++ template_tag
+      ++ " } = "
+      ++ "require(\""
+      ++ location
+      ++ "\")",
     )
   | _ => None
   };
 };
 
-let wrap_template_tag = (template_tag, source) => {
+let wrap_template_tag = (~import=?, template_tag, source) => {
   // if the template literal is: "graphql"
   // a string is created like this: graphql`[query]`
-  template_tag ++ "`\n" ++ source ++ "`";
+  (
+    switch (import) {
+    | None
+    | Some("default") => ""
+    | Some(import) => import ++ "."
+    }
+  )
+  ++ template_tag
+  ++ "`\n"
+  ++ source
+  ++ "`";
+};
+
+let wrap_structure_raw = contents => {
+  Str.extension((
+    {txt: "raw", loc: Location.none},
+    PStr([
+      {
+        pstr_desc:
+          Pstr_eval(
+            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            [],
+          ),
+        pstr_loc: Location.none,
+      },
+    ]),
+  ));
 };
 
 let wrap_raw = contents => {
   Exp.extension((
-    {txt: "bs.raw", loc: Location.none},
+    {txt: "raw", loc: Location.none},
     PStr([
       {
         pstr_desc:
@@ -248,15 +281,16 @@ let make_printed_query = (config, document) => {
           switch (config.template_tag) {
           | (None, _, _) => (None, emit_printed_query(source))
           | (Some(template_tag), location, import) =>
-            // the only way to emit a template literal for now, using thebs.raw
+            // the only way to emit a template literal for now, using the bs.raw
             // extension
             (
               switch (pre_template_tag(~location?, ~import?, template_tag)) {
-              | Some(contents) => Some((template_tag, wrap_raw(contents)))
+              | Some(contents) => Some(wrap_structure_raw(contents))
               | None => None
               },
               wrap_raw(
                 wrap_template_tag(
+                  ~import?,
                   template_tag,
                   pretty_print(emit_printed_template_query(source)),
                 ),
@@ -305,17 +339,7 @@ let generate_default_operation =
       List.concat([
         List.concat([
           switch (pre_printed_query) {
-          | Some((tag, pre_printed_query)) => [
-              Str.value(
-                Nonrecursive,
-                [
-                  Vb.mk(
-                    Pat.var({loc: Location.none, txt: tag}),
-                    pre_printed_query,
-                  ),
-                ],
-              ),
-            ]
+          | Some(pre_printed_query) => [pre_printed_query]
           | None => []
           },
           [[%stri let query = [%e printed_query]]],
@@ -448,17 +472,7 @@ let generate_fragment_module =
         List.concat([
           [
             switch (pre_printed_query) {
-            | Some((tag, pre_printed_query)) => [
-                Str.value(
-                  Nonrecursive,
-                  [
-                    Vb.mk(
-                      Pat.var({loc: Location.none, txt: tag}),
-                      pre_printed_query,
-                    ),
-                  ],
-                ),
-              ]
+            | Some(pre_printed_query) => [pre_printed_query]
             | None => []
             },
             [[%stri let query = [%e printed_query]]],
