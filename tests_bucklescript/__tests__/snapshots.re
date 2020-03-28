@@ -28,7 +28,7 @@ let refmt =
   |> toString
   |> Js.String.trim;
 
-let run_ppx = (path, opts) => {
+let run_ppx = (path, opts, testType) => {
   let result =
     execSync(
       (win ? "type " : "cat ")
@@ -44,7 +44,7 @@ let run_ppx = (path, opts) => {
       {cwd: resolve(dirname, "..")},
     )
     |> toString;
-  writeFileSync("static_snapshots/" ++ path, result);
+  writeFileSync("static_snapshots/" ++ testType ++ "/" ++ path, result);
   result;
 };
 
@@ -55,7 +55,8 @@ describe("Objects (legacy)", () =>
   tests
   |> Array.iter(t => {
        test(t, () =>
-         expect(run_ppx("operations/" ++ t, "")) |> toMatchSnapshot
+         expect(run_ppx("operations/" ++ t, "", "objects"))
+         |> toMatchSnapshot
        )
      })
 );
@@ -64,7 +65,8 @@ describe("Records", () =>
   tests
   |> Array.iter(t => {
        test(t, () =>
-         expect(run_ppx("operations/" ++ t, "-records")) |> toMatchSnapshot
+         expect(run_ppx("operations/" ++ t, "-records", "records"))
+         |> toMatchSnapshot
        )
      })
 );
