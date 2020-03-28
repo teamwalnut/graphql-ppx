@@ -46,6 +46,7 @@ let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
 let global_template_tag_location = () => Ppx_config.template_tag_location();
+let global_relay = () => Ppx_config.relay();
 
 let fmt_parse_err = err =>
   Graphql_parser.(
@@ -250,6 +251,7 @@ let get_query_config = fields => {
     tagged_template: extract_tagged_template_config(fields),
   };
 };
+
 let empty_query_config = {
   schema: None,
   records: None,
@@ -418,6 +420,7 @@ let () =
       template_tag_location: None,
       template_tag_import: None,
       definition: true,
+      relay: false,
     })
   );
 
@@ -709,7 +712,7 @@ let args = [
       () =>
         Ppx_config.update_config(current => {...current, definition: false}),
     ),
-    "Legacy mode (make and makeWithVariables)",
+    "Do not generate a definition",
   ),
   (
     "-template-tag",
@@ -719,7 +722,7 @@ let args = [
           {...current, template_tag: Some(template_tag)}
         ),
     ),
-    "Template tag to use",
+    "Name of the template tag to use",
   ),
   (
     "-template-tag-import",
@@ -729,7 +732,7 @@ let args = [
           {...current, template_tag_import: Some(template_tag_import)}
         ),
     ),
-    "the import to use for the template tag (default is \"default\"",
+    "the import to use for the template tag (default is \"default\")",
   ),
   (
     "-template-tag-location",
@@ -740,6 +743,13 @@ let args = [
         ),
     ),
     "the import location for the template tag (default is \"default\"",
+  ),
+  (
+    "-relay",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, relay: true}),
+    ),
+    "Relay mode",
   ),
 ];
 
