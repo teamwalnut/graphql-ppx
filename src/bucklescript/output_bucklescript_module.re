@@ -307,7 +307,8 @@ let generate_default_operation =
       Graphql_ast.Operation(operation),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let types =
+    Output_bucklescript_types.generate_types(config, res_structure, false);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
@@ -400,7 +401,8 @@ let generate_fragment_module =
       Graphql_ast.Fragment(fragment),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let types =
+    Output_bucklescript_types.generate_types(config, res_structure, false);
 
   let rec make_labeled_fun = body =>
     fun

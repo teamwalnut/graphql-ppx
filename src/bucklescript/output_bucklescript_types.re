@@ -106,6 +106,10 @@ let base_type = (~inner=[], ~loc=?, name) => {
   );
 };
 
+let generate_raw_enum_type = (loc, enum_meta) => {
+  base_type("string");
+};
+
 let generate_enum_type = (loc, enum_meta) => {
   Graphql_ppx_base__.Schema.(
     [@metaloc conv_loc(loc)]
@@ -144,23 +148,35 @@ let generate_enum_type = (loc, enum_meta) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = (config, path) =>
+let rec generate_type = (config, path, raw) =>
   fun
   | Res_string(loc) => base_type(~loc=conv_loc(loc), "string")
   | Res_nullable(loc, inner) =>
-    base_type(
-      ~loc=conv_loc(loc),
-      ~inner=[generate_type(config, path, inner)],
-      "option",
-    )
+    if (raw) {
+      base_type(
+        ~loc=conv_loc(loc),
+        ~inner=[generate_type(config, path, raw, inner)],
+        "Js.Nullable.t",
+      );
+    } else {
+      base_type(
+        ~loc=conv_loc(loc),
+        ~inner=[generate_type(config, path, raw, inner)],
+        "option",
+      );
+    }
   | Res_array(loc, inner) =>
     base_type(
       ~loc=conv_loc(loc),
-      ~inner=[generate_type(config, path, inner)],
+      ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
   | Res_custom_decoder(loc, module_name, _) =>
-    base_type(~loc=conv_loc(loc), module_name ++ ".t")
+    if (raw) {
+      base_type(~loc=conv_loc(loc), "Js.Json.t");
+    } else {
+      base_type(~loc=conv_loc(loc), module_name ++ ".t");
+    }
   | Res_id(loc) => base_type(~loc=conv_loc(loc), "string")
   | Res_int(loc) => base_type(~loc=conv_loc(loc), "int")
   | Res_float(loc) => base_type(~loc=conv_loc(loc), "float")
@@ -222,7 +238,7 @@ let rec generate_type = (config, path) =>
                  Rtag(
                    {txt: name, loc: conv_loc(loc)},
                    false,
-                   [generate_type(config, [name, ...path], res)],
+                   [generate_type(config, [name, ...path], raw, res)],
                  ),
                prf_loc: conv_loc(loc),
                prf_attributes: [],
@@ -244,7 +260,7 @@ let rec generate_type = (config, path) =>
           Rtag(
             {txt: name, loc: conv_loc(loc)},
             false,
-            [generate_type(config, [name, ...path], res)],
+            [generate_type(config, [name, ...path], raw, res)],
           ),
         prf_loc: conv_loc(loc),
         prf_attributes: [],
@@ -259,11 +275,14 @@ let rec generate_type = (config, path) =>
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(loc, enum_meta) => {
+  | Res_poly_enum(loc, enum_meta) =>
+    if (raw) {
+      generate_raw_enum_type(loc, enum_meta);
+    } else {
       generate_enum_type(loc, enum_meta);
     };
 
-let generate_record_type = (config, fields, obj_path) => {
+let generate_record_type = (config, fields, obj_path, raw) => {
   Ast_helper.Type.mk(
     ~kind=
       Ptype_record(
@@ -294,7 +313,7 @@ let generate_record_type = (config, fields, obj_path) => {
              | Field({path: [name, ...path], type_}) =>
                Ast_helper.Type.field(
                  {Location.txt: to_valid_ident(name), loc: Location.none},
-                 generate_type(config, [name, ...path], type_),
+                 generate_type(config, [name, ...path], raw, type_),
                )
              | Field({path: [], loc}) =>
                // I don't think this should ever happen but we need to
@@ -310,7 +329,7 @@ let generate_record_type = (config, fields, obj_path) => {
   );
 };
 
-let generate_object_type = (config, fields, obj_path) => {
+let generate_object_type = (config, fields, obj_path, raw) => {
   Ast_helper.(
     Type.mk(
       ~kind=Ptype_abstract,
@@ -351,7 +370,12 @@ let generate_object_type = (config, fields, obj_path) => {
                        pof_desc:
                          Otag(
                            {txt: to_valid_ident(name), loc: Location.none},
-                           generate_type(config, [name, ...path], type_),
+                           generate_type(
+                             config,
+                             [name, ...path],
+                             raw,
+                             type_,
+                           ),
                          ),
                        pof_loc: Location.none,
                        pof_attributes: [],
@@ -374,20 +398,32 @@ let generate_object_type = (config, fields, obj_path) => {
   );
 };
 let generate_graphql_object =
-    (config: Generator_utils.output_config, fields, obj_path, force_record) => {
+    (
+      config: Generator_utils.output_config,
+      fields,
+      obj_path,
+      force_record,
+      raw,
+    ) => {
   config.records || force_record
-    ? generate_record_type(config, fields, obj_path)
-    : generate_object_type(config, fields, obj_path);
+    ? generate_record_type(config, fields, obj_path, raw)
+    : generate_object_type(config, fields, obj_path, raw);
 };
 
 // generate all the types necessary types that we later refer to by name.
-let generate_types = (config: Generator_utils.output_config, res) => {
+let generate_types = (config: Generator_utils.output_config, res, raw) => {
   let types =
     extract([], res)
     |> List.map(
          fun
          | Object({fields, path: obj_path, force_record}) =>
-           generate_graphql_object(config, fields, obj_path, force_record),
+           generate_graphql_object(
+             config,
+             fields,
+             obj_path,
+             force_record,
+             raw,
+           ),
        );
 
   Ast_helper.Str.type_(Recursive, types);
