@@ -19,10 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
-      | `Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,

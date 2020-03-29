@@ -133,7 +133,7 @@ module ExternalFragmentQuery = {
   };
   module Untitled1 = {
     module Raw = {
-      type t = {. "variousScalars": Fragment.t};
+      type t = {. "variousScalars": Fragment.Raw.t};
     };
     let query =
       (
@@ -164,10 +164,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {. "dogOrHuman": t_dogOrHuman}
-    and t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
-      | `Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -298,10 +295,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {. "dogOrHuman": t_dogOrHuman}
-      and t_dogOrHuman = [
-        | `FutureAddedValue(Js.Json.t)
-        | `Dog(DogFragment.t)
-      ];
+      and t_dogOrHuman = {__typename: string};
     };
     let query =
       (

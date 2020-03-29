@@ -591,7 +591,7 @@ module MyQuery = {
   module Raw = {
     type t = {
       .
-      \\"l1\\": Fragments.ListFragment.t,
+      \\"l1\\": Fragments.ListFragment.Raw.t,
       \\"l2\\": t_l2,
     }
     and t_l2 = {
@@ -2190,7 +2190,7 @@ module ExternalFragmentQuery = {
   };
   module Untitled1 = {
     module Raw = {
-      type t = {. \\"variousScalars\\": Fragment.t};
+      type t = {. \\"variousScalars\\": Fragment.Raw.t};
     };
     let query =
       (
@@ -2221,10 +2221,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -2355,10 +2352,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-      and t_dogOrHuman = [
-        | \`FutureAddedValue(Js.Json.t)
-        | \`Dog(DogFragment.t)
-      ];
+      and t_dogOrHuman = {__typename: string};
     };
     let query =
       (
@@ -3290,11 +3284,7 @@ exports[`Objects (legacy) subscription.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"simpleSubscription\\": t_simpleSubscription}
-    and t_simpleSubscription = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_simpleSubscription_Dog)
-      | \`Human(t_simpleSubscription_Human)
-    ]
+    and t_simpleSubscription = {__typename: string}
     and t_simpleSubscription_Human = {. \\"name\\": string}
     and t_simpleSubscription_Dog = {. \\"name\\": string};
   };
@@ -4121,11 +4111,7 @@ exports[`Objects (legacy) union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-      | \`Human(t_dogOrHuman_Human)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Human = {. \\"name\\": string}
     and t_dogOrHuman_Dog = {
       .
@@ -4270,10 +4256,7 @@ exports[`Objects (legacy) unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       .
       \\"name\\": string,
@@ -4942,12 +4925,12 @@ module Fragments = {
 module MyQuery = {
   module Raw = {
     type t = {
-      l1: Fragments.ListFragment.t,
+      l1: Fragments.ListFragment.Raw.t,
       l2: t_l2,
     }
     and t_l2 = {
-      frag1: Fragments.ListFragment.t_Lists,
-      frag2: Fragments.ListFragment.t_Lists,
+      frag1: Fragments.ListFragment.Raw.t_Lists,
+      frag2: Fragments.ListFragment.Raw.t_Lists,
     };
   };
   let query =
@@ -6446,7 +6429,7 @@ module ExternalFragmentQuery = {
   };
   module Untitled1 = {
     module Raw = {
-      type t = {variousScalars: Fragment.t};
+      type t = {variousScalars: Fragment.Raw.t};
     };
     let query =
       (
@@ -6475,10 +6458,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -6595,10 +6575,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {dogOrHuman: t_dogOrHuman}
-      and t_dogOrHuman = [
-        | \`FutureAddedValue(Js.Json.t)
-        | \`Dog(DogFragment.t)
-      ];
+      and t_dogOrHuman = {__typename: string};
     };
     let query =
       (
@@ -7509,11 +7486,7 @@ exports[`Records subscription.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {simpleSubscription: t_simpleSubscription}
-    and t_simpleSubscription = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_simpleSubscription_Dog)
-      | \`Human(t_simpleSubscription_Human)
-    ]
+    and t_simpleSubscription = {__typename: string}
     and t_simpleSubscription_Human = {name: string}
     and t_simpleSubscription_Dog = {name: string};
   };
@@ -8301,11 +8274,7 @@ exports[`Records union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-      | \`Human(t_dogOrHuman_Human)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Human = {name: string}
     and t_dogOrHuman_Dog = {
       name: string,
@@ -8433,10 +8402,7 @@ exports[`Records unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = [
-      | \`FutureAddedValue(Js.Json.t)
-      | \`Dog(t_dogOrHuman_Dog)
-    ]
+    and t_dogOrHuman = {__typename: string}
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,

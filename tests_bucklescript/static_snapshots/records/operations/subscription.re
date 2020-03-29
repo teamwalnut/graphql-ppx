@@ -19,11 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {simpleSubscription: t_simpleSubscription}
-    and t_simpleSubscription = [
-      | `FutureAddedValue(Js.Json.t)
-      | `Dog(t_simpleSubscription_Dog)
-      | `Human(t_simpleSubscription_Human)
-    ]
+    and t_simpleSubscription = {__typename: string}
     and t_simpleSubscription_Human = {name: string}
     and t_simpleSubscription_Dog = {name: string};
   };

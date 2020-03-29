@@ -152,7 +152,11 @@ let rec generate_type = (config, path, raw) =>
   | Res_poly_variant_interface(loc, name, _, _) =>
     base_type(~loc=conv_loc(loc), generate_type_name(path))
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
-    base_type(module_name ++ ".t")
+    if (raw) {
+      base_type(module_name ++ ".Raw.t");
+    } else {
+      base_type(module_name ++ ".t");
+    }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(loc, enum_meta) =>
@@ -163,6 +167,19 @@ let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
     ~kind=inner,
     ~manifest?,
     {loc: conv_loc(loc), txt: generate_type_name(path)},
+  );
+};
+
+let generate_typename_record = (path, loc) => {
+  wrap_type_declaration(
+    Ptype_record([
+      Ast_helper.Type.field(
+        {Location.txt: "__typename", loc: Location.none},
+        base_type("string"),
+      ),
+    ]),
+    loc,
+    path,
   );
 };
 
@@ -180,6 +197,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
                    Location.txt:
                      Longident.parse(
                        module_name
+                       ++ (raw ? ".Raw" : "")
                        ++ ".t"
                        ++ (
                          switch (type_name) {
@@ -213,113 +231,122 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
   );
 };
 
-let generate_variant_selection = (config, fields, path, loc, raw) => {
-  wrap_type_declaration(
-    Ptype_abstract,
-    ~manifest=
-      Ast_helper.(
-        Typ.variant(
-          fields
-          |> List.map(((name, _)) =>
-               {
-                 prf_desc:
-                   Rtag(
-                     {
-                       txt: Compat.capitalize_ascii(name),
-                       loc: conv_loc(loc),
-                     },
-                     false,
-                     [
+let generate_variant_selection = (config, fields, path, loc, raw) =>
+  if (raw) {
+    generate_typename_record(path, loc);
+  } else {
+    wrap_type_declaration(
+      Ptype_abstract,
+      ~manifest=
+        Ast_helper.(
+          Typ.variant(
+            fields
+            |> List.map(((name, _)) =>
+                 {
+                   prf_desc:
+                     Rtag(
                        {
-                         ptyp_desc: Ptyp_any,
-                         ptyp_attributes: [],
-                         ptyp_loc_stack: [],
-                         ptyp_loc: Location.none,
+                         txt: Compat.capitalize_ascii(name),
+                         loc: conv_loc(loc),
                        },
-                     ],
-                   ),
-                 prf_loc: Location.none,
-                 prf_attributes: [],
-               }
-             ),
-          Closed,
-          None,
-        )
-      ),
-    loc,
-    path,
-  );
-};
+                       false,
+                       [
+                         {
+                           ptyp_desc: Ptyp_any,
+                           ptyp_attributes: [],
+                           ptyp_loc_stack: [],
+                           ptyp_loc: Location.none,
+                         },
+                       ],
+                     ),
+                   prf_loc: Location.none,
+                   prf_attributes: [],
+                 }
+               ),
+            Closed,
+            None,
+          )
+        ),
+      loc,
+      path,
+    );
+  };
 
-let generate_variant_union = (config, fields, path, loc, raw) => {
-  let fallback_case_ty = [
-    {
+let generate_variant_union = (config, fields, path, loc, raw) =>
+  if (raw) {
+    generate_typename_record(path, loc);
+  } else {
+    let fallback_case_ty = [
+      {
+        prf_desc:
+          Rtag(
+            {txt: "FutureAddedValue", loc: conv_loc(loc)},
+            false,
+            [base_type("Js.Json.t")],
+          ),
+        prf_loc: conv_loc(loc),
+        prf_attributes: [],
+      },
+    ];
+
+    let fragment_case_tys =
+      fields
+      |> List.map(((name, res)) =>
+           {
+             prf_desc:
+               Rtag(
+                 {txt: name, loc: conv_loc(loc)},
+                 false,
+                 [generate_type(config, [name, ...path], raw, res)],
+               ),
+             prf_loc: conv_loc(loc),
+             prf_attributes: [],
+           }
+         );
+
+    wrap_type_declaration(
+      Ptype_abstract,
+      ~manifest=
+        Ast_helper.(
+          Typ.variant(
+            List.concat([fallback_case_ty, fragment_case_tys]),
+            Closed,
+            None,
+          )
+        ),
+      loc,
+      path,
+    );
+  };
+
+let generate_variant_interface = (config, fields, base, path, loc, raw) =>
+  if (raw) {
+    generate_typename_record(path, loc);
+  } else {
+    let map_case_ty = ((name, res)) => {
       prf_desc:
         Rtag(
-          {txt: "FutureAddedValue", loc: conv_loc(loc)},
+          {txt: name, loc: conv_loc(loc)},
           false,
-          [base_type("Js.Json.t")],
+          [generate_type(config, [name, ...path], raw, res)],
         ),
       prf_loc: conv_loc(loc),
       prf_attributes: [],
-    },
-  ];
+    };
 
-  let fragment_case_tys =
-    fields
-    |> List.map(((name, res)) =>
-         {
-           prf_desc:
-             Rtag(
-               {txt: name, loc: conv_loc(loc)},
-               false,
-               [generate_type(config, [name, ...path], raw, res)],
-             ),
-           prf_loc: conv_loc(loc),
-           prf_attributes: [],
-         }
-       );
+    let fallback_case_ty = map_case_ty(base);
+    let fragment_case_tys = fields |> List.map(map_case_ty);
 
-  wrap_type_declaration(
-    Ptype_abstract,
-    ~manifest=
-      Ast_helper.(
-        Typ.variant(
-          List.concat([fallback_case_ty, fragment_case_tys]),
-          Closed,
-          None,
-        )
-      ),
-    loc,
-    path,
-  );
-};
-
-let generate_variant_interface = (config, fields, base, path, loc, raw) => {
-  let map_case_ty = ((name, res)) => {
-    prf_desc:
-      Rtag(
-        {txt: name, loc: conv_loc(loc)},
-        false,
-        [generate_type(config, [name, ...path], raw, res)],
-      ),
-    prf_loc: conv_loc(loc),
-    prf_attributes: [],
+    wrap_type_declaration(
+      Ptype_abstract,
+      ~manifest=
+        Ast_helper.(
+          Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
+        ),
+      loc,
+      path,
+    );
   };
-
-  let fallback_case_ty = map_case_ty(base);
-  let fragment_case_tys = fields |> List.map(map_case_ty);
-
-  wrap_type_declaration(
-    Ptype_abstract,
-    ~manifest=
-      Ast_helper.(
-        Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
-      ),
-    loc,
-    path,
-  );
-};
 
 let generate_enum = (config, fields, path, loc, raw) =>
   wrap_type_declaration(

@@ -91,12 +91,12 @@ module Fragments = {
 module MyQuery = {
   module Raw = {
     type t = {
-      l1: Fragments.ListFragment.t,
+      l1: Fragments.ListFragment.Raw.t,
       l2: t_l2,
     }
     and t_l2 = {
-      frag1: Fragments.ListFragment.t_Lists,
-      frag2: Fragments.ListFragment.t_Lists,
+      frag1: Fragments.ListFragment.Raw.t_Lists,
+      frag2: Fragments.ListFragment.Raw.t_Lists,
     };
   };
   let query =

@@ -101,7 +101,7 @@ module MyQuery = {
   module Raw = {
     type t = {
       .
-      "l1": Fragments.ListFragment.t,
+      "l1": Fragments.ListFragment.Raw.t,
       "l2": t_l2,
     }
     and t_l2 = {
