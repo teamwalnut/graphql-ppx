@@ -252,8 +252,6 @@ let rec generate_type = (config, path, raw) =>
         )
       );
     }
-  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
-    base_type(module_name ++ ".t")
   | Res_poly_variant_interface(loc, name, base, fragments) => {
       let map_case_ty = ((name, res)) => {
         prf_desc:
@@ -273,6 +271,8 @@ let rec generate_type = (config, path, raw) =>
         Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
       );
     }
+  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
+    base_type(module_name ++ ".t")
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(loc, enum_meta) =>
@@ -413,7 +413,7 @@ let generate_graphql_object =
 // generate all the types necessary types that we later refer to by name.
 let generate_types = (config: Generator_utils.output_config, res, raw) => {
   let types =
-    extract([], res)
+    extract(raw, [], res)
     |> List.map(
          fun
          | Object({fields, path: obj_path, force_record}) =>
