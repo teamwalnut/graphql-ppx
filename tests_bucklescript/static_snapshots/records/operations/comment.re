@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {nonrecursiveInput: string};
+  };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {

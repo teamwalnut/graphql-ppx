@@ -33,17 +33,18 @@ and type_def =
   | VariantSelection({
       loc,
       path,
-      fields: list(string),
+      fields: list((string, Result_structure.t)),
     })
   | VariantUnion({
       loc,
       path,
-      fields: list(string),
+      fields: list((string, Result_structure.t)),
     })
   | VariantInterface({
       loc,
       path,
-      fields: list(string),
+      base: (string, Result_structure.t),
+      fields: list((string, Result_structure.t)),
     })
   | Enum({
       loc,
@@ -78,32 +79,30 @@ let generate_type_name = (~prefix="t") =>
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
-let rec extract = (raw, path) =>
+let rec extract = path =>
   fun
-  | Res_nullable(_loc, inner) => extract(raw, path, inner)
-  | Res_array(_loc, inner) => extract(raw, path, inner)
-  | Res_object(_loc, _name, fields, Some(_)) =>
-    create_children(raw, path, fields)
+  | Res_nullable(_loc, inner) => extract(path, inner)
+  | Res_array(_loc, inner) => extract(path, inner)
+  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
   | Res_object(loc, _name, fields, None) =>
-    create_object(raw, path, fields, false, loc)
-  | Res_record(_loc, _name, fields, Some(_)) =>
-    create_children(raw, path, fields)
+    create_object(path, fields, false, loc)
+  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
   | Res_record(loc, _name, fields, None) =>
-    create_object(raw, path, fields, true, loc)
+    create_object(path, fields, true, loc)
   | Res_poly_variant_union(loc, _name, fragments, _) => [
-      VariantUnion({path, fields: fragment_names(fragments), loc}),
-      ...extract_fragments(fragments, raw, path),
+      VariantUnion({path, fields: fragments, loc}),
+      ...extract_fragments(fragments, path),
     ]
   | Res_poly_variant_selection_set(loc, _name, fragments) => [
-      VariantSelection({path, fields: fragment_names(fragments), loc}),
-      ...extract_fragments(fragments, raw, path),
+      VariantSelection({path, fields: fragments, loc}),
+      ...extract_fragments(fragments, path),
     ]
 
-  | Res_poly_variant_interface(loc, _name, _, fragments) => [
-      VariantInterface({path, fields: fragment_names(fragments), loc}),
-      ...extract_fragments(fragments, raw, path),
+  | Res_poly_variant_interface(loc, _name, base, fragments) => [
+      VariantInterface({path, fields: fragments, base, loc}),
+      ...extract_fragments(fragments, path),
     ]
-  | Res_custom_decoder(_loc, _ident, inner) => extract(raw, path, inner)
+  | Res_custom_decoder(_loc, _ident, inner) => extract(path, inner)
   | Res_solo_fragment_spread(_loc, _name, _) => []
   | Res_error(_loc, _message) => []
   | Res_id(_loc) => []
@@ -121,27 +120,27 @@ let rec extract = (raw, path) =>
     ]
 
 and fragment_names = f => f |> List.map(((name, _)) => name)
-and extract_fragments = (fragments, raw, path) => {
+and extract_fragments = (fragments, path) => {
   fragments
   |> List.fold_left(
        (acc, (name, inner)) =>
-         List.append(extract(raw, [name, ...path], inner), acc),
+         List.append(extract([name, ...path], inner), acc),
        [],
      );
 }
 
-and create_children = (raw, path, fields) => {
+and create_children = (path, fields) => {
   fields
   |> List.fold_left(
        acc =>
          fun
          | Fr_named_field(name, _loc, type_) =>
-           List.append(extract(raw, [name, ...path], type_), acc)
+           List.append(extract([name, ...path], type_), acc)
          | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
        [],
      );
 }
-and create_object = (raw, path, fields, force_record, loc) => {
+and create_object = (path, fields, force_record, loc) => {
   [
     Object({
       loc,
@@ -157,7 +156,7 @@ and create_object = (raw, path, fields, force_record, loc) => {
                Fragment({module_name: name, key, type_name}),
            ),
     }),
-    ...create_children(raw, path, fields),
+    ...create_children(path, fields),
   ];
 };
 

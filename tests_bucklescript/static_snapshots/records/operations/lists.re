@@ -17,8 +17,16 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {lists: t_lists}
+    and t_lists = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+  };
   let query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type raw_t;
   type t = {lists: t_lists}
   and t_lists = {
     nullableOfNullable: option(array(option(string))),

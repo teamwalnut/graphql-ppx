@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {argNamedQuery: int};
+  };
   let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
-  type raw_t;
   type t = {argNamedQuery: int};
   type t_variables = {query: string};
   let parse: Js.Json.t => t =

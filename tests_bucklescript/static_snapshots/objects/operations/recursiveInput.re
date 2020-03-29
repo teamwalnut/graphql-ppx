@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "recursiveInput": string};
+  };
   let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {. "recursiveInput": string};
   type t_variables = {. "arg": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {

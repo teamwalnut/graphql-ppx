@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {enumInput: string};
+  };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {enumInput: string};
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
   let parse: Js.Json.t => t =

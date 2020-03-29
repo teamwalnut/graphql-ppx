@@ -17,8 +17,22 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "mutationWithError": t_mutationWithError}
+    and t_mutationWithError = {
+      .
+      "value": Js.Nullable.t(t_mutationWithError_value),
+      "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
+    }
+    and t_mutationWithError_errors = {
+      .
+      "field": t_mutationWithError_errors_field,
+      "message": string,
+    }
+    and t_mutationWithError_errors_field = string
+    and t_mutationWithError_value = {. "stringField": string};
+  };
   let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type raw_t;
   type t = {. "mutationWithError": t_mutationWithError}
   and t_mutationWithError = {
     .
@@ -27,9 +41,15 @@ module MyQuery = {
   }
   and t_mutationWithError_errors = {
     .
-    "field": [ | `FutureAddedValue(string) | `FIRST | `SECOND | `THIRD],
+    "field": t_mutationWithError_errors_field,
     "message": string,
   }
+  and t_mutationWithError_errors_field = [
+    | `FutureAddedValue(string)
+    | `FIRST
+    | `SECOND
+    | `THIRD
+  ]
   and t_mutationWithError_value = {. "stringField": string};
   let parse: Js.Json.t => t =
     value => {
@@ -85,19 +105,12 @@ module MyQuery = {
                          "field": {
                            let value =
                              Js.Dict.unsafeGet(Obj.magic(value), "field");
-                           (
-                             switch (Obj.magic(value: string)) {
-                             | "FIRST" => `FIRST
-                             | "SECOND" => `SECOND
-                             | "THIRD" => `THIRD
-                             | other => `FutureAddedValue(other)
-                             }: [
-                               | `FutureAddedValue(string)
-                               | `FIRST
-                               | `SECOND
-                               | `THIRD
-                             ]
-                           );
+                           switch (Obj.magic(value: string)) {
+                           | "FIRST" => `FIRST
+                           | "SECOND" => `SECOND
+                           | "THIRD" => `THIRD
+                           | other => `FutureAddedValue(other)
+                           };
                          },
 
                          "message": {

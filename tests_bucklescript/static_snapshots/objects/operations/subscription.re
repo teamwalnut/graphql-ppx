@@ -17,16 +17,23 @@
   }
 ];
 module MyQuery = {
-  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type raw_t;
-  type t = {
-    .
-    "simpleSubscription": [
+  module Raw = {
+    type t = {. "simpleSubscription": t_simpleSubscription}
+    and t_simpleSubscription = [
       | `FutureAddedValue(Js.Json.t)
       | `Dog(t_simpleSubscription_Dog)
       | `Human(t_simpleSubscription_Human)
-    ],
-  }
+    ]
+    and t_simpleSubscription_Human = {. "name": string}
+    and t_simpleSubscription_Dog = {. "name": string};
+  };
+  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  type t = {. "simpleSubscription": t_simpleSubscription}
+  and t_simpleSubscription = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_simpleSubscription_Dog)
+    | `Human(t_simpleSubscription_Human)
+  ]
   and t_simpleSubscription_Human = {. "name": string}
   and t_simpleSubscription_Dog = {. "name": string};
   let parse: Js.Json.t => t =

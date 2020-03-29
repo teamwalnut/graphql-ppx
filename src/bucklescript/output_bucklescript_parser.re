@@ -131,10 +131,8 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       )
     );
 
-  let enum_ty = generate_enum_type(loc, enum_meta);
-
   %expr
-  ([%e match_expr]: [%t enum_ty]);
+  [%e match_expr];
 };
 
 let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {

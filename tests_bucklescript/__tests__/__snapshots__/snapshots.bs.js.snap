@@ -20,8 +20,10 @@ exports[`Objects (legacy) argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"argNamedQuery\\": int};
+  };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"argNamedQuery\\": int};
   type t_variables = {. \\"query\\": string};
   let parse: Js.Json.t => t =
@@ -87,8 +89,10 @@ exports[`Objects (legacy) comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"nonrecursiveInput\\": string};
+  };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
@@ -234,8 +238,15 @@ module IntOfString = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"string\\": Js.Json.t,
+      \\"int\\": Js.Json.t,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -295,8 +306,15 @@ exports[`Objects (legacy) customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"customScalarField\\": t_customScalarField}
+    and t_customScalarField = {
+      .
+      \\"nullable\\": Js.Nullable.t(Js.Json.t),
+      \\"nonNullable\\": Js.Json.t,
+    };
+  };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"customScalarField\\": t_customScalarField}
   and t_customScalarField = {
     .
@@ -404,8 +422,10 @@ exports[`Objects (legacy) enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"enumInput\\": string};
+  };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"enumInput\\": string};
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Js.Json.t => t =
@@ -495,7 +515,6 @@ module Fragments = {
       \\"nullableOfNullable\\": option(array(option(string))),
       \\"nullableOfNonNullable\\": option(array(string)),
     };
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t) => {
@@ -542,7 +561,6 @@ module Fragments = {
   module Another = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     type t = {. \\"nullableOfNonNullable\\": option(array(string))};
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t) => {
@@ -570,6 +588,18 @@ module Fragments = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {
+      .
+      \\"l1\\": Fragments.ListFragment.t,
+      \\"l2\\": t_l2,
+    }
+    and t_l2 = {
+      .
+      \\"frag1\\": Fragments.ListFragment.t_Lists,
+      \\"frag2\\": Fragments.ListFragment.t_Lists,
+    };
+  };
   let query =
     (
       (
@@ -588,7 +618,6 @@ module MyQuery = {
       ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
     )
     ++ Fragments.ListFragment.query;
-  type raw_t;
   type t = {
     .
     \\"l1\\": Fragments.ListFragment.t,
@@ -670,8 +699,17 @@ exports[`Objects (legacy) lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"lists\\": t_lists}
+    and t_lists = {
+      .
+      \\"nullableOfNullable\\": Js.Nullable.t(array(Js.Nullable.t(string))),
+      \\"nullableOfNonNullable\\": Js.Nullable.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Nullable.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
+  };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"lists\\": t_lists}
   and t_lists = {
     .
@@ -780,8 +818,10 @@ exports[`Objects (legacy) listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"listsInput\\": string};
+  };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"listsInput\\": string};
   type t_variables = {
     .
@@ -979,8 +1019,10 @@ exports[`Objects (legacy) listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"listsInput\\": string};
+  };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"listsInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_ListsInput}
   and t_variables_ListsInput = {
@@ -1200,8 +1242,22 @@ exports[`Objects (legacy) mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"mutationWithError\\": t_mutationWithError}
+    and t_mutationWithError = {
+      .
+      \\"value\\": Js.Nullable.t(t_mutationWithError_value),
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    }
+    and t_mutationWithError_errors = {
+      .
+      \\"field\\": t_mutationWithError_errors_field,
+      \\"message\\": string,
+    }
+    and t_mutationWithError_errors_field = string
+    and t_mutationWithError_value = {. \\"stringField\\": string};
+  };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"mutationWithError\\": t_mutationWithError}
   and t_mutationWithError = {
     .
@@ -1210,9 +1266,15 @@ module MyQuery = {
   }
   and t_mutationWithError_errors = {
     .
-    \\"field\\": [ | \`FutureAddedValue(string) | \`FIRST | \`SECOND | \`THIRD],
+    \\"field\\": t_mutationWithError_errors_field,
     \\"message\\": string,
   }
+  and t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ]
   and t_mutationWithError_value = {. \\"stringField\\": string};
   let parse: Js.Json.t => t =
     value => {
@@ -1268,19 +1330,12 @@ module MyQuery = {
                          \\"field\\": {
                            let value =
                              Js.Dict.unsafeGet(Obj.magic(value), \\"field\\");
-                           (
-                             switch (Obj.magic(value: string)) {
-                             | \\"FIRST\\" => \`FIRST
-                             | \\"SECOND\\" => \`SECOND
-                             | \\"THIRD\\" => \`THIRD
-                             | other => \`FutureAddedValue(other)
-                             }: [
-                               | \`FutureAddedValue(string)
-                               | \`FIRST
-                               | \`SECOND
-                               | \`THIRD
-                             ]
-                           );
+                           switch (Obj.magic(value: string)) {
+                           | \\"FIRST\\" => \`FIRST
+                           | \\"SECOND\\" => \`SECOND
+                           | \\"THIRD\\" => \`THIRD
+                           | other => \`FutureAddedValue(other)
+                           };
                          },
 
                          \\"message\\": {
@@ -1325,8 +1380,10 @@ exports[`Objects (legacy) mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"optionalInputArgs\\": string};
+  };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"optionalInputArgs\\": string};
   type t_variables = {. \\"required\\": string};
   let parse: Js.Json.t => t =
@@ -1398,8 +1455,27 @@ type record = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {
+      .
+      \\"first\\": t_first,
+      \\"second\\": t_second,
+      \\"let_\\": t_let,
+    }
+    and t_let = {. \\"inner\\": Js.Nullable.t(t_let_inner)}
+    and t_let_inner = {. \\"inner\\": Js.Nullable.t(t_let_inner_inner)}
+    and t_let_inner_inner = {. \\"field\\": string}
+    and t_second = {. \\"inner\\": Js.Nullable.t(t_second_inner)}
+    and t_second_inner = {. \\"inner\\": Js.Nullable.t(t_second_inner_inner)}
+    and t_second_inner_inner = {
+      f1: string,
+      f2: string,
+    }
+    and t_first = {. \\"inner\\": Js.Nullable.t(t_first_inner)}
+    and t_first_inner = {. \\"inner\\": Js.Nullable.t(t_first_inner_inner)}
+    and t_first_inner_inner = {. \\"field\\": string};
+  };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {
     .
     \\"first\\": t_first,
@@ -1638,8 +1714,10 @@ exports[`Objects (legacy) nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"nonrecursiveInput\\": string};
+  };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
@@ -1776,8 +1854,15 @@ exports[`Objects (legacy) pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      .
+      \\"id\\": string,
+      \\"name\\": Js.Nullable.t(string),
+    };
+  };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"pokemon\\": option(t_pokemon)}
   and t_pokemon = {
     .
@@ -1851,8 +1936,15 @@ exports[`Objects (legacy) pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      .
+      \\"id\\": string,
+      \\"name\\": Js.Nullable.t(string),
+    };
+  };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"pokemon\\": option(t_pokemon)}
   and t_pokemon = {
     .
@@ -1994,8 +2086,10 @@ type dog = {
 type oneFieldQuery = {nullableString: option(string)};
 
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": scalars};
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"variousScalars\\": scalars};
   let parse: Js.Json.t => t =
     value => {
@@ -2029,8 +2123,11 @@ module MyQuery = {
 };
 
 module OneFieldQuery = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {nullableString: Js.Nullable.t(string)};
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {nullableString: option(string)};
   let parse: Js.Json.t => t =
@@ -2069,7 +2166,6 @@ module ExternalFragmentQuery = {
       string,
       int,
     };
-    type raw_t;
     type t_VariousScalars = t;
 
     let parse = (value: Js.Json.t) => {
@@ -2093,13 +2189,15 @@ module ExternalFragmentQuery = {
     let name = \\"Fragment\\";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {. \\"variousScalars\\": Fragment.t};
+    };
     let query =
       (
         (\\"query   {\\\\nvariousScalars  {\\\\n...\\" ++ Fragment.name)
         ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
       )
       ++ Fragment.query;
-    type raw_t;
     type t = {. \\"variousScalars\\": Fragment.t};
     let parse: Js.Json.t => t =
       value => {
@@ -2121,12 +2219,23 @@ module ExternalFragmentQuery = {
 };
 
 module InlineFragmentQuery = {
+  module Raw = {
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+    ]
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    .
-    \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -2221,7 +2330,6 @@ module UnionExternalFragmentQuery = {
       name: string,
       barkVolume: float,
     };
-    type raw_t;
     type t_Dog = t;
 
     let parse = (value: Js.Json.t) => {
@@ -2245,6 +2353,13 @@ module UnionExternalFragmentQuery = {
     let name = \\"DogFragment\\";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+      and t_dogOrHuman = [
+        | \`FutureAddedValue(Js.Json.t)
+        | \`Dog(DogFragment.t)
+      ];
+    };
     let query =
       (
         (
@@ -2254,11 +2369,11 @@ module UnionExternalFragmentQuery = {
         ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\"
       )
       ++ DogFragment.query;
-    type raw_t;
-    type t = {
-      .
-      \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(DogFragment.t)],
-    };
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(DogFragment.t)
+    ];
     let parse: Js.Json.t => t =
       value => {
         [@metaloc loc]
@@ -2339,8 +2454,10 @@ exports[`Objects (legacy) recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"recursiveInput\\": string};
+  };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"recursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
@@ -2492,8 +2609,23 @@ exports[`Objects (legacy) scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Nullable.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Nullable.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Nullable.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Nullable.t(string),
+      \\"id\\": string,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -2627,8 +2759,10 @@ exports[`Objects (legacy) scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"scalarsInput\\": string};
+  };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"scalarsInput\\": string};
   type t_variables = {
     .
@@ -2804,8 +2938,10 @@ exports[`Objects (legacy) scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"scalarsInput\\": string};
+  };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"scalarsInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
@@ -3007,8 +3143,24 @@ exports[`Objects (legacy) skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {
+      .
+      \\"v1\\": t_v1,
+      \\"v2\\": t_v2,
+    }
+    and t_v2 = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": Js.Nullable.t(string),
+    }
+    and t_v1 = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": Js.Nullable.t(string),
+    };
+  };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {
     .
     \\"v1\\": t_v1,
@@ -3136,16 +3288,23 @@ exports[`Objects (legacy) subscription.re 1`] = `
   }
 ];
 module MyQuery = {
-  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    .
-    \\"simpleSubscription\\": [
+  module Raw = {
+    type t = {. \\"simpleSubscription\\": t_simpleSubscription}
+    and t_simpleSubscription = [
       | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_simpleSubscription_Dog)
       | \`Human(t_simpleSubscription_Human)
-    ],
-  }
+    ]
+    and t_simpleSubscription_Human = {. \\"name\\": string}
+    and t_simpleSubscription_Dog = {. \\"name\\": string};
+  };
+  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t = {. \\"simpleSubscription\\": t_simpleSubscription}
+  and t_simpleSubscription = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_simpleSubscription_Dog)
+    | \`Human(t_simpleSubscription_Human)
+  ]
   and t_simpleSubscription_Human = {. \\"name\\": string}
   and t_simpleSubscription_Dog = {. \\"name\\": string};
   let parse: Js.Json.t => t =
@@ -3261,8 +3420,23 @@ exports[`Objects (legacy) tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Nullable.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Nullable.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Nullable.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Nullable.t(string),
+      \\"id\\": string,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -3375,12 +3549,27 @@ module MyQuery = {
 };
 
 module MyQuery2 = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Nullable.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Nullable.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Nullable.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Nullable.t(string),
+      \\"id\\": string,
+    };
+  };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -3493,12 +3682,27 @@ module MyQuery2 = {
 };
 
 module MyQuery3 = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Nullable.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Nullable.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Nullable.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Nullable.t(string),
+      \\"id\\": string,
+    };
+  };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -3611,12 +3815,27 @@ module MyQuery3 = {
 };
 
 module MyQuery4 = {
+  module Raw = {
+    type t = {. \\"variousScalars\\": t_variousScalars}
+    and t_variousScalars = {
+      .
+      \\"nullableString\\": Js.Nullable.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Nullable.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Nullable.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Nullable.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Nullable.t(string),
+      \\"id\\": string,
+    };
+  };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {. \\"variousScalars\\": t_variousScalars}
   and t_variousScalars = {
     .
@@ -3750,8 +3969,25 @@ exports[`Objects (legacy) typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"first\\": t_first}
+    and t_first = {
+      .
+      \\"__typename\\": string,
+      \\"inner\\": Js.Nullable.t(t_first_inner),
+    }
+    and t_first_inner = {
+      .
+      \\"__typename\\": string,
+      \\"inner\\": Js.Nullable.t(t_first_inner_inner),
+    }
+    and t_first_inner_inner = {
+      .
+      \\"__typename\\": string,
+      \\"field\\": string,
+    };
+  };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {. \\"first\\": t_first}
   and t_first = {
     .
@@ -3883,16 +4119,27 @@ exports[`Objects (legacy) union.re 1`] = `
   }
 ];
 module MyQuery = {
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    .
-    \\"dogOrHuman\\": [
+  module Raw = {
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+    and t_dogOrHuman = [
       | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_dogOrHuman_Dog)
       | \`Human(t_dogOrHuman_Human)
-    ],
-  }
+    ]
+    and t_dogOrHuman_Human = {. \\"name\\": string}
+    and t_dogOrHuman_Dog = {
+      .
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ]
   and t_dogOrHuman_Human = {. \\"name\\": string}
   and t_dogOrHuman_Dog = {
     .
@@ -4021,12 +4268,24 @@ exports[`Objects (legacy) unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+    ]
+    and t_dogOrHuman_Dog = {
+      .
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+  };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    .
-    \\"dogOrHuman\\": [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     .
     \\"name\\": string,
@@ -4137,8 +4396,10 @@ exports[`Records argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {argNamedQuery: int};
+  };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {argNamedQuery: int};
   type t_variables = {query: string};
   let parse: Js.Json.t => t =
@@ -4202,8 +4463,10 @@ exports[`Records comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {nonrecursiveInput: string};
+  };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
@@ -4346,8 +4609,14 @@ module IntOfString = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      string: Js.Json.t,
+      int: Js.Json.t,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     string: IntOfString.t,
@@ -4404,8 +4673,14 @@ exports[`Records customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {customScalarField: t_customScalarField}
+    and t_customScalarField = {
+      nullable: Js.Nullable.t(Js.Json.t),
+      nonNullable: Js.Json.t,
+    };
+  };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {customScalarField: t_customScalarField}
   and t_customScalarField = {
     nullable: option(Js.Json.t),
@@ -4510,8 +4785,10 @@ exports[`Records enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {enumInput: string};
+  };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {enumInput: string};
   type t_variables = {arg: [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Js.Json.t => t =
@@ -4598,7 +4875,6 @@ module Fragments = {
       nullableOfNullable: option(array(option(string))),
       nullableOfNonNullable: option(array(string)),
     };
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t): t => {
@@ -4641,7 +4917,6 @@ module Fragments = {
   module Another = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     type t = {nullableOfNonNullable: option(array(string))};
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t): t => {
@@ -4665,6 +4940,16 @@ module Fragments = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {
+      l1: Fragments.ListFragment.t,
+      l2: t_l2,
+    }
+    and t_l2 = {
+      frag1: Fragments.ListFragment.t_Lists,
+      frag2: Fragments.ListFragment.t_Lists,
+    };
+  };
   let query =
     (
       (
@@ -4683,7 +4968,6 @@ module MyQuery = {
       ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
     )
     ++ Fragments.ListFragment.query;
-  type raw_t;
   type t = {
     l1: Fragments.ListFragment.t,
     l2: t_l2,
@@ -4761,8 +5045,16 @@ exports[`Records lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {lists: t_lists}
+    and t_lists = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+  };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {lists: t_lists}
   and t_lists = {
     nullableOfNullable: option(array(option(string))),
@@ -4876,8 +5168,10 @@ exports[`Records listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {listsInput: string};
+  };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {listsInput: string};
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
@@ -5072,8 +5366,10 @@ exports[`Records listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {listsInput: string};
+  };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {listsInput: string};
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
@@ -5288,17 +5584,35 @@ exports[`Records mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {mutationWithError: t_mutationWithError}
+    and t_mutationWithError = {
+      value: Js.Nullable.t(t_mutationWithError_value),
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    }
+    and t_mutationWithError_errors = {
+      field: t_mutationWithError_errors_field,
+      message: string,
+    }
+    and t_mutationWithError_errors_field = string
+    and t_mutationWithError_value = {stringField: string};
+  };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {mutationWithError: t_mutationWithError}
   and t_mutationWithError = {
     value: option(t_mutationWithError_value),
     errors: option(array(t_mutationWithError_errors)),
   }
   and t_mutationWithError_errors = {
-    field: [ | \`FutureAddedValue(string) | \`FIRST | \`SECOND | \`THIRD],
+    field: t_mutationWithError_errors_field,
     message: string,
   }
+  and t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ]
   and t_mutationWithError_value = {stringField: string};
   let parse: Js.Json.t => t =
     (value) => (
@@ -5347,19 +5661,12 @@ module MyQuery = {
                                    Obj.magic(value),
                                    \\"field\\",
                                  );
-                               (
-                                 switch (Obj.magic(value: string)) {
-                                 | \\"FIRST\\" => \`FIRST
-                                 | \\"SECOND\\" => \`SECOND
-                                 | \\"THIRD\\" => \`THIRD
-                                 | other => \`FutureAddedValue(other)
-                                 }: [
-                                   | \`FutureAddedValue(string)
-                                   | \`FIRST
-                                   | \`SECOND
-                                   | \`THIRD
-                                 ]
-                               );
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | other => \`FutureAddedValue(other)
+                               };
                              },
 
                              message: {
@@ -5409,8 +5716,10 @@ exports[`Records mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {optionalInputArgs: string};
+  };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {optionalInputArgs: string};
   type t_variables = {required: string};
   let parse: Js.Json.t => t =
@@ -5480,8 +5789,26 @@ type record = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {
+      first: t_first,
+      second: t_second,
+      let_: t_let,
+    }
+    and t_let = {inner: Js.Nullable.t(t_let_inner)}
+    and t_let_inner = {inner: Js.Nullable.t(t_let_inner_inner)}
+    and t_let_inner_inner = {field: string}
+    and t_second = {inner: Js.Nullable.t(t_second_inner)}
+    and t_second_inner = {inner: Js.Nullable.t(t_second_inner_inner)}
+    and t_second_inner_inner = {
+      f1: string,
+      f2: string,
+    }
+    and t_first = {inner: Js.Nullable.t(t_first_inner)}
+    and t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)}
+    and t_first_inner_inner = {field: string};
+  };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {
     first: t_first,
     second: t_second,
@@ -5675,8 +6002,10 @@ exports[`Records nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {nonrecursiveInput: string};
+  };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
@@ -5810,8 +6139,14 @@ exports[`Records pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {pokemon: Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      id: string,
+      name: Js.Nullable.t(string),
+    };
+  };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {pokemon: option(t_pokemon)}
   and t_pokemon = {
     id: string,
@@ -5876,8 +6211,14 @@ exports[`Records pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {pokemon: Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      id: string,
+      name: Js.Nullable.t(string),
+    };
+  };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {pokemon: option(t_pokemon)}
   and t_pokemon = {
     id: string,
@@ -6009,8 +6350,10 @@ type dog = {
 type oneFieldQuery = {nullableString: option(string)};
 
 module MyQuery = {
+  module Raw = {
+    type t = {variousScalars: scalars};
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {variousScalars: scalars};
   let parse: Js.Json.t => t =
     (value) => (
@@ -6042,8 +6385,11 @@ module MyQuery = {
 };
 
 module OneFieldQuery = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {nullableString: Js.Nullable.t(string)};
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {nullableString: option(string)};
   let parse: Js.Json.t => t =
@@ -6080,7 +6426,6 @@ module ExternalFragmentQuery = {
       string,
       int,
     };
-    type raw_t;
     type t_VariousScalars = t;
 
     let parse = (value: Js.Json.t): t => {
@@ -6100,13 +6445,15 @@ module ExternalFragmentQuery = {
     let name = \\"Fragment\\";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {variousScalars: Fragment.t};
+    };
     let query =
       (
         (\\"query   {\\\\nvariousScalars  {\\\\n...\\" ++ Fragment.name)
         ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\"
       )
       ++ Fragment.query;
-    type raw_t;
     type t = {variousScalars: Fragment.t};
     let parse: Js.Json.t => t =
       (value) => (
@@ -6126,11 +6473,23 @@ module ExternalFragmentQuery = {
 };
 
 module InlineFragmentQuery = {
+  module Raw = {
+    type t = {dogOrHuman: t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+    ]
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {dogOrHuman: t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -6215,7 +6574,6 @@ module UnionExternalFragmentQuery = {
       name: string,
       barkVolume: float,
     };
-    type raw_t;
     type t_Dog = t;
 
     let parse = (value: Js.Json.t): t => {
@@ -6235,6 +6593,13 @@ module UnionExternalFragmentQuery = {
     let name = \\"DogFragment\\";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {dogOrHuman: t_dogOrHuman}
+      and t_dogOrHuman = [
+        | \`FutureAddedValue(Js.Json.t)
+        | \`Dog(DogFragment.t)
+      ];
+    };
     let query =
       (
         (
@@ -6244,10 +6609,11 @@ module UnionExternalFragmentQuery = {
         ++ \\"   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\"
       )
       ++ DogFragment.query;
-    type raw_t;
-    type t = {
-      dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(DogFragment.t)],
-    };
+    type t = {dogOrHuman: t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(DogFragment.t)
+    ];
     let parse: Js.Json.t => t =
       (value) => (
         {
@@ -6326,8 +6692,10 @@ exports[`Records recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {recursiveInput: string};
+  };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {recursiveInput: string};
   type t_variables = {arg: t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
@@ -6476,8 +6844,22 @@ exports[`Records scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     nullableString: option(string),
@@ -6610,8 +6992,10 @@ exports[`Records scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {scalarsInput: string};
+  };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {scalarsInput: string};
   type t_variables = {
     nullableString: option(string),
@@ -6784,8 +7168,10 @@ exports[`Records scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {scalarsInput: string};
+  };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
-  type raw_t;
   type t = {scalarsInput: string};
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
@@ -6984,8 +7370,21 @@ exports[`Records skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {
+      v1: t_v1,
+      v2: t_v2,
+    }
+    and t_v2 = {
+      nullableString: Js.Nullable.t(string),
+      string: Js.Nullable.t(string),
+    }
+    and t_v1 = {
+      nullableString: Js.Nullable.t(string),
+      string: Js.Nullable.t(string),
+    };
+  };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {
     v1: t_v1,
     v2: t_v2,
@@ -7108,15 +7507,23 @@ exports[`Records subscription.re 1`] = `
   }
 ];
 module MyQuery = {
-  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    simpleSubscription: [
+  module Raw = {
+    type t = {simpleSubscription: t_simpleSubscription}
+    and t_simpleSubscription = [
       | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_simpleSubscription_Dog)
       | \`Human(t_simpleSubscription_Human)
-    ],
-  }
+    ]
+    and t_simpleSubscription_Human = {name: string}
+    and t_simpleSubscription_Dog = {name: string};
+  };
+  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t = {simpleSubscription: t_simpleSubscription}
+  and t_simpleSubscription = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_simpleSubscription_Dog)
+    | \`Human(t_simpleSubscription_Human)
+  ]
   and t_simpleSubscription_Human = {name: string}
   and t_simpleSubscription_Dog = {name: string};
   let parse: Js.Json.t => t =
@@ -7220,8 +7627,22 @@ exports[`Records tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     nullableString: option(string),
@@ -7333,12 +7754,26 @@ module MyQuery = {
 };
 
 module MyQuery2 = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     nullableString: option(string),
@@ -7450,12 +7885,26 @@ module MyQuery2 = {
 };
 
 module MyQuery3 = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     nullableString: option(string),
@@ -7567,12 +8016,26 @@ module MyQuery3 = {
 };
 
 module MyQuery4 = {
+  module Raw = {
+    type t = {variousScalars: t_variousScalars}
+    and t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
   let query = [%raw
     \\"graphql\`\\\\n  query   {\\\\n    variousScalars  {\\\\n      nullableString\\\\n      string\\\\n      nullableInt\\\\n      int\\\\n      nullableFloat\\\\n      float\\\\n      nullableBoolean\\\\n      boolean\\\\n      nullableID\\\\n      id\\\\n    }\\\\n  }\\\\n\`\\"
   ];
-  type raw_t;
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     nullableString: option(string),
@@ -7705,8 +8168,22 @@ exports[`Records typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {first: t_first}
+    and t_first = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner),
+    }
+    and t_first_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner_inner),
+    }
+    and t_first_inner_inner = {
+      __typename: string,
+      field: string,
+    };
+  };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
   type t = {first: t_first}
   and t_first = {
     __typename: string,
@@ -7822,15 +8299,26 @@ exports[`Records union.re 1`] = `
   }
 ];
 module MyQuery = {
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    dogOrHuman: [
+  module Raw = {
+    type t = {dogOrHuman: t_dogOrHuman}
+    and t_dogOrHuman = [
       | \`FutureAddedValue(Js.Json.t)
       | \`Dog(t_dogOrHuman_Dog)
       | \`Human(t_dogOrHuman_Human)
-    ],
-  }
+    ]
+    and t_dogOrHuman_Human = {name: string}
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t = {dogOrHuman: t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ]
   and t_dogOrHuman_Human = {name: string}
   and t_dogOrHuman_Dog = {
     name: string,
@@ -7943,11 +8431,23 @@ exports[`Records unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {dogOrHuman: t_dogOrHuman}
+    and t_dogOrHuman = [
+      | \`FutureAddedValue(Js.Json.t)
+      | \`Dog(t_dogOrHuman_Dog)
+    ]
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type raw_t;
-  type t = {
-    dogOrHuman: [ | \`FutureAddedValue(Js.Json.t) | \`Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {dogOrHuman: t_dogOrHuman}
+  and t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,

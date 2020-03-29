@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "listsInput": string};
+  };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
-  type raw_t;
   type t = {. "listsInput": string};
   type t_variables = {
     .

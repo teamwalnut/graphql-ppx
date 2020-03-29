@@ -106,47 +106,6 @@ let base_type = (~inner=[], ~loc=?, name) => {
   );
 };
 
-let generate_raw_enum_type = (loc, enum_meta) => {
-  base_type("string");
-};
-
-let generate_enum_type = (loc, enum_meta) => {
-  Graphql_ppx_base__.Schema.(
-    [@metaloc conv_loc(loc)]
-    Ast_helper.(
-      Typ.variant(
-        [
-          {
-            prf_desc:
-              Rtag(
-                {txt: "FutureAddedValue", loc: conv_loc(loc)},
-                false,
-                [base_type("string")],
-              ),
-            prf_loc: conv_loc(loc),
-            prf_attributes: [],
-          },
-          ...enum_meta.em_values
-             |> List.map(({evm_name, _}) =>
-                  {
-                    prf_desc:
-                      Rtag(
-                        {txt: to_valid_ident(evm_name), loc: conv_loc(loc)},
-                        true,
-                        [],
-                      ),
-                    prf_loc: conv_loc(loc),
-                    prf_attributes: [],
-                  }
-                ),
-        ],
-        Closed,
-        None,
-      )
-    )
-  );
-};
-
 // generate the type definition, including nullables, arrays etc.
 let rec generate_type = (config, path, raw) =>
   fun
@@ -188,152 +147,233 @@ let rec generate_type = (config, path, raw) =>
   | Res_object(loc, name, _fields, None)
   | Res_record(loc, name, _fields, None) =>
     base_type(~loc=conv_loc(loc), generate_type_name(path))
-  | Res_poly_variant_selection_set(loc, name, fields) =>
-    Ast_helper.(
-      Typ.variant(
-        fields
-        |> List.map(((name, _)) =>
-             {
-               prf_desc:
-                 Rtag(
-                   {txt: Compat.capitalize_ascii(name), loc: conv_loc(loc)},
-                   false,
-                   [
+  | Res_poly_variant_selection_set(loc, name, _)
+  | Res_poly_variant_union(loc, name, _, _)
+  | Res_poly_variant_interface(loc, name, _, _) =>
+    base_type(~loc=conv_loc(loc), generate_type_name(path))
+  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
+    base_type(module_name ++ ".t")
+  | Res_error(loc, error) =>
+    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
+  | Res_poly_enum(loc, enum_meta) =>
+    base_type(~loc=conv_loc(loc), generate_type_name(path));
+
+let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
+  Ast_helper.Type.mk(
+    ~kind=inner,
+    ~manifest?,
+    {loc: conv_loc(loc), txt: generate_type_name(path)},
+  );
+};
+
+let generate_record_type = (config, fields, obj_path, raw, loc) => {
+  wrap_type_declaration(
+    Ptype_record(
+      fields
+      |> List.map(
+           fun
+           | Fragment({key, module_name, type_name}) =>
+             Ast_helper.Type.field(
+               {Location.txt: key, loc: Location.none},
+               Ast_helper.Typ.constr(
+                 {
+                   Location.txt:
+                     Longident.parse(
+                       module_name
+                       ++ ".t"
+                       ++ (
+                         switch (type_name) {
+                         | None => ""
+                         | Some(type_name) => "_" ++ type_name
+                         }
+                       ),
+                     ),
+                   loc: Location.none,
+                 },
+                 [],
+               ),
+             )
+           | Field({path: [name, ...path], type_}) =>
+             Ast_helper.Type.field(
+               {Location.txt: to_valid_ident(name), loc: Location.none},
+               generate_type(config, [name, ...path], raw, type_),
+             )
+           | Field({path: [], loc}) =>
+             // I don't think this should ever happen but we need to
+             // cover this case, perhaps we can constrain the type
+             raise(
+               Location.Error(
+                 Location.error(~loc=loc |> conv_loc, "No path"),
+               ),
+             ),
+         ),
+    ),
+    loc,
+    obj_path,
+  );
+};
+
+let generate_variant_selection = (config, fields, path, loc, raw) => {
+  wrap_type_declaration(
+    Ptype_abstract,
+    ~manifest=
+      Ast_helper.(
+        Typ.variant(
+          fields
+          |> List.map(((name, _)) =>
+               {
+                 prf_desc:
+                   Rtag(
                      {
-                       ptyp_desc: Ptyp_any,
-                       ptyp_attributes: [],
-                       ptyp_loc_stack: [],
-                       ptyp_loc: Location.none,
+                       txt: Compat.capitalize_ascii(name),
+                       loc: conv_loc(loc),
                      },
-                   ],
-                 ),
-               prf_loc: Location.none,
-               prf_attributes: [],
-             }
-           ),
-        Closed,
-        None,
-      )
-    )
+                     false,
+                     [
+                       {
+                         ptyp_desc: Ptyp_any,
+                         ptyp_attributes: [],
+                         ptyp_loc_stack: [],
+                         ptyp_loc: Location.none,
+                       },
+                     ],
+                   ),
+                 prf_loc: Location.none,
+                 prf_attributes: [],
+               }
+             ),
+          Closed,
+          None,
+        )
+      ),
+    loc,
+    path,
+  );
+};
 
-  | Res_poly_variant_union(loc, name, fragments, _exhaustive_flag) => {
-      let fallback_case_ty = [
-        {
-          prf_desc:
-            Rtag(
-              {txt: "FutureAddedValue", loc: conv_loc(loc)},
-              false,
-              [base_type("Js.Json.t")],
-            ),
-          prf_loc: conv_loc(loc),
-          prf_attributes: [],
-        },
-      ];
+let generate_variant_union = (config, fields, path, loc, raw) => {
+  let fallback_case_ty = [
+    {
+      prf_desc:
+        Rtag(
+          {txt: "FutureAddedValue", loc: conv_loc(loc)},
+          false,
+          [base_type("Js.Json.t")],
+        ),
+      prf_loc: conv_loc(loc),
+      prf_attributes: [],
+    },
+  ];
 
-      let fragment_case_tys =
-        fragments
-        |> List.map(((name, res)) =>
-             {
-               prf_desc:
-                 Rtag(
-                   {txt: name, loc: conv_loc(loc)},
-                   false,
-                   [generate_type(config, [name, ...path], raw, res)],
-                 ),
-               prf_loc: conv_loc(loc),
-               prf_attributes: [],
-             }
-           );
+  let fragment_case_tys =
+    fields
+    |> List.map(((name, res)) =>
+         {
+           prf_desc:
+             Rtag(
+               {txt: name, loc: conv_loc(loc)},
+               false,
+               [generate_type(config, [name, ...path], raw, res)],
+             ),
+           prf_loc: conv_loc(loc),
+           prf_attributes: [],
+         }
+       );
+
+  wrap_type_declaration(
+    Ptype_abstract,
+    ~manifest=
       Ast_helper.(
         Typ.variant(
           List.concat([fallback_case_ty, fragment_case_tys]),
           Closed,
           None,
         )
-      );
-    }
-  | Res_poly_variant_interface(loc, name, base, fragments) => {
-      let map_case_ty = ((name, res)) => {
-        prf_desc:
-          Rtag(
-            {txt: name, loc: conv_loc(loc)},
-            false,
-            [generate_type(config, [name, ...path], raw, res)],
-          ),
-        prf_loc: conv_loc(loc),
-        prf_attributes: [],
-      };
-
-      let fallback_case_ty = map_case_ty(base);
-      let fragment_case_tys = fragments |> List.map(map_case_ty);
-
-      Ast_helper.(
-        Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
-      );
-    }
-  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
-    base_type(module_name ++ ".t")
-  | Res_error(loc, error) =>
-    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(loc, enum_meta) =>
-    if (raw) {
-      generate_raw_enum_type(loc, enum_meta);
-    } else {
-      generate_enum_type(loc, enum_meta);
-    };
-
-let generate_record_type = (config, fields, obj_path, raw) => {
-  Ast_helper.Type.mk(
-    ~kind=
-      Ptype_record(
-        fields
-        |> List.map(
-             fun
-             | Fragment({key, module_name, type_name}) =>
-               Ast_helper.Type.field(
-                 {Location.txt: key, loc: Location.none},
-                 Ast_helper.Typ.constr(
-                   {
-                     Location.txt:
-                       Longident.parse(
-                         module_name
-                         ++ ".t"
-                         ++ (
-                           switch (type_name) {
-                           | None => ""
-                           | Some(type_name) => "_" ++ type_name
-                           }
-                         ),
-                       ),
-                     loc: Location.none,
-                   },
-                   [],
-                 ),
-               )
-             | Field({path: [name, ...path], type_}) =>
-               Ast_helper.Type.field(
-                 {Location.txt: to_valid_ident(name), loc: Location.none},
-                 generate_type(config, [name, ...path], raw, type_),
-               )
-             | Field({path: [], loc}) =>
-               // I don't think this should ever happen but we need to
-               // cover this case, perhaps we can constrain the type
-               raise(
-                 Location.Error(
-                   Location.error(~loc=loc |> conv_loc, "No path"),
-                 ),
-               ),
-           ),
       ),
-    {loc: Location.none, txt: generate_type_name(obj_path)},
+    loc,
+    path,
   );
 };
 
-let generate_object_type = (config, fields, obj_path, raw) => {
-  Ast_helper.(
-    Type.mk(
-      ~kind=Ptype_abstract,
-      ~manifest=
+let generate_variant_interface = (config, fields, base, path, loc, raw) => {
+  let map_case_ty = ((name, res)) => {
+    prf_desc:
+      Rtag(
+        {txt: name, loc: conv_loc(loc)},
+        false,
+        [generate_type(config, [name, ...path], raw, res)],
+      ),
+    prf_loc: conv_loc(loc),
+    prf_attributes: [],
+  };
+
+  let fallback_case_ty = map_case_ty(base);
+  let fragment_case_tys = fields |> List.map(map_case_ty);
+
+  wrap_type_declaration(
+    Ptype_abstract,
+    ~manifest=
+      Ast_helper.(
+        Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
+      ),
+    loc,
+    path,
+  );
+};
+
+let generate_enum = (config, fields, path, loc, raw) =>
+  wrap_type_declaration(
+    Ptype_abstract,
+    ~manifest=
+      if (raw) {
+        base_type("string");
+      } else {
+        Graphql_ppx_base__.Schema.(
+          [@metaloc conv_loc(loc)]
+          Ast_helper.(
+            Typ.variant(
+              [
+                {
+                  prf_desc:
+                    Rtag(
+                      {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                      false,
+                      [base_type("string")],
+                    ),
+                  prf_loc: conv_loc(loc),
+                  prf_attributes: [],
+                },
+                ...fields
+                   |> List.map(field =>
+                        {
+                          prf_desc:
+                            Rtag(
+                              {
+                                txt: to_valid_ident(field),
+                                loc: conv_loc(loc),
+                              },
+                              true,
+                              [],
+                            ),
+                          prf_loc: conv_loc(loc),
+                          prf_attributes: [],
+                        }
+                      ),
+              ],
+              Closed,
+              None,
+            )
+          )
+        );
+      },
+    loc,
+    path,
+  );
+
+let generate_object_type = (config, fields, obj_path, raw, loc) => {
+  wrap_type_declaration(
+    ~manifest=
+      Ast_helper.(
         Typ.constr(
           {Location.txt: Longident.parse("Js.t"), loc: Location.none},
           [
@@ -392,11 +432,14 @@ let generate_object_type = (config, fields, obj_path, raw) => {
               Closed,
             ),
           ],
-        ),
-      {loc: Location.none, txt: generate_type_name(obj_path)},
-    )
+        )
+      ),
+    Ptype_abstract,
+    loc,
+    obj_path,
   );
 };
+
 let generate_graphql_object =
     (
       config: Generator_utils.output_config,
@@ -404,26 +447,36 @@ let generate_graphql_object =
       obj_path,
       force_record,
       raw,
+      loc,
     ) => {
   config.records || force_record
-    ? generate_record_type(config, fields, obj_path, raw)
-    : generate_object_type(config, fields, obj_path, raw);
+    ? generate_record_type(config, fields, obj_path, raw, loc)
+    : generate_object_type(config, fields, obj_path, raw, loc);
 };
 
 // generate all the types necessary types that we later refer to by name.
 let generate_types = (config: Generator_utils.output_config, res, raw) => {
   let types =
-    extract(raw, [], res)
+    extract([], res)
     |> List.map(
          fun
-         | Object({fields, path: obj_path, force_record}) =>
+         | Object({fields, path: obj_path, force_record, loc}) =>
            generate_graphql_object(
              config,
              fields,
              obj_path,
              force_record,
              raw,
-           ),
+             loc,
+           )
+         | VariantSelection({loc, path, fields}) =>
+           generate_variant_selection(config, fields, path, loc, raw)
+         | VariantUnion({loc, path, fields}) =>
+           generate_variant_union(config, fields, path, loc, raw)
+         | VariantInterface({loc, path, base, fields}) =>
+           generate_variant_interface(config, fields, base, path, loc, raw)
+         | Enum({loc, path, fields}) =>
+           generate_enum(config, fields, path, loc, raw),
        );
 
   Ast_helper.Str.type_(Recursive, types);

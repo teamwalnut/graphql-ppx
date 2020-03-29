@@ -17,8 +17,23 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -131,12 +146,27 @@ module MyQuery = {
 };
 
 module MyQuery2 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let { graphql } = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -249,12 +279,27 @@ module MyQuery2 = {
 };
 
 module MyQuery3 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let { graphql } = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -367,12 +412,27 @@ module MyQuery3 = {
 };
 
 module MyQuery4 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let graphql = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .

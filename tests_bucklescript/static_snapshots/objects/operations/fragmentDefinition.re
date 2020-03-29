@@ -25,7 +25,6 @@ module Fragments = {
       "nullableOfNullable": option(array(option(string))),
       "nullableOfNonNullable": option(array(string)),
     };
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t) => {
@@ -72,7 +71,6 @@ module Fragments = {
   module Another = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
     type t = {. "nullableOfNonNullable": option(array(string))};
-    type raw_t;
     type t_Lists = t;
 
     let parse = (value: Js.Json.t) => {
@@ -100,6 +98,18 @@ module Fragments = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {
+      .
+      "l1": Fragments.ListFragment.t,
+      "l2": t_l2,
+    }
+    and t_l2 = {
+      .
+      "frag1": Fragments.ListFragment.t_Lists,
+      "frag2": Fragments.ListFragment.t_Lists,
+    };
+  };
   let query =
     (
       (
@@ -118,7 +128,6 @@ module MyQuery = {
       ++ "   \n}\n\n}\n"
     )
     ++ Fragments.ListFragment.query;
-  type raw_t;
   type t = {
     .
     "l1": Fragments.ListFragment.t,

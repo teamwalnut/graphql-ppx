@@ -26,8 +26,15 @@ module IntOfString = {
 };
 
 module MyQuery = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "string": Js.Json.t,
+      "int": Js.Json.t,
+    };
+  };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .

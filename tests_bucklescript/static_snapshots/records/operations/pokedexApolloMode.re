@@ -17,8 +17,14 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {pokemon: Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      id: string,
+      name: Js.Nullable.t(string),
+    };
+  };
   let query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
-  type raw_t;
   type t = {pokemon: option(t_pokemon)}
   and t_pokemon = {
     id: string,

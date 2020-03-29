@@ -17,8 +17,25 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "first": t_first}
+    and t_first = {
+      .
+      "__typename": string,
+      "inner": Js.Nullable.t(t_first_inner),
+    }
+    and t_first_inner = {
+      .
+      "__typename": string,
+      "inner": Js.Nullable.t(t_first_inner_inner),
+    }
+    and t_first_inner_inner = {
+      .
+      "__typename": string,
+      "field": string,
+    };
+  };
   let query = "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
-  type raw_t;
   type t = {. "first": t_first}
   and t_first = {
     .

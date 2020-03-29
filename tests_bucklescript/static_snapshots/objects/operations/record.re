@@ -29,8 +29,10 @@ type dog = {
 type oneFieldQuery = {nullableString: option(string)};
 
 module MyQuery = {
+  module Raw = {
+    type t = {. "variousScalars": scalars};
+  };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type raw_t;
   type t = {. "variousScalars": scalars};
   let parse: Js.Json.t => t =
     value => {
@@ -64,8 +66,11 @@ module MyQuery = {
 };
 
 module OneFieldQuery = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {nullableString: Js.Nullable.t(string)};
+  };
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {nullableString: option(string)};
   let parse: Js.Json.t => t =
@@ -104,7 +109,6 @@ module ExternalFragmentQuery = {
       string,
       int,
     };
-    type raw_t;
     type t_VariousScalars = t;
 
     let parse = (value: Js.Json.t) => {
@@ -128,13 +132,15 @@ module ExternalFragmentQuery = {
     let name = "Fragment";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {. "variousScalars": Fragment.t};
+    };
     let query =
       (
         ("query   {\nvariousScalars  {\n..." ++ Fragment.name)
         ++ "   \n}\n\n}\n"
       )
       ++ Fragment.query;
-    type raw_t;
     type t = {. "variousScalars": Fragment.t};
     let parse: Js.Json.t => t =
       value => {
@@ -156,12 +162,23 @@ module ExternalFragmentQuery = {
 };
 
 module InlineFragmentQuery = {
+  module Raw = {
+    type t = {. "dogOrHuman": t_dogOrHuman}
+    and t_dogOrHuman = [
+      | `FutureAddedValue(Js.Json.t)
+      | `Dog(t_dogOrHuman_Dog)
+    ]
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type raw_t;
-  type t = {
-    .
-    "dogOrHuman": [ | `FutureAddedValue(Js.Json.t) | `Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {. "dogOrHuman": t_dogOrHuman}
+  and t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -256,7 +273,6 @@ module UnionExternalFragmentQuery = {
       name: string,
       barkVolume: float,
     };
-    type raw_t;
     type t_Dog = t;
 
     let parse = (value: Js.Json.t) => {
@@ -280,6 +296,13 @@ module UnionExternalFragmentQuery = {
     let name = "DogFragment";
   };
   module Untitled1 = {
+    module Raw = {
+      type t = {. "dogOrHuman": t_dogOrHuman}
+      and t_dogOrHuman = [
+        | `FutureAddedValue(Js.Json.t)
+        | `Dog(DogFragment.t)
+      ];
+    };
     let query =
       (
         (
@@ -289,11 +312,11 @@ module UnionExternalFragmentQuery = {
         ++ "   \n}\n\n}\n\n}\n"
       )
       ++ DogFragment.query;
-    type raw_t;
-    type t = {
-      .
-      "dogOrHuman": [ | `FutureAddedValue(Js.Json.t) | `Dog(DogFragment.t)],
-    };
+    type t = {. "dogOrHuman": t_dogOrHuman}
+    and t_dogOrHuman = [
+      | `FutureAddedValue(Js.Json.t)
+      | `Dog(DogFragment.t)
+    ];
     let parse: Js.Json.t => t =
       value => {
         [@metaloc loc]

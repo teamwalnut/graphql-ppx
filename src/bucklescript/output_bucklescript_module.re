@@ -298,6 +298,24 @@ let make_printed_query = (config, document) => {
   reprinted;
 };
 
+let wrap_module = (name: string, contents) => {
+  [
+    {
+      pstr_desc:
+        Pstr_module({
+          pmb_name: {
+            txt: Generator_utils.capitalize_ascii(name),
+            loc: Location.none,
+          },
+          pmb_expr: Mod.structure(contents),
+          pmb_attributes: [],
+          pmb_loc: Location.none,
+        }),
+      pstr_loc: Location.none,
+    },
+  ];
+};
+
 let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
@@ -309,6 +327,8 @@ let generate_default_operation =
     );
   let types =
     Output_bucklescript_types.generate_types(config, res_structure, false);
+  let raw_types =
+    Output_bucklescript_types.generate_types(config, res_structure, true);
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
@@ -333,12 +353,12 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
+          wrap_module("Raw", [raw_types]),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
           },
           [[%stri let query = [%e printed_query]]],
-          [[%stri type raw_t]],
           [types],
           switch (extracted_args) {
           | [] => []
@@ -473,7 +493,6 @@ let generate_fragment_module =
             },
             [[%stri let query = [%e printed_query]]],
             [types],
-            [[%stri type raw_t]],
             [
               Ast_helper.(
                 Str.type_(
@@ -508,24 +527,6 @@ let generate_fragment_module =
     };
 
   (Some(Generator_utils.capitalize_ascii(name)), contents);
-};
-
-let wrap_module = (name: string, contents) => {
-  [
-    {
-      pstr_desc:
-        Pstr_module({
-          pmb_name: {
-            txt: Generator_utils.capitalize_ascii(name),
-            loc: Location.none,
-          },
-          pmb_expr: Mod.structure(contents),
-          pmb_attributes: [],
-          pmb_loc: Location.none,
-        }),
-      pstr_loc: Location.none,
-    },
-  ];
 };
 
 let generate_operation = config =>
