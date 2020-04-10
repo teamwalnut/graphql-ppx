@@ -170,17 +170,8 @@ let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
   );
 };
 
-let generate_typename_record = (path, loc) => {
-  wrap_type_declaration(
-    Ptype_record([
-      Ast_helper.Type.field(
-        {Location.txt: "__typename", loc: Location.none},
-        base_type("string"),
-      ),
-    ]),
-    loc,
-    path,
-  );
+let generate_opaque = (path, loc) => {
+  Ast_helper.Type.mk({loc: conv_loc(loc), txt: generate_type_name(path)});
 };
 
 let generate_record_type = (config, fields, obj_path, raw, loc) => {
@@ -233,7 +224,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
 
 let generate_variant_selection = (config, fields, path, loc, raw) =>
   if (raw) {
-    generate_typename_record(path, loc);
+    generate_opaque(path, loc);
   } else {
     wrap_type_declaration(
       Ptype_abstract,
@@ -274,7 +265,7 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
 
 let generate_variant_union = (config, fields, path, loc, raw) =>
   if (raw) {
-    generate_typename_record(path, loc);
+    generate_opaque(path, loc);
   } else {
     let fallback_case_ty = [
       {
@@ -321,7 +312,7 @@ let generate_variant_union = (config, fields, path, loc, raw) =>
 
 let generate_variant_interface = (config, fields, base, path, loc, raw) =>
   if (raw) {
-    generate_typename_record(path, loc);
+    generate_opaque(path, loc);
   } else {
     let map_case_ty = ((name, res)) => {
       prf_desc:

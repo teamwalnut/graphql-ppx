@@ -154,7 +154,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -271,7 +271,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {dogOrHuman: t_dogOrHuman}
-      and t_dogOrHuman = {__typename: string};
+      and t_dogOrHuman;
     };
     let query =
       (

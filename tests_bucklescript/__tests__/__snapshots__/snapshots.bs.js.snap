@@ -2221,7 +2221,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -2352,7 +2352,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-      and t_dogOrHuman = {__typename: string};
+      and t_dogOrHuman;
     };
     let query =
       (
@@ -3284,7 +3284,7 @@ exports[`Objects (legacy) subscription.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"simpleSubscription\\": t_simpleSubscription}
-    and t_simpleSubscription = {__typename: string}
+    and t_simpleSubscription
     and t_simpleSubscription_Human = {. \\"name\\": string}
     and t_simpleSubscription_Dog = {. \\"name\\": string};
   };
@@ -4111,7 +4111,7 @@ exports[`Objects (legacy) union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Human = {. \\"name\\": string}
     and t_dogOrHuman_Dog = {
       .
@@ -4256,7 +4256,7 @@ exports[`Objects (legacy) unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Dog = {
       .
       \\"name\\": string,
@@ -6458,7 +6458,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
@@ -6575,7 +6575,7 @@ module UnionExternalFragmentQuery = {
   module Untitled1 = {
     module Raw = {
       type t = {dogOrHuman: t_dogOrHuman}
-      and t_dogOrHuman = {__typename: string};
+      and t_dogOrHuman;
     };
     let query =
       (
@@ -7486,7 +7486,7 @@ exports[`Records subscription.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {simpleSubscription: t_simpleSubscription}
-    and t_simpleSubscription = {__typename: string}
+    and t_simpleSubscription
     and t_simpleSubscription_Human = {name: string}
     and t_simpleSubscription_Dog = {name: string};
   };
@@ -8274,7 +8274,7 @@ exports[`Records union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Human = {name: string}
     and t_dogOrHuman_Dog = {
       name: string,
@@ -8402,7 +8402,7 @@ exports[`Records unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,

@@ -19,7 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {. "dogOrHuman": t_dogOrHuman}
-    and t_dogOrHuman = {__typename: string}
+    and t_dogOrHuman
     and t_dogOrHuman_Human = {. "name": string}
     and t_dogOrHuman_Dog = {
       .
