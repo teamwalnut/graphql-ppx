@@ -581,7 +581,7 @@ and generate_poly_variant_union =
   let (fallback_case, fallback_case_ty) =
     Ast_helper.(
       Exp.case(
-        Pat.var({loc: Location.none, txt: "typename"}),
+        Pat.any(),
         Exp.variant(
           "FutureAddedValue",
           Some(

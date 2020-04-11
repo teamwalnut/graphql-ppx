@@ -91,7 +91,7 @@ module MyQuery = {
                     value;
                   },
                 })
-              | typename => `FutureAddedValue(value)
+              | _ => `FutureAddedValue(value)
               }
             }
           }

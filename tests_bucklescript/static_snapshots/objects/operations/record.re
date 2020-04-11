@@ -215,7 +215,7 @@ module InlineFragmentQuery = {
                     value;
                   },
                 })
-              | typename => `FutureAddedValue(value)
+              | _ => `FutureAddedValue(value)
               }
             }
           }
@@ -313,7 +313,7 @@ module UnionExternalFragmentQuery = {
               | Some(typename) =>
                 switch (typename) {
                 | "Dog" => `Dog(DogFragment.parse(value))
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(value)
                 }
               }
             }
