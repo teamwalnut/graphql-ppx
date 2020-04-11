@@ -340,7 +340,7 @@ let generate_default_operation =
 
   let contents =
     if (has_error) {
-      [[%stri let parse = value => [%e parse_fn]]];
+      [[%stri let parse: Raw.t => t = value => [%e parse_fn]]];
     } else {
       let variable_constructors =
         Output_bucklescript_serializer.generate_variable_constructors(
@@ -364,7 +364,7 @@ let generate_default_operation =
           | [] => []
           | _ => [arg_types]
           },
-          [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
+          [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
@@ -469,7 +469,7 @@ let generate_fragment_module =
     make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
   let parse =
     [@metaloc conv_loc(config.map_loc(fragment.span))]
-    [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
+    [%stri let parse: Raw.t => t = [%e make_labeled_fun(parse_fn, required_variables)]];
 
   let variable_obj_type =
     Typ.constr(
