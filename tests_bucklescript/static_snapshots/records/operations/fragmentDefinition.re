@@ -26,41 +26,38 @@ module Fragments = {
     };
     type t_Lists = t;
 
-    let parse = (value: Js.Json.t): t => {
+    let parse: Raw.t => t =
+      (value: Js.Json.t) => (
+        {
 
-      nullableOfNullable: {
-        let value =
-          Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable");
+          nullableOfNullable: {
+            let value = (value: Raw.t).nullableOfNullable;
 
-        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-        | Some(_) =>
-          Some(
-            Obj.magic(value)
-            |> Js.Array.map(value =>
-                 switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                 | Some(_) => Some(Obj.magic(value): string)
-                 | None => None
-                 }
-               ),
-          )
-        | None => None
-        };
-      },
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some(
+                value
+                |> Js.Array.map(value =>
+                     switch (Js.toOption(value)) {
+                     | Some(value) => Some(value)
+                     | None => None
+                     }
+                   ),
+              )
+            | None => None
+            };
+          },
 
-      nullableOfNonNullable: {
-        let value =
-          Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNonNullable");
+          nullableOfNonNullable: {
+            let value = (value: Raw.t).nullableOfNonNullable;
 
-        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-        | Some(_) =>
-          Some(
-            Obj.magic(value)
-            |> Js.Array.map((value) => (Obj.magic(value): string)),
-          )
-        | None => None
-        };
-      },
-    };
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value |> Js.Array.map(value => value))
+            | None => None
+            };
+          },
+        }: t
+      );
     let name = "ListFragment";
   };
   module Another = {
@@ -68,22 +65,20 @@ module Fragments = {
     type t = {nullableOfNonNullable: option(array(string))};
     type t_Lists = t;
 
-    let parse = (value: Js.Json.t): t => {
+    let parse: Raw.t => t =
+      (value: Js.Json.t) => (
+        {
 
-      nullableOfNonNullable: {
-        let value =
-          Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNonNullable");
+          nullableOfNonNullable: {
+            let value = (value: Raw.t).nullableOfNonNullable;
 
-        switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-        | Some(_) =>
-          Some(
-            Obj.magic(value)
-            |> Js.Array.map((value) => (Obj.magic(value): string)),
-          )
-        | None => None
-        };
-      },
-    };
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value |> Js.Array.map(value => value))
+            | None => None
+            };
+          },
+        }: t
+      );
     let name = "Another";
   };
 };
@@ -125,18 +120,18 @@ module MyQuery = {
     frag1: Fragments.ListFragment.t_Lists,
     frag2: Fragments.ListFragment.t_Lists,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         l1: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "l1");
+          let value = (value: Raw.t).l1;
 
           Fragments.ListFragment.parse(value);
         },
 
         l2: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "l2");
+          let value = (value: Raw.t).l2;
           (
             {
               frag1: Fragments.ListFragment.parse(value),

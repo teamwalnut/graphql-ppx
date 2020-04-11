@@ -22,14 +22,6 @@ let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   };
 };
 
-// let type_name_to_words = type_name => {
-//   type_name
-//   |> Str.global_replace(Str.regexp("\\["), "")
-//   |> Str.global_replace(Str.regexp("\\]!"), "_OfNonNullList")
-//   |> Str.global_replace(Str.regexp("\\]"), "_OfList")
-//   |> Str.global_replace(Str.regexp("!"), "_NonNull");
-// };
-
 let type_name_to_words = type_name => {
   let str = ref("");
   type_name
@@ -89,11 +81,7 @@ let make_error_raiser = message =>
     Js.Exn.raiseError("Unexpected GraphQL query response");
   };
 
-let string_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): string)];
-let id_decoder = string_decoder;
-let float_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): float)];
-let int_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): int)];
-let boolean_decoder = loc => [@metaloc loc] [%expr (Obj.magic(value): bool)];
+let raw_value = loc => [@metaloc loc] [%expr value];
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -178,12 +166,12 @@ let rec generate_parser = (config, path: list(string), definition) =>
     generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
   | Res_array(loc, inner) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id(loc) => id_decoder(conv_loc(loc))
-  | Res_string(loc) => string_decoder(conv_loc(loc))
-  | Res_int(loc) => int_decoder(conv_loc(loc))
-  | Res_float(loc) => float_decoder(conv_loc(loc))
-  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
-  | Res_raw_scalar(_) => [%expr value]
+  | Res_id(loc) => raw_value(conv_loc(loc))
+  | Res_string(loc) => raw_value(conv_loc(loc))
+  | Res_int(loc) => raw_value(conv_loc(loc))
+  | Res_float(loc) => raw_value(conv_loc(loc))
+  | Res_boolean(loc) => raw_value(conv_loc(loc))
+  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
   | Res_poly_enum(loc, enum_meta) =>
     generate_poly_enum_decoder(loc, enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
@@ -257,15 +245,16 @@ let rec generate_parser = (config, path: list(string), definition) =>
 and generate_nullable_decoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]
   (
-    switch%expr (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-    | Some(_) => Some([%e generate_parser(config, path, definition, inner)])
+    switch%expr (Js.toOption(value)) {
+    | Some(value) =>
+      Some([%e generate_parser(config, path, definition, inner)])
     | None => None
     }
   )
 and generate_array_decoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]
   [%expr
-    Obj.magic(value)
+    value
     |> Js.Array.map(value => {
          %e
          generate_parser(config, path, definition, inner)
@@ -292,12 +281,12 @@ and generate_object_decoder =
       Ast_helper.(
         Exp.extension((
           {txt: "bs.obj", loc},
-          PStr([[%stri [%e do_obj_constructor_base()]]]),
+          PStr([[%stri [%e do_obj_constructor_base(true)]]]),
         ))
       )
     );
   }
-  and do_obj_constructor_base = () => {
+  and do_obj_constructor_base = is_object => {
     Ast_helper.(
       Exp.record(
         fields
@@ -307,10 +296,38 @@ and generate_object_decoder =
                  {Location.txt: Longident.parse(to_valid_ident(key)), loc},
                  {
                    let%expr value =
-                     Js.Dict.unsafeGet(
-                       Obj.magic(value),
-                       [%e const_str_expr(key)],
-                     );
+                     switch%e (is_object) {
+                     | true =>
+                       %expr
+                       value##[%e ident_from_string(to_valid_ident(key))]
+                     | false =>
+                       %expr
+                       [%e
+                         Ast_helper.Exp.field(
+                           Exp.constraint_(
+                             ident_from_string("value"),
+                             Ast_helper.Typ.constr(
+                               {
+                                 txt:
+                                   Longident.parse(
+                                     "Raw."
+                                     ++ Extract_type_definitions.generate_type_name(
+                                          path,
+                                        ),
+                                   ),
+                                 loc: Location.none,
+                               },
+                               [],
+                             ),
+                           ),
+                           {
+                             loc: Location.none,
+                             Location.txt:
+                               Longident.parse(to_valid_ident(key)),
+                           },
+                         )
+                       ]
+                     };
 
                    %e
                    generate_parser(
@@ -341,7 +358,7 @@ and generate_object_decoder =
   and do_obj_constructor_records = () => {
     Ast_helper.(
       Exp.constraint_(
-        do_obj_constructor_base(),
+        do_obj_constructor_base(false),
         Ast_helper.Typ.constr(
           {
             txt:
@@ -360,12 +377,11 @@ and generate_object_decoder =
       )
     );
   }
-  and obj_constructor = () => {
+  and obj_constructor = () =>
     [@metaloc loc]
-    let%expr value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-    %e
-    do_obj_constructor();
-  }
+    {
+      do_obj_constructor();
+    }
   and obj_constructor_records = () =>
     [@metaloc loc]
     {

@@ -28,19 +28,14 @@ module MyQuery = {
     "field": option(string),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "nonrecursiveInput": {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "nonrecursiveInput");
+      "nonrecursiveInput": {
+        let value = value##nonrecursiveInput;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>

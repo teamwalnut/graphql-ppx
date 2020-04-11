@@ -29,18 +29,14 @@ module MyQuery = {
     "nonNullableOfNullable": array(option(string)),
     "nonNullableOfNonNullable": array(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "listsInput": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "listsInput");
+      "listsInput": {
+        let value = value##listsInput;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

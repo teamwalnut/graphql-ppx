@@ -45,30 +45,29 @@ module MyQuery = {
     string: option(string),
   };
   type t_variables = {var: bool};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         v1: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "v1");
+          let value = (value: Raw.t).v1;
           (
             {
 
               nullableString: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+                let value = (value: Raw.t_v1).nullableString;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(Obj.magic(value): string)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },
 
               string: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+                let value = (value: Raw.t_v1).string;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(Obj.magic(value): string)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },
@@ -77,25 +76,24 @@ module MyQuery = {
         },
 
         v2: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "v2");
+          let value = (value: Raw.t).v2;
           (
             {
 
               nullableString: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+                let value = (value: Raw.t_v2).nullableString;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(Obj.magic(value): string)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },
 
               string: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+                let value = (value: Raw.t_v2).string;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(Obj.magic(value): string)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },

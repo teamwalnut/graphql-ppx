@@ -23,15 +23,14 @@ module MyQuery = {
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {optionalInputArgs: string};
   type t_variables = {required: string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         optionalInputArgs: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "optionalInputArgs");
+          let value = (value: Raw.t).optionalInputArgs;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

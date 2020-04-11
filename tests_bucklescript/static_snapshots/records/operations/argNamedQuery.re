@@ -23,14 +23,14 @@ module MyQuery = {
   let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {argNamedQuery: int};
   type t_variables = {query: string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         argNamedQuery: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "argNamedQuery");
+          let value = (value: Raw.t).argNamedQuery;
 
-          (Obj.magic(value): int);
+          value;
         },
       }: t
     );

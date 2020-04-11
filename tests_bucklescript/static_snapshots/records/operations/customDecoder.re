@@ -29,8 +29,8 @@ module MyQuery = {
   module Raw = {
     type t = {variousScalars: t_variousScalars}
     and t_variousScalars = {
-      string: Js.Json.t,
-      int: Js.Json.t,
+      string,
+      int,
     };
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
@@ -39,25 +39,25 @@ module MyQuery = {
     string: IntOfString.t,
     int: StringOfInt.t,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         variousScalars: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
+          let value = (value: Raw.t).variousScalars;
           (
             {
 
               string: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+                let value = (value: Raw.t_variousScalars).string;
 
-                IntOfString.parse(Obj.magic(value): string);
+                IntOfString.parse(value);
               },
 
               int: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+                let value = (value: Raw.t_variousScalars).int;
 
-                StringOfInt.parse(Obj.magic(value): int);
+                StringOfInt.parse(value);
               },
             }: t_variousScalars
           );

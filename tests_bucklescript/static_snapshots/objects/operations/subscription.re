@@ -32,92 +32,71 @@ module MyQuery = {
   ]
   and t_simpleSubscription_Human = {. "name": string}
   and t_simpleSubscription_Dog = {. "name": string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "simpleSubscription": {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "simpleSubscription");
+      "simpleSubscription": {
+        let value = value##simpleSubscription;
 
-          switch (Js.Json.decodeObject(value)) {
+        switch (Js.Json.decodeObject(value)) {
+
+        | None =>
+          Js.Exn.raiseError(
+            "graphql_ppx: "
+            ++ "Expected union "
+            ++ "DogOrHuman"
+            ++ " to be an object, got "
+            ++ Js.Json.stringify(value),
+          )
+
+        | Some(typename_obj) =>
+          switch (Js.Dict.get(typename_obj, "__typename")) {
 
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
-              ++ "Expected union "
+              ++ "Union "
               ++ "DogOrHuman"
-              ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ " is missing the __typename field",
             )
 
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, "__typename")) {
+          | Some(typename) =>
+            switch (Js.Json.decodeString(typename)) {
 
             | None =>
               Js.Exn.raiseError(
                 "graphql_ppx: "
                 ++ "Union "
                 ++ "DogOrHuman"
-                ++ " is missing the __typename field",
+                ++ " has a __typename field that is not a string",
               )
 
             | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
+              switch (typename) {
+              | "Dog" =>
+                `Dog({
 
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " has a __typename field that is not a string",
-                )
+                  "name": {
+                    let value = value##name;
 
-              | Some(typename) =>
-                switch (typename) {
-                | "Dog" =>
-                  `Dog(
-                    {
-                      [@metaloc loc]
-                      let value =
-                        value |> Js.Json.decodeObject |> Js.Option.getExn;
-                      {
+                    value;
+                  },
+                })
+              | "Human" =>
+                `Human({
 
-                        "name": {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), "name");
+                  "name": {
+                    let value = value##name;
 
-                          (Obj.magic(value): string);
-                        },
-                      };
-                    },
-                  )
-                | "Human" =>
-                  `Human(
-                    {
-                      [@metaloc loc]
-                      let value =
-                        value |> Js.Json.decodeObject |> Js.Option.getExn;
-                      {
-
-                        "name": {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), "name");
-
-                          (Obj.magic(value): string);
-                        },
-                      };
-                    },
-                  )
-                | typename => `FutureAddedValue(value)
-                }
+                    value;
+                  },
+                })
+              | typename => `FutureAddedValue(value)
               }
             }
-          };
-        },
-      };
+          }
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

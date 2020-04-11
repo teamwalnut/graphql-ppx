@@ -28,14 +28,14 @@ module MyQuery = {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         listsInput: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "listsInput");
+          let value = (value: Raw.t).listsInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

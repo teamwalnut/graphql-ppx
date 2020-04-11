@@ -52,94 +52,60 @@ module MyQuery = {
     "__typename": string,
     "field": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "first": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "first");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "first": {
+        let value = value##first;
+        {
 
-            "__typename": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "__typename");
+          "__typename": {
+            let value = value##__typename;
 
-              (Obj.magic(value): string);
-            },
+            value;
+          },
 
-            "inner": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "inner");
+          "inner": {
+            let value = value##inner;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  {
-                    [@metaloc loc]
-                    let value =
-                      value |> Js.Json.decodeObject |> Js.Option.getExn;
-                    {
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some({
+
+                "__typename": {
+                  let value = value##__typename;
+
+                  value;
+                },
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some({
 
                       "__typename": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "__typename");
+                        let value = value##__typename;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
 
-                      "inner": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "inner");
+                      "field": {
+                        let value = value##field;
 
-                        switch (
-                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                        ) {
-                        | Some(_) =>
-                          Some(
-                            {
-                              [@metaloc loc]
-                              let value =
-                                value
-                                |> Js.Json.decodeObject
-                                |> Js.Option.getExn;
-                              {
-
-                                "__typename": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "__typename",
-                                    );
-
-                                  (Obj.magic(value): string);
-                                },
-
-                                "field": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "field",
-                                    );
-
-                                  (Obj.magic(value): string);
-                                },
-                              };
-                            },
-                          )
-                        | None => None
-                        };
+                        value;
                       },
-                    };
-                  },
-                )
-              | None => None
-              };
-            },
-          };
-        },
-      };
+                    })
+                  | None => None
+                  };
+                },
+              })
+            | None => None
+            };
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

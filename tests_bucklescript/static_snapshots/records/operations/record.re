@@ -34,25 +34,25 @@ module MyQuery = {
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
   type t = {variousScalars: scalars};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         variousScalars: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
+          let value = (value: Raw.t).variousScalars;
           (
             {
 
               string: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+                let value = (value: Raw.t_variousScalars).string;
 
-                (Obj.magic(value): string);
+                value;
               },
 
               int: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+                let value = (value: Raw.t_variousScalars).int;
 
-                (Obj.magic(value): int);
+                value;
               },
             }: scalars
           );
@@ -71,21 +71,20 @@ module OneFieldQuery = {
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {nullableString: option(string)};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         variousScalars: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
+          let value = (value: Raw.t).variousScalars;
           (
             {
 
               nullableString: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+                let value = (value: Raw.t_variousScalars).nullableString;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(Obj.magic(value): string)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },
@@ -107,20 +106,23 @@ module ExternalFragmentQuery = {
     };
     type t_VariousScalars = t;
 
-    let parse = (value: Js.Json.t): t => {
+    let parse: Raw.t => t =
+      (value: Js.Json.t) => (
+        {
 
-      string: {
-        let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          string: {
+            let value = (value: Raw.t).string;
 
-        (Obj.magic(value): string);
-      },
+            value;
+          },
 
-      int: {
-        let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          int: {
+            let value = (value: Raw.t).int;
 
-        (Obj.magic(value): int);
-      },
-    };
+            value;
+          },
+        }: t
+      );
     let name = "Fragment";
   };
   module Untitled1 = {
@@ -134,13 +136,12 @@ module ExternalFragmentQuery = {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
-    let parse: Js.Json.t => t =
+    let parse: Raw.t => t =
       (value) => (
         {
 
           variousScalars: {
-            let value =
-              Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
+            let value = (value: Raw.t).variousScalars;
 
             Fragment.parse(value);
           },
@@ -170,12 +171,12 @@ module InlineFragmentQuery = {
     name: string,
     barkVolume: float,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         dogOrHuman: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+          let value = (value: Raw.t).dogOrHuman;
 
           switch (Js.Json.decodeObject(value)) {
 
@@ -217,17 +218,15 @@ module InlineFragmentQuery = {
                     {
 
                       name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
 
                       barkVolume: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "barkVolume");
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                        (Obj.magic(value): float);
+                        value;
                       },
                     }: t_dogOrHuman_Dog,
                   )
@@ -252,20 +251,23 @@ module UnionExternalFragmentQuery = {
     };
     type t_Dog = t;
 
-    let parse = (value: Js.Json.t): t => {
+    let parse: Raw.t => t =
+      (value: Js.Json.t) => (
+        {
 
-      name: {
-        let value = Js.Dict.unsafeGet(Obj.magic(value), "name");
+          name: {
+            let value = (value: Raw.t).name;
 
-        (Obj.magic(value): string);
-      },
+            value;
+          },
 
-      barkVolume: {
-        let value = Js.Dict.unsafeGet(Obj.magic(value), "barkVolume");
+          barkVolume: {
+            let value = (value: Raw.t).barkVolume;
 
-        (Obj.magic(value): float);
-      },
-    };
+            value;
+          },
+        }: t
+      );
     let name = "DogFragment";
   };
   module Untitled1 = {
@@ -287,12 +289,12 @@ module UnionExternalFragmentQuery = {
       | `FutureAddedValue(Js.Json.t)
       | `Dog(DogFragment.t)
     ];
-    let parse: Js.Json.t => t =
+    let parse: Raw.t => t =
       (value) => (
         {
 
           dogOrHuman: {
-            let value = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+            let value = (value: Raw.t).dogOrHuman;
 
             switch (Js.Json.decodeObject(value)) {
 

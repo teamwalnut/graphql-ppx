@@ -32,13 +32,12 @@ module MyQuery = {
   ]
   and t_simpleSubscription_Human = {name: string}
   and t_simpleSubscription_Dog = {name: string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         simpleSubscription: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "simpleSubscription");
+          let value = (value: Raw.t).simpleSubscription;
 
           switch (Js.Json.decodeObject(value)) {
 
@@ -80,10 +79,9 @@ module MyQuery = {
                     {
 
                       name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                        let value = (value: Raw.t_simpleSubscription_Dog).name;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
                     }: t_simpleSubscription_Dog,
                   )
@@ -93,9 +91,9 @@ module MyQuery = {
 
                       name: {
                         let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                          (value: Raw.t_simpleSubscription_Human).name;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
                     }: t_simpleSubscription_Human,
                   )

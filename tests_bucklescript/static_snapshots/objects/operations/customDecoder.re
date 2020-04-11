@@ -30,8 +30,8 @@ module MyQuery = {
     type t = {. "variousScalars": t_variousScalars}
     and t_variousScalars = {
       .
-      "string": Js.Json.t,
-      "int": Js.Json.t,
+      "string": string,
+      "int": int,
     };
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
@@ -41,32 +41,26 @@ module MyQuery = {
     "string": IntOfString.t,
     "int": StringOfInt.t,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "variousScalars": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              IntOfString.parse(Obj.magic(value): string);
-            },
+            IntOfString.parse(value);
+          },
 
-            "int": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          "int": {
+            let value = value##int;
 
-              StringOfInt.parse(Obj.magic(value): int);
-            },
-          };
-        },
-      };
+            StringOfInt.parse(value);
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

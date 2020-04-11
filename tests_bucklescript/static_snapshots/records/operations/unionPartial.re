@@ -35,12 +35,12 @@ module MyQuery = {
     name: string,
     barkVolume: float,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         dogOrHuman: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+          let value = (value: Raw.t).dogOrHuman;
 
           switch (Js.Json.decodeObject(value)) {
 
@@ -82,17 +82,15 @@ module MyQuery = {
                     {
 
                       name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
 
                       barkVolume: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "barkVolume");
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                        (Obj.magic(value): float);
+                        value;
                       },
                     }: t_dogOrHuman_Dog,
                   )

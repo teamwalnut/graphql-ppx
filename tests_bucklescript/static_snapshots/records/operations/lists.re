@@ -34,28 +34,25 @@ module MyQuery = {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         lists: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "lists");
+          let value = (value: Raw.t).lists;
           (
             {
 
               nullableOfNullable: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable");
+                let value = (value: Raw.t_lists).nullableOfNullable;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) =>
+                switch (Js.toOption(value)) {
+                | Some(value) =>
                   Some(
-                    Obj.magic(value)
+                    value
                     |> Js.Array.map(value =>
-                         switch (
-                           Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                         ) {
-                         | Some(_) => Some(Obj.magic(value): string)
+                         switch (Js.toOption(value)) {
+                         | Some(value) => Some(value)
                          | None => None
                          }
                        ),
@@ -65,49 +62,30 @@ module MyQuery = {
               },
 
               nullableOfNonNullable: {
-                let value =
-                  Js.Dict.unsafeGet(
-                    Obj.magic(value),
-                    "nullableOfNonNullable",
-                  );
+                let value = (value: Raw.t_lists).nullableOfNonNullable;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) =>
-                  Some(
-                    Obj.magic(value)
-                    |> Js.Array.map((value) => (Obj.magic(value): string)),
-                  )
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
 
               nonNullableOfNullable: {
-                let value =
-                  Js.Dict.unsafeGet(
-                    Obj.magic(value),
-                    "nonNullableOfNullable",
-                  );
+                let value = (value: Raw.t_lists).nonNullableOfNullable;
 
-                Obj.magic(value)
+                value
                 |> Js.Array.map(value =>
-                     switch (
-                       Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                     ) {
-                     | Some(_) => Some(Obj.magic(value): string)
+                     switch (Js.toOption(value)) {
+                     | Some(value) => Some(value)
                      | None => None
                      }
                    );
               },
 
               nonNullableOfNonNullable: {
-                let value =
-                  Js.Dict.unsafeGet(
-                    Obj.magic(value),
-                    "nonNullableOfNonNullable",
-                  );
+                let value = (value: Raw.t_lists).nonNullableOfNonNullable;
 
-                Obj.magic(value)
-                |> Js.Array.map((value) => (Obj.magic(value): string));
+                value |> Js.Array.map(value => value);
               },
             }: t_lists
           );

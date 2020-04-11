@@ -47,29 +47,28 @@ module MyQuery = {
     | `THIRD
   ]
   and t_mutationWithError_value = {stringField: string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         mutationWithError: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "mutationWithError");
+          let value = (value: Raw.t).mutationWithError;
           (
             {
 
               value: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "value");
+                let value = (value: Raw.t_mutationWithError).value;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) =>
+                switch (Js.toOption(value)) {
+                | Some(value) =>
                   Some(
                     {
 
                       stringField: {
                         let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "stringField");
+                          (value: Raw.t_mutationWithError_value).stringField;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
                     }: t_mutationWithError_value,
                   )
@@ -78,22 +77,19 @@ module MyQuery = {
               },
 
               errors: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "errors");
+                let value = (value: Raw.t_mutationWithError).errors;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) =>
+                switch (Js.toOption(value)) {
+                | Some(value) =>
                   Some(
-                    Obj.magic(value)
+                    value
                     |> Js.Array.map((value) =>
                          (
                            {
 
                              field: {
                                let value =
-                                 Js.Dict.unsafeGet(
-                                   Obj.magic(value),
-                                   "field",
-                                 );
+                                 (value: Raw.t_mutationWithError_errors).field;
                                switch (Obj.magic(value: string)) {
                                | "FIRST" => `FIRST
                                | "SECOND" => `SECOND
@@ -104,12 +100,10 @@ module MyQuery = {
 
                              message: {
                                let value =
-                                 Js.Dict.unsafeGet(
-                                   Obj.magic(value),
-                                   "message",
-                                 );
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
 
-                               (Obj.magic(value): string);
+                               value;
                              },
                            }: t_mutationWithError_errors
                          )

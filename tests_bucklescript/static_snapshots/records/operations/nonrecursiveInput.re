@@ -27,15 +27,14 @@ module MyQuery = {
     field: option(string),
     enum: option([ | `FIRST | `SECOND | `THIRD]),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         nonrecursiveInput: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "nonrecursiveInput");
+          let value = (value: Raw.t).nonrecursiveInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

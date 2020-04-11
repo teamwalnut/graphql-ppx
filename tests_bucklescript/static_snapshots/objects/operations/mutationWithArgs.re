@@ -23,19 +23,14 @@ module MyQuery = {
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {. "optionalInputArgs": string};
   type t_variables = {. "required": string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "optionalInputArgs": {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "optionalInputArgs");
+      "optionalInputArgs": {
+        let value = value##optionalInputArgs;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

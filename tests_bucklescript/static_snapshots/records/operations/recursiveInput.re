@@ -28,14 +28,14 @@ module MyQuery = {
     inner: option(t_variables_RecursiveInput),
     enum: option([ | `FIRST | `SECOND | `THIRD]),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         recursiveInput: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "recursiveInput");
+          let value = (value: Raw.t).recursiveInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

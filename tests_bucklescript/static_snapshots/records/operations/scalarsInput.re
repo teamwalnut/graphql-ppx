@@ -35,14 +35,14 @@ module MyQuery = {
     nullableID: option(string),
     id: string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         scalarsInput: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "scalarsInput");
+          let value = (value: Raw.t).scalarsInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

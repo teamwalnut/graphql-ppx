@@ -30,29 +30,29 @@ module MyQuery = {
     id: string,
     name: option(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         pokemon: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "pokemon");
+          let value = (value: Raw.t).pokemon;
 
-          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-          | Some(_) =>
+          switch (Js.toOption(value)) {
+          | Some(value) =>
             Some(
               {
 
                 id: {
-                  let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+                  let value = (value: Raw.t_pokemon).id;
 
-                  (Obj.magic(value): string);
+                  value;
                 },
 
                 name: {
-                  let value = Js.Dict.unsafeGet(Obj.magic(value), "name");
+                  let value = (value: Raw.t_pokemon).name;
 
-                  switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                  | Some(_) => Some(Obj.magic(value): string)
+                  switch (Js.toOption(value)) {
+                  | Some(value) => Some(value)
                   | None => None
                   };
                 },

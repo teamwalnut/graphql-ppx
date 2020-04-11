@@ -130,9 +130,9 @@ let rec generate_type = (config, path, raw) =>
       ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
-  | Res_custom_decoder(loc, module_name, _) =>
+  | Res_custom_decoder(loc, module_name, inner) =>
     if (raw) {
-      base_type(~loc=conv_loc(loc), "Js.Json.t");
+      generate_type(config, path, raw, inner);
     } else {
       base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }

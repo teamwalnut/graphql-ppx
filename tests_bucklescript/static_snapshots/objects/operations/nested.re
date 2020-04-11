@@ -61,199 +61,116 @@ module MyQuery = {
   and t_first = {. "inner": option(t_first_inner)}
   and t_first_inner = {. "inner": option(t_first_inner_inner)}
   and t_first_inner_inner = {. "field": string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "first": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "first");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "first": {
+        let value = value##first;
+        {
 
-            "inner": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "inner");
+          "inner": {
+            let value = value##inner;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  {
-                    [@metaloc loc]
-                    let value =
-                      value |> Js.Json.decodeObject |> Js.Option.getExn;
-                    {
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some({
 
-                      "inner": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "inner");
+                "inner": {
+                  let value = value##inner;
 
-                        switch (
-                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                        ) {
-                        | Some(_) =>
-                          Some(
-                            {
-                              [@metaloc loc]
-                              let value =
-                                value
-                                |> Js.Json.decodeObject
-                                |> Js.Option.getExn;
-                              {
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some({
 
-                                "field": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "field",
-                                    );
+                      "field": {
+                        let value = value##field;
 
-                                  (Obj.magic(value): string);
-                                },
-                              };
-                            },
-                          )
-                        | None => None
-                        };
+                        value;
                       },
-                    };
-                  },
-                )
-              | None => None
-              };
-            },
-          };
-        },
+                    })
+                  | None => None
+                  };
+                },
+              })
+            | None => None
+            };
+          },
+        };
+      },
 
-        "second": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "second");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "second": {
+        let value = value##second;
+        {
 
-            "inner": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "inner");
+          "inner": {
+            let value = value##inner;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  {
-                    [@metaloc loc]
-                    let value =
-                      value |> Js.Json.decodeObject |> Js.Option.getExn;
-                    {
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some({
 
-                      "inner": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "inner");
+                "inner": {
+                  let value = value##inner;
 
-                        switch (
-                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                        ) {
-                        | Some(_) =>
-                          Some(
-                            {
-                              [@metaloc loc]
-                              let value =
-                                value
-                                |> Js.Json.decodeObject
-                                |> Js.Option.getExn;
-                              {
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some({
 
-                                "f1": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "f1",
-                                    );
+                      "f1": {
+                        let value = value##f1;
 
-                                  (Obj.magic(value): string);
-                                },
-
-                                "f2": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "f2",
-                                    );
-
-                                  (Obj.magic(value): string);
-                                },
-                              };
-                            },
-                          )
-                        | None => None
-                        };
+                        value;
                       },
-                    };
-                  },
-                )
-              | None => None
-              };
-            },
-          };
-        },
 
-        "let_": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "let");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+                      "f2": {
+                        let value = value##f2;
 
-            "inner": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "inner");
-
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  {
-                    [@metaloc loc]
-                    let value =
-                      value |> Js.Json.decodeObject |> Js.Option.getExn;
-                    {
-
-                      "inner": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "inner");
-
-                        switch (
-                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                        ) {
-                        | Some(_) =>
-                          Some(
-                            {
-                              [@metaloc loc]
-                              let value =
-                                value
-                                |> Js.Json.decodeObject
-                                |> Js.Option.getExn;
-                              {
-
-                                "field": {
-                                  let value =
-                                    Js.Dict.unsafeGet(
-                                      Obj.magic(value),
-                                      "field",
-                                    );
-
-                                  (Obj.magic(value): string);
-                                },
-                              };
-                            },
-                          )
-                        | None => None
-                        };
+                        value;
                       },
-                    };
-                  },
-                )
-              | None => None
-              };
-            },
-          };
-        },
-      };
+                    })
+                  | None => None
+                  };
+                },
+              })
+            | None => None
+            };
+          },
+        };
+      },
+
+      "let_": {
+        let value = value##let_;
+        {
+
+          "inner": {
+            let value = value##inner;
+
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some({
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some({
+
+                      "field": {
+                        let value = value##field;
+
+                        value;
+                      },
+                    })
+                  | None => None
+                  };
+                },
+              })
+            | None => None
+            };
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
