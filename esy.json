@@ -17,7 +17,8 @@
   "devDependencies": {
     "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.8.0",
+    "ocaml": "~4.8.1",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
     "refmterr": "*"
   },
   "esy": {
