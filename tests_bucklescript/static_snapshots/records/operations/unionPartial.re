@@ -94,7 +94,7 @@ module MyQuery = {
                       },
                     }: t_dogOrHuman_Dog,
                   )
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(value)
                 }
               }
             }

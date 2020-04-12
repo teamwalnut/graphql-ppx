@@ -97,7 +97,7 @@ module MyQuery = {
                       },
                     }: t_simpleSubscription_Human,
                   )
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(value)
                 }
               }
             }

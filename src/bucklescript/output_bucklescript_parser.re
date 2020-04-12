@@ -338,18 +338,55 @@ and generate_object_decoder =
                    );
                  },
                )
-             | Fr_fragment_spread(key, loc, name, _, arguments) => (
-                 {Location.txt: Longident.parse(key), loc: conv_loc(loc)},
-                 {
-                   generate_fragment_parse_fun(
-                     config,
-                     conv_loc(loc),
-                     name,
-                     arguments,
-                     definition,
-                   );
-                 },
-               ),
+             | Fr_fragment_spread(key, loc, name, _, arguments) => {
+                 (
+                   {Location.txt: Longident.parse(key), loc: conv_loc(loc)},
+                   {
+                     let%expr value =
+                       switch%e (is_object) {
+                       | true =>
+                         %expr
+                         value##[%e ident_from_string(to_valid_ident(key))]
+                       | false =>
+                         %expr
+                         [%e
+                           Ast_helper.Exp.field(
+                             Exp.constraint_(
+                               ident_from_string("value"),
+                               Ast_helper.Typ.constr(
+                                 {
+                                   txt:
+                                     Longident.parse(
+                                       "Raw."
+                                       ++ Extract_type_definitions.generate_type_name(
+                                            path,
+                                          ),
+                                     ),
+                                   loc: Location.none,
+                                 },
+                                 [],
+                               ),
+                             ),
+                             {
+                               loc: Location.none,
+                               Location.txt:
+                                 Longident.parse(to_valid_ident(key)),
+                             },
+                           )
+                         ]
+                       };
+
+                     %e
+                     generate_fragment_parse_fun(
+                       config,
+                       conv_loc(loc),
+                       name,
+                       arguments,
+                       definition,
+                     );
+                   },
+                 );
+               },
            ),
         None,
       )

@@ -100,29 +100,33 @@ module OneFieldQuery = {
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
+    module Raw = {
+      type t = {
+        string,
+        int,
+      };
+      type t_VariousScalars = t;
+    };
     type t = {
       string,
       int,
     };
     type t_VariousScalars = t;
 
-    let parse: Raw.t => t =
-      (value: Js.Json.t) => (
-        {
+    let parse = (value: Raw.t): t => {
 
-          string: {
-            let value = (value: Raw.t).string;
+      string: {
+        let value = (value: Raw.t).string;
 
-            value;
-          },
+        value;
+      },
 
-          int: {
-            let value = (value: Raw.t).int;
+      int: {
+        let value = (value: Raw.t).int;
 
-            value;
-          },
-        }: t
-      );
+        value;
+      },
+    };
     let name = "Fragment";
   };
   module Untitled1 = {
@@ -230,7 +234,7 @@ module InlineFragmentQuery = {
                       },
                     }: t_dogOrHuman_Dog,
                   )
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(value)
                 }
               }
             }
@@ -245,29 +249,33 @@ module InlineFragmentQuery = {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
+    module Raw = {
+      type t = {
+        name: string,
+        barkVolume: float,
+      };
+      type t_Dog = t;
+    };
     type t = {
       name: string,
       barkVolume: float,
     };
     type t_Dog = t;
 
-    let parse: Raw.t => t =
-      (value: Js.Json.t) => (
-        {
+    let parse = (value: Raw.t): t => {
 
-          name: {
-            let value = (value: Raw.t).name;
+      name: {
+        let value = (value: Raw.t).name;
 
-            value;
-          },
+        value;
+      },
 
-          barkVolume: {
-            let value = (value: Raw.t).barkVolume;
+      barkVolume: {
+        let value = (value: Raw.t).barkVolume;
 
-            value;
-          },
-        }: t
-      );
+        value;
+      },
+    };
     let name = "DogFragment";
   };
   module Untitled1 = {
@@ -332,7 +340,7 @@ module UnionExternalFragmentQuery = {
                 | Some(typename) =>
                   switch (typename) {
                   | "Dog" => `Dog(DogFragment.parse(value))
-                  | typename => `FutureAddedValue(value)
+                  | _ => `FutureAddedValue(value)
                   }
                 }
               }

@@ -20,65 +20,70 @@
 module Fragments = {
   module ListFragment = {
     let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+    module Raw = {
+      type t = {
+        nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+        nullableOfNonNullable: Js.Nullable.t(array(string)),
+      };
+      type t_Lists = t;
+    };
     type t = {
       nullableOfNullable: option(array(option(string))),
       nullableOfNonNullable: option(array(string)),
     };
     type t_Lists = t;
 
-    let parse: Raw.t => t =
-      (value: Js.Json.t) => (
-        {
+    let parse = (value: Raw.t): t => {
 
-          nullableOfNullable: {
-            let value = (value: Raw.t).nullableOfNullable;
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable;
 
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some(
-                value
-                |> Js.Array.map(value =>
-                     switch (Js.toOption(value)) {
-                     | Some(value) => Some(value)
-                     | None => None
-                     }
-                   ),
-              )
-            | None => None
-            };
-          },
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
 
-          nullableOfNonNullable: {
-            let value = (value: Raw.t).nullableOfNonNullable;
+      nullableOfNonNullable: {
+        let value = (value: Raw.t).nullableOfNonNullable;
 
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value |> Js.Array.map(value => value))
-            | None => None
-            };
-          },
-        }: t
-      );
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      },
+    };
     let name = "ListFragment";
   };
   module Another = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
+    module Raw = {
+      type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
+      type t_Lists = t;
+    };
     type t = {nullableOfNonNullable: option(array(string))};
     type t_Lists = t;
 
-    let parse: Raw.t => t =
-      (value: Js.Json.t) => (
-        {
+    let parse = (value: Raw.t): t => {
 
-          nullableOfNonNullable: {
-            let value = (value: Raw.t).nullableOfNonNullable;
+      nullableOfNonNullable: {
+        let value = (value: Raw.t).nullableOfNonNullable;
 
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value |> Js.Array.map(value => value))
-            | None => None
-            };
-          },
-        }: t
-      );
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      },
+    };
     let name = "Another";
   };
 };
@@ -134,8 +139,18 @@ module MyQuery = {
           let value = (value: Raw.t).l2;
           (
             {
-              frag1: Fragments.ListFragment.parse(value),
-              frag2: Fragments.ListFragment.parse(value),
+
+              frag1: {
+                let value = (value: Raw.t_l2).frag1;
+
+                Fragments.ListFragment.parse(value);
+              },
+
+              frag2: {
+                let value = (value: Raw.t_l2).frag2;
+
+                Fragments.ListFragment.parse(value);
+              },
             }: t_l2
           );
         },

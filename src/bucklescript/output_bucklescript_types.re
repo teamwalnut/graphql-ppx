@@ -473,7 +473,8 @@ let generate_graphql_object =
 };
 
 // generate all the types necessary types that we later refer to by name.
-let generate_types = (config: Generator_utils.output_config, res, raw) => {
+let generate_types =
+    (config: Generator_utils.output_config, res, raw, fragment_name) => {
   let types =
     extract([], res)
     |> List.map(
@@ -497,7 +498,31 @@ let generate_types = (config: Generator_utils.output_config, res, raw) => {
            generate_enum(config, fields, path, loc, raw),
        );
 
-  Ast_helper.Str.type_(Recursive, types);
+  let types = Ast_helper.Str.type_(Recursive, types);
+  switch (fragment_name) {
+  | Some(fragment_name) =>
+    List.append(
+      [types],
+      [
+        Ast_helper.(
+          Str.type_(
+            Recursive,
+            [
+              Type.mk(
+                ~manifest=
+                  Typ.constr(
+                    {loc: Location.none, txt: Longident.Lident("t")},
+                    [],
+                  ),
+                {loc: Location.none, txt: "t_" ++ fragment_name},
+              ),
+            ],
+          )
+        ),
+      ],
+    )
+  | None => [types]
+  };
 };
 
 let rec generate_arg_type = loc =>
