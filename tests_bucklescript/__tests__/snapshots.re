@@ -51,11 +51,21 @@ let run_ppx = (path, opts, testType) => {
 let tests =
   readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
-describe("Objects (legacy)", () =>
+describe("Legacy", () =>
   tests
   |> Array.iter(t => {
        test(t, () =>
-         expect(run_ppx("operations/" ++ t, "", "objects"))
+         expect(run_ppx("operations/" ++ t, "-legacy", "legacy"))
+         |> toMatchSnapshot
+       )
+     })
+);
+
+describe("Objects", () =>
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "-objects", "objects"))
          |> toMatchSnapshot
        )
      })
@@ -65,7 +75,7 @@ describe("Records", () =>
   tests
   |> Array.iter(t => {
        test(t, () =>
-         expect(run_ppx("operations/" ++ t, "-records", "records"))
+         expect(run_ppx("operations/" ++ t, "", "records"))
          |> toMatchSnapshot
        )
      })

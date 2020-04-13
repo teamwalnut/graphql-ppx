@@ -222,6 +222,7 @@ let extract_template_tag_import_from_config =
   extract_string_from_config("templateTagImport");
 
 let extract_records_from_config = extract_bool_from_config("records");
+let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
 let extract_definition_from_config = extract_bool_from_config("definition");
 let extract_tagged_template_config =
@@ -230,6 +231,7 @@ let extract_tagged_template_config =
 type query_config = {
   schema: option(string),
   records: option(bool),
+  objects: option(bool),
   inline: option(bool),
   definition: option(bool),
   template_tag: option(string),
@@ -242,6 +244,7 @@ let get_query_config = fields => {
   {
     schema: extract_schema_from_config(fields),
     records: extract_records_from_config(fields),
+    objects: extract_objects_from_config(fields),
     inline: extract_inline_from_config(fields),
     definition: extract_definition_from_config(fields),
     template_tag: extract_template_tag_from_config(fields),
@@ -253,6 +256,7 @@ let get_query_config = fields => {
 let empty_query_config = {
   schema: None,
   records: None,
+  objects: None,
   inline: None,
   definition: None,
   tagged_template: None,
@@ -353,9 +357,11 @@ let rewrite_query =
         delimiter: delim,
         full_document: document,
         records:
-          switch (query_config.records) {
-          | Some(value) => value
-          | None => global_records()
+          switch (query_config.records, query_config.objects) {
+          | (Some(value), _) => value
+          | (_, Some(true)) => false
+          | (_, Some(false)) => true
+          | (None, None) => global_records()
           },
         inline:
           switch (query_config.inline) {
@@ -412,7 +418,7 @@ let () =
         let loc = conv_loc(loc);
         raise(Location.Error(Location.error(~loc, message)));
       },
-      records: false,
+      records: true,
       legacy: false,
       template_tag: None,
       template_tag_location: None,
@@ -690,18 +696,28 @@ let args = [
     "Verbose error handling. If not defined NODE_ENV will be used",
   ),
   (
+    "-objects",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, records: false}),
+    ),
+    "Compile to objects instead of records by default (legacy)",
+  ),
+  (
     "-records",
     Arg.Unit(
       () => Ppx_config.update_config(current => {...current, records: true}),
     ),
-    "Compile to records instead of objects (experimental)",
+    "Compile to records by default",
   ),
   (
     "-legacy",
     Arg.Unit(
-      () => Ppx_config.update_config(current => {...current, records: false}),
+      () =>
+        Ppx_config.update_config(current =>
+          {...current, legacy: true, records: false}
+        ),
     ),
-    "Legacy mode (make and makeWithVariables)",
+    "Legacy mode (make, makeWithVariables, and objects by default)",
   ),
   (
     "-no-definition",
