@@ -182,7 +182,7 @@ module InlineFragmentQuery = {
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
 
-          switch (Js.Json.decodeObject(value)) {
+          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
           | None =>
             Js.Exn.raiseError(
@@ -190,7 +190,7 @@ module InlineFragmentQuery = {
               ++ "Expected union "
               ++ "DogOrHuman"
               ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
             )
 
           | Some(typename_obj) =>
@@ -220,21 +220,27 @@ module InlineFragmentQuery = {
                 | "Dog" =>
                   `Dog(
                     {
+                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                          name: {
+                            let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                        value;
-                      },
+                            value;
+                          },
 
-                      barkVolume: {
-                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                          barkVolume: {
+                            let value =
+                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                        value;
-                      },
-                    }: t_dogOrHuman_Dog,
+                            value;
+                          },
+                        }: t_dogOrHuman_Dog
+                      );
+                    },
                   )
-                | _ => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
                 }
               }
             }
@@ -304,7 +310,7 @@ module UnionExternalFragmentQuery = {
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
 
-            switch (Js.Json.decodeObject(value)) {
+            switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
             | None =>
               Js.Exn.raiseError(
@@ -312,7 +318,7 @@ module UnionExternalFragmentQuery = {
                 ++ "Expected union "
                 ++ "DogOrHuman"
                 ++ " to be an object, got "
-                ++ Js.Json.stringify(value),
+                ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
               )
 
             | Some(typename_obj) =>
@@ -339,8 +345,15 @@ module UnionExternalFragmentQuery = {
 
                 | Some(typename) =>
                   switch (typename) {
-                  | "Dog" => `Dog(DogFragment.parse(value))
-                  | _ => `FutureAddedValue(value)
+                  | "Dog" =>
+                    `Dog(
+                      {
+                        let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+
+                        DogFragment.parse(value);
+                      },
+                    )
+                  | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
                   }
                 }
               }

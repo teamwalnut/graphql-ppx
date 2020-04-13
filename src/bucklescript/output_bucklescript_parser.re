@@ -472,7 +472,7 @@ and generate_poly_variant_selection_set =
 
   [@metaloc loc]
   (
-    switch%expr (Js.Json.decodeObject(value)) {
+    switch%expr (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
     | None =>
       %e
       make_error_raiser(
@@ -508,7 +508,26 @@ and generate_poly_variant_interface =
     Exp.variant(
       type_name,
       Some(
-        generate_parser(config, [type_name, ...path], definition, inner),
+        {
+          let%expr value: [%t
+            Typ.constr(
+              {
+                txt:
+                  Longident.parse(
+                    "Raw."
+                    ++ Extract_type_definitions.generate_type_name([
+                         type_name,
+                         ...path,
+                       ]),
+                  ),
+                loc: Location.none,
+              },
+              [],
+            )
+          ] =
+            Obj.magic(value);
+          generate_parser(config, [type_name, ...path], definition, inner);
+        },
       ),
     )
     |> Exp.case(name_pattern);
@@ -552,7 +571,7 @@ and generate_poly_variant_interface =
     );
   [@metaloc loc]
   (
-    switch%expr (Js.Json.decodeObject(value)) {
+    switch%expr (Js.Json.decodeObject(Obj.magic(value: Js.Json.t))) {
     | None =>
       %e
       make_error_raiser(
@@ -603,12 +622,32 @@ and generate_poly_variant_union =
                Exp.variant(
                  type_name,
                  Some(
-                   generate_parser(
-                     config,
-                     [type_name, ...path],
-                     definition,
-                     inner,
-                   ),
+                   {
+                     let%expr value: [%t
+                       Typ.constr(
+                         {
+                           txt:
+                             Longident.parse(
+                               "Raw."
+                               ++ Extract_type_definitions.generate_type_name([
+                                    type_name,
+                                    ...path,
+                                  ]),
+                             ),
+                           loc: Location.none,
+                         },
+                         [],
+                       )
+                     ] =
+                       Obj.magic(value);
+                     %e
+                     generate_parser(
+                       config,
+                       [type_name, ...path],
+                       definition,
+                       inner,
+                     );
+                   },
                  ),
                ),
              )
@@ -622,10 +661,18 @@ and generate_poly_variant_union =
         Exp.variant(
           "FutureAddedValue",
           Some(
-            Exp.ident({
-              Location.txt: Longident.parse("value"),
-              loc: Location.none,
-            }),
+            [%expr
+              (
+                Obj.magic(
+                  [%e
+                    Exp.ident({
+                      Location.txt: Longident.parse("value"),
+                      loc: Location.none,
+                    })
+                  ],
+                ): Js.Json.t
+              )
+            ],
           ),
         ),
       ),
@@ -641,7 +688,7 @@ and generate_poly_variant_union =
     );
   [@metaloc loc]
   (
-    switch%expr (Js.Json.decodeObject(value)) {
+    switch%expr (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
     | None =>
       %e
       make_error_raiser(
@@ -649,7 +696,7 @@ and generate_poly_variant_union =
           "Expected union "
           ++ [%e const_str_expr(name)]
           ++ " to be an object, got "
-          ++ Js.Json.stringify(value)
+          ++ Js.Json.stringify(Obj.magic(value): Js.Json.t)
         ],
       )
     | Some(typename_obj) =>

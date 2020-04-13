@@ -46,7 +46,7 @@ module MyQuery = {
       "dogOrHuman": {
         let value = value##dogOrHuman;
 
-        switch (Js.Json.decodeObject(value)) {
+        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
         | None =>
           Js.Exn.raiseError(
@@ -54,7 +54,7 @@ module MyQuery = {
             ++ "Expected union "
             ++ "DogOrHuman"
             ++ " to be an object, got "
-            ++ Js.Json.stringify(value),
+            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
           )
 
         | Some(typename_obj) =>
@@ -82,30 +82,40 @@ module MyQuery = {
             | Some(typename) =>
               switch (typename) {
               | "Dog" =>
-                `Dog({
+                `Dog(
+                  {
+                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                    {
 
-                  "name": {
-                    let value = value##name;
+                      "name": {
+                        let value = value##name;
 
-                    value;
+                        value;
+                      },
+
+                      "barkVolume": {
+                        let value = value##barkVolume;
+
+                        value;
+                      },
+                    };
                   },
-
-                  "barkVolume": {
-                    let value = value##barkVolume;
-
-                    value;
-                  },
-                })
+                )
               | "Human" =>
-                `Human({
+                `Human(
+                  {
+                    let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                    {
 
-                  "name": {
-                    let value = value##name;
+                      "name": {
+                        let value = value##name;
 
-                    value;
+                        value;
+                      },
+                    };
                   },
-                })
-              | _ => `FutureAddedValue(value)
+                )
+              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
               }
             }
           }

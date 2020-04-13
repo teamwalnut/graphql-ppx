@@ -39,7 +39,7 @@ module MyQuery = {
         simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
 
-          switch (Js.Json.decodeObject(value)) {
+          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
           | None =>
             Js.Exn.raiseError(
@@ -47,7 +47,7 @@ module MyQuery = {
               ++ "Expected union "
               ++ "DogOrHuman"
               ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
             )
 
           | Some(typename_obj) =>
@@ -77,27 +77,40 @@ module MyQuery = {
                 | "Dog" =>
                   `Dog(
                     {
+                      let value: Raw.t_simpleSubscription_Dog =
+                        Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value = (value: Raw.t_simpleSubscription_Dog).name;
+                          name: {
+                            let value =
+                              (value: Raw.t_simpleSubscription_Dog).name;
 
-                        value;
-                      },
-                    }: t_simpleSubscription_Dog,
+                            value;
+                          },
+                        }: t_simpleSubscription_Dog
+                      );
+                    },
                   )
                 | "Human" =>
                   `Human(
                     {
+                      let value: Raw.t_simpleSubscription_Human =
+                        Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value =
-                          (value: Raw.t_simpleSubscription_Human).name;
+                          name: {
+                            let value =
+                              (value: Raw.t_simpleSubscription_Human).name;
 
-                        value;
-                      },
-                    }: t_simpleSubscription_Human,
+                            value;
+                          },
+                        }: t_simpleSubscription_Human
+                      );
+                    },
                   )
-                | _ => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
                 }
               }
             }
