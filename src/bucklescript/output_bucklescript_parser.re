@@ -287,6 +287,13 @@ and generate_object_decoder =
     );
   }
   and do_obj_constructor_base = is_object => {
+    let opaque =
+      fields
+      |> List.exists(
+           fun
+           | Fr_fragment_spread(_) => true
+           | _ => false,
+         );
     Ast_helper.(
       Exp.record(
         fields
@@ -296,11 +303,17 @@ and generate_object_decoder =
                  {Location.txt: Longident.parse(to_valid_ident(key)), loc},
                  {
                    let%expr value =
-                     switch%e (is_object) {
-                     | true =>
+                     switch%e (opaque, is_object) {
+                     | (true, _) =>
+                       %expr
+                       Js.Dict.unsafeGet(
+                         Obj.magic(value),
+                         [%e const_str_expr(key)],
+                       )
+                     | (_, true) =>
                        %expr
                        value##[%e ident_from_string(to_valid_ident(key))]
-                     | false =>
+                     | (_, false) =>
                        %expr
                        [%e
                          Ast_helper.Exp.field(
@@ -352,13 +365,14 @@ and generate_object_decoder =
                        )
                      ] =
                        Obj.magic(value);
-                     [%e generate_fragment_parse_fun(
+                     %e
+                     generate_fragment_parse_fun(
                        config,
                        conv_loc(loc),
                        name,
                        arguments,
                        definition,
-                     )];
+                     );
                    },
                  );
                },
