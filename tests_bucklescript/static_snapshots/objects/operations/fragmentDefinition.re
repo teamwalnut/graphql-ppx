@@ -97,11 +97,7 @@ module MyQuery = {
       "l1": Fragments.ListFragment.Raw.t,
       "l2": t_l2,
     }
-    and t_l2 = {
-      .
-      "frag1": Fragments.ListFragment.t_Lists,
-      "frag2": Fragments.ListFragment.t_Lists,
-    };
+    and t_l2 = Js.t({.});
   };
   let query =
     (
@@ -145,13 +141,13 @@ module MyQuery = {
         {
 
           "frag1": {
-            let value = value##frag1;
+            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
 
             Fragments.ListFragment.parse(value);
           },
 
           "frag2": {
-            let value = value##frag2;
+            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
 
             Fragments.ListFragment.parse(value);
           },

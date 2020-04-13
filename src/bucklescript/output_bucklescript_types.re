@@ -175,38 +175,46 @@ let generate_opaque = (path, loc) => {
 };
 
 let generate_record_type = (config, fields, obj_path, raw, loc) => {
-  wrap_type_declaration(
-    Ptype_record(
-      fields
-      |> List.map(
+  let record_fields =
+    fields
+    |> List.fold_left(
+         acc =>
            fun
            | Fragment({key, module_name, type_name}) =>
-             Ast_helper.Type.field(
-               {Location.txt: key, loc: Location.none},
-               Ast_helper.Typ.constr(
-                 {
-                   Location.txt:
-                     Longident.parse(
-                       module_name
-                       ++ (raw ? ".Raw" : "")
-                       ++ ".t"
-                       ++ (
-                         switch (type_name) {
-                         | None => ""
-                         | Some(type_name) => "_" ++ type_name
-                         }
-                       ),
-                     ),
-                   loc: Location.none,
-                 },
-                 [],
+             if (raw) {
+               acc;
+             } else {
+               [
+                 Ast_helper.Type.field(
+                   {Location.txt: key, loc: Location.none},
+                   Ast_helper.Typ.constr(
+                     {
+                       Location.txt:
+                         Longident.parse(
+                           module_name
+                           ++ ".t"
+                           ++ (
+                             switch (type_name) {
+                             | None => ""
+                             | Some(type_name) => "_" ++ type_name
+                             }
+                           ),
+                         ),
+                       loc: Location.none,
+                     },
+                     [],
+                   ),
+                 ),
+                 ...acc,
+               ];
+             }
+           | Field({path: [name, ...path], type_}) => [
+               Ast_helper.Type.field(
+                 {Location.txt: to_valid_ident(name), loc: Location.none},
+                 generate_type(config, [name, ...path], raw, type_),
                ),
-             )
-           | Field({path: [name, ...path], type_}) =>
-             Ast_helper.Type.field(
-               {Location.txt: to_valid_ident(name), loc: Location.none},
-               generate_type(config, [name, ...path], raw, type_),
-             )
+               ...acc,
+             ]
            | Field({path: [], loc}) =>
              // I don't think this should ever happen but we need to
              // cover this case, perhaps we can constrain the type
@@ -215,11 +223,13 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
                  Location.error(~loc=loc |> conv_loc, "No path"),
                ),
              ),
-         ),
-    ),
-    loc,
-    obj_path,
-  );
+         [],
+       )
+    |> List.rev;
+  switch (record_fields) {
+  | [] => generate_opaque(obj_path, loc)
+  | _ => wrap_type_declaration(Ptype_record(record_fields), loc, obj_path)
+  };
 };
 
 let generate_variant_selection = (config, fields, path, loc, raw) =>
@@ -397,56 +407,74 @@ let generate_object_type = (config, fields, obj_path, raw, loc) => {
           [
             Ast_helper.Typ.object_(
               fields
-              |> List.map(
-                   fun
-                   | Fragment({key, module_name, type_name}) => {
-                       pof_desc:
-                         Otag(
-                           {txt: key, loc: Location.none},
-                           Ast_helper.Typ.constr(
-                             {
-                               Location.txt:
-                                 Longident.parse(
-                                   module_name
-                                   ++ ".t"
-                                   ++ (
-                                     switch (type_name) {
-                                     | None => ""
-                                     | Some(type_name) => "_" ++ type_name
-                                     }
-                                   ),
+              |> List.fold_left(
+                   acc =>
+                     fun
+                     | Fragment({key, module_name, type_name}) =>
+                       if (raw) {
+                         acc;
+                       } else {
+                         [
+                           {
+                             pof_desc:
+                               Otag(
+                                 {txt: key, loc: Location.none},
+                                 Ast_helper.Typ.constr(
+                                   {
+                                     Location.txt:
+                                       Longident.parse(
+                                         module_name
+                                         ++ ".t"
+                                         ++ (
+                                           switch (type_name) {
+                                           | None => ""
+                                           | Some(type_name) =>
+                                             "_" ++ type_name
+                                           }
+                                         ),
+                                       ),
+                                     loc: Location.none,
+                                   },
+                                   [],
                                  ),
-                               loc: Location.none,
-                             },
-                             [],
-                           ),
+                               ),
+                             pof_loc: Location.none,
+                             pof_attributes: [],
+                           },
+                           ...acc,
+                         ];
+                       }
+                     | Field({path: [name, ...path], type_}) => [
+                         {
+                           pof_desc:
+                             Otag(
+                               {
+                                 txt: to_valid_ident(name),
+                                 loc: Location.none,
+                               },
+                               generate_type(
+                                 config,
+                                 [name, ...path],
+                                 raw,
+                                 type_,
+                               ),
+                             ),
+                           pof_loc: Location.none,
+                           pof_attributes: [],
+                         },
+                         ...acc,
+                       ]
+                     | Field({path: [], loc}) =>
+                       // I don't think this should ever happen but we need to
+                       // cover this case, perhaps we can constrain the type
+                       raise(
+                         Location.Error(
+                           Location.error(~loc=loc |> conv_loc, "No path"),
                          ),
-                       pof_loc: Location.none,
-                       pof_attributes: [],
-                     }
-                   | Field({path: [name, ...path], type_}) => {
-                       pof_desc:
-                         Otag(
-                           {txt: to_valid_ident(name), loc: Location.none},
-                           generate_type(
-                             config,
-                             [name, ...path],
-                             raw,
-                             type_,
-                           ),
-                         ),
-                       pof_loc: Location.none,
-                       pof_attributes: [],
-                     }
-                   | Field({path: [], loc}) =>
-                     // I don't think this should ever happen but we need to
-                     // cover this case, perhaps we can constrain the type
-                     raise(
-                       Location.Error(
-                         Location.error(~loc=loc |> conv_loc, "No path"),
                        ),
-                     ),
-                 ),
+                   [],
+                 )
+              |> List.rev,
               Closed,
             ),
           ],
