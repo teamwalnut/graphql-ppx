@@ -17,8 +17,17 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "lists": t_lists}
+    and t_lists = {
+      .
+      "nullableOfNullable": Js.Nullable.t(array(Js.Nullable.t(string))),
+      "nullableOfNonNullable": Js.Nullable.t(array(string)),
+      "nonNullableOfNullable": array(Js.Nullable.t(string)),
+      "nonNullableOfNonNullable": array(string),
+    };
+  };
   let query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type raw_t;
   type t = {. "lists": t_lists}
   and t_lists = {
     .
@@ -27,79 +36,59 @@ module MyQuery = {
     "nonNullableOfNullable": array(option(string)),
     "nonNullableOfNonNullable": array(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "lists": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "lists");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "lists": {
+        let value = value##lists;
+        {
 
-            "nullableOfNullable": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable");
+          "nullableOfNullable": {
+            let value = value##nullableOfNullable;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  Obj.magic(value)
-                  |> Js.Array.map(value =>
-                       switch (
-                         Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                       ) {
-                       | Some(_) => Some(Obj.magic(value): string)
-                       | None => None
-                       }
-                     ),
-                )
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some(
+                value
+                |> Js.Array.map(value =>
+                     switch (Js.toOption(value)) {
+                     | Some(value) => Some(value)
+                     | None => None
+                     }
+                   ),
+              )
+            | None => None
+            };
+          },
 
-            "nullableOfNonNullable": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNonNullable");
+          "nullableOfNonNullable": {
+            let value = value##nullableOfNonNullable;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  Obj.magic(value)
-                  |> Js.Array.map((value) => (Obj.magic(value): string)),
-                )
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value |> Js.Array.map(value => value))
+            | None => None
+            };
+          },
 
-            "nonNullableOfNullable": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nonNullableOfNullable");
+          "nonNullableOfNullable": {
+            let value = value##nonNullableOfNullable;
 
-              Obj.magic(value)
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                   | Some(_) => Some(Obj.magic(value): string)
-                   | None => None
-                   }
-                 );
-            },
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               );
+          },
 
-            "nonNullableOfNonNullable": {
-              let value =
-                Js.Dict.unsafeGet(
-                  Obj.magic(value),
-                  "nonNullableOfNonNullable",
-                );
+          "nonNullableOfNonNullable": {
+            let value = value##nonNullableOfNonNullable;
 
-              Obj.magic(value)
-              |> Js.Array.map((value) => (Obj.magic(value): string));
-            },
-          };
-        },
-      };
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

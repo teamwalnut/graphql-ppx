@@ -17,8 +17,14 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {customScalarField: t_customScalarField}
+    and t_customScalarField = {
+      nullable: Js.Nullable.t(Js.Json.t),
+      nonNullable: Js.Json.t,
+    };
+  };
   let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n";
-  type raw_t;
   type t = {customScalarField: t_customScalarField}
   and t_customScalarField = {
     nullable: option(Js.Json.t),
@@ -28,28 +34,27 @@ module MyQuery = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         customScalarField: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "customScalarField");
+          let value = (value: Raw.t).customScalarField;
           (
             {
 
               nullable: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "nullable");
+                let value = (value: Raw.t_customScalarField).nullable;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) => Some(value)
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
                 | None => None
                 };
               },
 
               nonNullable: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "nonNullable");
+                let value = (value: Raw.t_customScalarField).nonNullable;
+
                 value;
               },
             }: t_customScalarField

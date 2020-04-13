@@ -17,23 +17,32 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {dogOrHuman: t_dogOrHuman}
+    and t_dogOrHuman
+    and t_dogOrHuman_Dog = {
+      name: string,
+      barkVolume: float,
+    };
+  };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type raw_t;
-  type t = {
-    dogOrHuman: [ | `FutureAddedValue(Js.Json.t) | `Dog(t_dogOrHuman_Dog)],
-  }
+  type t = {dogOrHuman: t_dogOrHuman}
+  and t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ]
   and t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         dogOrHuman: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+          let value = (value: Raw.t).dogOrHuman;
 
-          switch (Js.Json.decodeObject(value)) {
+          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
           | None =>
             Js.Exn.raiseError(
@@ -41,7 +50,7 @@ module MyQuery = {
               ++ "Expected union "
               ++ "DogOrHuman"
               ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
             )
 
           | Some(typename_obj) =>
@@ -71,23 +80,27 @@ module MyQuery = {
                 | "Dog" =>
                   `Dog(
                     {
+                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                          name: {
+                            let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                        (Obj.magic(value): string);
-                      },
+                            value;
+                          },
 
-                      barkVolume: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "barkVolume");
+                          barkVolume: {
+                            let value =
+                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                        (Obj.magic(value): float);
-                      },
-                    }: t_dogOrHuman_Dog,
+                            value;
+                          },
+                        }: t_dogOrHuman_Dog
+                      );
+                    },
                   )
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
                 }
               }
             }

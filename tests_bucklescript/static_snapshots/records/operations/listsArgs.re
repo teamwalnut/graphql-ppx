@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {listsInput: string};
+  };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
-  type raw_t;
   type t = {listsInput: string};
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
@@ -26,14 +28,14 @@ module MyQuery = {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         listsInput: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "listsInput");
+          let value = (value: Raw.t).listsInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );

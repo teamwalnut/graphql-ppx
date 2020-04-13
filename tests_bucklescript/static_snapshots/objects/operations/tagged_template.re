@@ -17,8 +17,23 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -33,110 +48,116 @@ module MyQuery = {
     "nullableID": option(string),
     "id": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "variousScalars": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              (Obj.magic(value): string);
-            },
+            value;
+          },
 
-            "nullableInt": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableInt");
+          "nullableInt": {
+            let value = value##nullableInt;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): int)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "int": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          "int": {
+            let value = value##int;
 
-              (Obj.magic(value): int);
-            },
+            value;
+          },
 
-            "nullableFloat": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableFloat");
+          "nullableFloat": {
+            let value = value##nullableFloat;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): float)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "float": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "float");
+          "float": {
+            let value = value##float;
 
-              (Obj.magic(value): float);
-            },
+            value;
+          },
 
-            "nullableBoolean": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableBoolean");
+          "nullableBoolean": {
+            let value = value##nullableBoolean;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): bool)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "boolean": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "boolean");
+          "boolean": {
+            let value = value##boolean;
 
-              (Obj.magic(value): bool);
-            },
+            value;
+          },
 
-            "nullableID": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableID");
+          "nullableID": {
+            let value = value##nullableID;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "id": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+          "id": {
+            let value = value##id;
 
-              (Obj.magic(value): string);
-            },
-          };
-        },
-      };
+            value;
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
 
 module MyQuery2 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let { graphql } = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -151,110 +172,116 @@ module MyQuery2 = {
     "nullableID": option(string),
     "id": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "variousScalars": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              (Obj.magic(value): string);
-            },
+            value;
+          },
 
-            "nullableInt": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableInt");
+          "nullableInt": {
+            let value = value##nullableInt;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): int)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "int": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          "int": {
+            let value = value##int;
 
-              (Obj.magic(value): int);
-            },
+            value;
+          },
 
-            "nullableFloat": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableFloat");
+          "nullableFloat": {
+            let value = value##nullableFloat;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): float)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "float": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "float");
+          "float": {
+            let value = value##float;
 
-              (Obj.magic(value): float);
-            },
+            value;
+          },
 
-            "nullableBoolean": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableBoolean");
+          "nullableBoolean": {
+            let value = value##nullableBoolean;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): bool)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "boolean": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "boolean");
+          "boolean": {
+            let value = value##boolean;
 
-              (Obj.magic(value): bool);
-            },
+            value;
+          },
 
-            "nullableID": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableID");
+          "nullableID": {
+            let value = value##nullableID;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "id": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+          "id": {
+            let value = value##id;
 
-              (Obj.magic(value): string);
-            },
-          };
-        },
-      };
+            value;
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
 
 module MyQuery3 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let { graphql } = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -269,110 +296,116 @@ module MyQuery3 = {
     "nullableID": option(string),
     "id": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "variousScalars": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              (Obj.magic(value): string);
-            },
+            value;
+          },
 
-            "nullableInt": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableInt");
+          "nullableInt": {
+            let value = value##nullableInt;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): int)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "int": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          "int": {
+            let value = value##int;
 
-              (Obj.magic(value): int);
-            },
+            value;
+          },
 
-            "nullableFloat": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableFloat");
+          "nullableFloat": {
+            let value = value##nullableFloat;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): float)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "float": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "float");
+          "float": {
+            let value = value##float;
 
-              (Obj.magic(value): float);
-            },
+            value;
+          },
 
-            "nullableBoolean": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableBoolean");
+          "nullableBoolean": {
+            let value = value##nullableBoolean;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): bool)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "boolean": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "boolean");
+          "boolean": {
+            let value = value##boolean;
 
-              (Obj.magic(value): bool);
-            },
+            value;
+          },
 
-            "nullableID": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableID");
+          "nullableID": {
+            let value = value##nullableID;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "id": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+          "id": {
+            let value = value##id;
 
-              (Obj.magic(value): string);
-            },
-          };
-        },
-      };
+            value;
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
 
 module MyQuery4 = {
+  module Raw = {
+    type t = {. "variousScalars": t_variousScalars}
+    and t_variousScalars = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": string,
+      "nullableInt": Js.Nullable.t(int),
+      "int": int,
+      "nullableFloat": Js.Nullable.t(float),
+      "float": float,
+      "nullableBoolean": Js.Nullable.t(bool),
+      "boolean": bool,
+      "nullableID": Js.Nullable.t(string),
+      "id": string,
+    };
+  };
   %raw
   "let graphql = require(\"gatsby\")";
   let query = [%raw
     "graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
-  type raw_t;
   type t = {. "variousScalars": t_variousScalars}
   and t_variousScalars = {
     .
@@ -387,98 +420,89 @@ module MyQuery4 = {
     "nullableID": option(string),
     "id": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "variousScalars": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "variousScalars");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              (Obj.magic(value): string);
-            },
+            value;
+          },
 
-            "nullableInt": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableInt");
+          "nullableInt": {
+            let value = value##nullableInt;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): int)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "int": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "int");
+          "int": {
+            let value = value##int;
 
-              (Obj.magic(value): int);
-            },
+            value;
+          },
 
-            "nullableFloat": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableFloat");
+          "nullableFloat": {
+            let value = value##nullableFloat;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): float)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "float": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "float");
+          "float": {
+            let value = value##float;
 
-              (Obj.magic(value): float);
-            },
+            value;
+          },
 
-            "nullableBoolean": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableBoolean");
+          "nullableBoolean": {
+            let value = value##nullableBoolean;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): bool)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "boolean": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "boolean");
+          "boolean": {
+            let value = value##boolean;
 
-              (Obj.magic(value): bool);
-            },
+            value;
+          },
 
-            "nullableID": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "nullableID");
+          "nullableID": {
+            let value = value##nullableID;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "id": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+          "id": {
+            let value = value##id;
 
-              (Obj.magic(value): string);
-            },
-          };
-        },
-      };
+            value;
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

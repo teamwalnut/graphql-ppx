@@ -17,22 +17,20 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "argNamedQuery": int};
+  };
   let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
-  type raw_t;
   type t = {. "argNamedQuery": int};
   type t_variables = {. "query": string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "argNamedQuery": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "argNamedQuery");
+      "argNamedQuery": {
+        let value = value##argNamedQuery;
 
-          (Obj.magic(value): int);
-        },
-      };
+        value;
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

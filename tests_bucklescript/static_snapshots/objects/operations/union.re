@@ -17,117 +17,110 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "dogOrHuman": t_dogOrHuman}
+    and t_dogOrHuman
+    and t_dogOrHuman_Human = {. "name": string}
+    and t_dogOrHuman_Dog = {
+      .
+      "name": string,
+      "barkVolume": float,
+    };
+  };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type raw_t;
-  type t = {
-    .
-    "dogOrHuman": [
-      | `FutureAddedValue(Js.Json.t)
-      | `Dog(t_dogOrHuman_Dog)
-      | `Human(t_dogOrHuman_Human)
-    ],
-  }
+  type t = {. "dogOrHuman": t_dogOrHuman}
+  and t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ]
   and t_dogOrHuman_Human = {. "name": string}
   and t_dogOrHuman_Dog = {
     .
     "name": string,
     "barkVolume": float,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "dogOrHuman": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+      "dogOrHuman": {
+        let value = value##dogOrHuman;
 
-          switch (Js.Json.decodeObject(value)) {
+        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+
+        | None =>
+          Js.Exn.raiseError(
+            "graphql_ppx: "
+            ++ "Expected union "
+            ++ "DogOrHuman"
+            ++ " to be an object, got "
+            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
+          )
+
+        | Some(typename_obj) =>
+          switch (Js.Dict.get(typename_obj, "__typename")) {
 
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
-              ++ "Expected union "
+              ++ "Union "
               ++ "DogOrHuman"
-              ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ " is missing the __typename field",
             )
 
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, "__typename")) {
+          | Some(typename) =>
+            switch (Js.Json.decodeString(typename)) {
 
             | None =>
               Js.Exn.raiseError(
                 "graphql_ppx: "
                 ++ "Union "
                 ++ "DogOrHuman"
-                ++ " is missing the __typename field",
+                ++ " has a __typename field that is not a string",
               )
 
             | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
+              switch (typename) {
+              | "Dog" =>
+                `Dog(
+                  {
+                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                    {
 
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " has a __typename field that is not a string",
+                      "name": {
+                        let value = value##name;
+
+                        value;
+                      },
+
+                      "barkVolume": {
+                        let value = value##barkVolume;
+
+                        value;
+                      },
+                    };
+                  },
                 )
-
-              | Some(typename) =>
-                switch (typename) {
-                | "Dog" =>
-                  `Dog(
+              | "Human" =>
+                `Human(
+                  {
+                    let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                     {
-                      [@metaloc loc]
-                      let value =
-                        value |> Js.Json.decodeObject |> Js.Option.getExn;
-                      {
 
-                        "name": {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), "name");
+                      "name": {
+                        let value = value##name;
 
-                          (Obj.magic(value): string);
-                        },
-
-                        "barkVolume": {
-                          let value =
-                            Js.Dict.unsafeGet(
-                              Obj.magic(value),
-                              "barkVolume",
-                            );
-
-                          (Obj.magic(value): float);
-                        },
-                      };
-                    },
-                  )
-                | "Human" =>
-                  `Human(
-                    {
-                      [@metaloc loc]
-                      let value =
-                        value |> Js.Json.decodeObject |> Js.Option.getExn;
-                      {
-
-                        "name": {
-                          let value =
-                            Js.Dict.unsafeGet(Obj.magic(value), "name");
-
-                          (Obj.magic(value): string);
-                        },
-                      };
-                    },
-                  )
-                | typename => `FutureAddedValue(value)
-                }
+                        value;
+                      },
+                    };
+                  },
+                )
+              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
               }
             }
-          };
-        },
-      };
+          }
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

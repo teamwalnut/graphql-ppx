@@ -17,8 +17,22 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "mutationWithError": t_mutationWithError}
+    and t_mutationWithError = {
+      .
+      "value": Js.Nullable.t(t_mutationWithError_value),
+      "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
+    }
+    and t_mutationWithError_errors = {
+      .
+      "field": t_mutationWithError_errors_field,
+      "message": string,
+    }
+    and t_mutationWithError_errors_field = string
+    and t_mutationWithError_value = {. "stringField": string};
+  };
   let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type raw_t;
   type t = {. "mutationWithError": t_mutationWithError}
   and t_mutationWithError = {
     .
@@ -27,94 +41,73 @@ module MyQuery = {
   }
   and t_mutationWithError_errors = {
     .
-    "field": [ | `FutureAddedValue(string) | `FIRST | `SECOND | `THIRD],
+    "field": t_mutationWithError_errors_field,
     "message": string,
   }
+  and t_mutationWithError_errors_field = [
+    | `FutureAddedValue(string)
+    | `FIRST
+    | `SECOND
+    | `THIRD
+  ]
   and t_mutationWithError_value = {. "stringField": string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "mutationWithError": {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "mutationWithError");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "mutationWithError": {
+        let value = value##mutationWithError;
+        {
 
-            "value": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "value");
+          "value": {
+            let value = value##value;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  {
-                    [@metaloc loc]
-                    let value =
-                      value |> Js.Json.decodeObject |> Js.Option.getExn;
-                    {
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some({
 
-                      "stringField": {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "stringField");
+                "stringField": {
+                  let value = value##stringField;
 
-                        (Obj.magic(value): string);
-                      },
-                    };
-                  },
-                )
-              | None => None
-              };
-            },
+                  value;
+                },
+              })
+            | None => None
+            };
+          },
 
-            "errors": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "errors");
+          "errors": {
+            let value = value##errors;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) =>
-                Some(
-                  Obj.magic(value)
-                  |> Js.Array.map(value =>
-                       [@metaloc loc]
-                       let value =
-                         value |> Js.Json.decodeObject |> Js.Option.getExn;
-                       {
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some(
+                value
+                |> Js.Array.map(value =>
+                     {
 
-                         "field": {
-                           let value =
-                             Js.Dict.unsafeGet(Obj.magic(value), "field");
-                           (
-                             switch (Obj.magic(value: string)) {
-                             | "FIRST" => `FIRST
-                             | "SECOND" => `SECOND
-                             | "THIRD" => `THIRD
-                             | other => `FutureAddedValue(other)
-                             }: [
-                               | `FutureAddedValue(string)
-                               | `FIRST
-                               | `SECOND
-                               | `THIRD
-                             ]
-                           );
-                         },
+                       "field": {
+                         let value = value##field;
+                         switch (Obj.magic(value: string)) {
+                         | "FIRST" => `FIRST
+                         | "SECOND" => `SECOND
+                         | "THIRD" => `THIRD
+                         | other => `FutureAddedValue(other)
+                         };
+                       },
 
-                         "message": {
-                           let value =
-                             Js.Dict.unsafeGet(Obj.magic(value), "message");
+                       "message": {
+                         let value = value##message;
 
-                           (Obj.magic(value): string);
-                         },
-                       };
-                     ),
-                )
-              | None => None
-              };
-            },
-          };
-        },
-      };
+                         value;
+                       },
+                     }
+                   ),
+              )
+            | None => None
+            };
+          },
+        };
+      },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

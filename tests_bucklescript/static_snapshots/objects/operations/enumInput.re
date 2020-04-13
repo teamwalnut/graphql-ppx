@@ -17,22 +17,20 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "enumInput": string};
+  };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {. "enumInput": string};
   type t_variables = {. "arg": [ | `FIRST | `SECOND | `THIRD]};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "enumInput": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "enumInput");
+      "enumInput": {
+        let value = value##enumInput;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

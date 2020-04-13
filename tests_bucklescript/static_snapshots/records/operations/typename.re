@@ -17,8 +17,22 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {first: t_first}
+    and t_first = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner),
+    }
+    and t_first_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner_inner),
+    }
+    and t_first_inner_inner = {
+      __typename: string,
+      field: string,
+    };
+  };
   let query = "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
-  type raw_t;
   type t = {first: t_first}
   and t_first = {
     __typename: string,
@@ -32,66 +46,55 @@ module MyQuery = {
     __typename: string,
     field: string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         first: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "first");
+          let value = (value: Raw.t).first;
           (
             {
 
               __typename: {
-                let value =
-                  Js.Dict.unsafeGet(Obj.magic(value), "__typename");
+                let value = (value: Raw.t_first).__typename;
 
-                (Obj.magic(value): string);
+                value;
               },
 
               inner: {
-                let value = Js.Dict.unsafeGet(Obj.magic(value), "inner");
+                let value = (value: Raw.t_first).inner;
 
-                switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-                | Some(_) =>
+                switch (Js.toOption(value)) {
+                | Some(value) =>
                   Some(
                     {
 
                       __typename: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "__typename");
+                        let value = (value: Raw.t_first_inner).__typename;
 
-                        (Obj.magic(value): string);
+                        value;
                       },
 
                       inner: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "inner");
+                        let value = (value: Raw.t_first_inner).inner;
 
-                        switch (
-                          Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                        ) {
-                        | Some(_) =>
+                        switch (Js.toOption(value)) {
+                        | Some(value) =>
                           Some(
                             {
 
                               __typename: {
                                 let value =
-                                  Js.Dict.unsafeGet(
-                                    Obj.magic(value),
-                                    "__typename",
-                                  );
+                                  (value: Raw.t_first_inner_inner).__typename;
 
-                                (Obj.magic(value): string);
+                                value;
                               },
 
                               field: {
                                 let value =
-                                  Js.Dict.unsafeGet(
-                                    Obj.magic(value),
-                                    "field",
-                                  );
+                                  (value: Raw.t_first_inner_inner).field;
 
-                                (Obj.magic(value): string);
+                                value;
                               },
                             }: t_first_inner_inner,
                           )

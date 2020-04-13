@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "scalarsInput": string};
+  };
   let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
-  type raw_t;
   type t = {. "scalarsInput": string};
   type t_variables = {
     .
@@ -33,18 +35,14 @@ module MyQuery = {
     "nullableID": option(string),
     "id": string,
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "scalarsInput": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "scalarsInput");
+      "scalarsInput": {
+        let value = value##scalarsInput;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

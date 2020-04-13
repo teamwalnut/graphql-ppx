@@ -17,8 +17,10 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "nonrecursiveInput": string};
+  };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {. "nonrecursiveInput": string};
   type t_variables = {. "arg": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
@@ -26,19 +28,14 @@ module MyQuery = {
     "field": option(string),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "nonrecursiveInput": {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "nonrecursiveInput");
+      "nonrecursiveInput": {
+        let value = value##nonrecursiveInput;
 
-          (Obj.magic(value): string);
-        },
-      };
+        value;
+      },
     };
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>

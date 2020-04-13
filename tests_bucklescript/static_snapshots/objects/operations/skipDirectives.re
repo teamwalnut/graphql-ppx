@@ -17,8 +17,24 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {
+      .
+      "v1": t_v1,
+      "v2": t_v2,
+    }
+    and t_v2 = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": Js.Nullable.t(string),
+    }
+    and t_v1 = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": Js.Nullable.t(string),
+    };
+  };
   let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
-  type raw_t;
   type t = {
     .
     "v1": t_v1,
@@ -35,66 +51,56 @@ module MyQuery = {
     "string": option(string),
   };
   type t_variables = {. "var": bool};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "v1": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "v1");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "v1": {
+        let value = value##v1;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
-          };
-        },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
+        };
+      },
 
-        "v2": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "v2");
-          [@metaloc loc]
-          let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-          {
+      "v2": {
+        let value = value##v2;
+        {
 
-            "nullableString": {
-              let value =
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableString");
+          "nullableString": {
+            let value = value##nullableString;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
 
-            "string": {
-              let value = Js.Dict.unsafeGet(Obj.magic(value), "string");
+          "string": {
+            let value = value##string;
 
-              switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-              | Some(_) => Some(Obj.magic(value): string)
-              | None => None
-              };
-            },
-          };
-        },
-      };
+            switch (Js.toOption(value)) {
+            | Some(value) => Some(value)
+            | None => None
+            };
+          },
+        };
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

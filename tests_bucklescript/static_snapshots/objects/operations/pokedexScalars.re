@@ -17,8 +17,15 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {. "pokemon": Js.Nullable.t(t_pokemon)}
+    and t_pokemon = {
+      .
+      "id": string,
+      "name": Js.Nullable.t(string),
+    };
+  };
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
-  type raw_t;
   type t = {. "pokemon": option(t_pokemon)}
   and t_pokemon = {
     .
@@ -30,46 +37,34 @@ module MyQuery = {
     "id": option(string),
     "name": option(string),
   };
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     value => {
-      [@metaloc loc]
-      let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-      {
 
-        "pokemon": {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "pokemon");
+      "pokemon": {
+        let value = value##pokemon;
 
-          switch (Js.toOption(Obj.magic(value): Js.Nullable.t('a))) {
-          | Some(_) =>
-            Some(
-              {
-                [@metaloc loc]
-                let value = value |> Js.Json.decodeObject |> Js.Option.getExn;
-                {
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some({
 
-                  "id": {
-                    let value = Js.Dict.unsafeGet(Obj.magic(value), "id");
+            "id": {
+              let value = value##id;
 
-                    (Obj.magic(value): string);
-                  },
+              value;
+            },
 
-                  "name": {
-                    let value = Js.Dict.unsafeGet(Obj.magic(value), "name");
+            "name": {
+              let value = value##name;
 
-                    switch (
-                      Js.toOption(Obj.magic(value): Js.Nullable.t('a))
-                    ) {
-                    | Some(_) => Some(Obj.magic(value): string)
-                    | None => None
-                    };
-                  },
-                };
-              },
-            )
-          | None => None
-          };
-        },
-      };
+              switch (Js.toOption(value)) {
+              | Some(value) => Some(value)
+              | None => None
+              };
+            },
+          })
+        | None => None
+        };
+      },
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

@@ -298,6 +298,24 @@ let make_printed_query = (config, document) => {
   reprinted;
 };
 
+let wrap_module = (name: string, contents) => {
+  [
+    {
+      pstr_desc:
+        Pstr_module({
+          pmb_name: {
+            txt: Generator_utils.capitalize_ascii(name),
+            loc: Location.none,
+          },
+          pmb_expr: Mod.structure(contents),
+          pmb_attributes: [],
+          pmb_loc: Location.none,
+        }),
+      pstr_loc: Location.none,
+    },
+  ];
+};
+
 let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
   let parse_fn =
@@ -307,7 +325,20 @@ let generate_default_operation =
       Graphql_ast.Operation(operation),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      false,
+      None,
+    );
+  let raw_types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      true,
+      None,
+    );
   let arg_types =
     Output_bucklescript_types.generate_arg_types(config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
@@ -319,7 +350,7 @@ let generate_default_operation =
 
   let contents =
     if (has_error) {
-      [[%stri let parse = value => [%e parse_fn]]];
+      [[%stri let parse: Raw.t => t = value => [%e parse_fn]]];
     } else {
       let variable_constructors =
         Output_bucklescript_serializer.generate_variable_constructors(
@@ -332,18 +363,18 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
+          wrap_module("Raw", raw_types),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
           },
           [[%stri let query = [%e printed_query]]],
-          [[%stri type raw_t]],
-          [types],
+          types,
           switch (extracted_args) {
           | [] => []
           | _ => [arg_types]
           },
-          [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
+          [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
@@ -400,11 +431,24 @@ let generate_fragment_module =
       Graphql_ast.Fragment(fragment),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      false,
+      Some(fragment.item.fg_type_condition.item),
+    );
+  let raw_types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      true,
+      Some(fragment.item.fg_type_condition.item),
+    );
 
   let rec make_labeled_fun = body =>
     fun
-    | [] => [%expr ((value: Js.Json.t) => [%e body])]
+    | [] => [%expr ((value: Raw.t) => [%e body])]
     | [(name, type_, span, type_span), ...tl] => {
         let loc = config.map_loc(span) |> conv_loc;
         let type_loc = config.map_loc(type_span) |> conv_loc;
@@ -470,28 +514,8 @@ let generate_fragment_module =
             | None => []
             },
             [[%stri let query = [%e printed_query]]],
-            [types],
-            [[%stri type raw_t]],
-            [
-              Ast_helper.(
-                Str.type_(
-                  Recursive,
-                  [
-                    Type.mk(
-                      ~manifest=
-                        Typ.constr(
-                          {loc: Location.none, txt: Longident.Lident("t")},
-                          [],
-                        ),
-                      {
-                        loc: Location.none,
-                        txt: "t_" ++ fragment.item.fg_type_condition.item,
-                      },
-                    ),
-                  ],
-                )
-              ),
-            ],
+            wrap_module("Raw", raw_types),
+            types,
             [parse],
             [
               [%stri
@@ -506,24 +530,6 @@ let generate_fragment_module =
     };
 
   (Some(Generator_utils.capitalize_ascii(name)), contents);
-};
-
-let wrap_module = (name: string, contents) => {
-  [
-    {
-      pstr_desc:
-        Pstr_module({
-          pmb_name: {
-            txt: Generator_utils.capitalize_ascii(name),
-            loc: Location.none,
-          },
-          pmb_expr: Mod.structure(contents),
-          pmb_attributes: [],
-          pmb_loc: Location.none,
-        }),
-      pstr_loc: Location.none,
-    },
-  ];
 };
 
 let generate_operation = config =>

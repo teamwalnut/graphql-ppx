@@ -17,26 +17,29 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {simpleSubscription: t_simpleSubscription}
+    and t_simpleSubscription
+    and t_simpleSubscription_Human = {name: string}
+    and t_simpleSubscription_Dog = {name: string};
+  };
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type raw_t;
-  type t = {
-    simpleSubscription: [
-      | `FutureAddedValue(Js.Json.t)
-      | `Dog(t_simpleSubscription_Dog)
-      | `Human(t_simpleSubscription_Human)
-    ],
-  }
+  type t = {simpleSubscription: t_simpleSubscription}
+  and t_simpleSubscription = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_simpleSubscription_Dog)
+    | `Human(t_simpleSubscription_Human)
+  ]
   and t_simpleSubscription_Human = {name: string}
   and t_simpleSubscription_Dog = {name: string};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         simpleSubscription: {
-          let value =
-            Js.Dict.unsafeGet(Obj.magic(value), "simpleSubscription");
+          let value = (value: Raw.t).simpleSubscription;
 
-          switch (Js.Json.decodeObject(value)) {
+          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
           | None =>
             Js.Exn.raiseError(
@@ -44,7 +47,7 @@ module MyQuery = {
               ++ "Expected union "
               ++ "DogOrHuman"
               ++ " to be an object, got "
-              ++ Js.Json.stringify(value),
+              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
             )
 
           | Some(typename_obj) =>
@@ -74,28 +77,40 @@ module MyQuery = {
                 | "Dog" =>
                   `Dog(
                     {
+                      let value: Raw.t_simpleSubscription_Dog =
+                        Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                          name: {
+                            let value =
+                              (value: Raw.t_simpleSubscription_Dog).name;
 
-                        (Obj.magic(value): string);
-                      },
-                    }: t_simpleSubscription_Dog,
+                            value;
+                          },
+                        }: t_simpleSubscription_Dog
+                      );
+                    },
                   )
                 | "Human" =>
                   `Human(
                     {
+                      let value: Raw.t_simpleSubscription_Human =
+                        Obj.magic(value);
+                      (
+                        {
 
-                      name: {
-                        let value =
-                          Js.Dict.unsafeGet(Obj.magic(value), "name");
+                          name: {
+                            let value =
+                              (value: Raw.t_simpleSubscription_Human).name;
 
-                        (Obj.magic(value): string);
-                      },
-                    }: t_simpleSubscription_Human,
+                            value;
+                          },
+                        }: t_simpleSubscription_Human
+                      );
+                    },
                   )
-                | typename => `FutureAddedValue(value)
+                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
                 }
               }
             }

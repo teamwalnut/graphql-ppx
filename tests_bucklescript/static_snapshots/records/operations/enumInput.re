@@ -17,18 +17,20 @@
   }
 ];
 module MyQuery = {
+  module Raw = {
+    type t = {enumInput: string};
+  };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
-  type raw_t;
   type t = {enumInput: string};
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
-  let parse: Js.Json.t => t =
+  let parse: Raw.t => t =
     (value) => (
       {
 
         enumInput: {
-          let value = Js.Dict.unsafeGet(Obj.magic(value), "enumInput");
+          let value = (value: Raw.t).enumInput;
 
-          (Obj.magic(value): string);
+          value;
         },
       }: t
     );
