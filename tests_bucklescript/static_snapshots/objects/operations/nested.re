@@ -184,9 +184,25 @@ module MyQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return({
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return({
+
+                      "field": {
+                        let value = value##field;
+
+                        value;
+                      },
+                    })
+                  | None => Js.Nullable.null
+                  };
+                },
+              })
             | None => Js.Nullable.null
             };
           },
@@ -202,9 +218,31 @@ module MyQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return({
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return({
+
+                      "f1": {
+                        let value = value##f1;
+
+                        value;
+                      },
+
+                      "f2": {
+                        let value = value##f2;
+
+                        value;
+                      },
+                    })
+                  | None => Js.Nullable.null
+                  };
+                },
+              })
             | None => Js.Nullable.null
             };
           },
@@ -220,9 +258,25 @@ module MyQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return({
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return({
+
+                      "field": {
+                        let value = value##field;
+
+                        value;
+                      },
+                    })
+                  | None => Js.Nullable.null
+                  };
+                },
+              })
             | None => Js.Nullable.null
             };
           },

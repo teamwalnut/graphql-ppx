@@ -433,7 +433,7 @@ let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
     switch%expr (value) {
     | Some(value) =>
       Js.Nullable.return(
-        generate_serializer(config, path, definition, inner),
+        [%e generate_serializer(config, path, definition, inner)]
       )
     | None => Js.Nullable.null
     }

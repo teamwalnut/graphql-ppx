@@ -131,10 +131,7 @@ module OneFieldQuery = {
                 let value = (value: t_variousScalars).nullableString;
 
                 switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
-                  )
+                | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
               },

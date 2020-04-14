@@ -77,7 +77,23 @@ module MyQuery = {
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              generate_serializer(config, path, definition, inner),
+              {
+
+                id: {
+                  let value = (value: t_pokemon).id;
+
+                  value;
+                },
+
+                name: {
+                  let value = (value: t_pokemon).name;
+
+                  switch (value) {
+                  | Some(value) => Js.Nullable.return(value)
+                  | None => Js.Nullable.null
+                  };
+                },
+              }: Raw.t_pokemon,
             )
           | None => Js.Nullable.null
           };

@@ -74,9 +74,23 @@ module MyQuery = {
 
         switch (value) {
         | Some(value) =>
-          Js.Nullable.return(
-            generate_serializer(config, path, definition, inner),
-          )
+          Js.Nullable.return({
+
+            "id": {
+              let value = value##id;
+
+              value;
+            },
+
+            "name": {
+              let value = value##name;
+
+              switch (value) {
+              | Some(value) => Js.Nullable.return(value)
+              | None => Js.Nullable.null
+              };
+            },
+          })
         | None => Js.Nullable.null
         };
       },

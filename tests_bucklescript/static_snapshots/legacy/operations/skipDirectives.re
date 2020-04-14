@@ -113,10 +113,7 @@ module MyQuery = {
             let value = value##nullableString;
 
             switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+            | Some(value) => Js.Nullable.return(value)
             | None => Js.Nullable.null
             };
           },
@@ -125,10 +122,7 @@ module MyQuery = {
             let value = value##string;
 
             switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+            | Some(value) => Js.Nullable.return(value)
             | None => Js.Nullable.null
             };
           },
@@ -143,10 +137,7 @@ module MyQuery = {
             let value = value##nullableString;
 
             switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+            | Some(value) => Js.Nullable.return(value)
             | None => Js.Nullable.null
             };
           },
@@ -155,10 +146,7 @@ module MyQuery = {
             let value = value##string;
 
             switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+            | Some(value) => Js.Nullable.return(value)
             | None => Js.Nullable.null
             };
           },

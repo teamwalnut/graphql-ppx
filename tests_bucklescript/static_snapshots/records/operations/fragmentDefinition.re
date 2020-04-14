@@ -72,7 +72,13 @@ module Fragments = {
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) => Js.Nullable.return(value)
+                     | None => Js.Nullable.null
+                     }
+                   ),
               )
             | None => Js.Nullable.null
             };
@@ -83,9 +89,7 @@ module Fragments = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return(value |> Js.Array.map(value => value))
             | None => Js.Nullable.null
             };
           },
@@ -122,9 +126,7 @@ module Fragments = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return(value |> Js.Array.map(value => value))
             | None => Js.Nullable.null
             };
           },
@@ -340,7 +342,13 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
                   )
                 | None => Js.Nullable.null
                 };
@@ -367,7 +375,13 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
                   )
                 | None => Js.Nullable.null
                 };

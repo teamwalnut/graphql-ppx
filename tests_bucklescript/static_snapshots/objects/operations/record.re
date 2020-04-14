@@ -117,10 +117,7 @@ module OneFieldQuery = {
             let value = value##nullableString;
 
             switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+            | Some(value) => Js.Nullable.return(value)
             | None => Js.Nullable.null
             };
           },

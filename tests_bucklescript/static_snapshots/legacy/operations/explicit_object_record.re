@@ -107,7 +107,13 @@ module RecordsQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
                   )
                 | None => Js.Nullable.null
                 };
@@ -118,9 +124,7 @@ module RecordsQuery = {
 
                 switch (value) {
                 | Some(value) =>
-                  Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
-                  )
+                  Js.Nullable.return(value |> Js.Array.map(value => value))
                 | None => Js.Nullable.null
                 };
               },
@@ -131,10 +135,7 @@ module RecordsQuery = {
                 value
                 |> Js.Array.map(value =>
                      switch (value) {
-                     | Some(value) =>
-                       Js.Nullable.return(
-                         generate_serializer(config, path, definition, inner),
-                       )
+                     | Some(value) => Js.Nullable.return(value)
                      | None => Js.Nullable.null
                      }
                    );
@@ -250,7 +251,13 @@ module ObjectsQuery = {
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) => Js.Nullable.return(value)
+                     | None => Js.Nullable.null
+                     }
+                   ),
               )
             | None => Js.Nullable.null
             };
@@ -261,9 +268,7 @@ module ObjectsQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return(value |> Js.Array.map(value => value))
             | None => Js.Nullable.null
             };
           },
@@ -274,10 +279,7 @@ module ObjectsQuery = {
             value
             |> Js.Array.map(value =>
                  switch (value) {
-                 | Some(value) =>
-                   Js.Nullable.return(
-                     generate_serializer(config, path, definition, inner),
-                   )
+                 | Some(value) => Js.Nullable.return(value)
                  | None => Js.Nullable.null
                  }
                );

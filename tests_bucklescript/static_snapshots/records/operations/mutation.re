@@ -132,7 +132,15 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    {
+
+                      stringField: {
+                        let value =
+                          (value: t_mutationWithError_value).stringField;
+
+                        value;
+                      },
+                    }: Raw.t_mutationWithError_value,
                   )
                 | None => Js.Nullable.null
                 };
@@ -144,7 +152,31 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+
+                             field: {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | `FIRST => "FIRST"
+                               | `SECOND => "SECOND"
+                               | `THIRD => "THIRD"
+                               | `FutureAddedValue(other) => other
+                               };
+                             },
+
+                             message: {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+
+                               value;
+                             },
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
                   )
                 | None => Js.Nullable.null
                 };

@@ -125,9 +125,37 @@ module MyQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return({
+
+                "__typename": {
+                  let value = value##__typename;
+
+                  value;
+                },
+
+                "inner": {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return({
+
+                      "__typename": {
+                        let value = value##__typename;
+
+                        value;
+                      },
+
+                      "field": {
+                        let value = value##field;
+
+                        value;
+                      },
+                    })
+                  | None => Js.Nullable.null
+                  };
+                },
+              })
             | None => Js.Nullable.null
             };
           },

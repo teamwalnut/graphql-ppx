@@ -121,9 +121,14 @@ module MyQuery = {
 
             switch (value) {
             | Some(value) =>
-              Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
-              )
+              Js.Nullable.return({
+
+                "stringField": {
+                  let value = value##stringField;
+
+                  value;
+                },
+              })
             | None => Js.Nullable.null
             };
           },
@@ -134,7 +139,27 @@ module MyQuery = {
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(
-                generate_serializer(config, path, definition, inner),
+                value
+                |> Js.Array.map(value =>
+                     {
+
+                       "field": {
+                         let value = value##field;
+                         switch (Obj.magic(value: string)) {
+                         | `FIRST => "FIRST"
+                         | `SECOND => "SECOND"
+                         | `THIRD => "THIRD"
+                         | `FutureAddedValue(other) => other
+                         };
+                       },
+
+                       "message": {
+                         let value = value##message;
+
+                         value;
+                       },
+                     }
+                   ),
               )
             | None => Js.Nullable.null
             };

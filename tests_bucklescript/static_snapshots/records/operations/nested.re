@@ -209,7 +209,27 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    {
+
+                      inner: {
+                        let value = (value: t_first_inner).inner;
+
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+
+                              field: {
+                                let value = (value: t_first_inner_inner).field;
+
+                                value;
+                              },
+                            }: Raw.t_first_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      },
+                    }: Raw.t_first_inner,
                   )
                 | None => Js.Nullable.null
                 };
@@ -229,7 +249,33 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    {
+
+                      inner: {
+                        let value = (value: t_second_inner).inner;
+
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+
+                              f1: {
+                                let value = (value: t_second_inner_inner).f1;
+
+                                value;
+                              },
+
+                              f2: {
+                                let value = (value: t_second_inner_inner).f2;
+
+                                value;
+                              },
+                            }: Raw.t_second_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      },
+                    }: Raw.t_second_inner,
                   )
                 | None => Js.Nullable.null
                 };
@@ -249,7 +295,27 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    generate_serializer(config, path, definition, inner),
+                    {
+
+                      inner: {
+                        let value = (value: t_let_inner).inner;
+
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+
+                              field: {
+                                let value = (value: t_let_inner_inner).field;
+
+                                value;
+                              },
+                            }: Raw.t_let_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      },
+                    }: Raw.t_let_inner,
                   )
                 | None => Js.Nullable.null
                 };
