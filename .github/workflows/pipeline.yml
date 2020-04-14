@@ -94,6 +94,7 @@ jobs:
           if [ "${{ matrix.os }}" == "windows-2016" ]; then
             THE_ESY__CACHE_INSTALL_PATH=$HOME/.esy/3_/i
             THE_ESY__CACHE_INSTALL_PATH=$( cygpath --mixed --absolute "$THE_ESY__CACHE_INSTALL_PATH")
+            dir $( cygpath --mixed --absolute "$HOME/.esy")
           else
             DESIRED_LEN="86"
             HOME_ESY3="$HOME/.esy/3"
