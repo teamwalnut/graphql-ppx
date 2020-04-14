@@ -102,6 +102,75 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        v1: {
+          let value = (value: t).v1;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_v1).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_v1).string;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_v1
+          );
+        },
+
+        v2: {
+          let value = (value: t).v2;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_v2).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_v2).string;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_v2
+          );
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|("var", (a => Some(Js.Json.boolean(a)))(inp.var))|]

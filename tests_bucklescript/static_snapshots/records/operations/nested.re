@@ -194,6 +194,71 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        first: {
+          let value = (value: t).first;
+          (
+            {
+
+              inner: {
+                let value = (value: t_first).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_first
+          );
+        },
+
+        second: {
+          let value = (value: t).second;
+          (
+            {
+
+              inner: {
+                let value = (value: t_second).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_second
+          );
+        },
+
+        let_: {
+          let value = (value: t).let_;
+          (
+            {
+
+              inner: {
+                let value = (value: t_let).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_let
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };

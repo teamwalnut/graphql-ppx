@@ -90,6 +90,60 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      "lists": {
+        let value = value##lists;
+        {
+
+          "nullableOfNullable": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "nullableOfNonNullable": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "nonNullableOfNullable": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
+                 }
+               );
+          },
+
+          "nonNullableOfNonNullable": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>

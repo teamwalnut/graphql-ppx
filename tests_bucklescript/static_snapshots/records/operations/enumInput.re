@@ -34,6 +34,17 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        enumInput: {
+          let value = (value: t).enumInput;
+
+          value;
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|

@@ -62,6 +62,37 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        customScalarField: {
+          let value = (value: t).customScalarField;
+          (
+            {
+
+              nullable: {
+                let value = (value: t_customScalarField).nullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullable: {
+                let value = (value: t_customScalarField).nonNullable;
+
+                value;
+              },
+            }: Raw.tt_customScalarField
+          );
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|

@@ -55,6 +55,27 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
+
+          "string": {
+            let value = value##string;
+
+            value;
+          },
+
+          "int": {
+            let value = value##int;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -80,6 +101,27 @@ module OneFieldQuery = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
+
+          "nullableString": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
         };
@@ -119,6 +161,21 @@ module ExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        "string": {
+          let value = value##string;
+
+          value;
+        },
+
+        "int": {
+          let value = value##int;
+
+          value;
+        },
+      };
     let name = "Fragment";
   };
   module Untitled1 = {
@@ -139,6 +196,14 @@ module ExternalFragmentQuery = {
           let value = value##variousScalars;
 
           Fragment.parse(value);
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
+
+        "variousScalars": {
+          let value = value##variousScalars;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -170,67 +235,42 @@ module InlineFragmentQuery = {
 
       "dogOrHuman": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+        (
+          switch (typename) {
+          | "Dog" =>
+            `Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  "name": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            "graphql_ppx: "
-            ++ "Expected union "
-            ++ "DogOrHuman"
-            ++ " to be an object, got "
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, "__typename")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Union "
-              ++ "DogOrHuman"
-              ++ " is missing the __typename field",
-            )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " has a __typename field that is not a string",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | "Dog" =>
-                `Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      "name": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      "barkVolume": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+
+                  "barkVolume": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                };
+              },
+            )
+          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      "dogOrHuman": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -267,6 +307,21 @@ module UnionExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        "name": {
+          let value = value##name;
+
+          value;
+        },
+
+        "barkVolume": {
+          let value = value##barkVolume;
+
+          value;
+        },
+      };
     let name = "DogFragment";
   };
   module Untitled1 = {
@@ -293,55 +348,30 @@ module UnionExternalFragmentQuery = {
 
         "dogOrHuman": {
           let value = value##dogOrHuman;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Expected union "
-              ++ "DogOrHuman"
-              ++ " to be an object, got "
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, "__typename")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " is missing the __typename field",
+                  DogFragment.parse(value);
+                },
               )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
 
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " has a __typename field that is not a string",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | "Dog" =>
-                  `Dog(
-                    {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-
-                      DogFragment.parse(value);
-                    },
-                  )
-                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+        "dogOrHuman": {
+          let value = value##dogOrHuman;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);

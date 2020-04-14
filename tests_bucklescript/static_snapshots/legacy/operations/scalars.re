@@ -132,6 +132,105 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      "variousScalars": {
+        let value = value##variousScalars;
+        {
+
+          "nullableString": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "string": {
+            let value = value##string;
+
+            value;
+          },
+
+          "nullableInt": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "int": {
+            let value = value##int;
+
+            value;
+          },
+
+          "nullableFloat": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "float": {
+            let value = value##float;
+
+            value;
+          },
+
+          "nullableBoolean": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "boolean": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          "nullableID": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "id": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>

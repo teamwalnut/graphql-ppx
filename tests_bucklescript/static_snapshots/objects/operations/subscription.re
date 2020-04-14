@@ -37,76 +37,50 @@ module MyQuery = {
 
       "simpleSubscription": {
         let value = value##simpleSubscription;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+        (
+          switch (typename) {
+          | "Dog" =>
+            `Dog(
+              {
+                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  "name": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            "graphql_ppx: "
-            ++ "Expected union "
-            ++ "DogOrHuman"
-            ++ " to be an object, got "
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, "__typename")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Union "
-              ++ "DogOrHuman"
-              ++ " is missing the __typename field",
+                    value;
+                  },
+                };
+              },
             )
+          | "Human" =>
+            `Human(
+              {
+                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                {
 
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
+                  "name": {
+                    let value = value##name;
 
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " has a __typename field that is not a string",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | "Dog" =>
-                `Dog(
-                  {
-                    let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                    {
-
-                      "name": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | "Human" =>
-                `Human(
-                  {
-                    let value: Raw.t_simpleSubscription_Human =
-                      Obj.magic(value);
-                    {
+                };
+              },
+            )
+          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_simpleSubscription
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
 
-                      "name": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+      "simpleSubscription": {
+        let value = value##simpleSubscription;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);

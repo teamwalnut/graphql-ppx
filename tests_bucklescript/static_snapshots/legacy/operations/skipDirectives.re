@@ -102,6 +102,69 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      "v1": {
+        let value = value##v1;
+        {
+
+          "nullableString": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "string": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      "v2": {
+        let value = value##v2;
+        {
+
+          "nullableString": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "string": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|("var", (a => Some(Js.Json.boolean(a)))(inp##var))|]

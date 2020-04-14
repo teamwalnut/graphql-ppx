@@ -34,6 +34,17 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        argNamedQuery: {
+          let value = (value: t).argNamedQuery;
+
+          value;
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|("query", (a => Some(Js.Json.string(a)))(inp.query))|]

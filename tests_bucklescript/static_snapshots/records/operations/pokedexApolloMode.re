@@ -63,6 +63,23 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        pokemon: {
+          let value = (value: t).pokemon;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };

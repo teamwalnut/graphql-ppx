@@ -64,6 +64,31 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                IntOfString.serialize(value);
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                StringOfInt.serialize(value);
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };

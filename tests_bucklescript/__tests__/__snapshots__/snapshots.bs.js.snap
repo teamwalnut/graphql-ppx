@@ -35,6 +35,15 @@ module MyQuery = {
         value;
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"argNamedQuery\\": {
+        let value = value##argNamedQuery;
+
+        value;
+      },
+    };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|(\\"query\\", (a => Some(Js.Json.string(a)))(inp##query))|]
@@ -106,6 +115,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"nonrecursiveInput\\": {
+        let value = value##nonrecursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"nonrecursiveInput\\": {
@@ -283,6 +301,27 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"string\\": {
+            let value = value##string;
+
+            IntOfString.serialize(value);
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            StringOfInt.serialize(value);
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -351,6 +390,33 @@ module MyQuery = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"nonNullable\\": {
+            let value = value##nonNullable;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"customScalarField\\": {
+        let value = value##customScalarField;
+        {
+
+          \\"nullable\\": {
+            let value = value##nullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -444,6 +510,15 @@ module MyQuery = {
   type t = {. \\"enumInput\\": string};
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
+    value => {
+
+      \\"enumInput\\": {
+        let value = value##enumInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"enumInput\\": {
@@ -602,6 +677,64 @@ module RecordsQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        lists: {
+          let value = (value: t).lists;
+          (
+            {
+
+              nullableOfNullable: {
+                let value = (value: t_lists).nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) =>
+                       Js.Nullable.return(
+                         generate_serializer(config, path, definition, inner),
+                       )
+                     | None => Js.Nullable.null
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+
+                value |> Js.Array.map(value => value);
+              },
+            }: Raw.tt_lists
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -677,6 +810,60 @@ module ObjectsQuery = {
                  switch (Js.toOption(value)) {
                  | Some(value) => Some(value)
                  | None => None
+                 }
+               );
+          },
+
+          \\"nonNullableOfNonNullable\\": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"lists\\": {
+        let value = value##lists;
+        {
+
+          \\"nullableOfNullable\\": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nullableOfNonNullable\\": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nonNullableOfNullable\\": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
                  }
                );
           },
@@ -771,6 +958,33 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"nullableOfNullable\\": {
+          let value = value##nullableOfNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+
+        \\"nullableOfNonNullable\\": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = \\"ListFragment\\";
   };
   module Another = {
@@ -793,6 +1007,21 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"nullableOfNonNullable\\": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = \\"Another\\";
   };
 };
@@ -967,6 +1196,78 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"l1\\": {
+        let value = value##l1;
+        Js.Json.null;
+      },
+
+      \\"l2\\": {
+        let value = value##l2;
+        let initial: Js.Json.t = Obj.magic({});
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      \\"l3\\": {
+        let value = value##l3;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            \\"nullableOfNullable\\": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      \\"l4\\": {
+        let value = value##l4;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            \\"nullableOfNullable\\": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|Fragments.ListFragment.serialize(value##listFragment)|],
+        );
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -1097,6 +1398,60 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"lists\\": {
+        let value = value##lists;
+        {
+
+          \\"nullableOfNullable\\": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nullableOfNonNullable\\": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nonNullableOfNullable\\": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
+                 }
+               );
+          },
+
+          \\"nonNullableOfNonNullable\\": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -1145,6 +1500,15 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"listsInput\\": {
+        let value = value##listsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"listsInput\\": {
@@ -1352,6 +1716,15 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"listsInput\\": {
+        let value = value##listsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"listsInput\\": {
@@ -1658,6 +2031,39 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"mutationWithError\\": {
+        let value = value##mutationWithError;
+        {
+
+          \\"value\\": {
+            let value = value##value;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"errors\\": {
+            let value = value##errors;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -1700,6 +2106,15 @@ module MyQuery = {
   type t = {. \\"optionalInputArgs\\": string};
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
+    value => {
+
+      \\"optionalInputArgs\\": {
+        let value = value##optionalInputArgs;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"optionalInputArgs\\": {
@@ -1922,6 +2337,63 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"first\\": {
+        let value = value##first;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"second\\": {
+        let value = value##second;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"let_\\": {
+        let value = value##let_;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -1969,6 +2441,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"nonrecursiveInput\\": {
+        let value = value##nonrecursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"nonrecursiveInput\\": {
@@ -2145,6 +2626,21 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"pokemon\\": {
+        let value = value##pokemon;
+
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            generate_serializer(config, path, definition, inner),
+          )
+        | None => Js.Nullable.null
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -2226,6 +2722,21 @@ module MyQuery = {
             },
           })
         | None => None
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"pokemon\\": {
+        let value = value##pokemon;
+
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            generate_serializer(config, path, definition, inner),
+          )
+        | None => Js.Nullable.null
         };
       },
     };
@@ -2353,6 +2864,27 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -2387,6 +2919,27 @@ module OneFieldQuery = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
         };
@@ -2435,6 +2988,21 @@ module ExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"string\\": {
+          let value = value##string;
+
+          value;
+        },
+
+        \\"int\\": {
+          let value = value##int;
+
+          value;
+        },
+      };
     let name = \\"Fragment\\";
   };
   module Untitled1 = {
@@ -2455,6 +3023,14 @@ module ExternalFragmentQuery = {
           let value = value##variousScalars;
 
           Fragment.parse(value);
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"variousScalars\\": {
+          let value = value##variousScalars;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -2495,67 +3071,42 @@ module InlineFragmentQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
-            )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -2601,6 +3152,21 @@ module UnionExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"name\\": {
+          let value = value##name;
+
+          value;
+        },
+
+        \\"barkVolume\\": {
+          let value = value##barkVolume;
+
+          value;
+        },
+      };
     let name = \\"DogFragment\\";
   };
   module Untitled1 = {
@@ -2627,55 +3193,30 @@ module UnionExternalFragmentQuery = {
 
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
+                  DogFragment.parse(value);
+                },
               )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
 
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
-                    {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-
-                      DogFragment.parse(value);
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+        \\"dogOrHuman\\": {
+          let value = value##dogOrHuman;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -2727,6 +3268,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"recursiveInput\\": {
+        let value = value##recursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"recursiveInput\\": {
@@ -2989,6 +3539,105 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -3043,6 +3692,15 @@ module MyQuery = {
     \\"id\\": string,
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"scalarsInput\\": {
+        let value = value##scalarsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"scalarsInput\\": {
@@ -3228,6 +3886,15 @@ module MyQuery = {
     \\"id\\": string,
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"scalarsInput\\": {
+        let value = value##scalarsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"scalarsInput\\": {
@@ -3503,6 +4170,69 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"v1\\": {
+        let value = value##v1;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"v2\\": {
+        let value = value##v2;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|(\\"var\\", (a => Some(Js.Json.boolean(a)))(inp##var))|]
@@ -3582,76 +4312,50 @@ module MyQuery = {
 
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
+                    value;
+                  },
+                };
+              },
             )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                {
 
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | \\"Human\\" =>
-                \`Human(
-                  {
-                    let value: Raw.t_simpleSubscription_Human =
-                      Obj.magic(value);
-                    {
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_simpleSubscription
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
 
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+      \\"simpleSubscription\\": {
+        let value = value##simpleSubscription;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -3804,6 +4508,105 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -3926,6 +4729,105 @@ module MyQuery2 = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -4070,6 +4972,105 @@ module MyQuery3 = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -4192,6 +5193,105 @@ module MyQuery4 = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -4328,6 +5428,33 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"first\\": {
+        let value = value##first;
+        {
+
+          \\"__typename\\": {
+            let value = value##__typename;
+
+            value;
+          },
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -4391,81 +5518,56 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
+                    value;
+                  },
 
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
 
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
+                    value;
+                  },
+                };
+              },
             )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                {
 
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | \\"Human\\" =>
-                \`Human(
-                  {
-                    let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                    {
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
 
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -4528,67 +5630,42 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
-            )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -4633,6 +5710,15 @@ module MyQuery = {
   type t = {. \\"argNamedQuery\\": int};
   type t_variables = {. \\"query\\": string};
   let parse: Raw.t => t =
+    value => {
+
+      \\"argNamedQuery\\": {
+        let value = value##argNamedQuery;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"argNamedQuery\\": {
@@ -4703,6 +5789,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"nonrecursiveInput\\": {
+        let value = value##nonrecursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"nonrecursiveInput\\": {
@@ -4871,6 +5966,27 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"string\\": {
+            let value = value##string;
+
+            IntOfString.serialize(value);
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            StringOfInt.serialize(value);
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -4930,6 +6046,33 @@ module MyQuery = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"nonNullable\\": {
+            let value = value##nonNullable;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"customScalarField\\": {
+        let value = value##customScalarField;
+        {
+
+          \\"nullable\\": {
+            let value = value##nullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -5014,6 +6157,15 @@ module MyQuery = {
   type t = {. \\"enumInput\\": string};
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
+    value => {
+
+      \\"enumInput\\": {
+        let value = value##enumInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"enumInput\\": {
@@ -5163,6 +6315,64 @@ module RecordsQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        lists: {
+          let value = (value: t).lists;
+          (
+            {
+
+              nullableOfNullable: {
+                let value = (value: t_lists).nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) =>
+                       Js.Nullable.return(
+                         generate_serializer(config, path, definition, inner),
+                       )
+                     | None => Js.Nullable.null
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+
+                value |> Js.Array.map(value => value);
+              },
+            }: Raw.tt_lists
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -5229,6 +6439,60 @@ module ObjectsQuery = {
                  switch (Js.toOption(value)) {
                  | Some(value) => Some(value)
                  | None => None
+                 }
+               );
+          },
+
+          \\"nonNullableOfNonNullable\\": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"lists\\": {
+        let value = value##lists;
+        {
+
+          \\"nullableOfNullable\\": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nullableOfNonNullable\\": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nonNullableOfNullable\\": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
                  }
                );
           },
@@ -5314,6 +6578,33 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"nullableOfNullable\\": {
+          let value = value##nullableOfNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+
+        \\"nullableOfNonNullable\\": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = \\"ListFragment\\";
   };
   module Another = {
@@ -5336,6 +6627,21 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"nullableOfNonNullable\\": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = \\"Another\\";
   };
 };
@@ -5510,6 +6816,78 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"l1\\": {
+        let value = value##l1;
+        Js.Json.null;
+      },
+
+      \\"l2\\": {
+        let value = value##l2;
+        let initial: Js.Json.t = Obj.magic({});
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      \\"l3\\": {
+        let value = value##l3;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            \\"nullableOfNullable\\": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      \\"l4\\": {
+        let value = value##l4;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            \\"nullableOfNullable\\": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|Fragments.ListFragment.serialize(value##listFragment)|],
+        );
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -5631,6 +7009,60 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"lists\\": {
+        let value = value##lists;
+        {
+
+          \\"nullableOfNullable\\": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nullableOfNonNullable\\": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nonNullableOfNullable\\": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
+                 }
+               );
+          },
+
+          \\"nonNullableOfNonNullable\\": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -5670,6 +7102,15 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"listsInput\\": {
+        let value = value##listsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"listsInput\\": {
@@ -5868,6 +7309,15 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"listsInput\\": {
+        let value = value##listsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"listsInput\\": {
@@ -6165,6 +7615,39 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"mutationWithError\\": {
+        let value = value##mutationWithError;
+        {
+
+          \\"value\\": {
+            let value = value##value;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"errors\\": {
+            let value = value##errors;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -6198,6 +7681,15 @@ module MyQuery = {
   type t = {. \\"optionalInputArgs\\": string};
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
+    value => {
+
+      \\"optionalInputArgs\\": {
+        let value = value##optionalInputArgs;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"optionalInputArgs\\": {
@@ -6411,6 +7903,63 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"first\\": {
+        let value = value##first;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"second\\": {
+        let value = value##second;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"let_\\": {
+        let value = value##let_;
+        {
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -6449,6 +7998,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"nonrecursiveInput\\": {
+        let value = value##nonrecursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"nonrecursiveInput\\": {
@@ -6616,6 +8174,21 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"pokemon\\": {
+        let value = value##pokemon;
+
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            generate_serializer(config, path, definition, inner),
+          )
+        | None => Js.Nullable.null
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -6688,6 +8261,21 @@ module MyQuery = {
             },
           })
         | None => None
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"pokemon\\": {
+        let value = value##pokemon;
+
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            generate_serializer(config, path, definition, inner),
+          )
+        | None => Js.Nullable.null
         };
       },
     };
@@ -6806,6 +8394,27 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -6831,6 +8440,27 @@ module OneFieldQuery = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
         };
@@ -6870,6 +8500,21 @@ module ExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"string\\": {
+          let value = value##string;
+
+          value;
+        },
+
+        \\"int\\": {
+          let value = value##int;
+
+          value;
+        },
+      };
     let name = \\"Fragment\\";
   };
   module Untitled1 = {
@@ -6890,6 +8535,14 @@ module ExternalFragmentQuery = {
           let value = value##variousScalars;
 
           Fragment.parse(value);
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"variousScalars\\": {
+          let value = value##variousScalars;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -6921,67 +8574,42 @@ module InlineFragmentQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
-            )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -7018,6 +8646,21 @@ module UnionExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        \\"name\\": {
+          let value = value##name;
+
+          value;
+        },
+
+        \\"barkVolume\\": {
+          let value = value##barkVolume;
+
+          value;
+        },
+      };
     let name = \\"DogFragment\\";
   };
   module Untitled1 = {
@@ -7044,55 +8687,30 @@ module UnionExternalFragmentQuery = {
 
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
+                  DogFragment.parse(value);
+                },
               )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      };
+    let serialize: t => Raw.t =
+      value => {
 
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
-                    {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-
-                      DogFragment.parse(value);
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+        \\"dogOrHuman\\": {
+          let value = value##dogOrHuman;
+          Js.Json.null;
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -7135,6 +8753,15 @@ module MyQuery = {
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"recursiveInput\\": {
+        let value = value##recursiveInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"recursiveInput\\": {
@@ -7388,6 +9015,105 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -7433,6 +9159,15 @@ module MyQuery = {
     \\"id\\": string,
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"scalarsInput\\": {
+        let value = value##scalarsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"scalarsInput\\": {
@@ -7609,6 +9344,15 @@ module MyQuery = {
     \\"id\\": string,
   };
   let parse: Raw.t => t =
+    value => {
+
+      \\"scalarsInput\\": {
+        let value = value##scalarsInput;
+
+        value;
+      },
+    };
+  let serialize: t => Raw.t =
     value => {
 
       \\"scalarsInput\\": {
@@ -7875,6 +9619,69 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"v1\\": {
+        let value = value##v1;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+
+      \\"v2\\": {
+        let value = value##v2;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|(\\"var\\", (a => Some(Js.Json.boolean(a)))(inp##var))|]
@@ -7945,76 +9752,50 @@ module MyQuery = {
 
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
+                    value;
+                  },
+                };
+              },
             )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                {
 
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | \\"Human\\" =>
-                \`Human(
-                  {
-                    let value: Raw.t_simpleSubscription_Human =
-                      Obj.magic(value);
-                    {
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_simpleSubscription
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
 
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+      \\"simpleSubscription\\": {
+        let value = value##simpleSubscription;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -8158,6 +9939,105 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -8271,6 +10151,105 @@ module MyQuery2 = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -8406,6 +10385,105 @@ module MyQuery3 = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -8519,6 +10597,105 @@ module MyQuery4 = {
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
+            };
+          },
+
+          \\"id\\": {
+            let value = value##id;
+
+            value;
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"variousScalars\\": {
+        let value = value##variousScalars;
+        {
+
+          \\"nullableString\\": {
+            let value = value##nullableString;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"string\\": {
+            let value = value##string;
+
+            value;
+          },
+
+          \\"nullableInt\\": {
+            let value = value##nullableInt;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"int\\": {
+            let value = value##int;
+
+            value;
+          },
+
+          \\"nullableFloat\\": {
+            let value = value##nullableFloat;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"float\\": {
+            let value = value##float;
+
+            value;
+          },
+
+          \\"nullableBoolean\\": {
+            let value = value##nullableBoolean;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"boolean\\": {
+            let value = value##boolean;
+
+            value;
+          },
+
+          \\"nullableID\\": {
+            let value = value##nullableID;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
             };
           },
 
@@ -8646,6 +10823,33 @@ module MyQuery = {
         };
       },
     };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"first\\": {
+        let value = value##first;
+        {
+
+          \\"__typename\\": {
+            let value = value##__typename;
+
+            value;
+          },
+
+          \\"inner\\": {
+            let value = value##inner;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        };
+      },
+    };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -8700,81 +10904,56 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
+                    value;
+                  },
 
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
 
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
+                    value;
+                  },
+                };
+              },
             )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                {
 
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | \\"Human\\" =>
-                \`Human(
-                  {
-                    let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                    {
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
 
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -8828,67 +11007,42 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
+        [@metaloc loc]
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                {
 
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                  \\"name\\": {
+                    let value = value##name;
 
-        | None =>
-          Js.Exn.raiseError(
-            \\"graphql_ppx: \\"
-            ++ \\"Expected union \\"
-            ++ \\"DogOrHuman\\"
-            ++ \\" to be an object, got \\"
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" is missing the __typename field\\",
-            )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" has a __typename field that is not a string\\",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | \\"Dog\\" =>
-                \`Dog(
-                  {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                    {
-
-                      \\"name\\": {
-                        let value = value##name;
-
-                        value;
-                      },
-
-                      \\"barkVolume\\": {
-                        let value = value##barkVolume;
-
-                        value;
-                      },
-                    };
+                    value;
                   },
-                )
-              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+
+                  \\"barkVolume\\": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                };
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"dogOrHuman\\": {
+        let value = value##dogOrHuman;
+        Js.Json.null;
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -8933,6 +11087,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        argNamedQuery: {
+          let value = (value: t).argNamedQuery;
+
+          value;
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -9004,6 +11169,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        nonrecursiveInput: {
+          let value = (value: t).nonrecursiveInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -9167,6 +11343,31 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                IntOfString.serialize(value);
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                StringOfInt.serialize(value);
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -9237,6 +11438,37 @@ module MyQuery = {
           );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        customScalarField: {
+          let value = (value: t).customScalarField;
+          (
+            {
+
+              nullable: {
+                let value = (value: t_customScalarField).nullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullable: {
+                let value = (value: t_customScalarField).nonNullable;
+
+                value;
+              },
+            }: Raw.tt_customScalarField
+          );
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -9320,6 +11552,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        enumInput: {
+          let value = (value: t).enumInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -9462,6 +11705,64 @@ module RecordsQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        lists: {
+          let value = (value: t).lists;
+          (
+            {
+
+              nullableOfNullable: {
+                let value = (value: t_lists).nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) =>
+                       Js.Nullable.return(
+                         generate_serializer(config, path, definition, inner),
+                       )
+                     | None => Js.Nullable.null
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+
+                value |> Js.Array.map(value => value);
+              },
+            }: Raw.tt_lists
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -9528,6 +11829,60 @@ module ObjectsQuery = {
                  switch (Js.toOption(value)) {
                  | Some(value) => Some(value)
                  | None => None
+                 }
+               );
+          },
+
+          \\"nonNullableOfNonNullable\\": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      \\"lists\\": {
+        let value = value##lists;
+        {
+
+          \\"nullableOfNullable\\": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nullableOfNonNullable\\": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          \\"nonNullableOfNullable\\": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
                  }
                );
           },
@@ -9611,6 +11966,35 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          nullableOfNullable: {
+            let value = (value: t).nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          nullableOfNonNullable: {
+            let value = (value: t).nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        }: Raw.tt
+      );
     let name = \\"ListFragment\\";
   };
   module Another = {
@@ -9633,6 +12017,23 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          nullableOfNonNullable: {
+            let value = (value: t).nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+        }: Raw.tt
+      );
     let name = \\"Another\\";
   };
 };
@@ -9810,6 +12211,80 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        l1: {
+          let value = (value: t).l1;
+          Js.Json.null;
+        },
+
+        l2: {
+          let value = (value: t).l2;
+          let initial: Js.Json.t = Obj.magic({});
+          Js.Array.reduce(
+            Graphql_PPX.deepMerge,
+            initial,
+            [|
+              Fragments.ListFragment.serialize(value##frag1),
+              Fragments.ListFragment.serialize(value##frag2),
+            |],
+          );
+        },
+
+        l3: {
+          let value = (value: t).l3;
+          let initial: Js.Json.t =
+            Obj.magic({
+
+              \\"nullableOfNullable\\": {
+                let value = value##nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            });
+          Js.Array.reduce(
+            Graphql_PPX.deepMerge,
+            initial,
+            [|
+              Fragments.ListFragment.serialize(value##frag1),
+              Fragments.ListFragment.serialize(value##frag2),
+            |],
+          );
+        },
+
+        l4: {
+          let value = (value: t).l4;
+          let initial: Js.Json.t =
+            Obj.magic({
+
+              \\"nullableOfNullable\\": {
+                let value = value##nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            });
+          Js.Array.reduce(
+            Graphql_PPX.deepMerge,
+            initial,
+            [|Fragments.ListFragment.serialize(value##listFragment)|],
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -9933,6 +12408,64 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        lists: {
+          let value = (value: t).lists;
+          (
+            {
+
+              nullableOfNullable: {
+                let value = (value: t_lists).nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) =>
+                       Js.Nullable.return(
+                         generate_serializer(config, path, definition, inner),
+                       )
+                     | None => Js.Nullable.null
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+
+                value |> Js.Array.map(value => value);
+              },
+            }: Raw.tt_lists
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -9980,6 +12513,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        listsInput: {
+          let value = (value: t).listsInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -10179,6 +12723,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        listsInput: {
+          let value = (value: t).listsInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -10475,6 +13030,43 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        mutationWithError: {
+          let value = (value: t).mutationWithError;
+          (
+            {
+
+              value: {
+                let value = (value: t_mutationWithError).value;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              errors: {
+                let value = (value: t_mutationWithError).errors;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_mutationWithError
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -10517,6 +13109,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        optionalInputArgs: {
+          let value = (value: t).optionalInputArgs;
+
+          value;
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -10745,6 +13348,71 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        first: {
+          let value = (value: t).first;
+          (
+            {
+
+              inner: {
+                let value = (value: t_first).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_first
+          );
+        },
+
+        second: {
+          let value = (value: t).second;
+          (
+            {
+
+              inner: {
+                let value = (value: t_second).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_second
+          );
+        },
+
+        let_: {
+          let value = (value: t).let_;
+          (
+            {
+
+              inner: {
+                let value = (value: t_let).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_let
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -10791,6 +13459,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        nonrecursiveInput: {
+          let value = (value: t).nonrecursiveInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -10953,6 +13632,23 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        pokemon: {
+          let value = (value: t).pokemon;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -11028,6 +13724,23 @@ module MyQuery = {
           };
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        pokemon: {
+          let value = (value: t).pokemon;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11148,6 +13861,31 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              string: {
+                let value = (value: scalars).string;
+
+                value;
+              },
+
+              int: {
+                let value = (value: scalars).int;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -11181,6 +13919,31 @@ module OneFieldQuery = {
           );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -11216,6 +13979,23 @@ module ExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          string: {
+            let value = (value: t).string;
+
+            value;
+          },
+
+          int: {
+            let value = (value: t).int;
+
+            value;
+          },
+        }: Raw.tt
+      );
     let name = \\"Fragment\\";
   };
   module Untitled1 = {
@@ -11239,6 +14019,16 @@ module ExternalFragmentQuery = {
             Fragment.parse(value);
           },
         }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          variousScalars: {
+            let value = (value: t).variousScalars;
+            Js.Json.null;
+          },
+        }: Raw.tt
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);
@@ -11270,72 +14060,48 @@ module InlineFragmentQuery = {
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
-              )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                      (
-                        {
 
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Dog).name;
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                            value;
-                          },
+                        value;
+                      },
 
-                          barkVolume: {
-                            let value =
-                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                            value;
-                          },
-                        }: t_dogOrHuman_Dog
-                      );
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = (value: t).dogOrHuman;
+          Js.Json.null;
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -11371,6 +14137,23 @@ module UnionExternalFragmentQuery = {
         value;
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          name: {
+            let value = (value: t).name;
+
+            value;
+          },
+
+          barkVolume: {
+            let value = (value: t).barkVolume;
+
+            value;
+          },
+        }: Raw.tt
+      );
     let name = \\"DogFragment\\";
   };
   module Untitled1 = {
@@ -11398,57 +14181,34 @@ module UnionExternalFragmentQuery = {
 
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
+            [@metaloc loc]
+            let typename: string =
+              Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+            (
+              switch (typename) {
+              | \\"Dog\\" =>
+                \`Dog(
+                  {
+                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
 
-            switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Expected union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" to be an object, got \\"
-                ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-              )
-
-            | Some(typename_obj) =>
-              switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" is missing the __typename field\\",
+                    DogFragment.parse(value);
+                  },
                 )
-
-              | Some(typename) =>
-                switch (Js.Json.decodeString(typename)) {
-
-                | None =>
-                  Js.Exn.raiseError(
-                    \\"graphql_ppx: \\"
-                    ++ \\"Union \\"
-                    ++ \\"DogOrHuman\\"
-                    ++ \\" has a __typename field that is not a string\\",
-                  )
-
-                | Some(typename) =>
-                  switch (typename) {
-                  | \\"Dog\\" =>
-                    \`Dog(
-                      {
-                        let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-
-                        DogFragment.parse(value);
-                      },
-                    )
-                  | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                  }
-                }
-              }
-            };
+              | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+              }: t_dogOrHuman
+            );
           },
         }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+
+          dogOrHuman: {
+            let value = (value: t).dogOrHuman;
+            Js.Json.null;
+          },
+        }: Raw.tt
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);
@@ -11498,6 +14258,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        recursiveInput: {
+          let value = (value: t).recursiveInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11746,6 +14517,109 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -11799,6 +14673,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        scalarsInput: {
+          let value = (value: t).scalarsInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11976,6 +14861,17 @@ module MyQuery = {
           value;
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        scalarsInput: {
+          let value = (value: t).scalarsInput;
+
+          value;
+        },
+      }: Raw.tt
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -12235,6 +15131,75 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        v1: {
+          let value = (value: t).v1;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_v1).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_v1).string;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_v1
+          );
+        },
+
+        v2: {
+          let value = (value: t).v2;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_v2).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_v2).string;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_v2
+          );
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|(\\"var\\", (a => Some(Js.Json.boolean(a)))(inp.var))|]
@@ -12306,85 +15271,59 @@ module MyQuery = {
 
         simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                  (
+                    {
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                      name: {
+                        let value = (value: Raw.t_simpleSubscription_Dog).name;
 
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
+                        value;
+                      },
+                    }: t_simpleSubscription_Dog
+                  );
+                },
               )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_simpleSubscription_Dog =
-                        Obj.magic(value);
-                      (
-                        {
 
-                          name: {
-                            let value =
-                              (value: Raw.t_simpleSubscription_Dog).name;
+                      name: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Human).name;
 
-                            value;
-                          },
-                        }: t_simpleSubscription_Dog
-                      );
-                    },
-                  )
-                | \\"Human\\" =>
-                  \`Human(
-                    {
-                      let value: Raw.t_simpleSubscription_Human =
-                        Obj.magic(value);
-                      (
-                        {
-
-                          name: {
-                            let value =
-                              (value: Raw.t_simpleSubscription_Human).name;
-
-                            value;
-                          },
-                        }: t_simpleSubscription_Human
-                      );
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                        value;
+                      },
+                    }: t_simpleSubscription_Human
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_simpleSubscription
+          );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        simpleSubscription: {
+          let value = (value: t).simpleSubscription;
+          Js.Json.null;
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -12529,6 +15468,109 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -12654,6 +15696,109 @@ module MyQuery2 = {
           );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -12781,6 +15926,109 @@ module MyQuery3 = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -12907,6 +16155,109 @@ module MyQuery4 = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -13027,6 +16378,37 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        first: {
+          let value = (value: t).first;
+          (
+            {
+
+              __typename: {
+                let value = (value: t_first).__typename;
+
+                value;
+              },
+
+              inner: {
+                let value = (value: t_first).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_first
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -13080,88 +16462,64 @@ module MyQuery = {
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
+                        value;
+                      },
 
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
               )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                      (
-                        {
 
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Dog).name;
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
 
-                            value;
-                          },
-
-                          barkVolume: {
-                            let value =
-                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
-                            value;
-                          },
-                        }: t_dogOrHuman_Dog
-                      );
-                    },
-                  )
-                | \\"Human\\" =>
-                  \`Human(
-                    {
-                      let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                      (
-                        {
-
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Human).name;
-
-                            value;
-                          },
-                        }: t_dogOrHuman_Human
-                      );
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = (value: t).dogOrHuman;
+          Js.Json.null;
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13213,72 +16571,48 @@ module MyQuery = {
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              \\"graphql_ppx: \\"
-              ++ \\"Expected union \\"
-              ++ \\"DogOrHuman\\"
-              ++ \\" to be an object, got \\"
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, \\"__typename\\")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                \\"graphql_ppx: \\"
-                ++ \\"Union \\"
-                ++ \\"DogOrHuman\\"
-                ++ \\" is missing the __typename field\\",
-              )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  \\"graphql_ppx: \\"
-                  ++ \\"Union \\"
-                  ++ \\"DogOrHuman\\"
-                  ++ \\" has a __typename field that is not a string\\",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | \\"Dog\\" =>
-                  \`Dog(
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                      (
-                        {
 
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Dog).name;
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-                            value;
-                          },
+                        value;
+                      },
 
-                          barkVolume: {
-                            let value =
-                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-                            value;
-                          },
-                        }: t_dogOrHuman_Dog
-                      );
-                    },
-                  )
-                | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = (value: t).dogOrHuman;
+          Js.Json.null;
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

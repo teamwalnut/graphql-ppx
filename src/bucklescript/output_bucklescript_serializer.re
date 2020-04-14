@@ -11,6 +11,8 @@ open Type_utils;
 open Generator_utils;
 open Output_bucklescript_utils;
 open Extract_type_definitions;
+open Result_structure;
+open Output_bucklescript_types;
 
 let ident_from_string = (~loc=Location.none, ident) =>
   Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
@@ -330,13 +332,11 @@ let generate_variable_constructors =
                      );
 
                    let object_ =
-                     Ast_408.(
-                       Ast_helper.(
-                         Exp.extension((
-                           {txt: "bs.obj", loc: conv_loc(loc)},
-                           PStr([[%stri [%e record]]]),
-                         ))
-                       )
+                     Ast_helper.(
+                       Exp.extension((
+                         {txt: "bs.obj", loc: conv_loc(loc)},
+                         PStr([[%stri [%e record]]]),
+                       ))
                      );
 
                    let body =
@@ -386,3 +386,312 @@ let generate_variable_constructors =
     )
   };
 };
+
+let raw_value = loc => [@metaloc loc] [%expr value];
+let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
+let ident_from_string = (~loc=Location.none, ident) =>
+  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
+
+let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
+  [@metaloc loc]
+  (
+    switch%expr (value) {
+    | Some(value) =>
+      Js.Nullable.return(
+        generate_serializer(config, path, definition, inner),
+      )
+    | None => Js.Nullable.null
+    }
+  )
+and generate_array_encoder = (config, loc, inner, path, definition) =>
+  [@metaloc loc]
+  [%expr
+    value
+    |> Js.Array.map(value => {
+         %e
+         generate_serializer(config, path, definition, inner)
+       })
+  ]
+and generate_poly_enum_encoder = (loc, enum_meta) => {
+  let enum_match_arms =
+    Ast_helper.(
+      enum_meta.em_values
+      |> List.map(({evm_name, _}) =>
+           Exp.case(Pat.variant(evm_name, None), const_str_expr(evm_name))
+         )
+    );
+
+  let fallback_arm =
+    Ast_helper.(
+      Exp.case(
+        Pat.variant(
+          "FutureAddedValue",
+          Some(Pat.var({loc: conv_loc(loc), txt: "other"})),
+        ),
+        ident_from_string("other"),
+      )
+    );
+
+  let match_expr =
+    Ast_helper.(
+      Exp.match(
+        [%expr Obj.magic(value: string)],
+        List.concat([enum_match_arms, [fallback_arm]]),
+      )
+    );
+
+  %expr
+  [%e match_expr];
+}
+and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
+  [@metaloc loc]
+  {
+    %expr
+    [%e ident_from_string(ident ++ ".serialize")](
+      [%e generate_serializer(config, path, definition, inner)],
+    );
+  }
+and generate_object_encoder =
+    (config, loc, name, fields, path, definition, existing_record) => {
+  let opaque =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+
+  let get_field = (is_object, key) => {
+    is_object
+      ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
+      : [%expr
+        [%e
+          Ast_helper.(
+            Exp.field(
+              Exp.constraint_(
+                ident_from_string("value"),
+                Ast_helper.Typ.constr(
+                  {
+                    txt:
+                      Longident.parse(
+                        switch (existing_record) {
+                        | None =>
+                          Extract_type_definitions.generate_type_name(path)
+                        | Some(existing) => existing
+                        },
+                      ),
+                    loc: Location.none,
+                  },
+                  [],
+                ),
+              ),
+              {
+                loc: Location.none,
+                txt: Longident.parse(to_valid_ident(key)),
+              },
+            )
+          )
+        ]
+      ];
+  };
+
+  let do_obj_constructor_base = is_object => {
+    Ast_helper.(
+      Exp.record(
+        fields
+        |> List.fold_left(
+             acc =>
+               fun
+               | Fr_named_field(key, _, inner) => [
+                   (
+                     {
+                       Location.txt: Longident.parse(to_valid_ident(key)),
+                       loc,
+                     },
+                     {
+                       let%expr value = [%e get_field(is_object, key)];
+                       %e
+                       generate_serializer(
+                         config,
+                         [key, ...path],
+                         definition,
+                         inner,
+                       );
+                     },
+                   ),
+                   ...acc,
+                 ]
+               | Fr_fragment_spread(key, loc, name, _, arguments) => acc,
+             [],
+           )
+        |> List.rev,
+        None,
+      )
+    );
+  };
+
+  let do_obj_constructor = () =>
+    [@metaloc loc]
+    {
+      Ast_helper.(
+        Exp.extension((
+          {txt: "bs.obj", loc},
+          PStr([[%stri [%e do_obj_constructor_base(true)]]]),
+        ))
+      );
+    };
+
+  let do_obj_constructor_records = () =>
+    [@metaloc loc]
+    {
+      Ast_helper.(
+        Exp.constraint_(
+          do_obj_constructor_base(false),
+          Ast_helper.Typ.constr(
+            {
+              txt:
+                Longident.parse(
+                  "Raw.t" ++ Extract_type_definitions.generate_type_name(path),
+                ),
+              loc: Location.none,
+            },
+            [],
+          ),
+        )
+      );
+    };
+
+  let merge_into_opaque = () => {
+    let%expr initial: Js.Json.t = Obj.magic([%e do_obj_constructor()]);
+    Js.Array.reduce(
+      Graphql_PPX.deepMerge,
+      initial,
+      [%e
+        fields
+        |> List.fold_left(
+             acc =>
+               fun
+               | Fr_named_field(key, _, inner) => acc
+               | Fr_fragment_spread(key, loc, name, _, arguments) => [
+                   [%expr
+                     [%e ident_from_string(name ++ ".serialize")](
+                       [%e get_field(true, key)],
+                     )
+                   ],
+                   ...acc,
+                 ],
+             [],
+           )
+        |> List.rev
+        |> Ast_helper.Exp.array
+      ],
+    );
+  };
+
+  opaque
+    ? merge_into_opaque()
+    : config.records ? do_obj_constructor_records() : do_obj_constructor();
+}
+and generate_poly_variant_union_encoder =
+    (config, loc, name, fragments, exhaustive, path, definition) => [%expr
+  Js.Json.null
+]
+and generate_poly_variant_selection_set_encoder =
+    (config, loc, name, fields, path, definition) => [%expr
+  Js.Json.null
+]
+and generate_poly_variant_interface_encoder =
+    (config, loc, name, base, fragments, path, definition) => [%expr
+  Js.Json.null
+]
+and generate_solo_fragment_spread_encorder =
+    (config, loc, name, arguments, definition) => [%expr
+  Js.Json.null
+]
+and generate_error = (loc, message) => {
+  let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
+  let%expr _value = value;
+  %e
+  Ast_helper.Exp.extension(~loc, ext);
+}
+and generate_serializer = (config, path: list(string), definition) =>
+  fun
+  | Res_nullable(loc, inner) =>
+    generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
+  | Res_array(loc, inner) =>
+    generate_array_encoder(config, conv_loc(loc), inner, path, definition)
+  | Res_id(loc) => raw_value(conv_loc(loc))
+  | Res_string(loc) => raw_value(conv_loc(loc))
+  | Res_int(loc) => raw_value(conv_loc(loc))
+  | Res_float(loc) => raw_value(conv_loc(loc))
+  | Res_boolean(loc) => raw_value(conv_loc(loc))
+  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
+  | Res_poly_enum(loc, enum_meta) =>
+    generate_poly_enum_encoder(loc, enum_meta)
+  | Res_custom_decoder(loc, ident, inner) =>
+    generate_custom_encoder(
+      config,
+      conv_loc(loc),
+      ident,
+      inner,
+      path,
+      definition,
+    )
+  | Res_record(loc, name, fields, existing_record) =>
+    generate_object_encoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+    )
+  | Res_object(loc, name, fields, existing_record) =>
+    generate_object_encoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+    )
+  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+    generate_poly_variant_union_encoder(
+      config,
+      conv_loc(loc),
+      name,
+      fragments,
+      exhaustive,
+      path,
+      definition,
+    )
+  | Res_poly_variant_selection_set(loc, name, fields) =>
+    generate_poly_variant_selection_set_encoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+    )
+  | Res_poly_variant_interface(loc, name, base, fragments) =>
+    generate_poly_variant_interface_encoder(
+      config,
+      conv_loc(loc),
+      name,
+      base,
+      fragments,
+      [name, ...path],
+      definition,
+    )
+  | Res_solo_fragment_spread(loc, name, arguments) =>
+    generate_solo_fragment_spread_encorder(
+      config,
+      conv_loc(loc),
+      name,
+      arguments,
+      definition,
+    )
+  | Res_error(loc, message) => generate_error(conv_loc(loc), message);

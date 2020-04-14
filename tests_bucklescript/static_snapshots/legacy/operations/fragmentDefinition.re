@@ -64,6 +64,33 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        "nullableOfNullable": {
+          let value = value##nullableOfNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+
+        "nullableOfNonNullable": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = "ListFragment";
   };
   module Another = {
@@ -86,6 +113,21 @@ module Fragments = {
         };
       },
     };
+    let serialize: t => Raw.t =
+      value => {
+
+        "nullableOfNonNullable": {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              generate_serializer(config, path, definition, inner),
+            )
+          | None => Js.Nullable.null
+          };
+        },
+      };
     let name = "Another";
   };
 };
@@ -258,6 +300,78 @@ module MyQuery = {
             Fragments.ListFragment.parse(value);
           },
         };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      "l1": {
+        let value = value##l1;
+        Js.Json.null;
+      },
+
+      "l2": {
+        let value = value##l2;
+        let initial: Js.Json.t = Obj.magic({});
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      "l3": {
+        let value = value##l3;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            "nullableOfNullable": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|
+            Fragments.ListFragment.serialize(value##frag1),
+            Fragments.ListFragment.serialize(value##frag2),
+          |],
+        );
+      },
+
+      "l4": {
+        let value = value##l4;
+        let initial: Js.Json.t =
+          Obj.magic({
+
+            "nullableOfNullable": {
+              let value = value##nullableOfNullable;
+
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  generate_serializer(config, path, definition, inner),
+                )
+              | None => Js.Nullable.null
+              };
+            },
+          });
+        Js.Array.reduce(
+          Graphql_PPX.deepMerge,
+          initial,
+          [|Fragments.ListFragment.serialize(value##listFragment)|],
+        );
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);

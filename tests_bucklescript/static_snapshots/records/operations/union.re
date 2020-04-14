@@ -44,88 +44,64 @@ module MyQuery = {
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
+          [@metaloc loc]
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
 
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
 
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Expected union "
-              ++ "DogOrHuman"
-              ++ " to be an object, got "
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
+                        value;
+                      },
 
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, "__typename")) {
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
 
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " is missing the __typename field",
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
               )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " has a __typename field that is not a string",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | "Dog" =>
-                  `Dog(
+            | "Human" =>
+              `Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                      (
-                        {
 
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Dog).name;
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
 
-                            value;
-                          },
-
-                          barkVolume: {
-                            let value =
-                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
-                            value;
-                          },
-                        }: t_dogOrHuman_Dog
-                      );
-                    },
-                  )
-                | "Human" =>
-                  `Human(
-                    {
-                      let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                      (
-                        {
-
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Human).name;
-
-                            value;
-                          },
-                        }: t_dogOrHuman_Human
-                      );
-                    },
-                  )
-                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        dogOrHuman: {
+          let value = (value: t).dogOrHuman;
+          Js.Json.null;
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

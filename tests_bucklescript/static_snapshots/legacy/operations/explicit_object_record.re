@@ -92,6 +92,64 @@ module RecordsQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        lists: {
+          let value = (value: t).lists;
+          (
+            {
+
+              nullableOfNullable: {
+                let value = (value: t_lists).nullableOfNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nullableOfNonNullable: {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              nonNullableOfNullable: {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) =>
+                       Js.Nullable.return(
+                         generate_serializer(config, path, definition, inner),
+                       )
+                     | None => Js.Nullable.null
+                     }
+                   );
+              },
+
+              nonNullableOfNonNullable: {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+
+                value |> Js.Array.map(value => value);
+              },
+            }: Raw.tt_lists
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
     makeVar(~f=variables =>
@@ -167,6 +225,60 @@ module ObjectsQuery = {
                  switch (Js.toOption(value)) {
                  | Some(value) => Some(value)
                  | None => None
+                 }
+               );
+          },
+
+          "nonNullableOfNonNullable": {
+            let value = value##nonNullableOfNonNullable;
+
+            value |> Js.Array.map(value => value);
+          },
+        };
+      },
+    };
+  let serialize: t => Raw.t =
+    value => {
+
+      "lists": {
+        let value = value##lists;
+        {
+
+          "nullableOfNullable": {
+            let value = value##nullableOfNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "nullableOfNonNullable": {
+            let value = value##nullableOfNonNullable;
+
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                generate_serializer(config, path, definition, inner),
+              )
+            | None => Js.Nullable.null
+            };
+          },
+
+          "nonNullableOfNullable": {
+            let value = value##nonNullableOfNullable;
+
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) =>
+                   Js.Nullable.return(
+                     generate_serializer(config, path, definition, inner),
+                   )
+                 | None => Js.Nullable.null
                  }
                );
           },

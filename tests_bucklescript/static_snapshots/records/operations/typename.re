@@ -111,6 +111,37 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        first: {
+          let value = (value: t).first;
+          (
+            {
+
+              __typename: {
+                let value = (value: t_first).__typename;
+
+                value;
+              },
+
+              inner: {
+                let value = (value: t_first).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+            }: Raw.tt_first
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };

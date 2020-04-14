@@ -325,6 +325,13 @@ let generate_default_operation =
       Graphql_ast.Operation(operation),
       res_structure,
     );
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
+      config,
+      [],
+      Graphql_ast.Operation(operation),
+      res_structure,
+    );
   let types =
     Output_bucklescript_types.generate_types(
       config,
@@ -375,6 +382,7 @@ let generate_default_operation =
           | _ => [arg_types]
           },
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
+          [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
@@ -426,6 +434,13 @@ let generate_fragment_module =
     (config, name, required_variables, has_error, fragment, res_structure) => {
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
+      config,
+      [],
+      Graphql_ast.Fragment(fragment),
+      res_structure,
+    );
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
       config,
       [],
       Graphql_ast.Fragment(fragment),
@@ -517,6 +532,7 @@ let generate_fragment_module =
             wrap_module("Raw", raw_types),
             types,
             [parse],
+            [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
             [
               [%stri
                 let name = [%e

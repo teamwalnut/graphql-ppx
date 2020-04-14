@@ -134,6 +134,109 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -259,6 +362,109 @@ module MyQuery2 = {
           );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -386,6 +592,109 @@ module MyQuery3 = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
+    );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
 };
@@ -511,6 +820,109 @@ module MyQuery4 = {
           );
         },
       }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        variousScalars: {
+          let value = (value: t).variousScalars;
+          (
+            {
+
+              nullableString: {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              string: {
+                let value = (value: t_variousScalars).string;
+
+                value;
+              },
+
+              nullableInt: {
+                let value = (value: t_variousScalars).nullableInt;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              int: {
+                let value = (value: t_variousScalars).int;
+
+                value;
+              },
+
+              nullableFloat: {
+                let value = (value: t_variousScalars).nullableFloat;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              float: {
+                let value = (value: t_variousScalars).float;
+
+                value;
+              },
+
+              nullableBoolean: {
+                let value = (value: t_variousScalars).nullableBoolean;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              boolean: {
+                let value = (value: t_variousScalars).boolean;
+
+                value;
+              },
+
+              nullableID: {
+                let value = (value: t_variousScalars).nullableID;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    generate_serializer(config, path, definition, inner),
+                  )
+                | None => Js.Nullable.null
+                };
+              },
+
+              id: {
+                let value = (value: t_variousScalars).id;
+
+                value;
+              },
+            }: Raw.tt_variousScalars
+          );
+        },
+      }: Raw.tt
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

@@ -39,6 +39,17 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        recursiveInput: {
+          let value = (value: t).recursiveInput;
+
+          value;
+        },
+      }: Raw.tt
+    );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|

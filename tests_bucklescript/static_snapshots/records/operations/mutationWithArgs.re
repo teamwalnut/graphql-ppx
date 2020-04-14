@@ -34,6 +34,17 @@ module MyQuery = {
         },
       }: t
     );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+
+        optionalInputArgs: {
+          let value = (value: t).optionalInputArgs;
+
+          value;
+        },
+      }: Raw.tt
+    );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
       [|("required", (a => Some(Js.Json.string(a)))(inp.required))|]
