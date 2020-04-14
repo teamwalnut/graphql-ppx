@@ -149,10 +149,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_mutationWithError
+            }: Raw.t_mutationWithError
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

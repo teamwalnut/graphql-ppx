@@ -84,10 +84,10 @@ module MyQuery = {
 
                 StringOfInt.serialize(value);
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

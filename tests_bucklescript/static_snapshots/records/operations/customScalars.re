@@ -88,10 +88,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_customScalarField
+            }: Raw.t_customScalarField
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

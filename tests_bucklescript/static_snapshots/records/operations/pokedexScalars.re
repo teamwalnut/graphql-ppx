@@ -82,7 +82,7 @@ module MyQuery = {
           | None => Js.Nullable.null
           };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

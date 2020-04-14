@@ -134,7 +134,7 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_v1
+            }: Raw.t_v1
           );
         },
 
@@ -166,10 +166,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_v2
+            }: Raw.t_v2
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

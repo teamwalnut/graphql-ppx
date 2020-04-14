@@ -232,10 +232,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -461,10 +461,10 @@ module MyQuery2 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -690,10 +690,10 @@ module MyQuery3 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -919,10 +919,10 @@ module MyQuery4 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

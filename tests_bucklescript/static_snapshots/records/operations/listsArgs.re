@@ -48,7 +48,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

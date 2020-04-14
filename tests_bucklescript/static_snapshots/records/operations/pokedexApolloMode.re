@@ -78,7 +78,7 @@ module MyQuery = {
           | None => Js.Nullable.null
           };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

@@ -145,10 +145,10 @@ module MyQuery = {
 
                 value |> Js.Array.map(value => value);
               },
-            }: Raw.tt_lists
+            }: Raw.t_lists
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
