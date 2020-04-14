@@ -99,9 +99,7 @@ module MyQuery = {
                 }: Raw.t_dogOrHuman_Dog,
               ): Raw.t_dogOrHuman
             )
-          | `FutureAddedValue(value) => (
-              Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
-            )
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
         },
       }: Raw.t

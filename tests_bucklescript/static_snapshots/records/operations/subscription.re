@@ -114,7 +114,7 @@ module MyQuery = {
               ): Raw.t_simpleSubscription
             )
           | `FutureAddedValue(value) => (
-              Obj.magic(ident_from_string("value")): Raw.t_simpleSubscription
+              Obj.magic(value): Raw.t_simpleSubscription
             )
           };
         },

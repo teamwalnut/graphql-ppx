@@ -17,6 +17,11 @@ open Output_bucklescript_types;
 let ident_from_string = (~loc=Location.none, ident) =>
   Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
 
+let base_type_name = name =>
+  Ast_helper.(
+    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
+  );
+
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -207,27 +212,14 @@ let generate_serialize_variables =
                    }),
                    Typ.arrow(
                      Nolabel,
-                     Typ.constr(
-                       {
-                         txt:
-                           Longident.parse(
-                             switch (name) {
-                             | None => "t_variables"
-                             | Some(input_object_name) =>
-                               "t_variables_" ++ input_object_name
-                             },
-                           ),
-                         loc: conv_loc(loc),
+                     base_type_name(
+                       switch (name) {
+                       | None => "t_variables"
+                       | Some(input_object_name) =>
+                         "t_variables_" ++ input_object_name
                        },
-                       [],
                      ),
-                     Typ.constr(
-                       {
-                         txt: Longident.parse("Js.Json.t"),
-                         loc: conv_loc(loc),
-                       },
-                       [],
-                     ),
+                     base_type_name("Js.Json.t"),
                    ),
                  ),
                  serialize_fun(config, fields),
@@ -343,19 +335,12 @@ let generate_variable_constructors =
                      Ast_helper.(
                        Exp.constraint_(
                          config.records ? record : object_,
-                         Typ.constr(
-                           {
-                             txt:
-                               Longident.parse(
-                                 switch (name) {
-                                 | None => "t_variables"
-                                 | Some(input_type_name) =>
-                                   "t_variables_" ++ input_type_name
-                                 },
-                               ),
-                             loc: conv_loc(loc),
+                         base_type_name(
+                           switch (name) {
+                           | None => "t_variables"
+                           | Some(input_type_name) =>
+                             "t_variables_" ++ input_type_name
                            },
-                           [],
                          ),
                        )
                      );
@@ -387,10 +372,6 @@ let generate_variable_constructors =
   };
 };
 
-let base_type_name = name =>
-  Ast_helper.(
-    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
-  );
 let raw_value = loc => [@metaloc loc] [%expr value];
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 let ident_from_string = (~loc=Location.none, ident) =>
@@ -405,19 +386,11 @@ let get_field = (is_object, key, existing_record, path) => {
           Exp.field(
             Exp.constraint_(
               ident_from_string("value"),
-              Ast_helper.Typ.constr(
-                {
-                  txt:
-                    Longident.parse(
-                      switch (existing_record) {
-                      | None =>
-                        Extract_type_definitions.generate_type_name(path)
-                      | Some(existing) => existing
-                      },
-                    ),
-                  loc: Location.none,
+              base_type_name(
+                switch (existing_record) {
+                | None => generate_type_name(path)
+                | Some(existing) => existing
                 },
-                [],
               ),
             ),
             {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
@@ -433,7 +406,7 @@ let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
     switch%expr (value) {
     | Some(value) =>
       Js.Nullable.return(
-        [%e generate_serializer(config, path, definition, inner)]
+        [%e generate_serializer(config, path, definition, inner)],
       )
     | None => Js.Nullable.null
     }
@@ -470,7 +443,7 @@ and generate_poly_enum_encoder = (loc, enum_meta) => {
   let match_expr =
     Ast_helper.(
       Exp.match(
-        [%expr Obj.magic(value: string)],
+        [%expr value],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
@@ -533,13 +506,13 @@ and generate_object_encoder =
     );
   };
 
-  let do_obj_constructor = () =>
+  let do_obj_constructor = with_objects =>
     [@metaloc loc]
     {
       Ast_helper.(
         Exp.extension((
           {txt: "bs.obj", loc},
-          PStr([[%stri [%e do_obj_constructor_base(true)]]]),
+          PStr([[%stri [%e do_obj_constructor_base(with_objects)]]]),
         ))
       );
     };
@@ -550,50 +523,58 @@ and generate_object_encoder =
       Ast_helper.(
         Exp.constraint_(
           do_obj_constructor_base(false),
-          Ast_helper.Typ.constr(
-            {
-              txt:
-                Longident.parse(
-                  "Raw." ++ Extract_type_definitions.generate_type_name(path),
-                ),
-              loc: Location.none,
-            },
-            [],
-          ),
+          base_type_name("Raw." ++ generate_type_name(path)),
         )
       );
     };
 
-  let merge_into_opaque = () => {
-    let%expr initial: Js.Json.t = Obj.magic([%e do_obj_constructor()]);
-    Js.Array.reduce(
-      Graphql_PPX.deepMerge,
-      initial,
-      [%e
-        fields
-        |> List.fold_left(
-             acc =>
-               fun
-               | Fr_named_field(key, _, inner) => acc
-               | Fr_fragment_spread(key, loc, name, _, arguments) => [
-                   [%expr
-                     [%e ident_from_string(name ++ ".serialize")](
-                       [%e get_field(true, key, existing_record, path)],
-                     )
-                   ],
-                   ...acc,
-                 ],
-             [],
-           )
-        |> List.rev
-        |> Ast_helper.Exp.array
-      ],
+  let merge_into_opaque = is_object => {
+    %expr
+    (
+      Obj.magic(
+        Js.Array.reduce(
+          GraphQL_PPX.deepMerge,
+          Obj.magic(Js.Dict.empty): Js.Json.t,
+          [%e
+            fields
+            |> List.fold_left(
+                 acc =>
+                   fun
+                   | Fr_named_field(key, _, inner) => acc
+                   | Fr_fragment_spread(key, loc, name, _, arguments) => [
+                       [%expr
+                         (
+                           Obj.magic(
+                             [%e ident_from_string(name ++ ".serialize")](
+                               [%e
+                                 get_field(
+                                   is_object,
+                                   key,
+                                   existing_record,
+                                   path,
+                                 )
+                               ],
+                             ),
+                           ): Js.Json.t
+                         )
+                       ],
+                       ...acc,
+                     ],
+                 [],
+               )
+            |> List.rev
+            |> Ast_helper.Exp.array
+          ],
+        ),
+      ): [%t
+        base_type_name("Raw." ++ generate_type_name(path))
+      ]
     );
   };
 
   opaque
-    ? merge_into_opaque()
-    : config.records ? do_obj_constructor_records() : do_obj_constructor();
+    ? merge_into_opaque(!config.records)
+    : config.records ? do_obj_constructor_records() : do_obj_constructor(true);
 }
 and generate_poly_variant_union_encoder =
     (config, loc, name, fragments, exhaustive, path, definition) => {
@@ -619,10 +600,7 @@ and generate_poly_variant_union_encoder =
                        )
                      ],
                    ): [%t
-                     base_type_name(
-                       "Raw."
-                       ++ Extract_type_definitions.generate_type_name(path),
-                     )
+                     base_type_name("Raw." ++ generate_type_name(path))
                    ]
                  )
                ],
@@ -640,10 +618,8 @@ and generate_poly_variant_union_encoder =
         ),
         [%expr
           (
-            Obj.magic(ident_from_string("value")): [%t
-              base_type_name(
-                "Raw." ++ Extract_type_definitions.generate_type_name(path),
-              )
+            Obj.magic(value): [%t
+              base_type_name("Raw." ++ generate_type_name(path))
             ]
           )
         ],

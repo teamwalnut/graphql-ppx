@@ -284,9 +284,7 @@ module InlineFragmentQuery = {
               },
             }): Raw.t_dogOrHuman
           )
-        | `FutureAddedValue(value) => (
-            Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
-          )
+        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
         };
       },
     };
@@ -392,9 +390,7 @@ module UnionExternalFragmentQuery = {
           | `Dog(value) => (
               Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
             )
-          | `FutureAddedValue(value) => (
-              Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
-            )
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
         },
       };

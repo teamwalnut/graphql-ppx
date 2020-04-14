@@ -145,7 +145,7 @@ module MyQuery = {
 
                        "field": {
                          let value = value##field;
-                         switch (Obj.magic(value: string)) {
+                         switch (value) {
                          | `FIRST => "FIRST"
                          | `SECOND => "SECOND"
                          | `THIRD => "THIRD"

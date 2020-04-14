@@ -160,7 +160,7 @@ module MyQuery = {
                              field: {
                                let value =
                                  (value: t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch (value) {
                                | `FIRST => "FIRST"
                                | `SECOND => "SECOND"
                                | `THIRD => "THIRD"

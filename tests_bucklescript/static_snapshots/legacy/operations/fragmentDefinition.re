@@ -16,6 +16,55 @@
     cookies: [],
   }
 ];
+module GraphQL_PPX = {
+  let%private clone: Js.Dict.t('a) => Js.Dict.t('a) =
+    a => Obj.magic(Js.Obj.assign(Obj.magic(Js.Obj.empty()), Obj.magic(a)));
+
+  let rec deepMerge = (json1: Js.Json.t, json2: Js.Json.t) =>
+    switch (
+      (
+        Obj.magic(json1) == Js.null,
+        Js_array2.isArray(json1),
+        Js.typeof(json1) == "object",
+      ),
+      (
+        Obj.magic(json2) == Js.null,
+        Js_array2.isArray(json2),
+        Js.typeof(json2) == "object",
+      ),
+    ) {
+    | ((_, true, _), (_, true, _)) => (
+        Obj.magic(
+          Js.Array.mapi(
+            (el1, idx) => {
+              let el2 = Js.Array.unsafe_get(Obj.magic(json2), idx);
+
+              Js.typeof(el2) == "object" ? deepMerge(el1, el2) : el2;
+            },
+            Obj.magic(json1),
+          ),
+        ): Js.Json.t
+      )
+
+    | ((false, false, true), (false, false, true)) =>
+      let obj1 = clone(Obj.magic(json1));
+      let obj2 = Obj.magic(json2);
+      Js.Dict.keys(obj2)
+      |> Js.Array.forEach(key =>
+           let existingVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
+           let newVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
+           Js.Dict.set(
+             obj1,
+             key,
+             Js.typeof(existingVal) != "object"
+               ? newVal : Obj.magic(deepMerge(existingVal, newVal)),
+           );
+         );
+      Obj.magic(obj1);
+
+    | ((_, _, _), (_, _, _)) => json2
+    };
+};
 
 module Fragments = {
   module ListFragment = {
@@ -242,7 +291,9 @@ module MyQuery = {
 
           "nullableOfNullable": {
             let value =
-              Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable");
+              Obj.magic(
+                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+              );
 
             switch (Js.toOption(value)) {
             | Some(value) =>
@@ -279,7 +330,9 @@ module MyQuery = {
 
           "nullableOfNullable": {
             let value =
-              Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable");
+              Obj.magic(
+                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+              );
 
             switch (Js.toOption(value)) {
             | Some(value) =>
@@ -314,77 +367,60 @@ module MyQuery = {
 
       "l2": {
         let value = value##l2;
-        let initial: Js.Json.t = Obj.magic({});
-        Js.Array.reduce(
-          Graphql_PPX.deepMerge,
-          initial,
-          [|
-            Fragments.ListFragment.serialize(value##frag1),
-            Fragments.ListFragment.serialize(value##frag2),
-          |],
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(Js.Dict.empty): Js.Json.t,
+              [|
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag1)): Js.Json.t
+                ),
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag2)): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l2
         );
       },
 
       "l3": {
         let value = value##l3;
-        let initial: Js.Json.t =
-          Obj.magic({
-
-            "nullableOfNullable": {
-              let value = value##nullableOfNullable;
-
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  value
-                  |> Js.Array.map(value =>
-                       switch (value) {
-                       | Some(value) => Js.Nullable.return(value)
-                       | None => Js.Nullable.null
-                       }
-                     ),
-                )
-              | None => Js.Nullable.null
-              };
-            },
-          });
-        Js.Array.reduce(
-          Graphql_PPX.deepMerge,
-          initial,
-          [|
-            Fragments.ListFragment.serialize(value##frag1),
-            Fragments.ListFragment.serialize(value##frag2),
-          |],
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(Js.Dict.empty): Js.Json.t,
+              [|
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag1)): Js.Json.t
+                ),
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag2)): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l3
         );
       },
 
       "l4": {
         let value = value##l4;
-        let initial: Js.Json.t =
-          Obj.magic({
-
-            "nullableOfNullable": {
-              let value = value##nullableOfNullable;
-
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  value
-                  |> Js.Array.map(value =>
-                       switch (value) {
-                       | Some(value) => Js.Nullable.return(value)
-                       | None => Js.Nullable.null
-                       }
-                     ),
-                )
-              | None => Js.Nullable.null
-              };
-            },
-          });
-        Js.Array.reduce(
-          Graphql_PPX.deepMerge,
-          initial,
-          [|Fragments.ListFragment.serialize(value##listFragment)|],
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(Js.Dict.empty): Js.Json.t,
+              [|
+                (
+                  Obj.magic(
+                    Fragments.ListFragment.serialize(value##listFragment),
+                  ): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l4
         );
       },
     };

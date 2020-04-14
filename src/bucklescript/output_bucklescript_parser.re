@@ -10,6 +10,7 @@ open Parsetree;
 open Generator_utils;
 open Output_bucklescript_utils;
 open Output_bucklescript_types;
+open Extract_type_definitions;
 
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
@@ -86,6 +87,10 @@ let make_error_raiser = message =>
   };
 
 let raw_value = loc => [@metaloc loc] [%expr value];
+let base_type_name = name =>
+  Ast_helper.(
+    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
+  );
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -284,6 +289,7 @@ and generate_object_decoder =
            | Fr_fragment_spread(_) => true
            | _ => false,
          );
+    let object_type = base_type_name("Raw." ++ generate_type_name(path));
     Ast_helper.(
       Exp.record(
         fields
@@ -296,10 +302,13 @@ and generate_object_decoder =
                      switch%e (opaque, is_object) {
                      | (true, _) =>
                        %expr
-                       Js.Dict.unsafeGet(
-                         Obj.magic(value),
-                         [%e const_str_expr(key)],
+                       Obj.magic(
+                         Js.Dict.unsafeGet(
+                           Obj.magic(value),
+                           [%e const_str_expr(key)],
+                         ),
                        )
+
                      | (_, true) =>
                        %expr
                        value##[%e ident_from_string(to_valid_ident(key))]
@@ -309,19 +318,7 @@ and generate_object_decoder =
                          Ast_helper.Exp.field(
                            Exp.constraint_(
                              ident_from_string("value"),
-                             Ast_helper.Typ.constr(
-                               {
-                                 txt:
-                                   Longident.parse(
-                                     "Raw."
-                                     ++ Extract_type_definitions.generate_type_name(
-                                          path,
-                                        ),
-                                   ),
-                                 loc: Location.none,
-                               },
-                               [],
-                             ),
+                             object_type,
                            ),
                            {
                              loc: Location.none,
@@ -394,10 +391,7 @@ and generate_object_decoder =
             {
               txt:
                 switch (existing_record) {
-                | None =>
-                  Longident.Lident(
-                    Extract_type_definitions.generate_type_name(path),
-                  )
+                | None => Longident.Lident(generate_type_name(path))
                 | Some(type_name) => Longident.parse(type_name)
                 },
 
@@ -498,11 +492,7 @@ and generate_poly_variant_interface_decoder =
               {
                 txt:
                   Longident.parse(
-                    "Raw."
-                    ++ Extract_type_definitions.generate_type_name([
-                         type_name,
-                         ...path,
-                       ]),
+                    "Raw." ++ generate_type_name([type_name, ...path]),
                   ),
                 loc: Location.none,
               },
@@ -530,11 +520,7 @@ and generate_poly_variant_interface_decoder =
   [@metaloc loc]
   let%expr typename: string =
     Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  (
-    [%e typename_matcher]: [%t
-      base_type_name(Extract_type_definitions.generate_type_name(path))
-    ]
-  );
+  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
 }
 and generate_poly_variant_union_decoder =
     (config, loc, name, fragments, exhaustive_flag, path, definition) => {
@@ -555,10 +541,7 @@ and generate_poly_variant_union_decoder =
                            txt:
                              Longident.parse(
                                "Raw."
-                               ++ Extract_type_definitions.generate_type_name([
-                                    type_name,
-                                    ...path,
-                                  ]),
+                               ++ generate_type_name([type_name, ...path]),
                              ),
                            loc: Location.none,
                          },
@@ -615,9 +598,5 @@ and generate_poly_variant_union_decoder =
   [@metaloc loc]
   let%expr typename: string =
     Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  (
-    [%e typename_matcher]: [%t
-      base_type_name(Extract_type_definitions.generate_type_name(path))
-    ]
-  );
+  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
 };
