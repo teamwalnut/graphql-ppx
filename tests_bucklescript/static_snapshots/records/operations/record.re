@@ -79,10 +79,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -138,10 +138,10 @@ module OneFieldQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -192,7 +192,7 @@ module ExternalFragmentQuery = {
 
             value;
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = "Fragment";
   };
@@ -224,9 +224,9 @@ module ExternalFragmentQuery = {
 
           variousScalars: {
             let value = (value: t).variousScalars;
-            Js.Json.null;
+            Fragment.serialize(value);
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);
@@ -297,9 +297,31 @@ module InlineFragmentQuery = {
 
         dogOrHuman: {
           let value = (value: t).dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  },
+
+                  barkVolume: {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+
+                    value;
+                  },
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | `FutureAddedValue(value) => (
+              Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -350,7 +372,7 @@ module UnionExternalFragmentQuery = {
 
             value;
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = "DogFragment";
   };
@@ -404,9 +426,16 @@ module UnionExternalFragmentQuery = {
 
           dogOrHuman: {
             let value = (value: t).dogOrHuman;
-            Js.Json.null;
+            switch (value) {
+            | `Dog(value) => (
+                Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+              )
+            | `FutureAddedValue(value) => (
+                Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
+              )
+            };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);

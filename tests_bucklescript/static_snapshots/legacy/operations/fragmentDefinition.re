@@ -307,7 +307,7 @@ module MyQuery = {
 
       "l1": {
         let value = value##l1;
-        Js.Json.null;
+        Fragments.ListFragment.serialize(value);
       },
 
       "l2": {

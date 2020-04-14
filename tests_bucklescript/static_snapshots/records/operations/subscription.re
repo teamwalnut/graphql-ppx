@@ -88,9 +88,37 @@ module MyQuery = {
 
         simpleSubscription: {
           let value = (value: t).simpleSubscription;
-          Js.Json.null;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_simpleSubscription_Dog).name;
+
+                    value;
+                  },
+                }: Raw.t_simpleSubscription_Dog,
+              ): Raw.t_simpleSubscription
+            )
+          | `Human(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_simpleSubscription_Human).name;
+
+                    value;
+                  },
+                }: Raw.t_simpleSubscription_Human,
+              ): Raw.t_simpleSubscription
+            )
+          | `FutureAddedValue(value) => (
+              Obj.magic(ident_from_string("value")): Raw.t_simpleSubscription
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

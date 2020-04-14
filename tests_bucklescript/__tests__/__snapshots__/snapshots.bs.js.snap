@@ -730,10 +730,10 @@ module RecordsQuery = {
 
                 value |> Js.Array.map(value => value);
               },
-            }: Raw.tt_lists
+            }: Raw.t_lists
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =
@@ -1201,7 +1201,7 @@ module MyQuery = {
 
       \\"l1\\": {
         let value = value##l1;
-        Js.Json.null;
+        Fragments.ListFragment.serialize(value);
       },
 
       \\"l2\\": {
@@ -3030,7 +3030,7 @@ module ExternalFragmentQuery = {
 
         \\"variousScalars\\": {
           let value = value##variousScalars;
-          Js.Json.null;
+          Fragment.serialize(value);
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -3106,7 +3106,27 @@ module InlineFragmentQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -3216,7 +3236,14 @@ module UnionExternalFragmentQuery = {
 
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+            )
+          };
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -4355,7 +4382,31 @@ module MyQuery = {
 
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | \`Human(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_simpleSubscription
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -5567,7 +5618,37 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -5665,7 +5746,27 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -6368,10 +6469,10 @@ module RecordsQuery = {
 
                 value |> Js.Array.map(value => value);
               },
-            }: Raw.tt_lists
+            }: Raw.t_lists
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -6821,7 +6922,7 @@ module MyQuery = {
 
       \\"l1\\": {
         let value = value##l1;
-        Js.Json.null;
+        Fragments.ListFragment.serialize(value);
       },
 
       \\"l2\\": {
@@ -8542,7 +8643,7 @@ module ExternalFragmentQuery = {
 
         \\"variousScalars\\": {
           let value = value##variousScalars;
-          Js.Json.null;
+          Fragment.serialize(value);
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -8609,7 +8710,27 @@ module InlineFragmentQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -8710,7 +8831,14 @@ module UnionExternalFragmentQuery = {
 
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+            )
+          };
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -9795,7 +9923,31 @@ module MyQuery = {
 
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | \`Human(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_simpleSubscription
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -10953,7 +11105,37 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -11042,7 +11224,27 @@ module MyQuery = {
 
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic({
+
+              \\"name\\": {
+                let value = value##name;
+
+                value;
+              },
+
+              \\"barkVolume\\": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (
+            Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -11097,7 +11299,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11179,7 +11381,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11363,10 +11565,10 @@ module MyQuery = {
 
                 StringOfInt.serialize(value);
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -11465,10 +11667,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_customScalarField
+            }: Raw.t_customScalarField
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11562,7 +11764,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -11758,10 +11960,10 @@ module RecordsQuery = {
 
                 value |> Js.Array.map(value => value);
               },
-            }: Raw.tt_lists
+            }: Raw.t_lists
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -11993,7 +12195,7 @@ module Fragments = {
             | None => Js.Nullable.null
             };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = \\"ListFragment\\";
   };
@@ -12032,7 +12234,7 @@ module Fragments = {
             | None => Js.Nullable.null
             };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = \\"Another\\";
   };
@@ -12217,7 +12419,7 @@ module MyQuery = {
 
         l1: {
           let value = (value: t).l1;
-          Js.Json.null;
+          Fragments.ListFragment.serialize(value);
         },
 
         l2: {
@@ -12283,7 +12485,7 @@ module MyQuery = {
             [|Fragments.ListFragment.serialize(value##listFragment)|],
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -12461,10 +12663,10 @@ module MyQuery = {
 
                 value |> Js.Array.map(value => value);
               },
-            }: Raw.tt_lists
+            }: Raw.t_lists
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -12523,7 +12725,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -12733,7 +12935,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -13062,10 +13264,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_mutationWithError
+            }: Raw.t_mutationWithError
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13119,7 +13321,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -13368,7 +13570,7 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_first
+            }: Raw.t_first
           );
         },
 
@@ -13388,7 +13590,7 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_second
+            }: Raw.t_second
           );
         },
 
@@ -13408,10 +13610,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_let
+            }: Raw.t_let
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13469,7 +13671,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -13647,7 +13849,7 @@ module MyQuery = {
           | None => Js.Nullable.null
           };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13740,7 +13942,7 @@ module MyQuery = {
           | None => Js.Nullable.null
           };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -13881,10 +14083,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13940,10 +14142,10 @@ module OneFieldQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -13994,7 +14196,7 @@ module ExternalFragmentQuery = {
 
             value;
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = \\"Fragment\\";
   };
@@ -14026,9 +14228,9 @@ module ExternalFragmentQuery = {
 
           variousScalars: {
             let value = (value: t).variousScalars;
-            Js.Json.null;
+            Fragment.serialize(value);
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);
@@ -14099,9 +14301,31 @@ module InlineFragmentQuery = {
 
         dogOrHuman: {
           let value = (value: t).dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  },
+
+                  barkVolume: {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+
+                    value;
+                  },
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -14152,7 +14376,7 @@ module UnionExternalFragmentQuery = {
 
             value;
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = \\"DogFragment\\";
   };
@@ -14206,9 +14430,16 @@ module UnionExternalFragmentQuery = {
 
           dogOrHuman: {
             let value = (value: t).dogOrHuman;
-            Js.Json.null;
+            switch (value) {
+            | \`Dog(value) => (
+                Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+              )
+            | \`FutureAddedValue(value) => (
+                Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+              )
+            };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
     let definition = (parse, query, makeVar);
@@ -14268,7 +14499,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -14615,10 +14846,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -14683,7 +14914,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -14871,7 +15102,7 @@ module MyQuery = {
 
           value;
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -15163,7 +15394,7 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_v1
+            }: Raw.t_v1
           );
         },
 
@@ -15195,10 +15426,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_v2
+            }: Raw.t_v2
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =
     inp =>
@@ -15321,9 +15552,37 @@ module MyQuery = {
 
         simpleSubscription: {
           let value = (value: t).simpleSubscription;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_simpleSubscription_Dog).name;
+
+                    value;
+                  },
+                }: Raw.t_simpleSubscription_Dog,
+              ): Raw.t_simpleSubscription
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_simpleSubscription_Human).name;
+
+                    value;
+                  },
+                }: Raw.t_simpleSubscription_Human,
+              ): Raw.t_simpleSubscription
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_simpleSubscription
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -15566,10 +15825,10 @@ module MyQuery = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -15795,10 +16054,10 @@ module MyQuery2 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -16024,10 +16283,10 @@ module MyQuery3 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -16253,10 +16512,10 @@ module MyQuery4 = {
 
                 value;
               },
-            }: Raw.tt_variousScalars
+            }: Raw.t_variousScalars
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -16404,10 +16663,10 @@ module MyQuery = {
                 | None => Js.Nullable.null
                 };
               },
-            }: Raw.tt_first
+            }: Raw.t_first
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -16517,9 +16776,43 @@ module MyQuery = {
 
         dogOrHuman: {
           let value = (value: t).dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  },
+
+                  barkVolume: {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+
+                    value;
+                  },
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_dogOrHuman_Human).name;
+
+                    value;
+                  },
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
@@ -16610,9 +16903,31 @@ module MyQuery = {
 
         dogOrHuman: {
           let value = (value: t).dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+
+                  name: {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  },
+
+                  barkVolume: {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+
+                    value;
+                  },
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (
+              Obj.magic(ident_from_string(\\"value\\")): Raw.t_dogOrHuman
+            )
+          };
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

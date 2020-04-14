@@ -89,7 +89,7 @@ module Fragments = {
             | None => Js.Nullable.null
             };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = "ListFragment";
   };
@@ -128,7 +128,7 @@ module Fragments = {
             | None => Js.Nullable.null
             };
           },
-        }: Raw.tt
+        }: Raw.t
       );
     let name = "Another";
   };
@@ -313,7 +313,7 @@ module MyQuery = {
 
         l1: {
           let value = (value: t).l1;
-          Js.Json.null;
+          Fragments.ListFragment.serialize(value);
         },
 
         l2: {
@@ -379,7 +379,7 @@ module MyQuery = {
             [|Fragments.ListFragment.serialize(value##listFragment)|],
           );
         },
-      }: Raw.tt
+      }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

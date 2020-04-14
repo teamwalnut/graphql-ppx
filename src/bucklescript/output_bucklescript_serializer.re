@@ -387,10 +387,45 @@ let generate_variable_constructors =
   };
 };
 
+let base_type_name = name =>
+  Ast_helper.(
+    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
+  );
 let raw_value = loc => [@metaloc loc] [%expr value];
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 let ident_from_string = (~loc=Location.none, ident) =>
   Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
+
+let get_field = (is_object, key, existing_record, path) => {
+  is_object
+    ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
+    : [%expr
+      [%e
+        Ast_helper.(
+          Exp.field(
+            Exp.constraint_(
+              ident_from_string("value"),
+              Ast_helper.Typ.constr(
+                {
+                  txt:
+                    Longident.parse(
+                      switch (existing_record) {
+                      | None =>
+                        Extract_type_definitions.generate_type_name(path)
+                      | Some(existing) => existing
+                      },
+                    ),
+                  loc: Location.none,
+                },
+                [],
+              ),
+            ),
+            {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
+          )
+        )
+      ]
+    ];
+};
 
 let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]
@@ -461,40 +496,6 @@ and generate_object_encoder =
          | _ => false,
        );
 
-  let get_field = (is_object, key) => {
-    is_object
-      ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
-      : [%expr
-        [%e
-          Ast_helper.(
-            Exp.field(
-              Exp.constraint_(
-                ident_from_string("value"),
-                Ast_helper.Typ.constr(
-                  {
-                    txt:
-                      Longident.parse(
-                        switch (existing_record) {
-                        | None =>
-                          Extract_type_definitions.generate_type_name(path)
-                        | Some(existing) => existing
-                        },
-                      ),
-                    loc: Location.none,
-                  },
-                  [],
-                ),
-              ),
-              {
-                loc: Location.none,
-                txt: Longident.parse(to_valid_ident(key)),
-              },
-            )
-          )
-        ]
-      ];
-  };
-
   let do_obj_constructor_base = is_object => {
     Ast_helper.(
       Exp.record(
@@ -509,7 +510,9 @@ and generate_object_encoder =
                        loc,
                      },
                      {
-                       let%expr value = [%e get_field(is_object, key)];
+                       let%expr value = [%e
+                         get_field(is_object, key, existing_record, path)
+                       ];
                        %e
                        generate_serializer(
                          config,
@@ -551,7 +554,7 @@ and generate_object_encoder =
             {
               txt:
                 Longident.parse(
-                  "Raw.t" ++ Extract_type_definitions.generate_type_name(path),
+                  "Raw." ++ Extract_type_definitions.generate_type_name(path),
                 ),
               loc: Location.none,
             },
@@ -575,7 +578,7 @@ and generate_object_encoder =
                | Fr_fragment_spread(key, loc, name, _, arguments) => [
                    [%expr
                      [%e ident_from_string(name ++ ".serialize")](
-                       [%e get_field(true, key)],
+                       [%e get_field(true, key, existing_record, path)],
                      )
                    ],
                    ...acc,
@@ -593,9 +596,71 @@ and generate_object_encoder =
     : config.records ? do_obj_constructor_records() : do_obj_constructor();
 }
 and generate_poly_variant_union_encoder =
-    (config, loc, name, fragments, exhaustive, path, definition) => [%expr
-  Js.Json.null
-]
+    (config, loc, name, fragments, exhaustive, path, definition) => {
+  let fragment_cases =
+    Ast_helper.(
+      fragments
+      |> List.map(((type_name, inner)) => {
+           Ast_helper.(
+             Exp.case(
+               Pat.variant(
+                 type_name,
+                 Some(Pat.var({txt: "value", loc: Location.none})),
+               ),
+               [%expr
+                 (
+                   Obj.magic(
+                     [%e
+                       generate_serializer(
+                         config,
+                         [type_name, ...path],
+                         definition,
+                         inner,
+                       )
+                     ],
+                   ): [%t
+                     base_type_name(
+                       "Raw."
+                       ++ Extract_type_definitions.generate_type_name(path),
+                     )
+                   ]
+                 )
+               ],
+             )
+           )
+         })
+    );
+
+  let fallback_case =
+    Ast_helper.(
+      Exp.case(
+        Pat.variant(
+          "FutureAddedValue",
+          Some(Pat.var({txt: "value", loc: Location.none})),
+        ),
+        [%expr
+          (
+            Obj.magic(ident_from_string("value")): [%t
+              base_type_name(
+                "Raw." ++ Extract_type_definitions.generate_type_name(path),
+              )
+            ]
+          )
+        ],
+      )
+    );
+
+  let typename_matcher =
+    Ast_helper.(
+      Exp.match(
+        [%expr value],
+        List.concat([fragment_cases, [fallback_case]]),
+      )
+    );
+
+  %expr
+  [%e typename_matcher];
+}
 and generate_poly_variant_selection_set_encoder =
     (config, loc, name, fields, path, definition) => [%expr
   Js.Json.null
@@ -606,8 +671,11 @@ and generate_poly_variant_interface_encoder =
 ]
 and generate_solo_fragment_spread_encorder =
     (config, loc, name, arguments, definition) => [%expr
-  Js.Json.null
+  [%e ident_from_string(name ++ ".serialize")](
+    [%e ident_from_string("value")],
+  )
 ]
+
 and generate_error = (loc, message) => {
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;

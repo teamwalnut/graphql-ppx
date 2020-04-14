@@ -203,7 +203,7 @@ module ExternalFragmentQuery = {
 
         "variousScalars": {
           let value = value##variousScalars;
-          Js.Json.null;
+          Fragment.serialize(value);
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -270,7 +270,27 @@ module InlineFragmentQuery = {
 
       "dogOrHuman": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | `Dog(value) => (
+            Obj.magic({
+
+              "name": {
+                let value = value##name;
+
+                value;
+              },
+
+              "barkVolume": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | `FutureAddedValue(value) => (
+            Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -371,7 +391,14 @@ module UnionExternalFragmentQuery = {
 
         "dogOrHuman": {
           let value = value##dogOrHuman;
-          Js.Json.null;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | `FutureAddedValue(value) => (
+              Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
+            )
+          };
         },
       };
     let makeVar = (~f, ()) => f(Js.Json.null);

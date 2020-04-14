@@ -580,7 +580,7 @@ and generate_poly_variant_union_decoder =
            )
          })
     );
-  let (fallback_case, fallback_case_ty) =
+  let fallback_case =
     Ast_helper.(
       Exp.case(
         Pat.any(),
@@ -601,8 +601,7 @@ and generate_poly_variant_union_decoder =
             ],
           ),
         ),
-      ),
-      [],
+      )
     );
 
   let typename_matcher =

@@ -80,7 +80,31 @@ module MyQuery = {
 
       "simpleSubscription": {
         let value = value##simpleSubscription;
-        Js.Json.null;
+        switch (value) {
+        | `Dog(value) => (
+            Obj.magic({
+
+              "name": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | `Human(value) => (
+            Obj.magic({
+
+              "name": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_simpleSubscription
+          )
+        | `FutureAddedValue(value) => (
+            Obj.magic(ident_from_string("value")): Raw.t_simpleSubscription
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);

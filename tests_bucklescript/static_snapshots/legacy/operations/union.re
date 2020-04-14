@@ -94,7 +94,37 @@ module MyQuery = {
 
       "dogOrHuman": {
         let value = value##dogOrHuman;
-        Js.Json.null;
+        switch (value) {
+        | `Dog(value) => (
+            Obj.magic({
+
+              "name": {
+                let value = value##name;
+
+                value;
+              },
+
+              "barkVolume": {
+                let value = value##barkVolume;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | `Human(value) => (
+            Obj.magic({
+
+              "name": {
+                let value = value##name;
+
+                value;
+              },
+            }): Raw.t_dogOrHuman
+          )
+        | `FutureAddedValue(value) => (
+            Obj.magic(ident_from_string("value")): Raw.t_dogOrHuman
+          )
+        };
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
