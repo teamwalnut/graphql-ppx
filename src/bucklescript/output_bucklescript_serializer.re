@@ -14,14 +14,6 @@ open Extract_type_definitions;
 open Result_structure;
 open Output_bucklescript_types;
 
-let ident_from_string = (~loc=Location.none, ident) =>
-  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
-
-let base_type_name = name =>
-  Ast_helper.(
-    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
-  );
-
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -421,31 +413,26 @@ and generate_array_encoder = (config, loc, inner, path, definition) =>
        })
   ]
 and generate_poly_enum_encoder = (loc, enum_meta) => {
+  open Ast_helper;
   let enum_match_arms =
-    Ast_helper.(
-      enum_meta.em_values
-      |> List.map(({evm_name, _}) =>
-           Exp.case(Pat.variant(evm_name, None), const_str_expr(evm_name))
-         )
-    );
+    enum_meta.em_values
+    |> List.map(({evm_name, _}) =>
+         Exp.case(Pat.variant(evm_name, None), const_str_expr(evm_name))
+       );
 
   let fallback_arm =
-    Ast_helper.(
-      Exp.case(
-        Pat.variant(
-          "FutureAddedValue",
-          Some(Pat.var({loc: conv_loc(loc), txt: "other"})),
-        ),
-        ident_from_string("other"),
-      )
+    Exp.case(
+      Pat.variant(
+        "FutureAddedValue",
+        Some(Pat.var({loc: conv_loc(loc), txt: "other"})),
+      ),
+      ident_from_string("other"),
     );
 
   let match_expr =
-    Ast_helper.(
-      Exp.match(
-        [%expr value],
-        List.concat([enum_match_arms, [fallback_arm]]),
-      )
+    Exp.match(
+      [%expr value],
+      List.concat([enum_match_arms, [fallback_arm]]),
     );
 
   %expr
@@ -461,82 +448,94 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   }
 and generate_object_encoder =
     (config, loc, name, fields, path, definition, existing_record) => {
+  open Ast_helper;
   let do_obj_constructor_base = (is_object, wrap) => {
-    Ast_helper.(
-      switch (
-        fields
-        |> List.filter_map(
-             fun
-             | Fr_fragment_spread(_, _, _, _, _) => None
-             | Fr_named_field(key, _, inner) => Some((key, inner)),
-           )
-      ) {
-      | [] =>
-        %expr
-        Js.Dict.empty
-      | fields =>
-        let record =
-          Exp.record(
-            fields
-            |> List.map(((key, inner)) =>
-                 (
-                   {Location.txt: Longident.parse(to_valid_ident(key)), loc},
-                   ident_from_string(to_valid_ident(key)),
-                 )
-               ),
-            None,
-          );
-
-        let record =
-          wrap
-            ? Ast_helper.(
-                Exp.extension((
-                  {txt: "bs.obj", loc},
-                  PStr([[%stri [%e record]]]),
-                ))
-              )
-            : record;
-
-        let bindings =
+    switch (
+      fields
+      |> List.filter_map(
+           fun
+           | Fr_fragment_spread(_, _, _, _, _) => None
+           | Fr_named_field(key, _, inner) => Some((key, inner)),
+         )
+    ) {
+    | [] =>
+      %expr
+      Js.Dict.empty
+    | fields =>
+      let record =
+        Exp.record(
           fields
           |> List.map(((key, inner)) =>
-               Ast_helper.(
-                 Vb.mk(
-                   Pat.var({txt: to_valid_ident(key), loc}),
-                   {
-                     let%expr value = [%e
-                       get_field(is_object, key, existing_record, path)
-                     ];
-                     %e
-                     generate_serializer(
-                       config,
-                       [key, ...path],
-                       definition,
-                       inner,
-                     );
-                   },
-                 )
+               (
+                 {Location.txt: Longident.parse(to_valid_ident(key)), loc},
+                 ident_from_string(to_valid_ident(key)),
                )
+             ),
+          None,
+        );
+
+      let record =
+        wrap
+          ? Exp.extension((
+              {txt: "bs.obj", loc},
+              PStr([[%stri [%e record]]]),
+            ))
+          : record;
+
+      let bindings =
+        fields
+        |> List.map(((key, inner)) =>
+             Vb.mk(
+               Pat.var({txt: to_valid_ident(key), loc}),
+               {
+                 // TODO: would be nice to pass the input instead of relying
+                 // on a static identifier called `value`
+                 let%expr value = [%e
+                   get_field(is_object, key, existing_record, path)
+                 ];
+                 %e
+                 generate_serializer(
+                   config,
+                   [key, ...path],
+                   definition,
+                   inner,
+                 );
+               },
              )
-          |> List.rev;
-        Exp.let_(Nonrecursive, bindings, record);
-      }
-    );
+           )
+        |> List.rev;
+      Exp.let_(Nonrecursive, bindings, record);
+    };
   };
 
   let do_obj_constructor = with_objects =>
-    do_obj_constructor_base(with_objects, true);
+    [@metaloc loc] do_obj_constructor_base(with_objects, true);
 
   let do_obj_constructor_records = () =>
     [@metaloc loc]
     {
-      Ast_helper.(
-        Exp.constraint_(
-          do_obj_constructor_base(false, false),
-          base_type_name("Raw." ++ generate_type_name(path)),
-        )
+      Exp.constraint_(
+        do_obj_constructor_base(false, false),
+        base_type_name("Raw." ++ generate_type_name(path)),
       );
     };
+
+  // the fields and fragments needs to be deeply merged, the fragments in the
+  // reason types are separate fields (separated out from the raw output of
+  // the query).
+  //
+  // The fragments are responsible for generating the raw output for themselves
+  // using a serialize function per fragment. However when there are regular
+  // fields AND (possibly multiple) fragment spreads we need to deeply merge
+  // them to reconcile back to the canonical json representation.
+  //
+  // The deeply merge is done using a runtime function that is supplied with
+  // this PPX as the `GraphQL_PPX.deep_merge` function
+  //
+  // This also brings an important gotcha: if a field is duplicated between
+  // fragments, and it is changed in a particular frament, it is only changed
+  // in the raw representation if it is merged last. Unfortunately there is not
+  // really anything that we can do about this.
 
   let merge_into_opaque = is_object => {
     %expr
@@ -595,66 +594,63 @@ and generate_object_encoder =
          | _ => false,
        );
 
-  has_fragment_spreads
-    ? merge_into_opaque(!config.records)
-    : config.records ? do_obj_constructor_records() : do_obj_constructor(true);
+  switch (has_fragment_spreads, config.records) {
+  | (true, records) => merge_into_opaque(!records)
+  | (false, true) => do_obj_constructor_records()
+  | (false, false) => do_obj_constructor(true)
+  };
 }
 and generate_poly_variant_union_encoder =
     (config, loc, name, fragments, exhaustive, path, definition) => {
+  open Ast_helper;
   let fragment_cases =
-    Ast_helper.(
-      fragments
-      |> List.map(((type_name, inner)) => {
-           Ast_helper.(
-             Exp.case(
-               Pat.variant(
-                 type_name,
-                 Some(Pat.var({txt: "value", loc: Location.none})),
-               ),
-               [%expr
-                 (
-                   Obj.magic(
-                     [%e
-                       generate_serializer(
-                         config,
-                         [type_name, ...path],
-                         definition,
-                         inner,
-                       )
-                     ],
-                   ): [%t
-                     base_type_name("Raw." ++ generate_type_name(path))
-                   ]
-                 )
-               ],
-             )
+    fragments
+    |> List.map(((type_name, inner)) => {
+         Ast_helper.(
+           Exp.case(
+             Pat.variant(
+               type_name,
+               Some(Pat.var({txt: "value", loc: Location.none})),
+             ),
+             [%expr
+               (
+                 Obj.magic(
+                   [%e
+                     generate_serializer(
+                       config,
+                       [type_name, ...path],
+                       definition,
+                       inner,
+                     )
+                   ],
+                 ): [%t
+                   base_type_name("Raw." ++ generate_type_name(path))
+                 ]
+               )
+             ],
            )
-         })
-    );
+         )
+       });
 
   let fallback_case =
-    Ast_helper.(
-      Exp.case(
-        Pat.variant(
-          "FutureAddedValue",
-          Some(Pat.var({txt: "value", loc: Location.none})),
-        ),
-        [%expr
-          (
-            Obj.magic(value): [%t
-              base_type_name("Raw." ++ generate_type_name(path))
-            ]
-          )
-        ],
-      )
+    Exp.case(
+      Pat.variant(
+        "FutureAddedValue",
+        Some(Pat.var({txt: "value", loc: Location.none})),
+      ),
+      [%expr
+        (
+          Obj.magic(value): [%t
+            base_type_name("Raw." ++ generate_type_name(path))
+          ]
+        )
+      ],
     );
 
   let typename_matcher =
-    Ast_helper.(
-      Exp.match(
-        [%expr value],
-        List.concat([fragment_cases, [fallback_case]]),
-      )
+    Exp.match(
+      [%expr value],
+      List.concat([fragment_cases, [fallback_case]]),
     );
 
   %expr

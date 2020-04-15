@@ -25,3 +25,12 @@ let conv_loc_from_ast = loc => {
   Source_pos.loc_end: conv_pos_from_ast(loc.Location.loc_end),
   Source_pos.loc_ghost: loc.Location.loc_ghost,
 };
+
+let base_type_name = name =>
+  Ast_helper.(
+    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
+  );
+let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
+let const_str_pat = s => Ast_helper.(Pat.constant(Pconst_string(s, None)));
+let ident_from_string = (~loc=Location.none, ident) =>
+  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));

@@ -69,14 +69,6 @@ let get_variable_definitions = (definition: Graphql_ast.definition) => {
   };
 };
 
-let base_type_name = name =>
-  Ast_helper.(
-    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
-  );
-let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
-let ident_from_string = (~loc=Location.none, ident) =>
-  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
-
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
@@ -87,10 +79,6 @@ let make_error_raiser = message =>
   };
 
 let raw_value = loc => [@metaloc loc] [%expr value];
-let base_type_name = name =>
-  Ast_helper.(
-    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
-  );
 
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
@@ -98,7 +86,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
       enum_meta.em_values
       |> List.map(({evm_name, _}) =>
            Exp.case(
-             Pat.constant(Pconst_string(evm_name, None)),
+             const_str_pat(evm_name),
              Exp.variant(to_valid_ident(evm_name), None),
            )
          )
@@ -171,89 +159,7 @@ let generate_error = (loc, message) => {
   Ast_helper.Exp.extension(~loc, ext);
 };
 
-let rec generate_parser = (config, path: list(string), definition) =>
-  fun
-  | Res_nullable(loc, inner) =>
-    generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_array(loc, inner) =>
-    generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id(loc) => raw_value(conv_loc(loc))
-  | Res_string(loc) => raw_value(conv_loc(loc))
-  | Res_int(loc) => raw_value(conv_loc(loc))
-  | Res_float(loc) => raw_value(conv_loc(loc))
-  | Res_boolean(loc) => raw_value(conv_loc(loc))
-  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(loc, enum_meta)
-  | Res_custom_decoder(loc, ident, inner) =>
-    generate_custom_decoder(
-      config,
-      conv_loc(loc),
-      ident,
-      inner,
-      path,
-      definition,
-    )
-  | Res_record(loc, name, fields, existing_record) =>
-    generate_object_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      fields,
-      path,
-      definition,
-      existing_record,
-    )
-  | Res_object(loc, name, fields, existing_record) =>
-    generate_object_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      fields,
-      path,
-      definition,
-      existing_record,
-    )
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
-    generate_poly_variant_union_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      fragments,
-      exhaustive,
-      path,
-      definition,
-    )
-  | Res_poly_variant_selection_set(loc, name, fields) =>
-    generate_poly_variant_selection_set_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      fields,
-      path,
-      definition,
-    )
-
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
-    generate_poly_variant_interface_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      base,
-      fragments,
-      [name, ...path],
-      definition,
-    )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
-    generate_solo_fragment_spread_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      arguments,
-      definition,
-    )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message)
-and generate_nullable_decoder = (config, loc, inner, path, definition) =>
+let rec generate_nullable_decoder = (config, loc, inner, path, definition) =>
   [@metaloc loc]
   (
     switch%expr (Js.toOption(value)) {
@@ -342,15 +248,7 @@ and generate_object_decoder =
                  (
                    {txt: Longident.parse(key), loc: conv_loc(loc)},
                    {
-                     let%expr value: [%t
-                       Typ.constr(
-                         {
-                           txt: Longident.parse(name ++ ".Raw.t"),
-                           loc: Location.none,
-                         },
-                         [],
-                       )
-                     ] =
+                     let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
                        Obj.magic(value);
                      %e
                      generate_fragment_parse_fun(
@@ -387,17 +285,11 @@ and generate_object_decoder =
       Ast_helper.(
         Exp.constraint_(
           do_obj_constructor_base(false),
-          Ast_helper.Typ.constr(
-            {
-              txt:
-                switch (existing_record) {
-                | None => Longident.Lident(generate_type_name(path))
-                | Some(type_name) => Longident.parse(type_name)
-                },
-
-              loc: Location.none,
+          base_type_name(
+            switch (existing_record) {
+            | None => generate_type_name(path)
+            | Some(type_name) => type_name
             },
-            [],
           ),
         )
       );
@@ -481,22 +373,15 @@ and generate_poly_variant_interface_decoder =
 
   let map_case = ((type_name, inner)) => {
     open Ast_helper;
-    let name_pattern = Pat.constant(Pconst_string(type_name, None));
+    let name_pattern = const_str_pat(type_name);
 
     Exp.variant(
       type_name,
       Some(
         {
           let%expr value: [%t
-            Typ.constr(
-              {
-                txt:
-                  Longident.parse(
-                    "Raw." ++ generate_type_name([type_name, ...path]),
-                  ),
-                loc: Location.none,
-              },
-              [],
+            base_type_name(
+              "Raw." ++ generate_type_name([type_name, ...path]),
             )
           ] =
             Obj.magic(value);
@@ -530,22 +415,14 @@ and generate_poly_variant_union_decoder =
       |> List.map(((type_name, inner)) => {
            Ast_helper.(
              Exp.case(
-               Pat.constant(Pconst_string(type_name, None)),
+               const_str_pat(type_name),
                Exp.variant(
                  type_name,
                  Some(
                    {
                      let%expr value: [%t
-                       Typ.constr(
-                         {
-                           txt:
-                             Longident.parse(
-                               "Raw."
-                               ++ generate_type_name([type_name, ...path]),
-                             ),
-                           loc: Location.none,
-                         },
-                         [],
+                       base_type_name(
+                         "Raw." ++ generate_type_name([type_name, ...path]),
                        )
                      ] =
                        Obj.magic(value);
@@ -599,4 +476,86 @@ and generate_poly_variant_union_decoder =
   let%expr typename: string =
     Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
   ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
-};
+}
+and generate_parser = (config, path: list(string), definition) =>
+  fun
+  | Res_nullable(loc, inner) =>
+    generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
+  | Res_array(loc, inner) =>
+    generate_array_decoder(config, conv_loc(loc), inner, path, definition)
+  | Res_id(loc) => raw_value(conv_loc(loc))
+  | Res_string(loc) => raw_value(conv_loc(loc))
+  | Res_int(loc) => raw_value(conv_loc(loc))
+  | Res_float(loc) => raw_value(conv_loc(loc))
+  | Res_boolean(loc) => raw_value(conv_loc(loc))
+  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
+  | Res_poly_enum(loc, enum_meta) =>
+    generate_poly_enum_decoder(loc, enum_meta)
+  | Res_custom_decoder(loc, ident, inner) =>
+    generate_custom_decoder(
+      config,
+      conv_loc(loc),
+      ident,
+      inner,
+      path,
+      definition,
+    )
+  | Res_record(loc, name, fields, existing_record) =>
+    generate_object_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+    )
+  | Res_object(loc, name, fields, existing_record) =>
+    generate_object_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+    )
+  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+    generate_poly_variant_union_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      fragments,
+      exhaustive,
+      path,
+      definition,
+    )
+  | Res_poly_variant_selection_set(loc, name, fields) =>
+    generate_poly_variant_selection_set_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      fields,
+      path,
+      definition,
+    )
+
+  | Res_poly_variant_interface(loc, name, base, fragments) =>
+    generate_poly_variant_interface_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      base,
+      fragments,
+      [name, ...path],
+      definition,
+    )
+  | Res_solo_fragment_spread(loc, name, arguments) =>
+    generate_solo_fragment_spread_decoder(
+      config,
+      conv_loc(loc),
+      name,
+      arguments,
+      definition,
+    )
+  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
