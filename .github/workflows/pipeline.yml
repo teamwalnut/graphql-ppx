@@ -37,7 +37,7 @@ jobs:
           echo "THE_ESY__CACHE_INSTALL_PATH: $THE_ESY__CACHE_INSTALL_PATH"
           echo "##[set-output name=path;]$THE_ESY__CACHE_INSTALL_PATH"
       - name: Restore esy cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v1
         with:
           path: ${{ steps.esy_cache_path.outputs.path }}
           key: v1-esy-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
@@ -74,7 +74,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        os: [windows-2016, macOS-latest]
+        os: [windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v1
@@ -85,13 +85,12 @@ jobs:
       - name: Install esy
         run: |
           npm install -g esy@0.6.0
-
       - name: Get esy store path
         id: esy_cache_path
         shell: bash
         run: |
           # COMPUTE THE ESY INSTALL CACHE LOCATION AHEAD OF TIME
-          if [ "${{ matrix.os }}" == "windows-2016" ]; then
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
             THE_ESY__CACHE_INSTALL_PATH=$HOME/.esy/3_/i
             THE_ESY__CACHE_INSTALL_PATH=$( cygpath --mixed --absolute "$THE_ESY__CACHE_INSTALL_PATH")
           else
@@ -106,12 +105,12 @@ jobs:
           echo "THE_ESY__CACHE_INSTALL_PATH: $THE_ESY__CACHE_INSTALL_PATH"
           echo "##[set-output name=path;]$THE_ESY__CACHE_INSTALL_PATH"
       - name: Restore esy cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v1
         with:
           path: ${{ steps.esy_cache_path.outputs.path }}
-          key: v1-esy--${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          key: v1-esy-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
-            v1-esy--${{ matrix.os }}-
+            v1-esy-${{ matrix.os }}-
 
       - name: install
         run: |
@@ -170,7 +169,7 @@ jobs:
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: windows-2016
+          name: windows-latest
           path: binaries/windows
 
       - name: Move artifacts
