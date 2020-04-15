@@ -36,6 +36,9 @@ jobs:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
 
+      - name: build
+        run: esy b
+
       # - name: test-native
       #   run: |
       #     esy b dune runtest -f
@@ -91,14 +94,15 @@ jobs:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
 
+      - name: build
+        run: esy b
+
       # - name: test-native
       #   run: |
       #     esy b dune runtest -f
       #   env:
       #     CI: true
-      - name: build
-        run: |
-          esy b
+
       - name: test-bucklescript
         if: runner.os != 'Windows'
         run: |
