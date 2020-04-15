@@ -116,15 +116,6 @@ jobs:
       - name: install
         run: |
           esy install
-      - name: show path
-        run: |
-          if [ "${{ matrix.os }}" == "windows-2016" ]; then
-            PATH=$( cygpath --mixed --absolute "$HOME/.esy")
-            dir $PATH
-          else
-            PATH=$HOME/.esy
-            ls $PATH
-          fi
       # - name: test-native
       #   run: |
       #     esy b dune runtest -f
