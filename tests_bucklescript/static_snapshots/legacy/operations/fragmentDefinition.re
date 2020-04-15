@@ -115,8 +115,16 @@ module Fragments = {
     };
     let serialize: t => Raw.t =
       value => {
+        let nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
 
-        "nullableOfNullable": {
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
           let value = value##nullableOfNullable;
 
           switch (value) {
@@ -132,17 +140,13 @@ module Fragments = {
             )
           | None => Js.Nullable.null
           };
-        },
+        };
+        {
 
-        "nullableOfNonNullable": {
-          let value = value##nullableOfNonNullable;
+          "nullableOfNullable": nullableOfNullable,
 
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        },
+          "nullableOfNonNullable": nullableOfNonNullable,
+        };
       };
     let name = "ListFragment";
   };
@@ -168,8 +172,7 @@ module Fragments = {
     };
     let serialize: t => Raw.t =
       value => {
-
-        "nullableOfNonNullable": {
+        let nullableOfNonNullable = {
           let value = value##nullableOfNonNullable;
 
           switch (value) {
@@ -177,7 +180,11 @@ module Fragments = {
             Js.Nullable.return(value |> Js.Array.map(value => value))
           | None => Js.Nullable.null
           };
-        },
+        };
+        {
+
+          "nullableOfNonNullable": nullableOfNonNullable,
+        };
       };
     let name = "Another";
   };
@@ -359,13 +366,92 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
+      let l4 = {
+        let value = value##l4;
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  let nullableOfNullable = {
+                    let value = (value: t_l4).nullableOfNullable;
 
-      "l1": {
-        let value = value##l1;
-        Fragments.ListFragment.serialize(value);
-      },
+                    switch (value) {
+                    | Some(value) =>
+                      Js.Nullable.return(
+                        value
+                        |> Js.Array.map(value =>
+                             switch (value) {
+                             | Some(value) => Js.Nullable.return(value)
+                             | None => Js.Nullable.null
+                             }
+                           ),
+                      )
+                    | None => Js.Nullable.null
+                    };
+                  };
+                  {
 
-      "l2": {
+                    "nullableOfNullable": nullableOfNullable,
+                  };
+                },
+              ): Js.Json.t,
+              [|
+                (
+                  Obj.magic(
+                    Fragments.ListFragment.serialize(value##listFragment),
+                  ): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l4
+        );
+      }
+      and l3 = {
+        let value = value##l3;
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  let nullableOfNullable = {
+                    let value = (value: t_l3).nullableOfNullable;
+
+                    switch (value) {
+                    | Some(value) =>
+                      Js.Nullable.return(
+                        value
+                        |> Js.Array.map(value =>
+                             switch (value) {
+                             | Some(value) => Js.Nullable.return(value)
+                             | None => Js.Nullable.null
+                             }
+                           ),
+                      )
+                    | None => Js.Nullable.null
+                    };
+                  };
+                  {
+
+                    "nullableOfNullable": nullableOfNullable,
+                  };
+                },
+              ): Js.Json.t,
+              [|
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag1)): Js.Json.t
+                ),
+                (
+                  Obj.magic(Fragments.ListFragment.serialize(value##frag2)): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l3
+        );
+      }
+      and l2 = {
         let value = value##l2;
         (
           Obj.magic(
@@ -383,46 +469,21 @@ module MyQuery = {
             ),
           ): Raw.t_l2
         );
-      },
+      }
+      and l1 = {
+        let value = value##l1;
+        Fragments.ListFragment.serialize(value);
+      };
+      {
 
-      "l3": {
-        let value = value##l3;
-        (
-          Obj.magic(
-            Js.Array.reduce(
-              GraphQL_PPX.deepMerge,
-              Obj.magic(Js.Dict.empty): Js.Json.t,
-              [|
-                (
-                  Obj.magic(Fragments.ListFragment.serialize(value##frag1)): Js.Json.t
-                ),
-                (
-                  Obj.magic(Fragments.ListFragment.serialize(value##frag2)): Js.Json.t
-                ),
-              |],
-            ),
-          ): Raw.t_l3
-        );
-      },
+        "l1": l1,
 
-      "l4": {
-        let value = value##l4;
-        (
-          Obj.magic(
-            Js.Array.reduce(
-              GraphQL_PPX.deepMerge,
-              Obj.magic(Js.Dict.empty): Js.Json.t,
-              [|
-                (
-                  Obj.magic(
-                    Fragments.ListFragment.serialize(value##listFragment),
-                  ): Js.Json.t
-                ),
-              |],
-            ),
-          ): Raw.t_l4
-        );
-      },
+        "l2": l2,
+
+        "l3": l3,
+
+        "l4": l4,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =

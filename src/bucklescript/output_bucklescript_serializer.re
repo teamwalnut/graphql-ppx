@@ -461,68 +461,78 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   }
 and generate_object_encoder =
     (config, loc, name, fields, path, definition, existing_record) => {
-  let opaque =
-    fields
-    |> List.exists(
-         fun
-         | Fr_fragment_spread(_) => true
-         | _ => false,
-       );
-
-  let do_obj_constructor_base = is_object => {
+  let do_obj_constructor_base = (is_object, wrap) => {
     Ast_helper.(
-      Exp.record(
+      switch (
         fields
-        |> List.fold_left(
-             acc =>
-               fun
-               | Fr_named_field(key, _, inner) => [
-                   (
-                     {
-                       Location.txt: Longident.parse(to_valid_ident(key)),
-                       loc,
-                     },
-                     {
-                       let%expr value = [%e
-                         get_field(is_object, key, existing_record, path)
-                       ];
-                       %e
-                       generate_serializer(
-                         config,
-                         [key, ...path],
-                         definition,
-                         inner,
-                       );
-                     },
-                   ),
-                   ...acc,
-                 ]
-               | Fr_fragment_spread(key, loc, name, _, arguments) => acc,
-             [],
+        |> List.filter_map(
+             fun
+             | Fr_fragment_spread(_, _, _, _, _) => None
+             | Fr_named_field(key, _, inner) => Some((key, inner)),
            )
-        |> List.rev,
-        None,
-      )
+      ) {
+      | [] =>
+        %expr
+        Js.Dict.empty
+      | fields =>
+        let record =
+          Exp.record(
+            fields
+            |> List.map(((key, inner)) =>
+                 (
+                   {Location.txt: Longident.parse(to_valid_ident(key)), loc},
+                   ident_from_string(to_valid_ident(key)),
+                 )
+               ),
+            None,
+          );
+
+        let record =
+          wrap
+            ? Ast_helper.(
+                Exp.extension((
+                  {txt: "bs.obj", loc},
+                  PStr([[%stri [%e record]]]),
+                ))
+              )
+            : record;
+
+        let bindings =
+          fields
+          |> List.map(((key, inner)) =>
+               Ast_helper.(
+                 Vb.mk(
+                   Pat.var({txt: to_valid_ident(key), loc}),
+                   {
+                     let%expr value = [%e
+                       get_field(is_object, key, existing_record, path)
+                     ];
+                     %e
+                     generate_serializer(
+                       config,
+                       [key, ...path],
+                       definition,
+                       inner,
+                     );
+                   },
+                 )
+               )
+             )
+          |> List.rev;
+        Exp.let_(Nonrecursive, bindings, record);
+      }
     );
   };
 
   let do_obj_constructor = with_objects =>
-    [@metaloc loc]
-    {
-      Ast_helper.(
-        Exp.extension((
-          {txt: "bs.obj", loc},
-          PStr([[%stri [%e do_obj_constructor_base(with_objects)]]]),
-        ))
-      );
-    };
+    do_obj_constructor_base(with_objects, true);
 
   let do_obj_constructor_records = () =>
     [@metaloc loc]
     {
       Ast_helper.(
         Exp.constraint_(
-          do_obj_constructor_base(false),
+          do_obj_constructor_base(false, false),
           base_type_name("Raw." ++ generate_type_name(path)),
         )
       );
@@ -534,7 +544,12 @@ and generate_object_encoder =
       Obj.magic(
         Js.Array.reduce(
           GraphQL_PPX.deepMerge,
-          Obj.magic(Js.Dict.empty): Js.Json.t,
+          Obj.magic(
+            {
+              %e
+              do_obj_constructor(false);
+            },
+          ): Js.Json.t,
           [%e
             fields
             |> List.fold_left(
@@ -572,7 +587,15 @@ and generate_object_encoder =
     );
   };
 
-  opaque
+  let has_fragment_spreads =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+
+  has_fragment_spreads
     ? merge_into_opaque(!config.records)
     : config.records ? do_obj_constructor_records() : do_obj_constructor(true);
 }

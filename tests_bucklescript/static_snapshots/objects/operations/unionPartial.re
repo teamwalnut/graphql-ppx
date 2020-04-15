@@ -74,29 +74,38 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "dogOrHuman": {
+      let dogOrHuman = {
         let value = value##dogOrHuman;
         switch (value) {
         | `Dog(value) => (
-            Obj.magic({
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
 
-              "name": {
-                let value = value##name;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
 
-                value;
+                  value;
+                };
+                {
+
+                  "name": name,
+
+                  "barkVolume": barkVolume,
+                };
               },
-
-              "barkVolume": {
-                let value = value##barkVolume;
-
-                value;
-              },
-            }): Raw.t_dogOrHuman
+            ): Raw.t_dogOrHuman
           )
         | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
         };
-      },
+      };
+      {
+
+        "dogOrHuman": dogOrHuman,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

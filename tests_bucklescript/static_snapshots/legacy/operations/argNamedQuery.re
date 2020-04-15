@@ -34,12 +34,15 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "argNamedQuery": {
+      let argNamedQuery = {
         let value = value##argNamedQuery;
 
         value;
-      },
+      };
+      {
+
+        "argNamedQuery": argNamedQuery,
+      };
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

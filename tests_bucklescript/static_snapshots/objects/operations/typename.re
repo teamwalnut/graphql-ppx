@@ -109,58 +109,75 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "first": {
+      let first = {
         let value = value##first;
-        {
+        let inner = {
+          let value = value##inner;
 
-          "__typename": {
-            let value = value##__typename;
-
-            value;
-          },
-
-          "inner": {
-            let value = value##inner;
-
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return({
-
-                "__typename": {
-                  let value = value##__typename;
-
-                  value;
-                },
-
-                "inner": {
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
                   let value = value##inner;
 
                   switch (value) {
                   | Some(value) =>
-                    Js.Nullable.return({
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
 
-                      "__typename": {
-                        let value = value##__typename;
+                          value;
+                        }
+                        and __typename = {
+                          let value = value##__typename;
 
-                        value;
+                          value;
+                        };
+                        {
+
+                          "__typename": __typename,
+
+                          "field": field,
+                        };
                       },
-
-                      "field": {
-                        let value = value##field;
-
-                        value;
-                      },
-                    })
+                    )
                   | None => Js.Nullable.null
                   };
-                },
-              })
-            | None => Js.Nullable.null
-            };
-          },
+                }
+                and __typename = {
+                  let value = value##__typename;
+
+                  value;
+                };
+                {
+
+                  "__typename": __typename,
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
+        }
+        and __typename = {
+          let value = value##__typename;
+
+          value;
         };
-      },
+        {
+
+          "__typename": __typename,
+
+          "inner": inner,
+        };
+      };
+      {
+
+        "first": first,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

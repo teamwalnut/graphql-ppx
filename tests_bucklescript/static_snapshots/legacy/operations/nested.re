@@ -174,114 +174,153 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "first": {
-        let value = value##first;
-        {
-
-          "inner": {
-            let value = value##inner;
-
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return({
-
-                "inner": {
-                  let value = value##inner;
-
-                  switch (value) {
-                  | Some(value) =>
-                    Js.Nullable.return({
-
-                      "field": {
-                        let value = value##field;
-
-                        value;
-                      },
-                    })
-                  | None => Js.Nullable.null
-                  };
-                },
-              })
-            | None => Js.Nullable.null
-            };
-          },
-        };
-      },
-
-      "second": {
-        let value = value##second;
-        {
-
-          "inner": {
-            let value = value##inner;
-
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return({
-
-                "inner": {
-                  let value = value##inner;
-
-                  switch (value) {
-                  | Some(value) =>
-                    Js.Nullable.return({
-
-                      "f1": {
-                        let value = value##f1;
-
-                        value;
-                      },
-
-                      "f2": {
-                        let value = value##f2;
-
-                        value;
-                      },
-                    })
-                  | None => Js.Nullable.null
-                  };
-                },
-              })
-            | None => Js.Nullable.null
-            };
-          },
-        };
-      },
-
-      "let_": {
+      let let_ = {
         let value = value##let_;
-        {
+        let inner = {
+          let value = value##inner;
 
-          "inner": {
-            let value = value##inner;
-
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return({
-
-                "inner": {
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
                   let value = value##inner;
 
                   switch (value) {
                   | Some(value) =>
-                    Js.Nullable.return({
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
 
-                      "field": {
-                        let value = value##field;
+                          value;
+                        };
+                        {
 
-                        value;
+                          "field": field,
+                        };
                       },
-                    })
+                    )
                   | None => Js.Nullable.null
                   };
-                },
-              })
-            | None => Js.Nullable.null
-            };
-          },
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
-      },
+        {
+
+          "inner": inner,
+        };
+      }
+      and second = {
+        let value = value##second;
+        let inner = {
+          let value = value##inner;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let f2 = {
+                          let value = value##f2;
+
+                          value;
+                        }
+                        and f1 = {
+                          let value = value##f1;
+
+                          value;
+                        };
+                        {
+
+                          "f1": f1,
+
+                          "f2": f2,
+                        };
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {
+
+          "inner": inner,
+        };
+      }
+      and first = {
+        let value = value##first;
+        let inner = {
+          let value = value##inner;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
+
+                          value;
+                        };
+                        {
+
+                          "field": field,
+                        };
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {
+
+          "inner": inner,
+        };
+      };
+      {
+
+        "first": first,
+
+        "second": second,
+
+        "let_": let_,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =

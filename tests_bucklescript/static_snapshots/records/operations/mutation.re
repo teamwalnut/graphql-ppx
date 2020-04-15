@@ -120,33 +120,11 @@ module MyQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        mutationWithError: {
+        let mutationWithError = {
           let value = (value: t).mutationWithError;
           (
             {
-
-              value: {
-                let value = (value: t_mutationWithError).value;
-
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-
-                      stringField: {
-                        let value =
-                          (value: t_mutationWithError_value).stringField;
-
-                        value;
-                      },
-                    }: Raw.t_mutationWithError_value,
-                  )
-                | None => Js.Nullable.null
-                };
-              },
-
-              errors: {
+              let errors = {
                 let value = (value: t_mutationWithError).errors;
 
                 switch (value) {
@@ -156,8 +134,13 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
+                             let message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
 
-                             field: {
+                               value;
+                             }
+                             and field = {
                                let value =
                                  (value: t_mutationWithError_errors).field;
                                switch (value) {
@@ -166,24 +149,55 @@ module MyQuery = {
                                | `THIRD => "THIRD"
                                | `FutureAddedValue(other) => other
                                };
-                             },
+                             };
+                             {
 
-                             message: {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
+                               field,
 
-                               value;
-                             },
+                               message,
+                             };
                            }: Raw.t_mutationWithError_errors
                          )
                        ),
                   )
                 | None => Js.Nullable.null
                 };
-              },
+              }
+              and value = {
+                let value = (value: t_mutationWithError).value;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let stringField = {
+                        let value =
+                          (value: t_mutationWithError_value).stringField;
+
+                        value;
+                      };
+                      {
+
+                        stringField: stringField,
+                      };
+                    }: Raw.t_mutationWithError_value,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {
+
+                value,
+
+                errors,
+              };
             }: Raw.t_mutationWithError
           );
-        },
+        };
+        {
+
+          mutationWithError: mutationWithError,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);

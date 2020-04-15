@@ -114,65 +114,80 @@ module MyQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        first: {
+        let first = {
           let value = (value: t).first;
           (
             {
-
-              __typename: {
-                let value = (value: t_first).__typename;
-
-                value;
-              },
-
-              inner: {
+              let inner = {
                 let value = (value: t_first).inner;
 
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
-
-                      __typename: {
-                        let value = (value: t_first_inner).__typename;
-
-                        value;
-                      },
-
-                      inner: {
+                      let inner = {
                         let value = (value: t_first_inner).inner;
 
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
+                              let field = {
+                                let value = (value: t_first_inner_inner).field;
 
-                              __typename: {
+                                value;
+                              }
+                              and __typename = {
                                 let value =
                                   (value: t_first_inner_inner).__typename;
 
                                 value;
-                              },
+                              };
+                              {
 
-                              field: {
-                                let value = (value: t_first_inner_inner).field;
+                                __typename,
 
-                                value;
-                              },
+                                field,
+                              };
                             }: Raw.t_first_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
-                      },
+                      }
+                      and __typename = {
+                        let value = (value: t_first_inner).__typename;
+
+                        value;
+                      };
+                      {
+
+                        __typename,
+
+                        inner,
+                      };
                     }: Raw.t_first_inner,
                   )
                 | None => Js.Nullable.null
                 };
-              },
+              }
+              and __typename = {
+                let value = (value: t_first).__typename;
+
+                value;
+              };
+              {
+
+                __typename,
+
+                inner,
+              };
             }: Raw.t_first
           );
-        },
+        };
+        {
+
+          first: first,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);

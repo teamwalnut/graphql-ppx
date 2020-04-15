@@ -70,34 +70,41 @@ module MyQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        pokemon: {
+        let pokemon = {
           let value = (value: t).pokemon;
 
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
               {
-
-                id: {
-                  let value = (value: t_pokemon).id;
-
-                  value;
-                },
-
-                name: {
+                let name = {
                   let value = (value: t_pokemon).name;
 
                   switch (value) {
                   | Some(value) => Js.Nullable.return(value)
                   | None => Js.Nullable.null
                   };
-                },
+                }
+                and id = {
+                  let value = (value: t_pokemon).id;
+
+                  value;
+                };
+                {
+
+                  id,
+
+                  name,
+                };
               }: Raw.t_pokemon,
             )
           | None => Js.Nullable.null
           };
-        },
+        };
+        {
+
+          pokemon: pokemon,
+        };
       }: Raw.t
     );
   let serializeVariables: t_variables => Js.Json.t =

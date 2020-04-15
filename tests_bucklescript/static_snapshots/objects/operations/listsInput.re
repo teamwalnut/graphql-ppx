@@ -41,12 +41,15 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "listsInput": {
+      let listsInput = {
         let value = value##listsInput;
 
         value;
-      },
+      };
+      {
+
+        "listsInput": listsInput,
+      };
     };
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>

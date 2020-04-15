@@ -111,61 +111,73 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "mutationWithError": {
+      let mutationWithError = {
         let value = value##mutationWithError;
-        {
+        let errors = {
+          let value = value##errors;
 
-          "value": {
-            let value = value##value;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let message = {
+                     let value = value##message;
 
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return({
+                     value;
+                   }
+                   and field = {
+                     let value = value##field;
+                     switch (value) {
+                     | `FIRST => "FIRST"
+                     | `SECOND => "SECOND"
+                     | `THIRD => "THIRD"
+                     | `FutureAddedValue(other) => other
+                     };
+                   };
+                   {
 
-                "stringField": {
+                     "field": field,
+
+                     "message": message,
+                   };
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        }
+        and value = {
+          let value = value##value;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let stringField = {
                   let value = value##stringField;
 
                   value;
-                },
-              })
-            | None => Js.Nullable.null
-            };
-          },
+                };
+                {
 
-          "errors": {
-            let value = value##errors;
-
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                value
-                |> Js.Array.map(value =>
-                     {
-
-                       "field": {
-                         let value = value##field;
-                         switch (value) {
-                         | `FIRST => "FIRST"
-                         | `SECOND => "SECOND"
-                         | `THIRD => "THIRD"
-                         | `FutureAddedValue(other) => other
-                         };
-                       },
-
-                       "message": {
-                         let value = value##message;
-
-                         value;
-                       },
-                     }
-                   ),
-              )
-            | None => Js.Nullable.null
-            };
-          },
+                  "stringField": stringField,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
-      },
+        {
+
+          "value": value,
+
+          "errors": errors,
+        };
+      };
+      {
+
+        "mutationWithError": mutationWithError,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);

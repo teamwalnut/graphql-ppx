@@ -39,12 +39,15 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "nonrecursiveInput": {
+      let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
 
         value;
-      },
+      };
+      {
+
+        "nonrecursiveInput": nonrecursiveInput,
+      };
     };
   let rec serializeVariables: t_variables => Js.Json.t =
     inp =>

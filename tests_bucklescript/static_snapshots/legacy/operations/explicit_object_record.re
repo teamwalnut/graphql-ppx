@@ -95,13 +95,36 @@ module RecordsQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        lists: {
+        let lists = {
           let value = (value: t).lists;
           (
             {
+              let nonNullableOfNonNullable = {
+                let value = (value: t_lists).nonNullableOfNonNullable;
 
-              nullableOfNullable: {
+                value |> Js.Array.map(value => value);
+              }
+              and nonNullableOfNullable = {
+                let value = (value: t_lists).nonNullableOfNullable;
+
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) => Js.Nullable.return(value)
+                     | None => Js.Nullable.null
+                     }
+                   );
+              }
+              and nullableOfNonNullable = {
+                let value = (value: t_lists).nullableOfNonNullable;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(value |> Js.Array.map(value => value))
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableOfNullable = {
                 let value = (value: t_lists).nullableOfNullable;
 
                 switch (value) {
@@ -117,38 +140,24 @@ module RecordsQuery = {
                   )
                 | None => Js.Nullable.null
                 };
-              },
+              };
+              {
 
-              nullableOfNonNullable: {
-                let value = (value: t_lists).nullableOfNonNullable;
+                nullableOfNullable,
 
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(value |> Js.Array.map(value => value))
-                | None => Js.Nullable.null
-                };
-              },
+                nullableOfNonNullable,
 
-              nonNullableOfNullable: {
-                let value = (value: t_lists).nonNullableOfNullable;
+                nonNullableOfNullable,
 
-                value
-                |> Js.Array.map(value =>
-                     switch (value) {
-                     | Some(value) => Js.Nullable.return(value)
-                     | None => Js.Nullable.null
-                     }
-                   );
-              },
-
-              nonNullableOfNonNullable: {
-                let value = (value: t_lists).nonNullableOfNonNullable;
-
-                value |> Js.Array.map(value => value);
-              },
+                nonNullableOfNonNullable,
+              };
             }: Raw.t_lists
           );
-        },
+        };
+        {
+
+          lists: lists,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -240,58 +249,65 @@ module ObjectsQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "lists": {
+      let lists = {
         let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
         {
 
-          "nullableOfNullable": {
-            let value = value##nullableOfNullable;
+          "nullableOfNullable": nullableOfNullable,
 
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(
-                value
-                |> Js.Array.map(value =>
-                     switch (value) {
-                     | Some(value) => Js.Nullable.return(value)
-                     | None => Js.Nullable.null
-                     }
-                   ),
-              )
-            | None => Js.Nullable.null
-            };
-          },
+          "nullableOfNonNullable": nullableOfNonNullable,
 
-          "nullableOfNonNullable": {
-            let value = value##nullableOfNonNullable;
+          "nonNullableOfNullable": nonNullableOfNullable,
 
-            switch (value) {
-            | Some(value) =>
-              Js.Nullable.return(value |> Js.Array.map(value => value))
-            | None => Js.Nullable.null
-            };
-          },
-
-          "nonNullableOfNullable": {
-            let value = value##nonNullableOfNullable;
-
-            value
-            |> Js.Array.map(value =>
-                 switch (value) {
-                 | Some(value) => Js.Nullable.return(value)
-                 | None => Js.Nullable.null
-                 }
-               );
-          },
-
-          "nonNullableOfNonNullable": {
-            let value = value##nonNullableOfNonNullable;
-
-            value |> Js.Array.map(value => value);
-          },
+          "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
-      },
+      };
+      {
+
+        "lists": lists,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let make =

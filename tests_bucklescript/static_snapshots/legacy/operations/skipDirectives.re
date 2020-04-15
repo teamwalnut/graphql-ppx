@@ -104,54 +104,62 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "v1": {
-        let value = value##v1;
-        {
-
-          "nullableString": {
-            let value = value##nullableString;
-
-            switch (value) {
-            | Some(value) => Js.Nullable.return(value)
-            | None => Js.Nullable.null
-            };
-          },
-
-          "string": {
-            let value = value##string;
-
-            switch (value) {
-            | Some(value) => Js.Nullable.return(value)
-            | None => Js.Nullable.null
-            };
-          },
-        };
-      },
-
-      "v2": {
+      let v2 = {
         let value = value##v2;
+        let string = {
+          let value = value##string;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        };
         {
 
-          "nullableString": {
-            let value = value##nullableString;
+          "nullableString": nullableString,
 
-            switch (value) {
-            | Some(value) => Js.Nullable.return(value)
-            | None => Js.Nullable.null
-            };
-          },
-
-          "string": {
-            let value = value##string;
-
-            switch (value) {
-            | Some(value) => Js.Nullable.return(value)
-            | None => Js.Nullable.null
-            };
-          },
+          "string": string,
         };
-      },
+      }
+      and v1 = {
+        let value = value##v1;
+        let string = {
+          let value = value##string;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        };
+        {
+
+          "nullableString": nullableString,
+
+          "string": string,
+        };
+      };
+      {
+
+        "v1": v1,
+
+        "v2": v2,
+      };
     };
   let serializeVariables: t_variables => Js.Json.t =
     inp =>

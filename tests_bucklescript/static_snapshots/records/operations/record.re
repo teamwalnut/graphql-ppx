@@ -62,26 +62,33 @@ module MyQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        variousScalars: {
+        let variousScalars = {
           let value = (value: t).variousScalars;
           (
             {
-
-              string: {
-                let value = (value: scalars).string;
-
-                value;
-              },
-
-              int: {
+              let int = {
                 let value = (value: scalars).int;
 
                 value;
-              },
+              }
+              and string = {
+                let value = (value: scalars).string;
+
+                value;
+              };
+              {
+
+                string,
+
+                int,
+              };
             }: Raw.t_variousScalars
           );
-        },
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -121,23 +128,29 @@ module OneFieldQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        variousScalars: {
+        let variousScalars = {
           let value = (value: t).variousScalars;
           (
             {
-
-              nullableString: {
+              let nullableString = {
                 let value = (value: t_variousScalars).nullableString;
 
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
-              },
+              };
+              {
+
+                nullableString: nullableString,
+              };
             }: Raw.t_variousScalars
           );
-        },
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -177,18 +190,22 @@ module ExternalFragmentQuery = {
     let serialize: t => Raw.t =
       (value) => (
         {
-
-          string: {
-            let value = (value: t).string;
-
-            value;
-          },
-
-          int: {
+          let int = {
             let value = (value: t).int;
 
             value;
-          },
+          }
+          and string = {
+            let value = (value: t).string;
+
+            value;
+          };
+          {
+
+            string,
+
+            int,
+          };
         }: Raw.t
       );
     let name = "Fragment";
@@ -218,11 +235,14 @@ module ExternalFragmentQuery = {
     let serialize: t => Raw.t =
       (value) => (
         {
-
-          variousScalars: {
+          let variousScalars = {
             let value = (value: t).variousScalars;
             Fragment.serialize(value);
-          },
+          };
+          {
+
+            variousScalars: variousScalars,
+          };
         }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);
@@ -291,31 +311,38 @@ module InlineFragmentQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        dogOrHuman: {
+        let dogOrHuman = {
           let value = (value: t).dogOrHuman;
           switch (value) {
           | `Dog(value) => (
               Obj.magic(
                 {
-
-                  name: {
-                    let value = (value: t_dogOrHuman_Dog).name;
-
-                    value;
-                  },
-
-                  barkVolume: {
+                  let barkVolume = {
                     let value = (value: t_dogOrHuman_Dog).barkVolume;
 
                     value;
-                  },
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  };
+                  {
+
+                    name,
+
+                    barkVolume,
+                  };
                 }: Raw.t_dogOrHuman_Dog,
               ): Raw.t_dogOrHuman
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
-        },
+        };
+        {
+
+          dogOrHuman: dogOrHuman,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -355,18 +382,22 @@ module UnionExternalFragmentQuery = {
     let serialize: t => Raw.t =
       (value) => (
         {
-
-          name: {
-            let value = (value: t).name;
-
-            value;
-          },
-
-          barkVolume: {
+          let barkVolume = {
             let value = (value: t).barkVolume;
 
             value;
-          },
+          }
+          and name = {
+            let value = (value: t).name;
+
+            value;
+          };
+          {
+
+            name,
+
+            barkVolume,
+          };
         }: Raw.t
       );
     let name = "DogFragment";
@@ -418,8 +449,7 @@ module UnionExternalFragmentQuery = {
     let serialize: t => Raw.t =
       (value) => (
         {
-
-          dogOrHuman: {
+          let dogOrHuman = {
             let value = (value: t).dogOrHuman;
             switch (value) {
             | `Dog(value) => (
@@ -429,7 +459,11 @@ module UnionExternalFragmentQuery = {
                 Obj.magic(value): Raw.t_dogOrHuman
               )
             };
-          },
+          };
+          {
+
+            dogOrHuman: dogOrHuman,
+          };
         }: Raw.t
       );
     let makeVar = (~f, ()) => f(Js.Json.null);

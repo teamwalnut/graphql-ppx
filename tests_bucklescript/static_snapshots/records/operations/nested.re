@@ -197,132 +197,165 @@ module MyQuery = {
   let serialize: t => Raw.t =
     (value) => (
       {
-
-        first: {
-          let value = (value: t).first;
-          (
-            {
-
-              inner: {
-                let value = (value: t_first).inner;
-
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-
-                      inner: {
-                        let value = (value: t_first_inner).inner;
-
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-
-                              field: {
-                                let value = (value: t_first_inner_inner).field;
-
-                                value;
-                              },
-                            }: Raw.t_first_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      },
-                    }: Raw.t_first_inner,
-                  )
-                | None => Js.Nullable.null
-                };
-              },
-            }: Raw.t_first
-          );
-        },
-
-        second: {
-          let value = (value: t).second;
-          (
-            {
-
-              inner: {
-                let value = (value: t_second).inner;
-
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-
-                      inner: {
-                        let value = (value: t_second_inner).inner;
-
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-
-                              f1: {
-                                let value = (value: t_second_inner_inner).f1;
-
-                                value;
-                              },
-
-                              f2: {
-                                let value = (value: t_second_inner_inner).f2;
-
-                                value;
-                              },
-                            }: Raw.t_second_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      },
-                    }: Raw.t_second_inner,
-                  )
-                | None => Js.Nullable.null
-                };
-              },
-            }: Raw.t_second
-          );
-        },
-
-        let_: {
+        let let_ = {
           let value = (value: t).let_;
           (
             {
-
-              inner: {
+              let inner = {
                 let value = (value: t_let).inner;
 
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
-
-                      inner: {
+                      let inner = {
                         let value = (value: t_let_inner).inner;
 
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
-
-                              field: {
+                              let field = {
                                 let value = (value: t_let_inner_inner).field;
 
                                 value;
-                              },
+                              };
+                              {
+
+                                field: field,
+                              };
                             }: Raw.t_let_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
-                      },
+                      };
+                      {
+
+                        inner: inner,
+                      };
                     }: Raw.t_let_inner,
                   )
                 | None => Js.Nullable.null
                 };
-              },
+              };
+              {
+
+                inner: inner,
+              };
             }: Raw.t_let
           );
-        },
+        }
+        and second = {
+          let value = (value: t).second;
+          (
+            {
+              let inner = {
+                let value = (value: t_second).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_second_inner).inner;
+
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let f2 = {
+                                let value = (value: t_second_inner_inner).f2;
+
+                                value;
+                              }
+                              and f1 = {
+                                let value = (value: t_second_inner_inner).f1;
+
+                                value;
+                              };
+                              {
+
+                                f1,
+
+                                f2,
+                              };
+                            }: Raw.t_second_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {
+
+                        inner: inner,
+                      };
+                    }: Raw.t_second_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {
+
+                inner: inner,
+              };
+            }: Raw.t_second
+          );
+        }
+        and first = {
+          let value = (value: t).first;
+          (
+            {
+              let inner = {
+                let value = (value: t_first).inner;
+
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_first_inner).inner;
+
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let field = {
+                                let value = (value: t_first_inner_inner).field;
+
+                                value;
+                              };
+                              {
+
+                                field: field,
+                              };
+                            }: Raw.t_first_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {
+
+                        inner: inner,
+                      };
+                    }: Raw.t_first_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {
+
+                inner: inner,
+              };
+            }: Raw.t_first
+          );
+        };
+        {
+
+          first,
+
+          second,
+
+          let_,
+        };
       }: Raw.t
     );
   let makeVar = (~f, ()) => f(Js.Json.null);

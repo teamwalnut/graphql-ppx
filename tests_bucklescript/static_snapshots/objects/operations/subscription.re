@@ -77,35 +77,48 @@ module MyQuery = {
     };
   let serialize: t => Raw.t =
     value => {
-
-      "simpleSubscription": {
+      let simpleSubscription = {
         let value = value##simpleSubscription;
         switch (value) {
         | `Dog(value) => (
-            Obj.magic({
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
 
-              "name": {
-                let value = value##name;
+                  value;
+                };
+                {
 
-                value;
+                  "name": name,
+                };
               },
-            }): Raw.t_simpleSubscription
+            ): Raw.t_simpleSubscription
           )
         | `Human(value) => (
-            Obj.magic({
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
 
-              "name": {
-                let value = value##name;
+                  value;
+                };
+                {
 
-                value;
+                  "name": name,
+                };
               },
-            }): Raw.t_simpleSubscription
+            ): Raw.t_simpleSubscription
           )
         | `FutureAddedValue(value) => (
             Obj.magic(value): Raw.t_simpleSubscription
           )
         };
-      },
+      };
+      {
+
+        "simpleSubscription": simpleSubscription,
+      };
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
   let definition = (parse, query, makeVar);
