@@ -116,6 +116,8 @@ jobs:
       - name: install
         run: |
           esy install
+      - name: show path
+        run: |
           dir $( cygpath --mixed --absolute "$HOME/.esy")
       # - name: test-native
       #   run: |
