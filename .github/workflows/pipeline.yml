@@ -119,7 +119,11 @@ jobs:
       - name: show path
         run: |
           if [ "${{ matrix.os }}" == "windows-2016" ]; then
-            dir $( cygpath --mixed --absolute "$HOME/.esy")
+            PATH=$( cygpath --mixed --absolute "$HOME/.esy")
+            dir $PATH
+          else
+            PATH=$HOME/.esy
+            ls $PATH
           fi
       # - name: test-native
       #   run: |
