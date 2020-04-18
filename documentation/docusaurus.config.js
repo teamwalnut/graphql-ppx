@@ -50,8 +50,7 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           admonitions: {
-            icons: "emoji",
-            infima: false,
+            // infima: false,
           },
         },
         theme: {
