@@ -24,6 +24,154 @@ let add_loc = (delimLength, base, span) => {
   loc_ghost: false,
 };
 
+// get's the type of a field name
+let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
+  let ty_fields =
+    switch (ty) {
+    | Interface({im_fields, _}) => im_fields
+    | Object({om_fields, _}) => om_fields
+    | _ => []
+    };
+  Schema.(
+    List.find(fm => fm.Schema.fm_name == name, ty_fields).fm_field_type
+    |> Graphql_printer.type_ref_name
+    |> Schema.lookup_type(schema)
+    |> Option.unsafe_unwrap
+  );
+};
+
+let rec add_typename_to_selection_set =
+        (
+          parent_span,
+          schema: Schema.schema,
+          ty: Schema.type_meta,
+          selection_set: list(Graphql_ast.selection),
+        ) => {
+  let add_typename =
+    switch (ty, selection_set) {
+    | (_, []) => false
+    // do not add typename to a single fragment spread. It will be added in the
+    // fragment anyway, and it will prevent the result to be a single record of
+    // the type of the fragment
+    | (_, [FragmentSpread(_)]) => false
+    | (Interface(_), selection_set) => true
+    | (Union(_), selection_set) => true
+    | (Object({om_name}), selection_set) =>
+      // do not ineject __typename in top-level subscription type
+      if (schema.meta.sm_subscription_type == Some(om_name)) {
+        false;
+      } else {
+        true;
+      }
+    | (_, selection_set) => false
+    };
+
+  if (add_typename) {
+    [
+      Graphql_ast.Field({
+        span: parent_span,
+        item: {
+          fd_alias: None,
+          fd_name: {
+            span: parent_span,
+            item: "__typename",
+          },
+          fd_arguments: None,
+          fd_directives: [],
+          fd_selection_set: None,
+        },
+      }),
+      ...traverse_selection_set(schema, ty, selection_set),
+    ];
+  } else {
+    traverse_selection_set(schema, ty, selection_set);
+  };
+}
+and traverse_selection_set =
+    (
+      schema,
+      ty: Schema.type_meta,
+      selection_set: list(Graphql_ast.selection),
+    ) => {
+  Graphql_ast.(
+    selection_set
+    |> List.map(
+         fun
+         | Field({
+             span: field_span,
+             item:
+               {
+                 fd_name,
+                 fd_selection_set:
+                   Some({item: selection_set, span: selection_set_span}),
+               } as field,
+           }) => {
+             let field_ty = unsafe_get_field_type(schema, ty, fd_name.item);
+             let selection_set =
+               add_typename_to_selection_set(
+                 selection_set_span,
+                 schema,
+                 field_ty,
+                 selection_set,
+               );
+
+             Field({
+               span: field_span,
+               item: {
+                 ...field,
+                 fd_selection_set:
+                   Some({item: selection_set, span: selection_set_span}),
+               },
+             });
+           }
+         | other => other,
+       )
+  );
+};
+
+let add_type_names:
+  (Schema.schema, list(Graphql_ast.definition)) =>
+  list(Graphql_ast.definition) =
+  (schema, definitions) => {
+    Graphql_ast.(
+      definitions
+      |> List.map(def => {
+           switch (def) {
+           | Operation({item as op, span}) =>
+             let ty_name =
+               switch (op.o_type) {
+               | Query => schema.meta.sm_query_type
+               | Mutation =>
+                 Option.unsafe_unwrap(schema.meta.sm_mutation_type)
+               | Subscription =>
+                 Option.unsafe_unwrap(schema.meta.sm_subscription_type)
+               };
+             let ty =
+               Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
+
+             Operation({
+               span,
+               item: {
+                 ...op,
+                 o_selection_set: {
+                   item:
+                     add_typename_to_selection_set(
+                       span,
+                       schema,
+                       ty,
+                       op.o_selection_set.item,
+                     ),
+                   span: op.o_selection_set.span,
+                 },
+               },
+             });
+
+           | Fragment(fragment) => Fragment(fragment)
+           }
+         })
+    );
+  };
+
 let fmt_lex_err = err =>
   Graphql_lexer.(
     switch (err) {
@@ -350,6 +498,8 @@ let rewrite_query =
         ),
       )
     | Result.Ok(document) =>
+      let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+      let document = add_type_names(schema, document);
       let template_tag = get_template_tag(query_config);
 
       let config = {
@@ -375,7 +525,7 @@ let rewrite_query =
           },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
+        schema,
         template_tag,
       };
       switch (Validations.run_validators(config, document)) {
