@@ -4,7 +4,7 @@ open Source_pos;
 open Schema;
 
 /*
-   We rely on graphql_ppx.ml having created the result decoder before running
+   We rely on graphql_ppx.re having created the result decoder before running
    the functions in this file. The result decoder produces proper and located
    error messages for missing or invalid types, which means that we can - for
    simplicity's sake - skip any kind of error handling here.

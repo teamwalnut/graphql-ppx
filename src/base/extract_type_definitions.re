@@ -83,10 +83,9 @@ let rec extract = path =>
   fun
   | Res_nullable(_loc, inner) => extract(path, inner)
   | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
-  | Res_object(loc, _name, fields, None) =>
-    create_object(path, fields, false, loc)
+  | Res_object(_loc, _name, fields, Some(_))
   | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
+  | Res_object(loc, _name, fields, None)
   | Res_record(loc, _name, fields, None) =>
     create_object(path, fields, true, loc)
   | Res_poly_variant_union(loc, _name, fragments, _) => [
