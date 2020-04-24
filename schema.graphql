@@ -54,6 +54,7 @@ type Query {
 
 type Mutation {
   mutationWithError: MutationWithErrorResult!
+  mutationForVariant: VariantTestResult!
   optionalInputArgs(
     required: String!
     optional: String
@@ -162,4 +163,12 @@ scalar CustomScalar
 type CustomScalarObject {
   nullable: CustomScalar
   nonNullable: CustomScalar!
+}
+
+type VariantTestResult {
+  baseType: String
+  baseTypeList: [String!]
+  dog: Dog
+  human: Human
+  dogOrHuman: DogOrHuman
 }
