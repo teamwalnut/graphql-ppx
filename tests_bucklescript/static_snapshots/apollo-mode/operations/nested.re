@@ -24,49 +24,113 @@ type record = {
 module MyQuery = {
   module Raw = {
     type t = {
+      __typename: string,
       first: t_first,
       second: t_second,
       let_: t_let,
     }
-    and t_let = {inner: Js.Nullable.t(t_let_inner)}
-    and t_let_inner = {inner: Js.Nullable.t(t_let_inner_inner)}
-    and t_let_inner_inner = {field: string}
-    and t_second = {inner: Js.Nullable.t(t_second_inner)}
-    and t_second_inner = {inner: Js.Nullable.t(t_second_inner_inner)}
+    and t_let = {
+      __typename: string,
+      inner: Js.Nullable.t(t_let_inner),
+    }
+    and t_let_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_let_inner_inner),
+    }
+    and t_let_inner_inner = {
+      __typename: string,
+      field: string,
+    }
+    and t_second = {
+      __typename: string,
+      inner: Js.Nullable.t(t_second_inner),
+    }
+    and t_second_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_second_inner_inner),
+    }
     and t_second_inner_inner = {
+      __typename: string,
       f1: string,
       f2: string,
     }
-    and t_first = {inner: Js.Nullable.t(t_first_inner)}
-    and t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)}
-    and t_first_inner_inner = {field: string};
+    and t_first = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner),
+    }
+    and t_first_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner_inner),
+    }
+    and t_first_inner_inner = {
+      __typename: string,
+      field: string,
+    };
   };
-  let query = "query   {\n__typename\nfirst: nestedObject  {\n__typename\ninner  {\n__typename\ninner  {\n__typename\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename\ninner  {\n__typename\ninner  {\n__typename\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename\ninner  {\n__typename\ninner  {\n__typename\nfield  \n}\n\n}\n\n}\n\n}\n";
+  let query = "query   {\n__typename  \nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
   type t = {
+    __typename: string,
     first: t_first,
     second: t_second,
     let_: t_let,
   }
-  and t_let = {inner: option(t_let_inner)}
-  and t_let_inner = {inner: option(t_let_inner_inner)}
-  and t_let_inner_inner = {field: string}
-  and t_second = {inner: option(t_second_inner)}
-  and t_second_inner = {inner: option(t_second_inner_inner)}
+  and t_let = {
+    __typename: string,
+    inner: option(t_let_inner),
+  }
+  and t_let_inner = {
+    __typename: string,
+    inner: option(t_let_inner_inner),
+  }
+  and t_let_inner_inner = {
+    __typename: string,
+    field: string,
+  }
+  and t_second = {
+    __typename: string,
+    inner: option(t_second_inner),
+  }
+  and t_second_inner = {
+    __typename: string,
+    inner: option(t_second_inner_inner),
+  }
   and t_second_inner_inner = {
+    __typename: string,
     f1: string,
     f2: string,
   }
-  and t_first = {inner: option(t_first_inner)}
-  and t_first_inner = {inner: option(t_first_inner_inner)}
-  and t_first_inner_inner = {field: string};
+  and t_first = {
+    __typename: string,
+    inner: option(t_first_inner),
+  }
+  and t_first_inner = {
+    __typename: string,
+    inner: option(t_first_inner_inner),
+  }
+  and t_first_inner_inner = {
+    __typename: string,
+    field: string,
+  };
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         first: {
           let value = (value: Raw.t).first;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_first).__typename;
+
+                value;
+              },
 
               inner: {
                 let value = (value: Raw.t_first).inner;
@@ -76,6 +140,12 @@ module MyQuery = {
                   Some(
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_first_inner).__typename;
+
+                        value;
+                      },
+
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
 
@@ -83,6 +153,13 @@ module MyQuery = {
                         | Some(value) =>
                           Some(
                             {
+
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_first_inner_inner).__typename;
+
+                                value;
+                              },
 
                               field: {
                                 let value =
@@ -109,6 +186,12 @@ module MyQuery = {
           (
             {
 
+              __typename: {
+                let value = (value: Raw.t_second).__typename;
+
+                value;
+              },
+
               inner: {
                 let value = (value: Raw.t_second).inner;
 
@@ -117,6 +200,12 @@ module MyQuery = {
                   Some(
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_second_inner).__typename;
+
+                        value;
+                      },
+
                       inner: {
                         let value = (value: Raw.t_second_inner).inner;
 
@@ -124,6 +213,13 @@ module MyQuery = {
                         | Some(value) =>
                           Some(
                             {
+
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_second_inner_inner).__typename;
+
+                                value;
+                              },
 
                               f1: {
                                 let value =
@@ -157,6 +253,12 @@ module MyQuery = {
           (
             {
 
+              __typename: {
+                let value = (value: Raw.t_let).__typename;
+
+                value;
+              },
+
               inner: {
                 let value = (value: Raw.t_let).inner;
 
@@ -165,6 +267,12 @@ module MyQuery = {
                   Some(
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_let_inner).__typename;
+
+                        value;
+                      },
+
                       inner: {
                         let value = (value: Raw.t_let_inner).inner;
 
@@ -172,6 +280,13 @@ module MyQuery = {
                         | Some(value) =>
                           Some(
                             {
+
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_let_inner_inner).__typename;
+
+                                value;
+                              },
 
                               field: {
                                 let value =
@@ -219,28 +334,50 @@ module MyQuery = {
                                 let value = (value: t_let_inner_inner).field;
 
                                 value;
+                              }
+                              and __typename = {
+                                let value =
+                                  (value: t_let_inner_inner).__typename;
+
+                                value;
                               };
                               {
 
-                                field: field,
+                                __typename,
+
+                                field,
                               };
                             }: Raw.t_let_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
+                      }
+                      and __typename = {
+                        let value = (value: t_let_inner).__typename;
+
+                        value;
                       };
                       {
 
-                        inner: inner,
+                        __typename,
+
+                        inner,
                       };
                     }: Raw.t_let_inner,
                   )
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_let).__typename;
+
+                value;
               };
               {
 
-                inner: inner,
+                __typename,
+
+                inner,
               };
             }: Raw.t_let
           );
@@ -272,8 +409,16 @@ module MyQuery = {
                                 let value = (value: t_second_inner_inner).f1;
 
                                 value;
+                              }
+                              and __typename = {
+                                let value =
+                                  (value: t_second_inner_inner).__typename;
+
+                                value;
                               };
                               {
+
+                                __typename,
 
                                 f1,
 
@@ -283,19 +428,33 @@ module MyQuery = {
                           )
                         | None => Js.Nullable.null
                         };
+                      }
+                      and __typename = {
+                        let value = (value: t_second_inner).__typename;
+
+                        value;
                       };
                       {
 
-                        inner: inner,
+                        __typename,
+
+                        inner,
                       };
                     }: Raw.t_second_inner,
                   )
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_second).__typename;
+
+                value;
               };
               {
 
-                inner: inner,
+                __typename,
+
+                inner,
               };
             }: Raw.t_second
           );
@@ -322,33 +481,62 @@ module MyQuery = {
                                 let value = (value: t_first_inner_inner).field;
 
                                 value;
+                              }
+                              and __typename = {
+                                let value =
+                                  (value: t_first_inner_inner).__typename;
+
+                                value;
                               };
                               {
 
-                                field: field,
+                                __typename,
+
+                                field,
                               };
                             }: Raw.t_first_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
+                      }
+                      and __typename = {
+                        let value = (value: t_first_inner).__typename;
+
+                        value;
                       };
                       {
 
-                        inner: inner,
+                        __typename,
+
+                        inner,
                       };
                     }: Raw.t_first_inner,
                   )
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_first).__typename;
+
+                value;
               };
               {
 
-                inner: inner,
+                __typename,
+
+                inner,
               };
             }: Raw.t_first
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
+
+          __typename,
 
           first,
 

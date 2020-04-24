@@ -118,11 +118,6 @@ let rec print_selection_set = (schema, ty, selection_set) =>
       switch (ty) {
       | Interface(_)
       | Union(_) => true
-      | Object({om_name, _}) =>
-        let is_top_level_subscrption_type =
-          schema.meta.sm_subscription_type == Some(om_name);
-
-        !is_top_level_subscrption_type && Ppx_config.apollo_mode();
       | _ => false
       };
 

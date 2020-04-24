@@ -27,15 +27,23 @@ module IntOfString = {
 
 module MyQuery = {
   module Raw = {
-    type t = {variousScalars: t_variousScalars}
+    type t = {
+      __typename: string,
+      variousScalars: t_variousScalars,
+    }
     and t_variousScalars = {
+      __typename: string,
       string,
       int,
     };
   };
-  let query = "query   {\n__typename\nvariousScalars  {\n__typename\nstring  \nint  \n}\n\n}\n";
-  type t = {variousScalars: t_variousScalars}
+  let query = "query   {\n__typename  \nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
+  type t = {
+    __typename: string,
+    variousScalars: t_variousScalars,
+  }
   and t_variousScalars = {
+    __typename: string,
     string: IntOfString.t,
     int: StringOfInt.t,
   };
@@ -43,10 +51,22 @@ module MyQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_variousScalars).__typename;
+
+                value;
+              },
 
               string: {
                 let value = (value: Raw.t_variousScalars).string;
@@ -80,8 +100,15 @@ module MyQuery = {
                 let value = (value: t_variousScalars).string;
 
                 IntOfString.serialize(value);
+              }
+              and __typename = {
+                let value = (value: t_variousScalars).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 string,
 
@@ -89,10 +116,17 @@ module MyQuery = {
               };
             }: Raw.t_variousScalars
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          variousScalars: variousScalars,
+          __typename,
+
+          variousScalars,
         };
       }: Raw.t
     );

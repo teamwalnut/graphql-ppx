@@ -18,14 +18,26 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {enumInput: string};
+    type t = {
+      __typename: string,
+      enumInput: string,
+    };
   };
-  let query = "query ($arg: SampleField!)  {\n__typename\nenumInput(arg: $arg)  \n}\n";
-  type t = {enumInput: string};
+  let query = "query ($arg: SampleField!)  {\n__typename  \nenumInput(arg: $arg)  \n}\n";
+  type t = {
+    __typename: string,
+    enumInput: string,
+  };
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         enumInput: {
           let value = (value: Raw.t).enumInput;
@@ -41,10 +53,17 @@ module MyQuery = {
           let value = (value: t).enumInput;
 
           value;
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          enumInput: enumInput,
+          __typename,
+
+          enumInput,
         };
       }: Raw.t
     );

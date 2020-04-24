@@ -18,31 +18,43 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {first: t_first}
+    type t = {
+      __typename: string,
+      first: t_first,
+    }
     and t_first = {
+      __typename: string,
       __typename: string,
       inner: Js.Nullable.t(t_first_inner),
     }
     and t_first_inner = {
       __typename: string,
+      __typename: string,
       inner: Js.Nullable.t(t_first_inner_inner),
     }
     and t_first_inner_inner = {
       __typename: string,
+      __typename: string,
       field: string,
     };
   };
-  let query = "query   {\n__typename\nfirst: nestedObject  {\n__typename\n__typename  \ninner  {\n__typename\n__typename  \ninner  {\n__typename\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
-  type t = {first: t_first}
+  let query = "query   {\n__typename  \nfirst: nestedObject  {\n__typename  \n__typename  \ninner  {\n__typename  \n__typename  \ninner  {\n__typename  \n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
+  type t = {
+    __typename: string,
+    first: t_first,
+  }
   and t_first = {
+    __typename: string,
     __typename: string,
     inner: option(t_first_inner),
   }
   and t_first_inner = {
     __typename: string,
+    __typename: string,
     inner: option(t_first_inner_inner),
   }
   and t_first_inner_inner = {
+    __typename: string,
     __typename: string,
     field: string,
   };
@@ -50,10 +62,22 @@ module MyQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         first: {
           let value = (value: Raw.t).first;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_first).__typename;
+
+                value;
+              },
 
               __typename: {
                 let value = (value: Raw.t_first).__typename;
@@ -75,6 +99,12 @@ module MyQuery = {
                         value;
                       },
 
+                      __typename: {
+                        let value = (value: Raw.t_first_inner).__typename;
+
+                        value;
+                      },
+
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
 
@@ -82,6 +112,13 @@ module MyQuery = {
                         | Some(value) =>
                           Some(
                             {
+
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_first_inner_inner).__typename;
+
+                                value;
+                              },
 
                               __typename: {
                                 let value =
@@ -142,8 +179,16 @@ module MyQuery = {
                                   (value: t_first_inner_inner).__typename;
 
                                 value;
+                              }
+                              and __typename = {
+                                let value =
+                                  (value: t_first_inner_inner).__typename;
+
+                                value;
                               };
                               {
+
+                                __typename,
 
                                 __typename,
 
@@ -158,8 +203,15 @@ module MyQuery = {
                         let value = (value: t_first_inner).__typename;
 
                         value;
+                      }
+                      and __typename = {
+                        let value = (value: t_first_inner).__typename;
+
+                        value;
                       };
                       {
+
+                        __typename,
 
                         __typename,
 
@@ -174,8 +226,15 @@ module MyQuery = {
                 let value = (value: t_first).__typename;
 
                 value;
+              }
+              and __typename = {
+                let value = (value: t_first).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 __typename,
 
@@ -183,10 +242,17 @@ module MyQuery = {
               };
             }: Raw.t_first
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          first: first,
+          __typename,
+
+          first,
         };
       }: Raw.t
     );

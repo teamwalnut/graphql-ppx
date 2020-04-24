@@ -18,15 +18,23 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {customScalarField: t_customScalarField}
+    type t = {
+      __typename: string,
+      customScalarField: t_customScalarField,
+    }
     and t_customScalarField = {
+      __typename: string,
       nullable: Js.Nullable.t(Js.Json.t),
       nonNullable: Js.Json.t,
     };
   };
-  let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\n__typename\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\n__typename\nnullable  \nnonNullable  \n}\n\n}\n";
-  type t = {customScalarField: t_customScalarField}
+  let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\n__typename  \ncustomScalarField(argOptional: $opt, argRequired: $req)  {\n__typename  \nnullable  \nnonNullable  \n}\n\n}\n";
+  type t = {
+    __typename: string,
+    customScalarField: t_customScalarField,
+  }
   and t_customScalarField = {
+    __typename: string,
     nullable: option(Js.Json.t),
     nonNullable: Js.Json.t,
   };
@@ -38,10 +46,22 @@ module MyQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         customScalarField: {
           let value = (value: Raw.t).customScalarField;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_customScalarField).__typename;
+
+                value;
+              },
 
               nullable: {
                 let value = (value: Raw.t_customScalarField).nullable;
@@ -81,8 +101,15 @@ module MyQuery = {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_customScalarField).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 nullable,
 
@@ -90,10 +117,17 @@ module MyQuery = {
               };
             }: Raw.t_customScalarField
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          customScalarField: customScalarField,
+          __typename,
+
+          customScalarField,
         };
       }: Raw.t
     );

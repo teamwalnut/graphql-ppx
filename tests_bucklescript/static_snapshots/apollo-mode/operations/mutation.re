@@ -18,25 +18,38 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {mutationWithError: t_mutationWithError}
+    type t = {
+      __typename: string,
+      mutationWithError: t_mutationWithError,
+    }
     and t_mutationWithError = {
+      __typename: string,
       value: Js.Nullable.t(t_mutationWithError_value),
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     }
     and t_mutationWithError_errors = {
+      __typename: string,
       field: t_mutationWithError_errors_field,
       message: string,
     }
     and t_mutationWithError_errors_field = string
-    and t_mutationWithError_value = {stringField: string};
+    and t_mutationWithError_value = {
+      __typename: string,
+      stringField: string,
+    };
   };
-  let query = "mutation   {\n__typename\nmutationWithError  {\n__typename\nvalue  {\n__typename\nstringField  \n}\n\nerrors  {\n__typename\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {mutationWithError: t_mutationWithError}
+  let query = "mutation   {\n__typename  \nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
+  type t = {
+    __typename: string,
+    mutationWithError: t_mutationWithError,
+  }
   and t_mutationWithError = {
+    __typename: string,
     value: option(t_mutationWithError_value),
     errors: option(array(t_mutationWithError_errors)),
   }
   and t_mutationWithError_errors = {
+    __typename: string,
     field: t_mutationWithError_errors_field,
     message: string,
   }
@@ -46,15 +59,30 @@ module MyQuery = {
     | `SECOND
     | `THIRD
   ]
-  and t_mutationWithError_value = {stringField: string};
+  and t_mutationWithError_value = {
+    __typename: string,
+    stringField: string,
+  };
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_mutationWithError).__typename;
+
+                value;
+              },
 
               value: {
                 let value = (value: Raw.t_mutationWithError).value;
@@ -63,6 +91,13 @@ module MyQuery = {
                 | Some(value) =>
                   Some(
                     {
+
+                      __typename: {
+                        let value =
+                          (value: Raw.t_mutationWithError_value).__typename;
+
+                        value;
+                      },
 
                       stringField: {
                         let value =
@@ -86,6 +121,14 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
+
+                             __typename: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   __typename;
+
+                               value;
+                             },
 
                              field: {
                                let value =
@@ -149,8 +192,17 @@ module MyQuery = {
                                | `THIRD => "THIRD"
                                | `FutureAddedValue(other) => other
                                };
+                             }
+                             and __typename = {
+                               let value =
+                                 (value: t_mutationWithError_errors).
+                                   __typename;
+
+                               value;
                              };
                              {
+
+                               __typename,
 
                                field,
 
@@ -175,17 +227,32 @@ module MyQuery = {
                           (value: t_mutationWithError_value).stringField;
 
                         value;
+                      }
+                      and __typename = {
+                        let value =
+                          (value: t_mutationWithError_value).__typename;
+
+                        value;
                       };
                       {
 
-                        stringField: stringField,
+                        __typename,
+
+                        stringField,
                       };
                     }: Raw.t_mutationWithError_value,
                   )
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_mutationWithError).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 value,
 
@@ -193,10 +260,17 @@ module MyQuery = {
               };
             }: Raw.t_mutationWithError
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          mutationWithError: mutationWithError,
+          __typename,
+
+          mutationWithError,
         };
       }: Raw.t
     );

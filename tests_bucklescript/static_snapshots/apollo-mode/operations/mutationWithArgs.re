@@ -18,14 +18,26 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {optionalInputArgs: string};
+    type t = {
+      __typename: string,
+      optionalInputArgs: string,
+    };
   };
-  let query = "mutation MyMutation($required: String!)  {\n__typename\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
-  type t = {optionalInputArgs: string};
+  let query = "mutation MyMutation($required: String!)  {\n__typename  \noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
+  type t = {
+    __typename: string,
+    optionalInputArgs: string,
+  };
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
@@ -41,10 +53,17 @@ module MyQuery = {
           let value = (value: t).optionalInputArgs;
 
           value;
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          optionalInputArgs: optionalInputArgs,
+          __typename,
+
+          optionalInputArgs,
         };
       }: Raw.t
     );

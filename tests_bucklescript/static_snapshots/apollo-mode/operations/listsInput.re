@@ -18,10 +18,16 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {listsInput: string};
+    type t = {
+      __typename: string,
+      listsInput: string,
+    };
   };
-  let query = "query ($arg: ListsInput!)  {\n__typename\nlistsInput(arg: $arg)  \n}\n";
-  type t = {listsInput: string};
+  let query = "query ($arg: ListsInput!)  {\n__typename  \nlistsInput(arg: $arg)  \n}\n";
+  type t = {
+    __typename: string,
+    listsInput: string,
+  };
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -32,6 +38,12 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         listsInput: {
           let value = (value: Raw.t).listsInput;
@@ -47,10 +59,17 @@ module MyQuery = {
           let value = (value: t).listsInput;
 
           value;
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          listsInput: listsInput,
+          __typename,
+
+          listsInput,
         };
       }: Raw.t
     );

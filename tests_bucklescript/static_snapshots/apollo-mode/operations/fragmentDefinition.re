@@ -68,21 +68,29 @@ module GraphQL_PPX = {
 
 module Fragments = {
   module ListFragment = {
-    let query = "fragment ListFragment on Lists   {\n__typename\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+    let query = "fragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
+        __typename: string,
         nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
         nullableOfNonNullable: Js.Nullable.t(array(string)),
       };
       type t_Lists = t;
     };
     type t = {
+      __typename: string,
       nullableOfNullable: option(array(option(string))),
       nullableOfNonNullable: option(array(string)),
     };
     type t_Lists = t;
 
     let parse = (value: Raw.t): t => {
+
+      __typename: {
+        let value = (value: Raw.t).__typename;
+
+        value;
+      },
 
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
@@ -139,8 +147,15 @@ module Fragments = {
               )
             | None => Js.Nullable.null
             };
+          }
+          and __typename = {
+            let value = (value: t).__typename;
+
+            value;
           };
           {
+
+            __typename,
 
             nullableOfNullable,
 
@@ -151,15 +166,27 @@ module Fragments = {
     let name = "ListFragment";
   };
   module Another = {
-    let query = "fragment Another on Lists   {\n__typename\nnullableOfNonNullable  \n}\n";
+    let query = "fragment Another on Lists   {\n__typename  \nnullableOfNonNullable  \n}\n";
     module Raw = {
-      type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
+      type t = {
+        __typename: string,
+        nullableOfNonNullable: Js.Nullable.t(array(string)),
+      };
       type t_Lists = t;
     };
-    type t = {nullableOfNonNullable: option(array(string))};
+    type t = {
+      __typename: string,
+      nullableOfNonNullable: option(array(string)),
+    };
     type t_Lists = t;
 
     let parse = (value: Raw.t): t => {
+
+      __typename: {
+        let value = (value: Raw.t).__typename;
+
+        value;
+      },
 
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -181,10 +208,17 @@ module Fragments = {
               Js.Nullable.return(value |> Js.Array.map(value => value))
             | None => Js.Nullable.null
             };
+          }
+          and __typename = {
+            let value = (value: t).__typename;
+
+            value;
           };
           {
 
-            nullableOfNonNullable: nullableOfNonNullable,
+            __typename,
+
+            nullableOfNonNullable,
           };
         }: Raw.t
       );
@@ -195,6 +229,7 @@ module Fragments = {
 module MyQuery = {
   module Raw = {
     type t = {
+      __typename: string,
       l1: Fragments.ListFragment.Raw.t,
       l2: t_l2,
       l3: t_l3,
@@ -217,10 +252,10 @@ module MyQuery = {
                       (
                         (
                           (
-                            "query   {\n__typename\nl1: lists  {\n__typename\n..."
+                            "query   {\n__typename  \nl1: lists  {\n..."
                             ++ Fragments.ListFragment.name
                           )
-                          ++ "   \n}\n\nl2: lists  {\n__typename\n..."
+                          ++ "   \n}\n\nl2: lists  {\n__typename  \n..."
                         )
                         ++ Fragments.ListFragment.name
                       )
@@ -228,7 +263,7 @@ module MyQuery = {
                     )
                     ++ Fragments.ListFragment.name
                   )
-                  ++ "   \n}\n\nl3: lists  {\n__typename\nnullableOfNullable  \n..."
+                  ++ "   \n}\n\nl3: lists  {\n__typename  \nnullableOfNullable  \n..."
                 )
                 ++ Fragments.ListFragment.name
               )
@@ -236,7 +271,7 @@ module MyQuery = {
             )
             ++ Fragments.ListFragment.name
           )
-          ++ "   \n}\n\nl4: lists  {\n__typename\nnullableOfNullable  \n..."
+          ++ "   \n}\n\nl4: lists  {\n__typename  \nnullableOfNullable  \n..."
         )
         ++ Fragments.ListFragment.name
       )
@@ -244,27 +279,37 @@ module MyQuery = {
     )
     ++ Fragments.ListFragment.query;
   type t = {
+    __typename: string,
     l1: Fragments.ListFragment.t,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
   }
   and t_l4 = {
+    __typename: string,
     nullableOfNullable: option(array(option(string))),
     listFragment: Fragments.ListFragment.t_Lists,
   }
   and t_l3 = {
+    __typename: string,
     nullableOfNullable: option(array(option(string))),
     frag1: Fragments.ListFragment.t_Lists,
     frag2: Fragments.ListFragment.t_Lists,
   }
   and t_l2 = {
+    __typename: string,
     frag1: Fragments.ListFragment.t_Lists,
     frag2: Fragments.ListFragment.t_Lists,
   };
   let parse: Raw.t => t =
     (value) => (
       {
+
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
 
         l1: {
           let value = (value: Raw.t).l1;
@@ -276,6 +321,15 @@ module MyQuery = {
           let value = (value: Raw.t).l2;
           (
             {
+
+              __typename: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                  );
+
+                value;
+              },
 
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
@@ -296,6 +350,15 @@ module MyQuery = {
           let value = (value: Raw.t).l3;
           (
             {
+
+              __typename: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                  );
+
+                value;
+              },
 
               nullableOfNullable: {
                 let value =
@@ -340,6 +403,15 @@ module MyQuery = {
           let value = (value: Raw.t).l4;
           (
             {
+
+              __typename: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                  );
+
+                value;
+              },
 
               nullableOfNullable: {
                 let value =
@@ -402,8 +474,15 @@ module MyQuery = {
                         )
                       | None => Js.Nullable.null
                       };
+                    }
+                    and __typename = {
+                      let value = (value: t_l4).__typename;
+
+                      value;
                     };
                     {
+
+                      "__typename": __typename,
 
                       "nullableOfNullable": nullableOfNullable,
                     };
@@ -446,8 +525,15 @@ module MyQuery = {
                         )
                       | None => Js.Nullable.null
                       };
+                    }
+                    and __typename = {
+                      let value = (value: t_l3).__typename;
+
+                      value;
                     };
                     {
+
+                      "__typename": __typename,
 
                       "nullableOfNullable": nullableOfNullable,
                     };
@@ -475,7 +561,19 @@ module MyQuery = {
             Obj.magic(
               Js.Array.reduce(
                 GraphQL_PPX.deepMerge,
-                Obj.magic(Js.Dict.empty): Js.Json.t,
+                Obj.magic(
+                  {
+                    let __typename = {
+                      let value = (value: t_l2).__typename;
+
+                      value;
+                    };
+                    {
+
+                      "__typename": __typename,
+                    };
+                  },
+                ): Js.Json.t,
                 [|
                   (
                     Obj.magic(
@@ -495,8 +593,15 @@ module MyQuery = {
         and l1 = {
           let value = (value: t).l1;
           Fragments.ListFragment.serialize(value);
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
+
+          __typename,
 
           l1,
 

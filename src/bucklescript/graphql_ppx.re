@@ -39,26 +39,26 @@ let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
     |> Option.unsafe_unwrap
   );
 };
-
+/**
+ * This is a GraphQL AST transform that will add the __typename to all selection
+ * sets. This is necessary for Apollo, as this is an implicit field.
+ * If we don't include this when using Apollo, the __typename information is
+ * lost when we parse values and then serialize back to the js-values again
+ */
 let rec add_typename_to_selection_set =
-        (
-          parent_span,
-          schema: Schema.schema,
-          ty: Schema.type_meta,
-          selection_set: list(Graphql_ast.selection),
-        ) => {
+        (parent_span, schema, ty, selection_set) => {
   let add_typename =
     switch (ty, selection_set) {
     | (_, []) => false
     // do not add typename to a single fragment spread. It will be added in the
     // fragment anyway, and it will prevent the result to be a single record of
     // the type of the fragment
-    | (_, [FragmentSpread(_)]) => false
-    | (Interface(_), selection_set) => true
-    | (Union(_), selection_set) => true
-    | (Object({om_name}), selection_set) =>
+    | (_, [Graphql_ast.FragmentSpread(_)]) => false
+    | (Schema.Interface(_), selection_set) => true
+    | (Schema.Union(_), selection_set) => true
+    | (Schema.Object({om_name}), selection_set) =>
       // do not ineject __typename in top-level subscription type
-      if (schema.meta.sm_subscription_type == Some(om_name)) {
+      if (schema.Schema.meta.sm_subscription_type == Some(om_name)) {
         false;
       } else {
         true;
@@ -81,23 +81,59 @@ let rec add_typename_to_selection_set =
           fd_selection_set: None,
         },
       }),
-      ...traverse_selection_set(schema, ty, selection_set),
+      ...traverse_selection_set(
+           schema,
+           ty,
+           selection_set,
+           add_typename_to_selection_set,
+         ),
     ];
   } else {
-    traverse_selection_set(schema, ty, selection_set);
+    traverse_selection_set(
+      schema,
+      ty,
+      selection_set,
+      add_typename_to_selection_set,
+    );
   };
 }
-and traverse_selection_set =
-    (
-      schema,
-      ty: Schema.type_meta,
-      selection_set: list(Graphql_ast.selection),
-    ) => {
+/**
+ * This is a GraphQL AST transform that removes the `__typename` field from
+ * unions. The PPX will add this in the printer stage, so it is always there.
+ * The PPX will not allow any scalar fields on a union except for the inline
+ * fragments, so we make sure to remove it before doing any further processing.
+ */
+and remove_typename_from_union = (parent_span, schema, ty, selection_set) => {
+  let selection_set =
+    switch (ty, selection_set) {
+    | (Schema.Interface(_), selection_set)
+    | (Schema.Union(_), selection_set) =>
+      Graphql_ast.(
+        selection_set
+        |> List.fold_left(
+             acc =>
+               fun
+               | Field({item: {fd_name: {item: "__typename"}}}) => acc
+               | other => [other, ...acc],
+             [],
+           )
+        |> List.rev
+      )
+    | (_, selection_set) => selection_set
+    };
+  traverse_selection_set(
+    schema,
+    ty,
+    selection_set,
+    remove_typename_from_union,
+  );
+}
+and traverse_selection_set = (schema, ty, selection_set, fn) => {
   Graphql_ast.(
     selection_set
     |> List.map(
          fun
-         | Field({
+         | Graphql_ast.Field({
              span: field_span,
              item:
                {
@@ -108,12 +144,7 @@ and traverse_selection_set =
            }) => {
              let field_ty = unsafe_get_field_type(schema, ty, fd_name.item);
              let selection_set =
-               add_typename_to_selection_set(
-                 selection_set_span,
-                 schema,
-                 field_ty,
-                 selection_set,
-               );
+               fn(selection_set_span, schema, field_ty, selection_set);
 
              Field({
                span: field_span,
@@ -129,48 +160,52 @@ and traverse_selection_set =
   );
 };
 
-let add_type_names:
-  (Schema.schema, list(Graphql_ast.definition)) =>
-  list(Graphql_ast.definition) =
-  (schema, definitions) => {
-    Graphql_ast.(
-      definitions
-      |> List.map(def => {
-           switch (def) {
-           | Operation({item as op, span}) =>
-             let ty_name =
-               switch (op.o_type) {
-               | Query => schema.meta.sm_query_type
-               | Mutation =>
-                 Option.unsafe_unwrap(schema.meta.sm_mutation_type)
-               | Subscription =>
-                 Option.unsafe_unwrap(schema.meta.sm_subscription_type)
-               };
-             let ty =
-               Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
+let traverse_document_selections = (fn, schema: Schema.schema, definitions) => {
+  Graphql_ast.(
+    definitions
+    |> List.map(def => {
+         switch (def) {
+         | Operation({item as op, span}) =>
+           let ty_name =
+             switch (op.o_type) {
+             | Query => schema.meta.sm_query_type
+             | Mutation => Option.unsafe_unwrap(schema.meta.sm_mutation_type)
+             | Subscription =>
+               Option.unsafe_unwrap(schema.meta.sm_subscription_type)
+             };
+           let ty =
+             Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
 
-             Operation({
-               span,
-               item: {
-                 ...op,
-                 o_selection_set: {
-                   item:
-                     add_typename_to_selection_set(
-                       span,
-                       schema,
-                       ty,
-                       op.o_selection_set.item,
-                     ),
-                   span: op.o_selection_set.span,
-                 },
+           Operation({
+             span,
+             item: {
+               ...op,
+               o_selection_set: {
+                 item: fn(span, schema, ty, op.o_selection_set.item),
+                 span: op.o_selection_set.span,
                },
-             });
+             },
+           });
 
-           | Fragment(fragment) => Fragment(fragment)
-           }
-         })
-    );
-  };
+         | Fragment({item as f, span}) =>
+           let ty_name = f.fg_type_condition.item;
+           let ty =
+             Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
+
+           Fragment({
+             item: {
+               ...f,
+               fg_selection_set: {
+                 item: fn(span, schema, ty, f.fg_selection_set.item),
+                 span: f.fg_selection_set.span,
+               },
+             },
+             span,
+           });
+         }
+       })
+  );
+};
 
 let fmt_lex_err = err =>
   Graphql_lexer.(
@@ -499,7 +534,19 @@ let rewrite_query =
       )
     | Result.Ok(document) =>
       let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
-      let document = add_type_names(schema, document);
+      let document =
+        (
+          if (Ppx_config.apollo_mode()) {
+            document
+            |> traverse_document_selections(
+                 add_typename_to_selection_set,
+                 schema,
+               );
+          } else {
+            document;
+          }
+        )
+        |> traverse_document_selections(remove_typename_from_union, schema);
       let template_tag = get_template_tag(query_config);
 
       let config = {

@@ -18,10 +18,16 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {scalarsInput: string};
+    type t = {
+      __typename: string,
+      scalarsInput: string,
+    };
   };
-  let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\n__typename\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
-  type t = {scalarsInput: string};
+  let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\n__typename  \nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
+  type t = {
+    __typename: string,
+    scalarsInput: string,
+  };
   type t_variables = {
     nullableString: option(string),
     string,
@@ -38,6 +44,12 @@ module MyQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
 
@@ -52,10 +64,17 @@ module MyQuery = {
           let value = (value: t).scalarsInput;
 
           value;
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          scalarsInput: scalarsInput,
+          __typename,
+
+          scalarsInput,
         };
       }: Raw.t
     );

@@ -18,15 +18,23 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {pokemon: Js.Nullable.t(t_pokemon)}
+    type t = {
+      __typename: string,
+      pokemon: Js.Nullable.t(t_pokemon),
+    }
     and t_pokemon = {
+      __typename: string,
       id: string,
       name: Js.Nullable.t(string),
     };
   };
-  let query = "query pokemon($id: String, $name: String)  {\n__typename\npokemon(name: $name, id: $id)  {\n__typename\nid  \nname  \n}\n\n}\n";
-  type t = {pokemon: option(t_pokemon)}
+  let query = "query pokemon($id: String, $name: String)  {\n__typename  \npokemon(name: $name, id: $id)  {\n__typename  \nid  \nname  \n}\n\n}\n";
+  type t = {
+    __typename: string,
+    pokemon: option(t_pokemon),
+  }
   and t_pokemon = {
+    __typename: string,
     id: string,
     name: option(string),
   };
@@ -38,6 +46,12 @@ module MyQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         pokemon: {
           let value = (value: Raw.t).pokemon;
 
@@ -45,6 +59,12 @@ module MyQuery = {
           | Some(value) =>
             Some(
               {
+
+                __typename: {
+                  let value = (value: Raw.t_pokemon).__typename;
+
+                  value;
+                },
 
                 id: {
                   let value = (value: Raw.t_pokemon).id;
@@ -89,8 +109,15 @@ module MyQuery = {
                   let value = (value: t_pokemon).id;
 
                   value;
+                }
+                and __typename = {
+                  let value = (value: t_pokemon).__typename;
+
+                  value;
                 };
                 {
+
+                  __typename,
 
                   id,
 
@@ -100,10 +127,17 @@ module MyQuery = {
             )
           | None => Js.Nullable.null
           };
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          pokemon: pokemon,
+          __typename,
+
+          pokemon,
         };
       }: Raw.t
     );

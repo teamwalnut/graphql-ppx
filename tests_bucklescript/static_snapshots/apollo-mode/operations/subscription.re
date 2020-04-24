@@ -23,7 +23,7 @@ module MyQuery = {
     and t_simpleSubscription_Human = {name: string}
     and t_simpleSubscription_Dog = {name: string};
   };
-  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\n__typename\nname  \n}\n\n...on Human   {\n__typename\nname  \n}\n\n}\n\n}\n";
+  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t = {simpleSubscription: t_simpleSubscription}
   and t_simpleSubscription = [
     | `FutureAddedValue(Js.Json.t)

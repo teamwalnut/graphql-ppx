@@ -18,17 +18,25 @@
 ];
 module RecordsQuery = {
   module Raw = {
-    type t = {lists: t_lists}
+    type t = {
+      __typename: string,
+      lists: t_lists,
+    }
     and t_lists = {
+      __typename: string,
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
       nullableOfNonNullable: Js.Nullable.t(array(string)),
       nonNullableOfNullable: array(Js.Nullable.t(string)),
       nonNullableOfNonNullable: array(string),
     };
   };
-  let query = "query   {\n__typename\nlists  {\n__typename\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type t = {lists: t_lists}
+  let query = "query   {\n__typename  \nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
+  type t = {
+    __typename: string,
+    lists: t_lists,
+  }
   and t_lists = {
+    __typename: string,
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
     nonNullableOfNullable: array(option(string)),
@@ -38,10 +46,22 @@ module RecordsQuery = {
     (value) => (
       {
 
+        __typename: {
+          let value = (value: Raw.t).__typename;
+
+          value;
+        },
+
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
+
+              __typename: {
+                let value = (value: Raw.t_lists).__typename;
+
+                value;
+              },
 
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
@@ -140,8 +160,15 @@ module RecordsQuery = {
                   )
                 | None => Js.Nullable.null
                 };
+              }
+              and __typename = {
+                let value = (value: t_lists).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 nullableOfNullable,
 
@@ -153,10 +180,17 @@ module RecordsQuery = {
               };
             }: Raw.t_lists
           );
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+
+          value;
         };
         {
 
-          lists: lists,
+          __typename,
+
+          lists,
         };
       }: Raw.t
     );
@@ -166,19 +200,29 @@ module RecordsQuery = {
 
 module ObjectsQuery = {
   module Raw = {
-    type t = {. "lists": t_lists}
+    type t = {
+      .
+      "__typename": string,
+      "lists": t_lists,
+    }
     and t_lists = {
       .
+      "__typename": string,
       "nullableOfNullable": Js.Nullable.t(array(Js.Nullable.t(string))),
       "nullableOfNonNullable": Js.Nullable.t(array(string)),
       "nonNullableOfNullable": array(Js.Nullable.t(string)),
       "nonNullableOfNonNullable": array(string),
     };
   };
-  let query = "query   {\n__typename\nlists  {\n__typename\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type t = {. "lists": t_lists}
+  let query = "query   {\n__typename  \nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
+  type t = {
+    .
+    "__typename": string,
+    "lists": t_lists,
+  }
   and t_lists = {
     .
+    "__typename": string,
     "nullableOfNullable": option(array(option(string))),
     "nullableOfNonNullable": option(array(string)),
     "nonNullableOfNullable": array(option(string)),
@@ -187,9 +231,21 @@ module ObjectsQuery = {
   let parse: Raw.t => t =
     value => {
 
+      "__typename": {
+        let value = value##__typename;
+
+        value;
+      },
+
       "lists": {
         let value = value##lists;
         {
+
+          "__typename": {
+            let value = value##__typename;
+
+            value;
+          },
 
           "nullableOfNullable": {
             let value = value##nullableOfNullable;
@@ -283,8 +339,15 @@ module ObjectsQuery = {
             )
           | None => Js.Nullable.null
           };
+        }
+        and __typename = {
+          let value = value##__typename;
+
+          value;
         };
         {
+
+          "__typename": __typename,
 
           "nullableOfNullable": nullableOfNullable,
 
@@ -294,8 +357,15 @@ module ObjectsQuery = {
 
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
+      }
+      and __typename = {
+        let value = value##__typename;
+
+        value;
       };
       {
+
+        "__typename": __typename,
 
         "lists": lists,
       };
