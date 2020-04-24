@@ -157,14 +157,11 @@ and print_selection = (schema, ty, selection) =>
   }
 and print_field = (schema, ty, f) => {
   let ty_fields =
-    Option.unsafe_unwrap @@
-    (
-      switch (ty) {
-      | Interface({im_fields, _}) => Some(im_fields)
-      | Object({om_fields, _}) => Some(om_fields)
-      | _ => None
-      }
-    );
+    switch (ty) {
+    | Interface({im_fields, _}) => im_fields
+    | Object({om_fields, _}) => om_fields
+    | _ => []
+    };
 
   let field_ty =
     List.find(fm => fm.fm_name == f.fd_name.item, ty_fields).fm_field_type
