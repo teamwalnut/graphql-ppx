@@ -18,39 +18,53 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "mutationWithError": t_mutationWithError}
-    and t_mutationWithError
-    and t_mutationWithError_errors = {
+    type t = {. "mutationForVariant": t_mutationForVariant}
+    and t_mutationForVariant
+    and t_mutationForVariant_dogOrHuman
+    and t_mutationForVariant_dogOrHuman_Human = {. "name": string}
+    and t_mutationForVariant_dogOrHuman_Dog = {
       .
-      "field": t_mutationWithError_errors_field,
-      "message": string,
+      "name": string,
+      "barkVolume": float,
     }
-    and t_mutationWithError_errors_field = string
-    and t_mutationWithError_value = {. "stringField": string};
+    and t_mutationForVariant_human = {. "name": string}
+    and t_mutationForVariant_dog = {
+      .
+      "name": string,
+      "barkVolume": float,
+    };
   };
-  let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {. "mutationWithError": t_mutationWithError}
-  and t_mutationWithError = [
-    | `Value(t_mutationWithError_value)
-    | `Errors(array(t_mutationWithError_errors))
+  let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n";
+  type t = {. "mutationForVariant": t_mutationForVariant}
+  and t_mutationForVariant = [
+    | `BaseType(string)
+    | `BaseTypeList(array(string))
+    | `Dog(t_mutationForVariant_dog)
+    | `Human(t_mutationForVariant_human)
+    | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ]
-  and t_mutationWithError_errors = {
+  and t_mutationForVariant_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_mutationForVariant_dogOrHuman_Dog)
+    | `Human(t_mutationForVariant_dogOrHuman_Human)
+  ]
+  and t_mutationForVariant_dogOrHuman_Human = {. "name": string}
+  and t_mutationForVariant_dogOrHuman_Dog = {
     .
-    "field": t_mutationWithError_errors_field,
-    "message": string,
+    "name": string,
+    "barkVolume": float,
   }
-  and t_mutationWithError_errors_field = [
-    | `FutureAddedValue(string)
-    | `FIRST
-    | `SECOND
-    | `THIRD
-  ]
-  and t_mutationWithError_value = {. "stringField": string};
+  and t_mutationForVariant_human = {. "name": string}
+  and t_mutationForVariant_dog = {
+    .
+    "name": string,
+    "barkVolume": float,
+  };
   let parse: Raw.t => t =
     value => {
 
-      "mutationWithError": {
-        let value = value##mutationWithError;
+      "mutationForVariant": {
+        let value = value##mutationForVariant;
 
         switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
@@ -58,58 +72,151 @@ module MyQuery = {
           Js.Exn.raiseError(
             "graphql_ppx: "
             ++ "Expected type "
-            ++ "MutationWithErrorResult"
+            ++ "VariantTestResult"
             ++ " to be an object",
           )
 
         | Some(value) =>
-          let temp = Js.Dict.unsafeGet(Obj.magic(value), "value");
+          let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType");
           switch (Js.Json.decodeNull(temp)) {
           | None =>
             let value = temp;
-            `Value({
-
-              "stringField": {
-                let value = value##stringField;
-
-                value;
-              },
-            });
+            `BaseType(value);
           | Some(_) =>
-            let temp = Js.Dict.unsafeGet(Obj.magic(value), "errors");
+            let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseTypeList");
             switch (Js.Json.decodeNull(temp)) {
             | None =>
               let value = temp;
-              `Errors(
-                value
-                |> Js.Array.map(value =>
-                     {
-
-                       "field": {
-                         let value = value##field;
-                         switch (Obj.magic(value: string)) {
-                         | "FIRST" => `FIRST
-                         | "SECOND" => `SECOND
-                         | "THIRD" => `THIRD
-                         | other => `FutureAddedValue(other)
-                         };
-                       },
-
-                       "message": {
-                         let value = value##message;
-
-                         value;
-                       },
-                     }
-                   ),
-              );
+              `BaseTypeList(value |> Js.Array.map(value => value));
             | Some(_) =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "All fields on variant selection set on type "
-                ++ "MutationWithErrorResult"
-                ++ " were null",
-              )
+              let temp = Js.Dict.unsafeGet(Obj.magic(value), "dog");
+              switch (Js.Json.decodeNull(temp)) {
+              | None =>
+                let value = temp;
+                `Dog({
+
+                  "name": {
+                    let value = value##name;
+
+                    value;
+                  },
+
+                  "barkVolume": {
+                    let value = value##barkVolume;
+
+                    value;
+                  },
+                });
+              | Some(_) =>
+                let temp = Js.Dict.unsafeGet(Obj.magic(value), "human");
+                switch (Js.Json.decodeNull(temp)) {
+                | None =>
+                  let value = temp;
+                  `Human({
+
+                    "name": {
+                      let value = value##name;
+
+                      value;
+                    },
+                  });
+                | Some(_) =>
+                  let temp =
+                    Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
+                  switch (Js.Json.decodeNull(temp)) {
+                  | None =>
+                    let value = temp;
+                    `DogOrHuman(
+                      switch (
+                        Js.Json.decodeObject(Obj.magic(value): Js.Json.t)
+                      ) {
+
+                      | None =>
+                        Js.Exn.raiseError(
+                          "graphql_ppx: "
+                          ++ "Expected union "
+                          ++ "DogOrHuman"
+                          ++ " to be an object, got "
+                          ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
+                        )
+
+                      | Some(typename_obj) =>
+                        switch (Js.Dict.get(typename_obj, "__typename")) {
+
+                        | None =>
+                          Js.Exn.raiseError(
+                            "graphql_ppx: "
+                            ++ "Union "
+                            ++ "DogOrHuman"
+                            ++ " is missing the __typename field",
+                          )
+
+                        | Some(typename) =>
+                          switch (Js.Json.decodeString(typename)) {
+
+                          | None =>
+                            Js.Exn.raiseError(
+                              "graphql_ppx: "
+                              ++ "Union "
+                              ++ "DogOrHuman"
+                              ++ " has a __typename field that is not a string",
+                            )
+
+                          | Some(typename) =>
+                            switch (typename) {
+                            | "Dog" =>
+                              `Dog(
+                                {
+                                  let value: Raw.t_mutationForVariant_dogOrHuman_Dog =
+                                    Obj.magic(value);
+                                  {
+
+                                    "name": {
+                                      let value = value##name;
+
+                                      value;
+                                    },
+
+                                    "barkVolume": {
+                                      let value = value##barkVolume;
+
+                                      value;
+                                    },
+                                  };
+                                },
+                              )
+                            | "Human" =>
+                              `Human(
+                                {
+                                  let value: Raw.t_mutationForVariant_dogOrHuman_Human =
+                                    Obj.magic(value);
+                                  {
+
+                                    "name": {
+                                      let value = value##name;
+
+                                      value;
+                                    },
+                                  };
+                                },
+                              )
+                            | _ =>
+                              `FutureAddedValue(Obj.magic(value): Js.Json.t)
+                            }
+                          }
+                        }
+                      },
+                    );
+                  | Some(_) =>
+                    Js.Exn.raiseError(
+                      "graphql_ppx: "
+                      ++ "All fields on variant selection set on type "
+                      ++ "VariantTestResult"
+                      ++ " were null",
+                    )
+                  };
+                };
+              };
             };
           };
         };

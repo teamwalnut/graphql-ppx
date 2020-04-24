@@ -1,14 +1,25 @@
 module MyQuery = [%graphql
   {|
   mutation {
-    mutationWithError @bsVariant {
-      value {
-        stringField
+    mutationForVariant @bsVariant {
+      baseType
+      baseTypeList
+      dog {
+        name
+        barkVolume
       }
+      human {
+        name
+      }
+      dogOrHuman {
+        ...on Dog {
+          name
+          barkVolume
+        }
 
-      errors {
-        field
-        message
+        ...on Human {
+          name
+        }
       }
     }
   }
