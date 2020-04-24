@@ -97,7 +97,6 @@ let rec extract = path =>
       VariantSelection({path, fields: fragments, loc}),
       ...extract_fragments(fragments, path),
     ]
-
   | Res_poly_variant_interface(loc, _name, base, fragments) => [
       VariantInterface({path, fields: fragments, base, loc}),
       ...extract_fragments(fragments, path),
@@ -118,7 +117,6 @@ let rec extract = path =>
         loc,
       }),
     ]
-
 and fragment_names = f => f |> List.map(((name, _)) => name)
 and extract_fragments = (fragments, path) => {
   fragments
@@ -128,7 +126,6 @@ and extract_fragments = (fragments, path) => {
        [],
      );
 }
-
 and create_children = (path, fields) => {
   fields
   |> List.fold_left(
