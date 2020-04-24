@@ -48,7 +48,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = acc =>
     fun
-    | Empty => acc
     | String(s) =>
       Ast_helper.(
         Exp.apply(

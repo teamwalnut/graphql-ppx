@@ -1,5 +1,4 @@
 type t =
-  | Empty
   | String(string)
   | FragmentNameRef(string)
   | FragmentQueryRef(string);
