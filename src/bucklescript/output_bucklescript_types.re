@@ -246,7 +246,7 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
         Ast_helper.(
           Typ.variant(
             fields
-            |> List.map(((name, field)) =>
+            |> List.map(((name, res)) =>
                  {
                    prf_desc:
                      Rtag(
@@ -255,46 +255,7 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
                          loc: conv_loc(loc),
                        },
                        false,
-                       [
-                         {
-                           ptyp_desc:
-                             switch (field) {
-                             | Res_array(_, _) =>
-                               Ptyp_constr(
-                                 Location.mknoloc(
-                                   Longident.Lident(
-                                     "array("
-                                     ++ generate_type_name(
-                                          path |> List.append([name]),
-                                        )
-                                     ++ ")",
-                                   ),
-                                 ),
-                                 [],
-                               )
-                             | Res_object(_, _, _, _)
-                             | Res_record(_, _, _, _)
-                             | Res_poly_variant_selection_set(_, _, _)
-                             | Res_poly_variant_union(_, _, _, _)
-                             | Res_poly_variant_interface(_, _, _, _)
-                             | Res_solo_fragment_spread(_, _, _) =>
-                               Ptyp_constr(
-                                 Location.mknoloc(
-                                   Longident.Lident(
-                                     generate_type_name(
-                                       path |> List.append([name]),
-                                     ),
-                                   ),
-                                 ),
-                                 [],
-                               )
-                             | _ => Ptyp_any
-                             },
-                           ptyp_attributes: [],
-                           ptyp_loc_stack: [],
-                           ptyp_loc: Location.none,
-                         },
-                       ],
+                       [generate_type(config, [name, ...path], raw, res)],
                      ),
                    prf_loc: Location.none,
                    prf_attributes: [],

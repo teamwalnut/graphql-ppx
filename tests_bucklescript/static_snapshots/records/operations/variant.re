@@ -47,10 +47,12 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
+
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
 
           switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
@@ -66,6 +68,7 @@ module MyQuery = {
               let value = temp;
               `Value(
                 {
+
                   stringField: {
                     let value =
                       (value: Raw.t_mutationWithError_value).stringField;
@@ -84,6 +87,7 @@ module MyQuery = {
                   |> Js.Array.map((value) =>
                        (
                          {
+
                            field: {
                              let value =
                                (value: Raw.t_mutationWithError_errors).field;
