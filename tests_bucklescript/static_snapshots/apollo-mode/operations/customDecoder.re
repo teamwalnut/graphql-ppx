@@ -27,21 +27,15 @@ module IntOfString = {
 
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      variousScalars: t_variousScalars,
-    }
+    type t = {variousScalars: t_variousScalars}
     and t_variousScalars = {
       __typename: string,
       string,
       int,
     };
   };
-  let query = "query   {\n__typename  \nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
-  type t = {
-    __typename: string,
-    variousScalars: t_variousScalars,
-  }
+  let query = "query   {\nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
+  type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     __typename: string,
     string: IntOfString.t,
@@ -50,12 +44,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
@@ -116,17 +104,10 @@ module MyQuery = {
               };
             }: Raw.t_variousScalars
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          variousScalars,
+          variousScalars: variousScalars,
         };
       }: Raw.t
     );

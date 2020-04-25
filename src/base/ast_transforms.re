@@ -56,9 +56,10 @@ let rec do_add_typename_to_selection_set =
     | (Schema.Interface(_), selection_set) => false
     | (Schema.Union(_), selection_set) => false
     | (Schema.Object({om_name}), selection_set) =>
-      // do not inject __typename in top-level subscription type
-      // not exactly sure why, but this was there in the previous implementation
-      if (schema.Schema.meta.sm_subscription_type == Some(om_name)) {
+      // do not inject __typename in top-level types
+      if (schema.Schema.meta.sm_subscription_type == Some(om_name)
+          || schema.Schema.meta.sm_query_type == om_name
+          || schema.Schema.meta.sm_mutation_type == Some(om_name)) {
         false;
       } else {
         true;
@@ -81,6 +82,7 @@ let rec do_add_typename_to_selection_set =
            true
          | _ => false,
        );
+
   if (add_typename && !already_has_typename) {
     [
       Graphql_ast.Field({

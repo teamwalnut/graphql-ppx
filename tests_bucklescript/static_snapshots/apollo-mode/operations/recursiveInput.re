@@ -18,16 +18,10 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      recursiveInput: string,
-    };
+    type t = {recursiveInput: string};
   };
-  let query = "query ($arg: RecursiveInput!)  {\n__typename  \nrecursiveInput(arg: $arg)  \n}\n";
-  type t = {
-    __typename: string,
-    recursiveInput: string,
-  };
+  let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
+  type t = {recursiveInput: string};
   type t_variables = {arg: t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     otherField: option(string),
@@ -37,12 +31,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         recursiveInput: {
           let value = (value: Raw.t).recursiveInput;
@@ -58,17 +46,10 @@ module MyQuery = {
           let value = (value: t).recursiveInput;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          recursiveInput,
+          recursiveInput: recursiveInput,
         };
       }: Raw.t
     );

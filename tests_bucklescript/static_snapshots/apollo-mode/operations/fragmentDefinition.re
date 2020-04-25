@@ -229,7 +229,6 @@ module Fragments = {
 module MyQuery = {
   module Raw = {
     type t = {
-      __typename: string,
       l1: Fragments.ListFragment.Raw.t,
       l2: t_l2,
       l3: t_l3,
@@ -252,7 +251,7 @@ module MyQuery = {
                       (
                         (
                           (
-                            "query   {\n__typename  \nl1: lists  {\n..."
+                            "query   {\nl1: lists  {\n..."
                             ++ Fragments.ListFragment.name
                           )
                           ++ "   \n}\n\nl2: lists  {\n__typename  \n..."
@@ -279,7 +278,6 @@ module MyQuery = {
     )
     ++ Fragments.ListFragment.query;
   type t = {
-    __typename: string,
     l1: Fragments.ListFragment.t,
     l2: t_l2,
     l3: t_l3,
@@ -304,12 +302,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         l1: {
           let value = (value: Raw.t).l1;
@@ -593,15 +585,8 @@ module MyQuery = {
         and l1 = {
           let value = (value: t).l1;
           Fragments.ListFragment.serialize(value);
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
-
-          __typename,
 
           l1,
 

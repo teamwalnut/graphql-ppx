@@ -18,10 +18,7 @@
 ];
 module RecordsQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      lists: t_lists,
-    }
+    type t = {lists: t_lists}
     and t_lists = {
       __typename: string,
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -30,11 +27,8 @@ module RecordsQuery = {
       nonNullableOfNonNullable: array(string),
     };
   };
-  let query = "query   {\n__typename  \nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type t = {
-    __typename: string,
-    lists: t_lists,
-  }
+  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
+  type t = {lists: t_lists}
   and t_lists = {
     __typename: string,
     nullableOfNullable: option(array(option(string))),
@@ -45,12 +39,6 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         lists: {
           let value = (value: Raw.t).lists;
@@ -180,17 +168,10 @@ module RecordsQuery = {
               };
             }: Raw.t_lists
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          lists,
+          lists: lists,
         };
       }: Raw.t
     );
@@ -200,11 +181,7 @@ module RecordsQuery = {
 
 module ObjectsQuery = {
   module Raw = {
-    type t = {
-      .
-      "__typename": string,
-      "lists": t_lists,
-    }
+    type t = {. "lists": t_lists}
     and t_lists = {
       .
       "__typename": string,
@@ -214,12 +191,8 @@ module ObjectsQuery = {
       "nonNullableOfNonNullable": array(string),
     };
   };
-  let query = "query   {\n__typename  \nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-  type t = {
-    .
-    "__typename": string,
-    "lists": t_lists,
-  }
+  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
+  type t = {. "lists": t_lists}
   and t_lists = {
     .
     "__typename": string,
@@ -230,12 +203,6 @@ module ObjectsQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
-      "__typename": {
-        let value = value##__typename;
-
-        value;
-      },
 
       "lists": {
         let value = value##lists;
@@ -357,15 +324,8 @@ module ObjectsQuery = {
 
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
-      }
-      and __typename = {
-        let value = value##__typename;
-
-        value;
       };
       {
-
-        "__typename": __typename,
 
         "lists": lists,
       };

@@ -18,10 +18,7 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      variousScalars: t_variousScalars,
-    }
+    type t = {variousScalars: t_variousScalars}
     and t_variousScalars = {
       __typename: string,
       nullableString: Js.Nullable.t(string),
@@ -36,11 +33,8 @@ module MyQuery = {
       id: string,
     };
   };
-  let query = "query   {\n__typename  \nvariousScalars  {\n__typename  \nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-  type t = {
-    __typename: string,
-    variousScalars: t_variousScalars,
-  }
+  let query = "query   {\nvariousScalars  {\n__typename  \nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
+  type t = {variousScalars: t_variousScalars}
   and t_variousScalars = {
     __typename: string,
     nullableString: option(string),
@@ -57,12 +51,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
@@ -257,17 +245,10 @@ module MyQuery = {
               };
             }: Raw.t_variousScalars
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          variousScalars,
+          variousScalars: variousScalars,
         };
       }: Raw.t
     );

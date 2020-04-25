@@ -18,26 +18,14 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      argNamedQuery: int,
-    };
+    type t = {argNamedQuery: int};
   };
-  let query = "query ($query: String!)  {\n__typename  \nargNamedQuery(query: $query)  \n}\n";
-  type t = {
-    __typename: string,
-    argNamedQuery: int,
-  };
+  let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
+  type t = {argNamedQuery: int};
   type t_variables = {query: string};
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         argNamedQuery: {
           let value = (value: Raw.t).argNamedQuery;
@@ -53,17 +41,10 @@ module MyQuery = {
           let value = (value: t).argNamedQuery;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          argNamedQuery,
+          argNamedQuery: argNamedQuery,
         };
       }: Raw.t
     );

@@ -18,10 +18,7 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      dogOrHuman: t_dogOrHuman,
-    }
+    type t = {dogOrHuman: t_dogOrHuman}
     and t_dogOrHuman
     and t_dogOrHuman_Human = {name: string}
     and t_dogOrHuman_Dog = {
@@ -29,11 +26,8 @@ module MyQuery = {
       barkVolume: float,
     };
   };
-  let query = "query   {\n__typename  \ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t = {
-    __typename: string,
-    dogOrHuman: t_dogOrHuman,
-  }
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  type t = {dogOrHuman: t_dogOrHuman}
   and t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)
@@ -47,12 +41,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
@@ -150,17 +138,10 @@ module MyQuery = {
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          dogOrHuman,
+          dogOrHuman: dogOrHuman,
         };
       }: Raw.t
     );
@@ -170,10 +151,7 @@ module MyQuery = {
 
 module MyQueryNoError = {
   module Raw = {
-    type t = {
-      __typename: string,
-      dogOrHuman: t_dogOrHuman,
-    }
+    type t = {dogOrHuman: t_dogOrHuman}
     and t_dogOrHuman
     and t_dogOrHuman_Human = {name: string}
     and t_dogOrHuman_Dog = {
@@ -181,11 +159,8 @@ module MyQueryNoError = {
       barkVolume: float,
     };
   };
-  let query = "query   {\n__typename  \ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t = {
-    __typename: string,
-    dogOrHuman: t_dogOrHuman,
-  }
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  type t = {dogOrHuman: t_dogOrHuman}
   and t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)
@@ -199,12 +174,6 @@ module MyQueryNoError = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
@@ -302,17 +271,10 @@ module MyQueryNoError = {
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          dogOrHuman,
+          dogOrHuman: dogOrHuman,
         };
       }: Raw.t
     );

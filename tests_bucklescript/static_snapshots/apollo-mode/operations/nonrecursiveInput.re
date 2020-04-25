@@ -18,16 +18,10 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      nonrecursiveInput: string,
-    };
+    type t = {nonrecursiveInput: string};
   };
-  let query = "query ($arg: NonrecursiveInput!)  {\n__typename  \nnonrecursiveInput(arg: $arg)  \n}\n";
-  type t = {
-    __typename: string,
-    nonrecursiveInput: string,
-  };
+  let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
+  type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     field: option(string),
@@ -36,12 +30,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
@@ -57,17 +45,10 @@ module MyQuery = {
           let value = (value: t).nonrecursiveInput;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          nonrecursiveInput,
+          nonrecursiveInput: nonrecursiveInput,
         };
       }: Raw.t
     );

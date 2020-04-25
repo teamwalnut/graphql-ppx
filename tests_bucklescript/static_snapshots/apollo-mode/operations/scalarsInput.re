@@ -18,16 +18,10 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      scalarsInput: string,
-    };
+    type t = {scalarsInput: string};
   };
-  let query = "query ($arg: VariousScalarsInput!)  {\n__typename  \nscalarsInput(arg: $arg)  \n}\n";
-  type t = {
-    __typename: string,
-    scalarsInput: string,
-  };
+  let query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
+  type t = {scalarsInput: string};
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -45,12 +39,6 @@ module MyQuery = {
     (value) => (
       {
 
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
-
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
 
@@ -65,17 +53,10 @@ module MyQuery = {
           let value = (value: t).scalarsInput;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          scalarsInput,
+          scalarsInput: scalarsInput,
         };
       }: Raw.t
     );

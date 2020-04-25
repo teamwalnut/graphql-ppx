@@ -24,7 +24,6 @@ type record = {
 module MyQuery = {
   module Raw = {
     type t = {
-      __typename: string,
       first: t_first,
       second: t_second,
       let_: t_let,
@@ -67,9 +66,8 @@ module MyQuery = {
       field: string,
     };
   };
-  let query = "query   {\n__typename  \nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
+  let query = "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
   type t = {
-    __typename: string,
     first: t_first,
     second: t_second,
     let_: t_let,
@@ -114,12 +112,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         first: {
           let value = (value: Raw.t).first;
@@ -528,15 +520,8 @@ module MyQuery = {
               };
             }: Raw.t_first
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
-
-          __typename,
 
           first,
 

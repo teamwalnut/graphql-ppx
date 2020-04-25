@@ -18,16 +18,10 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      listsInput: string,
-    };
+    type t = {listsInput: string};
   };
-  let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\n__typename  \nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
-  type t = {
-    __typename: string,
-    listsInput: string,
-  };
+  let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
+  type t = {listsInput: string};
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
@@ -37,12 +31,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         listsInput: {
           let value = (value: Raw.t).listsInput;
@@ -58,17 +46,10 @@ module MyQuery = {
           let value = (value: t).listsInput;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          listsInput,
+          listsInput: listsInput,
         };
       }: Raw.t
     );

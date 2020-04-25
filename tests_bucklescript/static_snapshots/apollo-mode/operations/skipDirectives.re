@@ -19,7 +19,6 @@
 module MyQuery = {
   module Raw = {
     type t = {
-      __typename: string,
       v1: t_v1,
       v2: t_v2,
     }
@@ -34,9 +33,8 @@ module MyQuery = {
       string: Js.Nullable.t(string),
     };
   };
-  let query = "query ($var: Boolean!)  {\n__typename  \nv1: variousScalars  {\n__typename  \nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\n__typename  \nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
+  let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\n__typename  \nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\n__typename  \nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
   type t = {
-    __typename: string,
     v1: t_v1,
     v2: t_v2,
   }
@@ -54,12 +52,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         v1: {
           let value = (value: Raw.t).v1;
@@ -200,15 +192,8 @@ module MyQuery = {
               };
             }: Raw.t_v1
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
-
-          __typename,
 
           v1,
 
