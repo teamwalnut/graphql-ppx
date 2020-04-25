@@ -17,6 +17,10 @@
   "graphql": {
     "apollo-mode": false,
     "mode": "records",
-    "schema": "../graphql_schema.json"
+    "schema": "../graphql_schema.json",
+    "custom-fields": {
+      "DateTime": "GraphqlHelpers.DateTime",
+      "Color": "GraphqlHelpers.Color"
+    }
   }
 }
