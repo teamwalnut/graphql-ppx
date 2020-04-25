@@ -73,7 +73,15 @@ let rec do_add_typename_to_selection_set =
       do_add_typename_to_selection_set,
     );
 
-  if (add_typename) {
+  let already_has_typename =
+    selection_set
+    |> List.exists(
+         fun
+         | Graphql_ast.Field({item: {fd_name: {item: "__typename"}}}) =>
+           true
+         | _ => false,
+       );
+  if (add_typename && !already_has_typename) {
     [
       Graphql_ast.Field({
         span: parent_span,
