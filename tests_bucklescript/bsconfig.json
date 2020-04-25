@@ -14,7 +14,7 @@
     "number": "+A-48-30-42-40",
     "error": "+A"
   },
-  "graphql-ppx": {
+  "graphql": {
     "apollo-mode": false,
     "mode": "records",
     "schema": "../graphql_schema.json"

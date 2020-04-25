@@ -102,11 +102,23 @@ let read_config = () => {
          Ppx_config.update_config(current => {...current, schema_file})
        });
     ppxConfig
-    |> JsonHelper.mapBool("ast-out", ast_out => {
+    |> JsonHelper.mapString("ast-out", ast_out => {
          Ppx_config.update_config(current =>
            {
              ...current,
-             output_mode: ast_out ? Ppx_config.Apollo_AST : Ppx_config.String,
+             output_mode:
+               switch (ast_out) {
+               | "apollo" => Ppx_config.Apollo_AST
+               | "string" => Ppx_config.String
+               | other =>
+                 raise(
+                   Config_error(
+                     "Error in graphql configuration: ast-out \""
+                     ++ other
+                     ++ "\" is not supported. Choose either apollo or string.",
+                   ),
+                 )
+               },
            }
          )
        });
