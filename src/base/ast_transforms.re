@@ -22,15 +22,15 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
     |> List.map(
          fun
          | Graphql_ast.Field(
-             {item: {fd_name, fd_selection_set: Some(selection)}} as field,
+             {item: {fd_selection_set: Some(selection)}} as field,
            ) => {
              let field_ty =
                unsafe_get_field_type(schema, ty, field.item.fd_name.item);
              let selection_set =
-               fn(selection.span, schema, field_ty, selection_set);
+               fn(selection.span, schema, field_ty, selection.item);
 
              Field({
-               span: field.span,
+               ...field,
                item: {
                  ...field.item,
                  fd_selection_set: Some({...selection, item: selection_set}),
