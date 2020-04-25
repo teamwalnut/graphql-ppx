@@ -546,7 +546,7 @@ let generate_types =
   };
 };
 
-let rec generate_arg_type = loc =>
+let rec generate_arg_type = (raw, loc) =>
   fun
   | Type(Scalar({sm_name: "ID"}))
   | Type(Scalar({sm_name: "String"})) => base_type("string")
@@ -555,23 +555,27 @@ let rec generate_arg_type = loc =>
   | Type(Scalar({sm_name: "Boolean"})) => base_type("bool")
   | Type(Scalar({sm_name: _})) => base_type("Js.Json.t")
   | Type(Enum(enum_meta)) =>
-    Graphql_ppx_base__.Schema.(
-      Ast_helper.(
-        Typ.variant(
-          enum_meta.em_values
-          |> List.map(({evm_name, _}) =>
-               {
-                 prf_desc:
-                   Rtag({txt: evm_name, loc: Location.none}, true, []),
-                 prf_loc: Location.none,
-                 prf_attributes: [],
-               }
-             ),
-          Closed,
-          None,
+    if (raw) {
+      base_type("string");
+    } else {
+      Graphql_ppx_base__.Schema.(
+        Ast_helper.(
+          Typ.variant(
+            enum_meta.em_values
+            |> List.map(({evm_name, _}) =>
+                 {
+                   prf_desc:
+                     Rtag({txt: evm_name, loc: Location.none}, true, []),
+                   prf_loc: Location.none,
+                   prf_attributes: [],
+                 }
+               ),
+            Closed,
+            None,
+          )
         )
-      )
-    )
+      );
+    }
   | Type(InputObject({iom_name})) =>
     base_type(generate_type_name(~prefix="t_variables", [iom_name]))
   | Type(Object(_)) =>
@@ -593,9 +597,12 @@ let rec generate_arg_type = loc =>
       ),
     )
   | Nullable(inner) =>
-    base_type(~inner=[generate_arg_type(loc, inner)], "option")
+    base_type(
+      ~inner=[generate_arg_type(raw, loc, inner)],
+      raw ? "Js.Json.t" : "option",
+    )
   | List(inner) =>
-    base_type(~inner=[generate_arg_type(loc, inner)], "array")
+    base_type(~inner=[generate_arg_type(raw, loc, inner)], "array")
   | TypeNotFound(name) =>
     raise(
       Location.Error(
@@ -606,7 +613,7 @@ let rec generate_arg_type = loc =>
       ),
     );
 
-let generate_record_input_object = (input_obj_name, fields) => {
+let generate_record_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.Type.mk(
     ~kind=
       Ptype_record(
@@ -616,7 +623,7 @@ let generate_record_input_object = (input_obj_name, fields) => {
              | InputField({name, type_, loc}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
-                   generate_arg_type(loc, type_),
+                   generate_arg_type(raw, loc, type_),
                  );
                },
            ),
@@ -635,7 +642,7 @@ let generate_record_input_object = (input_obj_name, fields) => {
   );
 };
 
-let generate_object_input_object = (input_obj_name, fields) => {
+let generate_object_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.(
     Type.mk(
       ~kind=Ptype_abstract,
@@ -650,7 +657,7 @@ let generate_object_input_object = (input_obj_name, fields) => {
                      pof_desc:
                        Otag(
                          {txt: name, loc: Location.none},
-                         generate_arg_type(loc, type_),
+                         generate_arg_type(raw, loc, type_),
                        ),
                      pof_loc: Location.none,
                      pof_attributes: [],
@@ -676,18 +683,18 @@ let generate_object_input_object = (input_obj_name, fields) => {
 };
 
 let generate_input_object =
-    (config: Generator_utils.output_config, input_obj_name, fields) => {
+    (raw, config: Generator_utils.output_config, input_obj_name, fields) => {
   config.records
-    ? generate_record_input_object(input_obj_name, fields)
-    : generate_object_input_object(input_obj_name, fields);
+    ? generate_record_input_object(raw, input_obj_name, fields)
+    : generate_object_input_object(raw, input_obj_name, fields);
 };
 
-let generate_arg_types = (config, variable_defs) => {
+let generate_arg_types = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
   input_objects
   |> List.map((InputObject({name, fields})) =>
-       generate_input_object(config, name, fields)
+       generate_input_object(raw, config, name, fields)
      )
   |> Ast_helper.Str.type_(Recursive);
 };

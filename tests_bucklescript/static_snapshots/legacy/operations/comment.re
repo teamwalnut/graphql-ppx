@@ -19,6 +19,12 @@
 module MyQuery = {
   module Raw = {
     type t = {. "nonrecursiveInput": string};
+    type t_variables = {. "arg": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      "field": Js.Json.t(string),
+      "enum": Js.Json.t(string),
+    };
   };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "nonrecursiveInput": string};

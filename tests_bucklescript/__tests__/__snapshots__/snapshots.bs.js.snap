@@ -22,6 +22,7 @@ exports[`Apollo argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {argNamedQuery: int};
+    type t_variables = {query: string};
   };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
@@ -100,6 +101,11 @@ exports[`Apollo comment.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {nonrecursiveInput: string};
+    type t_variables = {arg: t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      field: Js.Json.t(string),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
@@ -371,6 +377,10 @@ module MyQuery = {
       nonNullable: Js.Json.t,
     };
     type t = {customScalarField: t_customScalarField};
+    type t_variables = {
+      opt: Js.Json.t(Js.Json.t),
+      req: Js.Json.t,
+    };
   };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\n__typename  \\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customScalarField = {
@@ -524,6 +534,7 @@ exports[`Apollo enumInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {enumInput: string};
+    type t_variables = {arg: string};
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {enumInput: string};
@@ -1766,6 +1777,12 @@ exports[`Apollo listsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {listsInput: string};
+    type t_variables = {
+      nullableOfNullable: Js.Json.t(array(Js.Json.t(string))),
+      nullableOfNonNullable: Js.Json.t(array(string)),
+      nonNullableOfNullable: array(Js.Json.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {listsInput: string};
@@ -1974,6 +1991,13 @@ exports[`Apollo listsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {listsInput: string};
+    type t_variables = {arg: t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      nullableOfNullable: Js.Json.t(array(Js.Json.t(string))),
+      nullableOfNonNullable: Js.Json.t(array(string)),
+      nonNullableOfNullable: array(Js.Json.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {listsInput: string};
@@ -2466,6 +2490,7 @@ exports[`Apollo mutationWithArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {optionalInputArgs: string};
+    type t_variables = {required: string};
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {optionalInputArgs: string};
@@ -3083,6 +3108,11 @@ exports[`Apollo nonrecursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {nonrecursiveInput: string};
+    type t_variables = {arg: t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      field: Js.Json.t(string),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
@@ -3361,6 +3391,10 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      id: Js.Json.t(string),
+      name: Js.Json.t(string),
+    };
   };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\n__typename  \\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -4068,6 +4102,12 @@ exports[`Apollo recursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {recursiveInput: string};
+    type t_variables = {arg: t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      otherField: Js.Json.t(string),
+      inner: Js.Json.t(t_variables_RecursiveInput),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {recursiveInput: string};
@@ -4491,6 +4531,18 @@ exports[`Apollo scalarsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
@@ -4677,6 +4729,19 @@ exports[`Apollo scalarsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {arg: t_variables_VariousScalarsInput}
+    and t_variables_VariousScalarsInput = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
@@ -4903,6 +4968,7 @@ module MyQuery = {
       v1: t_v1,
       v2: t_v2,
     };
+    type t_variables = {var: bool};
   };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\n__typename  \\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\n__typename  \\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_v1 = {
@@ -6849,6 +6915,7 @@ exports[`Legacy argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
+    type t_variables = {. \\"query\\": string};
   };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
@@ -6939,6 +7006,12 @@ exports[`Legacy comment.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      \\"field\\": Js.Json.t(string),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
@@ -7205,6 +7278,11 @@ module MyQuery = {
       \\"nonNullable\\": Js.Json.t,
     };
     type t = {. \\"customScalarField\\": t_customScalarField};
+    type t_variables = {
+      .
+      \\"opt\\": Js.Json.t(Js.Json.t),
+      \\"req\\": Js.Json.t,
+    };
   };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customScalarField = {
@@ -7354,6 +7432,7 @@ exports[`Legacy enumInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"enumInput\\": string};
+    type t_variables = {. \\"arg\\": string};
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"enumInput\\": string};
@@ -8462,6 +8541,13 @@ exports[`Legacy listsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
+    type t_variables = {
+      .
+      \\"nullableOfNullable\\": Js.Json.t(array(Js.Json.t(string))),
+      \\"nullableOfNonNullable\\": Js.Json.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Json.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
@@ -8696,6 +8782,14 @@ exports[`Legacy listsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      .
+      \\"nullableOfNullable\\": Js.Json.t(array(Js.Json.t(string))),
+      \\"nullableOfNonNullable\\": Js.Json.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Json.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
@@ -9132,6 +9226,7 @@ exports[`Legacy mutationWithArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
+    type t_variables = {. \\"required\\": string};
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
@@ -9557,6 +9652,12 @@ exports[`Legacy nonrecursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      \\"field\\": Js.Json.t(string),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
@@ -9834,6 +9935,11 @@ module MyQuery = {
       \\"name\\": Js.Nullable.t(string),
     };
     type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      .
+      \\"id\\": Js.Json.t(string),
+      \\"name\\": Js.Json.t(string),
+    };
   };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -10464,6 +10570,13 @@ exports[`Legacy recursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      .
+      \\"otherField\\": Js.Json.t(string),
+      \\"inner\\": Js.Json.t(t_variables_RecursiveInput),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"recursiveInput\\": string};
@@ -10882,6 +10995,19 @@ exports[`Legacy scalarsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
+    type t_variables = {
+      .
+      \\"nullableString\\": Js.Json.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Json.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Json.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Json.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Json.t(string),
+      \\"id\\": string,
+    };
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
@@ -11112,6 +11238,20 @@ exports[`Legacy scalarsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
+    and t_variables_VariousScalarsInput = {
+      .
+      \\"nullableString\\": Js.Json.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Json.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Json.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Json.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Json.t(string),
+      \\"id\\": string,
+    };
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
@@ -11352,6 +11492,7 @@ module MyQuery = {
       \\"v1\\": t_v1,
       \\"v2\\": t_v2,
     };
+    type t_variables = {. \\"var\\": bool};
   };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_v1 = {
@@ -13190,6 +13331,7 @@ exports[`Objects argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
+    type t_variables = {. \\"query\\": string};
   };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
@@ -13264,6 +13406,12 @@ exports[`Objects comment.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      \\"field\\": Js.Json.t(string),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
@@ -13509,6 +13657,11 @@ module MyQuery = {
       \\"nonNullable\\": Js.Json.t,
     };
     type t = {. \\"customScalarField\\": t_customScalarField};
+    type t_variables = {
+      .
+      \\"opt\\": Js.Json.t(Js.Json.t),
+      \\"req\\": Js.Json.t,
+    };
   };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customScalarField = {
@@ -13640,6 +13793,7 @@ exports[`Objects enumInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"enumInput\\": string};
+    type t_variables = {. \\"arg\\": string};
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"enumInput\\": string};
@@ -14712,6 +14866,13 @@ exports[`Objects listsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
+    type t_variables = {
+      .
+      \\"nullableOfNullable\\": Js.Json.t(array(Js.Json.t(string))),
+      \\"nullableOfNonNullable\\": Js.Json.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Json.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
@@ -14917,6 +15078,14 @@ exports[`Objects listsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      .
+      \\"nullableOfNullable\\": Js.Json.t(array(Js.Json.t(string))),
+      \\"nullableOfNonNullable\\": Js.Json.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Json.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
@@ -15332,6 +15501,7 @@ exports[`Objects mutationWithArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
+    type t_variables = {. \\"required\\": string};
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
@@ -15736,6 +15906,12 @@ exports[`Objects nonrecursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      \\"field\\": Js.Json.t(string),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
@@ -15992,6 +16168,11 @@ module MyQuery = {
       \\"name\\": Js.Nullable.t(string),
     };
     type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      .
+      \\"id\\": Js.Json.t(string),
+      \\"name\\": Js.Json.t(string),
+    };
   };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -16579,6 +16760,13 @@ exports[`Objects recursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      .
+      \\"otherField\\": Js.Json.t(string),
+      \\"inner\\": Js.Json.t(t_variables_RecursiveInput),
+      \\"enum\\": Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"recursiveInput\\": string};
@@ -16976,6 +17164,19 @@ exports[`Objects scalarsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
+    type t_variables = {
+      .
+      \\"nullableString\\": Js.Json.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Json.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Json.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Json.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Json.t(string),
+      \\"id\\": string,
+    };
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
@@ -17159,6 +17360,20 @@ exports[`Objects scalarsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
+    type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
+    and t_variables_VariousScalarsInput = {
+      .
+      \\"nullableString\\": Js.Json.t(string),
+      \\"string\\": string,
+      \\"nullableInt\\": Js.Json.t(int),
+      \\"int\\": int,
+      \\"nullableFloat\\": Js.Json.t(float),
+      \\"float\\": float,
+      \\"nullableBoolean\\": Js.Json.t(bool),
+      \\"boolean\\": bool,
+      \\"nullableID\\": Js.Json.t(string),
+      \\"id\\": string,
+    };
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
@@ -17383,6 +17598,7 @@ module MyQuery = {
       \\"v1\\": t_v1,
       \\"v2\\": t_v2,
     };
+    type t_variables = {. \\"var\\": bool};
   };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_v1 = {
@@ -19160,6 +19376,7 @@ exports[`Records argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {argNamedQuery: int};
+    type t_variables = {query: string};
   };
   let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
@@ -19238,6 +19455,11 @@ exports[`Records comment.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {nonrecursiveInput: string};
+    type t_variables = {arg: t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      field: Js.Json.t(string),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
@@ -19493,6 +19715,10 @@ module MyQuery = {
       nonNullable: Js.Json.t,
     };
     type t = {customScalarField: t_customScalarField};
+    type t_variables = {
+      opt: Js.Json.t(Js.Json.t),
+      req: Js.Json.t,
+    };
   };
   let query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customScalarField = {
@@ -19632,6 +19858,7 @@ exports[`Records enumInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {enumInput: string};
+    type t_variables = {arg: string};
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {enumInput: string};
@@ -20739,6 +20966,12 @@ exports[`Records listsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {listsInput: string};
+    type t_variables = {
+      nullableOfNullable: Js.Json.t(array(Js.Json.t(string))),
+      nullableOfNonNullable: Js.Json.t(array(string)),
+      nonNullableOfNullable: array(Js.Json.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {listsInput: string};
@@ -20947,6 +21180,13 @@ exports[`Records listsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {listsInput: string};
+    type t_variables = {arg: t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      nullableOfNullable: Js.Json.t(array(Js.Json.t(string))),
+      nullableOfNonNullable: Js.Json.t(array(string)),
+      nonNullableOfNullable: array(Js.Json.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {listsInput: string};
@@ -21384,6 +21624,7 @@ exports[`Records mutationWithArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {optionalInputArgs: string};
+    type t_variables = {required: string};
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {optionalInputArgs: string};
@@ -21828,6 +22069,11 @@ exports[`Records nonrecursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {nonrecursiveInput: string};
+    type t_variables = {arg: t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      field: Js.Json.t(string),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
@@ -22090,6 +22336,10 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      id: Js.Json.t(string),
+      name: Js.Json.t(string),
+    };
   };
   let query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -22721,6 +22971,12 @@ exports[`Records recursiveInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {recursiveInput: string};
+    type t_variables = {arg: t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      otherField: Js.Json.t(string),
+      inner: Js.Json.t(t_variables_RecursiveInput),
+      enum: Js.Json.t(string),
+    };
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {recursiveInput: string};
@@ -23129,6 +23385,18 @@ exports[`Records scalarsArgs.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
@@ -23315,6 +23583,19 @@ exports[`Records scalarsInput.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {arg: t_variables_VariousScalarsInput}
+    and t_variables_VariousScalarsInput = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
@@ -23539,6 +23820,7 @@ module MyQuery = {
       v1: t_v1,
       v2: t_v2,
     };
+    type t_variables = {var: bool};
   };
   let query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_v1 = {

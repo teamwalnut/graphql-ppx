@@ -24,6 +24,11 @@ module MyQuery = {
       "nonNullable": Js.Json.t,
     };
     type t = {. "customScalarField": t_customScalarField};
+    type t_variables = {
+      .
+      "opt": Js.Json.t(Js.Json.t),
+      "req": Js.Json.t,
+    };
   };
   let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n";
   type t_customScalarField = {

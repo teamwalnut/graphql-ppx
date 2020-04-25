@@ -19,6 +19,13 @@
 module MyQuery = {
   module Raw = {
     type t = {listsInput: string};
+    type t_variables = {arg: t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      nullableOfNullable: Js.Json.t(array(Js.Json.t(string))),
+      nullableOfNonNullable: Js.Json.t(array(string)),
+      nonNullableOfNullable: array(Js.Json.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
   };
   let query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
   type t = {listsInput: string};

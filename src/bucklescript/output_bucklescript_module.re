@@ -344,7 +344,13 @@ let generate_default_operation =
       None,
     );
   let arg_types =
-    Output_bucklescript_types.generate_arg_types(config, variable_defs);
+    Output_bucklescript_types.generate_arg_types(
+      false,
+      config,
+      variable_defs,
+    );
+  let raw_arg_types =
+    Output_bucklescript_types.generate_arg_types(true, config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
@@ -375,7 +381,13 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
-          wrap_module("Raw", raw_types),
+          wrap_module(
+            "Raw",
+            List.append(
+              raw_types,
+              extracted_args == [] ? [] : [raw_arg_types],
+            ),
+          ),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -396,7 +408,8 @@ let generate_default_operation =
           | None => []
           | Some(c) => [c]
           },
-          config.legacy && variable_constructors != None ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors != None
+            ? [legacy_make_with_variables] : [],
           config.legacy && variable_constructors == None
             ? [
               [%stri

@@ -19,6 +19,18 @@
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
   type t = {scalarsInput: string};

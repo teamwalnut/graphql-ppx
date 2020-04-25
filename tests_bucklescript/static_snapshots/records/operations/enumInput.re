@@ -19,6 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {enumInput: string};
+    type t_variables = {arg: string};
   };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
   type t = {enumInput: string};

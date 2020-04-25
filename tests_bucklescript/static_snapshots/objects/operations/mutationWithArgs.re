@@ -19,6 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {. "optionalInputArgs": string};
+    type t_variables = {. "required": string};
   };
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {. "optionalInputArgs": string};

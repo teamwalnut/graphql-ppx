@@ -19,6 +19,13 @@
 module MyQuery = {
   module Raw = {
     type t = {. "listsInput": string};
+    type t_variables = {
+      .
+      "nullableOfNullable": Js.Json.t(array(Js.Json.t(string))),
+      "nullableOfNonNullable": Js.Json.t(array(string)),
+      "nonNullableOfNullable": array(Js.Json.t(string)),
+      "nonNullableOfNonNullable": array(string),
+    };
   };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
   type t = {. "listsInput": string};

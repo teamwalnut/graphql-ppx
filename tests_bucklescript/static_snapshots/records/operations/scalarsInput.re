@@ -19,6 +19,19 @@
 module MyQuery = {
   module Raw = {
     type t = {scalarsInput: string};
+    type t_variables = {arg: t_variables_VariousScalarsInput}
+    and t_variables_VariousScalarsInput = {
+      nullableString: Js.Json.t(string),
+      string,
+      nullableInt: Js.Json.t(int),
+      int,
+      nullableFloat: Js.Json.t(float),
+      float,
+      nullableBoolean: Js.Json.t(bool),
+      boolean: bool,
+      nullableID: Js.Json.t(string),
+      id: string,
+    };
   };
   let query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
   type t = {scalarsInput: string};

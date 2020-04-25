@@ -19,6 +19,13 @@
 module MyQuery = {
   module Raw = {
     type t = {. "recursiveInput": string};
+    type t_variables = {. "arg": t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      .
+      "otherField": Js.Json.t(string),
+      "inner": Js.Json.t(t_variables_RecursiveInput),
+      "enum": Js.Json.t(string),
+    };
   };
   let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "recursiveInput": string};

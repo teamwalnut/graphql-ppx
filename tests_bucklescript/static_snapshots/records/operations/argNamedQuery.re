@@ -19,6 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t = {argNamedQuery: int};
+    type t_variables = {query: string};
   };
   let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {argNamedQuery: int};

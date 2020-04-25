@@ -23,6 +23,10 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      id: Js.Json.t(string),
+      name: Js.Json.t(string),
+    };
   };
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
