@@ -152,11 +152,6 @@ module MyQuery = {
         "lists": lists,
       };
     };
-  let makeWithVariables = variables => {
-    "query": query,
-    "variables": serializeVariables(variables),
-    "parse": parse,
-  };
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

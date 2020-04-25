@@ -396,7 +396,7 @@ let generate_default_operation =
           | None => []
           | Some(c) => [c]
           },
-          config.legacy ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors != None ? [legacy_make_with_variables] : [],
           config.legacy && variable_constructors == None
             ? [
               [%stri

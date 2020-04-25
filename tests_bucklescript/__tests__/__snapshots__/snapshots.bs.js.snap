@@ -7168,11 +7168,6 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -7606,11 +7601,6 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -7755,11 +7745,6 @@ module ObjectsQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -8258,11 +8243,6 @@ module MyQuery = {
         \\"l4\\": l4,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -8450,11 +8430,6 @@ module MyQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -9125,11 +9100,6 @@ module MyQuery = {
         \\"mutationWithError\\": mutationWithError,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -9555,11 +9525,6 @@ module MyQuery = {
         \\"let_\\": let_,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -9832,11 +9797,6 @@ module MyQuery = {
         \\"pokemon\\": pokemon,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -10110,11 +10070,6 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -10171,11 +10126,6 @@ module OneFieldQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -10266,11 +10216,6 @@ module ExternalFragmentQuery = {
           \\"variousScalars\\": variousScalars,
         };
       };
-    let makeWithVariables = variables => {
-      \\"query\\": query,
-      \\"variables\\": serializeVariables(variables),
-      \\"parse\\": parse,
-    };
     let make = () => {
       \\"query\\": query,
       \\"variables\\": Js.Json.null,
@@ -10369,11 +10314,6 @@ module InlineFragmentQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -10491,11 +10431,6 @@ module UnionExternalFragmentQuery = {
           \\"dogOrHuman\\": dogOrHuman,
         };
       };
-    let makeWithVariables = variables => {
-      \\"query\\": query,
-      \\"variables\\": serializeVariables(variables),
-      \\"parse\\": parse,
-    };
     let make = () => {
       \\"query\\": query,
       \\"variables\\": Js.Json.null,
@@ -10915,11 +10850,6 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -11716,11 +11646,6 @@ module MyQuery = {
         \\"simpleSubscription\\": simpleSubscription,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -11963,11 +11888,6 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -12193,11 +12113,6 @@ module MyQuery2 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -12423,11 +12338,6 @@ module MyQuery3 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -12653,11 +12563,6 @@ module MyQuery4 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -12850,11 +12755,6 @@ module MyQuery = {
         \\"first\\": first,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -13007,11 +12907,6 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -13143,11 +13038,6 @@ module MyQueryNoError = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -13268,11 +13158,6 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeWithVariables = variables => {
-    \\"query\\": query,
-    \\"variables\\": serializeVariables(variables),
-    \\"parse\\": parse,
-  };
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,

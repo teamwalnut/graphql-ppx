@@ -229,11 +229,6 @@ module MyQuery = {
         "variousScalars": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    "query": query,
-    "variables": serializeVariables(variables),
-    "parse": parse,
-  };
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -459,11 +454,6 @@ module MyQuery2 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    "query": query,
-    "variables": serializeVariables(variables),
-    "parse": parse,
-  };
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -689,11 +679,6 @@ module MyQuery3 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    "query": query,
-    "variables": serializeVariables(variables),
-    "parse": parse,
-  };
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -919,11 +904,6 @@ module MyQuery4 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeWithVariables = variables => {
-    "query": query,
-    "variables": serializeVariables(variables),
-    "parse": parse,
-  };
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
