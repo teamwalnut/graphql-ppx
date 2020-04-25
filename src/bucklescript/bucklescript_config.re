@@ -87,7 +87,7 @@ let read_config = () => {
   open Yojson.Basic.Util;
 
   let parseConfig = (json: Yojson.Basic.t) => {
-    let ppxConfig = json |> member("graphql-ppx");
+    let ppxConfig = json |> member("graphql");
 
     ppxConfig
     |> JsonHelper.mapBool("verbose", verbose_logging => {
