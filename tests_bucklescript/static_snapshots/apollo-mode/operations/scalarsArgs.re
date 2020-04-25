@@ -140,9 +140,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -155,32 +154,29 @@ module MyQuery = {
         ~id,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          nullableString,
+        nullableString,
 
-          string,
+        string,
 
-          nullableInt,
+        nullableInt,
 
-          int,
+        int,
 
-          nullableFloat,
+        nullableFloat,
 
-          float,
+        float,
 
-          nullableBoolean,
+        nullableBoolean,
 
-          boolean,
+        boolean,
 
-          nullableID,
+        nullableID,
 
-          id,
-        }: t_variables,
-      ),
+        id,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

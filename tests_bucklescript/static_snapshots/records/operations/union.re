@@ -145,8 +145,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -278,6 +277,5 @@ module MyQueryNoError = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

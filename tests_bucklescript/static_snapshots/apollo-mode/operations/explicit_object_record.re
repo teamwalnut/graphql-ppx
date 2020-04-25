@@ -175,8 +175,7 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -330,6 +329,5 @@ module ObjectsQuery = {
         "lists": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

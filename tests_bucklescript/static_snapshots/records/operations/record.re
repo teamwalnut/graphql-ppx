@@ -91,8 +91,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -153,8 +152,7 @@ module OneFieldQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -245,8 +243,7 @@ module ExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -345,8 +342,7 @@ module InlineFragmentQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -466,7 +462,6 @@ module UnionExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };

@@ -229,17 +229,17 @@ module MyQuery = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery2 = {
@@ -459,17 +459,17 @@ module MyQuery2 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery3 = {
@@ -689,17 +689,17 @@ module MyQuery3 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery4 = {
@@ -919,15 +919,15 @@ module MyQuery4 = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };

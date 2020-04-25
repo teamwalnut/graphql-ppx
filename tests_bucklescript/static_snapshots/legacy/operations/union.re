@@ -139,17 +139,17 @@ module MyQuery = {
         "dogOrHuman": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -275,15 +275,15 @@ module MyQueryNoError = {
         "dogOrHuman": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };

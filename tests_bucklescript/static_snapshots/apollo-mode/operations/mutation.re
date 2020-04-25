@@ -18,10 +18,7 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      mutationWithError: t_mutationWithError,
-    }
+    type t = {mutationWithError: t_mutationWithError}
     and t_mutationWithError = {
       __typename: string,
       value: Js.Nullable.t(t_mutationWithError_value),
@@ -38,11 +35,8 @@ module MyQuery = {
       stringField: string,
     };
   };
-  let query = "mutation   {\n__typename  \nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {
-    __typename: string,
-    mutationWithError: t_mutationWithError,
-  }
+  let query = "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
+  type t = {mutationWithError: t_mutationWithError}
   and t_mutationWithError = {
     __typename: string,
     value: option(t_mutationWithError_value),
@@ -66,12 +60,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
@@ -260,20 +248,12 @@ module MyQuery = {
               };
             }: Raw.t_mutationWithError
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          mutationWithError,
+          mutationWithError: mutationWithError,
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

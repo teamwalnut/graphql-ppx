@@ -122,14 +122,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          "arg": arg,
-        }: t_variables,
-      ),
+        "arg": arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -138,6 +136,5 @@ module MyQuery = {
 
     "enum": enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

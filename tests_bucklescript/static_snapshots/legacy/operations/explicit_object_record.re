@@ -160,17 +160,17 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -309,15 +309,15 @@ module ObjectsQuery = {
         "lists": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    "query": query,
+    "variables": Js.Json.null,
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };

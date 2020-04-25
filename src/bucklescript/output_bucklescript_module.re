@@ -365,6 +365,14 @@ let generate_default_operation =
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
+      let legacy_make_with_variables = [%stri
+        let makeWithVariables = variables => {
+          "query": query,
+          "variables": serializeVariables(variables),
+          "parse": parse,
+        }
+      ];
+
       List.concat([
         List.concat([
           wrap_module("Raw", raw_types),
@@ -384,37 +392,24 @@ let generate_default_operation =
           | None => []
           | Some(f) => [f]
           },
-          switch (variable_constructors, config.legacy, config.definition) {
-          | (None, true, _)
-          | (None, _, true) => [
-              [%stri let makeVar = (~f, ()) => f(Js.Json.null)],
-            ]
-          | (None, _, _) => []
-          | (Some(c), _, _) => [c]
+          switch (variable_constructors) {
+          | None => []
+          | Some(c) => [c]
           },
-          config.legacy
+          config.legacy ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors == None
             ? [
               [%stri
-                let make =
-                  makeVar(~f=variables => {
-                    {"query": query, "variables": variables, "parse": parse}
-                  })
-              ],
-              [%stri
-                let makeWithVariables = variables => {
+                let make = () => {
                   "query": query,
-                  "variables": serializeVariables(variables),
+                  "variables": Js.Json.null,
                   "parse": parse,
                 }
               ],
             ]
             : [],
           config.definition
-            ? [[%stri let definition = (parse, query, makeVar)]] : [],
-          switch (extracted_args) {
-          | [] => []
-          | _ => [[%stri let makeVariables = makeVar(~f=f => f)]]
-          },
+            ? [[%stri let definition = (parse, query, serialize)]] : [],
         ]),
       ]);
     };

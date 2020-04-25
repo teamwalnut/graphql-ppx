@@ -177,29 +177,25 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableOfNullable=?,
         ~nullableOfNonNullable=?,
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          "nullableOfNullable": nullableOfNullable,
+        "nullableOfNullable": nullableOfNullable,
 
-          "nullableOfNonNullable": nullableOfNonNullable,
+        "nullableOfNonNullable": nullableOfNonNullable,
 
-          "nonNullableOfNullable": nonNullableOfNullable,
+        "nonNullableOfNullable": nonNullableOfNullable,
 
-          "nonNullableOfNonNullable": nonNullableOfNonNullable,
-        }: t_variables,
-      ),
+        "nonNullableOfNonNullable": nonNullableOfNonNullable,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

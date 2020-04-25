@@ -162,17 +162,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
 
-          id,
+        id,
 
-          name,
-        }: t_variables,
-      ),
+        name,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

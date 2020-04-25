@@ -245,119 +245,126 @@ let generate_variable_constructors =
         Str.value(
           Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) =>
+          |> List.map((InputObject({name, fields, loc})) => {
+               let rec make_labeled_fun = body =>
+                 fun
+                 | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
+                 | [InputField({name, loc, type_}), ...tl] => {
+                     let name_loc = loc |> conv_loc;
+                     Ast_helper.(
+                       Exp.fun_(
+                         ~loc=name_loc,
+                         switch (type_) {
+                         | List(_)
+                         | Type(_) => Labelled(name)
+                         | _ => Optional(name)
+                         },
+                         None,
+                         Pat.var(~loc=name_loc, {txt: name, loc: name_loc}),
+                         make_labeled_fun(body, tl),
+                       )
+                     );
+                   };
+
+               let record =
+                 Ast_helper.(
+                   Exp.record(
+                     ~loc=loc |> conv_loc,
+                     fields
+                     |> List.map((InputField({name, loc})) =>
+                          (
+                            {
+                              Location.txt: Longident.parse(name),
+                              loc: conv_loc(loc),
+                            },
+                            ident_from_string(name),
+                          )
+                        ),
+                     None,
+                   )
+                 );
+
+               let object_ =
+                 Ast_helper.(
+                   Exp.extension((
+                     {txt: "bs.obj", loc: conv_loc(loc)},
+                     PStr([[%stri [%e record]]]),
+                   ))
+                 );
+
+               let body =
+                 Ast_helper.(
+                   Exp.constraint_(
+                     config.records ? record : object_,
+                     base_type_name(
+                       switch (name) {
+                       | None => "t_variables"
+                       | Some(input_type_name) =>
+                         "t_variables_" ++ input_type_name
+                       },
+                     ),
+                   )
+                 );
+
+               switch (name) {
+               | None =>
+                 let make_variables_body =
+                   Ast_helper.(
+                     make_labeled_fun(
+                       Exp.apply(
+                         Exp.ident({
+                           Location.txt:
+                             Longident.Lident("serializeVariables"),
+                           loc: conv_loc(loc),
+                         }),
+                         [(Nolabel, body)],
+                       ),
+                       fields,
+                     )
+                   );
+                 if (config.legacy && name == None) {
+                   let make_body =
+                     Ast_helper.(
+                       make_labeled_fun(
+                         [%expr
+                           {
+                             "query": query,
+                             "variables": serializeVariables([%e body]),
+                             "parse": parse,
+                           }
+                         ],
+                         fields,
+                       )
+                     );
+
+                   [
+                     (Some("make"), loc, make_body),
+                     (name, loc, make_variables_body),
+                   ];
+                 } else {
+                   [(name, loc, make_variables_body)];
+                 };
+
+               | Some(_) => [(name, loc, make_labeled_fun(body, fields))]
+               };
+             })
+          |> List.concat
+          |> List.map(((name, loc, expr)) => {
                [@metaloc conv_loc(loc)]
                Vb.mk(
                  Pat.var({
                    loc: conv_loc(loc),
                    txt:
                      switch (name) {
-                     | None => "makeVar"
+                     | None => "makeVariables"
+                     | Some("make") => "make"
                      | Some(input_object_name) =>
                        "makeInputObject" ++ input_object_name
                      },
                  }),
-                 {
-                   let rec make_labeled_fun = body =>
-                     fun
-                     | [] =>
-                       [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
-                     | [InputField({name, loc, type_}), ...tl] => {
-                         let name_loc = loc |> conv_loc;
-                         Ast_helper.(
-                           Exp.fun_(
-                             ~loc=name_loc,
-                             switch (type_) {
-                             | List(_)
-                             | Type(_) => Labelled(name)
-                             | _ => Optional(name)
-                             },
-                             None,
-                             Pat.var(
-                               ~loc=name_loc,
-                               {txt: name, loc: name_loc},
-                             ),
-                             make_labeled_fun(body, tl),
-                           )
-                         );
-                       };
-
-                   let make_labeled_fun_with_f = (body, fields) => {
-                     Ast_helper.(
-                       Exp.fun_(
-                         ~loc=loc |> conv_loc,
-                         Labelled("f"),
-                         None,
-                         Pat.var(
-                           ~loc=loc |> conv_loc,
-                           {txt: "f", loc: loc |> conv_loc},
-                         ),
-                         make_labeled_fun([%expr f([%e body])], fields),
-                       )
-                     );
-                   };
-
-                   let record =
-                     Ast_helper.(
-                       Exp.record(
-                         ~loc=loc |> conv_loc,
-                         fields
-                         |> List.map((InputField({name, loc})) =>
-                              (
-                                {
-                                  Location.txt: Longident.parse(name),
-                                  loc: conv_loc(loc),
-                                },
-                                ident_from_string(name),
-                              )
-                            ),
-                         None,
-                       )
-                     );
-
-                   let object_ =
-                     Ast_helper.(
-                       Exp.extension((
-                         {txt: "bs.obj", loc: conv_loc(loc)},
-                         PStr([[%stri [%e record]]]),
-                       ))
-                     );
-
-                   let body =
-                     Ast_helper.(
-                       Exp.constraint_(
-                         config.records ? record : object_,
-                         base_type_name(
-                           switch (name) {
-                           | None => "t_variables"
-                           | Some(input_type_name) =>
-                             "t_variables_" ++ input_type_name
-                           },
-                         ),
-                       )
-                     );
-
-                   switch (name) {
-                   | None =>
-                     Ast_helper.(
-                       make_labeled_fun_with_f(
-                         Exp.apply(
-                           Exp.ident({
-                             Location.txt:
-                               Longident.Lident("serializeVariables"),
-                             loc: conv_loc(loc),
-                           }),
-                           [(Nolabel, body)],
-                         ),
-                         fields,
-                       )
-                     )
-
-                   | Some(_) => make_labeled_fun(body, fields)
-                   };
-                 },
+                 expr,
                )
-             ),
+             }),
         )
       ),
     )

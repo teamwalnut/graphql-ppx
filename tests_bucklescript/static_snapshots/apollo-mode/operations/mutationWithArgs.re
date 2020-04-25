@@ -18,26 +18,14 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      optionalInputArgs: string,
-    };
+    type t = {optionalInputArgs: string};
   };
-  let query = "mutation MyMutation($required: String!)  {\n__typename  \noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
-  type t = {
-    __typename: string,
-    optionalInputArgs: string,
-  };
+  let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
+  type t = {optionalInputArgs: string};
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
@@ -53,17 +41,10 @@ module MyQuery = {
           let value = (value: t).optionalInputArgs;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          optionalInputArgs,
+          optionalInputArgs: optionalInputArgs,
         };
       }: Raw.t
     );
@@ -82,15 +63,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
 
-          required: required,
-        }: t_variables,
-      ),
+        required: required,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

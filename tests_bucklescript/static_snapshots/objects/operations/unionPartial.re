@@ -107,6 +107,5 @@ module MyQuery = {
         "dogOrHuman": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

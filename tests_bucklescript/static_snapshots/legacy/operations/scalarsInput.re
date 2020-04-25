@@ -159,14 +159,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    "query": query,
+    "variables":
       serializeVariables(
         {
 
           "arg": arg,
         }: t_variables,
       ),
+    "parse": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        "arg": arg,
+      }: t_variables,
     )
   and makeInputObjectVariousScalarsInput =
       (
@@ -204,15 +213,10 @@ module MyQuery = {
 
     "id": id,
   };
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

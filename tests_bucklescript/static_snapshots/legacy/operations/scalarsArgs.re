@@ -137,9 +137,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let make =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -151,8 +150,9 @@ module MyQuery = {
         ~nullableID=?,
         ~id,
         (),
-      ) =>
-    f(
+      ) => {
+    "query": query,
+    "variables":
       serializeVariables(
         {
 
@@ -177,16 +177,50 @@ module MyQuery = {
           "id": id,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
+    "parse": parse,
+  }
+  and makeVariables =
+      (
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      ) =>
+    serializeVariables(
+      {
+
+        "nullableString": nullableString,
+
+        "string": string,
+
+        "nullableInt": nullableInt,
+
+        "int": int,
+
+        "nullableFloat": nullableFloat,
+
+        "float": float,
+
+        "nullableBoolean": nullableBoolean,
+
+        "boolean": boolean,
+
+        "nullableID": nullableID,
+
+        "id": id,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

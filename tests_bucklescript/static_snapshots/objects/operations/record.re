@@ -81,8 +81,7 @@ module MyQuery = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -133,8 +132,7 @@ module OneFieldQuery = {
         "variousScalars": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -219,8 +217,7 @@ module ExternalFragmentQuery = {
           "variousScalars": variousScalars,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -313,8 +310,7 @@ module InlineFragmentQuery = {
         "dogOrHuman": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -426,7 +422,6 @@ module UnionExternalFragmentQuery = {
           "dogOrHuman": dogOrHuman,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };

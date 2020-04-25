@@ -66,17 +66,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~query, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~query, ()) =>
+    serializeVariables(
+      {
 
-          query: query,
-        }: t_variables,
-      ),
+        query: query,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -209,14 +206,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -225,8 +220,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -345,8 +339,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -495,19 +488,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~opt=?, ~req, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~opt=?, ~req, ()) =>
+    serializeVariables(
+      {
 
-          opt,
+        opt,
 
-          req,
-        }: t_variables,
-      ),
+        req,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -594,17 +584,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -787,8 +774,7 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -942,8 +928,7 @@ module ObjectsQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -1549,8 +1534,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -1755,8 +1739,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -1944,31 +1927,27 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableOfNullable=?,
         ~nullableOfNonNullable=?,
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          nullableOfNullable,
+        nullableOfNullable,
 
-          nullableOfNonNullable,
+        nullableOfNonNullable,
 
-          nonNullableOfNullable,
+        nonNullableOfNullable,
 
-          nonNullableOfNonNullable,
-        }: t_variables,
-      ),
+        nonNullableOfNonNullable,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -2172,14 +2151,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectListsInput =
       (
@@ -2199,8 +2176,7 @@ module MyQuery = {
 
     nonNullableOfNonNullable,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -2226,10 +2202,7 @@ exports[`Apollo mutation.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      mutationWithError: t_mutationWithError,
-    }
+    type t = {mutationWithError: t_mutationWithError}
     and t_mutationWithError = {
       __typename: string,
       value: Js.Nullable.t(t_mutationWithError_value),
@@ -2246,11 +2219,8 @@ module MyQuery = {
       stringField: string,
     };
   };
-  let query = \\"mutation   {\\\\n__typename  \\\\nmutationWithError  {\\\\n__typename  \\\\nvalue  {\\\\n__typename  \\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\n__typename  \\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type t = {
-    __typename: string,
-    mutationWithError: t_mutationWithError,
-  }
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nvalue  {\\\\n__typename  \\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\n__typename  \\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t = {mutationWithError: t_mutationWithError}
   and t_mutationWithError = {
     __typename: string,
     value: option(t_mutationWithError_value),
@@ -2274,12 +2244,6 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
@@ -2468,22 +2432,14 @@ module MyQuery = {
               };
             }: Raw.t_mutationWithError
           );
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          mutationWithError,
+          mutationWithError: mutationWithError,
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -2509,26 +2465,14 @@ exports[`Apollo mutationWithArgs.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      __typename: string,
-      optionalInputArgs: string,
-    };
+    type t = {optionalInputArgs: string};
   };
-  let query = \\"mutation MyMutation($required: String!)  {\\\\n__typename  \\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
-  type t = {
-    __typename: string,
-    optionalInputArgs: string,
-  };
+  let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+  type t = {optionalInputArgs: string};
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
       {
-
-        __typename: {
-          let value = (value: Raw.t).__typename;
-
-          value;
-        },
 
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
@@ -2544,17 +2488,10 @@ module MyQuery = {
           let value = (value: t).optionalInputArgs;
 
           value;
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-
-          value;
         };
         {
 
-          __typename,
-
-          optionalInputArgs,
+          optionalInputArgs: optionalInputArgs,
         };
       }: Raw.t
     );
@@ -2573,17 +2510,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
 
-          required: required,
-        }: t_variables,
-      ),
+        required: required,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -3122,8 +3056,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -3256,14 +3189,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -3272,8 +3203,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -3399,8 +3329,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -3570,19 +3499,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
 
-          id,
+        id,
 
-          name,
-        }: t_variables,
-      ),
+        name,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -3694,8 +3620,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -3775,8 +3700,7 @@ module OneFieldQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -3882,8 +3806,7 @@ module ExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -3982,8 +3905,7 @@ module InlineFragmentQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -4118,8 +4040,7 @@ module UnionExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 "
@@ -4267,14 +4188,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
@@ -4285,8 +4204,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -4546,8 +4464,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -4695,9 +4612,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -4710,34 +4626,31 @@ module MyQuery = {
         ~id,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          nullableString,
+        nullableString,
 
-          string,
+        string,
 
-          nullableInt,
+        nullableInt,
 
-          int,
+        int,
 
-          nullableFloat,
+        nullableFloat,
 
-          float,
+        float,
 
-          nullableBoolean,
+        nullableBoolean,
 
-          boolean,
+        boolean,
 
-          nullableID,
+        nullableID,
 
-          id,
-        }: t_variables,
-      ),
+        id,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -4907,14 +4820,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectVariousScalarsInput =
       (
@@ -4952,8 +4863,7 @@ module MyQuery = {
 
     id,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -5177,17 +5087,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~var, ()) =>
+    serializeVariables(
+      {
 
-          var: var,
-        }: t_variables,
-      ),
+        var: var,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -5324,8 +5231,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -5585,8 +5491,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery2 = {
@@ -5829,8 +5734,7 @@ module MyQuery2 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery3 = {
@@ -6073,8 +5977,7 @@ module MyQuery3 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery4 = {
@@ -6317,8 +6220,7 @@ module MyQuery4 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -6516,8 +6418,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -6670,8 +6571,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -6803,8 +6703,7 @@ module MyQueryNoError = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -6923,8 +6822,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -6991,26 +6889,30 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~query, ()) =>
-    f(
+  let make = (~query, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"query\\": query,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~query, ()) =>
+    serializeVariables(
+      {
+
+        \\"query\\": query,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -7140,14 +7042,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -7156,17 +7067,12 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -7262,17 +7168,17 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -7399,8 +7305,9 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~opt=?, ~req, ()) =>
-    f(
+  let make = (~opt=?, ~req, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
@@ -7409,18 +7316,23 @@ module MyQuery = {
           \\"req\\": req,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~opt=?, ~req, ()) =>
+    serializeVariables(
+      {
+
+        \\"opt\\": opt,
+
+        \\"req\\": req,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -7503,26 +7415,30 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -7690,17 +7606,17 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -7839,17 +7755,17 @@ module ObjectsQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -8342,17 +8258,17 @@ module MyQuery = {
         \\"l4\\": l4,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -8534,17 +8450,17 @@ module MyQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -8729,16 +8645,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let make =
       (
-        ~f,
         ~nullableOfNullable=?,
         ~nullableOfNonNullable=?,
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
-      ) =>
-    f(
+      ) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
@@ -8751,18 +8667,34 @@ module MyQuery = {
           \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables =
+      (
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      ) =>
+    serializeVariables(
+      {
+
+        \\"nullableOfNullable\\": nullableOfNullable,
+
+        \\"nullableOfNonNullable\\": nullableOfNonNullable,
+
+        \\"nonNullableOfNullable\\": nonNullableOfNullable,
+
+        \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -8965,14 +8897,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectListsInput =
       (
@@ -8992,17 +8933,12 @@ module MyQuery = {
 
     \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
   };
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -9189,17 +9125,17 @@ module MyQuery = {
         \\"mutationWithError\\": mutationWithError,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -9266,26 +9202,30 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
+  let make = (~required, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"required\\": required,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
+
+        \\"required\\": required,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -9615,17 +9555,17 @@ module MyQuery = {
         \\"let_\\": let_,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -9755,14 +9695,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -9771,17 +9720,12 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -9888,17 +9832,17 @@ module MyQuery = {
         \\"pokemon\\": pokemon,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -10050,8 +9994,9 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
+  let make = (~id=?, ~name=?, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
@@ -10060,18 +10005,23 @@ module MyQuery = {
           \\"name\\": name,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
+
+        \\"id\\": id,
+
+        \\"name\\": name,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -10160,17 +10110,17 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -10221,17 +10171,17 @@ module OneFieldQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -10316,17 +10266,17 @@ module ExternalFragmentQuery = {
           \\"variousScalars\\": variousScalars,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let make =
-      makeVar(~f=variables =>
-        {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-      );
     let makeWithVariables = variables => {
       \\"query\\": query,
       \\"variables\\": serializeVariables(variables),
       \\"parse\\": parse,
     };
-    let definition = (parse, query, makeVar);
+    let make = () => {
+      \\"query\\": query,
+      \\"variables\\": Js.Json.null,
+      \\"parse\\": parse,
+    };
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -10419,17 +10369,17 @@ module InlineFragmentQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -10541,17 +10491,17 @@ module UnionExternalFragmentQuery = {
           \\"dogOrHuman\\": dogOrHuman,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let make =
-      makeVar(~f=variables =>
-        {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-      );
     let makeWithVariables = variables => {
       \\"query\\": query,
       \\"variables\\": serializeVariables(variables),
       \\"parse\\": parse,
     };
-    let definition = (parse, query, makeVar);
+    let make = () => {
+      \\"query\\": query,
+      \\"variables\\": Js.Json.null,
+      \\"parse\\": parse,
+    };
+    let definition = (parse, query, serialize);
   };
 };
 "
@@ -10696,14 +10646,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
@@ -10714,17 +10673,12 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -10961,17 +10915,17 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -11116,9 +11070,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let make =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -11130,8 +11083,9 @@ module MyQuery = {
         ~nullableID=?,
         ~id,
         (),
-      ) =>
-    f(
+      ) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
@@ -11156,18 +11110,52 @@ module MyQuery = {
           \\"id\\": id,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables =
+      (
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      ) =>
+    serializeVariables(
+      {
+
+        \\"nullableString\\": nullableString,
+
+        \\"string\\": string,
+
+        \\"nullableInt\\": nullableInt,
+
+        \\"int\\": int,
+
+        \\"nullableFloat\\": nullableFloat,
+
+        \\"float\\": float,
+
+        \\"nullableBoolean\\": nullableBoolean,
+
+        \\"boolean\\": boolean,
+
+        \\"nullableID\\": nullableID,
+
+        \\"id\\": id,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -11334,14 +11322,23 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
+  let make = (~arg, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"arg\\": arg,
         }: t_variables,
       ),
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectVariousScalarsInput =
       (
@@ -11379,17 +11376,12 @@ module MyQuery = {
 
     \\"id\\": id,
   };
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -11573,26 +11565,30 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
+  let make = (~var, ()) => {
+    \\"query\\": query,
+    \\"variables\\":
       serializeVariables(
         {
 
           \\"var\\": var,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
+    \\"parse\\": parse,
+  }
+  and makeVariables = (~var, ()) =>
+    serializeVariables(
+      {
+
+        \\"var\\": var,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -11720,17 +11716,17 @@ module MyQuery = {
         \\"simpleSubscription\\": simpleSubscription,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -11967,17 +11963,17 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery2 = {
@@ -12197,17 +12193,17 @@ module MyQuery2 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery3 = {
@@ -12427,17 +12423,17 @@ module MyQuery3 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery4 = {
@@ -12657,17 +12653,17 @@ module MyQuery4 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -12854,17 +12850,17 @@ module MyQuery = {
         \\"first\\": first,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13011,17 +13007,17 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -13147,17 +13143,17 @@ module MyQueryNoError = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13272,17 +13268,17 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {\\"query\\": query, \\"variables\\": variables, \\"parse\\": parse}
-    );
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, makeVar);
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13349,17 +13345,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~query, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~query, ()) =>
+    serializeVariables(
+      {
 
-          \\"query\\": query,
-        }: t_variables,
-      ),
+        \\"query\\": query,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13489,14 +13482,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -13505,8 +13496,7 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13602,8 +13592,7 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13730,19 +13719,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~opt=?, ~req, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~opt=?, ~req, ()) =>
+    serializeVariables(
+      {
 
-          \\"opt\\": opt,
+        \\"opt\\": opt,
 
-          \\"req\\": req,
-        }: t_variables,
-      ),
+        \\"req\\": req,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -13825,17 +13811,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -14003,8 +13986,7 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -14143,8 +14125,7 @@ module ObjectsQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -14637,8 +14618,7 @@ module MyQuery = {
         \\"l4\\": l4,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -14820,8 +14800,7 @@ module MyQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15006,31 +14985,27 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableOfNullable=?,
         ~nullableOfNonNullable=?,
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          \\"nullableOfNullable\\": nullableOfNullable,
+        \\"nullableOfNullable\\": nullableOfNullable,
 
-          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+        \\"nullableOfNonNullable\\": nullableOfNonNullable,
 
-          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+        \\"nonNullableOfNullable\\": nonNullableOfNullable,
 
-          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
-        }: t_variables,
-      ),
+        \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15233,14 +15208,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectListsInput =
       (
@@ -15260,8 +15233,7 @@ module MyQuery = {
 
     \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15448,8 +15420,7 @@ module MyQuery = {
         \\"mutationWithError\\": mutationWithError,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15516,17 +15487,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
 
-          \\"required\\": required,
-        }: t_variables,
-      ),
+        \\"required\\": required,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15856,8 +15824,7 @@ module MyQuery = {
         \\"let_\\": let_,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -15987,14 +15954,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -16003,8 +15968,7 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -16111,8 +16075,7 @@ module MyQuery = {
         \\"pokemon\\": pokemon,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -16264,19 +16227,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
 
-          \\"id\\": id,
+        \\"id\\": id,
 
-          \\"name\\": name,
-        }: t_variables,
-      ),
+        \\"name\\": name,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -16365,8 +16325,7 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -16417,8 +16376,7 @@ module OneFieldQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -16503,8 +16461,7 @@ module ExternalFragmentQuery = {
           \\"variousScalars\\": variousScalars,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -16597,8 +16554,7 @@ module InlineFragmentQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -16710,8 +16666,7 @@ module UnionExternalFragmentQuery = {
           \\"dogOrHuman\\": dogOrHuman,
         };
       };
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 "
@@ -16856,14 +16811,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
@@ -16874,8 +16827,7 @@ module MyQuery = {
 
     \\"enum\\": enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -17112,8 +17064,7 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -17258,9 +17209,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -17273,34 +17223,31 @@ module MyQuery = {
         ~id,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          \\"nullableString\\": nullableString,
+        \\"nullableString\\": nullableString,
 
-          \\"string\\": string,
+        \\"string\\": string,
 
-          \\"nullableInt\\": nullableInt,
+        \\"nullableInt\\": nullableInt,
 
-          \\"int\\": int,
+        \\"int\\": int,
 
-          \\"nullableFloat\\": nullableFloat,
+        \\"nullableFloat\\": nullableFloat,
 
-          \\"float\\": float,
+        \\"float\\": float,
 
-          \\"nullableBoolean\\": nullableBoolean,
+        \\"nullableBoolean\\": nullableBoolean,
 
-          \\"boolean\\": boolean,
+        \\"boolean\\": boolean,
 
-          \\"nullableID\\": nullableID,
+        \\"nullableID\\": nullableID,
 
-          \\"id\\": id,
-        }: t_variables,
-      ),
+        \\"id\\": id,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -17467,14 +17414,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          \\"arg\\": arg,
-        }: t_variables,
-      ),
+        \\"arg\\": arg,
+      }: t_variables,
     )
   and makeInputObjectVariousScalarsInput =
       (
@@ -17512,8 +17457,7 @@ module MyQuery = {
 
     \\"id\\": id,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -17697,17 +17641,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~var, ()) =>
+    serializeVariables(
+      {
 
-          \\"var\\": var,
-        }: t_variables,
-      ),
+        \\"var\\": var,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -17835,8 +17776,7 @@ module MyQuery = {
         \\"simpleSubscription\\": simpleSubscription,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -18073,8 +18013,7 @@ module MyQuery = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery2 = {
@@ -18294,8 +18233,7 @@ module MyQuery2 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery3 = {
@@ -18515,8 +18453,7 @@ module MyQuery3 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery4 = {
@@ -18736,8 +18673,7 @@ module MyQuery4 = {
         \\"variousScalars\\": variousScalars,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -18924,8 +18860,7 @@ module MyQuery = {
         \\"first\\": first,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19072,8 +19007,7 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -19199,8 +19133,7 @@ module MyQueryNoError = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19315,8 +19248,7 @@ module MyQuery = {
         \\"dogOrHuman\\": dogOrHuman,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19387,17 +19319,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~query, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~query, ()) =>
+    serializeVariables(
+      {
 
-          query: query,
-        }: t_variables,
-      ),
+        query: query,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19530,14 +19459,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -19546,8 +19473,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19651,8 +19577,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19786,19 +19711,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~opt=?, ~req, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~opt=?, ~req, ()) =>
+    serializeVariables(
+      {
 
-          opt,
+        opt,
 
-          req,
-        }: t_variables,
-      ),
+        req,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -19885,17 +19807,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -20063,8 +19982,7 @@ module RecordsQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ObjectsQuery = {
@@ -20203,8 +20121,7 @@ module ObjectsQuery = {
         \\"lists\\": lists,
       };
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -20720,8 +20637,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -20911,8 +20827,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -21100,31 +21015,27 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableOfNullable=?,
         ~nullableOfNonNullable=?,
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          nullableOfNullable,
+        nullableOfNullable,
 
-          nullableOfNonNullable,
+        nullableOfNonNullable,
 
-          nonNullableOfNullable,
+        nonNullableOfNullable,
 
-          nonNullableOfNonNullable,
-        }: t_variables,
-      ),
+        nonNullableOfNonNullable,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -21328,14 +21239,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectListsInput =
       (
@@ -21355,8 +21264,7 @@ module MyQuery = {
 
     nonNullableOfNonNullable,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -21564,8 +21472,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -21636,17 +21543,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
 
-          required: required,
-        }: t_variables,
-      ),
+        required: required,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -22012,8 +21916,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -22146,14 +22049,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
       (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
@@ -22162,8 +22063,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -22274,8 +22174,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -22430,19 +22329,16 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
 
-          id,
+        id,
 
-          name,
-        }: t_variables,
-      ),
+        name,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -22541,8 +22437,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
@@ -22603,8 +22498,7 @@ module OneFieldQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -22695,8 +22589,7 @@ module ExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 
@@ -22795,8 +22688,7 @@ module InlineFragmentQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -22916,8 +22808,7 @@ module UnionExternalFragmentQuery = {
           };
         }: Raw.t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let definition = (parse, query, serialize);
   };
 };
 "
@@ -23065,14 +22956,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
@@ -23083,8 +22972,7 @@ module MyQuery = {
 
     enum,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -23329,8 +23217,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -23478,9 +23365,8 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar =
+  let makeVariables =
       (
-        ~f,
         ~nullableString=?,
         ~string,
         ~nullableInt=?,
@@ -23493,34 +23379,31 @@ module MyQuery = {
         ~id,
         (),
       ) =>
-    f(
-      serializeVariables(
-        {
+    serializeVariables(
+      {
 
-          nullableString,
+        nullableString,
 
-          string,
+        string,
 
-          nullableInt,
+        nullableInt,
 
-          int,
+        int,
 
-          nullableFloat,
+        nullableFloat,
 
-          float,
+        float,
 
-          nullableBoolean,
+        nullableBoolean,
 
-          boolean,
+        boolean,
 
-          nullableID,
+        nullableID,
 
-          id,
-        }: t_variables,
-      ),
+        id,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -23690,14 +23573,12 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
 
-          arg: arg,
-        }: t_variables,
-      ),
+        arg: arg,
+      }: t_variables,
     )
   and makeInputObjectVariousScalarsInput =
       (
@@ -23735,8 +23616,7 @@ module MyQuery = {
 
     id,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -23930,17 +23810,14 @@ module MyQuery = {
          )
       |> Js.Dict.fromArray
       |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
-      serializeVariables(
-        {
+  let makeVariables = (~var, ()) =>
+    serializeVariables(
+      {
 
-          var: var,
-        }: t_variables,
-      ),
+        var: var,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -24077,8 +23954,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -24323,8 +24199,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery2 = {
@@ -24552,8 +24427,7 @@ module MyQuery2 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery3 = {
@@ -24781,8 +24655,7 @@ module MyQuery3 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQuery4 = {
@@ -25010,8 +24883,7 @@ module MyQuery4 = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -25209,8 +25081,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -25363,8 +25234,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 
 module MyQueryNoError = {
@@ -25496,8 +25366,7 @@ module MyQueryNoError = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
@@ -25616,8 +25485,7 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
 "
 `;
