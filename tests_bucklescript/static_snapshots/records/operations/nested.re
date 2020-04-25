@@ -23,42 +23,42 @@ type record = {
 
 module MyQuery = {
   module Raw = {
+    type t_first_inner_inner = {field: string};
+    type t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)};
+    type t_first = {inner: Js.Nullable.t(t_first_inner)};
+    type t_second_inner_inner = {
+      f1: string,
+      f2: string,
+    };
+    type t_second_inner = {inner: Js.Nullable.t(t_second_inner_inner)};
+    type t_second = {inner: Js.Nullable.t(t_second_inner)};
+    type t_let_inner_inner = {field: string};
+    type t_let_inner = {inner: Js.Nullable.t(t_let_inner_inner)};
+    type t_let = {inner: Js.Nullable.t(t_let_inner)};
     type t = {
       first: t_first,
       second: t_second,
       let_: t_let,
-    }
-    and t_let = {inner: Js.Nullable.t(t_let_inner)}
-    and t_let_inner = {inner: Js.Nullable.t(t_let_inner_inner)}
-    and t_let_inner_inner = {field: string}
-    and t_second = {inner: Js.Nullable.t(t_second_inner)}
-    and t_second_inner = {inner: Js.Nullable.t(t_second_inner_inner)}
-    and t_second_inner_inner = {
-      f1: string,
-      f2: string,
-    }
-    and t_first = {inner: Js.Nullable.t(t_first_inner)}
-    and t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)}
-    and t_first_inner_inner = {field: string};
+    };
   };
   let query = "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
+  type t_first_inner_inner = {field: string};
+  type t_first_inner = {inner: option(t_first_inner_inner)};
+  type t_first = {inner: option(t_first_inner)};
+  type t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  };
+  type t_second_inner = {inner: option(t_second_inner_inner)};
+  type t_second = {inner: option(t_second_inner)};
+  type t_let_inner_inner = {field: string};
+  type t_let_inner = {inner: option(t_let_inner_inner)};
+  type t_let = {inner: option(t_let_inner)};
   type t = {
     first: t_first,
     second: t_second,
     let_: t_let,
-  }
-  and t_let = {inner: option(t_let_inner)}
-  and t_let_inner = {inner: option(t_let_inner_inner)}
-  and t_let_inner_inner = {field: string}
-  and t_second = {inner: option(t_second_inner)}
-  and t_second_inner = {inner: option(t_second_inner_inner)}
-  and t_second_inner_inner = {
-    f1: string,
-    f2: string,
-  }
-  and t_first = {inner: option(t_first_inner)}
-  and t_first_inner = {inner: option(t_first_inner_inner)}
-  and t_first_inner_inner = {field: string};
+  };
   let parse: Raw.t => t =
     (value) => (
       {

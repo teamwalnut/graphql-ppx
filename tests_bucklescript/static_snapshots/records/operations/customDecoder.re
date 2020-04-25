@@ -27,18 +27,18 @@ module IntOfString = {
 
 module MyQuery = {
   module Raw = {
-    type t = {variousScalars: t_variousScalars}
-    and t_variousScalars = {
+    type t_variousScalars = {
       string,
       int,
     };
+    type t = {variousScalars: t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type t = {variousScalars: t_variousScalars}
-  and t_variousScalars = {
+  type t_variousScalars = {
     string: IntOfString.t,
     int: StringOfInt.t,
   };
+  type t = {variousScalars: t_variousScalars};
   let parse: Raw.t => t =
     (value) => (
       {

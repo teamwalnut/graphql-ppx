@@ -18,20 +18,20 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {pokemon: Js.Nullable.t(t_pokemon)}
-    and t_pokemon = {
+    type t_pokemon = {
       __typename: string,
       id: string,
       name: Js.Nullable.t(string),
     };
+    type t = {pokemon: Js.Nullable.t(t_pokemon)};
   };
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\n__typename  \nid  \nname  \n}\n\n}\n";
-  type t = {pokemon: option(t_pokemon)}
-  and t_pokemon = {
+  type t_pokemon = {
     __typename: string,
     id: string,
     name: option(string),
   };
+  type t = {pokemon: option(t_pokemon)};
   type t_variables = {
     id: option(string),
     name: option(string),

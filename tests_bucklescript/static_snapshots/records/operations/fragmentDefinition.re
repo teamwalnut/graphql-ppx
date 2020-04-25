@@ -74,13 +74,13 @@ module Fragments = {
         nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
         nullableOfNonNullable: Js.Nullable.t(array(string)),
       };
-      type t_Lists = t;
+      type nonrec t_Lists = t;
     };
     type t = {
       nullableOfNullable: option(array(option(string))),
       nullableOfNonNullable: option(array(string)),
     };
-    type t_Lists = t;
+    type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
 
@@ -154,10 +154,10 @@ module Fragments = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
-      type t_Lists = t;
+      type nonrec t_Lists = t;
     };
     type t = {nullableOfNonNullable: option(array(string))};
-    type t_Lists = t;
+    type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
 
@@ -194,15 +194,15 @@ module Fragments = {
 
 module MyQuery = {
   module Raw = {
+    type t_l2;
+    type t_l3;
+    type t_l4;
     type t = {
       l1: Fragments.ListFragment.Raw.t,
       l2: t_l2,
       l3: t_l3,
       l4: t_l4,
-    }
-    and t_l4
-    and t_l3
-    and t_l2;
+    };
   };
   let query =
     (
@@ -243,24 +243,24 @@ module MyQuery = {
       ++ "   \n}\n\n}\n"
     )
     ++ Fragments.ListFragment.query;
+  type t_l2 = {
+    frag1: Fragments.ListFragment.t_Lists,
+    frag2: Fragments.ListFragment.t_Lists,
+  };
+  type t_l3 = {
+    nullableOfNullable: option(array(option(string))),
+    frag1: Fragments.ListFragment.t_Lists,
+    frag2: Fragments.ListFragment.t_Lists,
+  };
+  type t_l4 = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: Fragments.ListFragment.t_Lists,
+  };
   type t = {
     l1: Fragments.ListFragment.t,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
-  }
-  and t_l4 = {
-    nullableOfNullable: option(array(option(string))),
-    listFragment: Fragments.ListFragment.t_Lists,
-  }
-  and t_l3 = {
-    nullableOfNullable: option(array(option(string))),
-    frag1: Fragments.ListFragment.t_Lists,
-    frag2: Fragments.ListFragment.t_Lists,
-  }
-  and t_l2 = {
-    frag1: Fragments.ListFragment.t_Lists,
-    frag2: Fragments.ListFragment.t_Lists,
   };
   let parse: Raw.t => t =
     (value) => (

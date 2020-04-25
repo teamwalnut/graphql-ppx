@@ -23,91 +23,91 @@ type record = {
 
 module MyQuery = {
   module Raw = {
+    type t_first_inner_inner = {
+      __typename: string,
+      field: string,
+    };
+    type t_first_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner_inner),
+    };
+    type t_first = {
+      __typename: string,
+      inner: Js.Nullable.t(t_first_inner),
+    };
+    type t_second_inner_inner = {
+      __typename: string,
+      f1: string,
+      f2: string,
+    };
+    type t_second_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_second_inner_inner),
+    };
+    type t_second = {
+      __typename: string,
+      inner: Js.Nullable.t(t_second_inner),
+    };
+    type t_let_inner_inner = {
+      __typename: string,
+      field: string,
+    };
+    type t_let_inner = {
+      __typename: string,
+      inner: Js.Nullable.t(t_let_inner_inner),
+    };
+    type t_let = {
+      __typename: string,
+      inner: Js.Nullable.t(t_let_inner),
+    };
     type t = {
       first: t_first,
       second: t_second,
       let_: t_let,
-    }
-    and t_let = {
-      __typename: string,
-      inner: Js.Nullable.t(t_let_inner),
-    }
-    and t_let_inner = {
-      __typename: string,
-      inner: Js.Nullable.t(t_let_inner_inner),
-    }
-    and t_let_inner_inner = {
-      __typename: string,
-      field: string,
-    }
-    and t_second = {
-      __typename: string,
-      inner: Js.Nullable.t(t_second_inner),
-    }
-    and t_second_inner = {
-      __typename: string,
-      inner: Js.Nullable.t(t_second_inner_inner),
-    }
-    and t_second_inner_inner = {
-      __typename: string,
-      f1: string,
-      f2: string,
-    }
-    and t_first = {
-      __typename: string,
-      inner: Js.Nullable.t(t_first_inner),
-    }
-    and t_first_inner = {
-      __typename: string,
-      inner: Js.Nullable.t(t_first_inner_inner),
-    }
-    and t_first_inner_inner = {
-      __typename: string,
-      field: string,
     };
   };
   let query = "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n";
+  type t_first_inner_inner = {
+    __typename: string,
+    field: string,
+  };
+  type t_first_inner = {
+    __typename: string,
+    inner: option(t_first_inner_inner),
+  };
+  type t_first = {
+    __typename: string,
+    inner: option(t_first_inner),
+  };
+  type t_second_inner_inner = {
+    __typename: string,
+    f1: string,
+    f2: string,
+  };
+  type t_second_inner = {
+    __typename: string,
+    inner: option(t_second_inner_inner),
+  };
+  type t_second = {
+    __typename: string,
+    inner: option(t_second_inner),
+  };
+  type t_let_inner_inner = {
+    __typename: string,
+    field: string,
+  };
+  type t_let_inner = {
+    __typename: string,
+    inner: option(t_let_inner_inner),
+  };
+  type t_let = {
+    __typename: string,
+    inner: option(t_let_inner),
+  };
   type t = {
     first: t_first,
     second: t_second,
     let_: t_let,
-  }
-  and t_let = {
-    __typename: string,
-    inner: option(t_let_inner),
-  }
-  and t_let_inner = {
-    __typename: string,
-    inner: option(t_let_inner_inner),
-  }
-  and t_let_inner_inner = {
-    __typename: string,
-    field: string,
-  }
-  and t_second = {
-    __typename: string,
-    inner: option(t_second_inner),
-  }
-  and t_second_inner = {
-    __typename: string,
-    inner: option(t_second_inner_inner),
-  }
-  and t_second_inner_inner = {
-    __typename: string,
-    f1: string,
-    f2: string,
-  }
-  and t_first = {
-    __typename: string,
-    inner: option(t_first_inner),
-  }
-  and t_first_inner = {
-    __typename: string,
-    inner: option(t_first_inner_inner),
-  }
-  and t_first_inner_inner = {
-    __typename: string,
-    field: string,
   };
   let parse: Raw.t => t =
     (value) => (

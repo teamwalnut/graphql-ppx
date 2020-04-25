@@ -18,18 +18,18 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {customScalarField: t_customScalarField}
-    and t_customScalarField = {
+    type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),
       nonNullable: Js.Json.t,
     };
+    type t = {customScalarField: t_customScalarField};
   };
   let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n";
-  type t = {customScalarField: t_customScalarField}
-  and t_customScalarField = {
+  type t_customScalarField = {
     nullable: option(Js.Json.t),
     nonNullable: Js.Json.t,
   };
+  type t = {customScalarField: t_customScalarField};
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,

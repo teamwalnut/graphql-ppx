@@ -18,45 +18,45 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {mutationWithError: t_mutationWithError}
-    and t_mutationWithError = {
-      __typename: string,
-      value: Js.Nullable.t(t_mutationWithError_value),
-      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
-    }
-    and t_mutationWithError_errors = {
-      __typename: string,
-      field: t_mutationWithError_errors_field,
-      message: string,
-    }
-    and t_mutationWithError_errors_field = string
-    and t_mutationWithError_value = {
+    type t_mutationWithError_value = {
       __typename: string,
       stringField: string,
     };
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      __typename: string,
+      field: t_mutationWithError_errors_field,
+      message: string,
+    };
+    type t_mutationWithError = {
+      __typename: string,
+      value: Js.Nullable.t(t_mutationWithError_value),
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
   };
   let query = "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {mutationWithError: t_mutationWithError}
-  and t_mutationWithError = {
+  type t_mutationWithError_value = {
     __typename: string,
-    value: option(t_mutationWithError_value),
-    errors: option(array(t_mutationWithError_errors)),
-  }
-  and t_mutationWithError_errors = {
-    __typename: string,
-    field: t_mutationWithError_errors_field,
-    message: string,
-  }
-  and t_mutationWithError_errors_field = [
+    stringField: string,
+  };
+  type t_mutationWithError_errors_field = [
     | `FutureAddedValue(string)
     | `FIRST
     | `SECOND
     | `THIRD
-  ]
-  and t_mutationWithError_value = {
+  ];
+  type t_mutationWithError_errors = {
     __typename: string,
-    stringField: string,
+    field: t_mutationWithError_errors_field,
+    message: string,
   };
+  type t_mutationWithError = {
+    __typename: string,
+    value: option(t_mutationWithError_value),
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
   let parse: Raw.t => t =
     (value) => (
       {

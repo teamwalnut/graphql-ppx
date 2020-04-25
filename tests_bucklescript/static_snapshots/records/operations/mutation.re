@@ -18,35 +18,35 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {mutationWithError: t_mutationWithError}
-    and t_mutationWithError = {
-      value: Js.Nullable.t(t_mutationWithError_value),
-      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
-    }
-    and t_mutationWithError_errors = {
+    type t_mutationWithError_value = {stringField: string};
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
       field: t_mutationWithError_errors_field,
       message: string,
-    }
-    and t_mutationWithError_errors_field = string
-    and t_mutationWithError_value = {stringField: string};
+    };
+    type t_mutationWithError = {
+      value: Js.Nullable.t(t_mutationWithError_value),
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
   };
   let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {mutationWithError: t_mutationWithError}
-  and t_mutationWithError = {
-    value: option(t_mutationWithError_value),
-    errors: option(array(t_mutationWithError_errors)),
-  }
-  and t_mutationWithError_errors = {
-    field: t_mutationWithError_errors_field,
-    message: string,
-  }
-  and t_mutationWithError_errors_field = [
+  type t_mutationWithError_value = {stringField: string};
+  type t_mutationWithError_errors_field = [
     | `FutureAddedValue(string)
     | `FIRST
     | `SECOND
     | `THIRD
-  ]
-  and t_mutationWithError_value = {stringField: string};
+  ];
+  type t_mutationWithError_errors = {
+    field: t_mutationWithError_errors_field,
+    message: string,
+  };
+  type t_mutationWithError = {
+    value: option(t_mutationWithError_value),
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
   let parse: Raw.t => t =
     (value) => (
       {

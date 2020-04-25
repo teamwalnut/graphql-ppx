@@ -91,12 +91,12 @@ module MyQuery = {
 
 module OneFieldQuery = {
   module Raw = {
-    type t = {. "variousScalars": t_variousScalars}
-    and t_variousScalars = {nullableString: Js.Nullable.t(string)};
+    type t_variousScalars = {nullableString: Js.Nullable.t(string)};
+    type t = {. "variousScalars": t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
-  type t = {. "variousScalars": t_variousScalars}
-  and t_variousScalars = {nullableString: option(string)};
+  type t_variousScalars = {nullableString: option(string)};
+  type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
 
@@ -153,13 +153,13 @@ module ExternalFragmentQuery = {
         string,
         int,
       };
-      type t_VariousScalars = t;
+      type nonrec t_VariousScalars = t;
     };
     type t = {
       string,
       int,
     };
-    type t_VariousScalars = t;
+    type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t) => {
 
@@ -238,23 +238,23 @@ module ExternalFragmentQuery = {
 
 module InlineFragmentQuery = {
   module Raw = {
-    type t = {. "dogOrHuman": t_dogOrHuman}
-    and t_dogOrHuman
-    and t_dogOrHuman_Dog = {
+    type t_dogOrHuman_Dog = {
       name: string,
       barkVolume: float,
     };
+    type t_dogOrHuman;
+    type t = {. "dogOrHuman": t_dogOrHuman};
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type t = {. "dogOrHuman": t_dogOrHuman}
-  and t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ]
-  and t_dogOrHuman_Dog = {
+  type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
   };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
 
@@ -341,13 +341,13 @@ module UnionExternalFragmentQuery = {
         name: string,
         barkVolume: float,
       };
-      type t_Dog = t;
+      type nonrec t_Dog = t;
     };
     type t = {
       name: string,
       barkVolume: float,
     };
-    type t_Dog = t;
+    type nonrec t_Dog = t;
 
     let parse = (value: Raw.t) => {
 
@@ -386,8 +386,8 @@ module UnionExternalFragmentQuery = {
   };
   module Untitled1 = {
     module Raw = {
-      type t = {. "dogOrHuman": t_dogOrHuman}
-      and t_dogOrHuman;
+      type t_dogOrHuman;
+      type t = {. "dogOrHuman": t_dogOrHuman};
     };
     let query =
       (
@@ -398,11 +398,11 @@ module UnionExternalFragmentQuery = {
         ++ "   \n}\n\n}\n\n}\n"
       )
       ++ DogFragment.query;
-    type t = {. "dogOrHuman": t_dogOrHuman}
-    and t_dogOrHuman = [
+    type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
       | `Dog(DogFragment.t)
     ];
+    type t = {. "dogOrHuman": t_dogOrHuman};
     let parse: Raw.t => t =
       value => {
 

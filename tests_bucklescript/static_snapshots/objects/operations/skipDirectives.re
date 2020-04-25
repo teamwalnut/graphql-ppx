@@ -18,37 +18,37 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      .
-      "v1": t_v1,
-      "v2": t_v2,
-    }
-    and t_v2 = {
-      .
-      "nullableString": Js.Nullable.t(string),
-      "string": Js.Nullable.t(string),
-    }
-    and t_v1 = {
+    type t_v1 = {
       .
       "nullableString": Js.Nullable.t(string),
       "string": Js.Nullable.t(string),
     };
+    type t_v2 = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": Js.Nullable.t(string),
+    };
+    type t = {
+      .
+      "v1": t_v1,
+      "v2": t_v2,
+    };
   };
   let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
+  type t_v1 = {
+    .
+    "nullableString": option(string),
+    "string": option(string),
+  };
+  type t_v2 = {
+    .
+    "nullableString": option(string),
+    "string": option(string),
+  };
   type t = {
     .
     "v1": t_v1,
     "v2": t_v2,
-  }
-  and t_v2 = {
-    .
-    "nullableString": option(string),
-    "string": option(string),
-  }
-  and t_v1 = {
-    .
-    "nullableString": option(string),
-    "string": option(string),
   };
   type t_variables = {. "var": bool};
   let parse: Raw.t => t =

@@ -515,17 +515,19 @@ let generate_types =
            generate_variant_interface(config, fields, base, path, loc, raw)
          | Enum({loc, path, fields}) =>
            generate_enum(config, fields, path, loc, raw),
-       );
+       )
+    |> List.rev;
 
-  let types = Ast_helper.Str.type_(Recursive, types);
+  let types =
+    types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
   switch (fragment_name) {
   | Some(fragment_name) =>
     List.append(
-      [types],
+      types,
       [
         Ast_helper.(
           Str.type_(
-            Recursive,
+            Nonrecursive,
             [
               Type.mk(
                 ~manifest=
@@ -540,7 +542,7 @@ let generate_types =
         ),
       ],
     )
-  | None => [types]
+  | None => types
   };
 };
 

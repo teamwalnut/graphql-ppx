@@ -18,25 +18,25 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "dogOrHuman": t_dogOrHuman}
-    and t_dogOrHuman
-    and t_dogOrHuman_Dog = {
+    type t_dogOrHuman_Dog = {
       .
       "name": string,
       "barkVolume": float,
     };
+    type t_dogOrHuman;
+    type t = {. "dogOrHuman": t_dogOrHuman};
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type t = {. "dogOrHuman": t_dogOrHuman}
-  and t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ]
-  and t_dogOrHuman_Dog = {
+  type t_dogOrHuman_Dog = {
     .
     "name": string,
     "barkVolume": float,
   };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
 
