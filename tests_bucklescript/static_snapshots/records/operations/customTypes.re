@@ -32,7 +32,7 @@ module MyQuery = {
     currentTime: GraphqlHelpers.DateTime.t,
     favoriteColor: GraphqlHelpers.Color.t,
     futureTime: option(GraphqlHelpers.DateTime.t),
-    nullableColor: option(GraphqlHelpers.Color.t),
+    nullableColor: option(GraphqlHelpers.DateTime.t),
   };
   let parse: Raw.t => t =
     (value) => (
@@ -68,7 +68,12 @@ module MyQuery = {
                 let value = (value: Raw.t_customFields).nullableColor;
 
                 switch (Js.toOption(value)) {
-                | Some(value) => Some(GraphqlHelpers.Color.parse(value))
+                | Some(value) =>
+                  Some(
+                    GraphqlHelpers.DateTime.parse(
+                      GraphqlHelpers.Color.parse(value),
+                    ),
+                  )
                 | None => None
                 };
               },
