@@ -42,12 +42,6 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
   );
 };
 
-/**
- * This is a GraphQL AST transform that will add the __typename to all selection
- * sets. This is necessary for Apollo, as this is an implicit field.
- * If we don't include this when using Apollo, the __typename information is
- * lost when we parse values and then serialize back to the js-values again
- */
 let rec do_add_typename_to_selection_set =
         (parent_span, schema, ty, selection_set) => {
   let add_typename =
@@ -100,12 +94,7 @@ let rec do_add_typename_to_selection_set =
     selection_set;
   };
 };
-/**
- * This is a GraphQL AST transform that removes the `__typename` field from
- * unions. The PPX will add this in the printer stage, so it is always there.
- * The PPX will not allow any scalar fields on a union except for the inline
- * fragments, so we make sure to remove it before doing any further processing.
- */
+
 let rec do_remove_typename_from_union =
         (parent_span, schema, ty, selection_set) => {
   let selection_set =
