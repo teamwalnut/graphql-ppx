@@ -1,4 +1,4 @@
-type t = (Schema.schema, Graphql_ast.document) => Graphql_ast.document;
+type t = (Schema.t, Graphql_ast.document) => Graphql_ast.document;
 
 // get's the type of a field name
 let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
@@ -122,7 +122,7 @@ let rec do_remove_typename_from_union =
   );
 };
 
-let traverse_document_selections = (fn, schema: Schema.schema, definitions) => {
+let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
   Graphql_ast.(
     definitions
     |> List.map(def => {

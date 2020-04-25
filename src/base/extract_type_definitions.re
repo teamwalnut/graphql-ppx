@@ -193,7 +193,7 @@ let rec convert_type_ref = schema =>
 let generate_input_field_types =
     (
       _input_obj_name,
-      schema: Schema.schema,
+      schema: Schema.t,
       fields: list((string, Schema.type_ref, Source_pos.ast_location)),
     ) => {
   fields
@@ -240,7 +240,7 @@ let get_input_object_names = (fields: list(input_object_field)) => {
 
 let rec extract_input_object =
         (
-          schema: Schema.schema,
+          schema: Schema.t,
           finalized_input_objects,
           (
             name: option(string),

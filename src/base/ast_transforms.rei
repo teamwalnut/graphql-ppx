@@ -7,7 +7,7 @@
  * to add fields that clients will add implicitly, or to preprocess the document
  * to conform to some of the conventions of GraphQL PPX.
  */
-type t = (Schema.schema, Graphql_ast.document) => Graphql_ast.document;
+type t = (Schema.t, Graphql_ast.document) => Graphql_ast.document;
 
 /**
  * This is a GraphQL AST transform that will add the __typename to all selection
