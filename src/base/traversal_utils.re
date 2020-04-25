@@ -4,7 +4,7 @@ open Source_pos;
 type ctx = {
   map_loc: ((source_position, source_position)) => Result_structure.loc,
   fragments: Hashtbl.t(string, Graphql_ast.fragment),
-  schema: Schema.schema,
+  schema: Schema.t,
   errors: ref(list((Result_structure.loc, string))),
   type_stack: list(option(Schema.type_meta)),
   type_literal_stack: list(option(Schema.type_ref)),

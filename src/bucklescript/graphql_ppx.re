@@ -272,6 +272,43 @@ let get_with_default = (value, default_value) => {
   };
 };
 
+let get_template_tag = query_config => {
+  switch (query_config.tagged_template) {
+  | Some(false) => (None, None, None)
+  | _ =>
+    switch (
+      get_with_default(query_config.template_tag, global_template_tag()),
+      get_with_default(
+        query_config.template_tag_location,
+        global_template_tag_location(),
+      ),
+      get_with_default(
+        query_config.template_tag_import,
+        global_template_tag_import(),
+      ),
+    ) {
+    | (Some(tag), Some(location), Some(import)) => (
+        Some(tag),
+        Some(location),
+        Some(import),
+      )
+    | (None, Some(location), Some(import)) => (
+        Some(import),
+        Some(location),
+        Some(import),
+      )
+    | (Some(tag), Some(location), None) => (
+        Some(tag),
+        Some(location),
+        Some("default"),
+      )
+    | (Some(tag), None, Some(_))
+    | (Some(tag), None, None) => (Some(tag), None, None)
+    | (None, _, _) => (None, None, None)
+    }
+  };
+};
+
 let rewrite_query =
     (
       ~query_config: query_config,
@@ -313,44 +350,17 @@ let rewrite_query =
         ),
       )
     | Result.Ok(document) =>
-      let template_tag =
-        switch (query_config.tagged_template) {
-        | Some(false) => (None, None, None)
-        | _ =>
-          switch (
-            get_with_default(
-              query_config.template_tag,
-              global_template_tag(),
-            ),
-            get_with_default(
-              query_config.template_tag_location,
-              global_template_tag_location(),
-            ),
-            get_with_default(
-              query_config.template_tag_import,
-              global_template_tag_import(),
-            ),
-          ) {
-          | (Some(tag), Some(location), Some(import)) => (
-              Some(tag),
-              Some(location),
-              Some(import),
-            )
-          | (None, Some(location), Some(import)) => (
-              Some(import),
-              Some(location),
-              Some(import),
-            )
-          | (Some(tag), Some(location), None) => (
-              Some(tag),
-              Some(location),
-              Some("default"),
-            )
-          | (Some(tag), None, Some(_))
-          | (Some(tag), None, None) => (Some(tag), None, None)
-          | (None, _, _) => (None, None, None)
+      let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+      let document =
+        (
+          if (Ppx_config.apollo_mode()) {
+            document |> Ast_transforms.add_typename_to_selection_set(schema);
+          } else {
+            document;
           }
-        };
+        )
+        |> Ast_transforms.remove_typename_from_union(schema);
+      let template_tag = get_template_tag(query_config);
 
       let config = {
         Generator_utils.map_loc: add_loc(delimLength, loc),
@@ -375,7 +385,7 @@ let rewrite_query =
           },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
+        schema,
         template_tag,
       };
       switch (Validations.run_validators(config, document)) {
@@ -662,7 +672,7 @@ let args = [
       () =>
         Ppx_config.update_config(current => {...current, apollo_mode: true}),
     ),
-    "Defines if apply Apollo specific code generation",
+    "Automatically add __typename everywhere (necessary for apollo)",
   ),
   (
     "-schema",

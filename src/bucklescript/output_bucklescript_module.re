@@ -73,7 +73,6 @@ let compress_parts = (parts: array(Graphql_printer.t)) => {
                String(s1 ++ s2),
                ...rest,
              ]
-           | (acc, Empty) => acc
            | (acc, curr) => [curr, ...acc]
            }
          },
@@ -93,7 +92,6 @@ let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
       Array.fold_left(
         acc =>
           fun
-          | Empty => acc
           | String(s) => acc ++ s
           | FragmentNameRef(f) => {
               let name =
@@ -136,7 +134,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = (acc, part) =>
     switch (acc, part) {
-    | (acc, Empty) => acc
     | (None, String(s)) => Some(make_string(s))
     | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
     | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
@@ -550,9 +547,9 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,

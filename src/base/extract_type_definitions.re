@@ -83,10 +83,10 @@ let rec extract = path =>
   fun
   | Res_nullable(_loc, inner) => extract(path, inner)
   | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
+  | Res_object(_loc, _name, fields, Some(_))
+  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
   | Res_object(loc, _name, fields, None) =>
     create_object(path, fields, false, loc)
-  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
   | Res_record(loc, _name, fields, None) =>
     create_object(path, fields, true, loc)
   | Res_poly_variant_union(loc, _name, fragments, _) => [
@@ -193,7 +193,7 @@ let rec convert_type_ref = schema =>
 let generate_input_field_types =
     (
       _input_obj_name,
-      schema: Schema.schema,
+      schema: Schema.t,
       fields: list((string, Schema.type_ref, Source_pos.ast_location)),
     ) => {
   fields
@@ -240,7 +240,7 @@ let get_input_object_names = (fields: list(input_object_field)) => {
 
 let rec extract_input_object =
         (
-          schema: Schema.schema,
+          schema: Schema.t,
           finalized_input_objects,
           (
             name: option(string),
