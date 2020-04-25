@@ -280,7 +280,20 @@ let mapper = (_config, _cookies) => {
   );
 };
 
+let argKey = ref("");
 let args = [
+  (
+    "-custom-field",
+    Arg.Tuple([
+      Arg.String(key => {argKey := key}),
+      Arg.String(
+        moduleKey => {
+          Hashtbl.add(Ppx_config.custom_fields(), argKey^, moduleKey)
+        },
+      ),
+    ]),
+    "Adds a global custom field decoder/serializer (format: -custom-field ScalarType Module)",
+  ),
   (
     "-verbose",
     Arg.Unit(
