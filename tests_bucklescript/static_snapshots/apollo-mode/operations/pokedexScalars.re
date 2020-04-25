@@ -25,8 +25,8 @@ module MyQuery = {
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
     type t_variables = {
-      id: Js.Json.t(string),
-      name: Js.Json.t(string),
+      id: Js.Nullable.t(string),
+      name: Js.Nullable.t(string),
     };
   };
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\n__typename  \nid  \nname  \n}\n\n}\n";
@@ -126,46 +126,31 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      id:
         (
-          "id",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp.id,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables).id,
         ),
+
+      name:
         (
-          "name",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp.name,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables).name,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+    };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables(
       {

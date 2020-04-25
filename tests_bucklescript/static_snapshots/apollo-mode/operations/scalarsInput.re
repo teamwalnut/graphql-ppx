@@ -21,15 +21,15 @@ module MyQuery = {
     type t = {scalarsInput: string};
     type t_variables = {arg: t_variables_VariousScalarsInput}
     and t_variables_VariousScalarsInput = {
-      nullableString: Js.Json.t(string),
+      nullableString: Js.Nullable.t(string),
       string,
-      nullableInt: Js.Json.t(int),
+      nullableInt: Js.Nullable.t(int),
       int,
-      nullableFloat: Js.Json.t(float),
+      nullableFloat: Js.Nullable.t(float),
       float,
-      nullableBoolean: Js.Json.t(bool),
+      nullableBoolean: Js.Nullable.t(bool),
       boolean: bool,
-      nullableID: Js.Json.t(string),
+      nullableID: Js.Nullable.t(string),
       id: string,
     };
   };
@@ -73,108 +73,83 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let rec serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
-        (
-          "arg",
-          (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp.arg),
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      arg:
+        (a => Some(serializeInputObjectVariousScalarsInput(a)))(
+          (inp: t_variables).arg,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_
+    }
   and serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Js.Json.t =
-    inp =>
-      [|
+    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
+    inp => {
+
+      nullableString:
         (
-          "nullableString",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp.nullableString,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_VariousScalarsInput).nullableString,
         ),
-        ("string", (a => Some(Js.Json.string(a)))(inp.string)),
+
+      string: (a => a)((inp: t_variables_VariousScalarsInput).string),
+
+      nullableInt:
         (
-          "nullableInt",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.number(float_of_int(a))))(b)
-              }
-          )(
-            inp.nullableInt,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_VariousScalarsInput).nullableInt,
         ),
-        ("int", (a => Some(Js.Json.number(float_of_int(a))))(inp.int)),
+
+      int: (a => a)((inp: t_variables_VariousScalarsInput).int),
+
+      nullableFloat:
         (
-          "nullableFloat",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.number(a)))(b)
-              }
-          )(
-            inp.nullableFloat,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_VariousScalarsInput).nullableFloat,
         ),
-        ("float", (a => Some(Js.Json.number(a)))(inp.float)),
+
+      float: (a => a)((inp: t_variables_VariousScalarsInput).float),
+
+      nullableBoolean:
         (
-          "nullableBoolean",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.boolean(a)))(b)
-              }
-          )(
-            inp.nullableBoolean,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_VariousScalarsInput).nullableBoolean,
         ),
-        ("boolean", (a => Some(Js.Json.boolean(a)))(inp.boolean)),
+
+      boolean: (a => a)((inp: t_variables_VariousScalarsInput).boolean),
+
+      nullableID:
         (
-          "nullableID",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp.nullableID,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_VariousScalarsInput).nullableID,
         ),
-        ("id", (a => Some(Js.Json.string(a)))(inp.id)),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+
+      id: (a => a)((inp: t_variables_VariousScalarsInput).id),
+    };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
       {

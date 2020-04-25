@@ -49,21 +49,11 @@ module MyQuery = {
         };
       }: Raw.t
     );
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("query", (a => Some(Js.Json.string(a)))(inp.query))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      query: (a => a)((inp: t_variables).query),
+    };
   let makeVariables = (~query, ()) =>
     serializeVariables(
       {

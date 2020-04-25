@@ -599,7 +599,7 @@ let rec generate_arg_type = (raw, loc) =>
   | Nullable(inner) =>
     base_type(
       ~inner=[generate_arg_type(raw, loc, inner)],
-      raw ? "Js.Json.t" : "option",
+      raw ? "Js.Nullable.t" : "option",
     )
   | List(inner) =>
     base_type(~inner=[generate_arg_type(raw, loc, inner)], "array")

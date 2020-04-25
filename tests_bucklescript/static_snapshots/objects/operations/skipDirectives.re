@@ -162,21 +162,11 @@ module MyQuery = {
         "v2": v2,
       };
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("var", (a => Some(Js.Json.boolean(a)))(inp##var))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      var: (a => a)(inp##var),
+    };
   let makeVariables = (~var, ()) =>
     serializeVariables(
       {

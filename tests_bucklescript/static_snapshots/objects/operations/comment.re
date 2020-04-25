@@ -22,8 +22,8 @@ module MyQuery = {
     type t_variables = {. "arg": t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
       .
-      "field": Js.Json.t(string),
-      "enum": Js.Json.t(string),
+      "field": Js.Nullable.t(string),
+      "enum": Js.Nullable.t(string),
     };
   };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
@@ -55,79 +55,49 @@ module MyQuery = {
         "nonrecursiveInput": nonrecursiveInput,
       };
     };
-  let rec serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
-        (
-          "arg",
-          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
-        ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      arg: (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+    }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Js.Json.t =
-    inp =>
-      [|
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    inp => {
+
+      field:
         (
-          "field",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp##field,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
         ),
+
+      enum:
         (
-          "enum",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) =>
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
                 (
                   a =>
-                    Some(
-                      switch (a) {
-                      | `FIRST => Js.Json.string("FIRST")
-                      | `SECOND => Js.Json.string("SECOND")
-                      | `THIRD => Js.Json.string("THIRD")
-                      },
-                    )
+                    switch (a) {
+                    | `FIRST => "FIRST"
+                    | `SECOND => "SECOND"
+                    | `THIRD => "THIRD"
+                    }
                 )(
                   b,
-                )
-              }
-          )(
-            inp##enum,
-          ),
+                ),
+              )
+            }
+        )(
+          inp##enum,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+    };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
       {

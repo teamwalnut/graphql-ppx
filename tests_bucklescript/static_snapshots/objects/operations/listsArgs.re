@@ -21,9 +21,9 @@ module MyQuery = {
     type t = {. "listsInput": string};
     type t_variables = {
       .
-      "nullableOfNullable": Js.Json.t(array(Js.Json.t(string))),
-      "nullableOfNonNullable": Js.Json.t(array(string)),
-      "nonNullableOfNullable": array(Js.Json.t(string)),
+      "nullableOfNullable": Js.Nullable.t(array(Js.Nullable.t(string))),
+      "nullableOfNonNullable": Js.Nullable.t(array(string)),
+      "nonNullableOfNullable": array(Js.Nullable.t(string)),
       "nonNullableOfNonNullable": array(string),
     };
   };
@@ -57,133 +57,107 @@ module MyQuery = {
         "listsInput": listsInput,
       };
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      nullableOfNullable:
         (
-          "nullableOfNullable",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) =>
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
                 (
                   a =>
-                    Some(
-                      a
-                      |> Array.map(b =>
-                           switch (
-                             (
-                               a =>
-                                 switch (a) {
-                                 | None => None
-                                 | Some(b) =>
-                                   (a => Some(Js.Json.string(a)))(b)
-                                 }
-                             )(
-                               b,
-                             )
-                           ) {
-                           | Some(c) => c
-                           | None => Js.Json.null
-                           }
-                         )
-                      |> Js.Json.array,
-                    )
-                )(
-                  b,
-                )
-              }
-          )(
-            inp##nullableOfNullable,
-          ),
-        ),
-        (
-          "nullableOfNonNullable",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) =>
-                (
-                  a =>
-                    Some(
-                      a
-                      |> Array.map(b =>
-                           switch ((a => Some(Js.Json.string(a)))(b)) {
-                           | Some(c) => c
-                           | None => Js.Json.null
-                           }
-                         )
-                      |> Js.Json.array,
-                    )
-                )(
-                  b,
-                )
-              }
-          )(
-            inp##nullableOfNonNullable,
-          ),
-        ),
-        (
-          "nonNullableOfNullable",
-          (
-            a =>
-              Some(
-                a
-                |> Array.map(b =>
-                     switch (
-                       (
-                         a =>
-                           switch (a) {
-                           | None => None
-                           | Some(b) => (a => Some(Js.Json.string(a)))(b)
-                           }
-                       )(
-                         b,
+                    a
+                    |> Array.map(b =>
+                         switch (
+                           (
+                             a =>
+                               switch (a) {
+                               | None => Js.Nullable.undefined
+                               | Some(b) => Js.Nullable.return((a => a)(b))
+                               }
+                           )(
+                             b,
+                           )
+                         ) {
+                         | Some(c) => c
+                         | None => Js.Nullable.null
+                         }
                        )
-                     ) {
-                     | Some(c) => c
-                     | None => Js.Json.null
-                     }
-                   )
-                |> Js.Json.array,
+                )(
+                  b,
+                ),
               )
-          )(
-            inp##nonNullableOfNullable,
-          ),
+            }
+        )(
+          inp##nullableOfNullable,
         ),
+
+      nullableOfNonNullable:
         (
-          "nonNullableOfNonNullable",
-          (
-            a =>
-              Some(
-                a
-                |> Array.map(b =>
-                     switch ((a => Some(Js.Json.string(a)))(b)) {
-                     | Some(c) => c
-                     | None => Js.Json.null
-                     }
-                   )
-                |> Js.Json.array,
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    a
+                    |> Array.map(b =>
+                         switch ((a => a)(b)) {
+                         | Some(c) => c
+                         | None => Js.Nullable.null
+                         }
+                       )
+                )(
+                  b,
+                ),
               )
-          )(
-            inp##nonNullableOfNonNullable,
-          ),
+            }
+        )(
+          inp##nullableOfNonNullable,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
+
+      nonNullableOfNullable:
+        (
+          a =>
+            a
+            |> Array.map(b =>
+                 switch (
+                   (
+                     a =>
+                       switch (a) {
+                       | None => Js.Nullable.undefined
+                       | Some(b) => Js.Nullable.return((a => a)(b))
+                       }
+                   )(
+                     b,
+                   )
+                 ) {
+                 | Some(c) => c
+                 | None => Js.Nullable.null
+                 }
+               )
+        )(
+          inp##nonNullableOfNullable,
+        ),
+
+      nonNullableOfNonNullable:
+        (
+          a =>
+            a
+            |> Array.map(b =>
+                 switch ((a => a)(b)) {
+                 | Some(c) => c
+                 | None => Js.Nullable.null
+                 }
+               )
+        )(
+          inp##nonNullableOfNonNullable,
+        ),
+    };
   let makeVariables =
       (
         ~nullableOfNullable=?,

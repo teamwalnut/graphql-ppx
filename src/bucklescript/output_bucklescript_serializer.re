@@ -14,6 +14,7 @@ open Extract_type_definitions;
 open Result_structure;
 open Output_bucklescript_types;
 
+let raw_value = loc => [@metaloc loc] [%expr value];
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -32,19 +33,11 @@ open Output_bucklescript_types;
 let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => [%expr
-      (a => Some(Js.Json.string(a)))
-    ]
-  | Type(Scalar({sm_name: "Int"})) => [%expr
-      (a => Some(Js.Json.number(float_of_int(a))))
-    ]
-  | Type(Scalar({sm_name: "Float"})) => [%expr
-      (a => Some(Js.Json.number(a)))
-    ]
-  | Type(Scalar({sm_name: "Boolean"})) => [%expr
-      (a => Some(Js.Json.boolean(a)))
-    ]
-  | Type(Scalar({sm_name: _})) => [%expr (a => Some(a))]
+  | Type(Scalar({sm_name: "String"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Int"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Float"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Boolean"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: _})) => [%expr (a => a)]
   | Type(InputObject({iom_name})) => [%expr
       (
         a =>
@@ -62,30 +55,22 @@ let rec serialize_type =
             |> List.map(value => {
                  Exp.case(
                    Pat.variant(value.evm_name, None),
-                   Exp.apply(
-                     ident_from_string("Js.Json.string"),
-                     [
-                       (
-                         Nolabel,
-                         Ast_helper.Exp.constant(
-                           Parsetree.Pconst_string(value.evm_name, None),
-                         ),
-                       ),
-                     ],
+                   Ast_helper.Exp.constant(
+                     Parsetree.Pconst_string(value.evm_name, None),
                    ),
                  )
                }),
           )
         );
       %expr
-      (a => Some([%e case_exp]));
+      (a => [%e case_exp]);
     }
   | Nullable(inner) => [%expr
       (
         a =>
           switch (a) {
-          | None => None
-          | Some(b) => [%e serialize_type(inner)](b)
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
           }
       )
     ]
@@ -94,16 +79,13 @@ let rec serialize_type =
   | List(inner) => [%expr
       (
         a =>
-          Some(
-            a
-            |> Array.map(b =>
-                 switch ([%e serialize_type(inner)](b)) {
-                 | Some(c) => c
-                 | None => Js.Json.null
-                 }
-               )
-            |> Js.Json.array,
-          )
+          a
+          |> Array.map(b =>
+               switch ([%e serialize_type(inner)](b)) {
+               | Some(c) => c
+               | None => Js.Nullable.null
+               }
+             )
       )
     ]
   | Type(Object(_)) => [%expr (v => None)]
@@ -115,7 +97,7 @@ let rec serialize_type =
  * This creates a serialize function for variables and/or input types
  * the return type is Js.Json.t.
  */
-let serialize_fun = (config, fields) => {
+let serialize_fun = (config, fields, type_name) => {
   let arg = "inp";
   Ast_helper.(
     Exp.fun_(
@@ -123,53 +105,85 @@ let serialize_fun = (config, fields) => {
       None,
       Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
       {
-        let field_array =
+        Exp.record(
           fields
           |> List.map((InputField({name, type_, loc})) => {
-               %expr
-               {
-                 (
-                   [%e
-                     Ast_helper.Exp.constant(
-                       Parsetree.Pconst_string(name, None),
-                     )
-                   ],
+               (
+                 {txt: Longident.parse(name), loc: conv_loc(loc)},
+                 [%expr
                    [%e serialize_type(type_)](
-                     switch%e (config.records) {
-                     | true =>
+                     if%e (config.records) {
                        Exp.field(
-                         ident_from_string(arg),
+                         Exp.constraint_(
+                           ident_from_string(arg),
+                           base_type_name(type_name),
+                         ),
                          {
-                           Location.txt: Longident.Lident(name),
-                           loc: conv_loc(loc),
+                           loc: Location.none,
+                           Location.txt:
+                             Longident.parse(to_valid_ident(name)),
                          },
-                       )
-                     | false =>
+                       );
+                     } else {
                        %expr
                        [%e ident_from_string(arg)]##[%e
-                                                       ident_from_string(name)
-                                                     ]
+                                                       ident_from_string(
+                                                         to_valid_ident(name),
+                                                       )
+                                                     ];
                      },
-                   ),
-                 );
-               }
-             })
-          |> Ast_helper.Exp.array;
-
-        %expr
-        [%e field_array]
-        |> Js.Array.filter(
-             fun
-             | (_, None) => false
-             | (_, Some(_)) => true,
-           )
-        |> Js.Array.map(
-             fun
-             | (k, Some(v)) => (k, v)
-             | (k, None) => (k, Js.Json.null),
-           )
-        |> Js.Dict.fromArray
-        |> Js.Json.object_;
+                   )
+                 ],
+               )
+             }),
+          None,
+          //   let field_array =
+          //     fields
+          //     |> List.map((InputField({name, type_, loc})) => {
+          //          %expr
+          //          {
+          //            (
+          //              [%e
+          //                Ast_helper.Exp.constant(
+          //                  Parsetree.Pconst_string(name, None),
+          //                )
+          //              ],
+          //              [%e serialize_type(type_)](
+          //                switch%e (config.records) {
+          //                | true =>
+          //                  Exp.field(
+          //                    ident_from_string(arg),
+          //                    {
+          //                      Location.txt: Longident.Lident(name),
+          //                      loc: conv_loc(loc),
+          //                    },
+          //                  )
+          //                | false =>
+          //                  %expr
+          //                  [%e ident_from_string(arg)]##[%e
+          //                                                  ident_from_string(name)
+          //                                                ]
+          //                },
+          //              ),
+          //            );
+          //          }
+          //        })
+          //     |> Ast_helper.Exp.array;
+          //   %expr
+          //   [%e field_array]
+          //   |> Js.Array.filter(
+          //        fun
+          //        | (_, None) => false
+          //        | (_, Some(_)) => true,
+          //      )
+          //   |> Js.Array.map(
+          //        fun
+          //        | (k, Some(v)) => (k, v)
+          //        | (k, None) => (k, Js.Json.null),
+          //      )
+          //   |> Js.Dict.fromArray
+          //   |> Js.Json.object_;
+        );
       },
     )
   );
@@ -183,13 +197,19 @@ let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
   | [] => None
-  | _ =>
+  | arg_type_defs =>
     Some(
       Ast_helper.(
         Str.value(
           is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) =>
+          |> List.map((InputObject({name, fields, loc})) => {
+               let type_name =
+                 switch (name) {
+                 | None => "t_variables"
+                 | Some(input_object_name) =>
+                   "t_variables_" ++ input_object_name
+                 };
                [@metaloc conv_loc(loc)]
                Vb.mk(
                  Pat.constraint_(
@@ -204,19 +224,13 @@ let generate_serialize_variables =
                    }),
                    Typ.arrow(
                      Nolabel,
-                     base_type_name(
-                       switch (name) {
-                       | None => "t_variables"
-                       | Some(input_object_name) =>
-                         "t_variables_" ++ input_object_name
-                       },
-                     ),
-                     base_type_name("Js.Json.t"),
+                     base_type_name(type_name),
+                     base_type_name("Raw." ++ type_name),
                    ),
                  ),
-                 serialize_fun(config, fields),
-               )
-             ),
+                 serialize_fun(config, fields, type_name),
+               );
+             }),
         )
       ),
     )
@@ -370,11 +384,6 @@ let generate_variable_constructors =
     )
   };
 };
-
-let raw_value = loc => [@metaloc loc] [%expr value];
-let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
-let ident_from_string = (~loc=Location.none, ident) =>
-  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
 
 let get_field = (is_object, key, existing_record, path) => {
   is_object
