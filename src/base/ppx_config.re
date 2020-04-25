@@ -16,6 +16,7 @@ type config = {
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
+  relay: bool,
 };
 
 let config_ref = ref(None);
@@ -34,6 +35,7 @@ let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
 let definition = () => (config_ref^ |> Option.unsafe_unwrap).definition;
+let relay = () => (config_ref^ |> Option.unsafe_unwrap).relay;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
 let template_tag_import = () =>
