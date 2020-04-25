@@ -196,6 +196,7 @@ let () =
       template_tag: None,
       template_tag_location: None,
       template_tag_import: None,
+      custom_fields: Hashtbl.create(0),
     })
   );
 

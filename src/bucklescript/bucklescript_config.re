@@ -64,6 +64,7 @@ let defaultConfig =
     template_tag_location: None,
     template_tag_import: None,
     definition: true,
+    custom_fields: Hashtbl.create(0),
   };
 
 module JsonHelper = {
@@ -78,6 +79,26 @@ module JsonHelper = {
     | Yojson.Basic.Util.Type_error(_) => ()
     | other => raise(other)
     };
+};
+
+let read_custom_fields = json => {
+  Yojson.Basic.Util.(
+    try({
+      let custom_fields = Ppx_config.custom_fields() |> Hashtbl.copy;
+      json
+      |> (json => json |> member("custom-fields") |> to_assoc)
+      |> List.map(((key, value)) => (key, value |> to_string))
+      |> List.iter(((key, value)) => {
+           Hashtbl.add(custom_fields, key, value)
+         });
+      Ppx_config.update_config(current => {...current, custom_fields});
+
+      ();
+    }) {
+    | Yojson.Basic.Util.Type_error(_) => ()
+    | other => raise(other)
+    }
+  );
 };
 
 let read_config = () => {
@@ -165,6 +186,7 @@ let read_config = () => {
            {...current, template_tag_location: Some(template_tag_location)}
          )
        });
+    ppxConfig |> read_custom_fields;
   };
 
   switch (Paths.getBsConfigFile()) {

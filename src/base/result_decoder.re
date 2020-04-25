@@ -124,7 +124,18 @@ let rec unify_type =
       Res_float(config.map_loc(span))
     | Some(Scalar({sm_name: "Boolean", _})) =>
       Res_boolean(config.map_loc(span))
-    | Some(Scalar(_)) => Res_raw_scalar(config.map_loc(span))
+    | Some(Scalar({sm_name})) =>
+      try({
+        let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
+        Res_custom_decoder(
+          config.map_loc(span),
+          decoderModule,
+          Res_raw_scalar(config.map_loc(span)),
+        );
+      }) {
+      | Not_found => Res_raw_scalar(config.map_loc(span))
+      | other => raise(other)
+      }
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -804,7 +815,8 @@ let rec unify_document_schema = (config, document) => {
             getFragmentArgumentDefinitions(fg_directives);
 
           switch (with_decoder) {
-          | Error(err) => Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
+          | Error(err) =>
+            Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
           | Ok(decoder) =>
             Mod_fragment(
               fg_name.item,
