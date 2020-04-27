@@ -44,13 +44,13 @@ module MyQuery = {
             {
 
               string: {
-                let value = (value: Raw.t_variousScalars).string;
+                let value = (value: scalars).string;
 
                 value;
               },
 
               int: {
-                let value = (value: Raw.t_variousScalars).int;
+                let value = (value: scalars).int;
 
                 value;
               },

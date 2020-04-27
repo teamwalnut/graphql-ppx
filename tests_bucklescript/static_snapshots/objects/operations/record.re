@@ -36,23 +36,23 @@ module MyQuery = {
   type t = {. "variousScalars": scalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
-        {
+        (
+          {
+            string: {
+              let value = (value: scalars).string;
 
-          "string": {
-            let value = value##string;
+              value;
+            },
 
-            value;
-          },
+            int: {
+              let value = (value: scalars).int;
 
-          "int": {
-            let value = value##int;
-
-            value;
-          },
-        };
+              value;
+            },
+          }: scalars
+        );
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
@@ -69,11 +69,9 @@ module OneFieldQuery = {
   and t_variousScalars = {nullableString: option(string)};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
 
@@ -106,7 +104,6 @@ module ExternalFragmentQuery = {
     type t_VariousScalars = t;
 
     let parse = (value: Raw.t) => {
-
       "string": {
         let value = value##string;
 
@@ -134,7 +131,6 @@ module ExternalFragmentQuery = {
     type t = {. "variousScalars": Fragment.t};
     let parse: Raw.t => t =
       value => {
-
         "variousScalars": {
           let value = value##variousScalars;
 
@@ -167,12 +163,10 @@ module InlineFragmentQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       "dogOrHuman": {
         let value = value##dogOrHuman;
 
         switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
         | None =>
           Js.Exn.raiseError(
             "graphql_ppx: "
@@ -184,7 +178,6 @@ module InlineFragmentQuery = {
 
         | Some(typename_obj) =>
           switch (Js.Dict.get(typename_obj, "__typename")) {
-
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
@@ -195,7 +188,6 @@ module InlineFragmentQuery = {
 
           | Some(typename) =>
             switch (Js.Json.decodeString(typename)) {
-
             | None =>
               Js.Exn.raiseError(
                 "graphql_ppx: "
@@ -211,7 +203,6 @@ module InlineFragmentQuery = {
                   {
                     let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                     {
-
                       "name": {
                         let value = value##name;
 
@@ -254,7 +245,6 @@ module UnionExternalFragmentQuery = {
     type t_Dog = t;
 
     let parse = (value: Raw.t) => {
-
       "name": {
         let value = value##name;
 
@@ -290,12 +280,10 @@ module UnionExternalFragmentQuery = {
     ];
     let parse: Raw.t => t =
       value => {
-
         "dogOrHuman": {
           let value = value##dogOrHuman;
 
           switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
@@ -307,7 +295,6 @@ module UnionExternalFragmentQuery = {
 
           | Some(typename_obj) =>
             switch (Js.Dict.get(typename_obj, "__typename")) {
-
             | None =>
               Js.Exn.raiseError(
                 "graphql_ppx: "
@@ -318,7 +305,6 @@ module UnionExternalFragmentQuery = {
 
             | Some(typename) =>
               switch (Js.Json.decodeString(typename)) {
-
               | None =>
                 Js.Exn.raiseError(
                   "graphql_ppx: "

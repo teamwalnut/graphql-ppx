@@ -323,10 +323,14 @@ and generate_object_decoder =
                                {
                                  txt:
                                    Longident.parse(
-                                     "Raw."
-                                     ++ Extract_type_definitions.generate_type_name(
-                                          path,
-                                        ),
+                                     switch (existing_record) {
+                                     | None =>
+                                       "Raw."
+                                       ++ Extract_type_definitions.generate_type_name(
+                                            path,
+                                          )
+                                     | Some(type_name) => type_name
+                                     },
                                    ),
                                  loc: Location.none,
                                },
@@ -414,7 +418,8 @@ and generate_object_decoder =
       do_obj_constructor_records();
     };
 
-  config.records ? obj_constructor_records() : obj_constructor();
+  config.records || existing_record |> Stdlib.Option.is_some
+    ? obj_constructor_records() : obj_constructor();
 }
 and generate_poly_variant_selection_set =
     (config, loc, name, fields, path, definition) => {

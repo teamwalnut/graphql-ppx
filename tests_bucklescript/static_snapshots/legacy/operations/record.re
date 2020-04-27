@@ -39,20 +39,22 @@ module MyQuery = {
 
       "variousScalars": {
         let value = value##variousScalars;
-        {
+        (
+          {
 
-          "string": {
-            let value = value##string;
+            string: {
+              let value = (value: scalars).string;
 
-            value;
-          },
+              value;
+            },
 
-          "int": {
-            let value = value##int;
+            int: {
+              let value = (value: scalars).int;
 
-            value;
-          },
-        };
+              value;
+            },
+          }: scalars
+        );
       },
     };
   let makeVar = (~f, ()) => f(Js.Json.null);
