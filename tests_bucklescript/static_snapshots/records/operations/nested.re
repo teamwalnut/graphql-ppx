@@ -62,32 +62,25 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -103,39 +96,30 @@ module MyQuery = {
             }: t_first
           );
         },
-
         second: {
           let value = (value: Raw.t).second;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_second).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_second_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               f1: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f1;
-
                                 value;
                               },
-
                               f2: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f2;
-
                                 value;
                               },
                             }: t_second_inner_inner,
@@ -151,32 +135,25 @@ module MyQuery = {
             }: t_second
           );
         },
-
         let_: {
           let value = (value: Raw.t).let_;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_let).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_let_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               field: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).field;
-
                                 value;
                               },
                             }: t_let_inner_inner,

@@ -49,51 +49,38 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_first).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_first_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,

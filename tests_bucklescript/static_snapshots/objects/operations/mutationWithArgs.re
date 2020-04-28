@@ -26,10 +26,8 @@ module MyQuery = {
   type t_variables = {. "required": string};
   let parse: Raw.t => t =
     value => {
-
       "optionalInputArgs": {
         let value = value##optionalInputArgs;
-
         value;
       },
     };

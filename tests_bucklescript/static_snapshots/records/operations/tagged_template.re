@@ -49,84 +49,63 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -277,84 +256,63 @@ module MyQuery2 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -505,84 +463,63 @@ module MyQuery3 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -733,84 +670,63 @@ module MyQuery4 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars

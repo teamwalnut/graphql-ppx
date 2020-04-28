@@ -47,10 +47,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (
@@ -61,10 +59,8 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Dog
@@ -77,11 +73,9 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Human

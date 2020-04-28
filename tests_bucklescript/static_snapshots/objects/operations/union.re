@@ -52,10 +52,8 @@ module MyQuery = {
   type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       "dogOrHuman": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
         (
@@ -65,16 +63,12 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   "name": {
                     let value = value##name;
-
                     value;
                   },
-
                   "barkVolume": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -85,10 +79,8 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   "name": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -192,10 +184,8 @@ module MyQueryNoError = {
   type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       "dogOrHuman": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
         (
@@ -205,16 +195,12 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   "name": {
                     let value = value##name;
-
                     value;
                   },
-
                   "barkVolume": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -225,10 +211,8 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   "name": {
                     let value = value##name;
-
                     value;
                   },
                 };

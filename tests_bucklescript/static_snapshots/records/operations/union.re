@@ -49,10 +49,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (
@@ -63,16 +61,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -85,10 +79,8 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human
@@ -193,10 +185,8 @@ module MyQueryNoError = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (
@@ -207,16 +197,12 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -229,10 +215,8 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human

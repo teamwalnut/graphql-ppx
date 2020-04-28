@@ -36,20 +36,15 @@ module MyQuery = {
   type t = {. "variousScalars": scalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "string": {
             let value = value##string;
-
             value;
           },
-
           "int": {
             let value = value##int;
-
             value;
           },
         };
@@ -99,14 +94,11 @@ module OneFieldQuery = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -162,16 +154,12 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t) => {
-
       "string": {
         let value = value##string;
-
         value;
       },
-
       "int": {
         let value = value##int;
-
         value;
       },
     };
@@ -209,10 +197,8 @@ module ExternalFragmentQuery = {
     type t = {. "variousScalars": Fragment.t};
     let parse: Raw.t => t =
       value => {
-
         "variousScalars": {
           let value = value##variousScalars;
-
           Fragment.parse(value);
         },
       };
@@ -259,10 +245,8 @@ module InlineFragmentQuery = {
   type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       "dogOrHuman": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
         (
@@ -272,16 +256,12 @@ module InlineFragmentQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   "name": {
                     let value = value##name;
-
                     value;
                   },
-
                   "barkVolume": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -354,16 +334,12 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t) => {
-
       "name": {
         let value = value##name;
-
         value;
       },
-
       "barkVolume": {
         let value = value##barkVolume;
-
         value;
       },
     };
@@ -409,10 +385,8 @@ module UnionExternalFragmentQuery = {
     type t = {. "dogOrHuman": t_dogOrHuman};
     let parse: Raw.t => t =
       value => {
-
         "dogOrHuman": {
           let value = value##dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (

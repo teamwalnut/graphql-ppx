@@ -27,10 +27,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         argNamedQuery: {
           let value = (value: Raw.t).argNamedQuery;
-
           value;
         },
       }: t

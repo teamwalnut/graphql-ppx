@@ -26,10 +26,8 @@ module MyQuery = {
   type t_variables = {. "arg": [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     value => {
-
       "enumInput": {
         let value = value##enumInput;
-
         value;
       },
     };

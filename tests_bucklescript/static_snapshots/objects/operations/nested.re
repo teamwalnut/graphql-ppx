@@ -63,28 +63,21 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       "first": {
         let value = value##first;
         {
-
           "inner": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 "inner": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       "field": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -97,34 +90,25 @@ module MyQuery = {
           },
         };
       },
-
       "second": {
         let value = value##second;
         {
-
           "inner": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 "inner": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       "f1": {
                         let value = value##f1;
-
                         value;
                       },
-
                       "f2": {
                         let value = value##f2;
-
                         value;
                       },
                     })
@@ -137,28 +121,21 @@ module MyQuery = {
           },
         };
       },
-
       "let_": {
         let value = value##let_;
         {
-
           "inner": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 "inner": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       "field": {
                         let value = value##field;
-
                         value;
                       },
                     })

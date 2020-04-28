@@ -49,24 +49,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         v1: {
           let value = (value: Raw.t).v1;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v1).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v1).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -75,24 +70,19 @@ module MyQuery = {
             }: t_v1
           );
         },
-
         v2: {
           let value = (value: Raw.t).v2;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v2).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v2).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None

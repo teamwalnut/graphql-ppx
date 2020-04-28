@@ -112,51 +112,38 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_first).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_first_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -172,58 +159,43 @@ module MyQuery = {
             }: t_first
           );
         },
-
         second: {
           let value = (value: Raw.t).second;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_second).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_second).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_second_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_second_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).__typename;
-
                                 value;
                               },
-
                               f1: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f1;
-
                                 value;
                               },
-
                               f2: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f2;
-
                                 value;
                               },
                             }: t_second_inner_inner,
@@ -239,51 +211,38 @@ module MyQuery = {
             }: t_second
           );
         },
-
         let_: {
           let value = (value: Raw.t).let_;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_let).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_let).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_let_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_let_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).field;
-
                                 value;
                               },
                             }: t_let_inner_inner,

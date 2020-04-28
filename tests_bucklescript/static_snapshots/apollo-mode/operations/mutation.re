@@ -60,37 +60,28 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_mutationWithError).__typename;
-
                 value;
               },
-
               value: {
                 let value = (value: Raw.t_mutationWithError).value;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value =
                           (value: Raw.t_mutationWithError_value).__typename;
-
                         value;
                       },
-
                       stringField: {
                         let value =
                           (value: Raw.t_mutationWithError_value).stringField;
-
                         value;
                       },
                     }: t_mutationWithError_value,
@@ -98,10 +89,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               errors: {
                 let value = (value: Raw.t_mutationWithError).errors;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -109,15 +98,12 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
-
                              __typename: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    __typename;
-
                                value;
                              },
-
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
@@ -128,12 +114,10 @@ module MyQuery = {
                                | other => `FutureAddedValue(other)
                                };
                              },
-
                              message: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    message;
-
                                value;
                              },
                            }: t_mutationWithError_errors

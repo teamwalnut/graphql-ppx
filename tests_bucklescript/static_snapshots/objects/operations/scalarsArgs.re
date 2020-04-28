@@ -50,10 +50,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       "scalarsInput": {
         let value = value##scalarsInput;
-
         value;
       },
     };

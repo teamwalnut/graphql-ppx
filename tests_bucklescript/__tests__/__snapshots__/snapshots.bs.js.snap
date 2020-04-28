@@ -30,10 +30,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         argNamedQuery: {
           let value = (value: Raw.t).argNamedQuery;
-
           value;
         },
       }: t
@@ -116,10 +114,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
-
           value;
         },
       }: t
@@ -356,27 +352,20 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 IntOfString.parse(value);
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 StringOfInt.parse(value);
               },
             }: t_variousScalars
@@ -474,30 +463,23 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         customScalarField: {
           let value = (value: Raw.t).customScalarField;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_customScalarField).__typename;
-
                 value;
               },
-
               nullable: {
                 let value = (value: Raw.t_customScalarField).nullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               nonNullable: {
                 let value = (value: Raw.t_customScalarField).nonNullable;
-
                 value;
               },
             }: t_customScalarField
@@ -607,10 +589,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         enumInput: {
           let value = (value: Raw.t).enumInput;
-
           value;
         },
       }: t
@@ -698,21 +678,16 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_lists).__typename;
-
                 value;
               },
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -727,19 +702,15 @@ module RecordsQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -748,10 +719,8 @@ module RecordsQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -861,20 +830,15 @@ module ObjectsQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"__typename\\": {
             let value = value##__typename;
-
             value;
           },
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -889,19 +853,15 @@ module ObjectsQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -910,10 +870,8 @@ module ObjectsQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -1081,16 +1039,12 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some(
@@ -1105,10 +1059,8 @@ module Fragments = {
         | None => None
         };
       },
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -1177,16 +1129,12 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -1298,56 +1246,43 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         l1: {
           let value = (value: Raw.t).l1;
-
           Fragments.ListFragment.parse(value);
         },
-
         l2: {
           let value = (value: Raw.t).l2;
           (
             {
-
               __typename: {
                 let value =
                   Obj.magic(
                     Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"),
                   );
-
                 value;
               },
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l2
           );
         },
-
         l3: {
           let value = (value: Raw.t).l3;
           (
             {
-
               __typename: {
                 let value =
                   Obj.magic(
                     Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"),
                   );
-
                 value;
               },
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -1356,7 +1291,6 @@ module MyQuery = {
                       \\"nullableOfNullable\\",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -1371,36 +1305,28 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l3
           );
         },
-
         l4: {
           let value = (value: Raw.t).l4;
           (
             {
-
               __typename: {
                 let value =
                   Obj.magic(
                     Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"),
                   );
-
                 value;
               },
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -1409,7 +1335,6 @@ module MyQuery = {
                       \\"nullableOfNullable\\",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -1424,10 +1349,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               listFragment: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l4
@@ -1663,21 +1586,16 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_lists).__typename;
-
                 value;
               },
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -1692,19 +1610,15 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -1713,10 +1627,8 @@ module MyQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -1844,10 +1756,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         listsInput: {
           let value = (value: Raw.t).listsInput;
-
           value;
         },
       }: t
@@ -2004,10 +1914,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         listsInput: {
           let value = (value: Raw.t).listsInput;
-
           value;
         },
       }: t
@@ -2198,37 +2106,28 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_mutationWithError).__typename;
-
                 value;
               },
-
               value: {
                 let value = (value: Raw.t_mutationWithError).value;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value =
                           (value: Raw.t_mutationWithError_value).__typename;
-
                         value;
                       },
-
                       stringField: {
                         let value =
                           (value: Raw.t_mutationWithError_value).stringField;
-
                         value;
                       },
                     }: t_mutationWithError_value,
@@ -2236,10 +2135,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               errors: {
                 let value = (value: Raw.t_mutationWithError).errors;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -2247,15 +2144,12 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
-
                              __typename: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    __typename;
-
                                value;
                              },
-
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
@@ -2266,12 +2160,10 @@ module MyQuery = {
                                | other => \`FutureAddedValue(other)
                                };
                              },
-
                              message: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    message;
-
                                value;
                              },
                            }: t_mutationWithError_errors
@@ -2428,10 +2320,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
-
           value;
         },
       }: t
@@ -2582,51 +2472,38 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_first).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_first_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -2642,58 +2519,43 @@ module MyQuery = {
             }: t_first
           );
         },
-
         second: {
           let value = (value: Raw.t).second;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_second).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_second).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_second_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_second_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).__typename;
-
                                 value;
                               },
-
                               f1: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f1;
-
                                 value;
                               },
-
                               f2: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f2;
-
                                 value;
                               },
                             }: t_second_inner_inner,
@@ -2709,51 +2571,38 @@ module MyQuery = {
             }: t_second
           );
         },
-
         let_: {
           let value = (value: Raw.t).let_;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_let).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_let).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_let_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_let_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).field;
-
                                 value;
                               },
                             }: t_let_inner_inner,
@@ -3053,10 +2902,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
-
           value;
         },
       }: t
@@ -3284,30 +3131,22 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         pokemon: {
           let value = (value: Raw.t).pokemon;
-
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
               {
-
                 __typename: {
                   let value = (value: Raw.t_pokemon).__typename;
-
                   value;
                 },
-
                 id: {
                   let value = (value: Raw.t_pokemon).id;
-
                   value;
                 },
-
                 name: {
                   let value = (value: Raw.t_pokemon).name;
-
                   switch (Js.toOption(value)) {
                   | Some(value) => Some(value)
                   | None => None
@@ -3418,30 +3257,22 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         pokemon: {
           let value = (value: Raw.t).pokemon;
-
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
               {
-
                 __typename: {
                   let value = (value: Raw.t_pokemon).__typename;
-
                   value;
                 },
-
                 id: {
                   let value = (value: Raw.t_pokemon).id;
-
                   value;
                 },
-
                 name: {
                   let value = (value: Raw.t_pokemon).name;
-
                   switch (Js.toOption(value)) {
                   | Some(value) => Some(value)
                   | None => None
@@ -3580,27 +3411,20 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
             }: scalars
@@ -3667,21 +3491,16 @@ module OneFieldQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -3749,22 +3568,16 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       string: {
         let value = (value: Raw.t).string;
-
         value;
       },
-
       int: {
         let value = (value: Raw.t).int;
-
         value;
       },
     };
@@ -3812,10 +3625,8 @@ module ExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           variousScalars: {
             let value = (value: Raw.t).variousScalars;
-
             Fragment.parse(value);
           },
         }: t
@@ -3861,10 +3672,8 @@ module InlineFragmentQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -3875,22 +3684,16 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -3969,22 +3772,16 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       name: {
         let value = (value: Raw.t).name;
-
         value;
       },
-
       barkVolume: {
         let value = (value: Raw.t).barkVolume;
-
         value;
       },
     };
@@ -4040,10 +3837,8 @@ module UnionExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
-            [@metaloc loc]
             let typename: string =
               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
             (
@@ -4128,10 +3923,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         recursiveInput: {
           let value = (value: Raw.t).recursiveInput;
-
           value;
         },
       }: t
@@ -4285,90 +4078,67 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -4543,10 +4313,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
-
           value;
         },
       }: t
@@ -4730,10 +4498,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
-
           value;
         },
       }: t
@@ -4935,30 +4701,23 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         v1: {
           let value = (value: Raw.t).v1;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_v1).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_v1).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v1).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -4967,30 +4726,23 @@ module MyQuery = {
             }: t_v1
           );
         },
-
         v2: {
           let value = (value: Raw.t).v2;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_v2).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_v2).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v2).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -5151,10 +4903,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -5165,17 +4915,13 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value =
                           (value: Raw.t_simpleSubscription_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Dog
@@ -5188,18 +4934,14 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).__typename;
-
                         value;
                       },
-
                       name: {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Human
@@ -5332,90 +5074,67 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -5575,90 +5294,67 @@ module MyQuery2 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -5818,90 +5514,67 @@ module MyQuery3 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -6061,90 +5734,67 @@ module MyQuery4 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -6319,51 +5969,38 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_first).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_first_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -6517,10 +6154,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -6531,22 +6166,16 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -6559,16 +6188,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Human).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human
@@ -6683,10 +6308,8 @@ module MyQueryNoError = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -6697,22 +6320,16 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -6725,16 +6342,12 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Human).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human
@@ -6861,10 +6474,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -6875,22 +6486,16 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -6981,10 +6586,8 @@ module MyQuery = {
   type t_variables = {. \\"query\\": string};
   let parse: Raw.t => t =
     value => {
-
       \\"argNamedQuery\\": {
         let value = value##argNamedQuery;
-
         value;
       },
     };
@@ -7081,10 +6684,8 @@ module MyQuery = {
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
-
       \\"nonrecursiveInput\\": {
         let value = value##nonrecursiveInput;
-
         value;
       },
     };
@@ -7329,20 +6930,15 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"string\\": {
             let value = value##string;
-
             IntOfString.parse(value);
           },
-
           \\"int\\": {
             let value = value##int;
-
             StringOfInt.parse(value);
           },
         };
@@ -7431,23 +7027,18 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"customScalarField\\": {
         let value = value##customScalarField;
         {
-
           \\"nullable\\": {
             let value = value##nullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"nonNullable\\": {
             let value = value##nonNullable;
-
             value;
           },
         };
@@ -7559,10 +7150,8 @@ module MyQuery = {
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     value => {
-
       \\"enumInput\\": {
         let value = value##enumInput;
-
         value;
       },
     };
@@ -7661,15 +7250,12 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -7684,19 +7270,15 @@ module RecordsQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -7705,10 +7287,8 @@ module RecordsQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -7814,14 +7394,11 @@ module ObjectsQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -7836,19 +7413,15 @@ module ObjectsQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -7857,10 +7430,8 @@ module ObjectsQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -8026,10 +7597,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-
       \\"nullableOfNullable\\": {
         let value = value##nullableOfNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some(
@@ -8044,10 +7613,8 @@ module Fragments = {
         | None => None
         };
       },
-
       \\"nullableOfNonNullable\\": {
         let value = value##nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -8101,10 +7668,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-
       \\"nullableOfNonNullable\\": {
         let value = value##nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -8208,41 +7773,31 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"l1\\": {
         let value = value##l1;
-
         Fragments.ListFragment.parse(value);
       },
-
       \\"l2\\": {
         let value = value##l2;
         {
-
           \\"frag1\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
-
           \\"frag2\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
       },
-
       \\"l3\\": {
         let value = value##l3;
         {
-
           \\"nullableOfNullable\\": {
             let value =
               Obj.magic(
                 Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
               );
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -8257,31 +7812,24 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"frag1\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
-
           \\"frag2\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
       },
-
       \\"l4\\": {
         let value = value##l4;
         {
-
           \\"nullableOfNullable\\": {
             let value =
               Obj.magic(
                 Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
               );
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -8296,10 +7844,8 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"listFragment\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
@@ -8499,14 +8045,11 @@ module MyQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -8521,19 +8064,15 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -8542,10 +8081,8 @@ module MyQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -8664,10 +8201,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"listsInput\\": {
         let value = value##listsInput;
-
         value;
       },
     };
@@ -8851,10 +8386,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"listsInput\\": {
         let value = value##listsInput;
-
         value;
       },
     };
@@ -9051,38 +8584,30 @@ module MyQuery = {
   type t = {. \\"mutationWithError\\": t_mutationWithError};
   let parse: Raw.t => t =
     value => {
-
       \\"mutationWithError\\": {
         let value = value##mutationWithError;
         {
-
           \\"value\\": {
             let value = value##value;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"stringField\\": {
                   let value = value##stringField;
-
                   value;
                 },
               })
             | None => None
             };
           },
-
           \\"errors\\": {
             let value = value##errors;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
                 value
                 |> Js.Array.map(value =>
                      {
-
                        \\"field\\": {
                          let value = value##field;
                          switch (Obj.magic(value: string)) {
@@ -9092,10 +8617,8 @@ module MyQuery = {
                          | other => \`FutureAddedValue(other)
                          };
                        },
-
                        \\"message\\": {
                          let value = value##message;
-
                          value;
                        },
                      }
@@ -9216,10 +8739,8 @@ module MyQuery = {
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
-
       \\"optionalInputArgs\\": {
         let value = value##optionalInputArgs;
-
         value;
       },
     };
@@ -9334,28 +8855,21 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"first\\": {
         let value = value##first;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -9368,34 +8882,25 @@ module MyQuery = {
           },
         };
       },
-
       \\"second\\": {
         let value = value##second;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"f1\\": {
                         let value = value##f1;
-
                         value;
                       },
-
                       \\"f2\\": {
                         let value = value##f2;
-
                         value;
                       },
                     })
@@ -9408,28 +8913,21 @@ module MyQuery = {
           },
         };
       },
-
       \\"let_\\": {
         let value = value##let_;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -9651,10 +9149,8 @@ module MyQuery = {
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
-
       \\"nonrecursiveInput\\": {
         let value = value##nonrecursiveInput;
-
         value;
       },
     };
@@ -9890,23 +9386,17 @@ module MyQuery = {
   type t = {. \\"pokemon\\": option(t_pokemon)};
   let parse: Raw.t => t =
     value => {
-
       \\"pokemon\\": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             \\"id\\": {
               let value = value##id;
-
               value;
             },
-
             \\"name\\": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
@@ -10012,23 +9502,17 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"pokemon\\": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             \\"id\\": {
               let value = value##id;
-
               value;
             },
-
             \\"name\\": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
@@ -10173,20 +9657,15 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": scalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
         };
@@ -10236,14 +9715,11 @@ module OneFieldQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -10299,16 +9775,12 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t) => {
-
       \\"string\\": {
         let value = value##string;
-
         value;
       },
-
       \\"int\\": {
         let value = value##int;
-
         value;
       },
     };
@@ -10346,10 +9818,8 @@ module ExternalFragmentQuery = {
     type t = {. \\"variousScalars\\": Fragment.t};
     let parse: Raw.t => t =
       value => {
-
         \\"variousScalars\\": {
           let value = value##variousScalars;
-
           Fragment.parse(value);
         },
       };
@@ -10396,10 +9866,8 @@ module InlineFragmentQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -10409,16 +9877,12 @@ module InlineFragmentQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -10491,16 +9955,12 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t) => {
-
       \\"name\\": {
         let value = value##name;
-
         value;
       },
-
       \\"barkVolume\\": {
         let value = value##barkVolume;
-
         value;
       },
     };
@@ -10546,10 +10006,8 @@ module UnionExternalFragmentQuery = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
     let parse: Raw.t => t =
       value => {
-
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -10635,10 +10093,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"recursiveInput\\": {
         let value = value##recursiveInput;
-
         value;
       },
     };
@@ -10803,83 +10259,62 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -11045,10 +10480,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"scalarsInput\\": {
         let value = value##scalarsInput;
-
         value;
       },
     };
@@ -11277,10 +10710,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"scalarsInput\\": {
         let value = value##scalarsInput;
-
         value;
       },
     };
@@ -11493,23 +10924,18 @@ module MyQuery = {
   type t_variables = {. \\"var\\": bool};
   let parse: Raw.t => t =
     value => {
-
       \\"v1\\": {
         let value = value##v1;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -11517,23 +10943,18 @@ module MyQuery = {
           },
         };
       },
-
       \\"v2\\": {
         let value = value##v2;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -11687,10 +11108,8 @@ module MyQuery = {
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
   let parse: Raw.t => t =
     value => {
-
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -11700,10 +11119,8 @@ module MyQuery = {
               {
                 let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -11714,10 +11131,8 @@ module MyQuery = {
               {
                 let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -11840,83 +11255,62 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -12065,83 +11459,62 @@ module MyQuery2 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -12290,83 +11663,62 @@ module MyQuery3 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -12515,83 +11867,62 @@ module MyQuery4 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -12761,46 +12092,33 @@ module MyQuery = {
   type t = {. \\"first\\": t_first};
   let parse: Raw.t => t =
     value => {
-
       \\"first\\": {
         let value = value##first;
         {
-
           \\"__typename\\": {
             let value = value##__typename;
-
             value;
           },
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"__typename\\": {
                   let value = value##__typename;
-
                   value;
                 },
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"__typename\\": {
                         let value = value##__typename;
-
                         value;
                       },
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -12951,10 +12269,8 @@ module MyQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -12964,16 +12280,12 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -12984,10 +12296,8 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -13096,10 +12406,8 @@ module MyQueryNoError = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -13109,16 +12417,12 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -13129,10 +12433,8 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -13251,10 +12553,8 @@ module MyQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -13264,16 +12564,12 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -13360,10 +12656,8 @@ module MyQuery = {
   type t_variables = {. \\"query\\": string};
   let parse: Raw.t => t =
     value => {
-
       \\"argNamedQuery\\": {
         let value = value##argNamedQuery;
-
         value;
       },
     };
@@ -13444,10 +12738,8 @@ module MyQuery = {
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
-
       \\"nonrecursiveInput\\": {
         let value = value##nonrecursiveInput;
-
         value;
       },
     };
@@ -13676,20 +12968,15 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"string\\": {
             let value = value##string;
-
             IntOfString.parse(value);
           },
-
           \\"int\\": {
             let value = value##int;
-
             StringOfInt.parse(value);
           },
         };
@@ -13773,23 +13060,18 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"customScalarField\\": {
         let value = value##customScalarField;
         {
-
           \\"nullable\\": {
             let value = value##nullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"nonNullable\\": {
             let value = value##nonNullable;
-
             value;
           },
         };
@@ -13883,10 +13165,8 @@ module MyQuery = {
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     value => {
-
       \\"enumInput\\": {
         let value = value##enumInput;
-
         value;
       },
     };
@@ -13969,15 +13249,12 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -13992,19 +13269,15 @@ module RecordsQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -14013,10 +13286,8 @@ module RecordsQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -14117,14 +13388,11 @@ module ObjectsQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -14139,19 +13407,15 @@ module ObjectsQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -14160,10 +13424,8 @@ module ObjectsQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -14324,10 +13586,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-
       \\"nullableOfNullable\\": {
         let value = value##nullableOfNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some(
@@ -14342,10 +13602,8 @@ module Fragments = {
         | None => None
         };
       },
-
       \\"nullableOfNonNullable\\": {
         let value = value##nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -14399,10 +13657,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-
       \\"nullableOfNonNullable\\": {
         let value = value##nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -14506,41 +13762,31 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"l1\\": {
         let value = value##l1;
-
         Fragments.ListFragment.parse(value);
       },
-
       \\"l2\\": {
         let value = value##l2;
         {
-
           \\"frag1\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
-
           \\"frag2\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
       },
-
       \\"l3\\": {
         let value = value##l3;
         {
-
           \\"nullableOfNullable\\": {
             let value =
               Obj.magic(
                 Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
               );
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -14555,31 +13801,24 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"frag1\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
-
           \\"frag2\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
       },
-
       \\"l4\\": {
         let value = value##l4;
         {
-
           \\"nullableOfNullable\\": {
             let value =
               Obj.magic(
                 Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
               );
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -14594,10 +13833,8 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"listFragment\\": {
             let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
             Fragments.ListFragment.parse(value);
           },
         };
@@ -14792,14 +14029,11 @@ module MyQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -14814,19 +14048,15 @@ module MyQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -14835,10 +14065,8 @@ module MyQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -14952,10 +14180,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"listsInput\\": {
         let value = value##listsInput;
-
         value;
       },
     };
@@ -15110,10 +14336,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"listsInput\\": {
         let value = value##listsInput;
-
         value;
       },
     };
@@ -15294,38 +14518,30 @@ module MyQuery = {
   type t = {. \\"mutationWithError\\": t_mutationWithError};
   let parse: Raw.t => t =
     value => {
-
       \\"mutationWithError\\": {
         let value = value##mutationWithError;
         {
-
           \\"value\\": {
             let value = value##value;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"stringField\\": {
                   let value = value##stringField;
-
                   value;
                 },
               })
             | None => None
             };
           },
-
           \\"errors\\": {
             let value = value##errors;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
                 value
                 |> Js.Array.map(value =>
                      {
-
                        \\"field\\": {
                          let value = value##field;
                          switch (Obj.magic(value: string)) {
@@ -15335,10 +14551,8 @@ module MyQuery = {
                          | other => \`FutureAddedValue(other)
                          };
                        },
-
                        \\"message\\": {
                          let value = value##message;
-
                          value;
                        },
                      }
@@ -15454,10 +14668,8 @@ module MyQuery = {
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
-
       \\"optionalInputArgs\\": {
         let value = value##optionalInputArgs;
-
         value;
       },
     };
@@ -15556,28 +14768,21 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"first\\": {
         let value = value##first;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -15590,34 +14795,25 @@ module MyQuery = {
           },
         };
       },
-
       \\"second\\": {
         let value = value##second;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"f1\\": {
                         let value = value##f1;
-
                         value;
                       },
-
                       \\"f2\\": {
                         let value = value##f2;
-
                         value;
                       },
                     })
@@ -15630,28 +14826,21 @@ module MyQuery = {
           },
         };
       },
-
       \\"let_\\": {
         let value = value##let_;
         {
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -15868,10 +15057,8 @@ module MyQuery = {
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
-
       \\"nonrecursiveInput\\": {
         let value = value##nonrecursiveInput;
-
         value;
       },
     };
@@ -16091,23 +15278,17 @@ module MyQuery = {
   type t = {. \\"pokemon\\": option(t_pokemon)};
   let parse: Raw.t => t =
     value => {
-
       \\"pokemon\\": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             \\"id\\": {
               let value = value##id;
-
               value;
             },
-
             \\"name\\": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
@@ -16208,23 +15389,17 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"pokemon\\": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             \\"id\\": {
               let value = value##id;
-
               value;
             },
-
             \\"name\\": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
@@ -16351,20 +15526,15 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": scalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
         };
@@ -16409,14 +15579,11 @@ module OneFieldQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -16467,16 +15634,12 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t) => {
-
       \\"string\\": {
         let value = value##string;
-
         value;
       },
-
       \\"int\\": {
         let value = value##int;
-
         value;
       },
     };
@@ -16514,10 +15677,8 @@ module ExternalFragmentQuery = {
     type t = {. \\"variousScalars\\": Fragment.t};
     let parse: Raw.t => t =
       value => {
-
         \\"variousScalars\\": {
           let value = value##variousScalars;
-
           Fragment.parse(value);
         },
       };
@@ -16559,10 +15720,8 @@ module InlineFragmentQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -16572,16 +15731,12 @@ module InlineFragmentQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -16649,16 +15804,12 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t) => {
-
       \\"name\\": {
         let value = value##name;
-
         value;
       },
-
       \\"barkVolume\\": {
         let value = value##barkVolume;
-
         value;
       },
     };
@@ -16704,10 +15855,8 @@ module UnionExternalFragmentQuery = {
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
     let parse: Raw.t => t =
       value => {
-
         \\"dogOrHuman\\": {
           let value = value##dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -16788,10 +15937,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"recursiveInput\\": {
         let value = value##recursiveInput;
-
         value;
       },
     };
@@ -16940,83 +16087,62 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -17177,10 +16303,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"scalarsInput\\": {
         let value = value##scalarsInput;
-
         value;
       },
     };
@@ -17362,10 +16486,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       \\"scalarsInput\\": {
         let value = value##scalarsInput;
-
         value;
       },
     };
@@ -17562,23 +16684,18 @@ module MyQuery = {
   type t_variables = {. \\"var\\": bool};
   let parse: Raw.t => t =
     value => {
-
       \\"v1\\": {
         let value = value##v1;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -17586,23 +16703,18 @@ module MyQuery = {
           },
         };
       },
-
       \\"v2\\": {
         let value = value##v2;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -17740,10 +16852,8 @@ module MyQuery = {
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
   let parse: Raw.t => t =
     value => {
-
       \\"simpleSubscription\\": {
         let value = value##simpleSubscription;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -17753,10 +16863,8 @@ module MyQuery = {
               {
                 let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -17767,10 +16875,8 @@ module MyQuery = {
               {
                 let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -17888,83 +16994,62 @@ module MyQuery = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -18108,83 +17193,62 @@ module MyQuery2 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -18328,83 +17392,62 @@ module MyQuery3 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -18548,83 +17591,62 @@ module MyQuery4 = {
   type t = {. \\"variousScalars\\": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       \\"variousScalars\\": {
         let value = value##variousScalars;
         {
-
           \\"nullableString\\": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"string\\": {
             let value = value##string;
-
             value;
           },
-
           \\"nullableInt\\": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"int\\": {
             let value = value##int;
-
             value;
           },
-
           \\"nullableFloat\\": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"float\\": {
             let value = value##float;
-
             value;
           },
-
           \\"nullableBoolean\\": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"boolean\\": {
             let value = value##boolean;
-
             value;
           },
-
           \\"nullableID\\": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           \\"id\\": {
             let value = value##id;
-
             value;
           },
         };
@@ -18789,46 +17811,33 @@ module MyQuery = {
   type t = {. \\"first\\": t_first};
   let parse: Raw.t => t =
     value => {
-
       \\"first\\": {
         let value = value##first;
         {
-
           \\"__typename\\": {
             let value = value##__typename;
-
             value;
           },
-
           \\"inner\\": {
             let value = value##inner;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 \\"__typename\\": {
                   let value = value##__typename;
-
                   value;
                 },
-
                 \\"inner\\": {
                   let value = value##inner;
-
                   switch (Js.toOption(value)) {
                   | Some(value) =>
                     Some({
-
                       \\"__typename\\": {
                         let value = value##__typename;
-
                         value;
                       },
-
                       \\"field\\": {
                         let value = value##field;
-
                         value;
                       },
                     })
@@ -18974,10 +17983,8 @@ module MyQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -18987,16 +17994,12 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -19007,10 +18010,8 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -19114,10 +18115,8 @@ module MyQueryNoError = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -19127,16 +18126,12 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -19147,10 +18142,8 @@ module MyQueryNoError = {
               {
                 let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
                 };
@@ -19264,10 +18257,8 @@ module MyQuery = {
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-
       \\"dogOrHuman\\": {
         let value = value##dogOrHuman;
-        [@metaloc loc]
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
         (
@@ -19277,16 +18268,12 @@ module MyQuery = {
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                 {
-
                   \\"name\\": {
                     let value = value##name;
-
                     value;
                   },
-
                   \\"barkVolume\\": {
                     let value = value##barkVolume;
-
                     value;
                   },
                 };
@@ -19369,10 +18356,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         argNamedQuery: {
           let value = (value: Raw.t).argNamedQuery;
-
           value;
         },
       }: t
@@ -19455,10 +18440,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
-
           value;
         },
       }: t
@@ -19693,21 +18676,16 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 IntOfString.parse(value);
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 StringOfInt.parse(value);
               },
             }: t_variousScalars
@@ -19796,24 +18774,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         customScalarField: {
           let value = (value: Raw.t).customScalarField;
           (
             {
-
               nullable: {
                 let value = (value: Raw.t_customScalarField).nullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               nonNullable: {
                 let value = (value: Raw.t_customScalarField).nonNullable;
-
                 value;
               },
             }: t_customScalarField
@@ -19916,10 +18889,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         enumInput: {
           let value = (value: Raw.t).enumInput;
-
           value;
         },
       }: t
@@ -20005,15 +18976,12 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -20028,19 +18996,15 @@ module RecordsQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -20049,10 +19013,8 @@ module RecordsQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -20153,14 +19115,11 @@ module ObjectsQuery = {
   type t = {. \\"lists\\": t_lists};
   let parse: Raw.t => t =
     value => {
-
       \\"lists\\": {
         let value = value##lists;
         {
-
           \\"nullableOfNullable\\": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -20175,19 +19134,15 @@ module ObjectsQuery = {
             | None => None
             };
           },
-
           \\"nullableOfNonNullable\\": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           \\"nonNullableOfNullable\\": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -20196,10 +19151,8 @@ module ObjectsQuery = {
                  }
                );
           },
-
           \\"nonNullableOfNonNullable\\": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };
@@ -20358,10 +19311,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some(
@@ -20376,10 +19327,8 @@ module Fragments = {
         | None => None
         };
       },
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -20435,10 +19384,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -20540,38 +19487,29 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         l1: {
           let value = (value: Raw.t).l1;
-
           Fragments.ListFragment.parse(value);
         },
-
         l2: {
           let value = (value: Raw.t).l2;
           (
             {
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l2
           );
         },
-
         l3: {
           let value = (value: Raw.t).l3;
           (
             {
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -20580,7 +19518,6 @@ module MyQuery = {
                       \\"nullableOfNullable\\",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -20595,27 +19532,21 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l3
           );
         },
-
         l4: {
           let value = (value: Raw.t).l4;
           (
             {
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -20624,7 +19555,6 @@ module MyQuery = {
                       \\"nullableOfNullable\\",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -20639,10 +19569,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               listFragment: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l4
@@ -20850,15 +19778,12 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -20873,19 +19798,15 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -20894,10 +19815,8 @@ module MyQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -21018,10 +19937,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         listsInput: {
           let value = (value: Raw.t).listsInput;
-
           value;
         },
       }: t
@@ -21178,10 +20095,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         listsInput: {
           let value = (value: Raw.t).listsInput;
-
           value;
         },
       }: t
@@ -21362,24 +20277,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
           (
             {
-
               value: {
                 let value = (value: Raw.t_mutationWithError).value;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       stringField: {
                         let value =
                           (value: Raw.t_mutationWithError_value).stringField;
-
                         value;
                       },
                     }: t_mutationWithError_value,
@@ -21387,10 +20297,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               errors: {
                 let value = (value: Raw.t_mutationWithError).errors;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -21398,7 +20306,6 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
-
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
@@ -21409,12 +20316,10 @@ module MyQuery = {
                                | other => \`FutureAddedValue(other)
                                };
                              },
-
                              message: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    message;
-
                                value;
                              },
                            }: t_mutationWithError_errors
@@ -21547,10 +20452,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
-
           value;
         },
       }: t
@@ -21651,32 +20554,25 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -21692,39 +20588,30 @@ module MyQuery = {
             }: t_first
           );
         },
-
         second: {
           let value = (value: Raw.t).second;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_second).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_second_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               f1: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f1;
-
                                 value;
                               },
-
                               f2: {
                                 let value =
                                   (value: Raw.t_second_inner_inner).f2;
-
                                 value;
                               },
                             }: t_second_inner_inner,
@@ -21740,32 +20627,25 @@ module MyQuery = {
             }: t_second
           );
         },
-
         let_: {
           let value = (value: Raw.t).let_;
           (
             {
-
               inner: {
                 let value = (value: Raw.t_let).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       inner: {
                         let value = (value: Raw.t_let_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               field: {
                                 let value =
                                   (value: Raw.t_let_inner_inner).field;
-
                                 value;
                               },
                             }: t_let_inner_inner,
@@ -21999,10 +20879,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
-
           value;
         },
       }: t
@@ -22228,24 +21106,18 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         pokemon: {
           let value = (value: Raw.t).pokemon;
-
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
               {
-
                 id: {
                   let value = (value: Raw.t_pokemon).id;
-
                   value;
                 },
-
                 name: {
                   let value = (value: Raw.t_pokemon).name;
-
                   switch (Js.toOption(value)) {
                   | Some(value) => Some(value)
                   | None => None
@@ -22347,24 +21219,18 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         pokemon: {
           let value = (value: Raw.t).pokemon;
-
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
               {
-
                 id: {
                   let value = (value: Raw.t_pokemon).id;
-
                   value;
                 },
-
                 name: {
                   let value = (value: Raw.t_pokemon).name;
-
                   switch (Js.toOption(value)) {
                   | Some(value) => Some(value)
                   | None => None
@@ -22496,21 +21362,16 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
             }: scalars
@@ -22564,15 +21425,12 @@ module OneFieldQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -22631,16 +21489,12 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t): t => {
-
       string: {
         let value = (value: Raw.t).string;
-
         value;
       },
-
       int: {
         let value = (value: Raw.t).int;
-
         value;
       },
     };
@@ -22681,10 +21535,8 @@ module ExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           variousScalars: {
             let value = (value: Raw.t).variousScalars;
-
             Fragment.parse(value);
           },
         }: t
@@ -22730,10 +21582,8 @@ module InlineFragmentQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -22744,16 +21594,12 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -22825,16 +21671,12 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t): t => {
-
       name: {
         let value = (value: Raw.t).name;
-
         value;
       },
-
       barkVolume: {
         let value = (value: Raw.t).barkVolume;
-
         value;
       },
     };
@@ -22883,10 +21725,8 @@ module UnionExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
-            [@metaloc loc]
             let typename: string =
               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
             (
@@ -22971,10 +21811,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         recursiveInput: {
           let value = (value: Raw.t).recursiveInput;
-
           value;
         },
       }: t
@@ -23126,84 +21964,63 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -23371,10 +22188,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
-
           value;
         },
       }: t
@@ -23558,10 +22373,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
-
           value;
         },
       }: t
@@ -23759,24 +22572,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         v1: {
           let value = (value: Raw.t).v1;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v1).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v1).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -23785,24 +22593,19 @@ module MyQuery = {
             }: t_v1
           );
         },
-
         v2: {
           let value = (value: Raw.t).v2;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v2).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v2).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -23949,10 +22752,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -23963,10 +22764,8 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Dog
@@ -23979,11 +22778,9 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).name;
-
                         value;
                       },
                     }: t_simpleSubscription_Human
@@ -24104,84 +22901,63 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -24332,84 +23108,63 @@ module MyQuery2 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -24560,84 +23315,63 @@ module MyQuery3 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -24788,84 +23522,63 @@ module MyQuery4 = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               nullableInt: {
                 let value = (value: Raw.t_variousScalars).nullableInt;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
-
               nullableFloat: {
                 let value = (value: Raw.t_variousScalars).nullableFloat;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               float: {
                 let value = (value: Raw.t_variousScalars).float;
-
                 value;
               },
-
               nullableBoolean: {
                 let value = (value: Raw.t_variousScalars).nullableBoolean;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               boolean: {
                 let value = (value: Raw.t_variousScalars).boolean;
-
                 value;
               },
-
               nullableID: {
                 let value = (value: Raw.t_variousScalars).nullableID;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               id: {
                 let value = (value: Raw.t_variousScalars).id;
-
                 value;
               },
             }: t_variousScalars
@@ -25033,51 +23746,38 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         first: {
           let value = (value: Raw.t).first;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_first).__typename;
-
                 value;
               },
-
               inner: {
                 let value = (value: Raw.t_first).inner;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       __typename: {
                         let value = (value: Raw.t_first_inner).__typename;
-
                         value;
                       },
-
                       inner: {
                         let value = (value: Raw.t_first_inner).inner;
-
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-
                               __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
-
                                 value;
                               },
-
                               field: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).field;
-
                                 value;
                               },
                             }: t_first_inner_inner,
@@ -25231,10 +23931,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -25245,16 +23943,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -25267,10 +23961,8 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human
@@ -25375,10 +24067,8 @@ module MyQueryNoError = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -25389,16 +24079,12 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -25411,10 +24097,8 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
-
                         value;
                       },
                     }: t_dogOrHuman_Human
@@ -25531,10 +24215,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
           (
@@ -25545,16 +24227,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog

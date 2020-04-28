@@ -37,10 +37,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         listsInput: {
           let value = (value: Raw.t).listsInput;
-
           value;
         },
       }: t

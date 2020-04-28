@@ -37,15 +37,12 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -60,19 +57,15 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -81,10 +74,8 @@ module MyQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists

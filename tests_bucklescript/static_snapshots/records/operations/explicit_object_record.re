@@ -37,15 +37,12 @@ module RecordsQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         lists: {
           let value = (value: Raw.t).lists;
           (
             {
-
               nullableOfNullable: {
                 let value = (value: Raw.t_lists).nullableOfNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -60,19 +57,15 @@ module RecordsQuery = {
                 | None => None
                 };
               },
-
               nullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nullableOfNonNullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value |> Js.Array.map(value => value))
                 | None => None
                 };
               },
-
               nonNullableOfNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (Js.toOption(value)) {
@@ -81,10 +74,8 @@ module RecordsQuery = {
                      }
                    );
               },
-
               nonNullableOfNonNullable: {
                 let value = (value: Raw.t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               },
             }: t_lists
@@ -185,14 +176,11 @@ module ObjectsQuery = {
   type t = {. "lists": t_lists};
   let parse: Raw.t => t =
     value => {
-
       "lists": {
         let value = value##lists;
         {
-
           "nullableOfNullable": {
             let value = value##nullableOfNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -207,19 +195,15 @@ module ObjectsQuery = {
             | None => None
             };
           },
-
           "nullableOfNonNullable": {
             let value = value##nullableOfNonNullable;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value |> Js.Array.map(value => value))
             | None => None
             };
           },
-
           "nonNullableOfNullable": {
             let value = value##nonNullableOfNullable;
-
             value
             |> Js.Array.map(value =>
                  switch (Js.toOption(value)) {
@@ -228,10 +212,8 @@ module ObjectsQuery = {
                  }
                );
           },
-
           "nonNullableOfNonNullable": {
             let value = value##nonNullableOfNonNullable;
-
             value |> Js.Array.map(value => value);
           },
         };

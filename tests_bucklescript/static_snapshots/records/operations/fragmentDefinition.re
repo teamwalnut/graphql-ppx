@@ -83,10 +83,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some(
@@ -101,10 +99,8 @@ module Fragments = {
         | None => None
         };
       },
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -160,10 +156,8 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t): t => {
-
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
-
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
@@ -265,38 +259,29 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         l1: {
           let value = (value: Raw.t).l1;
-
           Fragments.ListFragment.parse(value);
         },
-
         l2: {
           let value = (value: Raw.t).l2;
           (
             {
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l2
           );
         },
-
         l3: {
           let value = (value: Raw.t).l3;
           (
             {
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -305,7 +290,6 @@ module MyQuery = {
                       "nullableOfNullable",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -320,27 +304,21 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               frag1: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
-
               frag2: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l3
           );
         },
-
         l4: {
           let value = (value: Raw.t).l4;
           (
             {
-
               nullableOfNullable: {
                 let value =
                   Obj.magic(
@@ -349,7 +327,6 @@ module MyQuery = {
                       "nullableOfNullable",
                     ),
                   );
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -364,10 +341,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               listFragment: {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-
                 Fragments.ListFragment.parse(value);
               },
             }: t_l4

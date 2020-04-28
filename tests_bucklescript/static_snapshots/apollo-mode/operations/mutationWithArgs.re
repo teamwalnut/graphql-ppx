@@ -27,10 +27,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         optionalInputArgs: {
           let value = (value: Raw.t).optionalInputArgs;
-
           value;
         },
       }: t

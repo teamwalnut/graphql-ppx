@@ -50,83 +50,62 @@ module MyQuery = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             value;
           },
-
           "nullableInt": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "int": {
             let value = value##int;
-
             value;
           },
-
           "nullableFloat": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "float": {
             let value = value##float;
-
             value;
           },
-
           "nullableBoolean": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "boolean": {
             let value = value##boolean;
-
             value;
           },
-
           "nullableID": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "id": {
             let value = value##id;
-
             value;
           },
         };
@@ -270,83 +249,62 @@ module MyQuery2 = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             value;
           },
-
           "nullableInt": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "int": {
             let value = value##int;
-
             value;
           },
-
           "nullableFloat": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "float": {
             let value = value##float;
-
             value;
           },
-
           "nullableBoolean": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "boolean": {
             let value = value##boolean;
-
             value;
           },
-
           "nullableID": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "id": {
             let value = value##id;
-
             value;
           },
         };
@@ -490,83 +448,62 @@ module MyQuery3 = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             value;
           },
-
           "nullableInt": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "int": {
             let value = value##int;
-
             value;
           },
-
           "nullableFloat": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "float": {
             let value = value##float;
-
             value;
           },
-
           "nullableBoolean": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "boolean": {
             let value = value##boolean;
-
             value;
           },
-
           "nullableID": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "id": {
             let value = value##id;
-
             value;
           },
         };
@@ -710,83 +647,62 @@ module MyQuery4 = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             value;
           },
-
           "nullableInt": {
             let value = value##nullableInt;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "int": {
             let value = value##int;
-
             value;
           },
-
           "nullableFloat": {
             let value = value##nullableFloat;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "float": {
             let value = value##float;
-
             value;
           },
-
           "nullableBoolean": {
             let value = value##nullableBoolean;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "boolean": {
             let value = value##boolean;
-
             value;
           },
-
           "nullableID": {
             let value = value##nullableID;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "id": {
             let value = value##id;
-
             value;
           },
         };

@@ -53,38 +53,30 @@ module MyQuery = {
   type t = {. "mutationWithError": t_mutationWithError};
   let parse: Raw.t => t =
     value => {
-
       "mutationWithError": {
         let value = value##mutationWithError;
         {
-
           "value": {
             let value = value##value;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 "stringField": {
                   let value = value##stringField;
-
                   value;
                 },
               })
             | None => None
             };
           },
-
           "errors": {
             let value = value##errors;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
                 value
                 |> Js.Array.map(value =>
                      {
-
                        "field": {
                          let value = value##field;
                          switch (Obj.magic(value: string)) {
@@ -94,10 +86,8 @@ module MyQuery = {
                          | other => `FutureAddedValue(other)
                          };
                        },
-
                        "message": {
                          let value = value##message;
-
                          value;
                        },
                      }

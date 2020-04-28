@@ -50,24 +50,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         mutationWithError: {
           let value = (value: Raw.t).mutationWithError;
           (
             {
-
               value: {
                 let value = (value: Raw.t_mutationWithError).value;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-
                       stringField: {
                         let value =
                           (value: Raw.t_mutationWithError_value).stringField;
-
                         value;
                       },
                     }: t_mutationWithError_value,
@@ -75,10 +70,8 @@ module MyQuery = {
                 | None => None
                 };
               },
-
               errors: {
                 let value = (value: Raw.t_mutationWithError).errors;
-
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
@@ -86,7 +79,6 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
-
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
@@ -97,12 +89,10 @@ module MyQuery = {
                                | other => `FutureAddedValue(other)
                                };
                              },
-
                              message: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).
                                    message;
-
                                value;
                              },
                            }: t_mutationWithError_errors

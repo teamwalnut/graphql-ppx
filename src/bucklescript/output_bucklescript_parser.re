@@ -203,8 +203,8 @@ and generate_object_decoder =
              fun
              | Fr_named_field(key, _, inner) => (
                  {txt: Longident.parse(to_valid_ident(key)), loc},
+                 [@metaloc loc]
                  {
-                   [@metaloc loc]
                    let%expr value =
                      switch%e (opaque, is_object) {
                      | (true, _) =>
@@ -248,8 +248,8 @@ and generate_object_decoder =
              | Fr_fragment_spread(key, loc, name, _, arguments) => {
                  (
                    {txt: Longident.parse(key), loc: conv_loc(loc)},
+                   [@metaloc conv_loc(loc)]
                    {
-                     [@metaloc loc]
                      let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
                        Obj.magic(value);
                      %e
@@ -320,17 +320,19 @@ and generate_poly_variant_selection_set_decoder =
             )
           );
         [@metaloc loc]
-        let%expr temp =
-          Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
+        {
+          let%expr temp =
+            Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
 
-        switch (Js.Json.decodeNull(temp)) {
-        | None =>
-          let value = temp;
-          %e
-          variant_decoder;
-        | Some(_) =>
-          %e
-          generator_loop(next)
+          switch (Js.Json.decodeNull(temp)) {
+          | None =>
+            let value = temp;
+            %e
+            variant_decoder;
+          | Some(_) =>
+            %e
+            generator_loop(next)
+          };
         };
       }
     | [] =>
@@ -405,9 +407,11 @@ and generate_poly_variant_interface_decoder =
     );
 
   [@metaloc loc]
-  let%expr typename: string =
-    Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  {
+    let%expr typename: string =
+      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  };
 }
 and generate_poly_variant_union_decoder =
     (config, loc, name, fragments, exhaustive_flag, path, definition) => {
@@ -475,9 +479,11 @@ and generate_poly_variant_union_decoder =
     );
 
   [@metaloc loc]
-  let%expr typename: string =
-    Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  {
+    let%expr typename: string =
+      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  };
 }
 and generate_parser = (config, path: list(string), definition) =>
   fun

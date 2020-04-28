@@ -37,27 +37,20 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
             }: scalars
@@ -124,21 +117,16 @@ module OneFieldQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
-
                 value;
               },
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -206,22 +194,16 @@ module ExternalFragmentQuery = {
     type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       string: {
         let value = (value: Raw.t).string;
-
         value;
       },
-
       int: {
         let value = (value: Raw.t).int;
-
         value;
       },
     };
@@ -269,10 +251,8 @@ module ExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           variousScalars: {
             let value = (value: Raw.t).variousScalars;
-
             Fragment.parse(value);
           },
         }: t
@@ -318,10 +298,8 @@ module InlineFragmentQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (
@@ -332,22 +310,16 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-
                         value;
                       },
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -426,22 +398,16 @@ module UnionExternalFragmentQuery = {
     type nonrec t_Dog = t;
 
     let parse = (value: Raw.t): t => {
-
       __typename: {
         let value = (value: Raw.t).__typename;
-
         value;
       },
-
       name: {
         let value = (value: Raw.t).name;
-
         value;
       },
-
       barkVolume: {
         let value = (value: Raw.t).barkVolume;
-
         value;
       },
     };
@@ -497,10 +463,8 @@ module UnionExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
-            [@metaloc loc]
             let typename: string =
               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
             (

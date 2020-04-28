@@ -44,10 +44,8 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
-
           value;
         },
       }: t

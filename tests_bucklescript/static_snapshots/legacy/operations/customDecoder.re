@@ -43,20 +43,15 @@ module MyQuery = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-
       "variousScalars": {
         let value = value##variousScalars;
         {
-
           "string": {
             let value = value##string;
-
             IntOfString.parse(value);
           },
-
           "int": {
             let value = value##int;
-
             StringOfInt.parse(value);
           },
         };

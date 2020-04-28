@@ -38,10 +38,8 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       "recursiveInput": {
         let value = value##recursiveInput;
-
         value;
       },
     };

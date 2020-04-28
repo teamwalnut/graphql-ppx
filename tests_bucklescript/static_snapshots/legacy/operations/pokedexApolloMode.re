@@ -34,23 +34,17 @@ module MyQuery = {
   type t = {. "pokemon": option(t_pokemon)};
   let parse: Raw.t => t =
     value => {
-
       "pokemon": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             "id": {
               let value = value##id;
-
               value;
             },
-
             "name": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
