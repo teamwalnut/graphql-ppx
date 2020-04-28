@@ -224,6 +224,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -232,6 +233,7 @@ module InlineFragmentQuery = {
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -294,6 +296,8 @@ module InlineFragmentQuery = {
                   value;
                 };
                 {
+
+                  "__typename": "Dog",
 
                   "name": name,
 

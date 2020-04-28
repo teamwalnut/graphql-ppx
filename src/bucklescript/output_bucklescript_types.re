@@ -183,7 +183,15 @@ let raw_opaque_object = fields => {
      );
 };
 
-let generate_record_type = (config, fields, obj_path, raw, loc) => {
+let already_has__typename = fields =>
+  List.exists(
+    fun
+    | Field({path: ["__typename", ..._]}) => true
+    | _ => false,
+    fields,
+  );
+
+let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let record_fields =
     fields
     |> List.fold_left(
@@ -230,6 +238,21 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
          [],
        )
     |> List.rev;
+
+  let record_fields =
+    // if this is a variant in the parsed type and __typename is not explicitly
+    // requested, still add it (because the printer is added)
+    if (is_variant && !already_has__typename(fields)) {
+      [
+        Ast_helper.Type.field(
+          {Location.txt: "__typename", loc: Location.none},
+          base_type_name("string"),
+        ),
+        ...record_fields,
+      ];
+    } else {
+      record_fields;
+    };
 
   raw && raw_opaque_object(fields)
     ? generate_opaque(obj_path, loc)
@@ -402,7 +425,7 @@ let generate_enum = (config, fields, path, loc, raw) =>
     path,
   );
 
-let generate_object_type = (config, fields, obj_path, raw, loc) => {
+let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let object_fields =
     fields
     |> List.fold_left(
@@ -461,6 +484,26 @@ let generate_object_type = (config, fields, obj_path, raw, loc) => {
        )
     |> List.rev;
 
+  let object_fields =
+    // if this is a variant in the parsed type and __typename is not explicitly
+    // requested, still add it (because the printer is added)
+    if (is_variant && !already_has__typename(fields)) {
+      [
+        {
+          pof_desc:
+            Otag(
+              {txt: to_valid_ident("__typename"), loc: Location.none},
+              base_type_name("string"),
+            ),
+          pof_loc: Location.none,
+          pof_attributes: [],
+        },
+        ...object_fields,
+      ];
+    } else {
+      object_fields;
+    };
+
   raw && raw_opaque_object(fields)
     ? generate_opaque(obj_path, loc)
     : wrap_type_declaration(
@@ -485,10 +528,11 @@ let generate_graphql_object =
       force_record,
       raw,
       loc,
+      is_variant,
     ) => {
   config.records || force_record
-    ? generate_record_type(config, fields, obj_path, raw, loc)
-    : generate_object_type(config, fields, obj_path, raw, loc);
+    ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
+    : generate_object_type(config, fields, obj_path, raw, loc, is_variant);
 };
 
 // generate all the types necessary types that we later refer to by name.
@@ -498,7 +542,7 @@ let generate_types =
     extract([], res)
     |> List.map(
          fun
-         | Object({fields, path: obj_path, force_record, loc}) =>
+         | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>
            generate_graphql_object(
              config,
              fields,
@@ -506,6 +550,7 @@ let generate_types =
              force_record,
              raw,
              loc,
+             variant_parent,
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)

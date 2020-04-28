@@ -423,27 +423,48 @@ and generate_object_encoder =
     | fields =>
       let record =
         Exp.record(
-          fields
-          |> List.map(((key, inner)) => {
-               let key_value = {
-                 Location.txt: Longident.parse(to_valid_ident(key)),
-                 loc,
-               };
-               switch (key, typename) {
-               | ("__typename", Some(typename)) => (
-                   key_value,
-                   const_str_expr(typename),
-                 )
-               | _ => (key_value, ident_from_string(to_valid_ident(key)))
-               };
-             }),
+          {
+            let fields =
+              // if the object is part of a union, it gets passed a typename
+              // the typename needs to exist on the raw type, because it is used
+              // to parse it into a union type. So if this is supplied, and
+              // typename is not already explicitly in the fields, add this.
+              if (typename != None
+                  && !(
+                       fields
+                       |> List.exists(
+                            fun
+                            | ("__typename", _) => true
+                            | _ => false,
+                          )
+                     )) {
+                [("__typename", Res_string(loc)), ...fields];
+              } else {
+                fields;
+              };
+
+            fields
+            |> List.map(((key, inner)) => {
+                 let key_value = {
+                   Location.txt: Longident.parse(to_valid_ident(key)),
+                   loc: conv_loc(loc),
+                 };
+                 switch (key, typename) {
+                 | ("__typename", Some(typename)) => (
+                     key_value,
+                     const_str_expr(typename),
+                   )
+                 | _ => (key_value, ident_from_string(to_valid_ident(key)))
+                 };
+               });
+          },
           None,
         );
 
       let record =
         wrap
           ? Exp.extension((
-              {txt: "bs.obj", loc},
+              {txt: "bs.obj", loc: conv_loc(loc)},
               PStr([[%stri [%e record]]]),
             ))
           : record;
@@ -452,7 +473,7 @@ and generate_object_encoder =
         fields
         |> List.map(((key, inner)) =>
              Vb.mk(
-               Pat.var({txt: to_valid_ident(key), loc}),
+               Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
                {
                  // TODO: would be nice to pass the input instead of relying
                  // on a static identifier called `value`
@@ -476,10 +497,10 @@ and generate_object_encoder =
   };
 
   let do_obj_constructor = with_objects =>
-    [@metaloc loc] do_obj_constructor_base(with_objects, true);
+    [@metaloc conv_loc(loc)] do_obj_constructor_base(with_objects, true);
 
   let do_obj_constructor_records = () =>
-    [@metaloc loc]
+    [@metaloc conv_loc(loc)]
     {
       Exp.constraint_(
         do_obj_constructor_base(false, false),
@@ -671,7 +692,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_record(loc, name, fields, existing_record) =>
     generate_object_encoder(
       config,
-      conv_loc(loc),
+      loc,
       name,
       fields,
       path,
@@ -682,7 +703,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
       config,
-      conv_loc(loc),
+      loc,
       name,
       fields,
       path,

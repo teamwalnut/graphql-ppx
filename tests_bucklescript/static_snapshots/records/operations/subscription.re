@@ -18,14 +18,26 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {name: string};
-    type t_simpleSubscription_Human = {name: string};
+    type t_simpleSubscription_Dog = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
   };
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t_simpleSubscription_Dog = {name: string};
-  type t_simpleSubscription_Human = {name: string};
+  type t_simpleSubscription_Dog = {
+    __typename: string,
+    name: string,
+  };
+  type t_simpleSubscription_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_simpleSubscription = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_simpleSubscription_Dog)
@@ -98,7 +110,9 @@ module MyQuery = {
                   };
                   {
 
-                    name: name,
+                    __typename: "Dog",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Dog,
               ): Raw.t_simpleSubscription
@@ -113,7 +127,9 @@ module MyQuery = {
                   };
                   {
 
-                    name: name,
+                    __typename: "Human",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Human,
               ): Raw.t_simpleSubscription

@@ -19,6 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -27,6 +28,7 @@ module MyQuery = {
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -94,6 +96,8 @@ module MyQuery = {
                     value;
                   };
                   {
+
+                    __typename: "Dog",
 
                     name,
 

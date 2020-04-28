@@ -10376,6 +10376,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -10384,6 +10385,7 @@ module InlineFragmentQuery = {
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -10446,6 +10448,8 @@ module InlineFragmentQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Dog\\",
 
                   \\"name\\": name,
 
@@ -11651,14 +11655,30 @@ exports[`Legacy subscription.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {. \\"name\\": string};
-    type t_simpleSubscription_Human = {. \\"name\\": string};
+    type t_simpleSubscription_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_simpleSubscription_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_simpleSubscription;
     type t = {. \\"simpleSubscription\\": t_simpleSubscription};
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type t_simpleSubscription_Dog = {. \\"name\\": string};
-  type t_simpleSubscription_Human = {. \\"name\\": string};
+  type t_simpleSubscription_Dog = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
+  type t_simpleSubscription_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_simpleSubscription = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_simpleSubscription_Dog)
@@ -11723,6 +11743,8 @@ module MyQuery = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
                 };
               },
@@ -11737,6 +11759,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -12895,20 +12919,30 @@ module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
-    type t_dogOrHuman_Human = {. \\"name\\": string};
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
-  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -12984,6 +13018,8 @@ module MyQuery = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
 
                   \\"barkVolume\\": barkVolume,
@@ -13000,6 +13036,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -13026,20 +13064,30 @@ module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
-    type t_dogOrHuman_Human = {. \\"name\\": string};
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
-  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -13115,6 +13163,8 @@ module MyQueryNoError = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
 
                   \\"barkVolume\\": barkVolume,
@@ -13131,6 +13181,8 @@ module MyQueryNoError = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -13178,6 +13230,7 @@ module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
@@ -13187,6 +13240,7 @@ module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
@@ -13249,6 +13303,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Dog\\",
 
                   \\"name\\": name,
 
@@ -16483,6 +16539,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -16491,6 +16548,7 @@ module InlineFragmentQuery = {
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -16553,6 +16611,8 @@ module InlineFragmentQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Dog\\",
 
                   \\"name\\": name,
 
@@ -17648,14 +17708,30 @@ exports[`Objects subscription.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {. \\"name\\": string};
-    type t_simpleSubscription_Human = {. \\"name\\": string};
+    type t_simpleSubscription_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_simpleSubscription_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_simpleSubscription;
     type t = {. \\"simpleSubscription\\": t_simpleSubscription};
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type t_simpleSubscription_Dog = {. \\"name\\": string};
-  type t_simpleSubscription_Human = {. \\"name\\": string};
+  type t_simpleSubscription_Dog = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
+  type t_simpleSubscription_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_simpleSubscription = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_simpleSubscription_Dog)
@@ -17720,6 +17796,8 @@ module MyQuery = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
                 };
               },
@@ -17734,6 +17812,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -18862,20 +18942,30 @@ module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
-    type t_dogOrHuman_Human = {. \\"name\\": string};
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
-  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -18951,6 +19041,8 @@ module MyQuery = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
 
                   \\"barkVolume\\": barkVolume,
@@ -18967,6 +19059,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -18988,20 +19082,30 @@ module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
-    type t_dogOrHuman_Human = {. \\"name\\": string};
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
-  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman_Human = {
+    .
+    \\"__typename\\": string,
+    \\"name\\": string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -19077,6 +19181,8 @@ module MyQueryNoError = {
                 };
                 {
 
+                  \\"__typename\\": \\"Dog\\",
+
                   \\"name\\": name,
 
                   \\"barkVolume\\": barkVolume,
@@ -19093,6 +19199,8 @@ module MyQueryNoError = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Human\\",
 
                   \\"name\\": name,
                 };
@@ -19135,6 +19243,7 @@ module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
+      \\"__typename\\": string,
       \\"name\\": string,
       \\"barkVolume\\": float,
     };
@@ -19144,6 +19253,7 @@ module MyQuery = {
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
     .
+    \\"__typename\\": string,
     \\"name\\": string,
     \\"barkVolume\\": float,
   };
@@ -19206,6 +19316,8 @@ module MyQuery = {
                   value;
                 };
                 {
+
+                  \\"__typename\\": \\"Dog\\",
 
                   \\"name\\": name,
 
@@ -22597,6 +22709,7 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -22605,6 +22718,7 @@ module InlineFragmentQuery = {
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -22672,6 +22786,8 @@ module InlineFragmentQuery = {
                     value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
@@ -23804,14 +23920,26 @@ exports[`Records subscription.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {name: string};
-    type t_simpleSubscription_Human = {name: string};
+    type t_simpleSubscription_Dog = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type t_simpleSubscription_Dog = {name: string};
-  type t_simpleSubscription_Human = {name: string};
+  type t_simpleSubscription_Dog = {
+    __typename: string,
+    name: string,
+  };
+  type t_simpleSubscription_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_simpleSubscription = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_simpleSubscription_Dog)
@@ -23884,7 +24012,9 @@ module MyQuery = {
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Dog\\",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Dog,
               ): Raw.t_simpleSubscription
@@ -23899,7 +24029,9 @@ module MyQuery = {
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Human,
               ): Raw.t_simpleSubscription
@@ -25069,19 +25201,27 @@ exports[`Records union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -25164,6 +25304,8 @@ module MyQuery = {
                   };
                   {
 
+                    __typename: \\"Dog\\",
+
                     name,
 
                     barkVolume,
@@ -25181,7 +25323,9 @@ module MyQuery = {
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman
@@ -25201,19 +25345,27 @@ module MyQuery = {
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -25296,6 +25448,8 @@ module MyQueryNoError = {
                   };
                   {
 
+                    __typename: \\"Dog\\",
+
                     name,
 
                     barkVolume,
@@ -25313,7 +25467,9 @@ module MyQueryNoError = {
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman
@@ -25354,6 +25510,7 @@ exports[`Records unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
@@ -25362,6 +25519,7 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -25429,6 +25587,8 @@ module MyQuery = {
                     value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
