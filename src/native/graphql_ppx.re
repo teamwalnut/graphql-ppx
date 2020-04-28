@@ -6,22 +6,31 @@ open Output_native_utils;
 
 let argv = Sys.argv |> Array.to_list;
 
-let add_pos = (delimLength, base, pos) => {
-  pos_fname: base.pos_fname,
-  pos_lnum: base.pos_lnum + pos.line,
-  pos_bol: 0,
-  pos_cnum:
-    if (pos.line == 0) {
-      delimLength + pos.col;
-    } else {
-      pos.col;
-    },
-};
-
 let add_loc = (delimLength, base, span) => {
-  loc_start: add_pos(delimLength, base.loc_start, fst(span)),
-  loc_end: add_pos(delimLength, base.loc_start, snd(span)),
-  loc_ghost: false,
+  let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
+  let baseBol =
+    base.loc_start.pos_bol
+    + col
+    + delimLength
+    + fst(span).index
+    - fst(span).col;
+  let start = baseBol + fst(span).col;
+  let end_ = baseBol + snd(span).col;
+  {
+    loc_start: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + fst(span).line,
+      pos_bol: baseBol,
+      pos_cnum: start,
+    },
+    loc_end: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + snd(span).line,
+      pos_bol: baseBol,
+      pos_cnum: end_,
+    },
+    loc_ghost: false,
+  };
 };
 
 let fmt_lex_err = err =>
