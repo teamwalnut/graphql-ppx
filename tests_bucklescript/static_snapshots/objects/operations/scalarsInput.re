@@ -71,12 +71,13 @@ module MyQuery = {
         "scalarsInput": scalarsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {

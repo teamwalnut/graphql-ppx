@@ -19,19 +19,27 @@
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)
@@ -56,6 +64,12 @@ module MyQuery = {
                   (
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
 
@@ -77,6 +91,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
@@ -111,8 +131,15 @@ module MyQuery = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: "Dog",
 
                     name,
 
@@ -128,10 +155,17 @@ module MyQuery = {
                     let value = (value: t_dogOrHuman_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: "Human",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman
@@ -151,19 +185,27 @@ module MyQuery = {
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)
@@ -188,6 +230,12 @@ module MyQueryNoError = {
                   (
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
 
@@ -209,6 +257,12 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
@@ -243,8 +297,15 @@ module MyQueryNoError = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: "Dog",
 
                     name,
 
@@ -260,10 +321,17 @@ module MyQueryNoError = {
                     let value = (value: t_dogOrHuman_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: "Human",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman

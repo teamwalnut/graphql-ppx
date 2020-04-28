@@ -125,9 +125,16 @@ input ListsInput {
   nonNullableOfNonNullable: [String!]!
 }
 
+input EmbeddedInput {
+  field: String
+}
+
 input NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
   field: String
   enum: SampleField
+  embeddedInput: [EmbeddedInput]
 }
 
 input RecursiveInput {

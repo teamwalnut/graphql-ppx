@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "test": "bsb -clean-world -make-world && jest --verbose .",
-    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o graphql_schema.json schema.graphql"
+    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ../graphql_schema.json ../schema.graphql"
   },
   "keywords": [
     "BuckleScript"

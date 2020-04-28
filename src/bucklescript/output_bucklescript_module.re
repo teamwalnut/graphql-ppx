@@ -327,6 +327,7 @@ let generate_default_operation =
       config,
       [],
       Graphql_ast.Operation(operation),
+      None,
       res_structure,
     );
   let types =
@@ -449,6 +450,7 @@ let generate_fragment_module =
       config,
       [],
       Graphql_ast.Fragment(fragment),
+      None,
       res_structure,
     );
   let types =

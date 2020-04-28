@@ -39,12 +39,7 @@ let rec serialize_type =
   | Type(Scalar({sm_name: "Boolean"})) => [%expr (a => a)]
   | Type(Scalar({sm_name: _})) => [%expr (a => a)]
   | Type(InputObject({iom_name})) => [%expr
-      (
-        a =>
-          Some(
-            [%e ident_from_string("serializeInputObject" ++ iom_name)](a),
-          )
-      )
+      (a => [%e ident_from_string("serializeInputObject" ++ iom_name)](a))
     ]
   | Type(Enum({em_values})) => {
       let case_exp =
@@ -77,16 +72,7 @@ let rec serialize_type =
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
   | List(inner) => [%expr
-      (
-        a =>
-          a
-          |> Array.map(b =>
-               switch ([%e serialize_type(inner)](b)) {
-               | Some(c) => c
-               | None => Js.Nullable.null
-               }
-             )
-      )
+      (a => Array.map(b => {[%e serialize_type(inner)](b)}, a))
     ]
   | Type(Object(_)) => [%expr (v => None)]
   | Type(Union(_)) => [%expr (v => None)]
@@ -137,52 +123,6 @@ let serialize_fun = (config, fields, type_name) => {
                )
              }),
           None,
-          //   let field_array =
-          //     fields
-          //     |> List.map((InputField({name, type_, loc})) => {
-          //          %expr
-          //          {
-          //            (
-          //              [%e
-          //                Ast_helper.Exp.constant(
-          //                  Parsetree.Pconst_string(name, None),
-          //                )
-          //              ],
-          //              [%e serialize_type(type_)](
-          //                switch%e (config.records) {
-          //                | true =>
-          //                  Exp.field(
-          //                    ident_from_string(arg),
-          //                    {
-          //                      Location.txt: Longident.Lident(name),
-          //                      loc: conv_loc(loc),
-          //                    },
-          //                  )
-          //                | false =>
-          //                  %expr
-          //                  [%e ident_from_string(arg)]##[%e
-          //                                                  ident_from_string(name)
-          //                                                ]
-          //                },
-          //              ),
-          //            );
-          //          }
-          //        })
-          //     |> Ast_helper.Exp.array;
-          //   %expr
-          //   [%e field_array]
-          //   |> Js.Array.filter(
-          //        fun
-          //        | (_, None) => false
-          //        | (_, Some(_)) => true,
-          //      )
-          //   |> Js.Array.map(
-          //        fun
-          //        | (k, Some(v)) => (k, v)
-          //        | (k, None) => (k, Js.Json.null),
-          //      )
-          //   |> Js.Dict.fromArray
-          //   |> Js.Json.object_;
         );
       },
     )
@@ -213,6 +153,7 @@ let generate_serialize_variables =
                [@metaloc conv_loc(loc)]
                Vb.mk(
                  Pat.constraint_(
+                   ~loc=conv_loc(loc),
                    Pat.var({
                      loc: conv_loc(loc),
                      txt:
@@ -223,6 +164,7 @@ let generate_serialize_variables =
                        },
                    }),
                    Typ.arrow(
+                     ~loc=conv_loc(loc),
                      Nolabel,
                      base_type_name(type_name),
                      base_type_name("Raw." ++ type_name),
@@ -309,6 +251,7 @@ let generate_variable_constructors =
                let body =
                  Ast_helper.(
                    Exp.constraint_(
+                     ~loc=conv_loc(loc),
                      config.records ? record : object_,
                      base_type_name(
                        switch (name) {
@@ -414,7 +357,7 @@ let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
     switch%expr (value) {
     | Some(value) =>
       Js.Nullable.return(
-        [%e generate_serializer(config, path, definition, inner)],
+        [%e generate_serializer(config, path, definition, None, inner)],
       )
     | None => Js.Nullable.null
     }
@@ -425,7 +368,7 @@ and generate_array_encoder = (config, loc, inner, path, definition) =>
     value
     |> Js.Array.map(value => {
          %e
-         generate_serializer(config, path, definition, inner)
+         generate_serializer(config, path, definition, None, inner)
        })
   ]
 and generate_poly_enum_encoder = (loc, enum_meta) => {
@@ -459,11 +402,11 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   {
     %expr
     [%e ident_from_string(ident ++ ".serialize")](
-      [%e generate_serializer(config, path, definition, inner)],
+      [%e generate_serializer(config, path, definition, None, inner)],
     );
   }
 and generate_object_encoder =
-    (config, loc, name, fields, path, definition, existing_record) => {
+    (config, loc, name, fields, path, definition, existing_record, typename) => {
   open Ast_helper;
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
@@ -481,12 +424,19 @@ and generate_object_encoder =
       let record =
         Exp.record(
           fields
-          |> List.map(((key, inner)) =>
-               (
-                 {Location.txt: Longident.parse(to_valid_ident(key)), loc},
-                 ident_from_string(to_valid_ident(key)),
-               )
-             ),
+          |> List.map(((key, inner)) => {
+               let key_value = {
+                 Location.txt: Longident.parse(to_valid_ident(key)),
+                 loc,
+               };
+               switch (key, typename) {
+               | ("__typename", Some(typename)) => (
+                   key_value,
+                   const_str_expr(typename),
+                 )
+               | _ => (key_value, ident_from_string(to_valid_ident(key)))
+               };
+             }),
           None,
         );
 
@@ -514,6 +464,7 @@ and generate_object_encoder =
                    config,
                    [key, ...path],
                    definition,
+                   None,
                    inner,
                  );
                },
@@ -636,6 +587,7 @@ and generate_poly_variant_union_encoder =
                        config,
                        [type_name, ...path],
                        definition,
+                       Some(type_name),
                        inner,
                      )
                    ],
@@ -693,7 +645,7 @@ and generate_error = (loc, message) => {
   %e
   Ast_helper.Exp.extension(~loc, ext);
 }
-and generate_serializer = (config, path: list(string), definition) =>
+and generate_serializer = (config, path: list(string), definition, typename) =>
   fun
   | Res_nullable(loc, inner) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
@@ -725,6 +677,7 @@ and generate_serializer = (config, path: list(string), definition) =>
       path,
       definition,
       existing_record,
+      typename,
     )
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
@@ -735,6 +688,7 @@ and generate_serializer = (config, path: list(string), definition) =>
       path,
       definition,
       existing_record,
+      typename,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union_encoder(

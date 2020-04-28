@@ -71,23 +71,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -103,20 +99,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           (inp: t_variables).nullableOfNonNullable,
@@ -125,38 +108,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           (inp: t_variables).nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables).nonNullableOfNonNullable,
         ),
     };

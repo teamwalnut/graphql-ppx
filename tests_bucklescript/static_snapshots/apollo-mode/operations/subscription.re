@@ -18,14 +18,26 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {name: string};
-    type t_simpleSubscription_Human = {name: string};
+    type t_simpleSubscription_Dog = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
   };
-  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t_simpleSubscription_Dog = {name: string};
-  type t_simpleSubscription_Human = {name: string};
+  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\n__typename  \nname  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
+  type t_simpleSubscription_Dog = {
+    __typename: string,
+    name: string,
+  };
+  type t_simpleSubscription_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_simpleSubscription = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_simpleSubscription_Dog)
@@ -50,6 +62,13 @@ module MyQuery = {
                   (
                     {
 
+                      __typename: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
 
@@ -65,6 +84,13 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value =
@@ -95,10 +121,17 @@ module MyQuery = {
                     let value = (value: t_simpleSubscription_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_simpleSubscription_Dog).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: "Dog",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Dog,
               ): Raw.t_simpleSubscription
@@ -110,10 +143,17 @@ module MyQuery = {
                     let value = (value: t_simpleSubscription_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_simpleSubscription_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: "Human",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Human,
               ): Raw.t_simpleSubscription

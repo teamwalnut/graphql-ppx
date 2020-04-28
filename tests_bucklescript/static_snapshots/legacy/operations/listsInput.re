@@ -59,11 +59,13 @@ module MyQuery = {
         "listsInput": listsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectListsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
     }
+
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
@@ -77,23 +79,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -109,20 +107,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           inp##nullableOfNonNullable,
@@ -131,38 +116,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           inp##nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
     };

@@ -21,6 +21,30 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
     selection_set
     |> List.map(
          fun
+         | Graphql_ast.InlineFragment(
+             {
+               item: {
+                 if_type_condition: Some(type_condition),
+                 if_selection_set: selection,
+               },
+             } as field,
+           ) => {
+             let field_ty =
+               Schema.lookup_type(schema, type_condition.item)
+               |> Option.unsafe_unwrap;
+             let selection_set =
+               fn(selection.span, schema, field_ty, selection.item);
+             Graphql_ast.InlineFragment({
+               ...field,
+               item: {
+                 ...field.item,
+                 if_selection_set: {
+                   ...selection,
+                   item: selection_set,
+                 },
+               },
+             });
+           }
          | Graphql_ast.Field(
              {item: {fd_selection_set: Some(selection)}} as field,
            ) => {
@@ -29,7 +53,7 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
              let selection_set =
                fn(selection.span, schema, field_ty, selection.item);
 
-             Field({
+             Graphql_ast.Field({
                ...field,
                item: {
                  ...field.item,

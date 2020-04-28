@@ -37,7 +37,7 @@ let rec deepMerge = (json1: Js.Json.t, json2: Js.Json.t) => {
     Js.Dict.keys(obj2)
     |> Js.Array.forEach(key => {
          let existingVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
-         let newVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
+         let newVal: Js.Json.t = Js.Dict.unsafeGet(obj2, key);
          Js.Dict.set(
            obj1,
            key,

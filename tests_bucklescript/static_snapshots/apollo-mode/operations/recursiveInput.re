@@ -59,14 +59,14 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectRecursiveInput(a)))(
-          (inp: t_variables).arg,
-        ),
+        (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -89,7 +89,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(

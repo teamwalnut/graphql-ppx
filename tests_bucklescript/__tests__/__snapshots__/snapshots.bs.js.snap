@@ -93,17 +93,26 @@ module MyQuery = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
+      nonNullableField: string,
+      nullableArray: Js.Nullable.t(array(Js.Nullable.t(string))),
       field: Js.Nullable.t(string),
       enum: Js.Nullable.t(string),
-    };
+      embeddedInput:
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
+    nonNullableField: string,
+    nullableArray: option(array(option(string))),
     field: option(string),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    embeddedInput: option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {field: option(string)};
   let parse: Raw.t => t =
     (value) => (
       {
@@ -129,17 +138,53 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectNonrecursiveInput(a)))(
+        (a => serializeInputObjectNonrecursiveInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField:
+        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).nullableArray,
+        ),
 
       field:
         (
@@ -174,6 +219,58 @@ module MyQuery = {
         )(
           (inp: t_variables_NonrecursiveInput).enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_EmbeddedInput).field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -183,11 +280,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    nonNullableField,
+
+    nullableArray,
 
     field,
 
     enum,
+
+    embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    field: field,
   };
   let definition = (parse, query, serialize);
 };
@@ -1763,23 +1878,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -1795,20 +1906,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           (inp: t_variables).nullableOfNonNullable,
@@ -1817,38 +1915,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           (inp: t_variables).nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables).nonNullableOfNonNullable,
         ),
     };
@@ -1941,14 +2026,13 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
-        (a => Some(serializeInputObjectListsInput(a)))(
-          (inp: t_variables).arg,
-        ),
+      arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
     }
+
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
@@ -1962,23 +2046,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -1994,20 +2074,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           (inp: t_variables_ListsInput).nullableOfNonNullable,
@@ -2016,38 +2083,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           (inp: t_variables_ListsInput).nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
     };
@@ -2976,17 +3030,26 @@ module MyQuery = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
+      nonNullableField: string,
+      nullableArray: Js.Nullable.t(array(Js.Nullable.t(string))),
       field: Js.Nullable.t(string),
       enum: Js.Nullable.t(string),
-    };
+      embeddedInput:
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
+    nonNullableField: string,
+    nullableArray: option(array(option(string))),
     field: option(string),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    embeddedInput: option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {field: option(string)};
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3012,17 +3075,53 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectNonrecursiveInput(a)))(
+        (a => serializeInputObjectNonrecursiveInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField:
+        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).nullableArray,
+        ),
 
       field:
         (
@@ -3057,6 +3156,58 @@ module MyQuery = {
         )(
           (inp: t_variables_NonrecursiveInput).enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_EmbeddedInput).field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -3066,11 +3217,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    nonNullableField,
+
+    nullableArray,
 
     field,
 
     enum,
+
+    embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    field: field,
   };
   let definition = (parse, query, serialize);
 };
@@ -3671,14 +3840,16 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -3704,6 +3875,12 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
@@ -3744,8 +3921,15 @@ module InlineFragmentQuery = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
@@ -3966,14 +4150,14 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectRecursiveInput(a)))(
-          (inp: t_variables).arg,
-        ),
+        (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -3996,7 +4180,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(
@@ -4568,14 +4752,16 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(
+        (a => serializeInputObjectVariousScalarsInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
@@ -4936,14 +5122,26 @@ exports[`Apollo subscription.re 1`] = `
 ];
 module MyQuery = {
   module Raw = {
-    type t_simpleSubscription_Dog = {name: string};
-    type t_simpleSubscription_Human = {name: string};
+    type t_simpleSubscription_Dog = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
   };
-  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
-  type t_simpleSubscription_Dog = {name: string};
-  type t_simpleSubscription_Human = {name: string};
+  let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_simpleSubscription_Dog = {
+    __typename: string,
+    name: string,
+  };
+  type t_simpleSubscription_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_simpleSubscription = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_simpleSubscription_Dog)
@@ -4968,6 +5166,13 @@ module MyQuery = {
                   (
                     {
 
+                      __typename: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
 
@@ -4983,6 +5188,13 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value =
@@ -5013,10 +5225,17 @@ module MyQuery = {
                     let value = (value: t_simpleSubscription_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_simpleSubscription_Dog).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Dog\\",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Dog,
               ): Raw.t_simpleSubscription
@@ -5028,10 +5247,17 @@ module MyQuery = {
                     let value = (value: t_simpleSubscription_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_simpleSubscription_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_simpleSubscription_Human,
               ): Raw.t_simpleSubscription
@@ -6261,19 +6487,27 @@ exports[`Apollo union.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -6298,6 +6532,12 @@ module MyQuery = {
                   (
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
 
@@ -6319,6 +6559,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
@@ -6353,8 +6599,15 @@ module MyQuery = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
@@ -6370,10 +6623,17 @@ module MyQuery = {
                     let value = (value: t_dogOrHuman_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman
@@ -6393,19 +6653,27 @@ module MyQuery = {
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
-    type t_dogOrHuman_Human = {name: string};
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
   type t_dogOrHuman = [
     | \`FutureAddedValue(Js.Json.t)
     | \`Dog(t_dogOrHuman_Dog)
@@ -6430,6 +6698,12 @@ module MyQueryNoError = {
                   (
                     {
 
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
+
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
 
@@ -6451,6 +6725,12 @@ module MyQueryNoError = {
                   let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Human).name;
@@ -6485,8 +6765,15 @@ module MyQueryNoError = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
@@ -6502,10 +6789,17 @@ module MyQueryNoError = {
                     let value = (value: t_dogOrHuman_Human).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+
+                    value;
                   };
                   {
 
-                    name: name,
+                    __typename: \\"Human\\",
+
+                    name,
                   };
                 }: Raw.t_dogOrHuman_Human,
               ): Raw.t_dogOrHuman
@@ -6546,14 +6840,16 @@ exports[`Apollo unionPartial.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
   };
-  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -6579,6 +6875,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
+
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+
+                        value;
+                      },
 
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
@@ -6619,8 +6921,15 @@ module MyQuery = {
                     let value = (value: t_dogOrHuman_Dog).name;
 
                     value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+
+                    value;
                   };
                   {
+
+                    __typename: \\"Dog\\",
 
                     name,
 
@@ -6749,18 +7058,27 @@ module MyQuery = {
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
       .
+      \\"nonNullableField\\": string,
+      \\"nullableArray\\": Js.Nullable.t(array(Js.Nullable.t(string))),
       \\"field\\": Js.Nullable.t(string),
       \\"enum\\": Js.Nullable.t(string),
-    };
+      \\"embeddedInput\\":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
+    \\"nonNullableField\\": string,
+    \\"nullableArray\\": option(array(option(string))),
     \\"field\\": option(string),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    \\"embeddedInput\\": option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
 
@@ -6782,14 +7100,49 @@ module MyQuery = {
         \\"nonrecursiveInput\\": nonrecursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField: (a => a)(inp##nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
+        ),
 
       field:
         (
@@ -6824,6 +7177,58 @@ module MyQuery = {
         )(
           inp##enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
     };
   let make = (~arg, ()) => {
     \\"query\\": query,
@@ -6844,11 +7249,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    \\"nonNullableField\\": nonNullableField,
+
+    \\"nullableArray\\": nullableArray,
 
     \\"field\\": field,
 
     \\"enum\\": enum,
+
+    \\"embeddedInput\\": embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    \\"field\\": field,
   };
   let makeWithVariables = variables => {
     \\"query\\": query,
@@ -8272,23 +8695,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -8304,20 +8723,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           inp##nullableOfNonNullable,
@@ -8326,38 +8732,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           inp##nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
     };
@@ -8477,11 +8870,13 @@ module MyQuery = {
         \\"listsInput\\": listsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectListsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
     }
+
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
@@ -8495,23 +8890,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -8527,20 +8918,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           inp##nullableOfNonNullable,
@@ -8549,38 +8927,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           inp##nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
     };
@@ -9263,18 +9628,27 @@ module MyQuery = {
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
       .
+      \\"nonNullableField\\": string,
+      \\"nullableArray\\": Js.Nullable.t(array(Js.Nullable.t(string))),
       \\"field\\": Js.Nullable.t(string),
       \\"enum\\": Js.Nullable.t(string),
-    };
+      \\"embeddedInput\\":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
+    \\"nonNullableField\\": string,
+    \\"nullableArray\\": option(array(option(string))),
     \\"field\\": option(string),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    \\"embeddedInput\\": option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
 
@@ -9296,14 +9670,49 @@ module MyQuery = {
         \\"nonrecursiveInput\\": nonrecursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField: (a => a)(inp##nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
+        ),
 
       field:
         (
@@ -9338,6 +9747,58 @@ module MyQuery = {
         )(
           inp##enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
     };
   let make = (~arg, ()) => {
     \\"query\\": query,
@@ -9358,11 +9819,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    \\"nonNullableField\\": nonNullableField,
+
+    \\"nullableArray\\": nullableArray,
 
     \\"field\\": field,
 
     \\"enum\\": enum,
+
+    \\"embeddedInput\\": embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    \\"field\\": field,
   };
   let makeWithVariables = variables => {
     \\"query\\": query,
@@ -10171,11 +10650,13 @@ module MyQuery = {
         \\"recursiveInput\\": recursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectRecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -10198,7 +10679,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(
@@ -10811,12 +11292,13 @@ module MyQuery = {
         \\"scalarsInput\\": scalarsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
@@ -12883,18 +13365,27 @@ module MyQuery = {
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
       .
+      \\"nonNullableField\\": string,
+      \\"nullableArray\\": Js.Nullable.t(array(Js.Nullable.t(string))),
       \\"field\\": Js.Nullable.t(string),
       \\"enum\\": Js.Nullable.t(string),
-    };
+      \\"embeddedInput\\":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
+    \\"nonNullableField\\": string,
+    \\"nullableArray\\": option(array(option(string))),
     \\"field\\": option(string),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    \\"embeddedInput\\": option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
 
@@ -12916,14 +13407,49 @@ module MyQuery = {
         \\"nonrecursiveInput\\": nonrecursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField: (a => a)(inp##nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
+        ),
 
       field:
         (
@@ -12958,6 +13484,58 @@ module MyQuery = {
         )(
           inp##enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -12967,11 +13545,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    \\"nonNullableField\\": nonNullableField,
+
+    \\"nullableArray\\": nullableArray,
 
     \\"field\\": field,
 
     \\"enum\\": enum,
+
+    \\"embeddedInput\\": embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    \\"field\\": field,
   };
   let definition = (parse, query, serialize);
 };
@@ -14331,23 +14927,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -14363,20 +14955,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           inp##nullableOfNonNullable,
@@ -14385,38 +14964,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           inp##nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
     };
@@ -14507,11 +15073,13 @@ module MyQuery = {
         \\"listsInput\\": listsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectListsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
     }
+
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
@@ -14525,23 +15093,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -14557,20 +15121,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           inp##nullableOfNonNullable,
@@ -14579,38 +15130,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           inp##nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
     };
@@ -15251,18 +15789,27 @@ module MyQuery = {
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
       .
+      \\"nonNullableField\\": string,
+      \\"nullableArray\\": Js.Nullable.t(array(Js.Nullable.t(string))),
       \\"field\\": Js.Nullable.t(string),
       \\"enum\\": Js.Nullable.t(string),
-    };
+      \\"embeddedInput\\":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
+    \\"nonNullableField\\": string,
+    \\"nullableArray\\": option(array(option(string))),
     \\"field\\": option(string),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    \\"embeddedInput\\": option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
   let parse: Raw.t => t =
     value => {
 
@@ -15284,14 +15831,49 @@ module MyQuery = {
         \\"nonrecursiveInput\\": nonrecursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField: (a => a)(inp##nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
+        ),
 
       field:
         (
@@ -15326,6 +15908,58 @@ module MyQuery = {
         )(
           inp##enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -15335,11 +15969,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    \\"nonNullableField\\": nonNullableField,
+
+    \\"nullableArray\\": nullableArray,
 
     \\"field\\": field,
 
     \\"enum\\": enum,
+
+    \\"embeddedInput\\": embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    \\"field\\": field,
   };
   let definition = (parse, query, serialize);
 };
@@ -16095,11 +16747,13 @@ module MyQuery = {
         \\"recursiveInput\\": recursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectRecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -16122,7 +16776,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(
@@ -16667,12 +17321,13 @@ module MyQuery = {
         \\"scalarsInput\\": scalarsInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
@@ -18665,17 +19320,26 @@ module MyQuery = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
+      nonNullableField: string,
+      nullableArray: Js.Nullable.t(array(Js.Nullable.t(string))),
       field: Js.Nullable.t(string),
       enum: Js.Nullable.t(string),
-    };
+      embeddedInput:
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
+    nonNullableField: string,
+    nullableArray: option(array(option(string))),
     field: option(string),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    embeddedInput: option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {field: option(string)};
   let parse: Raw.t => t =
     (value) => (
       {
@@ -18701,17 +19365,53 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectNonrecursiveInput(a)))(
+        (a => serializeInputObjectNonrecursiveInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField:
+        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).nullableArray,
+        ),
 
       field:
         (
@@ -18746,6 +19446,58 @@ module MyQuery = {
         )(
           (inp: t_variables_NonrecursiveInput).enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_EmbeddedInput).field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -18755,11 +19507,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    nonNullableField,
+
+    nullableArray,
 
     field,
 
     enum,
+
+    embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    field: field,
   };
   let definition = (parse, query, serialize);
 };
@@ -20170,23 +20940,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -20202,20 +20968,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           (inp: t_variables).nullableOfNonNullable,
@@ -20224,38 +20977,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           (inp: t_variables).nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables).nonNullableOfNonNullable,
         ),
     };
@@ -20348,14 +21088,13 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
-        (a => Some(serializeInputObjectListsInput(a)))(
-          (inp: t_variables).arg,
-        ),
+      arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
     }
+
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
@@ -20369,23 +21108,19 @@ module MyQuery = {
               Js.Nullable.return(
                 (
                   a =>
-                    a
-                    |> Array.map(b =>
-                         switch (
-                           (
-                             a =>
-                               switch (a) {
-                               | None => Js.Nullable.undefined
-                               | Some(b) => Js.Nullable.return((a => a)(b))
-                               }
-                           )(
-                             b,
-                           )
-                         ) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
                 )(
                   b,
                 ),
@@ -20401,20 +21136,7 @@ module MyQuery = {
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    a
-                    |> Array.map(b =>
-                         switch ((a => a)(b)) {
-                         | Some(c) => c
-                         | None => Js.Nullable.null
-                         }
-                       )
-                )(
-                  b,
-                ),
-              )
+              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
             }
         )(
           (inp: t_variables_ListsInput).nullableOfNonNullable,
@@ -20423,38 +21145,25 @@ module MyQuery = {
       nonNullableOfNullable:
         (
           a =>
-            a
-            |> Array.map(b =>
-                 switch (
-                   (
-                     a =>
-                       switch (a) {
-                       | None => Js.Nullable.undefined
-                       | Some(b) => Js.Nullable.return((a => a)(b))
-                       }
-                   )(
-                     b,
-                   )
-                 ) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
+            Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
         )(
           (inp: t_variables_ListsInput).nonNullableOfNullable,
         ),
 
       nonNullableOfNonNullable:
-        (
-          a =>
-            a
-            |> Array.map(b =>
-                 switch ((a => a)(b)) {
-                 | Some(c) => c
-                 | None => Js.Nullable.null
-                 }
-               )
-        )(
+        (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
     };
@@ -21155,17 +21864,26 @@ module MyQuery = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
     and t_variables_NonrecursiveInput = {
+      nonNullableField: string,
+      nullableArray: Js.Nullable.t(array(Js.Nullable.t(string))),
       field: Js.Nullable.t(string),
       enum: Js.Nullable.t(string),
-    };
+      embeddedInput:
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+    }
+    and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
+    nonNullableField: string,
+    nullableArray: option(array(option(string))),
     field: option(string),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
-  };
+    embeddedInput: option(array(option(t_variables_EmbeddedInput))),
+  }
+  and t_variables_EmbeddedInput = {field: option(string)};
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21191,17 +21909,53 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectNonrecursiveInput(a)))(
+        (a => serializeInputObjectNonrecursiveInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
+
+      nonNullableField:
+        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+
+      nullableArray:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).nullableArray,
+        ),
 
       field:
         (
@@ -21236,6 +21990,58 @@ module MyQuery = {
         )(
           (inp: t_variables_NonrecursiveInput).enum,
         ),
+
+      embeddedInput:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_NonrecursiveInput).embeddedInput,
+        ),
+    }
+
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+
+      field:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables_EmbeddedInput).field,
+        ),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -21245,11 +22051,29 @@ module MyQuery = {
       }: t_variables,
     )
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+
+    nonNullableField,
+
+    nullableArray,
 
     field,
 
     enum,
+
+    embeddedInput,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+
+    field: field,
   };
   let definition = (parse, query, serialize);
 };
@@ -22053,14 +22877,14 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectRecursiveInput(a)))(
-          (inp: t_variables).arg,
-        ),
+        (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -22083,7 +22907,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(
@@ -22640,14 +23464,16 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(
+        (a => serializeInputObjectVariousScalarsInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {

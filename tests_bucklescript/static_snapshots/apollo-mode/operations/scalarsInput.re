@@ -73,14 +73,16 @@ module MyQuery = {
         };
       }: Raw.t
     );
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
       arg:
-        (a => Some(serializeInputObjectVariousScalarsInput(a)))(
+        (a => serializeInputObjectVariousScalarsInput(a))(
           (inp: t_variables).arg,
         ),
     }
+
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {

@@ -57,11 +57,13 @@ module MyQuery = {
         "recursiveInput": recursiveInput,
       };
     };
+
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => Some(serializeInputObjectRecursiveInput(a)))(inp##arg),
+      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
+
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
@@ -84,7 +86,7 @@ module MyQuery = {
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Some(serializeInputObjectRecursiveInput(a)))(b),
+                (a => serializeInputObjectRecursiveInput(a))(b),
               )
             }
         )(
