@@ -12,6 +12,8 @@ let to_valid_ident = ident =>
   if (ident.[0] >= '0' && ident.[0] <= '9') {
     "_" ++ ident;
   } else {
+    // from gist of sgrove, source:
+    // https://gist.github.com/sgrove/335bf1759d8d2f685dfea80d4e6afac7
     [
       "and",
       "as",
