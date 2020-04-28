@@ -111,7 +111,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   let match_expr =
     Ast_helper.(
       Exp.match(
-        [%expr Obj.magic(value: string)],
+        [@metaloc conv_loc(loc)] [%expr Obj.magic(value: string)],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
@@ -204,6 +204,7 @@ and generate_object_decoder =
              | Fr_named_field(key, _, inner) => (
                  {txt: Longident.parse(to_valid_ident(key)), loc},
                  {
+                   [@metaloc loc]
                    let%expr value =
                      switch%e (opaque, is_object) {
                      | (true, _) =>
@@ -248,6 +249,7 @@ and generate_object_decoder =
                  (
                    {txt: Longident.parse(key), loc: conv_loc(loc)},
                    {
+                     [@metaloc loc]
                      let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
                        Obj.magic(value);
                      %e
@@ -317,7 +319,7 @@ and generate_poly_variant_selection_set_decoder =
               ),
             )
           );
-
+        [@metaloc loc]
         let%expr temp =
           Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
 
