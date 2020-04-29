@@ -106,6 +106,21 @@ let run_bsc_with_ppx = (fileName, pathIn, pathOut) => {
     ) {
     | error =>
       let stderr = Js.Exn.asJsExn(error)->Obj.magic##stderr##toString();
+      let lines = stderr |> Js.String.split("\n");
+      let stderr =
+        lines
+        |> Js.Array.reduce(
+             (p, ln) => {
+               p !== ""
+                 ? p ++ "\n" ++ ln
+                 : ln
+                   |> Js.String.includes("operations/")
+                   || ln
+                   |> Js.String.includes("found a bug for you")
+                     ? ln : p
+             },
+             "",
+           );
       let cutPosition =
         stderr
         |> Js.String.indexOf("Error while running external preprocessor");
