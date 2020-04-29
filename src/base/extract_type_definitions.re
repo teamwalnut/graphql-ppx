@@ -26,6 +26,7 @@ type object_field =
 and type_def =
   | Object({
       loc,
+      variant_parent: bool,
       force_record: bool,
       path,
       fields: list(object_field),
@@ -79,16 +80,16 @@ let generate_type_name = (~prefix="t") =>
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
-let rec extract = path =>
+let rec extract = (~variant=false, path) =>
   fun
   | Res_nullable(_loc, inner) => extract(path, inner)
   | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
-  | Res_object(loc, _name, fields, None) =>
-    create_object(path, fields, false, loc)
+  | Res_object(_loc, _name, fields, Some(_))
   | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
+  | Res_object(loc, _name, fields, None) =>
+    create_object(path, fields, false, loc, variant)
   | Res_record(loc, _name, fields, None) =>
-    create_object(path, fields, true, loc)
+    create_object(path, fields, true, loc, variant)
   | Res_poly_variant_union(loc, _name, fragments, _) => [
       VariantUnion({path, fields: fragments, loc}),
       ...extract_fragments(fragments, path),
@@ -97,7 +98,6 @@ let rec extract = path =>
       VariantSelection({path, fields: fragments, loc}),
       ...extract_fragments(fragments, path),
     ]
-
   | Res_poly_variant_interface(loc, _name, base, fragments) => [
       VariantInterface({path, fields: fragments, base, loc}),
       ...extract_fragments(fragments, path),
@@ -118,17 +118,15 @@ let rec extract = path =>
         loc,
       }),
     ]
-
 and fragment_names = f => f |> List.map(((name, _)) => name)
 and extract_fragments = (fragments, path) => {
   fragments
   |> List.fold_left(
        (acc, (name, inner)) =>
-         List.append(extract([name, ...path], inner), acc),
+         List.append(extract(~variant=true, [name, ...path], inner), acc),
        [],
      );
 }
-
 and create_children = (path, fields) => {
   fields
   |> List.fold_left(
@@ -140,9 +138,10 @@ and create_children = (path, fields) => {
        [],
      );
 }
-and create_object = (path, fields, force_record, loc) => {
+and create_object = (path, fields, force_record, loc, variant_parent) => {
   [
     Object({
+      variant_parent,
       loc,
       force_record,
       path,
@@ -193,7 +192,7 @@ let rec convert_type_ref = schema =>
 let generate_input_field_types =
     (
       _input_obj_name,
-      schema: Schema.schema,
+      schema: Schema.t,
       fields: list((string, Schema.type_ref, Source_pos.ast_location)),
     ) => {
   fields
@@ -240,7 +239,7 @@ let get_input_object_names = (fields: list(input_object_field)) => {
 
 let rec extract_input_object =
         (
-          schema: Schema.schema,
+          schema: Schema.t,
           finalized_input_objects,
           (
             name: option(string),

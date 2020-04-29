@@ -8,78 +8,6 @@ open Output_bucklescript_utils;
 open Ast_408;
 open Parsetree;
 
-let to_valid_ident = ident =>
-  if (ident.[0] >= '0' && ident.[0] <= '9') {
-    "_" ++ ident;
-  } else {
-    [
-      "and",
-      "as",
-      "asr",
-      "assert",
-      "begin",
-      "class",
-      "constraint",
-      "do",
-      "done",
-      "downto",
-      "else",
-      "end",
-      "esfun",
-      "exception",
-      "external",
-      "false",
-      "for",
-      "fun",
-      "function",
-      "functor",
-      "if",
-      "in",
-      "include",
-      "inherit",
-      "initializer",
-      "land",
-      "lazy",
-      "let",
-      "lor",
-      "lsl",
-      "lsr",
-      "lxor",
-      "match",
-      "method",
-      "mod",
-      "module",
-      "mutable",
-      "new",
-      "nonrec",
-      "object",
-      "of",
-      "open",
-      "open!",
-      "or",
-      "pri",
-      "private",
-      "pub",
-      "public",
-      "rec",
-      "sig",
-      "struct",
-      "switch",
-      "then",
-      "to",
-      "true",
-      "try",
-      "type",
-      "val",
-      "virtual",
-      "when",
-      "while",
-      "with",
-    ]
-    |> List.exists(reserved_word => ident == reserved_word)
-      ? ident ++ "_" : ident;
-  };
-
 // duplicate of ouput_bucklescript_decoder
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
@@ -183,7 +111,15 @@ let raw_opaque_object = fields => {
      );
 };
 
-let generate_record_type = (config, fields, obj_path, raw, loc) => {
+let already_has__typename = fields =>
+  List.exists(
+    fun
+    | Field({path: ["__typename", ..._]}) => true
+    | _ => false,
+    fields,
+  );
+
+let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let record_fields =
     fields
     |> List.fold_left(
@@ -230,6 +166,21 @@ let generate_record_type = (config, fields, obj_path, raw, loc) => {
          [],
        )
     |> List.rev;
+
+  let record_fields =
+    // if this is a variant in the parsed type and __typename is not explicitly
+    // requested, still add it (because the printer is added)
+    if (is_variant && !already_has__typename(fields)) {
+      [
+        Ast_helper.Type.field(
+          {Location.txt: "__typename", loc: Location.none},
+          base_type_name("string"),
+        ),
+        ...record_fields,
+      ];
+    } else {
+      record_fields;
+    };
 
   raw && raw_opaque_object(fields)
     ? generate_opaque(obj_path, loc)
@@ -395,7 +346,7 @@ let generate_enum = (config, fields, path, loc, raw) =>
     path,
   );
 
-let generate_object_type = (config, fields, obj_path, raw, loc) => {
+let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let object_fields =
     fields
     |> List.fold_left(
@@ -454,6 +405,26 @@ let generate_object_type = (config, fields, obj_path, raw, loc) => {
        )
     |> List.rev;
 
+  let object_fields =
+    // if this is a variant in the parsed type and __typename is not explicitly
+    // requested, still add it (because the printer is added)
+    if (is_variant && !already_has__typename(fields)) {
+      [
+        {
+          pof_desc:
+            Otag(
+              {txt: to_valid_ident("__typename"), loc: Location.none},
+              base_type_name("string"),
+            ),
+          pof_loc: Location.none,
+          pof_attributes: [],
+        },
+        ...object_fields,
+      ];
+    } else {
+      object_fields;
+    };
+
   raw && raw_opaque_object(fields)
     ? generate_opaque(obj_path, loc)
     : wrap_type_declaration(
@@ -478,10 +449,11 @@ let generate_graphql_object =
       force_record,
       raw,
       loc,
+      is_variant,
     ) => {
   config.records || force_record
-    ? generate_record_type(config, fields, obj_path, raw, loc)
-    : generate_object_type(config, fields, obj_path, raw, loc);
+    ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
+    : generate_object_type(config, fields, obj_path, raw, loc, is_variant);
 };
 
 // generate all the types necessary types that we later refer to by name.
@@ -491,7 +463,7 @@ let generate_types =
     extract([], res)
     |> List.map(
          fun
-         | Object({fields, path: obj_path, force_record, loc}) =>
+         | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>
            generate_graphql_object(
              config,
              fields,
@@ -499,6 +471,7 @@ let generate_types =
              force_record,
              raw,
              loc,
+             variant_parent,
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)
@@ -508,17 +481,19 @@ let generate_types =
            generate_variant_interface(config, fields, base, path, loc, raw)
          | Enum({loc, path, fields}) =>
            generate_enum(config, fields, path, loc, raw),
-       );
+       )
+    |> List.rev;
 
-  let types = Ast_helper.Str.type_(Recursive, types);
+  let types =
+    types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
   switch (fragment_name) {
   | Some(fragment_name) =>
     List.append(
-      [types],
+      types,
       [
         Ast_helper.(
           Str.type_(
-            Recursive,
+            Nonrecursive,
             [
               Type.mk(
                 ~manifest=
@@ -533,11 +508,11 @@ let generate_types =
         ),
       ],
     )
-  | None => [types]
+  | None => types
   };
 };
 
-let rec generate_arg_type = loc =>
+let rec generate_arg_type = (raw, loc) =>
   fun
   | Type(Scalar({sm_name: "ID"}))
   | Type(Scalar({sm_name: "String"})) => base_type("string")
@@ -546,23 +521,27 @@ let rec generate_arg_type = loc =>
   | Type(Scalar({sm_name: "Boolean"})) => base_type("bool")
   | Type(Scalar({sm_name: _})) => base_type("Js.Json.t")
   | Type(Enum(enum_meta)) =>
-    Graphql_ppx_base__.Schema.(
-      Ast_helper.(
-        Typ.variant(
-          enum_meta.em_values
-          |> List.map(({evm_name, _}) =>
-               {
-                 prf_desc:
-                   Rtag({txt: evm_name, loc: Location.none}, true, []),
-                 prf_loc: Location.none,
-                 prf_attributes: [],
-               }
-             ),
-          Closed,
-          None,
+    if (raw) {
+      base_type("string");
+    } else {
+      Graphql_ppx_base__.Schema.(
+        Ast_helper.(
+          Typ.variant(
+            enum_meta.em_values
+            |> List.map(({evm_name, _}) =>
+                 {
+                   prf_desc:
+                     Rtag({txt: evm_name, loc: Location.none}, true, []),
+                   prf_loc: Location.none,
+                   prf_attributes: [],
+                 }
+               ),
+            Closed,
+            None,
+          )
         )
-      )
-    )
+      );
+    }
   | Type(InputObject({iom_name})) =>
     base_type(generate_type_name(~prefix="t_variables", [iom_name]))
   | Type(Object(_)) =>
@@ -584,9 +563,12 @@ let rec generate_arg_type = loc =>
       ),
     )
   | Nullable(inner) =>
-    base_type(~inner=[generate_arg_type(loc, inner)], "option")
+    base_type(
+      ~inner=[generate_arg_type(raw, loc, inner)],
+      raw ? "Js.Nullable.t" : "option",
+    )
   | List(inner) =>
-    base_type(~inner=[generate_arg_type(loc, inner)], "array")
+    base_type(~inner=[generate_arg_type(raw, loc, inner)], "array")
   | TypeNotFound(name) =>
     raise(
       Location.Error(
@@ -597,7 +579,7 @@ let rec generate_arg_type = loc =>
       ),
     );
 
-let generate_record_input_object = (input_obj_name, fields) => {
+let generate_record_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.Type.mk(
     ~kind=
       Ptype_record(
@@ -607,7 +589,7 @@ let generate_record_input_object = (input_obj_name, fields) => {
              | InputField({name, type_, loc}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
-                   generate_arg_type(loc, type_),
+                   generate_arg_type(raw, loc, type_),
                  );
                },
            ),
@@ -626,7 +608,7 @@ let generate_record_input_object = (input_obj_name, fields) => {
   );
 };
 
-let generate_object_input_object = (input_obj_name, fields) => {
+let generate_object_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.(
     Type.mk(
       ~kind=Ptype_abstract,
@@ -641,7 +623,7 @@ let generate_object_input_object = (input_obj_name, fields) => {
                      pof_desc:
                        Otag(
                          {txt: name, loc: Location.none},
-                         generate_arg_type(loc, type_),
+                         generate_arg_type(raw, loc, type_),
                        ),
                      pof_loc: Location.none,
                      pof_attributes: [],
@@ -667,18 +649,18 @@ let generate_object_input_object = (input_obj_name, fields) => {
 };
 
 let generate_input_object =
-    (config: Generator_utils.output_config, input_obj_name, fields) => {
+    (raw, config: Generator_utils.output_config, input_obj_name, fields) => {
   config.records
-    ? generate_record_input_object(input_obj_name, fields)
-    : generate_object_input_object(input_obj_name, fields);
+    ? generate_record_input_object(raw, input_obj_name, fields)
+    : generate_object_input_object(raw, input_obj_name, fields);
 };
 
-let generate_arg_types = (config, variable_defs) => {
+let generate_arg_types = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
   input_objects
   |> List.map((InputObject({name, fields})) =>
-       generate_input_object(config, name, fields)
+       generate_input_object(raw, config, name, fields)
      )
   |> Ast_helper.Str.type_(Recursive);
 };

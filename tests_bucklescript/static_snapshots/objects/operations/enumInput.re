@@ -19,59 +19,51 @@
 module MyQuery = {
   module Raw = {
     type t = {. "enumInput": string};
+    type t_variables = {. "arg": string};
   };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
   type t = {. "enumInput": string};
   type t_variables = {. "arg": [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     value => {
-
       "enumInput": {
         let value = value##enumInput;
-
         value;
       },
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
-        (
-          "arg",
-          (
-            a =>
-              Some(
-                switch (a) {
-                | `FIRST => Js.Json.string("FIRST")
-                | `SECOND => Js.Json.string("SECOND")
-                | `THIRD => Js.Json.string("THIRD")
-                },
-              )
-          )(
-            inp##arg,
-          ),
-        ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
+  let serialize: t => Raw.t =
+    value => {
+      let enumInput = {
+        let value = value##enumInput;
 
-          "arg": arg,
-        }: t_variables,
-      ),
+        value;
+      };
+      {
+
+        "enumInput": enumInput,
+      };
+    };
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      arg:
+        (
+          a =>
+            switch (a) {
+            | `FIRST => "FIRST"
+            | `SECOND => "SECOND"
+            | `THIRD => "THIRD"
+            }
+        )(
+          inp##arg,
+        ),
+    };
+  let makeVariables = (~arg, ()) =>
+    serializeVariables(
+      {
+
+        "arg": arg,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

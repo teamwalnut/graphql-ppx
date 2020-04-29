@@ -124,7 +124,18 @@ let rec unify_type =
       Res_float(config.map_loc(span))
     | Some(Scalar({sm_name: "Boolean", _})) =>
       Res_boolean(config.map_loc(span))
-    | Some(Scalar(_)) => Res_raw_scalar(config.map_loc(span))
+    | Some(Scalar({sm_name})) =>
+      try({
+        let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
+        Res_custom_decoder(
+          config.map_loc(span),
+          decoderModule,
+          Res_raw_scalar(config.map_loc(span)),
+        );
+      }) {
+      | Not_found => Res_raw_scalar(config.map_loc(span))
+      | other => raise(other)
+      }
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -713,7 +724,7 @@ let rec unify_document_schema = (config, document) => {
   | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      Mod_default_operation(
+      Def_operation(
         o_variable_definitions,
         error_marker.has_error,
         op,
@@ -776,7 +787,7 @@ let rec unify_document_schema = (config, document) => {
           getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
-          Mod_fragment(
+          Def_fragment(
             fg_name.item,
             argumentDefinitions,
             true,
@@ -805,9 +816,9 @@ let rec unify_document_schema = (config, document) => {
 
           switch (with_decoder) {
           | Error(err) =>
-            Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
+            Def_fragment(fg_name.item, argumentDefinitions, true, fg, err)
           | Ok(decoder) =>
-            Mod_fragment(
+            Def_fragment(
               fg_name.item,
               argumentDefinitions,
               error_marker.has_error,

@@ -37,21 +37,16 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 value;
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 value;
               },
             }: scalars
@@ -59,30 +54,58 @@ module MyQuery = {
         },
       }: t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let int = {
+                let value = (value: scalars).int;
+
+                value;
+              }
+              and string = {
+                let value = (value: scalars).string;
+
+                value;
+              };
+              {
+
+                string,
+
+                int,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
 };
 
 module OneFieldQuery = {
   module Raw = {
-    type t = {variousScalars: t_variousScalars}
-    and t_variousScalars = {nullableString: Js.Nullable.t(string)};
+    type t_variousScalars = {nullableString: Js.Nullable.t(string)};
+    type t = {variousScalars: t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
-  type t = {variousScalars: t_variousScalars}
-  and t_variousScalars = {nullableString: option(string)};
+  type t_variousScalars = {nullableString: option(string)};
+  type t = {variousScalars: t_variousScalars};
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -93,8 +116,35 @@ module OneFieldQuery = {
         },
       }: t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+
+                nullableString: nullableString,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
 };
 
 module ExternalFragmentQuery = {
@@ -105,28 +155,45 @@ module ExternalFragmentQuery = {
         string,
         int,
       };
-      type t_VariousScalars = t;
+      type nonrec t_VariousScalars = t;
     };
     type t = {
       string,
       int,
     };
-    type t_VariousScalars = t;
+    type nonrec t_VariousScalars = t;
 
     let parse = (value: Raw.t): t => {
-
       string: {
         let value = (value: Raw.t).string;
-
         value;
       },
-
       int: {
         let value = (value: Raw.t).int;
-
         value;
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let int = {
+            let value = (value: t).int;
+
+            value;
+          }
+          and string = {
+            let value = (value: t).string;
+
+            value;
+          };
+          {
+
+            string,
+
+            int,
+          };
+        }: Raw.t
+      );
     let name = "Fragment";
   };
   module Untitled1 = {
@@ -143,113 +210,123 @@ module ExternalFragmentQuery = {
     let parse: Raw.t => t =
       (value) => (
         {
-
           variousScalars: {
             let value = (value: Raw.t).variousScalars;
-
             Fragment.parse(value);
           },
         }: t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let variousScalars = {
+            let value = (value: t).variousScalars;
+            Fragment.serialize(value);
+          };
+          {
+
+            variousScalars: variousScalars,
+          };
+        }: Raw.t
+      );
+    let definition = (parse, query, serialize);
   };
 };
 
 module InlineFragmentQuery = {
   module Raw = {
-    type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman
-    and t_dogOrHuman_Dog = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type t = {dogOrHuman: t_dogOrHuman}
-  and t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ]
-  and t_dogOrHuman_Dog = {
+  type t_dogOrHuman_Dog = {
+    __typename: string,
     name: string,
     barkVolume: float,
   };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-
-          switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Expected union "
-              ++ "DogOrHuman"
-              ++ " to be an object, got "
-              ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-            )
-
-          | Some(typename_obj) =>
-            switch (Js.Dict.get(typename_obj, "__typename")) {
-
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " is missing the __typename field",
-              )
-
-            | Some(typename) =>
-              switch (Js.Json.decodeString(typename)) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " has a __typename field that is not a string",
-                )
-
-              | Some(typename) =>
-                switch (typename) {
-                | "Dog" =>
-                  `Dog(
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
                     {
-                      let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                      (
-                        {
-
-                          name: {
-                            let value = (value: Raw.t_dogOrHuman_Dog).name;
-
-                            value;
-                          },
-
-                          barkVolume: {
-                            let value =
-                              (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
-                            value;
-                          },
-                        }: t_dogOrHuman_Dog
-                      );
-                    },
-                  )
-                | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-                }
-              }
-            }
-          };
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         },
       }: t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+
+                    value;
+                  };
+                  {
+
+                    __typename: "Dog",
+
+                    name,
+
+                    barkVolume,
+                  };
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
+        };
+        {
+
+          dogOrHuman: dogOrHuman,
+        };
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
 };
 
 module UnionExternalFragmentQuery = {
@@ -260,34 +337,51 @@ module UnionExternalFragmentQuery = {
         name: string,
         barkVolume: float,
       };
-      type t_Dog = t;
+      type nonrec t_Dog = t;
     };
     type t = {
       name: string,
       barkVolume: float,
     };
-    type t_Dog = t;
+    type nonrec t_Dog = t;
 
     let parse = (value: Raw.t): t => {
-
       name: {
         let value = (value: Raw.t).name;
-
         value;
       },
-
       barkVolume: {
         let value = (value: Raw.t).barkVolume;
-
         value;
       },
     };
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let barkVolume = {
+            let value = (value: t).barkVolume;
+
+            value;
+          }
+          and name = {
+            let value = (value: t).name;
+
+            value;
+          };
+          {
+
+            name,
+
+            barkVolume,
+          };
+        }: Raw.t
+      );
     let name = "DogFragment";
   };
   module Untitled1 = {
     module Raw = {
-      type t = {dogOrHuman: t_dogOrHuman}
-      and t_dogOrHuman;
+      type t_dogOrHuman;
+      type t = {dogOrHuman: t_dogOrHuman};
     };
     let query =
       (
@@ -298,70 +392,54 @@ module UnionExternalFragmentQuery = {
         ++ "   \n}\n\n}\n\n}\n"
       )
       ++ DogFragment.query;
-    type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman = [
+    type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
       | `Dog(DogFragment.t)
     ];
+    type t = {dogOrHuman: t_dogOrHuman};
     let parse: Raw.t => t =
       (value) => (
         {
-
           dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
+            let typename: string =
+              Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+            (
+              switch (typename) {
+              | "Dog" =>
+                `Dog(
+                  {
+                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
 
-            switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Expected union "
-                ++ "DogOrHuman"
-                ++ " to be an object, got "
-                ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-              )
-
-            | Some(typename_obj) =>
-              switch (Js.Dict.get(typename_obj, "__typename")) {
-
-              | None =>
-                Js.Exn.raiseError(
-                  "graphql_ppx: "
-                  ++ "Union "
-                  ++ "DogOrHuman"
-                  ++ " is missing the __typename field",
+                    DogFragment.parse(value);
+                  },
                 )
-
-              | Some(typename) =>
-                switch (Js.Json.decodeString(typename)) {
-
-                | None =>
-                  Js.Exn.raiseError(
-                    "graphql_ppx: "
-                    ++ "Union "
-                    ++ "DogOrHuman"
-                    ++ " has a __typename field that is not a string",
-                  )
-
-                | Some(typename) =>
-                  switch (typename) {
-                  | "Dog" =>
-                    `Dog(
-                      {
-                        let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-
-                        DogFragment.parse(value);
-                      },
-                    )
-                  | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-                  }
-                }
-              }
-            };
+              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+              }: t_dogOrHuman
+            );
           },
         }: t
       );
-    let makeVar = (~f, ()) => f(Js.Json.null);
-    let definition = (parse, query, makeVar);
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let dogOrHuman = {
+            let value = (value: t).dogOrHuman;
+            switch (value) {
+            | `Dog(value) => (
+                Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+              )
+            | `FutureAddedValue(value) => (
+                Obj.magic(value): Raw.t_dogOrHuman
+              )
+            };
+          };
+          {
+
+            dogOrHuman: dogOrHuman,
+          };
+        }: Raw.t
+      );
+    let definition = (parse, query, serialize);
   };
 };

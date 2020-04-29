@@ -18,73 +18,65 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "mutationWithError": t_mutationWithError}
-    and t_mutationWithError = {
-      .
-      "value": Js.Nullable.t(t_mutationWithError_value),
-      "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
-    }
-    and t_mutationWithError_errors = {
+    type t_mutationWithError_value = {. "stringField": string};
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
       .
       "field": t_mutationWithError_errors_field,
       "message": string,
-    }
-    and t_mutationWithError_errors_field = string
-    and t_mutationWithError_value = {. "stringField": string};
+    };
+    type t_mutationWithError = {
+      .
+      "value": Js.Nullable.t(t_mutationWithError_value),
+      "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. "mutationWithError": t_mutationWithError};
   };
   let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
-  type t = {. "mutationWithError": t_mutationWithError}
-  and t_mutationWithError = {
-    .
-    "value": option(t_mutationWithError_value),
-    "errors": option(array(t_mutationWithError_errors)),
-  }
-  and t_mutationWithError_errors = {
-    .
-    "field": t_mutationWithError_errors_field,
-    "message": string,
-  }
-  and t_mutationWithError_errors_field = [
+  type t_mutationWithError_value = {. "stringField": string};
+  type t_mutationWithError_errors_field = [
     | `FutureAddedValue(string)
     | `FIRST
     | `SECOND
     | `THIRD
-  ]
-  and t_mutationWithError_value = {. "stringField": string};
+  ];
+  type t_mutationWithError_errors = {
+    .
+    "field": t_mutationWithError_errors_field,
+    "message": string,
+  };
+  type t_mutationWithError = {
+    .
+    "value": option(t_mutationWithError_value),
+    "errors": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. "mutationWithError": t_mutationWithError};
   let parse: Raw.t => t =
     value => {
-
       "mutationWithError": {
         let value = value##mutationWithError;
         {
-
           "value": {
             let value = value##value;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some({
-
                 "stringField": {
                   let value = value##stringField;
-
                   value;
                 },
               })
             | None => None
             };
           },
-
           "errors": {
             let value = value##errors;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
                 value
                 |> Js.Array.map(value =>
                      {
-
                        "field": {
                          let value = value##field;
                          switch (Obj.magic(value: string)) {
@@ -94,10 +86,8 @@ module MyQuery = {
                          | other => `FutureAddedValue(other)
                          };
                        },
-
                        "message": {
                          let value = value##message;
-
                          value;
                        },
                      }
@@ -109,15 +99,80 @@ module MyQuery = {
         };
       },
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
-  let makeWithVariables = variables => {
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let message = {
+                     let value = value##message;
+
+                     value;
+                   }
+                   and field = {
+                     let value = value##field;
+                     switch (value) {
+                     | `FIRST => "FIRST"
+                     | `SECOND => "SECOND"
+                     | `THIRD => "THIRD"
+                     | `FutureAddedValue(other) => other
+                     };
+                   };
+                   {
+
+                     "field": field,
+
+                     "message": message,
+                   };
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        }
+        and value = {
+          let value = value##value;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let stringField = {
+                  let value = value##stringField;
+
+                  value;
+                };
+                {
+
+                  "stringField": stringField,
+                };
+              },
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {
+
+          "value": value,
+
+          "errors": errors,
+        };
+      };
+      {
+
+        "mutationWithError": mutationWithError,
+      };
+    };
+  let make = () => {
     "query": query,
-    "variables": serializeVariables(variables),
+    "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

@@ -285,6 +285,43 @@ let get_with_default = (value, default_value) => {
   };
 };
 
+let get_template_tag = query_config => {
+  switch (query_config.tagged_template) {
+  | Some(false) => (None, None, None)
+  | _ =>
+    switch (
+      get_with_default(query_config.template_tag, global_template_tag()),
+      get_with_default(
+        query_config.template_tag_location,
+        global_template_tag_location(),
+      ),
+      get_with_default(
+        query_config.template_tag_import,
+        global_template_tag_import(),
+      ),
+    ) {
+    | (Some(tag), Some(location), Some(import)) => (
+        Some(tag),
+        Some(location),
+        Some(import),
+      )
+    | (None, Some(location), Some(import)) => (
+        Some(import),
+        Some(location),
+        Some(import),
+      )
+    | (Some(tag), Some(location), None) => (
+        Some(tag),
+        Some(location),
+        Some("default"),
+      )
+    | (Some(tag), None, Some(_))
+    | (Some(tag), None, None) => (Some(tag), None, None)
+    | (None, _, _) => (None, None, None)
+    }
+  };
+};
+
 let rewrite_query =
     (
       ~query_config: query_config,
@@ -326,44 +363,17 @@ let rewrite_query =
         ),
       )
     | Result.Ok(document) =>
-      let template_tag =
-        switch (query_config.tagged_template) {
-        | Some(false) => (None, None, None)
-        | _ =>
-          switch (
-            get_with_default(
-              query_config.template_tag,
-              global_template_tag(),
-            ),
-            get_with_default(
-              query_config.template_tag_location,
-              global_template_tag_location(),
-            ),
-            get_with_default(
-              query_config.template_tag_import,
-              global_template_tag_import(),
-            ),
-          ) {
-          | (Some(tag), Some(location), Some(import)) => (
-              Some(tag),
-              Some(location),
-              Some(import),
-            )
-          | (None, Some(location), Some(import)) => (
-              Some(import),
-              Some(location),
-              Some(import),
-            )
-          | (Some(tag), Some(location), None) => (
-              Some(tag),
-              Some(location),
-              Some("default"),
-            )
-          | (Some(tag), None, Some(_))
-          | (Some(tag), None, None) => (Some(tag), None, None)
-          | (None, _, _) => (None, None, None)
+      let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+      let document =
+        (
+          if (Ppx_config.apollo_mode()) {
+            document |> Ast_transforms.add_typename_to_selection_set(schema);
+          } else {
+            document;
           }
-        };
+        )
+        |> Ast_transforms.remove_typename_from_union(schema);
+      let template_tag = get_template_tag(query_config);
 
       let config = {
         Generator_utils.map_loc: add_loc(delimLength, loc),
@@ -388,7 +398,7 @@ let rewrite_query =
           },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
+        schema,
         template_tag,
       };
       switch (Validations.run_validators(config, document)) {
@@ -413,32 +423,7 @@ let rewrite_query =
 };
 
 // Default configuration
-let () =
-  Ppx_config.(
-    set_config({
-      verbose_logging: false,
-      output_mode: Ppx_config.String,
-      verbose_error_handling:
-        switch (Sys.getenv("NODE_ENV")) {
-        | "production" => false
-        | _ => true
-        | exception Not_found => true
-        },
-      apollo_mode: false,
-      schema_file: "graphql_schema.json",
-      root_directory: Sys.getcwd(),
-      raise_error_with_loc: (loc, message) => {
-        let loc = conv_loc(loc);
-        raise(Location.Error(Location.error(~loc, message)));
-      },
-      records: true,
-      legacy: false,
-      template_tag: None,
-      template_tag_location: None,
-      template_tag_import: None,
-      definition: true,
-    })
-  );
+let () = Bucklescript_config.read_config();
 
 let mapper = (_config, _cookies) => {
   Ast_408.(
@@ -658,7 +643,20 @@ let mapper = (_config, _cookies) => {
   );
 };
 
+let argKey = ref("");
 let args = [
+  (
+    "-custom-field",
+    Arg.Tuple([
+      Arg.String(key => {argKey := key}),
+      Arg.String(
+        moduleKey => {
+          Hashtbl.add(Ppx_config.custom_fields(), argKey^, moduleKey)
+        },
+      ),
+    ]),
+    "Adds a global custom field decoder/serializer (format: -custom-field ScalarType Module)",
+  ),
   (
     "-verbose",
     Arg.Unit(
@@ -675,7 +673,7 @@ let args = [
       () =>
         Ppx_config.update_config(current => {...current, apollo_mode: true}),
     ),
-    "Defines if apply Apollo specific code generation",
+    "Automatically add __typename everywhere (necessary for apollo)",
   ),
   (
     "-schema",

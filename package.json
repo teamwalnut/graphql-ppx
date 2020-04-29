@@ -10,5 +10,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "bs-platform": "^7.3.1"
   }
 }

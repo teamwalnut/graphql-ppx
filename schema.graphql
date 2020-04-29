@@ -46,6 +46,7 @@ type Query {
     argOptional: CustomScalar
     argRequired: CustomScalar!
   ): CustomScalarObject!
+  customFields: customFieldsResult!
 
   dogOrHuman: DogOrHuman!
 
@@ -126,9 +127,16 @@ input ListsInput {
   nonNullableOfNonNullable: [String!]!
 }
 
+input EmbeddedInput {
+  field: String
+}
+
 input NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
   field: String
   enum: SampleField
+  embeddedInput: [EmbeddedInput]
 }
 
 input RecursiveInput {
@@ -171,4 +179,14 @@ type VariantTestResult {
   dog: Dog
   human: Human
   dogOrHuman: DogOrHuman
+}
+
+scalar DateTime
+scalar Color
+
+type customFieldsResult {
+  currentTime: DateTime!
+  favoriteColor: Color!
+  futureTime: DateTime
+  nullableColor: Color
 }
