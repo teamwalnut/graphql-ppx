@@ -12,7 +12,7 @@ let get_parent_span =
   | Definition(Graphql_ast.Fragment({span})) => span;
 
 // get's the type of a field name
-let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
+let rec safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
   let ty_fields =
     switch (ty) {
     | Interface({im_fields, _}) => im_fields
@@ -20,11 +20,14 @@ let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
     | _ => []
     };
   Schema.(
-    List.find(fm => fm.Schema.fm_name == name, ty_fields).fm_field_type
-    |> Graphql_printer.type_ref_name
-    |> Schema.lookup_type(schema)
-    |> Option.unsafe_unwrap
+    List.find_opt(fm => fm.Schema.fm_name == name, ty_fields)
+    |> Option.map(field => field.fm_field_type)
+    |> Option.map(Graphql_printer.type_ref_name)
+    |> Option.flat_map(Schema.lookup_type(schema))
   );
+}
+and unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
+  safe_get_field_type(schema, ty, name) |> Option.unsafe_unwrap;
 };
 
 let traverse_selection_set = (schema, ty, selection_set, fn) => {
@@ -40,37 +43,44 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
                },
              } as field,
            ) as parent => {
-             let field_ty =
-               Schema.lookup_type(schema, type_condition.item)
-               |> Option.unsafe_unwrap;
-             let selection_set =
-               fn(Selection(parent), schema, field_ty, selection.item);
-             Graphql_ast.InlineFragment({
-               ...field,
-               item: {
-                 ...field.item,
-                 if_selection_set: {
-                   ...selection,
-                   item: selection_set,
+             let field_ty = Schema.lookup_type(schema, type_condition.item);
+             switch (field_ty) {
+             | None => parent
+             | Some(field_ty) =>
+               let selection_set =
+                 fn(Selection(parent), schema, field_ty, selection.item);
+               Graphql_ast.InlineFragment({
+                 ...field,
+                 item: {
+                   ...field.item,
+                   if_selection_set: {
+                     ...selection,
+                     item: selection_set,
+                   },
                  },
-               },
-             });
+               });
+             };
            }
          | Graphql_ast.Field(
              {item: {fd_selection_set: Some(selection)}} as field,
            ) as parent => {
              let field_ty =
-               unsafe_get_field_type(schema, ty, field.item.fd_name.item);
-             let selection_set =
-               fn(Selection(parent), schema, field_ty, selection.item);
+               safe_get_field_type(schema, ty, field.item.fd_name.item);
+             switch (field_ty) {
+             | None => parent
+             | Some(field_ty) =>
+               let selection_set =
+                 fn(Selection(parent), schema, field_ty, selection.item);
 
-             Graphql_ast.Field({
-               ...field,
-               item: {
-                 ...field.item,
-                 fd_selection_set: Some({...selection, item: selection_set}),
-               },
-             });
+               Graphql_ast.Field({
+                 ...field,
+                 item: {
+                   ...field.item,
+                   fd_selection_set:
+                     Some({...selection, item: selection_set}),
+                 },
+               });
+             };
            }
          | other => other,
        )
@@ -195,47 +205,51 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
              | Subscription =>
                Option.unsafe_unwrap(schema.meta.sm_subscription_type)
              };
-           let ty =
-             Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
-
-           Operation({
-             span,
-             item: {
-               ...op,
-               o_selection_set: {
-                 item:
-                   fn(
-                     Definition(parent),
-                     schema,
-                     ty,
-                     op.o_selection_set.item,
-                   ),
-                 span: op.o_selection_set.span,
+           let ty = Schema.lookup_type(schema, ty_name);
+           switch (ty) {
+           | None => parent
+           | Some(ty) =>
+             Operation({
+               span,
+               item: {
+                 ...op,
+                 o_selection_set: {
+                   item:
+                     fn(
+                       Definition(parent),
+                       schema,
+                       ty,
+                       op.o_selection_set.item,
+                     ),
+                   span: op.o_selection_set.span,
+                 },
                },
-             },
-           });
+             })
+           };
 
          | Fragment({item as f, span}) as parent =>
            let ty_name = f.fg_type_condition.item;
-           let ty =
-             Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
-
-           Fragment({
-             item: {
-               ...f,
-               fg_selection_set: {
-                 item:
-                   fn(
-                     Definition(parent),
-                     schema,
-                     ty,
-                     f.fg_selection_set.item,
-                   ),
-                 span: f.fg_selection_set.span,
+           let ty = Schema.lookup_type(schema, ty_name);
+           switch (ty) {
+           | Some(ty) =>
+             Fragment({
+               item: {
+                 ...f,
+                 fg_selection_set: {
+                   item:
+                     fn(
+                       Definition(parent),
+                       schema,
+                       ty,
+                       f.fg_selection_set.item,
+                     ),
+                   span: f.fg_selection_set.span,
+                 },
                },
-             },
-             span,
-           });
+               span,
+             })
+           | None => parent
+           };
          }
        })
   );
