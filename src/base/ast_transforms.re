@@ -1,4 +1,15 @@
 type t = (Schema.t, Graphql_ast.document) => Graphql_ast.document;
+type parent =
+  | Definition(Graphql_ast.definition)
+  | Selection(Graphql_ast.selection);
+
+let get_parent_span =
+  fun
+  | Selection(Graphql_ast.Field({span})) => span
+  | Selection(Graphql_ast.InlineFragment({span})) => span
+  | Selection(Graphql_ast.FragmentSpread({span})) => span
+  | Definition(Graphql_ast.Operation({span})) => span
+  | Definition(Graphql_ast.Fragment({span})) => span;
 
 // get's the type of a field name
 let unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
@@ -28,12 +39,12 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
                  if_selection_set: selection,
                },
              } as field,
-           ) => {
+           ) as parent => {
              let field_ty =
                Schema.lookup_type(schema, type_condition.item)
                |> Option.unsafe_unwrap;
              let selection_set =
-               fn(selection.span, schema, field_ty, selection.item);
+               fn(Selection(parent), schema, field_ty, selection.item);
              Graphql_ast.InlineFragment({
                ...field,
                item: {
@@ -47,11 +58,11 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
            }
          | Graphql_ast.Field(
              {item: {fd_selection_set: Some(selection)}} as field,
-           ) => {
+           ) as parent => {
              let field_ty =
                unsafe_get_field_type(schema, ty, field.item.fd_name.item);
              let selection_set =
-               fn(selection.span, schema, field_ty, selection.item);
+               fn(Selection(parent), schema, field_ty, selection.item);
 
              Graphql_ast.Field({
                ...field,
@@ -66,8 +77,7 @@ let traverse_selection_set = (schema, ty, selection_set, fn) => {
   );
 };
 
-let rec do_add_typename_to_selection_set =
-        (parent_span, schema, ty, selection_set) => {
+let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) => {
   let add_typename =
     switch (ty, selection_set) {
     | (_, []) => false
@@ -81,13 +91,29 @@ let rec do_add_typename_to_selection_set =
     | (Schema.Union(_), selection_set) => false
     | (Schema.Object({om_name}), selection_set) =>
       // do not inject __typename in top-level types
-      if (schema.Schema.meta.sm_subscription_type == Some(om_name)
-          || schema.Schema.meta.sm_query_type == om_name
-          || schema.Schema.meta.sm_mutation_type == Some(om_name)) {
-        false;
-      } else {
-        true;
-      }
+      Schema.(
+        switch (schema) {
+        | {meta: {sm_subscription_type: Some(name)}} when name == om_name =>
+          false
+        | {meta: {sm_mutation_type: Some(name)}} when name == om_name =>
+          false
+        | {meta: {sm_query_type: name}} when name == om_name => false
+        | _ =>
+          switch (parent) {
+          // we cannot add typename when using @bsvariant
+          | Selection(
+              Graphql_ast.Field({item: {fd_directives: directives}}),
+            ) =>
+            !(
+              directives
+              |> List.exists((d: Source_pos.spanning(Graphql_ast.directive)) =>
+                   d.item.d_name.item == "bsVariant"
+                 )
+            )
+          | _ => true
+          }
+        }
+      )
     | (_, selection_set) => false
     };
   let selection_set =
@@ -107,6 +133,7 @@ let rec do_add_typename_to_selection_set =
          | _ => false,
        );
 
+  let parent_span = get_parent_span(parent);
   if (add_typename && !already_has_typename) {
     [
       Graphql_ast.Field({
@@ -129,8 +156,7 @@ let rec do_add_typename_to_selection_set =
   };
 };
 
-let rec do_remove_typename_from_union =
-        (parent_span, schema, ty, selection_set) => {
+let rec do_remove_typename_from_union = (parent, schema, ty, selection_set) => {
   let selection_set =
     switch (ty) {
     | Schema.Interface(_)
@@ -161,7 +187,7 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
     definitions
     |> List.map(def => {
          switch (def) {
-         | Operation({item as op, span}) =>
+         | Operation({item as op, span}) as parent =>
            let ty_name =
              switch (op.o_type) {
              | Query => schema.meta.sm_query_type
@@ -177,13 +203,19 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
              item: {
                ...op,
                o_selection_set: {
-                 item: fn(span, schema, ty, op.o_selection_set.item),
+                 item:
+                   fn(
+                     Definition(parent),
+                     schema,
+                     ty,
+                     op.o_selection_set.item,
+                   ),
                  span: op.o_selection_set.span,
                },
              },
            });
 
-         | Fragment({item as f, span}) =>
+         | Fragment({item as f, span}) as parent =>
            let ty_name = f.fg_type_condition.item;
            let ty =
              Schema.lookup_type(schema, ty_name) |> Option.unsafe_unwrap;
@@ -192,7 +224,13 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
              item: {
                ...f,
                fg_selection_set: {
-                 item: fn(span, schema, ty, f.fg_selection_set.item),
+                 item:
+                   fn(
+                     Definition(parent),
+                     schema,
+                     ty,
+                     f.fg_selection_set.item,
+                   ),
                  span: f.fg_selection_set.span,
                },
              },

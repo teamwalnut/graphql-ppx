@@ -24,13 +24,14 @@ module MyQuery = {
     };
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
+      __typename: string,
       field: t_mutationWithError_errors_field,
       message: string,
     };
     type t_mutationWithError;
     type t = {mutationWithError: t_mutationWithError};
   };
-  let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
+  let query = "mutation   {\nmutationWithError  {\nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
   type t_mutationWithError_value = {
     __typename: string,
     stringField: string,
@@ -42,6 +43,7 @@ module MyQuery = {
     | `THIRD
   ];
   type t_mutationWithError_errors = {
+    __typename: string,
     field: t_mutationWithError_errors_field,
     message: string,
   };
@@ -72,6 +74,11 @@ module MyQuery = {
               let value = temp;
               `Value(
                 {
+                  __typename: {
+                    let value =
+                      (value: Raw.t_mutationWithError_value).__typename;
+                    value;
+                  },
                   stringField: {
                     let value =
                       (value: Raw.t_mutationWithError_value).stringField;
@@ -89,6 +96,12 @@ module MyQuery = {
                   |> Js.Array.map((value) =>
                        (
                          {
+                           __typename: {
+                             let value =
+                               (value: Raw.t_mutationWithError_errors).
+                                 __typename;
+                             value;
+                           },
                            field: {
                              let value =
                                (value: Raw.t_mutationWithError_errors).field;
