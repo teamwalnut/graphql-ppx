@@ -400,32 +400,7 @@ let rewrite_query =
 };
 
 // Default configuration
-let () =
-  Ppx_config.(
-    set_config({
-      verbose_logging: false,
-      output_mode: Ppx_config.String,
-      verbose_error_handling:
-        switch (Sys.getenv("NODE_ENV")) {
-        | "production" => false
-        | _ => true
-        | exception Not_found => true
-        },
-      apollo_mode: false,
-      schema_file: "graphql_schema.json",
-      root_directory: Sys.getcwd(),
-      raise_error_with_loc: (loc, message) => {
-        let loc = conv_loc(loc);
-        raise(Location.Error(Location.error(~loc, message)));
-      },
-      records: true,
-      legacy: false,
-      template_tag: None,
-      template_tag_location: None,
-      template_tag_import: None,
-      definition: true,
-    })
-  );
+let () = Bucklescript_config.read_config();
 
 let mapper = (_config, _cookies) => {
   Ast_408.(
@@ -645,7 +620,20 @@ let mapper = (_config, _cookies) => {
   );
 };
 
+let argKey = ref("");
 let args = [
+  (
+    "-custom-field",
+    Arg.Tuple([
+      Arg.String(key => {argKey := key}),
+      Arg.String(
+        moduleKey => {
+          Hashtbl.add(Ppx_config.custom_fields(), argKey^, moduleKey)
+        },
+      ),
+    ]),
+    "Adds a global custom field decoder/serializer (format: -custom-field ScalarType Module)",
+  ),
   (
     "-verbose",
     Arg.Unit(
