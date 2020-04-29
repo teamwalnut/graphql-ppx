@@ -15,7 +15,7 @@ let add_loc = (delimLength, base, span) => {
     + fst(span).index
     - fst(span).col;
   let pos_bol_end =
-    base.loc_end.pos_bol
+    base.loc_start.pos_bol
     + col
     + delimLength
     + snd(span).index
@@ -26,13 +26,13 @@ let add_loc = (delimLength, base, span) => {
     loc_start: {
       pos_fname: base.loc_start.pos_fname,
       pos_lnum: base.loc_start.pos_lnum + fst(span).line,
-      pos_bol: baseBol,
+      pos_bol: pos_bol_start,
       pos_cnum: start,
     },
     loc_end: {
       pos_fname: base.loc_start.pos_fname,
       pos_lnum: base.loc_start.pos_lnum + snd(span).line,
-      pos_bol: baseBol,
+      pos_bol: pos_bol_end,
       pos_cnum: end_,
     },
     loc_ghost: false,
