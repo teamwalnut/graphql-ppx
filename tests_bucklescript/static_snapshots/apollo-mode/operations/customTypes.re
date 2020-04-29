@@ -19,6 +19,7 @@
 module MyQuery = {
   module Raw = {
     type t_customFields = {
+      __typename: string,
       currentTime: Js.Json.t,
       favoriteColor: Js.Json.t,
       futureTime: Js.Nullable.t(Js.Json.t),
@@ -26,8 +27,9 @@ module MyQuery = {
     };
     type t = {customFields: t_customFields};
   };
-  let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
+  let query = "query   {\ncustomFields  {\n__typename  \ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
   type t_customFields = {
+    __typename: string,
     currentTime: GraphqlHelpers.DateTime.t,
     favoriteColor: GraphqlHelpers.Color.t,
     futureTime: option(GraphqlHelpers.DateTime.t),
@@ -41,6 +43,10 @@ module MyQuery = {
           let value = (value: Raw.t).customFields;
           (
             {
+              __typename: {
+                let value = (value: Raw.t_customFields).__typename;
+                value;
+              },
               currentTime: {
                 let value = (value: Raw.t_customFields).currentTime;
                 GraphqlHelpers.DateTime.parse(value);
@@ -113,8 +119,15 @@ module MyQuery = {
                 let value = (value: t_customFields).currentTime;
 
                 GraphqlHelpers.DateTime.serialize(value);
+              }
+              and __typename = {
+                let value = (value: t_customFields).__typename;
+
+                value;
               };
               {
+
+                __typename,
 
                 currentTime,
 

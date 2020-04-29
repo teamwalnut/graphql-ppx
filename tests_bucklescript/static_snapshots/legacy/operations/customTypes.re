@@ -18,55 +18,46 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "customFields": t_customFields}
-    and t_customFields = {
+    type t_customFields = {
       .
       "currentTime": Js.Json.t,
       "favoriteColor": Js.Json.t,
       "futureTime": Js.Nullable.t(Js.Json.t),
       "nullableColor": Js.Nullable.t(Js.Json.t),
     };
+    type t = {. "customFields": t_customFields};
   };
   let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
-  type t = {. "customFields": t_customFields}
-  and t_customFields = {
+  type t_customFields = {
     .
     "currentTime": GraphqlHelpers.DateTime.t,
     "favoriteColor": GraphqlHelpers.Color.t,
     "futureTime": option(GraphqlHelpers.DateTime.t),
     "nullableColor": option(GraphqlHelpers.DateTime.t),
   };
+  type t = {. "customFields": t_customFields};
   let parse: Raw.t => t =
     value => {
-
       "customFields": {
         let value = value##customFields;
         {
-
           "currentTime": {
             let value = value##currentTime;
-
             GraphqlHelpers.DateTime.parse(value);
           },
-
           "favoriteColor": {
             let value = value##favoriteColor;
-
             GraphqlHelpers.Color.parse(value);
           },
-
           "futureTime": {
             let value = value##futureTime;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
             | None => None
             };
           },
-
           "nullableColor": {
             let value = value##nullableColor;
-
             switch (Js.toOption(value)) {
             | Some(value) =>
               Some(
@@ -80,15 +71,62 @@ module MyQuery = {
         };
       },
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
-  let makeWithVariables = variables => {
+  let serialize: t => Raw.t =
+    value => {
+      let customFields = {
+        let value = value##customFields;
+        let nullableColor = {
+          let value = value##nullableColor;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              GraphqlHelpers.DateTime.serialize(
+                GraphqlHelpers.Color.serialize(value),
+              ),
+            )
+          | None => Js.Nullable.null
+          };
+        }
+        and futureTime = {
+          let value = value##futureTime;
+
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(GraphqlHelpers.DateTime.serialize(value))
+          | None => Js.Nullable.null
+          };
+        }
+        and favoriteColor = {
+          let value = value##favoriteColor;
+
+          GraphqlHelpers.Color.serialize(value);
+        }
+        and currentTime = {
+          let value = value##currentTime;
+
+          GraphqlHelpers.DateTime.serialize(value);
+        };
+        {
+
+          "currentTime": currentTime,
+
+          "favoriteColor": favoriteColor,
+
+          "futureTime": futureTime,
+
+          "nullableColor": nullableColor,
+        };
+      };
+      {
+
+        "customFields": customFields,
+      };
+    };
+  let make = () => {
     "query": query,
-    "variables": serializeVariables(variables),
+    "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
