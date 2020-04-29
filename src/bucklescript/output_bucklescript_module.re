@@ -487,25 +487,17 @@ let generate_fragment_module =
         );
       };
 
-  let (pre_printed_query, printed_query) =
-    make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-  let parse =
-    [@metaloc conv_loc(config.map_loc(fragment.span))]
-    [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
-
-  let variable_obj_type =
-    Typ.constr(
-      {txt: Longident.Lident("t_variables"), loc: Location.none},
-      [],
-    );
   let contents =
     if (has_error) {
-      [
-        [%stri
-          let make = (_vars: [%t variable_obj_type], value) => [%e parse_fn]
-        ],
-      ];
+      [[%stri let make = (_vars, value) => [%e parse_fn]]];
     } else {
+      let (pre_printed_query, printed_query) =
+        make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+      let parse =
+        [@metaloc conv_loc(config.map_loc(fragment.span))]
+        [%stri
+          let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+        ];
       List.concat(
         List.concat([
           [
