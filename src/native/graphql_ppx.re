@@ -8,14 +8,20 @@ let argv = Sys.argv |> Array.to_list;
 
 let add_loc = (delimLength, base, span) => {
   let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
-  let baseBol =
+  let pos_bol_start =
     base.loc_start.pos_bol
     + col
     + delimLength
     + fst(span).index
     - fst(span).col;
-  let start = baseBol + fst(span).col;
-  let end_ = baseBol + snd(span).col;
+  let pos_bol_end =
+    base.loc_end.pos_bol
+    + col
+    + delimLength
+    + snd(span).index
+    - snd(span).col;
+  let start = pos_bol_start + fst(span).col;
+  let end_ = pos_bol_end + snd(span).col;
   {
     loc_start: {
       pos_fname: base.loc_start.pos_fname,
