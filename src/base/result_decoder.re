@@ -784,7 +784,7 @@ let rec unify_document_schema = (config, document) => {
             make_error(
               error_marker,
               config.map_loc,
-              span,
+              fg_type_condition.span,
               Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
             ),
           )
@@ -804,7 +804,8 @@ let rec unify_document_schema = (config, document) => {
             getFragmentArgumentDefinitions(fg_directives);
 
           switch (with_decoder) {
-          | Error(err) => Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
+          | Error(err) =>
+            Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
           | Ok(decoder) =>
             Mod_fragment(
               fg_name.item,
