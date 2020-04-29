@@ -310,12 +310,7 @@ and generate_poly_variant_selection_set_decoder =
             Exp.variant(
               field_name,
               Some(
-                generate_parser(
-                  config,
-                  [field_name, ...path],
-                  definition,
-                  inner,
-                ),
+                generate_parser(config, [field, ...path], definition, inner),
               ),
             )
           );
