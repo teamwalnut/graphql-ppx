@@ -80,3 +80,47 @@ describe("Records", () =>
        )
      })
 );
+
+let tests =
+  readdirSync("operations/errors")
+  ->Belt.Array.keep(Js.String.endsWith(".re"));
+
+let run_bsc_with_ppx = (fileName, pathIn, pathOut) => {
+  let result =
+    try(
+      execSync(
+        {j|./node_modules/.bin/bsc -ppx ../_build/default/src/bucklescript_bin/bin.exe $pathIn/$fileName|j},
+        {cwd: resolve(dirname, "..")},
+      )
+      |> toString
+    ) {
+    | error =>
+      let stderr = Js.Exn.asJsExn(error)->Obj.magic##stderr##toString();
+      let cutPosition =
+        stderr
+        |> Js.String.indexOf("Error while running external preprocessor");
+      let to_ = cutPosition > (-1) ? cutPosition : stderr |> Js.String.length;
+      stderr |> Js.String.substring(~from=0, ~to_) |> Js.String.trim;
+    };
+
+  let newFileName =
+    (
+      fileName
+      |> Js.String.substring(~from=0, ~to_=(fileName |> Js.String.length) - 3)
+    )
+    ++ ".txt";
+  writeFileSync({j|static_snapshots/$pathOut/$newFileName|j}, result ++ "\n");
+  result;
+};
+
+describe("Errors", () =>
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(
+           run_bsc_with_ppx(t, "operations/errors", "errors/operations"),
+         )
+         |> toMatchSnapshot
+       )
+     })
+);

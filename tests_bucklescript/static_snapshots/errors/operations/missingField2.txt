@@ -1,0 +1,8 @@
+File "operations/errors/missingField2.re", line 13, characters 4-55:
+13 | ....l1: thisTypeDoesNotExist {
+14 |       ...Fragments
+15 |     }
+Error: Unknown field 'thisTypeDoesNotExist' on type Query
+
+  We've found a bug for you!
+  operations/errors/missingField2.re
