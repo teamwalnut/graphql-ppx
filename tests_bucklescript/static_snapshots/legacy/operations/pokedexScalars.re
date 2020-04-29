@@ -18,20 +18,25 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "pokemon": Js.Nullable.t(t_pokemon)}
-    and t_pokemon = {
+    type t_pokemon = {
       .
       "id": string,
       "name": Js.Nullable.t(string),
     };
+    type t = {. "pokemon": Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      .
+      "id": Js.Nullable.t(string),
+      "name": Js.Nullable.t(string),
+    };
   };
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
-  type t = {. "pokemon": option(t_pokemon)}
-  and t_pokemon = {
+  type t_pokemon = {
     .
     "id": string,
     "name": option(string),
   };
+  type t = {. "pokemon": option(t_pokemon)};
   type t_variables = {
     .
     "id": option(string),
@@ -39,23 +44,17 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-
       "pokemon": {
         let value = value##pokemon;
-
         switch (Js.toOption(value)) {
         | Some(value) =>
           Some({
-
             "id": {
               let value = value##id;
-
               value;
             },
-
             "name": {
               let value = value##name;
-
               switch (Js.toOption(value)) {
               | Some(value) => Some(value)
               | None => None
@@ -66,48 +65,72 @@ module MyQuery = {
         };
       },
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
-        (
-          "id",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
+  let serialize: t => Raw.t =
+    value => {
+      let pokemon = {
+        let value = value##pokemon;
+
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            {
+              let name = {
+                let value = value##name;
+
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
               }
-          )(
-            inp##id,
-          ),
-        ),
+              and id = {
+                let value = value##id;
+
+                value;
+              };
+              {
+
+                "id": id,
+
+                "name": name,
+              };
+            },
+          )
+        | None => Js.Nullable.null
+        };
+      };
+      {
+
+        "pokemon": pokemon,
+      };
+    };
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      id:
         (
-          "name",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp##name,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##id,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~id=?, ~name=?, ()) =>
-    f(
+
+      name:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##name,
+        ),
+    };
+  let make = (~id=?, ~name=?, ()) => {
+    "query": query,
+    "variables":
       serializeVariables(
         {
 
@@ -116,16 +139,21 @@ module MyQuery = {
           "name": name,
         }: t_variables,
       ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
+    "parse": parse,
+  }
+  and makeVariables = (~id=?, ~name=?, ()) =>
+    serializeVariables(
+      {
+
+        "id": id,
+
+        "name": name,
+      }: t_variables,
     );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

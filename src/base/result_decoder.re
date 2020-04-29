@@ -724,7 +724,7 @@ let rec unify_document_schema = (config, document) => {
   | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      Mod_default_operation(
+      Def_operation(
         o_variable_definitions,
         error_marker.has_error,
         op,
@@ -787,7 +787,7 @@ let rec unify_document_schema = (config, document) => {
           getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
-          Mod_fragment(
+          Def_fragment(
             fg_name.item,
             argumentDefinitions,
             true,
@@ -816,9 +816,9 @@ let rec unify_document_schema = (config, document) => {
 
           switch (with_decoder) {
           | Error(err) =>
-            Mod_fragment(fg_name.item, argumentDefinitions, true, fg, err)
+            Def_fragment(fg_name.item, argumentDefinitions, true, fg, err)
           | Ok(decoder) =>
-            Mod_fragment(
+            Def_fragment(
               fg_name.item,
               argumentDefinitions,
               error_marker.has_error,

@@ -27,36 +27,31 @@ module IntOfString = {
 
 module MyQuery = {
   module Raw = {
-    type t = {variousScalars: t_variousScalars}
-    and t_variousScalars = {
+    type t_variousScalars = {
       string,
       int,
     };
+    type t = {variousScalars: t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type t = {variousScalars: t_variousScalars}
-  and t_variousScalars = {
+  type t_variousScalars = {
     string: IntOfString.t,
     int: StringOfInt.t,
   };
+  type t = {variousScalars: t_variousScalars};
   let parse: Raw.t => t =
     (value) => (
       {
-
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-
               string: {
                 let value = (value: Raw.t_variousScalars).string;
-
                 IntOfString.parse(value);
               },
-
               int: {
                 let value = (value: Raw.t_variousScalars).int;
-
                 StringOfInt.parse(value);
               },
             }: t_variousScalars
@@ -64,6 +59,37 @@ module MyQuery = {
         },
       }: t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let int = {
+                let value = (value: t_variousScalars).int;
+
+                StringOfInt.serialize(value);
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+
+                IntOfString.serialize(value);
+              };
+              {
+
+                string,
+
+                int,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
 };

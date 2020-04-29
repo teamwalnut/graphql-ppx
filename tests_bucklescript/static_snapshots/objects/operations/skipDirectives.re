@@ -18,58 +18,54 @@
 ];
 module MyQuery = {
   module Raw = {
+    type t_v1 = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": Js.Nullable.t(string),
+    };
+    type t_v2 = {
+      .
+      "nullableString": Js.Nullable.t(string),
+      "string": Js.Nullable.t(string),
+    };
     type t = {
       .
       "v1": t_v1,
       "v2": t_v2,
-    }
-    and t_v2 = {
-      .
-      "nullableString": Js.Nullable.t(string),
-      "string": Js.Nullable.t(string),
-    }
-    and t_v1 = {
-      .
-      "nullableString": Js.Nullable.t(string),
-      "string": Js.Nullable.t(string),
     };
+    type t_variables = {. "var": bool};
   };
   let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
+  type t_v1 = {
+    .
+    "nullableString": option(string),
+    "string": option(string),
+  };
+  type t_v2 = {
+    .
+    "nullableString": option(string),
+    "string": option(string),
+  };
   type t = {
     .
     "v1": t_v1,
     "v2": t_v2,
-  }
-  and t_v2 = {
-    .
-    "nullableString": option(string),
-    "string": option(string),
-  }
-  and t_v1 = {
-    .
-    "nullableString": option(string),
-    "string": option(string),
   };
   type t_variables = {. "var": bool};
   let parse: Raw.t => t =
     value => {
-
       "v1": {
         let value = value##v1;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -77,23 +73,18 @@ module MyQuery = {
           },
         };
       },
-
       "v2": {
         let value = value##v2;
         {
-
           "nullableString": {
             let value = value##nullableString;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
             };
           },
-
           "string": {
             let value = value##string;
-
             switch (Js.toOption(value)) {
             | Some(value) => Some(value)
             | None => None
@@ -102,30 +93,76 @@ module MyQuery = {
         };
       },
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("var", (a => Some(Js.Json.boolean(a)))(inp##var))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
-      serializeVariables(
+  let serialize: t => Raw.t =
+    value => {
+      let v2 = {
+        let value = value##v2;
+        let string = {
+          let value = value##string;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        };
         {
 
-          "var": var,
-        }: t_variables,
-      ),
+          "nullableString": nullableString,
+
+          "string": string,
+        };
+      }
+      and v1 = {
+        let value = value##v1;
+        let string = {
+          let value = value##string;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        };
+        {
+
+          "nullableString": nullableString,
+
+          "string": string,
+        };
+      };
+      {
+
+        "v1": v1,
+
+        "v2": v2,
+      };
+    };
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      var: (a => a)(inp##var),
+    };
+  let makeVariables = (~var, ()) =>
+    serializeVariables(
+      {
+
+        "var": var,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

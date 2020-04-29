@@ -48,7 +48,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = acc =>
     fun
-    | Empty => acc
     | String(s) =>
       Ast_helper.(
         Exp.apply(
@@ -279,9 +278,9 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,

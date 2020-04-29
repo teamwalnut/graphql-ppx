@@ -995,6 +995,34 @@
           "fields": null,
           "inputFields": [
             {
+              "name": "nonNullableField",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "nullableArray",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
               "name": "field",
               "description": null,
               "type": {
@@ -1010,6 +1038,41 @@
               "type": {
                 "kind": "ENUM",
                 "name": "SampleField",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "embeddedInput",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "EmbeddedInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "EmbeddedInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "field",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "defaultValue": null

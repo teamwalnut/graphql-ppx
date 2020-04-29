@@ -26,22 +26,15 @@ and t =
   | Res_solo_fragment_spread(loc, string, list(string))
   | Res_error(loc, string);
 
-type mod_ =
-  | Mod_fragment(
+type definition =
+  | Def_fragment(
       string,
-      list(
-        (
-          string,
-          string,
-          (Source_pos.source_position, Source_pos.source_position),
-          (Source_pos.source_position, Source_pos.source_position),
-        ),
-      ),
+      list((string, string, Source_pos.span, Source_pos.span)),
       bool,
       Source_pos.spanning(Graphql_ast.fragment),
       t,
     )
-  | Mod_default_operation(
+  | Def_operation(
       option(Source_pos.spanning(Graphql_ast.variable_definitions)),
       bool,
       Source_pos.spanning(Graphql_ast.operation),

@@ -80,3 +80,13 @@ describe("Records", () =>
        )
      })
 );
+
+describe("Apollo", () =>
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(run_ppx("operations/" ++ t, "-apollo-mode", "apollo-mode"))
+         |> toMatchSnapshot
+       )
+     })
+);

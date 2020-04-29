@@ -19,43 +19,41 @@
 module MyQuery = {
   module Raw = {
     type t = {. "optionalInputArgs": string};
+    type t_variables = {. "required": string};
   };
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {. "optionalInputArgs": string};
   type t_variables = {. "required": string};
   let parse: Raw.t => t =
     value => {
-
       "optionalInputArgs": {
         let value = value##optionalInputArgs;
-
         value;
       },
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("required", (a => Some(Js.Json.string(a)))(inp##required))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~required, ()) =>
-    f(
-      serializeVariables(
-        {
+  let serialize: t => Raw.t =
+    value => {
+      let optionalInputArgs = {
+        let value = value##optionalInputArgs;
 
-          "required": required,
-        }: t_variables,
-      ),
+        value;
+      };
+      {
+
+        "optionalInputArgs": optionalInputArgs,
+      };
+    };
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+
+      required: (a => a)(inp##required),
+    };
+  let makeVariables = (~required, ()) =>
+    serializeVariables(
+      {
+
+        "required": required,
+      }: t_variables,
     );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

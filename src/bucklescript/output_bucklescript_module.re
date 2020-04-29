@@ -73,7 +73,6 @@ let compress_parts = (parts: array(Graphql_printer.t)) => {
                String(s1 ++ s2),
                ...rest,
              ]
-           | (acc, Empty) => acc
            | (acc, curr) => [curr, ...acc]
            }
          },
@@ -93,7 +92,6 @@ let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
       Array.fold_left(
         acc =>
           fun
-          | Empty => acc
           | String(s) => acc ++ s
           | FragmentNameRef(f) => {
               let name =
@@ -136,7 +134,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = (acc, part) =>
     switch (acc, part) {
-    | (acc, Empty) => acc
     | (None, String(s)) => Some(make_string(s))
     | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
     | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
@@ -325,6 +322,14 @@ let generate_default_operation =
       Graphql_ast.Operation(operation),
       res_structure,
     );
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
+      config,
+      [],
+      Graphql_ast.Operation(operation),
+      None,
+      res_structure,
+    );
   let types =
     Output_bucklescript_types.generate_types(
       config,
@@ -340,7 +345,13 @@ let generate_default_operation =
       None,
     );
   let arg_types =
-    Output_bucklescript_types.generate_arg_types(config, variable_defs);
+    Output_bucklescript_types.generate_arg_types(
+      false,
+      config,
+      variable_defs,
+    );
+  let raw_arg_types =
+    Output_bucklescript_types.generate_arg_types(true, config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
@@ -361,9 +372,23 @@ let generate_default_operation =
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
+      let legacy_make_with_variables = [%stri
+        let makeWithVariables = variables => {
+          "query": query,
+          "variables": serializeVariables(variables),
+          "parse": parse,
+        }
+      ];
+
       List.concat([
         List.concat([
-          wrap_module("Raw", raw_types),
+          wrap_module(
+            "Raw",
+            List.append(
+              raw_types,
+              extracted_args == [] ? [] : [raw_arg_types],
+            ),
+          ),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -375,41 +400,30 @@ let generate_default_operation =
           | _ => [arg_types]
           },
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
+          [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
           },
-          switch (variable_constructors, config.legacy, config.definition) {
-          | (None, true, _)
-          | (None, _, true) => [
-              [%stri let makeVar = (~f, ()) => f(Js.Json.null)],
-            ]
-          | (None, _, _) => []
-          | (Some(c), _, _) => [c]
+          switch (variable_constructors) {
+          | None => []
+          | Some(c) => [c]
           },
-          config.legacy
+          config.legacy && variable_constructors != None
+            ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors == None
             ? [
               [%stri
-                let make =
-                  makeVar(~f=variables => {
-                    {"query": query, "variables": variables, "parse": parse}
-                  })
-              ],
-              [%stri
-                let makeWithVariables = variables => {
+                let make = () => {
                   "query": query,
-                  "variables": serializeVariables(variables),
+                  "variables": Js.Json.null,
                   "parse": parse,
                 }
               ],
             ]
             : [],
           config.definition
-            ? [[%stri let definition = (parse, query, makeVar)]] : [],
-          switch (extracted_args) {
-          | [] => []
-          | _ => [[%stri let makeVariables = makeVar(~f=f => f)]]
-          },
+            ? [[%stri let definition = (parse, query, serialize)]] : [],
         ]),
       ]);
     };
@@ -429,6 +443,14 @@ let generate_fragment_module =
       config,
       [],
       Graphql_ast.Fragment(fragment),
+      res_structure,
+    );
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
+      config,
+      [],
+      Graphql_ast.Fragment(fragment),
+      None,
       res_structure,
     );
   let types =
@@ -517,6 +539,7 @@ let generate_fragment_module =
             wrap_module("Raw", raw_types),
             types,
             [parse],
+            [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
             [
               [%stri
                 let name = [%e
@@ -534,9 +557,9 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,

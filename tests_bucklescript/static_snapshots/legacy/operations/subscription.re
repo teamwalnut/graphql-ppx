@@ -18,106 +18,126 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "simpleSubscription": t_simpleSubscription}
-    and t_simpleSubscription
-    and t_simpleSubscription_Human = {. "name": string}
-    and t_simpleSubscription_Dog = {. "name": string};
+    type t_simpleSubscription_Dog = {
+      .
+      "__typename": string,
+      "name": string,
+    };
+    type t_simpleSubscription_Human = {
+      .
+      "__typename": string,
+      "name": string,
+    };
+    type t_simpleSubscription;
+    type t = {. "simpleSubscription": t_simpleSubscription};
   };
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t = {. "simpleSubscription": t_simpleSubscription}
-  and t_simpleSubscription = [
+  type t_simpleSubscription_Dog = {
+    .
+    "__typename": string,
+    "name": string,
+  };
+  type t_simpleSubscription_Human = {
+    .
+    "__typename": string,
+    "name": string,
+  };
+  type t_simpleSubscription = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_simpleSubscription_Dog)
     | `Human(t_simpleSubscription_Human)
-  ]
-  and t_simpleSubscription_Human = {. "name": string}
-  and t_simpleSubscription_Dog = {. "name": string};
+  ];
+  type t = {. "simpleSubscription": t_simpleSubscription};
   let parse: Raw.t => t =
     value => {
-
       "simpleSubscription": {
         let value = value##simpleSubscription;
-
-        switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
-        | None =>
-          Js.Exn.raiseError(
-            "graphql_ppx: "
-            ++ "Expected union "
-            ++ "DogOrHuman"
-            ++ " to be an object, got "
-            ++ Js.Json.stringify(Obj.magic(value): Js.Json.t),
-          )
-
-        | Some(typename_obj) =>
-          switch (Js.Dict.get(typename_obj, "__typename")) {
-
-          | None =>
-            Js.Exn.raiseError(
-              "graphql_ppx: "
-              ++ "Union "
-              ++ "DogOrHuman"
-              ++ " is missing the __typename field",
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+        (
+          switch (typename) {
+          | "Dog" =>
+            `Dog(
+              {
+                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                {
+                  "name": {
+                    let value = value##name;
+                    value;
+                  },
+                };
+              },
             )
-
-          | Some(typename) =>
-            switch (Js.Json.decodeString(typename)) {
-
-            | None =>
-              Js.Exn.raiseError(
-                "graphql_ppx: "
-                ++ "Union "
-                ++ "DogOrHuman"
-                ++ " has a __typename field that is not a string",
-              )
-
-            | Some(typename) =>
-              switch (typename) {
-              | "Dog" =>
-                `Dog(
-                  {
-                    let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                    {
-
-                      "name": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
+          | "Human" =>
+            `Human(
+              {
+                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                {
+                  "name": {
+                    let value = value##name;
+                    value;
                   },
-                )
-              | "Human" =>
-                `Human(
-                  {
-                    let value: Raw.t_simpleSubscription_Human =
-                      Obj.magic(value);
-                    {
-
-                      "name": {
-                        let value = value##name;
-
-                        value;
-                      },
-                    };
-                  },
-                )
-              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-              }
-            }
-          }
-        };
+                };
+              },
+            )
+          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_simpleSubscription
+        );
       },
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
-  let makeWithVariables = variables => {
+  let serialize: t => Raw.t =
+    value => {
+      let simpleSubscription = {
+        let value = value##simpleSubscription;
+        switch (value) {
+        | `Dog(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+
+                  value;
+                };
+                {
+
+                  "__typename": "Dog",
+
+                  "name": name,
+                };
+              },
+            ): Raw.t_simpleSubscription
+          )
+        | `Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+
+                  value;
+                };
+                {
+
+                  "__typename": "Human",
+
+                  "name": name,
+                };
+              },
+            ): Raw.t_simpleSubscription
+          )
+        | `FutureAddedValue(value) => (
+            Obj.magic(value): Raw.t_simpleSubscription
+          )
+        };
+      };
+      {
+
+        "simpleSubscription": simpleSubscription,
+      };
+    };
+  let make = () => {
     "query": query,
-    "variables": serializeVariables(variables),
+    "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };
