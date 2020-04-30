@@ -444,7 +444,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
       make_error(
         error_marker,
         config.map_loc,
-        field_span.span,
+        ast_field.fd_name.span,
         "Unknown field '" ++ field_name ++ "' on type " ++ type_name(ty),
       )
     | Some(field_meta) =>
@@ -795,7 +795,7 @@ let rec unify_document_schema = (config, document) => {
             make_error(
               error_marker,
               config.map_loc,
-              span,
+              fg_type_condition.span,
               Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
             ),
           )

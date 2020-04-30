@@ -4,24 +4,37 @@ open Source_pos;
 
 open Output_bucklescript_utils;
 
-let add_pos = (delimLength, base, pos) => {
-  let (_, _, col) = Location.get_pos_info(conv_pos(base));
-  {
-    pos_fname: base.pos_fname,
-    pos_lnum: base.pos_lnum + pos.line,
-    pos_bol: 0,
-    pos_cnum:
-      switch (pos.line) {
-      | 0 => delimLength + col + pos.col
-      | _ => pos.col
-      },
-  };
-};
-
 let add_loc = (delimLength, base, span) => {
-  loc_start: add_pos(delimLength, base.loc_start, fst(span)),
-  loc_end: add_pos(delimLength, base.loc_start, snd(span)),
-  loc_ghost: false,
+  let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
+  let pos_bol_start =
+    base.loc_start.pos_bol
+    + col
+    + delimLength
+    + fst(span).index
+    - fst(span).col;
+  let pos_bol_end =
+    base.loc_start.pos_bol
+    + col
+    + delimLength
+    + snd(span).index
+    - snd(span).col;
+  let start = pos_bol_start + fst(span).col;
+  let end_ = pos_bol_end + snd(span).col;
+  {
+    loc_start: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + fst(span).line,
+      pos_bol: pos_bol_start,
+      pos_cnum: start,
+    },
+    loc_end: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + snd(span).line,
+      pos_bol: pos_bol_end,
+      pos_cnum: end_,
+    },
+    loc_ghost: false,
+  };
 };
 
 let fmt_lex_err = err =>
