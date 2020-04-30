@@ -133,7 +133,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         definition: true,
       };
       switch (Validations.run_validators(config, document)) {
-      | Some(errs) =>
+      | (Some(errs), _) =>
         Ast_helper.Mod.mk(
           Pmod_structure(
             List.map(
@@ -146,7 +146,23 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
             ),
           ),
         )
-      | None =>
+      | (None, warnings) =>
+        warnings
+        |> List.iter(((loc, message)) => {
+             let loc = conv_loc(loc);
+             let loc_as_ghost = {...loc, loc_ghost: true};
+             Location.print_alert(
+               loc,
+               Location.formatter_for_warnings^,
+               {
+                 kind: "deprecated",
+                 message,
+                 def: loc_as_ghost,
+                 use: loc_as_ghost,
+               },
+             );
+             ();
+           });
         let parts = Result_decoder.unify_document_schema(config, document);
         Output_native_module.generate_modules(config, parts);
       };
