@@ -47,6 +47,7 @@ type Query {
     argRequired: CustomScalar!
   ): CustomScalarObject!
   customFields: customFieldsResult!
+  deprecatedFields: deprecatedFieldsResult!
 
   dogOrHuman: DogOrHuman!
 
@@ -189,4 +190,10 @@ type customFieldsResult {
   favoriteColor: Color!
   futureTime: DateTime
   nullableColor: Color
+}
+
+type deprecatedFieldsResult {
+  field1: String
+  field2: Int!
+  deprecatedField: String! @deprecated(reason: "Use something else instead")
 }

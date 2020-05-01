@@ -6974,6 +6974,13 @@ module MyQuery = {
 "
 `;
 
+exports[`Errors deprecatedFields.re 1`] = `
+"File \\"operations/errors/deprecatedFields.re\\", line 7, characters 6-21:
+7 |       deprecatedField
+          ^^^^^^^^^^^^^^^
+Alert deprecated: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
+`;
+
 exports[`Errors missingField1.re 1`] = `
 "File \\"operations/errors/missingField1.re\\", line 6, characters 6-27:
 6 |       thisFieldDoesNotExist
