@@ -30,7 +30,12 @@ type oneFieldQuery = {nullableString: option(string)};
 
 module MyQuery = {
   module Raw = {
-    type t = {. "variousScalars": scalars};
+    type t_variousScalars = {
+      .
+      "string": string,
+      "int": int,
+    };
+    type t = {. "variousScalars": t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
   type t = {. "variousScalars": scalars};
@@ -38,16 +43,18 @@ module MyQuery = {
     value => {
       "variousScalars": {
         let value = value##variousScalars;
-        {
-          "string": {
-            let value = value##string;
-            value;
-          },
-          "int": {
-            let value = value##int;
-            value;
-          },
-        };
+        (
+          {
+            string: {
+              let value = value##string;
+              value;
+            },
+            int: {
+              let value = value##int;
+              value;
+            },
+          }: scalars
+        );
       },
     };
   let serialize: t => Raw.t =
@@ -86,7 +93,7 @@ module MyQuery = {
 
 module OneFieldQuery = {
   module Raw = {
-    type t_variousScalars = {nullableString: Js.Nullable.t(string)};
+    type t_variousScalars = {. "nullableString": Js.Nullable.t(string)};
     type t = {. "variousScalars": t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
@@ -142,8 +149,9 @@ module ExternalFragmentQuery = {
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
       type t = {
-        string,
-        int,
+        .
+        "string": string,
+        "int": int,
       };
       type nonrec t_VariousScalars = t;
     };
@@ -225,9 +233,10 @@ module ExternalFragmentQuery = {
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
-      __typename: string,
-      name: string,
-      barkVolume: float,
+      .
+      "__typename": string,
+      "name": string,
+      "barkVolume": float,
     };
     type t_dogOrHuman;
     type t = {. "dogOrHuman": t_dogOrHuman};
@@ -322,8 +331,9 @@ module UnionExternalFragmentQuery = {
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
-        name: string,
-        barkVolume: float,
+        .
+        "name": string,
+        "barkVolume": float,
       };
       type nonrec t_Dog = t;
     };

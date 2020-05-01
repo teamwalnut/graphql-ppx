@@ -69,12 +69,12 @@ let rec generate_type = (config, path, raw) =>
   | Res_float(loc) => base_type(~loc=conv_loc(loc), "float")
   | Res_boolean(loc) => base_type(~loc=conv_loc(loc), "bool")
   | Res_raw_scalar(loc) => base_type(~loc=conv_loc(loc), "Js.Json.t")
-  | Res_object(loc, name, _fields, Some(type_name))
-  | Res_record(loc, name, _fields, Some(type_name)) =>
-    base_type(~loc=conv_loc(loc), type_name)
-  | Res_object(loc, name, _fields, None)
-  | Res_record(loc, name, _fields, None) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path))
+  | Res_object(loc, name, _fields, type_name)
+  | Res_record(loc, name, _fields, type_name) =>
+    switch (type_name, raw) {
+    | (Some(type_name), false) => base_type(~loc=conv_loc(loc), type_name)
+    | (_, _) => base_type(~loc=conv_loc(loc), generate_type_name(path))
+    }
   | Res_poly_variant_selection_set(loc, name, _)
   | Res_poly_variant_union(loc, name, _, _)
   | Res_poly_variant_interface(loc, name, _, _) =>
@@ -460,7 +460,7 @@ let generate_graphql_object =
 let generate_types =
     (config: Generator_utils.output_config, res, raw, fragment_name) => {
   let types =
-    extract([], res)
+    extract(~path=[], ~raw, res)
     |> List.map(
          fun
          | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>

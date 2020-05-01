@@ -30,7 +30,12 @@ type oneFieldQuery = {nullableString: option(string)};
 
 module MyQuery = {
   module Raw = {
-    type t = {variousScalars: scalars};
+    type t_variousScalars = {
+      __typename: string,
+      string,
+      int,
+    };
+    type t = {variousScalars: t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
   type t = {variousScalars: scalars};

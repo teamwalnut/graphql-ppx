@@ -27,8 +27,9 @@ module MyQuery = {
     type t_first_inner = {. "inner": Js.Nullable.t(t_first_inner_inner)};
     type t_first = {. "inner": Js.Nullable.t(t_first_inner)};
     type t_second_inner_inner = {
-      f1: string,
-      f2: string,
+      .
+      "f1": string,
+      "f2": string,
     };
     type t_second_inner = {. "inner": Js.Nullable.t(t_second_inner_inner)};
     type t_second = {. "inner": Js.Nullable.t(t_second_inner)};

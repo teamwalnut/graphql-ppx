@@ -25,30 +25,30 @@ type object_field =
     })
 and type_def =
   | Object({
-      loc,
+      loc: Source_pos.ast_location,
       variant_parent: bool,
       force_record: bool,
       path,
       fields: list(object_field),
     })
   | VariantSelection({
-      loc,
+      loc: Source_pos.ast_location,
       path,
       fields: list((string, Result_structure.t)),
     })
   | VariantUnion({
-      loc,
+      loc: Source_pos.ast_location,
       path,
       fields: list((string, Result_structure.t)),
     })
   | VariantInterface({
-      loc,
+      loc: Source_pos.ast_location,
       path,
       base: (string, Result_structure.t),
       fields: list((string, Result_structure.t)),
     })
   | Enum({
-      loc,
+      loc: Source_pos.ast_location,
       path,
       fields: list(string),
     });
@@ -80,29 +80,31 @@ let generate_type_name = (~prefix="t") =>
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
-let rec extract = (~variant=false, path) =>
+let rec extract = (~variant=false, ~path, ~raw) =>
   fun
-  | Res_nullable(_loc, inner) => extract(path, inner)
-  | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _name, fields, Some(_))
-  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
-  | Res_object(loc, _name, fields, None) =>
-    create_object(path, fields, false, loc, variant)
-  | Res_record(loc, _name, fields, None) =>
-    create_object(path, fields, true, loc, variant)
+  | Res_nullable(_loc, inner) => extract(~path, ~raw, inner)
+  | Res_array(_loc, inner) => extract(~path, ~raw, inner)
+  | Res_object(loc, _name, fields, type_name) as result_structure
+  | Res_record(loc, _name, fields, type_name) as result_structure =>
+    switch (result_structure, type_name, raw) {
+    | (_, Some(type_name), false) => create_children(path, raw, fields)
+    | (Res_record(_, _, _, _), _, false) =>
+      create_object(path, raw, fields, true, loc, variant)
+    | (_, _, _) => create_object(path, raw, fields, false, loc, variant)
+    }
   | Res_poly_variant_union(loc, _name, fragments, _) => [
       VariantUnion({path, fields: fragments, loc}),
-      ...extract_fragments(fragments, path),
+      ...extract_fragments(fragments, path, raw),
     ]
   | Res_poly_variant_selection_set(loc, _name, fragments) => [
       VariantSelection({path, fields: fragments, loc}),
-      ...extract_fragments(fragments, path),
+      ...extract_fragments(fragments, path, raw),
     ]
   | Res_poly_variant_interface(loc, _name, base, fragments) => [
       VariantInterface({path, fields: fragments, base, loc}),
-      ...extract_fragments(fragments, path),
+      ...extract_fragments(fragments, path, raw),
     ]
-  | Res_custom_decoder(_loc, _ident, inner) => extract(path, inner)
+  | Res_custom_decoder(_loc, _ident, inner) => extract(~path, ~raw, inner)
   | Res_solo_fragment_spread(_loc, _name, _) => []
   | Res_error(_loc, _message) => []
   | Res_id(_loc) => []
@@ -119,26 +121,29 @@ let rec extract = (~variant=false, path) =>
       }),
     ]
 and fragment_names = f => f |> List.map(((name, _)) => name)
-and extract_fragments = (fragments, path) => {
+and extract_fragments = (fragments, path, raw) => {
   fragments
   |> List.fold_left(
        (acc, (name, inner)) =>
-         List.append(extract(~variant=true, [name, ...path], inner), acc),
+         List.append(
+           extract(~variant=true, ~path=[name, ...path], ~raw, inner),
+           acc,
+         ),
        [],
      );
 }
-and create_children = (path, fields) => {
+and create_children = (path, raw, fields) => {
   fields
   |> List.fold_left(
        acc =>
          fun
          | Fr_named_field(name, _loc, type_) =>
-           List.append(extract([name, ...path], type_), acc)
+           List.append(extract(~path=[name, ...path], ~raw, type_), acc)
          | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
        [],
      );
 }
-and create_object = (path, fields, force_record, loc, variant_parent) => {
+and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
   [
     Object({
       variant_parent,
@@ -155,7 +160,7 @@ and create_object = (path, fields, force_record, loc, variant_parent) => {
                Fragment({module_name: name, key, type_name}),
            ),
     }),
-    ...create_children(path, fields),
+    ...create_children(path, raw, fields),
   ];
 };
 

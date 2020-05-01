@@ -286,7 +286,7 @@ and generate_object_decoder =
     {
       Ast_helper.(
         Exp.constraint_(
-          do_obj_constructor_base(false),
+          do_obj_constructor_base(!config.records),
           base_type_name(
             switch (existing_record) {
             | None => generate_type_name(path)
@@ -297,7 +297,8 @@ and generate_object_decoder =
       );
     };
 
-  config.records ? do_obj_constructor_records() : do_obj_constructor();
+  config.records || existing_record != None
+    ? do_obj_constructor_records() : do_obj_constructor();
 }
 and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
@@ -503,16 +504,7 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_record(loc, name, fields, existing_record) =>
-    generate_object_decoder(
-      config,
-      conv_loc(loc),
-      name,
-      fields,
-      path,
-      definition,
-      existing_record,
-    )
+  | Res_record(loc, name, fields, existing_record)
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_decoder(
       config,
