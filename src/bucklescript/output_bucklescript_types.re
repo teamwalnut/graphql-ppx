@@ -89,7 +89,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
       base_type(~loc=?atLoc, module_name ++ ".t");
     }
   | Res_error(loc, error) =>
-    raise(Location.Error(Location.error(~loc=?atLoc, error)))
+    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(loc, enum_meta) =>
     base_type(~loc=?atLoc, generate_type_name(path));
 
