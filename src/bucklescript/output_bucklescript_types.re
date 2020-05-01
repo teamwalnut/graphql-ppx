@@ -632,7 +632,18 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
              | InputField({name, type_, loc}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
-                   generate_arg_type(raw, loc, type_),
+                   generate_arg_type(
+                     raw,
+                     {
+                       ...loc,
+                       loc_ghost:
+                         switch (input_obj_name) {
+                         | None => false
+                         | Some(_) => true
+                         },
+                     },
+                     type_,
+                   ),
                  );
                },
            ),
