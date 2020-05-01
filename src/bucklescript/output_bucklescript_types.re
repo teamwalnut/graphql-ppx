@@ -35,26 +35,25 @@ let base_type = (~inner=[], ~loc=?, name) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = (config, path, raw) =>
+let rec generate_type = (~atLoc=?, config, path, raw) =>
   fun
-  | Res_string(loc) => base_type(~loc=conv_loc(loc), "string")
+  | Res_string(loc) => base_type(~loc=?atLoc, "string")
   | Res_nullable(loc, inner) =>
     if (raw) {
       base_type(
-        ~loc=conv_loc(loc),
         ~inner=[generate_type(config, path, raw, inner)],
         "Js.Nullable.t",
       );
     } else {
       base_type(
-        ~loc=conv_loc(loc),
+        ~loc=?atLoc,
         ~inner=[generate_type(config, path, raw, inner)],
         "option",
       );
     }
   | Res_array(loc, inner) =>
     base_type(
-      ~loc=conv_loc(loc),
+      ~loc=?atLoc,
       ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
@@ -62,44 +61,48 @@ let rec generate_type = (config, path, raw) =>
     if (raw) {
       generate_type(config, path, raw, inner);
     } else {
-      base_type(~loc=conv_loc(loc), module_name ++ ".t");
+      base_type(~loc=?atLoc, module_name ++ ".t");
     }
-  | Res_id(loc) => base_type(~loc=conv_loc(loc), "string")
-  | Res_int(loc) => base_type(~loc=conv_loc(loc), "int")
-  | Res_float(loc) => base_type(~loc=conv_loc(loc), "float")
-  | Res_boolean(loc) => base_type(~loc=conv_loc(loc), "bool")
-  | Res_raw_scalar(loc) => base_type(~loc=conv_loc(loc), "Js.Json.t")
+  | Res_id(loc) => base_type(~loc=?atLoc, "string")
+  | Res_int(loc) => {
+      base_type(~loc=?atLoc, "int");
+    }
+  | Res_float(loc) => base_type(~loc=?atLoc, "float")
+  | Res_boolean(loc) => base_type(~loc=?atLoc, "bool")
+  | Res_raw_scalar(loc) => base_type(~loc=?atLoc, "Js.Json.t")
   | Res_object(loc, name, _fields, Some(type_name))
   | Res_record(loc, name, _fields, Some(type_name)) =>
-    base_type(~loc=conv_loc(loc), type_name)
+    base_type(~loc=?atLoc, type_name)
   | Res_object(loc, name, _fields, None)
-  | Res_record(loc, name, _fields, None) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path))
+  | Res_record(loc, name, _fields, None) => {
+      base_type(~loc=?atLoc, generate_type_name(path));
+    }
   | Res_poly_variant_selection_set(loc, name, _)
   | Res_poly_variant_union(loc, name, _, _)
-  | Res_poly_variant_interface(loc, name, _, _) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path))
+  | Res_poly_variant_interface(loc, name, _, _) => {
+      base_type(~loc=?atLoc, generate_type_name(path));
+    }
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
     if (raw) {
       base_type(module_name ++ ".Raw.t");
     } else {
-      base_type(module_name ++ ".t");
+      base_type(~loc=?atLoc, module_name ++ ".t");
     }
   | Res_error(loc, error) =>
-    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
+    raise(Location.Error(Location.error(~loc=?atLoc, error)))
   | Res_poly_enum(loc, enum_meta) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path));
+    base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
   Ast_helper.Type.mk(
     ~kind=inner,
     ~manifest?,
-    {loc: conv_loc(loc), txt: generate_type_name(path)},
+    {loc: Location.none, txt: generate_type_name(path)},
   );
 };
 
 let generate_opaque = (path, loc) => {
-  Ast_helper.Type.mk({loc: conv_loc(loc), txt: generate_type_name(path)});
+  Ast_helper.Type.mk({loc: Location.none, txt: generate_type_name(path)});
 };
 
 let raw_opaque_object = fields => {
@@ -148,13 +151,21 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_}) => [
-               Ast_helper.Type.field(
-                 {Location.txt: to_valid_ident(name), loc: Location.none},
-                 generate_type(config, [name, ...path], raw, type_),
-               ),
-               ...acc,
-             ]
+           | Field({path: [name, ...path], type_, loc, loc_key}) => {
+               [
+                 Ast_helper.Type.field(
+                   {Location.txt: to_valid_ident(name), loc: Location.none},
+                   generate_type(
+                     ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                     config,
+                     [name, ...path],
+                     raw,
+                     type_,
+                   ),
+                 ),
+                 ...acc,
+               ];
+             }
            | Field({path: [], loc}) =>
              // I don't think this should ever happen but we need to
              // cover this case, perhaps we can constrain the type
@@ -512,14 +523,15 @@ let generate_types =
   };
 };
 
-let rec generate_arg_type = (raw, loc) =>
+let rec generate_arg_type = (raw, loc as originalLoc) => {
+  let loc = raw ? None : Some(conv_loc(originalLoc));
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => base_type("string")
-  | Type(Scalar({sm_name: "Int"})) => base_type("int")
-  | Type(Scalar({sm_name: "Float"})) => base_type("float")
-  | Type(Scalar({sm_name: "Boolean"})) => base_type("bool")
-  | Type(Scalar({sm_name: _})) => base_type("Js.Json.t")
+  | Type(Scalar({sm_name: "String"})) => base_type(~loc?, "string")
+  | Type(Scalar({sm_name: "Int"})) => base_type(~loc?, "int")
+  | Type(Scalar({sm_name: "Float"})) => base_type(~loc?, "float")
+  | Type(Scalar({sm_name: "Boolean"})) => base_type(~loc?, "bool")
+  | Type(Scalar({sm_name: _})) => base_type(~loc?, "Js.Json.t")
   | Type(Enum(enum_meta)) =>
     if (raw) {
       base_type("string");
@@ -527,6 +539,7 @@ let rec generate_arg_type = (raw, loc) =>
       Graphql_ppx_base__.Schema.(
         Ast_helper.(
           Typ.variant(
+            ~loc?,
             enum_meta.em_values
             |> List.map(({evm_name, _}) =>
                  {
@@ -543,41 +556,60 @@ let rec generate_arg_type = (raw, loc) =>
       );
     }
   | Type(InputObject({iom_name})) =>
-    base_type(generate_type_name(~prefix="t_variables", [iom_name]))
+    base_type(~loc?, generate_type_name(~prefix="t_variables", [iom_name]))
   | Type(Object(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Object not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Object not allowed in args",
+        ),
       ),
     )
   | Type(Union(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Union not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Union not allowed in args",
+        ),
       ),
     )
   | Type(Interface(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Interface not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Interface not allowed in args",
+        ),
       ),
     )
   | Nullable(inner) =>
     base_type(
-      ~inner=[generate_arg_type(raw, loc, inner)],
+      ~loc?,
+      ~inner=[
+        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+      ],
       raw ? "Js.Nullable.t" : "option",
     )
   | List(inner) =>
-    base_type(~inner=[generate_arg_type(raw, loc, inner)], "array")
+    base_type(
+      ~loc?,
+      ~inner=[
+        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+      ],
+      "array",
+    )
   | TypeNotFound(name) =>
     raise(
       Location.Error(
         Location.error(
-          ~loc=loc |> conv_loc,
+          ~loc=originalLoc |> conv_loc,
           "Type " ++ name ++ " not found!",
         ),
       ),
     );
+};
 
 let generate_record_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.Type.mk(

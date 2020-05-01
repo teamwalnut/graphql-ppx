@@ -12,6 +12,10 @@ open Output_bucklescript_utils;
 open Output_bucklescript_types;
 open Extract_type_definitions;
 
+// Cheap way of preventing location override from types module
+// Might refactor this later
+let conv_loc = _ => Location.none;
+
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
   | Tr_named({item: name}) => name
@@ -153,6 +157,7 @@ let generate_solo_fragment_spread_decoder =
 };
 
 let generate_error = (loc, message) => {
+  let loc = Output_bucklescript_utils.conv_loc(loc);
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;
   %e
@@ -201,7 +206,7 @@ and generate_object_decoder =
         fields
         |> List.map(
              fun
-             | Fr_named_field(key, _, inner) => (
+             | Fr_named_field({name as key, type_ as inner}) => (
                  {txt: Longident.parse(to_valid_ident(key)), loc},
                  [@metaloc loc]
                  {
@@ -561,4 +566,4 @@ and generate_parser = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
+  | Res_error(loc, message) => generate_error(loc, message);

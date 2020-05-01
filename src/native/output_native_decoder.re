@@ -259,8 +259,8 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | Fr_named_field(field, _, _) =>
-             Some(Pat.var({loc, txt: "field_" ++ field}))
+           | Fr_named_field({name}) =>
+             Some(Pat.var({loc, txt: "field_" ++ name}))
            | Fr_fragment_spread(_) => None,
          )
       |> Pat.tuple
@@ -271,7 +271,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | Fr_named_field(field, loc, inner) => {
+           | Fr_named_field({name as field, loc, type_ as inner}) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
@@ -307,7 +307,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> List.map(
            fun
-           | Fr_named_field(field, loc, _) => {
+           | Fr_named_field({name as field, loc}) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -362,7 +362,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
             Pat.any(),
             List.map(
               fun
-              | Fr_named_field(key, _, inner) =>
+              | Fr_named_field({name as key, type_ as inner}) =>
                 Cf.method(
                   {txt: key, loc: Location.none},
                   Public,

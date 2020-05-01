@@ -5,7 +5,12 @@ type exhaustive_flag =
 type loc = Source_pos.ast_location;
 
 type field_result =
-  | Fr_named_field(string, loc, t)
+  | Fr_named_field({
+      name: string,
+      loc_key: loc,
+      loc,
+      type_: t,
+    })
   | Fr_fragment_spread(string, loc, string, option(string), list(string))
 and t =
   | Res_nullable(loc, t)

@@ -15,6 +15,7 @@ type extracted_type =
 type object_field =
   | Field({
       type_: Result_structure.t,
+      loc_key: Source_pos.ast_location,
       loc: Source_pos.ast_location,
       path,
     })
@@ -132,7 +133,7 @@ and create_children = (path, fields) => {
   |> List.fold_left(
        acc =>
          fun
-         | Fr_named_field(name, _loc, type_) =>
+         | Fr_named_field({name, type_}) =>
            List.append(extract([name, ...path], type_), acc)
          | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
        [],
@@ -149,8 +150,9 @@ and create_object = (path, fields, force_record, loc, variant_parent) => {
         fields
         |> List.map(
              fun
-             | Fr_named_field(name, loc, type_) =>
-               Field({loc, path: [name, ...path], type_})
+             | Fr_named_field({name, loc, loc_key, type_}) => {
+                 Field({loc, loc_key, path: [name, ...path], type_});
+               }
              | Fr_fragment_spread(key, _loc, name, type_name, _arguments) =>
                Fragment({module_name: name, key, type_name}),
            ),
