@@ -629,7 +629,7 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
         fields
         |> List.map(
              fun
-             | InputField({name, type_, loc}) => {
+             | InputField({name, type_, loc, loc_type}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
                    generate_arg_type(
@@ -712,9 +712,37 @@ let generate_input_object =
 let generate_arg_types = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
-  input_objects
-  |> List.map((InputObject({name, fields})) =>
-       generate_input_object(raw, config, name, fields)
-     )
-  |> Ast_helper.Str.type_(Recursive);
+  [
+    input_objects
+    |> List.map((InputObject({name, fields})) => {
+         generate_input_object(raw, config, name, fields)
+       })
+    |> Ast_helper.Str.type_(Recursive),
+    ...input_objects
+       |> List.fold_left(
+            (p, InputObject({name, fields})) => {
+              switch (name) {
+              | None =>
+                List.append(
+                  p,
+                  fields
+                  |> List.fold_left(
+                       (p, field) => {
+                         List.append(
+                           p,
+                           Output_bucklescript_docstrings.for_input_constraint(
+                             config,
+                             field,
+                           ),
+                         )
+                       },
+                       [],
+                     ),
+                )
+              | Some(_) => p
+              }
+            },
+            [],
+          ),
+  ];
 };

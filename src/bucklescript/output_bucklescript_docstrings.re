@@ -5,6 +5,65 @@ open Migrate_parsetree;
 open Ast_408;
 open Ast_helper;
 
+let for_input_constraint =
+    (
+      config: Generator_utils.output_config,
+      Extract_type_definitions.InputField(field),
+    ) => {
+  switch (
+    field.loc_type,
+    Extract_type_definitions.get_inner_type(field.type_)
+    |> Option.flat_map(innerType => {
+         switch (innerType) {
+         | Extract_type_definitions.Type(ty) =>
+           let type_name = ty |> Schema.extract_name_from_type_meta;
+           config.schema
+           |> Schema_printer.print_type(type_name)
+           |> Option.map(printed_type => (type_name, printed_type));
+         | _ => None
+         }
+       }),
+  ) {
+  | (Some(loc_type), Some((type_name, printed_type))) =>
+    Ast_helper.[
+      Str.type_(
+        Nonrecursive,
+        [Type.mk(Location.mknoloc("graphql_" ++ type_name))],
+      ),
+      Str.value(
+        Nonrecursive,
+        [
+          Vb.mk(
+            ~attrs=[
+              Docstrings.docs_attr(
+                Docstrings.docstring(
+                  "```\n" ++ printed_type ++ "\n```",
+                  conv_loc(loc_type),
+                ),
+              ),
+            ],
+            Ast_helper.Pat.var(
+              Location.mkloc("_graphql_" ++ type_name, conv_loc(loc_type)),
+            ),
+            Exp.constraint_(
+              Exp.apply(
+                Exp.ident(Location.mknoloc(Longident.parse("Obj.magic"))),
+                [(Nolabel, Exp.constant(Pconst_integer("0", None)))],
+              ),
+              Typ.constr(
+                Location.mknoloc(Longident.parse("graphql_" ++ type_name)),
+                [],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ]
+  | (None, _)
+  | (_, None) => []
+  };
+};
+
 let for_fragment =
     (
       config: Generator_utils.output_config,
