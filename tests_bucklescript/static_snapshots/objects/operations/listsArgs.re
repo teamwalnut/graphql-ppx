@@ -58,7 +58,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableOfNullable:
+      "nullableOfNullable":
         (
           a =>
             switch (a) {
@@ -89,7 +89,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      "nullableOfNonNullable":
         (
           a =>
             switch (a) {
@@ -101,7 +101,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      "nonNullableOfNullable":
         (
           a =>
             Array.map(
@@ -121,7 +121,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      "nonNullableOfNonNullable":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),

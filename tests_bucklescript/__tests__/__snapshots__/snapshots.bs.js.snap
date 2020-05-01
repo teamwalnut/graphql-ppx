@@ -2560,7 +2560,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let makeVariables = (~required, ()) =>
     serializeVariables(
@@ -7129,7 +7129,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      query: (a => a)(inp##query),
+      \\"query\\": (a => a)(inp##query),
     };
   let make = (~query, ()) => {
     \\"query\\": query,
@@ -7228,16 +7228,16 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
 
-      nonNullableField: (a => a)(inp##nonNullableField),
+      \\"nonNullableField\\": (a => a)(inp##nonNullableField),
 
-      nullableArray:
+      \\"nullableArray\\":
         (
           a =>
             switch (a) {
@@ -7268,7 +7268,7 @@ module MyQuery = {
           inp##nullableArray,
         ),
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -7279,7 +7279,7 @@ module MyQuery = {
           inp##field,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -7302,7 +7302,7 @@ module MyQuery = {
           inp##enum,
         ),
 
-      embeddedInput:
+      \\"embeddedInput\\":
         (
           a =>
             switch (a) {
@@ -7343,7 +7343,7 @@ module MyQuery = {
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -7599,7 +7599,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      opt:
+      \\"opt\\":
         (
           a =>
             switch (a) {
@@ -7610,7 +7610,7 @@ module MyQuery = {
           inp##opt,
         ),
 
-      req: (a => a)(inp##req),
+      \\"req\\": (a => a)(inp##req),
     };
   let make = (~opt=?, ~req, ()) => {
     \\"query\\": query,
@@ -7829,7 +7829,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
+      \\"arg\\":
         (
           a =>
             switch (a) {
@@ -8880,7 +8880,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableOfNullable:
+      \\"nullableOfNullable\\":
         (
           a =>
             switch (a) {
@@ -8911,7 +8911,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      \\"nullableOfNonNullable\\":
         (
           a =>
             switch (a) {
@@ -8923,7 +8923,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      \\"nonNullableOfNullable\\":
         (
           a =>
             Array.map(
@@ -8943,7 +8943,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      \\"nonNullableOfNonNullable\\":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
@@ -9066,14 +9066,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectListsInput(a))(inp##arg),
     }
 
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
 
-      nullableOfNullable:
+      \\"nullableOfNullable\\":
         (
           a =>
             switch (a) {
@@ -9104,7 +9104,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      \\"nullableOfNonNullable\\":
         (
           a =>
             switch (a) {
@@ -9116,7 +9116,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      \\"nonNullableOfNullable\\":
         (
           a =>
             Array.map(
@@ -9136,7 +9136,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      \\"nonNullableOfNonNullable\\":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
@@ -9418,7 +9418,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let make = (~required, ()) => {
     \\"query\\": query,
@@ -9497,7 +9497,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let make = (~required, ()) => {
     \\"query\\": query,
@@ -9908,16 +9908,16 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
 
-      nonNullableField: (a => a)(inp##nonNullableField),
+      \\"nonNullableField\\": (a => a)(inp##nonNullableField),
 
-      nullableArray:
+      \\"nullableArray\\":
         (
           a =>
             switch (a) {
@@ -9948,7 +9948,7 @@ module MyQuery = {
           inp##nullableArray,
         ),
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -9959,7 +9959,7 @@ module MyQuery = {
           inp##field,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -9982,7 +9982,7 @@ module MyQuery = {
           inp##enum,
         ),
 
-      embeddedInput:
+      \\"embeddedInput\\":
         (
           a =>
             switch (a) {
@@ -10023,7 +10023,7 @@ module MyQuery = {
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -10302,7 +10302,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      id:
+      \\"id\\":
         (
           a =>
             switch (a) {
@@ -10313,7 +10313,7 @@ module MyQuery = {
           inp##id,
         ),
 
-      name:
+      \\"name\\":
         (
           a =>
             switch (a) {
@@ -10852,14 +10852,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
 
-      otherField:
+      \\"otherField\\":
         (
           a =>
             switch (a) {
@@ -10870,7 +10870,7 @@ module MyQuery = {
           inp##otherField,
         ),
 
-      inner:
+      \\"inner\\":
         (
           a =>
             switch (a) {
@@ -10884,7 +10884,7 @@ module MyQuery = {
           inp##inner,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -11238,7 +11238,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableString:
+      \\"nullableString\\":
         (
           a =>
             switch (a) {
@@ -11249,9 +11249,9 @@ module MyQuery = {
           inp##nullableString,
         ),
 
-      string: (a => a)(inp##string),
+      \\"string\\": (a => a)(inp##string),
 
-      nullableInt:
+      \\"nullableInt\\":
         (
           a =>
             switch (a) {
@@ -11262,9 +11262,9 @@ module MyQuery = {
           inp##nullableInt,
         ),
 
-      int: (a => a)(inp##int),
+      \\"int\\": (a => a)(inp##int),
 
-      nullableFloat:
+      \\"nullableFloat\\":
         (
           a =>
             switch (a) {
@@ -11275,9 +11275,9 @@ module MyQuery = {
           inp##nullableFloat,
         ),
 
-      float: (a => a)(inp##float),
+      \\"float\\": (a => a)(inp##float),
 
-      nullableBoolean:
+      \\"nullableBoolean\\":
         (
           a =>
             switch (a) {
@@ -11288,9 +11288,9 @@ module MyQuery = {
           inp##nullableBoolean,
         ),
 
-      boolean: (a => a)(inp##boolean),
+      \\"boolean\\": (a => a)(inp##boolean),
 
-      nullableID:
+      \\"nullableID\\":
         (
           a =>
             switch (a) {
@@ -11301,7 +11301,7 @@ module MyQuery = {
           inp##nullableID,
         ),
 
-      id: (a => a)(inp##id),
+      \\"id\\": (a => a)(inp##id),
     };
   let make =
       (
@@ -11469,14 +11469,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
     }
 
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
 
-      nullableString:
+      \\"nullableString\\":
         (
           a =>
             switch (a) {
@@ -11487,9 +11487,9 @@ module MyQuery = {
           inp##nullableString,
         ),
 
-      string: (a => a)(inp##string),
+      \\"string\\": (a => a)(inp##string),
 
-      nullableInt:
+      \\"nullableInt\\":
         (
           a =>
             switch (a) {
@@ -11500,9 +11500,9 @@ module MyQuery = {
           inp##nullableInt,
         ),
 
-      int: (a => a)(inp##int),
+      \\"int\\": (a => a)(inp##int),
 
-      nullableFloat:
+      \\"nullableFloat\\":
         (
           a =>
             switch (a) {
@@ -11513,9 +11513,9 @@ module MyQuery = {
           inp##nullableFloat,
         ),
 
-      float: (a => a)(inp##float),
+      \\"float\\": (a => a)(inp##float),
 
-      nullableBoolean:
+      \\"nullableBoolean\\":
         (
           a =>
             switch (a) {
@@ -11526,9 +11526,9 @@ module MyQuery = {
           inp##nullableBoolean,
         ),
 
-      boolean: (a => a)(inp##boolean),
+      \\"boolean\\": (a => a)(inp##boolean),
 
-      nullableID:
+      \\"nullableID\\":
         (
           a =>
             switch (a) {
@@ -11539,7 +11539,7 @@ module MyQuery = {
           inp##nullableID,
         ),
 
-      id: (a => a)(inp##id),
+      \\"id\\": (a => a)(inp##id),
     };
   let make = (~arg, ()) => {
     \\"query\\": query,
@@ -11763,7 +11763,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      var: (a => a)(inp##var),
+      \\"var\\": (a => a)(inp##var),
     };
   let make = (~var, ()) => {
     \\"query\\": query,
@@ -13638,7 +13638,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      query: (a => a)(inp##query),
+      \\"query\\": (a => a)(inp##query),
     };
   let makeVariables = (~query, ()) =>
     serializeVariables(
@@ -13721,16 +13721,16 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
 
-      nonNullableField: (a => a)(inp##nonNullableField),
+      \\"nonNullableField\\": (a => a)(inp##nonNullableField),
 
-      nullableArray:
+      \\"nullableArray\\":
         (
           a =>
             switch (a) {
@@ -13761,7 +13761,7 @@ module MyQuery = {
           inp##nullableArray,
         ),
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -13772,7 +13772,7 @@ module MyQuery = {
           inp##field,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -13795,7 +13795,7 @@ module MyQuery = {
           inp##enum,
         ),
 
-      embeddedInput:
+      \\"embeddedInput\\":
         (
           a =>
             switch (a) {
@@ -13836,7 +13836,7 @@ module MyQuery = {
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -14071,7 +14071,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      opt:
+      \\"opt\\":
         (
           a =>
             switch (a) {
@@ -14082,7 +14082,7 @@ module MyQuery = {
           inp##opt,
         ),
 
-      req: (a => a)(inp##req),
+      \\"req\\": (a => a)(inp##req),
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables(
@@ -14278,7 +14278,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
+      \\"arg\\":
         (
           a =>
             switch (a) {
@@ -15293,7 +15293,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableOfNullable:
+      \\"nullableOfNullable\\":
         (
           a =>
             switch (a) {
@@ -15324,7 +15324,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      \\"nullableOfNonNullable\\":
         (
           a =>
             switch (a) {
@@ -15336,7 +15336,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      \\"nonNullableOfNullable\\":
         (
           a =>
             Array.map(
@@ -15356,7 +15356,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      \\"nonNullableOfNonNullable\\":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
@@ -15450,14 +15450,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectListsInput(a))(inp##arg),
     }
 
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
 
-      nullableOfNullable:
+      \\"nullableOfNullable\\":
         (
           a =>
             switch (a) {
@@ -15488,7 +15488,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      \\"nullableOfNonNullable\\":
         (
           a =>
             switch (a) {
@@ -15500,7 +15500,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      \\"nonNullableOfNullable\\":
         (
           a =>
             Array.map(
@@ -15520,7 +15520,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      \\"nonNullableOfNonNullable\\":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),
@@ -15781,7 +15781,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let makeVariables = (~required, ()) =>
     serializeVariables(
@@ -15844,7 +15844,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let makeVariables = (~required, ()) =>
     serializeVariables(
@@ -16234,16 +16234,16 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
 
-      nonNullableField: (a => a)(inp##nonNullableField),
+      \\"nonNullableField\\": (a => a)(inp##nonNullableField),
 
-      nullableArray:
+      \\"nullableArray\\":
         (
           a =>
             switch (a) {
@@ -16274,7 +16274,7 @@ module MyQuery = {
           inp##nullableArray,
         ),
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -16285,7 +16285,7 @@ module MyQuery = {
           inp##field,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -16308,7 +16308,7 @@ module MyQuery = {
           inp##enum,
         ),
 
-      embeddedInput:
+      \\"embeddedInput\\":
         (
           a =>
             switch (a) {
@@ -16349,7 +16349,7 @@ module MyQuery = {
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
 
-      field:
+      \\"field\\":
         (
           a =>
             switch (a) {
@@ -16607,7 +16607,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      id:
+      \\"id\\":
         (
           a =>
             switch (a) {
@@ -16618,7 +16618,7 @@ module MyQuery = {
           inp##id,
         ),
 
-      name:
+      \\"name\\":
         (
           a =>
             switch (a) {
@@ -17114,14 +17114,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
 
-      otherField:
+      \\"otherField\\":
         (
           a =>
             switch (a) {
@@ -17132,7 +17132,7 @@ module MyQuery = {
           inp##otherField,
         ),
 
-      inner:
+      \\"inner\\":
         (
           a =>
             switch (a) {
@@ -17146,7 +17146,7 @@ module MyQuery = {
           inp##inner,
         ),
 
-      enum:
+      \\"enum\\":
         (
           a =>
             switch (a) {
@@ -17479,7 +17479,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableString:
+      \\"nullableString\\":
         (
           a =>
             switch (a) {
@@ -17490,9 +17490,9 @@ module MyQuery = {
           inp##nullableString,
         ),
 
-      string: (a => a)(inp##string),
+      \\"string\\": (a => a)(inp##string),
 
-      nullableInt:
+      \\"nullableInt\\":
         (
           a =>
             switch (a) {
@@ -17503,9 +17503,9 @@ module MyQuery = {
           inp##nullableInt,
         ),
 
-      int: (a => a)(inp##int),
+      \\"int\\": (a => a)(inp##int),
 
-      nullableFloat:
+      \\"nullableFloat\\":
         (
           a =>
             switch (a) {
@@ -17516,9 +17516,9 @@ module MyQuery = {
           inp##nullableFloat,
         ),
 
-      float: (a => a)(inp##float),
+      \\"float\\": (a => a)(inp##float),
 
-      nullableBoolean:
+      \\"nullableBoolean\\":
         (
           a =>
             switch (a) {
@@ -17529,9 +17529,9 @@ module MyQuery = {
           inp##nullableBoolean,
         ),
 
-      boolean: (a => a)(inp##boolean),
+      \\"boolean\\": (a => a)(inp##boolean),
 
-      nullableID:
+      \\"nullableID\\":
         (
           a =>
             switch (a) {
@@ -17542,7 +17542,7 @@ module MyQuery = {
           inp##nullableID,
         ),
 
-      id: (a => a)(inp##id),
+      \\"id\\": (a => a)(inp##id),
     };
   let makeVariables =
       (
@@ -17663,14 +17663,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
+      \\"arg\\": (a => serializeInputObjectVariousScalarsInput(a))(inp##arg),
     }
 
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
 
-      nullableString:
+      \\"nullableString\\":
         (
           a =>
             switch (a) {
@@ -17681,9 +17681,9 @@ module MyQuery = {
           inp##nullableString,
         ),
 
-      string: (a => a)(inp##string),
+      \\"string\\": (a => a)(inp##string),
 
-      nullableInt:
+      \\"nullableInt\\":
         (
           a =>
             switch (a) {
@@ -17694,9 +17694,9 @@ module MyQuery = {
           inp##nullableInt,
         ),
 
-      int: (a => a)(inp##int),
+      \\"int\\": (a => a)(inp##int),
 
-      nullableFloat:
+      \\"nullableFloat\\":
         (
           a =>
             switch (a) {
@@ -17707,9 +17707,9 @@ module MyQuery = {
           inp##nullableFloat,
         ),
 
-      float: (a => a)(inp##float),
+      \\"float\\": (a => a)(inp##float),
 
-      nullableBoolean:
+      \\"nullableBoolean\\":
         (
           a =>
             switch (a) {
@@ -17720,9 +17720,9 @@ module MyQuery = {
           inp##nullableBoolean,
         ),
 
-      boolean: (a => a)(inp##boolean),
+      \\"boolean\\": (a => a)(inp##boolean),
 
-      nullableID:
+      \\"nullableID\\":
         (
           a =>
             switch (a) {
@@ -17733,7 +17733,7 @@ module MyQuery = {
           inp##nullableID,
         ),
 
-      id: (a => a)(inp##id),
+      \\"id\\": (a => a)(inp##id),
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables(
@@ -17941,7 +17941,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      var: (a => a)(inp##var),
+      \\"var\\": (a => a)(inp##var),
     };
   let makeVariables = (~var, ()) =>
     serializeVariables(
@@ -22054,7 +22054,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      \\"required\\": (a => a)(inp##required),
     };
   let makeVariables = (~required, ()) =>
     serializeVariables(

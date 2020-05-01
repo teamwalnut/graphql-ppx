@@ -66,16 +66,16 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      "arg": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
 
-      nonNullableField: (a => a)(inp##nonNullableField),
+      "nonNullableField": (a => a)(inp##nonNullableField),
 
-      nullableArray:
+      "nullableArray":
         (
           a =>
             switch (a) {
@@ -106,7 +106,7 @@ module MyQuery = {
           inp##nullableArray,
         ),
 
-      field:
+      "field":
         (
           a =>
             switch (a) {
@@ -117,7 +117,7 @@ module MyQuery = {
           inp##field,
         ),
 
-      enum:
+      "enum":
         (
           a =>
             switch (a) {
@@ -140,7 +140,7 @@ module MyQuery = {
           inp##enum,
         ),
 
-      embeddedInput:
+      "embeddedInput":
         (
           a =>
             switch (a) {
@@ -181,7 +181,7 @@ module MyQuery = {
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
 
-      field:
+      "field":
         (
           a =>
             switch (a) {

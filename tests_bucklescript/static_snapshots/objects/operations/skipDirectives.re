@@ -155,7 +155,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      var: (a => a)(inp##var),
+      "var": (a => a)(inp##var),
     };
   let makeVariables = (~var, ()) =>
     serializeVariables(

@@ -46,7 +46,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
+      "arg":
         (
           a =>
             switch (a) {

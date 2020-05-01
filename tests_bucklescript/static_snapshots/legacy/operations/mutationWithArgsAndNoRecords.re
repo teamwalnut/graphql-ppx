@@ -46,7 +46,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      required: (a => a)(inp##required),
+      "required": (a => a)(inp##required),
     };
   let make = (~required, ()) => {
     "query": query,
