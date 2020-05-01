@@ -10,6 +10,7 @@ module Result_structure = Result_structure;
 module Source_pos = Source_pos;
 module Validations = Validations;
 module Schema = Schema;
+module Schema_printer = Schema_printer;
 module Compat = Compat;
 module Graphql_ast = Graphql_ast;
 module Type_utils = Type_utils;

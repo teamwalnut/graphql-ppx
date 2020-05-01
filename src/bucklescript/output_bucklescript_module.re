@@ -515,14 +515,13 @@ let generate_fragment_module =
     } else {
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-      let parse =
-        [@metaloc conv_loc(config.map_loc(fragment.span))]
-        [%stri
-          let parse = [%e make_labeled_fun(parse_fn, required_variables)]
-        ];
+      let parse = [%stri
+        let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+      ];
       List.concat(
         List.concat([
           [
+            Output_bucklescript_docstrings.for_fragment(config, fragment),
             switch (pre_printed_query) {
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []
