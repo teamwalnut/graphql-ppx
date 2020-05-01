@@ -498,7 +498,7 @@ let generate_types =
   let types =
     types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
   switch (fragment_name) {
-  | Some(fragment_name) =>
+  | Some((fragment_name, fragment_name_loc)) =>
     List.append(
       types,
       [
@@ -509,10 +509,15 @@ let generate_types =
               Type.mk(
                 ~manifest=
                   Typ.constr(
-                    {loc: Location.none, txt: Longident.Lident("t")},
+                    raw
+                      ? Location.mknoloc(Longident.Lident("t"))
+                      : Location.mkloc(
+                          Longident.Lident("t"),
+                          conv_loc(config.map_loc(fragment_name_loc)),
+                        ),
                     [],
                   ),
-                {loc: Location.none, txt: "t_" ++ fragment_name},
+                Location.mknoloc("t_" ++ fragment_name),
               ),
             ],
           )

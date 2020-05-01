@@ -458,14 +458,20 @@ let generate_fragment_module =
       config,
       res_structure,
       false,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
       res_structure,
       true,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
 
   let rec make_labeled_fun = body =>
