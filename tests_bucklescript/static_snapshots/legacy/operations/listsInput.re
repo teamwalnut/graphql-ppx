@@ -61,14 +61,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectListsInput(a))(inp##arg),
+      "arg": (a => serializeInputObjectListsInput(a))(inp##arg),
     }
 
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
 
-      nullableOfNullable:
+      "nullableOfNullable":
         (
           a =>
             switch (a) {
@@ -99,7 +99,7 @@ module MyQuery = {
           inp##nullableOfNullable,
         ),
 
-      nullableOfNonNullable:
+      "nullableOfNonNullable":
         (
           a =>
             switch (a) {
@@ -111,7 +111,7 @@ module MyQuery = {
           inp##nullableOfNonNullable,
         ),
 
-      nonNullableOfNullable:
+      "nonNullableOfNullable":
         (
           a =>
             Array.map(
@@ -131,7 +131,7 @@ module MyQuery = {
           inp##nonNullableOfNullable,
         ),
 
-      nonNullableOfNonNullable:
+      "nonNullableOfNonNullable":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
         ),

@@ -93,7 +93,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      opt:
+      "opt":
         (
           a =>
             switch (a) {
@@ -104,7 +104,7 @@ module MyQuery = {
           inp##opt,
         ),
 
-      req: (a => a)(inp##req),
+      "req": (a => a)(inp##req),
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables(
