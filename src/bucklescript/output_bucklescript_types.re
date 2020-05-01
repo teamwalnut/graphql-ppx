@@ -392,12 +392,18 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                ...acc,
              ]
 
-           | Field({path: [name, ...path], type_}) => [
+           | Field({path: [name, ...path], loc_key, type_}) => [
                {
                  pof_desc:
                    Otag(
                      {txt: to_valid_ident(name), loc: Location.none},
-                     generate_type(config, [name, ...path], raw, type_),
+                     generate_type(
+                       ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                       config,
+                       [name, ...path],
+                       raw,
+                       type_,
+                     ),
                    ),
                  pof_loc: Location.none,
                  pof_attributes: [],

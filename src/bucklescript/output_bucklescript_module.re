@@ -337,6 +337,33 @@ let generate_default_operation =
       false,
       None,
     );
+  let types =
+    List.append(
+      types,
+      [
+        Ast_helper.Str.type_(
+          Recursive,
+          [
+            Type.mk(
+              ~manifest=
+                Output_bucklescript_types.base_type(
+                  ~loc=
+                    Output_bucklescript_utils.extend_loc_from_start(
+                      conv_loc(config.map_loc(operation.span)),
+                      switch (operation.item.o_type) {
+                      | Query => 5
+                      | Mutation => 8
+                      | Subscription => 12
+                      },
+                    ),
+                  "t",
+                ),
+              Location.mknoloc("operation"),
+            ),
+          ],
+        ),
+      ],
+    );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
