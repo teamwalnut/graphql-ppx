@@ -38,10 +38,14 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "recursiveInput": {
+      let recursiveInput = {
         let value = value##recursiveInput;
         value;
-      },
+      };
+      {
+
+        "recursiveInput": recursiveInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {

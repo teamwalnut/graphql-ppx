@@ -26,10 +26,14 @@ module MyQuery = {
   type t_variables = {. "query": string};
   let parse: Raw.t => t =
     value => {
-      "argNamedQuery": {
+      let argNamedQuery = {
         let value = value##argNamedQuery;
         value;
-      },
+      };
+      {
+
+        "argNamedQuery": argNamedQuery,
+      };
     };
   let serialize: t => Raw.t =
     value => {

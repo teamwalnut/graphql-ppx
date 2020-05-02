@@ -38,38 +38,50 @@ module MyQuery = {
   type t = {. "customFields": t_customFields};
   let parse: Raw.t => t =
     value => {
-      "customFields": {
+      let customFields = {
         let value = value##customFields;
-        {
-          "currentTime": {
-            let value = value##currentTime;
-            GraphqlHelpers.DateTime.parse(value);
-          },
-          "favoriteColor": {
-            let value = value##favoriteColor;
-            GraphqlHelpers.Color.parse(value);
-          },
-          "futureTime": {
-            let value = value##futureTime;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
-            | None => None
-            };
-          },
-          "nullableColor": {
-            let value = value##nullableColor;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some(
-                GraphqlHelpers.DateTime.parse(
-                  GraphqlHelpers.Color.parse(value),
-                ),
-              )
-            | None => None
-            };
-          },
+        let nullableColor = {
+          let value = value##nullableColor;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              GraphqlHelpers.DateTime.parse(
+                GraphqlHelpers.Color.parse(value),
+              ),
+            )
+          | None => None
+          };
+        }
+        and futureTime = {
+          let value = value##futureTime;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+          | None => None
+          };
+        }
+        and favoriteColor = {
+          let value = value##favoriteColor;
+          GraphqlHelpers.Color.parse(value);
+        }
+        and currentTime = {
+          let value = value##currentTime;
+          GraphqlHelpers.DateTime.parse(value);
         };
-      },
+        {
+
+          "currentTime": currentTime,
+
+          "favoriteColor": favoriteColor,
+
+          "futureTime": futureTime,
+
+          "nullableColor": nullableColor,
+        };
+      };
+      {
+
+        "customFields": customFields,
+      };
     };
   let serialize: t => Raw.t =
     value => {

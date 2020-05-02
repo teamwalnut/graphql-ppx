@@ -43,28 +43,40 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        customScalarField: {
+        let customScalarField = {
           let value = (value: Raw.t).customScalarField;
           (
             {
-              __typename: {
-                let value = (value: Raw.t_customScalarField).__typename;
+              let nonNullable = {
+                let value = (value: Raw.t_customScalarField).nonNullable;
                 value;
-              },
-              nullable: {
+              }
+              and nullable = {
                 let value = (value: Raw.t_customScalarField).nullable;
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
-              },
-              nonNullable: {
-                let value = (value: Raw.t_customScalarField).nonNullable;
+              }
+              and __typename = {
+                let value = (value: Raw.t_customScalarField).__typename;
                 value;
-              },
+              };
+              {
+
+                __typename,
+
+                nullable,
+
+                nonNullable,
+              };
             }: t_customScalarField
           );
-        },
+        };
+        {
+
+          customScalarField: customScalarField,
+        };
       }: t
     );
   let serialize: t => Raw.t =

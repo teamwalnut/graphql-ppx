@@ -406,7 +406,17 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
     );
   }
 and generate_object_encoder =
-    (config, loc, name, fields, path, definition, existing_record, typename) => {
+    (
+      config,
+      loc,
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+      typename,
+      force_record,
+    ) => {
   open Ast_helper;
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
@@ -491,7 +501,10 @@ and generate_object_encoder =
   };
 
   let do_obj_constructor = with_objects =>
-    [@metaloc conv_loc(loc)] do_obj_constructor_base(with_objects, true);
+    [@metaloc conv_loc(loc)]
+    {
+      do_obj_constructor_base(with_objects, true);
+    };
 
   let do_obj_constructor_records = () =>
     [@metaloc conv_loc(loc)]
@@ -576,10 +589,12 @@ and generate_object_encoder =
          | _ => false,
        );
 
-  switch (has_fragment_spreads, config.records) {
-  | (true, records) => merge_into_opaque(!records)
-  | (false, true) => do_obj_constructor_records()
-  | (false, false) => do_obj_constructor(true)
+  switch (has_fragment_spreads, config.records, existing_record, force_record) {
+  | (true, records, _, _) => merge_into_opaque(!records)
+  | (false, true, _, _) => do_obj_constructor_records()
+  | (false, false, _, true) => do_obj_constructor(false)
+  | (false, false, Some(_), _) => do_obj_constructor(false)
+  | (false, false, _, _) => do_obj_constructor(true)
   };
 }
 and generate_poly_variant_union_encoder =
@@ -693,6 +708,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
+      true,
     )
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
@@ -704,6 +720,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
+      false,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union_encoder(

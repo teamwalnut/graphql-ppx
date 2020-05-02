@@ -54,44 +54,58 @@ module MyQuery = {
   type t_variables = {. "var": bool};
   let parse: Raw.t => t =
     value => {
-      "v1": {
-        let value = value##v1;
-        {
-          "nullableString": {
-            let value = value##nullableString;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-          "string": {
-            let value = value##string;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-        };
-      },
-      "v2": {
+      let v2 = {
         let value = value##v2;
-        {
-          "nullableString": {
-            let value = value##nullableString;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-          "string": {
-            let value = value##string;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
+        let string = {
+          let value = value##string;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
         };
-      },
+        {
+
+          "nullableString": nullableString,
+
+          "string": string,
+        };
+      }
+      and v1 = {
+        let value = value##v1;
+        let string = {
+          let value = value##string;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and nullableString = {
+          let value = value##nullableString;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        };
+        {
+
+          "nullableString": nullableString,
+
+          "string": string,
+        };
+      };
+      {
+
+        "v1": v1,
+
+        "v2": v2,
+      };
     };
   let serialize: t => Raw.t =
     value => {

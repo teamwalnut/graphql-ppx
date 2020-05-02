@@ -42,21 +42,31 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        variousScalars: {
+        let variousScalars = {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              string: {
-                let value = (value: Raw.t_variousScalars).string;
-                IntOfString.parse(value);
-              },
-              int: {
+              let int = {
                 let value = (value: Raw.t_variousScalars).int;
                 StringOfInt.parse(value);
-              },
+              }
+              and string = {
+                let value = (value: Raw.t_variousScalars).string;
+                IntOfString.parse(value);
+              };
+              {
+
+                string,
+
+                int,
+              };
             }: t_variousScalars
           );
-        },
+        };
+        {
+
+          variousScalars: variousScalars,
+        };
       }: t
     );
   let serialize: t => Raw.t =

@@ -43,19 +43,27 @@ module MyQuery = {
   type t = {. "variousScalars": t_variousScalars};
   let parse: Raw.t => t =
     value => {
-      "variousScalars": {
+      let variousScalars = {
         let value = value##variousScalars;
-        {
-          "string": {
-            let value = value##string;
-            IntOfString.parse(value);
-          },
-          "int": {
-            let value = value##int;
-            StringOfInt.parse(value);
-          },
+        let int = {
+          let value = value##int;
+          StringOfInt.parse(value);
+        }
+        and string = {
+          let value = value##string;
+          IntOfString.parse(value);
         };
-      },
+        {
+
+          "string": string,
+
+          "int": int,
+        };
+      };
+      {
+
+        "variousScalars": variousScalars,
+      };
     };
   let serialize: t => Raw.t =
     value => {

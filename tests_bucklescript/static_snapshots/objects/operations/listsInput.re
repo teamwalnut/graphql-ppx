@@ -40,10 +40,14 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "listsInput": {
+      let listsInput = {
         let value = value##listsInput;
         value;
-      },
+      };
+      {
+
+        "listsInput": listsInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {

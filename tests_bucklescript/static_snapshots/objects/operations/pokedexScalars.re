@@ -44,26 +44,38 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "pokemon": {
+      let pokemon = {
         let value = value##pokemon;
         switch (Js.toOption(value)) {
         | Some(value) =>
-          Some({
-            "id": {
-              let value = value##id;
-              value;
-            },
-            "name": {
-              let value = value##name;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+          Some(
+            {
+              let name = {
+                let value = value##name;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              }
+              and id = {
+                let value = value##id;
+                value;
+              };
+              {
+
+                "id": id,
+
+                "name": name,
               };
             },
-          })
+          )
         | None => None
         };
-      },
+      };
+      {
+
+        "pokemon": pokemon,
+      };
     };
   let serialize: t => Raw.t =
     value => {

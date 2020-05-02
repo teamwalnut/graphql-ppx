@@ -38,48 +38,60 @@ module MyQuery = {
   type t = {. "lists": t_lists};
   let parse: Raw.t => t =
     value => {
-      "lists": {
+      let lists = {
         let value = value##lists;
-        {
-          "nullableOfNullable": {
-            let value = value##nullableOfNullable;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some(
-                value
-                |> Js.Array.map(value =>
-                     switch (Js.toOption(value)) {
-                     | Some(value) => Some(value)
-                     | None => None
-                     }
-                   ),
-              )
-            | None => None
-            };
-          },
-          "nullableOfNonNullable": {
-            let value = value##nullableOfNonNullable;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value |> Js.Array.map(value => value))
-            | None => None
-            };
-          },
-          "nonNullableOfNullable": {
-            let value = value##nonNullableOfNullable;
-            value
-            |> Js.Array.map(value =>
-                 switch (Js.toOption(value)) {
-                 | Some(value) => Some(value)
-                 | None => None
-                 }
-               );
-          },
-          "nonNullableOfNonNullable": {
-            let value = value##nonNullableOfNonNullable;
-            value |> Js.Array.map(value => value);
-          },
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
         };
-      },
+        {
+
+          "nullableOfNullable": nullableOfNullable,
+
+          "nullableOfNonNullable": nullableOfNonNullable,
+
+          "nonNullableOfNullable": nonNullableOfNullable,
+
+          "nonNullableOfNonNullable": nonNullableOfNonNullable,
+        };
+      };
+      {
+
+        "lists": lists,
+      };
     };
   let serialize: t => Raw.t =
     value => {

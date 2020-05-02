@@ -85,7 +85,14 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-      "nullableOfNullable": {
+      let nullableOfNonNullable = {
+        let value = value##nullableOfNonNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      }
+      and nullableOfNullable = {
         let value = value##nullableOfNullable;
         switch (Js.toOption(value)) {
         | Some(value) =>
@@ -100,14 +107,13 @@ module Fragments = {
           )
         | None => None
         };
-      },
-      "nullableOfNonNullable": {
-        let value = value##nullableOfNonNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value |> Js.Array.map(value => value))
-        | None => None
-        };
-      },
+      };
+      {
+
+        "nullableOfNullable": nullableOfNullable,
+
+        "nullableOfNonNullable": nullableOfNonNullable,
+      };
     };
     let serialize: t => Raw.t =
       value => {
@@ -156,13 +162,17 @@ module Fragments = {
     type nonrec t_Lists = t;
 
     let parse = (value: Raw.t) => {
-      "nullableOfNonNullable": {
+      let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
         };
-      },
+      };
+      {
+
+        "nullableOfNonNullable": nullableOfNonNullable,
+      };
     };
     let serialize: t => Raw.t =
       value => {
@@ -261,83 +271,107 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "l1": {
+      let l4 = {
+        let value = value##l4;
+        let listFragment = {
+          let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+          Fragments.ListFragment.parse(value);
+        }
+        and nullableOfNullable = {
+          let value =
+            Obj.magic(
+              Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+            );
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        };
+        {
+
+          "nullableOfNullable": nullableOfNullable,
+
+          "listFragment": listFragment,
+        };
+      }
+      and l3 = {
+        let value = value##l3;
+        let frag2 = {
+          let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+          Fragments.ListFragment.parse(value);
+        }
+        and frag1 = {
+          let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+          Fragments.ListFragment.parse(value);
+        }
+        and nullableOfNullable = {
+          let value =
+            Obj.magic(
+              Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+            );
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        };
+        {
+
+          "nullableOfNullable": nullableOfNullable,
+
+          "frag1": frag1,
+
+          "frag2": frag2,
+        };
+      }
+      and l2 = {
+        let value = value##l2;
+        let frag2 = {
+          let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+          Fragments.ListFragment.parse(value);
+        }
+        and frag1 = {
+          let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+          Fragments.ListFragment.parse(value);
+        };
+        {
+
+          "frag1": frag1,
+
+          "frag2": frag2,
+        };
+      }
+      and l1 = {
         let value = value##l1;
         Fragments.ListFragment.parse(value);
-      },
-      "l2": {
-        let value = value##l2;
-        {
-          "frag1": {
-            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-            Fragments.ListFragment.parse(value);
-          },
-          "frag2": {
-            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-            Fragments.ListFragment.parse(value);
-          },
-        };
-      },
-      "l3": {
-        let value = value##l3;
-        {
-          "nullableOfNullable": {
-            let value =
-              Obj.magic(
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
-              );
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some(
-                value
-                |> Js.Array.map(value =>
-                     switch (Js.toOption(value)) {
-                     | Some(value) => Some(value)
-                     | None => None
-                     }
-                   ),
-              )
-            | None => None
-            };
-          },
-          "frag1": {
-            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-            Fragments.ListFragment.parse(value);
-          },
-          "frag2": {
-            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-            Fragments.ListFragment.parse(value);
-          },
-        };
-      },
-      "l4": {
-        let value = value##l4;
-        {
-          "nullableOfNullable": {
-            let value =
-              Obj.magic(
-                Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
-              );
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some(
-                value
-                |> Js.Array.map(value =>
-                     switch (Js.toOption(value)) {
-                     | Some(value) => Some(value)
-                     | None => None
-                     }
-                   ),
-              )
-            | None => None
-            };
-          },
-          "listFragment": {
-            let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-            Fragments.ListFragment.parse(value);
-          },
-        };
-      },
+      };
+      {
+
+        "l1": l1,
+
+        "l2": l2,
+
+        "l3": l3,
+
+        "l4": l4,
+      };
     };
   let serialize: t => Raw.t =
     value => {

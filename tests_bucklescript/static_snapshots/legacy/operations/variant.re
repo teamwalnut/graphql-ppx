@@ -82,7 +82,7 @@ module MyQuery = {
   type t = {. "mutationForVariant": t_mutationForVariant};
   let parse: Raw.t => t =
     value => {
-      "mutationForVariant": {
+      let mutationForVariant = {
         let value = value##mutationForVariant;
         switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
@@ -111,27 +111,41 @@ module MyQuery = {
               switch (Js.Json.decodeNull(temp)) {
               | None =>
                 let value = temp;
-                `Dog({
-                  "name": {
-                    let value = value##name;
-                    value;
+                `Dog(
+                  {
+                    let barkVolume = {
+                      let value = value##barkVolume;
+                      value;
+                    }
+                    and name = {
+                      let value = value##name;
+                      value;
+                    };
+                    {
+
+                      "name": name,
+
+                      "barkVolume": barkVolume,
+                    };
                   },
-                  "barkVolume": {
-                    let value = value##barkVolume;
-                    value;
-                  },
-                });
+                );
               | Some(_) =>
                 let temp = Js.Dict.unsafeGet(Obj.magic(value), "human");
                 switch (Js.Json.decodeNull(temp)) {
                 | None =>
                   let value = temp;
-                  `Human({
-                    "name": {
-                      let value = value##name;
-                      value;
+                  `Human(
+                    {
+                      let name = {
+                        let value = value##name;
+                        value;
+                      };
+                      {
+
+                        "name": name,
+                      };
                     },
-                  });
+                  );
                 | Some(_) =>
                   let temp =
                     Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman");
@@ -154,15 +168,19 @@ module MyQuery = {
                               {
                                 let value: Raw.t_mutationForVariant_dogOrHuman_Dog =
                                   Obj.magic(value);
+                                let barkVolume = {
+                                  let value = value##barkVolume;
+                                  value;
+                                }
+                                and name = {
+                                  let value = value##name;
+                                  value;
+                                };
                                 {
-                                  "name": {
-                                    let value = value##name;
-                                    value;
-                                  },
-                                  "barkVolume": {
-                                    let value = value##barkVolume;
-                                    value;
-                                  },
+
+                                  "name": name,
+
+                                  "barkVolume": barkVolume,
                                 };
                               },
                             )
@@ -171,11 +189,13 @@ module MyQuery = {
                               {
                                 let value: Raw.t_mutationForVariant_dogOrHuman_Human =
                                   Obj.magic(value);
+                                let name = {
+                                  let value = value##name;
+                                  value;
+                                };
                                 {
-                                  "name": {
-                                    let value = value##name;
-                                    value;
-                                  },
+
+                                  "name": name,
                                 };
                               },
                             )
@@ -198,7 +218,11 @@ module MyQuery = {
             };
           };
         };
-      },
+      };
+      {
+
+        "mutationForVariant": mutationForVariant,
+      };
     };
   let serialize: t => Raw.t =
     value => {

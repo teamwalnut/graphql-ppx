@@ -27,10 +27,14 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        optionalInputArgs: {
+        let optionalInputArgs = {
           let value = (value: Raw.t).optionalInputArgs;
           value;
-        },
+        };
+        {
+
+          optionalInputArgs: optionalInputArgs,
+        };
       }: t
     );
   let serialize: t => Raw.t =

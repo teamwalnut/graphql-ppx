@@ -45,10 +45,14 @@ module MyQuery = {
   and t_variables_EmbeddedInput = {. "field": option(string)};
   let parse: Raw.t => t =
     value => {
-      "nonrecursiveInput": {
+      let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
         value;
-      },
+      };
+      {
+
+        "nonrecursiveInput": nonrecursiveInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {

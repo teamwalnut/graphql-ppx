@@ -26,10 +26,14 @@ module MyQuery = {
   type t_variables = {. "required": string};
   let parse: Raw.t => t =
     value => {
-      "optionalInputArgs": {
+      let optionalInputArgs = {
         let value = value##optionalInputArgs;
         value;
-      },
+      };
+      {
+
+        "optionalInputArgs": optionalInputArgs,
+      };
     };
   let serialize: t => Raw.t =
     value => {
