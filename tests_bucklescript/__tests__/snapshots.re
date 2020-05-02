@@ -44,7 +44,7 @@ let run_ppx = (path, opts, testType) => {
   let _:buffer = execSync(ppx ++ " -schema ../graphql_schema.json --dump-ast " ++ opts ++ " " ++ path ++ ".ml " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")});
   let ret = execSync(refmt ++ " --parse binary --print re " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")})
   |> toString;
-  writeFileSync("static_snapshots/" ++ testType ++ "/" ++ path, result);
+  writeFileSync("static_snapshots/" ++ testType ++ "/" ++ path, ret);
   // here we should clean file.
   ret;
 };
