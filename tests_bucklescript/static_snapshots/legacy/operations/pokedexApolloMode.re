@@ -32,6 +32,7 @@ module MyQuery = {
     "name": option(string),
   };
   type t = {. "pokemon": option(t_pokemon)};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -51,34 +52,24 @@ module MyQuery = {
                 let value = value##id;
                 value;
               };
-              {
-
-                "id": id,
-
-                "name": name,
-              };
+              {"id": id, "name": name};
             },
           )
         | None => None
         };
       };
-      {
-
-        "pokemon": pokemon,
-      };
+      {"pokemon": pokemon};
     };
   let serialize: t => Raw.t =
     value => {
       let pokemon = {
         let value = value##pokemon;
-
         switch (value) {
         | Some(value) =>
           Js.Nullable.return(
             {
               let name = {
                 let value = value##name;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
@@ -86,24 +77,15 @@ module MyQuery = {
               }
               and id = {
                 let value = value##id;
-
                 value;
               };
-              {
-
-                "id": id,
-
-                "name": name,
-              };
+              {"id": id, "name": name};
             },
           )
         | None => Js.Nullable.null
         };
       };
-      {
-
-        "pokemon": pokemon,
-      };
+      {"pokemon": pokemon};
     };
   let make = () => {
     "query": query,

@@ -51,6 +51,7 @@ module MyQuery = {
     "v1": t_v1,
     "v2": t_v2,
   };
+  type operation = t;
   type t_variables = {. "var": bool};
   let parse: Raw.t => t =
     value => {
@@ -70,12 +71,7 @@ module MyQuery = {
           | None => None
           };
         };
-        {
-
-          "nullableString": nullableString,
-
-          "string": string,
-        };
+        {"nullableString": nullableString, "string": string};
       }
       and v1 = {
         let value = value##v1;
@@ -93,19 +89,9 @@ module MyQuery = {
           | None => None
           };
         };
-        {
-
-          "nullableString": nullableString,
-
-          "string": string,
-        };
+        {"nullableString": nullableString, "string": string};
       };
-      {
-
-        "v1": v1,
-
-        "v2": v2,
-      };
+      {"v1": v1, "v2": v2};
     };
   let serialize: t => Raw.t =
     value => {
@@ -113,7 +99,6 @@ module MyQuery = {
         let value = value##v2;
         let string = {
           let value = value##string;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -121,24 +106,17 @@ module MyQuery = {
         }
         and nullableString = {
           let value = value##nullableString;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "nullableString": nullableString,
-
-          "string": string,
-        };
+        {"nullableString": nullableString, "string": string};
       }
       and v1 = {
         let value = value##v1;
         let string = {
           let value = value##string;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -146,49 +124,24 @@ module MyQuery = {
         }
         and nullableString = {
           let value = value##nullableString;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "nullableString": nullableString,
-
-          "string": string,
-        };
+        {"nullableString": nullableString, "string": string};
       };
-      {
-
-        "v1": v1,
-
-        "v2": v2,
-      };
+      {"v1": v1, "v2": v2};
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-
-      "var": (a => a)(inp##var),
-    };
+    inp => {"var": (a => a)(inp##var)};
   let make = (~var, ()) => {
     "query": query,
-    "variables":
-      serializeVariables(
-        {
-
-          "var": var,
-        }: t_variables,
-      ),
+    "variables": serializeVariables({"var": var}: t_variables),
     "parse": parse,
   }
   and makeVariables = (~var, ()) =>
-    serializeVariables(
-      {
-
-        "var": var,
-      }: t_variables,
-    );
+    serializeVariables({"var": var}: t_variables);
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),

@@ -23,6 +23,7 @@ module MyQuery = {
   };
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {optionalInputArgs: string};
+  type operation = t;
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
@@ -31,10 +32,7 @@ module MyQuery = {
           let value = (value: Raw.t).optionalInputArgs;
           value;
         };
-        {
-
-          optionalInputArgs: optionalInputArgs,
-        };
+        {optionalInputArgs: optionalInputArgs};
       }: t
     );
   let serialize: t => Raw.t =
@@ -42,26 +40,14 @@ module MyQuery = {
       {
         let optionalInputArgs = {
           let value = (value: t).optionalInputArgs;
-
           value;
         };
-        {
-
-          optionalInputArgs: optionalInputArgs,
-        };
+        {optionalInputArgs: optionalInputArgs};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-
-      required: (a => a)((inp: t_variables).required),
-    };
+    inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
-    serializeVariables(
-      {
-
-        required: required,
-      }: t_variables,
-    );
+    serializeVariables({required: required}: t_variables);
   let definition = (parse, query, serialize);
 };

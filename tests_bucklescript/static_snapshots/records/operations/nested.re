@@ -59,6 +59,7 @@ module MyQuery = {
     second: t_second,
     let_: t_let,
   };
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -83,28 +84,19 @@ module MyQuery = {
                                   (value: Raw.t_let_inner_inner).field;
                                 value;
                               };
-                              {
-
-                                field: field,
-                              };
+                              {field: field};
                             }: t_let_inner_inner,
                           )
                         | None => None
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: t_let_inner,
                   )
                 | None => None
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: t_let
           );
         }
@@ -134,30 +126,19 @@ module MyQuery = {
                                   (value: Raw.t_second_inner_inner).f1;
                                 value;
                               };
-                              {
-
-                                f1,
-
-                                f2,
-                              };
+                              {f1, f2};
                             }: t_second_inner_inner,
                           )
                         | None => None
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: t_second_inner,
                   )
                 | None => None
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: t_second
           );
         }
@@ -182,39 +163,23 @@ module MyQuery = {
                                   (value: Raw.t_first_inner_inner).field;
                                 value;
                               };
-                              {
-
-                                field: field,
-                              };
+                              {field: field};
                             }: t_first_inner_inner,
                           )
                         | None => None
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: t_first_inner,
                   )
                 | None => None
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: t_first
           );
         };
-        {
-
-          first,
-
-          second,
-
-          let_,
-        };
+        {first, second, let_};
       }: t
     );
   let serialize: t => Raw.t =
@@ -226,45 +191,33 @@ module MyQuery = {
             {
               let inner = {
                 let value = (value: t_let).inner;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
                       let inner = {
                         let value = (value: t_let_inner).inner;
-
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
                               let field = {
                                 let value = (value: t_let_inner_inner).field;
-
                                 value;
                               };
-                              {
-
-                                field: field,
-                              };
+                              {field: field};
                             }: Raw.t_let_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: Raw.t_let_inner,
                   )
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: Raw.t_let
           );
         }
@@ -274,52 +227,37 @@ module MyQuery = {
             {
               let inner = {
                 let value = (value: t_second).inner;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
                       let inner = {
                         let value = (value: t_second_inner).inner;
-
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
                               let f2 = {
                                 let value = (value: t_second_inner_inner).f2;
-
                                 value;
                               }
                               and f1 = {
                                 let value = (value: t_second_inner_inner).f1;
-
                                 value;
                               };
-                              {
-
-                                f1,
-
-                                f2,
-                              };
+                              {f1, f2};
                             }: Raw.t_second_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: Raw.t_second_inner,
                   )
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: Raw.t_second
           );
         }
@@ -329,56 +267,37 @@ module MyQuery = {
             {
               let inner = {
                 let value = (value: t_first).inner;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
                       let inner = {
                         let value = (value: t_first_inner).inner;
-
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
                               let field = {
                                 let value = (value: t_first_inner_inner).field;
-
                                 value;
                               };
-                              {
-
-                                field: field,
-                              };
+                              {field: field};
                             }: Raw.t_first_inner_inner,
                           )
                         | None => Js.Nullable.null
                         };
                       };
-                      {
-
-                        inner: inner,
-                      };
+                      {inner: inner};
                     }: Raw.t_first_inner,
                   )
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                inner: inner,
-              };
+              {inner: inner};
             }: Raw.t_first
           );
         };
-        {
-
-          first,
-
-          second,
-
-          let_,
-        };
+        {first, second, let_};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

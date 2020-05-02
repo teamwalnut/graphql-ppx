@@ -23,6 +23,7 @@ module MyQuery = {
   };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
   type t = {enumInput: string};
+  type operation = t;
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     (value) => (
@@ -31,10 +32,7 @@ module MyQuery = {
           let value = (value: Raw.t).enumInput;
           value;
         };
-        {
-
-          enumInput: enumInput,
-        };
+        {enumInput: enumInput};
       }: t
     );
   let serialize: t => Raw.t =
@@ -42,18 +40,13 @@ module MyQuery = {
       {
         let enumInput = {
           let value = (value: t).enumInput;
-
           value;
         };
-        {
-
-          enumInput: enumInput,
-        };
+        {enumInput: enumInput};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       arg:
         (
           a =>
@@ -67,11 +60,6 @@ module MyQuery = {
         ),
     };
   let makeVariables = (~arg, ()) =>
-    serializeVariables(
-      {
-
-        arg: arg,
-      }: t_variables,
-    );
+    serializeVariables({arg: arg}: t_variables);
   let definition = (parse, query, serialize);
 };

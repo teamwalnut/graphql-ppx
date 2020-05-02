@@ -26,9 +26,19 @@ module MyQuery = {
       "inner": Js.Nullable.t(t_variables_RecursiveInput),
       "enum": Js.Nullable.t(string),
     };
+    type nonrec _graphql_RecursiveInput_47;
+    /**```
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+```*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "recursiveInput": string};
+  type operation = t;
   type t_variables = {. "arg": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .
@@ -36,40 +46,36 @@ module MyQuery = {
     "inner": option(t_variables_RecursiveInput),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
   };
+  type nonrec _graphql_RecursiveInput_47;
+  /**```
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+```*/
+  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let recursiveInput = {
         let value = value##recursiveInput;
         value;
       };
-      {
-
-        "recursiveInput": recursiveInput,
-      };
+      {"recursiveInput": recursiveInput};
     };
   let serialize: t => Raw.t =
     value => {
       let recursiveInput = {
         let value = value##recursiveInput;
-
         value;
       };
-      {
-
-        "recursiveInput": recursiveInput,
-      };
+      {"recursiveInput": recursiveInput};
     };
-
   let rec serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-
-      "arg": (a => serializeInputObjectRecursiveInput(a))(inp##arg),
-    }
-
+    inp => {"arg": (a => serializeInputObjectRecursiveInput(a))(inp##arg)}
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
-
       "otherField":
         (
           a =>
@@ -80,7 +86,6 @@ module MyQuery = {
         )(
           inp##otherField,
         ),
-
       "inner":
         (
           a =>
@@ -94,7 +99,6 @@ module MyQuery = {
         )(
           inp##inner,
         ),
-
       "enum":
         (
           a =>
@@ -120,29 +124,15 @@ module MyQuery = {
     };
   let make = (~arg, ()) => {
     "query": query,
-    "variables":
-      serializeVariables(
-        {
-
-          "arg": arg,
-        }: t_variables,
-      ),
+    "variables": serializeVariables({"arg": arg}: t_variables),
     "parse": parse,
   }
   and makeVariables = (~arg, ()) =>
-    serializeVariables(
-      {
-
-        "arg": arg,
-      }: t_variables,
-    )
+    serializeVariables({"arg": arg}: t_variables)
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
-
     "otherField": otherField,
-
     "inner": inner,
-
     "enum": enum,
   };
   let makeWithVariables = variables => {

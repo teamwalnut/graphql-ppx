@@ -36,6 +36,7 @@ module MyQuery = {
     "nullableColor": option(GraphqlHelpers.DateTime.t),
   };
   type t = {. "customFields": t_customFields};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -68,20 +69,13 @@ module MyQuery = {
           GraphqlHelpers.DateTime.parse(value);
         };
         {
-
           "currentTime": currentTime,
-
           "favoriteColor": favoriteColor,
-
           "futureTime": futureTime,
-
           "nullableColor": nullableColor,
         };
       };
-      {
-
-        "customFields": customFields,
-      };
+      {"customFields": customFields};
     };
   let serialize: t => Raw.t =
     value => {
@@ -89,7 +83,6 @@ module MyQuery = {
         let value = value##customFields;
         let nullableColor = {
           let value = value##nullableColor;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
@@ -102,7 +95,6 @@ module MyQuery = {
         }
         and futureTime = {
           let value = value##futureTime;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(GraphqlHelpers.DateTime.serialize(value))
@@ -111,29 +103,20 @@ module MyQuery = {
         }
         and favoriteColor = {
           let value = value##favoriteColor;
-
           GraphqlHelpers.Color.serialize(value);
         }
         and currentTime = {
           let value = value##currentTime;
-
           GraphqlHelpers.DateTime.serialize(value);
         };
         {
-
           "currentTime": currentTime,
-
           "favoriteColor": favoriteColor,
-
           "futureTime": futureTime,
-
           "nullableColor": nullableColor,
         };
       };
-      {
-
-        "customFields": customFields,
-      };
+      {"customFields": customFields};
     };
   let definition = (parse, query, serialize);
 };

@@ -36,6 +36,7 @@ module MyQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -78,20 +79,13 @@ module MyQuery = {
           };
         };
         {
-
           "nullableOfNullable": nullableOfNullable,
-
           "nullableOfNonNullable": nullableOfNonNullable,
-
           "nonNullableOfNullable": nonNullableOfNullable,
-
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
       };
-      {
-
-        "lists": lists,
-      };
+      {"lists": lists};
     };
   let serialize: t => Raw.t =
     value => {
@@ -99,12 +93,10 @@ module MyQuery = {
         let value = value##lists;
         let nonNullableOfNonNullable = {
           let value = value##nonNullableOfNonNullable;
-
           value |> Js.Array.map(value => value);
         }
         and nonNullableOfNullable = {
           let value = value##nonNullableOfNullable;
-
           value
           |> Js.Array.map(value =>
                switch (value) {
@@ -115,7 +107,6 @@ module MyQuery = {
         }
         and nullableOfNonNullable = {
           let value = value##nullableOfNonNullable;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(value |> Js.Array.map(value => value))
@@ -124,7 +115,6 @@ module MyQuery = {
         }
         and nullableOfNullable = {
           let value = value##nullableOfNullable;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
@@ -140,20 +130,13 @@ module MyQuery = {
           };
         };
         {
-
           "nullableOfNullable": nullableOfNullable,
-
           "nullableOfNonNullable": nullableOfNonNullable,
-
           "nonNullableOfNullable": nonNullableOfNullable,
-
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
       };
-      {
-
-        "lists": lists,
-      };
+      {"lists": lists};
     };
   let definition = (parse, query, serialize);
 };

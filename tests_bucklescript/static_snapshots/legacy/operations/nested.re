@@ -62,6 +62,7 @@ module MyQuery = {
     "second": t_second,
     "let_": t_let,
   };
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -82,28 +83,19 @@ module MyQuery = {
                           let value = value##field;
                           value;
                         };
-                        {
-
-                          "field": field,
-                        };
+                        {"field": field};
                       },
                     )
                   | None => None
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => None
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       }
       and second = {
         let value = value##second;
@@ -127,30 +119,19 @@ module MyQuery = {
                           let value = value##f1;
                           value;
                         };
-                        {
-
-                          f1,
-
-                          f2,
-                        };
+                        {f1, f2};
                       }: t_second_inner_inner,
                     )
                   | None => None
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => None
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       }
       and first = {
         let value = value##first;
@@ -170,37 +151,21 @@ module MyQuery = {
                           let value = value##field;
                           value;
                         };
-                        {
-
-                          "field": field,
-                        };
+                        {"field": field};
                       },
                     )
                   | None => None
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => None
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       };
-      {
-
-        "first": first,
-
-        "second": second,
-
-        "let_": let_,
-      };
+      {"first": first, "second": second, "let_": let_};
     };
   let serialize: t => Raw.t =
     value => {
@@ -208,149 +173,103 @@ module MyQuery = {
         let value = value##let_;
         let inner = {
           let value = value##inner;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
               {
                 let inner = {
                   let value = value##inner;
-
                   switch (value) {
                   | Some(value) =>
                     Js.Nullable.return(
                       {
                         let field = {
                           let value = value##field;
-
                           value;
                         };
-                        {
-
-                          "field": field,
-                        };
+                        {"field": field};
                       },
                     )
                   | None => Js.Nullable.null
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       }
       and second = {
         let value = value##second;
         let inner = {
           let value = value##inner;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
               {
                 let inner = {
                   let value = value##inner;
-
                   switch (value) {
                   | Some(value) =>
                     Js.Nullable.return(
                       {
                         let f2 = {
                           let value = (value: t_second_inner_inner).f2;
-
                           value;
                         }
                         and f1 = {
                           let value = (value: t_second_inner_inner).f1;
-
                           value;
                         };
-                        {
-
-                          "f1": f1,
-
-                          "f2": f2,
-                        };
+                        {"f1": f1, "f2": f2};
                       },
                     )
                   | None => Js.Nullable.null
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       }
       and first = {
         let value = value##first;
         let inner = {
           let value = value##inner;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
               {
                 let inner = {
                   let value = value##inner;
-
                   switch (value) {
                   | Some(value) =>
                     Js.Nullable.return(
                       {
                         let field = {
                           let value = value##field;
-
                           value;
                         };
-                        {
-
-                          "field": field,
-                        };
+                        {"field": field};
                       },
                     )
                   | None => Js.Nullable.null
                   };
                 };
-                {
-
-                  "inner": inner,
-                };
+                {"inner": inner};
               },
             )
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "inner": inner,
-        };
+        {"inner": inner};
       };
-      {
-
-        "first": first,
-
-        "second": second,
-
-        "let_": let_,
-      };
+      {"first": first, "second": second, "let_": let_};
     };
   let make = () => {
     "query": query,

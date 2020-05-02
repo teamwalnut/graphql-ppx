@@ -29,6 +29,7 @@ module MyQuery = {
   };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
   type t = {. "listsInput": string};
+  type operation = t;
   type t_variables = {
     .
     "nullableOfNullable": option(array(option(string))),
@@ -42,26 +43,18 @@ module MyQuery = {
         let value = value##listsInput;
         value;
       };
-      {
-
-        "listsInput": listsInput,
-      };
+      {"listsInput": listsInput};
     };
   let serialize: t => Raw.t =
     value => {
       let listsInput = {
         let value = value##listsInput;
-
         value;
       };
-      {
-
-        "listsInput": listsInput,
-      };
+      {"listsInput": listsInput};
     };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       "nullableOfNullable":
         (
           a =>
@@ -92,7 +85,6 @@ module MyQuery = {
         )(
           inp##nullableOfNullable,
         ),
-
       "nullableOfNonNullable":
         (
           a =>
@@ -104,7 +96,6 @@ module MyQuery = {
         )(
           inp##nullableOfNonNullable,
         ),
-
       "nonNullableOfNullable":
         (
           a =>
@@ -124,7 +115,6 @@ module MyQuery = {
         )(
           inp##nonNullableOfNullable,
         ),
-
       "nonNullableOfNonNullable":
         (a => Array.map(b => (a => a)(b), a))(
           inp##nonNullableOfNonNullable,
@@ -140,13 +130,9 @@ module MyQuery = {
       ) =>
     serializeVariables(
       {
-
         "nullableOfNullable": nullableOfNullable,
-
         "nullableOfNonNullable": nullableOfNonNullable,
-
         "nonNullableOfNullable": nonNullableOfNullable,
-
         "nonNullableOfNonNullable": nonNullableOfNonNullable,
       }: t_variables,
     );

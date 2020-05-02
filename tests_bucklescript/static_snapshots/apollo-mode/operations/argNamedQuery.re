@@ -23,6 +23,7 @@ module MyQuery = {
   };
   let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {argNamedQuery: int};
+  type operation = t;
   type t_variables = {query: string};
   let parse: Raw.t => t =
     (value) => (
@@ -31,10 +32,7 @@ module MyQuery = {
           let value = (value: Raw.t).argNamedQuery;
           value;
         };
-        {
-
-          argNamedQuery: argNamedQuery,
-        };
+        {argNamedQuery: argNamedQuery};
       }: t
     );
   let serialize: t => Raw.t =
@@ -42,26 +40,14 @@ module MyQuery = {
       {
         let argNamedQuery = {
           let value = (value: t).argNamedQuery;
-
           value;
         };
-        {
-
-          argNamedQuery: argNamedQuery,
-        };
+        {argNamedQuery: argNamedQuery};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-
-      query: (a => a)((inp: t_variables).query),
-    };
+    inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
-    serializeVariables(
-      {
-
-        query: query,
-      }: t_variables,
-    );
+    serializeVariables({query: query}: t_variables);
   let definition = (parse, query, serialize);
 };

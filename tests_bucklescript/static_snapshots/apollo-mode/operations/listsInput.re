@@ -26,9 +26,20 @@ module MyQuery = {
       nonNullableOfNullable: array(Js.Nullable.t(string)),
       nonNullableOfNonNullable: array(string),
     };
+    type nonrec _graphql_ListsInput_47;
+    /**```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
   type t = {listsInput: string};
+  type operation = t;
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -36,6 +47,16 @@ module MyQuery = {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
+  type nonrec _graphql_ListsInput_47;
+  /**```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43,10 +64,7 @@ module MyQuery = {
           let value = (value: Raw.t).listsInput;
           value;
         };
-        {
-
-          listsInput: listsInput,
-        };
+        {listsInput: listsInput};
       }: t
     );
   let serialize: t => Raw.t =
@@ -54,26 +72,18 @@ module MyQuery = {
       {
         let listsInput = {
           let value = (value: t).listsInput;
-
           value;
         };
-        {
-
-          listsInput: listsInput,
-        };
+        {listsInput: listsInput};
       }: Raw.t
     );
-
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
     }
-
   and serializeInputObjectListsInput:
     t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
-
       nullableOfNullable:
         (
           a =>
@@ -104,7 +114,6 @@ module MyQuery = {
         )(
           (inp: t_variables_ListsInput).nullableOfNullable,
         ),
-
       nullableOfNonNullable:
         (
           a =>
@@ -116,7 +125,6 @@ module MyQuery = {
         )(
           (inp: t_variables_ListsInput).nullableOfNonNullable,
         ),
-
       nonNullableOfNullable:
         (
           a =>
@@ -136,19 +144,13 @@ module MyQuery = {
         )(
           (inp: t_variables_ListsInput).nonNullableOfNullable,
         ),
-
       nonNullableOfNonNullable:
         (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
     };
   let makeVariables = (~arg, ()) =>
-    serializeVariables(
-      {
-
-        arg: arg,
-      }: t_variables,
-    )
+    serializeVariables({arg: arg}: t_variables)
   and makeInputObjectListsInput =
       (
         ~nullableOfNullable=?,
@@ -158,13 +160,9 @@ module MyQuery = {
         (),
       )
       : t_variables_ListsInput => {
-
     nullableOfNullable,
-
     nullableOfNonNullable,
-
     nonNullableOfNullable,
-
     nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);

@@ -46,6 +46,7 @@ module MyQuery = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -75,12 +76,7 @@ module MyQuery = {
                                   (value: Raw.t_first_inner_inner).__typename;
                                 value;
                               };
-                              {
-
-                                __typename,
-
-                                field,
-                              };
+                              {__typename, field};
                             }: t_first_inner_inner,
                           )
                         | None => None
@@ -90,12 +86,7 @@ module MyQuery = {
                         let value = (value: Raw.t_first_inner).__typename;
                         value;
                       };
-                      {
-
-                        __typename,
-
-                        inner,
-                      };
+                      {__typename, inner};
                     }: t_first_inner,
                   )
                 | None => None
@@ -105,19 +96,11 @@ module MyQuery = {
                 let value = (value: Raw.t_first).__typename;
                 value;
               };
-              {
-
-                __typename,
-
-                inner,
-              };
+              {__typename, inner};
             }: t_first
           );
         };
-        {
-
-          first: first,
-        };
+        {first: first};
       }: t
     );
   let serialize: t => Raw.t =
@@ -129,35 +112,26 @@ module MyQuery = {
             {
               let inner = {
                 let value = (value: t_first).inner;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
                     {
                       let inner = {
                         let value = (value: t_first_inner).inner;
-
                         switch (value) {
                         | Some(value) =>
                           Js.Nullable.return(
                             {
                               let field = {
                                 let value = (value: t_first_inner_inner).field;
-
                                 value;
                               }
                               and __typename = {
                                 let value =
                                   (value: t_first_inner_inner).__typename;
-
                                 value;
                               };
-                              {
-
-                                __typename,
-
-                                field,
-                              };
+                              {__typename, field};
                             }: Raw.t_first_inner_inner,
                           )
                         | None => Js.Nullable.null
@@ -165,15 +139,9 @@ module MyQuery = {
                       }
                       and __typename = {
                         let value = (value: t_first_inner).__typename;
-
                         value;
                       };
-                      {
-
-                        __typename,
-
-                        inner,
-                      };
+                      {__typename, inner};
                     }: Raw.t_first_inner,
                   )
                 | None => Js.Nullable.null
@@ -181,22 +149,13 @@ module MyQuery = {
               }
               and __typename = {
                 let value = (value: t_first).__typename;
-
                 value;
               };
-              {
-
-                __typename,
-
-                inner,
-              };
+              {__typename, inner};
             }: Raw.t_first
           );
         };
-        {
-
-          first: first,
-        };
+        {first: first};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

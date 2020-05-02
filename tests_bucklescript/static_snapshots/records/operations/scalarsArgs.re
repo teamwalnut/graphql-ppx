@@ -34,6 +34,7 @@ module MyQuery = {
   };
   let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
   type t = {scalarsInput: string};
+  type operation = t;
   type t_variables = {
     nullableString: option(string),
     string,
@@ -53,10 +54,7 @@ module MyQuery = {
           let value = (value: Raw.t).scalarsInput;
           value;
         };
-        {
-
-          scalarsInput: scalarsInput,
-        };
+        {scalarsInput: scalarsInput};
       }: t
     );
   let serialize: t => Raw.t =
@@ -64,18 +62,13 @@ module MyQuery = {
       {
         let scalarsInput = {
           let value = (value: t).scalarsInput;
-
           value;
         };
-        {
-
-          scalarsInput: scalarsInput,
-        };
+        {scalarsInput: scalarsInput};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       nullableString:
         (
           a =>
@@ -86,9 +79,7 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableString,
         ),
-
       string: (a => a)((inp: t_variables).string),
-
       nullableInt:
         (
           a =>
@@ -99,9 +90,7 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableInt,
         ),
-
       int: (a => a)((inp: t_variables).int),
-
       nullableFloat:
         (
           a =>
@@ -112,9 +101,7 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableFloat,
         ),
-
       float: (a => a)((inp: t_variables).float),
-
       nullableBoolean:
         (
           a =>
@@ -125,9 +112,7 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableBoolean,
         ),
-
       boolean: (a => a)((inp: t_variables).boolean),
-
       nullableID:
         (
           a =>
@@ -138,7 +123,6 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableID,
         ),
-
       id: (a => a)((inp: t_variables).id),
     };
   let makeVariables =
@@ -157,25 +141,15 @@ module MyQuery = {
       ) =>
     serializeVariables(
       {
-
         nullableString,
-
         string,
-
         nullableInt,
-
         int,
-
         nullableFloat,
-
         float,
-
         nullableBoolean,
-
         boolean,
-
         nullableID,
-
         id,
       }: t_variables,
     );

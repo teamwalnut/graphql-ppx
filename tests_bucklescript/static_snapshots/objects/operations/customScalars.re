@@ -37,6 +37,7 @@ module MyQuery = {
     "nonNullable": Js.Json.t,
   };
   type t = {. "customScalarField": t_customScalarField};
+  type operation = t;
   type t_variables = {
     .
     "opt": option(Js.Json.t),
@@ -57,17 +58,9 @@ module MyQuery = {
           | None => None
           };
         };
-        {
-
-          "nullable": nullable,
-
-          "nonNullable": nonNullable,
-        };
+        {"nullable": nullable, "nonNullable": nonNullable};
       };
-      {
-
-        "customScalarField": customScalarField,
-      };
+      {"customScalarField": customScalarField};
     };
   let serialize: t => Raw.t =
     value => {
@@ -75,32 +68,21 @@ module MyQuery = {
         let value = value##customScalarField;
         let nonNullable = {
           let value = value##nonNullable;
-
           value;
         }
         and nullable = {
           let value = value##nullable;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "nullable": nullable,
-
-          "nonNullable": nonNullable,
-        };
+        {"nullable": nullable, "nonNullable": nonNullable};
       };
-      {
-
-        "customScalarField": customScalarField,
-      };
+      {"customScalarField": customScalarField};
     };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       "opt":
         (
           a =>
@@ -111,17 +93,9 @@ module MyQuery = {
         )(
           inp##opt,
         ),
-
       "req": (a => a)(inp##req),
     };
   let makeVariables = (~opt=?, ~req, ()) =>
-    serializeVariables(
-      {
-
-        "opt": opt,
-
-        "req": req,
-      }: t_variables,
-    );
+    serializeVariables({"opt": opt, "req": req}: t_variables);
   let definition = (parse, query, serialize);
 };
