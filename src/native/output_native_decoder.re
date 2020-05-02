@@ -602,7 +602,7 @@ and generate_poly_variant_union =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
            let name_pattern = Pat.constant(Pconst_string(type_name, None));
            let variant =
              Ast_helper.(
@@ -642,7 +642,7 @@ and generate_poly_variant_union =
     );
   let fragment_case_tys =
     List.map(
-      ((name, _)) =>
+      (({item: name}: Result_structure.name, _)) =>
         {
           prf_desc:
             Rtag(

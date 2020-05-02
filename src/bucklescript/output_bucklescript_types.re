@@ -234,7 +234,14 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
     );
   };
 
-let generate_variant_union = (config, fields, path, loc, raw) =>
+let generate_variant_union =
+    (
+      config,
+      fields: list((Result_structure.name, Result_structure.t)),
+      path,
+      loc,
+      raw,
+    ) =>
   if (raw) {
     generate_opaque(path, loc);
   } else {
@@ -257,9 +264,18 @@ let generate_variant_union = (config, fields, path, loc, raw) =>
            {
              prf_desc:
                Rtag(
-                 {txt: name, loc: conv_loc(loc)},
+                 {txt: name.item, loc: conv_loc(loc)},
                  false,
-                 [generate_type(config, [name, ...path], raw, res)],
+                 [
+                   generate_type(
+                     ~atLoc=
+                       conv_loc(config.Generator_utils.map_loc(name.span)),
+                     config,
+                     [name.item, ...path],
+                     raw,
+                     res,
+                   ),
+                 ],
                ),
              prf_loc: conv_loc(loc),
              prf_attributes: [],

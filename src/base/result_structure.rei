@@ -3,6 +3,7 @@ type exhaustive_flag =
   | Nonexhaustive;
 
 type loc = Source_pos.ast_location;
+type name = Source_pos.spanning(string);
 
 type field_result =
   | Fr_named_field({
@@ -26,7 +27,7 @@ and t =
   | Res_record(loc, string, list(field_result), option(string))
   | Res_object(loc, string, list(field_result), option(string))
   | Res_poly_variant_selection_set(loc, string, list((string, t)))
-  | Res_poly_variant_union(loc, string, list((string, t)), exhaustive_flag)
+  | Res_poly_variant_union(loc, string, list((name, t)), exhaustive_flag)
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
   | Res_solo_fragment_spread(loc, string, list(string))
   | Res_error(loc, string);

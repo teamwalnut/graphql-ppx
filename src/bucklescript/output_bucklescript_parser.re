@@ -457,7 +457,7 @@ and generate_poly_variant_union_decoder =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
            Ast_helper.(
              Exp.case(
                const_str_pat(type_name),

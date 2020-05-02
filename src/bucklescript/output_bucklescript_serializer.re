@@ -606,7 +606,7 @@ and generate_poly_variant_union_encoder =
   open Ast_helper;
   let fragment_cases =
     fragments
-    |> List.map(((type_name, inner)) => {
+    |> List.map((({item: type_name}: Result_structure.name, inner)) => {
          Ast_helper.(
            Exp.case(
              Pat.variant(

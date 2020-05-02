@@ -40,7 +40,7 @@ and type_def =
   | VariantUnion({
       loc: Source_pos.ast_location,
       path,
-      fields: list((string, Result_structure.t)),
+      fields: list((Result_structure.name, Result_structure.t)),
     })
   | VariantInterface({
       loc: Source_pos.ast_location,
@@ -96,7 +96,14 @@ let rec extract = (~variant=false, ~path, ~raw) =>
     }
   | Res_poly_variant_union(loc, _name, fragments, _) => [
       VariantUnion({path, fields: fragments, loc}),
-      ...extract_fragments(fragments, path, raw),
+      ...extract_fragments(
+           fragments
+           |> List.map((({item: name}: Result_structure.name, t)) =>
+                (name, t)
+              ),
+           path,
+           raw,
+         ),
     ]
   | Res_poly_variant_selection_set(loc, _name, fragments) => [
       VariantSelection({path, fields: fragments, loc}),

@@ -300,7 +300,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
             type_cond_ty,
             Some(if_selection_set),
           );
-        (if_type_condition.item, result_decoder);
+        (if_type_condition, result_decoder);
       | None => assert(false)
       };
 
