@@ -9,6 +9,7 @@ type extracted_type =
 type object_field =
   | Field({
       type_: Result_structure.t,
+      loc_key: Source_pos.ast_location,
       loc: Source_pos.ast_location,
       path,
     })
@@ -52,6 +53,7 @@ type input_object_field =
       type_: extracted_type,
       name: string,
       loc: Source_pos.ast_location,
+      loc_type: option(Source_pos.ast_location),
     });
 
 type arg_type_def =
@@ -72,3 +74,5 @@ let extract_args:
     option(Source_pos.spanning(Graphql_ast.variable_definitions))
   ) =>
   list(arg_type_def);
+
+let get_inner_type: extracted_type => option(extracted_type);

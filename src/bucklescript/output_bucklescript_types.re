@@ -73,7 +73,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
   | Res_object(loc, name, _fields, Some(type_name))
   | Res_record(loc, name, _fields, Some(type_name)) =>
     base_type(~loc=?atLoc, type_name)
-  | Res_object(loc, name, _fields, None)
+  | Res_object(loc, name, _fields, type_name)
   | Res_record(loc, name, _fields, type_name) =>
     switch (type_name, raw) {
     | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
