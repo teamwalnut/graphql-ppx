@@ -70,9 +70,6 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
   | Res_float(loc) => base_type(~loc=?atLoc, "float")
   | Res_boolean(loc) => base_type(~loc=?atLoc, "bool")
   | Res_raw_scalar(loc) => base_type(~loc=?atLoc, "Js.Json.t")
-  | Res_object(loc, name, _fields, Some(type_name))
-  | Res_record(loc, name, _fields, Some(type_name)) =>
-    base_type(~loc=?atLoc, type_name)
   | Res_object(loc, name, _fields, type_name)
   | Res_record(loc, name, _fields, type_name) =>
     switch (type_name, raw) {
