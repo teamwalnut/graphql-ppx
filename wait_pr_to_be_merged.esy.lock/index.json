@@ -1,5 +1,5 @@
 {
-  "checksum": "f1d6fbad427cc60c70d5f2f966a32755",
+  "checksum": "5b0b89bd3cf87be24cd5cefde3f26746",
   "root": "wait_pr_to_be_merged@link-dev:./wait_pr_to_be_merged.json",
   "node": {
     "wait_pr_to_be_merged@link-dev:./wait_pr_to_be_merged.json": {
@@ -13,7 +13,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/reason@github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb@d41d8cd9"
+        "@opam/reason@github:facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -56,16 +56,16 @@
         "ocaml@4.10.0@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
-    "@opam/reason@github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb@d41d8cd9": {
+    "@opam/reason@github:facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322@d41d8cd9": {
       "id":
-        "@opam/reason@github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb@d41d8cd9",
+        "@opam/reason@github:facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322@d41d8cd9",
       "name": "@opam/reason",
       "version":
-        "github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb",
+        "github:facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322",
       "source": {
         "type": "install",
         "source": [
-          "github:Et7f3/reason:reason.json#ca4aeea369c4e4d7b9b96e21789b25e03d2cc9cb"
+          "github:facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322"
         ]
       },
       "overrides": [],
