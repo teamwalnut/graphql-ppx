@@ -660,11 +660,11 @@ and generate_poly_variant_union_encoder =
 }
 and generate_poly_variant_selection_set_encoder =
     (config, loc, name, fields, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
     (config, loc, name, base, fragments, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_solo_fragment_spread_encorder =
     (config, loc, name, arguments, definition) => [%expr
