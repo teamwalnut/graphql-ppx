@@ -268,8 +268,17 @@ let rec extract_input_object =
             (acc, (_name, type_ref, loc)) => {
               let (_type_name, type_) = fetch_type(schema, type_ref);
               switch (type_) {
-              | Some(InputObject({iom_name, iom_input_fields, _})) =>
-                if (List.exists(f => f == iom_name, finalized_input_objects)) {
+              | Some(Schema.InputObject({iom_name, iom_input_fields, _})) =>
+                let already_created_earlier =
+                  finalized_input_objects |> List.exists(f => f == iom_name);
+                let already_created_in_same_list =
+                  acc
+                  |> List.exists(
+                       fun
+                       | InputObject({name}) => name == Some(iom_name),
+                     );
+
+                if (already_created_earlier || already_created_in_same_list) {
                   // we already generated this input object
                   acc;
                 } else {
@@ -287,7 +296,7 @@ let rec extract_input_object =
                     );
 
                   List.append(acc, result);
-                }
+                };
               | _ => acc
               };
             },
@@ -296,17 +305,7 @@ let rec extract_input_object =
   ];
 };
 
-let extract_args =
-    (
-      config: output_config,
-      args:
-        option(
-          spanning(
-            list((spanning(string), Graphql_ast.variable_definition)),
-          ),
-        ),
-    )
-    : list(arg_type_def) =>
+let extract_args = (config, args): list(arg_type_def) =>
   switch (args) {
   | Some({item, span}) =>
     (
