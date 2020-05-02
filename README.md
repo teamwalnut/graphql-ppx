@@ -114,7 +114,7 @@ contents assigned:
 #### Basic
 
 - `query` (`string`), the GraphQL query or mutation
-- `parse` (`UserQuery.t_raw => UserQuery.t`), the function to parse the raw
+- `parse` (`UserQuery.Raw.t => UserQuery.t`), the function to parse the raw
   GraphQL response into ReasonML types.
 - `makeVariables` (`(~your, ~arguments, ()) => Js.Json.t`): a
   function that takes labeled arguments to produce the variables that can be
@@ -126,7 +126,7 @@ contents assigned:
 
 #### Advanced
 
-- `serialize` (`t => t_raw`): this is the opposite of parse.
+- `serialize` (`t => Raw.t`): this is the opposite of parse.
   Sometimes you need to convert the ReasonML representation of the response back
   into the raw JSON representation. Usually this is used within the GraphQL
   client for things like updating the internal cache.
@@ -136,20 +136,17 @@ contents assigned:
 - `makeInputObject{YourInputObject}` - a labeled function to create
   `YourInputObject`: This is helpful when you have an input object with many
   optional values (works exactly the same as makeVariables)
-- `fromJSON` (`Js.Json.t => t_raw`): With this function you can
-  convert a Js.Json.t response to a `t_raw` response. It is a no-op and just
-  casts the type.
 
 ### Types
 
 - `t`: the parsed response of the query
-- `t_raw`: the unparsed response. This is basically the exact shape of the raw
+- `Raw.t`: the unparsed response. This is basically the exact shape of the raw
   response before it is parsed into more ergonomic ReasonML types like `option`
   instead of `Js.Json.t`, variants etc.
 - `t_variables`: the variables of the query or mutation
 
 GraphQL objects, variables and input objects are typed as records for `t`,
-`t_raw` and `t_variables`. The types are named according to the hierarchy. Each
+`Raw.t` and `t_variables`. The types are named according to the hierarchy. Each
 step in the hierarchy is split using an underscore. So the type of the user
 object in the query above is `t_user` if there would be a field that contained
 friends of the user it would be called `t_user_friends`.

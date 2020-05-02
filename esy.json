@@ -11,13 +11,13 @@
     "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": ">=1.6.0",
     "@opam/ppx_tools_versioned": "5.2.3",
-    "@opam/reason": "3.5.2",
+    "@opam/reason": ">=3.6.0",
     "@opam/menhir": "*"
   },
   "devDependencies": {
     "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.9.0",
+    "ocaml": "~4.8.0",
     "refmterr": "*"
   },
   "esy": {

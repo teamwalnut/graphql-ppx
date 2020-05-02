@@ -10,3 +10,8 @@ _release
 graphql_ppx.exe
 yarn-error.log
 /bin
+.DS_Store
+.bsb.lock
+npm-debug.log
+/lib
+/build/

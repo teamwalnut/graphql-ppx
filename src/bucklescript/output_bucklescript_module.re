@@ -39,6 +39,81 @@ let join = (part1, part2) => {
   );
 };
 
+let pretty_print = (query: string): string => {
+  let indent = ref(1);
+
+  let str =
+    query
+    |> String.split_on_char('\n')
+    |> List.map(l => String.trim(l))
+    |> List.filter(l => l != "")
+    |> List.map(line => {
+         if (String.contains(line, '}')) {
+           indent := indent^ - 1;
+         };
+         let line = String.make(indent^ * 2, ' ') ++ line;
+         if (String.contains(line, '{')) {
+           indent := indent^ + 1;
+         };
+         line;
+       })
+    |> String.concat("\n");
+
+  str ++ "\n";
+};
+
+let compress_parts = (parts: array(Graphql_printer.t)) => {
+  Graphql_printer.(
+    parts
+    |> Array.to_list
+    |> List.fold_left(
+         (acc, curr) => {
+           switch (acc, curr) {
+           | ([String(s1), ...rest], String(s2)) => [
+               String(s1 ++ s2),
+               ...rest,
+             ]
+           | (acc, curr) => [curr, ...acc]
+           }
+         },
+         [],
+       )
+    |> List.rev
+    |> Array.of_list
+  );
+};
+
+let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
+  switch (parts) {
+  | [|String(s)|] => s
+  | [||] => ""
+  | parts =>
+    Graphql_printer.(
+      Array.fold_left(
+        acc =>
+          fun
+          | String(s) => acc ++ s
+          | FragmentNameRef(f) => {
+              let name =
+                switch (String.split_on_char('.', f) |> List.rev) {
+                | [name, ..._] => name
+                | [] => assert(false)
+                };
+              acc ++ name;
+            }
+          // This is the code to make the template tag compatible with Apollo
+          // we can expose this as an option later. (we need to wait for new
+          // %raw functionality to properly do template literals. So in current
+          // state it is not possible to make it compatible with Apollo.
+          // | FragmentQueryRef(f) => acc ++ "${" ++ f ++ ".query" ++ "}",
+          | FragmentQueryRef(f) => acc,
+        "",
+        parts,
+      )
+    )
+  };
+};
+
 let emit_printed_query = parts => {
   open Ast_408;
   let make_string = s => {
@@ -59,7 +134,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = (acc, part) =>
     switch (acc, part) {
-    | (acc, Empty) => acc
     | (None, String(s)) => Some(make_string(s))
     | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
     | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
@@ -70,9 +144,12 @@ let emit_printed_query = parts => {
       Some(join(acc, make_fragment_query(f)))
     };
 
-  parts
-  |> Array.fold_left(generate_expr, None)
-  |> Option.get_or_else(make_string(""));
+  let result = parts |> Array.fold_left(generate_expr, None);
+
+  switch (result) {
+  | None => make_string("")
+  | Some(e) => e
+  };
 };
 
 let rec emit_json =
@@ -117,16 +194,123 @@ let rec emit_json =
       ]
   );
 
+// we need to add a require statement because we cannot output the js value of
+// a bucklescript identifier in the raw statement yet. This is a feature that
+// should be coming, so then we don't need templateTagImport and templateTagLocatino
+// anymore (and also this require statement will not be necessary anymore)
+let pre_template_tag = (~location=?, ~import=?, template_tag) => {
+  switch (import, location) {
+  | (Some(import), Some(location)) =>
+    Some(
+      (
+        switch (import, template_tag) {
+        | ("default", template_tag) => "let " ++ template_tag
+        | (import, template_tag) when import == template_tag =>
+          "let { " ++ template_tag ++ " }"
+        | (import, template_tag) =>
+          "let { " ++ import ++ ": " ++ template_tag ++ " }"
+        }
+      )
+      ++ " = "
+      ++ "require(\""
+      ++ location
+      ++ "\")",
+    )
+  | _ => None
+  };
+};
+
+let wrap_template_tag = (template_tag, source) => {
+  // if the template literal is: "graphql"
+  // a string is created like this: graphql`[query]`
+  template_tag ++ "`\n" ++ source ++ "`";
+};
+
+let wrap_structure_raw = contents => {
+  Str.extension((
+    {txt: "raw", loc: Location.none},
+    PStr([
+      {
+        pstr_desc:
+          Pstr_eval(
+            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            [],
+          ),
+        pstr_loc: Location.none,
+      },
+    ]),
+  ));
+};
+
+let wrap_raw = contents => {
+  Exp.extension((
+    {txt: "raw", loc: Location.none},
+    PStr([
+      {
+        pstr_desc:
+          Pstr_eval(
+            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            [],
+          ),
+        pstr_loc: Location.none,
+      },
+    ]),
+  ));
+};
+
 let make_printed_query = (config, document) => {
   let source = Graphql_printer.print_document(config.schema, document);
   let reprinted =
     switch (Ppx_config.output_mode()) {
-    | Ppx_config.Apollo_AST =>
-      Ast_serializer_apollo.serialize_document(source, document) |> emit_json
-    | Ppx_config.String => emit_printed_query(source)
+    | Ppx_config.Apollo_AST => (
+        None,
+        Ast_serializer_apollo.serialize_document(source, document)
+        |> emit_json,
+      )
+    | Ppx_config.String =>
+      Ast_408.(
+        Ast_helper.(
+          switch (config.template_tag) {
+          | (None, _, _) => (None, emit_printed_query(source))
+          | (Some(template_tag), location, import) =>
+            // the only way to emit a template literal for now, using the bs.raw
+            // extension
+            (
+              switch (pre_template_tag(~location?, ~import?, template_tag)) {
+              | Some(contents) => Some(wrap_structure_raw(contents))
+              | None => None
+              },
+              wrap_raw(
+                wrap_template_tag(
+                  template_tag,
+                  pretty_print(emit_printed_template_query(source)),
+                ),
+              ),
+            )
+          }
+        )
+      )
     };
 
   reprinted;
+};
+
+let wrap_module = (name: string, contents) => {
+  [
+    {
+      pstr_desc:
+        Pstr_module({
+          pmb_name: {
+            txt: Generator_utils.capitalize_ascii(name),
+            loc: Location.none,
+          },
+          pmb_expr: Mod.structure(contents),
+          pmb_attributes: [],
+          pmb_loc: Location.none,
+        }),
+      pstr_loc: Location.none,
+    },
+  ];
 };
 
 let generate_default_operation =
@@ -138,9 +322,36 @@ let generate_default_operation =
       Graphql_ast.Operation(operation),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
+      config,
+      [],
+      Graphql_ast.Operation(operation),
+      None,
+      res_structure,
+    );
+  let types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      false,
+      None,
+    );
+  let raw_types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      true,
+      None,
+    );
   let arg_types =
-    Output_bucklescript_types.generate_arg_types(config, variable_defs);
+    Output_bucklescript_types.generate_arg_types(
+      false,
+      config,
+      variable_defs,
+    );
+  let raw_arg_types =
+    Output_bucklescript_types.generate_arg_types(true, config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
@@ -150,67 +361,69 @@ let generate_default_operation =
 
   let contents =
     if (has_error) {
-      [[%stri let parse = value => [%e parse_fn]]];
+      [[%stri let parse: Raw.t => t = value => [%e parse_fn]]];
     } else {
       let variable_constructors =
         Output_bucklescript_serializer.generate_variable_constructors(
           config,
           extracted_args,
         );
+
+      let (pre_printed_query, printed_query) =
+        make_printed_query(config, [Graphql_ast.Operation(operation)]);
+
+      let legacy_make_with_variables = [%stri
+        let makeWithVariables = variables => {
+          "query": query,
+          "variables": serializeVariables(variables),
+          "parse": parse,
+        }
+      ];
+
       List.concat([
         List.concat([
-          [
-            [%stri
-              let query = [%e
-                make_printed_query(
-                  config,
-                  [Graphql_ast.Operation(operation)],
-                )
-              ]
-            ],
-          ],
-          [[%stri type raw_t]],
-          [types],
+          wrap_module(
+            "Raw",
+            List.append(
+              raw_types,
+              extracted_args == [] ? [] : [raw_arg_types],
+            ),
+          ),
+          switch (pre_printed_query) {
+          | Some(pre_printed_query) => [pre_printed_query]
+          | None => []
+          },
+          [[%stri let query = [%e printed_query]]],
+          types,
           switch (extracted_args) {
           | [] => []
           | _ => [arg_types]
           },
-          [[%stri let parse: Js.Json.t => t = value => [%e parse_fn]]],
+          [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
+          [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
           },
-          switch (variable_constructors, config.legacy, config.definition) {
-          | (None, true, _)
-          | (None, _, true) => [
-              [%stri let makeVar = (~f, ()) => f(Js.Json.null)],
-            ]
-          | (None, _, _) => []
-          | (Some(c), _, _) => [c]
+          switch (variable_constructors) {
+          | None => []
+          | Some(c) => [c]
           },
-          config.legacy
+          config.legacy && variable_constructors != None
+            ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors == None
             ? [
               [%stri
-                let make =
-                  makeVar(~f=variables => {
-                    {"query": query, "variables": variables, "parse": parse}
-                  })
-              ],
-              [%stri
-                let makeWithVariables = variables => {
+                let make = () => {
                   "query": query,
-                  "variables": serializeVariables(variables),
+                  "variables": Js.Json.null,
                   "parse": parse,
                 }
               ],
             ]
             : [],
           config.definition
-            ? [[%stri let definition = (parse, query, makeVar)]] : [],
-          switch (extracted_args) {
-          | [] => []
-          | _ => [[%stri let makeVariables = makeVar(~f=f => f)]]
-          },
+            ? [[%stri let definition = (parse, query, serialize)]] : [],
         ]),
       ]);
     };
@@ -232,11 +445,32 @@ let generate_fragment_module =
       Graphql_ast.Fragment(fragment),
       res_structure,
     );
-  let types = Output_bucklescript_types.generate_types(config, res_structure);
+  let serialize_fn =
+    Output_bucklescript_serializer.generate_serializer(
+      config,
+      [],
+      Graphql_ast.Fragment(fragment),
+      None,
+      res_structure,
+    );
+  let types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      false,
+      Some(fragment.item.fg_type_condition.item),
+    );
+  let raw_types =
+    Output_bucklescript_types.generate_types(
+      config,
+      res_structure,
+      true,
+      Some(fragment.item.fg_type_condition.item),
+    );
 
   let rec make_labeled_fun = body =>
     fun
-    | [] => [%expr ((value: Js.Json.t) => [%e body])]
+    | [] => [%expr ((value: Raw.t) => [%e body])]
     | [(name, type_, span, type_span), ...tl] => {
         let loc = config.map_loc(span) |> conv_loc;
         let type_loc = config.map_loc(type_span) |> conv_loc;
@@ -275,83 +509,49 @@ let generate_fragment_module =
         );
       };
 
-  let query = make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-  let parse =
-    [@metaloc conv_loc(config.map_loc(fragment.span))]
-    [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
-
-  let variable_obj_type =
-    Typ.constr(
-      {txt: Longident.Lident("t_variables"), loc: Location.none},
-      [],
-    );
   let contents =
     if (has_error) {
-      [
-        [%stri
-          let make = (_vars: [%t variable_obj_type], value) => [%e parse_fn]
-        ],
-      ];
+      [[%stri let make = (_vars, value) => [%e parse_fn]]];
     } else {
-      List.concat([
-        [
-          [%stri let query = [%e query]],
-          types,
-          [%stri type raw_t],
-          Ast_helper.(
-            Str.type_(
-              Recursive,
-              [
-                Type.mk(
-                  ~manifest=
-                    Typ.constr(
-                      {loc: Location.none, txt: Longident.Lident("t")},
-                      [],
-                    ),
-                  {
-                    loc: Location.none,
-                    txt: "t_" ++ fragment.item.fg_type_condition.item,
-                  },
-                ),
+      let (pre_printed_query, printed_query) =
+        make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+      let parse =
+        [@metaloc conv_loc(config.map_loc(fragment.span))]
+        [%stri
+          let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+        ];
+      List.concat(
+        List.concat([
+          [
+            switch (pre_printed_query) {
+            | Some(pre_printed_query) => [pre_printed_query]
+            | None => []
+            },
+            [[%stri let query = [%e printed_query]]],
+            wrap_module("Raw", raw_types),
+            types,
+            [parse],
+            [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
+            [
+              [%stri
+                let name = [%e
+                  Ast_helper.Exp.constant(Pconst_string(name, None))
+                ]
               ],
-            )
-          ),
-          parse,
-          [%stri
-            let name = [%e
-              Ast_helper.Exp.constant(Pconst_string(name, None))
-            ]
+            ],
           ],
-        ],
-      ]);
+        ]),
+      );
     };
 
   (Some(Generator_utils.capitalize_ascii(name)), contents);
 };
 
-let wrap_module = (name: string, contents) => {
-  [
-    {
-      pstr_desc:
-        Pstr_module({
-          pmb_name: {
-            txt: Generator_utils.capitalize_ascii(name),
-            loc: Location.none,
-          },
-          pmb_expr: Mod.structure(contents),
-          pmb_attributes: [],
-          pmb_loc: Location.none,
-        }),
-      pstr_loc: Location.none,
-    },
-  ];
-};
-
 let generate_operation = config =>
   fun
-  | Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,

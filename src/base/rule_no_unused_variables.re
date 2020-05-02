@@ -5,7 +5,7 @@ module Visitor: Traversal_utils.VisitorSig = {
 
   include AbstractVisitor;
 
-  type t = Hashtbl.t(string, (source_position, source_position));
+  type t = Hashtbl.t(string, span);
 
   let make_self = () => Hashtbl.create(0);
 

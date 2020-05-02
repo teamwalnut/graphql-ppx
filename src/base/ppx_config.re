@@ -13,6 +13,10 @@ type config = {
   records: bool,
   legacy: bool,
   definition: bool,
+  template_tag: option(string),
+  template_tag_location: option(string),
+  template_tag_import: option(string),
+  custom_fields: Hashtbl.t(string, string),
 };
 
 let config_ref = ref(None);
@@ -26,11 +30,19 @@ let verbose_logging = () =>
 
 let output_mode = () => (config_ref^ |> Option.unsafe_unwrap).output_mode;
 
+let custom_fields = () => (config_ref^ |> Option.unsafe_unwrap).custom_fields;
+
 let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 
 let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
 let definition = () => (config_ref^ |> Option.unsafe_unwrap).definition;
+
+let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
+let template_tag_import = () =>
+  (config_ref^ |> Option.unsafe_unwrap).template_tag_import;
+let template_tag_location = () =>
+  (config_ref^ |> Option.unsafe_unwrap).template_tag_location;
 
 let verbose_error_handling = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_error_handling;

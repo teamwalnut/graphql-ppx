@@ -90,7 +90,7 @@ type directive_meta = {
   dm_arguments: list(argument_meta),
 };
 
-type schema = {
+type t = {
   meta: schema_meta,
   type_map: Hashtbl.t(string, type_meta),
   directive_map: Hashtbl.t(string, directive_meta),

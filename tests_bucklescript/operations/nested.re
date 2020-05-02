@@ -22,6 +22,15 @@ module MyQuery = [%graphql
         }
       }
     }
+
+    # reserved word
+    let: nestedObject {
+      inner {
+        inner {
+          field
+        }
+      }
+    }
   }
 |}
 ];

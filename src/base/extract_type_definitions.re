@@ -3,6 +3,7 @@ open Graphql_ppx_base__;
 open Generator_utils;
 open Schema;
 open Source_pos;
+type path = list(string);
 
 // extract the typeref
 type extracted_type =
@@ -15,19 +16,41 @@ type object_field =
   | Field({
       type_: Result_structure.t,
       loc: Source_pos.ast_location,
-      path: list(string),
+      path,
     })
   | Fragment({
       module_name: string,
       key: string,
       type_name: option(string),
-    });
-
-type type_def =
+    })
+and type_def =
   | Object({
+      loc: Source_pos.ast_location,
+      variant_parent: bool,
       force_record: bool,
-      path: list(string),
+      path,
       fields: list(object_field),
+    })
+  | VariantSelection({
+      loc: Source_pos.ast_location,
+      path,
+      fields: list((string, Result_structure.t)),
+    })
+  | VariantUnion({
+      loc: Source_pos.ast_location,
+      path,
+      fields: list((string, Result_structure.t)),
+    })
+  | VariantInterface({
+      loc: Source_pos.ast_location,
+      path,
+      base: (string, Result_structure.t),
+      fields: list((string, Result_structure.t)),
+    })
+  | Enum({
+      loc: Source_pos.ast_location,
+      path,
+      fields: list(string),
     });
 
 type input_object_field =
@@ -53,29 +76,35 @@ let generate_type_name = (~prefix="t") =>
       |> List.rev
       |> List.fold_left((acc, item) => acc ++ "_" ++ item, prefix);
     };
+
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
-let rec extract = path =>
+let rec extract = (~variant=false, ~path, ~raw) =>
   fun
-  | Res_nullable(_loc, inner) => extract(path, inner)
-  | Res_array(_loc, inner) => extract(path, inner)
-  | Res_object(_loc, _name, fields, Some(_)) => create_children(path, fields)
-  | Res_object(_loc, _name, fields, None) =>
-    create_object(path, fields, false)
-  | Res_record(_loc, _name, fields, Some(_)) => create_children(path, fields)
-  | Res_record(_loc, _name, fields, None) =>
-    create_object(path, fields, true)
-  | Res_poly_variant_union(_loc, _name, fragments, _)
-  | Res_poly_variant_selection_set(_loc, _name, fragments)
-  | Res_poly_variant_interface(_loc, _name, _, fragments) =>
-    fragments
-    |> List.fold_left(
-         (acc, (name, inner)) =>
-           List.append(extract([name, ...path], inner), acc),
-         [],
-       )
-  | Res_custom_decoder(_loc, _ident, inner) => extract(path, inner)
+  | Res_nullable(_loc, inner) => extract(~path, ~raw, inner)
+  | Res_array(_loc, inner) => extract(~path, ~raw, inner)
+  | Res_object(loc, _name, fields, type_name) as result_structure
+  | Res_record(loc, _name, fields, type_name) as result_structure =>
+    switch (result_structure, type_name, raw) {
+    | (_, Some(type_name), false) => create_children(path, raw, fields)
+    | (Res_record(_, _, _, _), _, false) =>
+      create_object(path, raw, fields, true, loc, variant)
+    | (_, _, _) => create_object(path, raw, fields, false, loc, variant)
+    }
+  | Res_poly_variant_union(loc, _name, fragments, _) => [
+      VariantUnion({path, fields: fragments, loc}),
+      ...extract_fragments(fragments, path, raw),
+    ]
+  | Res_poly_variant_selection_set(loc, _name, fragments) => [
+      VariantSelection({path, fields: fragments, loc}),
+      ...extract_fragments(fragments, path, raw),
+    ]
+  | Res_poly_variant_interface(loc, _name, base, fragments) => [
+      VariantInterface({path, fields: fragments, base, loc}),
+      ...extract_fragments(fragments, path, raw),
+    ]
+  | Res_custom_decoder(_loc, _ident, inner) => extract(~path, ~raw, inner)
   | Res_solo_fragment_spread(_loc, _name, _) => []
   | Res_error(_loc, _message) => []
   | Res_id(_loc) => []
@@ -84,22 +113,41 @@ let rec extract = path =>
   | Res_float(_loc) => []
   | Res_boolean(_loc) => []
   | Res_raw_scalar(_) => []
-  | Res_poly_enum(_loc, _enum_meta) => []
-
-and create_children = (path, fields) => {
+  | Res_poly_enum(loc, enum_meta) => [
+      Enum({
+        path,
+        fields: enum_meta.em_values |> List.map(({evm_name, _}) => evm_name),
+        loc,
+      }),
+    ]
+and fragment_names = f => f |> List.map(((name, _)) => name)
+and extract_fragments = (fragments, path, raw) => {
+  fragments
+  |> List.fold_left(
+       (acc, (name, inner)) =>
+         List.append(
+           extract(~variant=true, ~path=[name, ...path], ~raw, inner),
+           acc,
+         ),
+       [],
+     );
+}
+and create_children = (path, raw, fields) => {
   fields
   |> List.fold_left(
        acc =>
          fun
          | Fr_named_field(name, _loc, type_) =>
-           List.append(extract([name, ...path], type_), acc)
+           List.append(extract(~path=[name, ...path], ~raw, type_), acc)
          | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
        [],
      );
 }
-and create_object = (path, fields, force_record) => {
+and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
   [
     Object({
+      variant_parent,
+      loc,
       force_record,
       path,
       fields:
@@ -112,7 +160,7 @@ and create_object = (path, fields, force_record) => {
                Fragment({module_name: name, key, type_name}),
            ),
     }),
-    ...create_children(path, fields),
+    ...create_children(path, raw, fields),
   ];
 };
 
@@ -149,7 +197,7 @@ let rec convert_type_ref = schema =>
 let generate_input_field_types =
     (
       _input_obj_name,
-      schema: Schema.schema,
+      schema: Schema.t,
       fields: list((string, Schema.type_ref, Source_pos.ast_location)),
     ) => {
   fields
@@ -196,7 +244,7 @@ let get_input_object_names = (fields: list(input_object_field)) => {
 
 let rec extract_input_object =
         (
-          schema: Schema.schema,
+          schema: Schema.t,
           finalized_input_objects,
           (
             name: option(string),
@@ -220,8 +268,17 @@ let rec extract_input_object =
             (acc, (_name, type_ref, loc)) => {
               let (_type_name, type_) = fetch_type(schema, type_ref);
               switch (type_) {
-              | Some(InputObject({iom_name, iom_input_fields, _})) =>
-                if (List.exists(f => f == iom_name, finalized_input_objects)) {
+              | Some(Schema.InputObject({iom_name, iom_input_fields, _})) =>
+                let already_created_earlier =
+                  finalized_input_objects |> List.exists(f => f == iom_name);
+                let already_created_in_same_list =
+                  acc
+                  |> List.exists(
+                       fun
+                       | InputObject({name}) => name == Some(iom_name),
+                     );
+
+                if (already_created_earlier || already_created_in_same_list) {
                   // we already generated this input object
                   acc;
                 } else {
@@ -239,7 +296,7 @@ let rec extract_input_object =
                     );
 
                   List.append(acc, result);
-                }
+                };
               | _ => acc
               };
             },
@@ -248,17 +305,7 @@ let rec extract_input_object =
   ];
 };
 
-let extract_args =
-    (
-      config: output_config,
-      args:
-        option(
-          spanning(
-            list((spanning(string), Graphql_ast.variable_definition)),
-          ),
-        ),
-    )
-    : list(arg_type_def) =>
+let extract_args = (config, args): list(arg_type_def) =>
   switch (args) {
   | Some({item, span}) =>
     (

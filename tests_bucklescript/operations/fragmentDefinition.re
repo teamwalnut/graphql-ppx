@@ -24,6 +24,27 @@ module MyQuery = [%graphql
       ...Fragments.ListFragment @bsField(name: "frag1")
       ...Fragments.ListFragment @bsField(name: "frag2")
     }
+
+    l3: lists {
+      nullableOfNullable
+      ...Fragments.ListFragment @bsField(name: "frag1")
+      ...Fragments.ListFragment @bsField(name: "frag2")
+    }
+
+    l4: lists {
+      nullableOfNullable
+      ...Fragments.ListFragment
+    }
   }
 |}
+];
+
+module MyQuery2 = [%graphql
+  {|
+  query {
+    lists {
+      ...Fragments.ListFragment
+    }
+  }
+  |}
 ];

@@ -4,8 +4,9 @@ open Source_pos;
 type ctx = {
   map_loc: ((source_position, source_position)) => Result_structure.loc,
   fragments: Hashtbl.t(string, Graphql_ast.fragment),
-  schema: Schema.schema,
+  schema: Schema.t,
   errors: ref(list((Result_structure.loc, string))),
+  warnings: ref(list((Result_structure.loc, string))),
   type_stack: list(option(Schema.type_meta)),
   type_literal_stack: list(option(Schema.type_ref)),
   input_type_stack: list(option(Schema.type_meta)),
@@ -194,6 +195,8 @@ module Context = {
     };
   let push_error = (ctx, loc, msg) =>
     ctx.errors := [(ctx.map_loc(loc), msg), ...ctx.errors^];
+  let push_warning = (ctx, loc, msg) =>
+    ctx.warnings := [(ctx.map_loc(loc), msg), ...ctx.warnings^];
 };
 
 let rec as_schema_type_ref =
@@ -462,6 +465,7 @@ let make_context = (config, document) => {
   fragments: find_fragments(document),
   schema: config.Generator_utils.schema,
   errors: ref([]),
+  warnings: ref([]),
   type_stack: [],
   type_literal_stack: [],
   input_type_stack: [],
