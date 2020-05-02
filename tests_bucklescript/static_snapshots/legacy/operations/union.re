@@ -35,15 +35,10 @@ module MyQuery = {
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     .
-    "__typename": string,
     "name": string,
     "barkVolume": float,
   };
-  type t_dogOrHuman_Human = {
-    .
-    "__typename": string,
-    "name": string,
-  };
+  type t_dogOrHuman_Human = {. "name": string};
   type t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)
@@ -182,15 +177,10 @@ module MyQueryNoError = {
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     .
-    "__typename": string,
     "name": string,
     "barkVolume": float,
   };
-  type t_dogOrHuman_Human = {
-    .
-    "__typename": string,
-    "name": string,
-  };
+  type t_dogOrHuman_Human = {. "name": string};
   type t_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_dogOrHuman_Dog)

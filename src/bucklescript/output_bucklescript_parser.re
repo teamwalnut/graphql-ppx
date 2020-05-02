@@ -456,9 +456,14 @@ and generate_poly_variant_union_decoder =
                  Some(
                    {
                      let%expr value: [%t
-                       base_type_name(
-                         "Raw." ++ generate_type_name([type_name, ...path]),
-                       )
+                       switch (inner) {
+                       | Res_solo_fragment_spread(_, name, _) =>
+                         base_type_name(name ++ ".Raw.t")
+                       | _ =>
+                         base_type_name(
+                           "Raw." ++ generate_type_name([type_name, ...path]),
+                         )
+                       }
                      ] =
                        Obj.magic(value);
                      %e

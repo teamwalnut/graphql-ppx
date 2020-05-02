@@ -531,7 +531,7 @@ module UnionExternalFragmentQuery = {
               | "Dog" =>
                 `Dog(
                   {
-                    let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                    let value: DogFragment.Raw.t = Obj.magic(value);
 
                     DogFragment.parse(value);
                   },

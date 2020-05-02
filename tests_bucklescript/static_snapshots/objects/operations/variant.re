@@ -47,26 +47,16 @@ module MyQuery = {
   let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n";
   type t_mutationForVariant_dog = {
     .
-    "__typename": string,
     "name": string,
     "barkVolume": float,
   };
-  type t_mutationForVariant_human = {
-    .
-    "__typename": string,
-    "name": string,
-  };
+  type t_mutationForVariant_human = {. "name": string};
   type t_mutationForVariant_dogOrHuman_Dog = {
     .
-    "__typename": string,
     "name": string,
     "barkVolume": float,
   };
-  type t_mutationForVariant_dogOrHuman_Human = {
-    .
-    "__typename": string,
-    "name": string,
-  };
+  type t_mutationForVariant_dogOrHuman_Human = {. "name": string};
   type t_mutationForVariant_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_mutationForVariant_dogOrHuman_Dog)

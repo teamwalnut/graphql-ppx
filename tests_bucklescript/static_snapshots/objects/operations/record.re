@@ -258,7 +258,6 @@ module InlineFragmentQuery = {
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
-    __typename: string,
     name: string,
     barkVolume: float,
   };
@@ -432,7 +431,7 @@ module UnionExternalFragmentQuery = {
             | "Dog" =>
               `Dog(
                 {
-                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  let value: DogFragment.Raw.t = Obj.magic(value);
 
                   DogFragment.parse(value);
                 },

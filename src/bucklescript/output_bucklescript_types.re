@@ -170,7 +170,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let record_fields =
     // if this is a variant in the parsed type and __typename is not explicitly
     // requested, still add it (because the printer is added)
-    if (is_variant && !already_has__typename(fields)) {
+    if (raw && is_variant && !already_has__typename(fields)) {
       [
         Ast_helper.Type.field(
           {Location.txt: "__typename", loc: Location.none},
@@ -408,7 +408,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let object_fields =
     // if this is a variant in the parsed type and __typename is not explicitly
     // requested, still add it (because the printer is added)
-    if (is_variant && !already_has__typename(fields)) {
+    if (raw && is_variant && !already_has__typename(fields)) {
       [
         {
           pof_desc:
