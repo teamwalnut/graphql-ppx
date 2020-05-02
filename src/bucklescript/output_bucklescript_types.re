@@ -210,16 +210,27 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
         Ast_helper.(
           Typ.variant(
             fields
-            |> List.map(((name, res)) =>
+            |> List.map(((name: Result_structure.name, res)) =>
                  {
                    prf_desc:
                      Rtag(
                        {
-                         txt: Compat.capitalize_ascii(name),
-                         loc: conv_loc(loc),
+                         txt: Compat.capitalize_ascii(name.item),
+                         loc: Location.none,
                        },
                        false,
-                       [generate_type(config, [name, ...path], raw, res)],
+                       [
+                         generate_type(
+                           ~atLoc=
+                             conv_loc(
+                               config.Generator_utils.map_loc(name.span),
+                             ),
+                           config,
+                           [name.item, ...path],
+                           raw,
+                           res,
+                         ),
+                       ],
                      ),
                    prf_loc: Location.none,
                    prf_attributes: [],

@@ -29,7 +29,7 @@ and type_def =
   | VariantSelection({
       loc: Source_pos.ast_location,
       path,
-      fields: list((string, Result_structure.t)),
+      fields: list((Result_structure.name, Result_structure.t)),
     })
   | VariantUnion({
       loc: Source_pos.ast_location,

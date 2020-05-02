@@ -418,7 +418,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [({item: field}: Result_structure.name, inner), ...next] => {
         let variant_decoder =
           Ast_helper.(
             Exp.variant(
@@ -462,7 +462,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     Ast_helper.(
       Typ.variant(
         List.map(
-          ((name, _)) =>
+          (({item: name}: Result_structure.name, _)) =>
             {
               prf_desc:
                 Rtag(

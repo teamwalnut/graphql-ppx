@@ -375,7 +375,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                      "Unknown field on type " ++ type_name(ty),
                    )
                  | Some(field_meta) =>
-                   let key = some_or(item.fd_alias, item.fd_name).item;
+                   let key = some_or(item.fd_alias, item.fd_name);
                    let inner_type =
                      switch (to_native_type_ref(field_meta.fm_field_type)) {
                      | Ntr_list(_)

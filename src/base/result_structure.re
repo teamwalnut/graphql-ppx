@@ -26,7 +26,7 @@ and t =
   | Res_custom_decoder(loc, string, t)
   | Res_record(loc, string, list(field_result), option(string))
   | Res_object(loc, string, list(field_result), option(string))
-  | Res_poly_variant_selection_set(loc, string, list((string, t)))
+  | Res_poly_variant_selection_set(loc, string, list((name, t)))
   | Res_poly_variant_union(loc, string, list((name, t)), exhaustive_flag)
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
   | Res_solo_fragment_spread(loc, string, list(string))

@@ -347,7 +347,7 @@ and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [({item: field}: Result_structure.name, inner), ...next] => {
         let field_name = Compat.capitalize_ascii(field);
         let variant_decoder =
           Ast_helper.(
