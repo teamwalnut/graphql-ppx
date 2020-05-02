@@ -22,8 +22,9 @@ module Visitor: Traversal_utils.VisitorSig = {
       |> Option.map(fm => fm.fm_arguments)
       |> Option.get_or_else([])
       |> List.filter(arg =>
-           switch (arg.am_arg_type) {
-           | NonNull(_) => true
+           switch (arg.am_arg_type, arg.am_default_value) {
+           | (NonNull(_), None) => true
+           | (NonNull(_), Some(_))
            | _ => false
            }
          );
