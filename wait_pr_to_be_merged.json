@@ -1,8 +1,0 @@
-{
-    "dependencies": {
-      "@opam/reason": "*"
-    },
-    "resolutions": {
-      "@opam/reason": "facebook/reason:reason.json#05e1e3a685c01c76477aee88a756c120f454c322"
-    }
-}
