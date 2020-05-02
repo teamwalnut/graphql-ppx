@@ -7975,7 +7975,7 @@ module MyQuery = {
       {
         let mutationForVariant = {
           let value = (value: t).mutationForVariant;
-          Js.Json.null;
+          Obj.magic(Js.Json.null);
         };
         {
 
@@ -15347,7 +15347,7 @@ module MyQuery = {
     value => {
       let mutationForVariant = {
         let value = value##mutationForVariant;
-        Js.Json.null;
+        Obj.magic(Js.Json.null);
       };
       {
 
@@ -22258,7 +22258,7 @@ module MyQuery = {
     value => {
       let mutationForVariant = {
         let value = value##mutationForVariant;
-        Js.Json.null;
+        Obj.magic(Js.Json.null);
       };
       {
 
@@ -29491,7 +29491,7 @@ module MyQuery = {
       {
         let mutationForVariant = {
           let value = (value: t).mutationForVariant;
-          Js.Json.null;
+          Obj.magic(Js.Json.null);
         };
         {
 
