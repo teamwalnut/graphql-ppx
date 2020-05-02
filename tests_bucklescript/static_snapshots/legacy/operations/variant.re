@@ -218,7 +218,7 @@ module MyQuery = {
     value => {
       let mutationForVariant = {
         let value = value##mutationForVariant;
-        Js.Json.null;
+        Obj.magic(Js.Json.null);
       };
       {
 
