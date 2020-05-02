@@ -16,55 +16,6 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
-  let%private clone: Js.Dict.t('a) => Js.Dict.t('a) =
-    a => Obj.magic(Js.Obj.assign(Obj.magic(Js.Obj.empty()), Obj.magic(a)));
-
-  let rec deepMerge = (json1: Js.Json.t, json2: Js.Json.t) =>
-    switch (
-      (
-        Obj.magic(json1) == Js.null,
-        Js_array2.isArray(json1),
-        Js.typeof(json1) == "object",
-      ),
-      (
-        Obj.magic(json2) == Js.null,
-        Js_array2.isArray(json2),
-        Js.typeof(json2) == "object",
-      ),
-    ) {
-    | ((_, true, _), (_, true, _)) => (
-        Obj.magic(
-          Js.Array.mapi(
-            (el1, idx) => {
-              let el2 = Js.Array.unsafe_get(Obj.magic(json2), idx);
-
-              Js.typeof(el2) == "object" ? deepMerge(el1, el2) : el2;
-            },
-            Obj.magic(json1),
-          ),
-        ): Js.Json.t
-      )
-
-    | ((false, false, true), (false, false, true)) =>
-      let obj1 = clone(Obj.magic(json1));
-      let obj2 = Obj.magic(json2);
-      Js.Dict.keys(obj2)
-      |> Js.Array.forEach(key =>
-           let existingVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
-           let newVal: Js.Json.t = Js.Dict.unsafeGet(obj1, key);
-           Js.Dict.set(
-             obj1,
-             key,
-             Js.typeof(existingVal) != "object"
-               ? newVal : Obj.magic(deepMerge(existingVal, newVal)),
-           );
-         );
-      Obj.magic(obj1);
-
-    | ((_, _, _), (_, _, _)) => json2
-    };
-};
 
 module Fragments = {
   module ListFragment = {
@@ -520,6 +471,46 @@ module MyQuery = {
           l3,
 
           l4,
+        };
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+};
+
+module MyQuery2 = {
+  module Raw = {
+    type t = {lists: Fragments.ListFragment.Raw.t};
+  };
+  let query =
+    (
+      ("query   {\nlists  {\n..." ++ Fragments.ListFragment.name)
+      ++ "   \n}\n\n}\n"
+    )
+    ++ Fragments.ListFragment.query;
+  type t = {lists: Fragments.ListFragment.t};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: Raw.t).lists;
+          Fragments.ListFragment.parse(value);
+        };
+        {
+
+          lists: lists,
+        };
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          Fragments.ListFragment.serialize(value);
+        };
+        {
+
+          lists: lists,
         };
       }: Raw.t
     );
