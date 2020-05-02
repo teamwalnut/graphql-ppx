@@ -50,27 +50,11 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        mutationWithError: {
+        let mutationWithError = {
           let value = (value: Raw.t).mutationWithError;
           (
             {
-              value: {
-                let value = (value: Raw.t_mutationWithError).value;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      stringField: {
-                        let value =
-                          (value: Raw.t_mutationWithError_value).stringField;
-                        value;
-                      },
-                    }: t_mutationWithError_value,
-                  )
-                | None => None
-                };
-              },
-              errors: {
+              let errors = {
                 let value = (value: Raw.t_mutationWithError).errors;
                 switch (Js.toOption(value)) {
                 | Some(value) =>
@@ -79,7 +63,13 @@ module MyQuery = {
                     |> Js.Array.map((value) =>
                          (
                            {
-                             field: {
+                             let message = {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             }
+                             and field = {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
                                switch (Obj.magic(value: string)) {
@@ -88,23 +78,53 @@ module MyQuery = {
                                | "THIRD" => `THIRD
                                | other => `FutureAddedValue(other)
                                };
-                             },
-                             message: {
-                               let value =
-                                 (value: Raw.t_mutationWithError_errors).
-                                   message;
-                               value;
-                             },
+                             };
+                             {
+
+                               field,
+
+                               message,
+                             };
                            }: t_mutationWithError_errors
                          )
                        ),
                   )
                 | None => None
                 };
-              },
+              }
+              and value = {
+                let value = (value: Raw.t_mutationWithError).value;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    {
+                      let stringField = {
+                        let value =
+                          (value: Raw.t_mutationWithError_value).stringField;
+                        value;
+                      };
+                      {
+
+                        stringField: stringField,
+                      };
+                    }: t_mutationWithError_value,
+                  )
+                | None => None
+                };
+              };
+              {
+
+                value,
+
+                errors,
+              };
             }: t_mutationWithError
           );
-        },
+        };
+        {
+
+          mutationWithError: mutationWithError,
+        };
       }: t
     );
   let serialize: t => Raw.t =

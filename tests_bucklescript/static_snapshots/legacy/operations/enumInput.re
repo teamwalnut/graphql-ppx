@@ -26,10 +26,14 @@ module MyQuery = {
   type t_variables = {. "arg": [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     value => {
-      "enumInput": {
+      let enumInput = {
         let value = value##enumInput;
         value;
-      },
+      };
+      {
+
+        "enumInput": enumInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {
@@ -46,7 +50,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg:
+      "arg":
         (
           a =>
             switch (a) {

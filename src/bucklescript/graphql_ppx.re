@@ -402,7 +402,7 @@ let rewrite_query =
         template_tag,
       };
       switch (Validations.run_validators(config, document)) {
-      | Some(errs) =>
+      | (Some(errs), _) =>
         let errs =
           errs
           |> List.map(((loc, msg)) => {
@@ -411,12 +411,28 @@ let rewrite_query =
                [%e make_error_expr(loc, msg)];
              });
         [errs];
-      | None =>
+      | (None, warnings) =>
+        warnings
+        |> List.iter(((loc, message)) => {
+             let loc = conv_loc(loc);
+             let loc_as_ghost = {...loc, loc_ghost: true};
+             Location.print_alert(
+               loc,
+               Location.formatter_for_warnings^,
+               {
+                 kind: "deprecated",
+                 message,
+                 def: loc_as_ghost,
+                 use: loc_as_ghost,
+               },
+             );
+             ();
+           });
         Result_decoder.unify_document_schema(config, document)
         |> Output_bucklescript_module.generate_modules(
              config,
              module_definition,
-           )
+           );
       };
     };
   };

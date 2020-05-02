@@ -30,14 +30,8 @@ module MyQuery = {
     type t = {simpleSubscription: t_simpleSubscription};
   };
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-  type t_simpleSubscription_Dog = {
-    __typename: string,
-    name: string,
-  };
-  type t_simpleSubscription_Human = {
-    __typename: string,
-    name: string,
-  };
+  type t_simpleSubscription_Dog = {name: string};
+  type t_simpleSubscription_Human = {name: string};
   type t_simpleSubscription = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_simpleSubscription_Dog)
@@ -47,7 +41,7 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        simpleSubscription: {
+        let simpleSubscription = {
           let value = (value: Raw.t).simpleSubscription;
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -59,10 +53,14 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                   (
                     {
-                      name: {
+                      let name = {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
                         value;
-                      },
+                      };
+                      {
+
+                        name: name,
+                      };
                     }: t_simpleSubscription_Dog
                   );
                 },
@@ -73,11 +71,15 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
-                      name: {
+                      let name = {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).name;
                         value;
-                      },
+                      };
+                      {
+
+                        name: name,
+                      };
                     }: t_simpleSubscription_Human
                   );
                 },
@@ -85,7 +87,11 @@ module MyQuery = {
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_simpleSubscription
           );
-        },
+        };
+        {
+
+          simpleSubscription: simpleSubscription,
+        };
       }: t
     );
   let serialize: t => Raw.t =

@@ -30,7 +30,6 @@ module MyQuery = {
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     .
-    "__typename": string,
     "name": string,
     "barkVolume": float,
   };
@@ -41,7 +40,7 @@ module MyQuery = {
   type t = {. "dogOrHuman": t_dogOrHuman};
   let parse: Raw.t => t =
     value => {
-      "dogOrHuman": {
+      let dogOrHuman = {
         let value = value##dogOrHuman;
         let typename: string =
           Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -51,22 +50,30 @@ module MyQuery = {
             `Dog(
               {
                 let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
                 {
-                  "name": {
-                    let value = value##name;
-                    value;
-                  },
-                  "barkVolume": {
-                    let value = value##barkVolume;
-                    value;
-                  },
+
+                  "name": name,
+
+                  "barkVolume": barkVolume,
                 };
               },
             )
           | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
           }: t_dogOrHuman
         );
-      },
+      };
+      {
+
+        "dogOrHuman": dogOrHuman,
+      };
     };
   let serialize: t => Raw.t =
     value => {

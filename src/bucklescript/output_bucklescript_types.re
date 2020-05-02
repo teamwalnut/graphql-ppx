@@ -74,8 +74,10 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
   | Res_record(loc, name, _fields, Some(type_name)) =>
     base_type(~loc=?atLoc, type_name)
   | Res_object(loc, name, _fields, None)
-  | Res_record(loc, name, _fields, None) => {
-      base_type(~loc=?atLoc, generate_type_name(path));
+  | Res_record(loc, name, _fields, type_name) =>
+    switch (type_name, raw) {
+    | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
+    | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
   | Res_poly_variant_selection_set(loc, name, _)
   | Res_poly_variant_union(loc, name, _, _)
@@ -181,7 +183,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let record_fields =
     // if this is a variant in the parsed type and __typename is not explicitly
     // requested, still add it (because the printer is added)
-    if (is_variant && !already_has__typename(fields)) {
+    if (raw && is_variant && !already_has__typename(fields)) {
       [
         Ast_helper.Type.field(
           {Location.txt: "__typename", loc: Location.none},
@@ -425,7 +427,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
   let object_fields =
     // if this is a variant in the parsed type and __typename is not explicitly
     // requested, still add it (because the printer is added)
-    if (is_variant && !already_has__typename(fields)) {
+    if (raw && is_variant && !already_has__typename(fields)) {
       [
         {
           pof_desc:
@@ -477,7 +479,7 @@ let generate_graphql_object =
 let generate_types =
     (config: Generator_utils.output_config, res, raw, fragment_name) => {
   let types =
-    extract([], res)
+    extract(~path=[], ~raw, res)
     |> List.map(
          fun
          | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>

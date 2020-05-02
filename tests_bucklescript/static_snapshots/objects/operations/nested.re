@@ -27,8 +27,9 @@ module MyQuery = {
     type t_first_inner = {. "inner": Js.Nullable.t(t_first_inner_inner)};
     type t_first = {. "inner": Js.Nullable.t(t_first_inner)};
     type t_second_inner_inner = {
-      f1: string,
-      f2: string,
+      .
+      "f1": string,
+      "f2": string,
     };
     type t_second_inner = {. "inner": Js.Nullable.t(t_second_inner_inner)};
     type t_second = {. "inner": Js.Nullable.t(t_second_inner)};
@@ -63,91 +64,143 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "first": {
-        let value = value##first;
-        {
-          "inner": {
-            let value = value##inner;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some({
-                "inner": {
-                  let value = value##inner;
-                  switch (Js.toOption(value)) {
-                  | Some(value) =>
-                    Some({
-                      "field": {
-                        let value = value##field;
-                        value;
-                      },
-                    })
-                  | None => None
-                  };
-                },
-              })
-            | None => None
-            };
-          },
-        };
-      },
-      "second": {
-        let value = value##second;
-        {
-          "inner": {
-            let value = value##inner;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some({
-                "inner": {
-                  let value = value##inner;
-                  switch (Js.toOption(value)) {
-                  | Some(value) =>
-                    Some({
-                      "f1": {
-                        let value = value##f1;
-                        value;
-                      },
-                      "f2": {
-                        let value = value##f2;
-                        value;
-                      },
-                    })
-                  | None => None
-                  };
-                },
-              })
-            | None => None
-            };
-          },
-        };
-      },
-      "let_": {
+      let let_ = {
         let value = value##let_;
-        {
-          "inner": {
-            let value = value##inner;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some({
-                "inner": {
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
                   let value = value##inner;
                   switch (Js.toOption(value)) {
                   | Some(value) =>
-                    Some({
-                      "field": {
-                        let value = value##field;
-                        value;
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {
+
+                          "field": field,
+                        };
                       },
-                    })
+                    )
                   | None => None
                   };
-                },
-              })
-            | None => None
-            };
-          },
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => None
+          };
         };
-      },
+        {
+
+          "inner": inner,
+        };
+      }
+      and second = {
+        let value = value##second;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let f2 = {
+                          let value = value##f2;
+                          value;
+                        }
+                        and f1 = {
+                          let value = value##f1;
+                          value;
+                        };
+                        {
+
+                          f1,
+
+                          f2,
+                        };
+                      }: t_second_inner_inner,
+                    )
+                  | None => None
+                  };
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => None
+          };
+        };
+        {
+
+          "inner": inner,
+        };
+      }
+      and first = {
+        let value = value##first;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {
+
+                          "field": field,
+                        };
+                      },
+                    )
+                  | None => None
+                  };
+                };
+                {
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => None
+          };
+        };
+        {
+
+          "inner": inner,
+        };
+      };
+      {
+
+        "first": first,
+
+        "second": second,
+
+        "let_": let_,
+      };
     };
   let serialize: t => Raw.t =
     value => {
@@ -212,12 +265,12 @@ module MyQuery = {
                     Js.Nullable.return(
                       {
                         let f2 = {
-                          let value = value##f2;
+                          let value = (value: t_second_inner_inner).f2;
 
                           value;
                         }
                         and f1 = {
-                          let value = value##f1;
+                          let value = (value: t_second_inner_inner).f1;
 
                           value;
                         };

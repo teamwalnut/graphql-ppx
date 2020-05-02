@@ -54,45 +54,69 @@ module MyQuery = {
   type t = {. "first": t_first};
   let parse: Raw.t => t =
     value => {
-      "first": {
+      let first = {
         let value = value##first;
-        {
-          "__typename": {
-            let value = value##__typename;
-            value;
-          },
-          "inner": {
-            let value = value##inner;
-            switch (Js.toOption(value)) {
-            | Some(value) =>
-              Some({
-                "__typename": {
-                  let value = value##__typename;
-                  value;
-                },
-                "inner": {
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
                   let value = value##inner;
                   switch (Js.toOption(value)) {
                   | Some(value) =>
-                    Some({
-                      "__typename": {
-                        let value = value##__typename;
-                        value;
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        }
+                        and __typename = {
+                          let value = value##__typename;
+                          value;
+                        };
+                        {
+
+                          "__typename": __typename,
+
+                          "field": field,
+                        };
                       },
-                      "field": {
-                        let value = value##field;
-                        value;
-                      },
-                    })
+                    )
                   | None => None
                   };
-                },
-              })
-            | None => None
-            };
-          },
+                }
+                and __typename = {
+                  let value = value##__typename;
+                  value;
+                };
+                {
+
+                  "__typename": __typename,
+
+                  "inner": inner,
+                };
+              },
+            )
+          | None => None
+          };
+        }
+        and __typename = {
+          let value = value##__typename;
+          value;
         };
-      },
+        {
+
+          "__typename": __typename,
+
+          "inner": inner,
+        };
+      };
+      {
+
+        "first": first,
+      };
     };
   let serialize: t => Raw.t =
     value => {

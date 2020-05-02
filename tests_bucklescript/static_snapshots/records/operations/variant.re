@@ -42,23 +42,15 @@ module MyQuery = {
   };
   let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n";
   type t_mutationForVariant_dog = {
-    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_mutationForVariant_human = {
-    __typename: string,
-    name: string,
-  };
+  type t_mutationForVariant_human = {name: string};
   type t_mutationForVariant_dogOrHuman_Dog = {
-    __typename: string,
     name: string,
     barkVolume: float,
   };
-  type t_mutationForVariant_dogOrHuman_Human = {
-    __typename: string,
-    name: string,
-  };
+  type t_mutationForVariant_dogOrHuman_Human = {name: string};
   type t_mutationForVariant_dogOrHuman = [
     | `FutureAddedValue(Js.Json.t)
     | `Dog(t_mutationForVariant_dogOrHuman_Dog)
@@ -75,7 +67,7 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        mutationForVariant: {
+        let mutationForVariant = {
           let value = (value: Raw.t).mutationForVariant;
           switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
 
@@ -106,15 +98,21 @@ module MyQuery = {
                   let value = temp;
                   `Dog(
                     {
-                      name: {
-                        let value = (value: Raw.t_mutationForVariant_dog).name;
-                        value;
-                      },
-                      barkVolume: {
+                      let barkVolume = {
                         let value =
                           (value: Raw.t_mutationForVariant_dog).barkVolume;
                         value;
-                      },
+                      }
+                      and name = {
+                        let value = (value: Raw.t_mutationForVariant_dog).name;
+                        value;
+                      };
+                      {
+
+                        name,
+
+                        barkVolume,
+                      };
                     }: t_mutationForVariant_dog,
                   );
                 | Some(_) =>
@@ -124,11 +122,15 @@ module MyQuery = {
                     let value = temp;
                     `Human(
                       {
-                        name: {
+                        let name = {
                           let value =
                             (value: Raw.t_mutationForVariant_human).name;
                           value;
-                        },
+                        };
+                        {
+
+                          name: name,
+                        };
                       }: t_mutationForVariant_human,
                     );
                   | Some(_) =>
@@ -155,22 +157,28 @@ module MyQuery = {
                                     Obj.magic(value);
                                   (
                                     {
-                                      name: {
-                                        let value =
-                                          (
-                                            value: Raw.t_mutationForVariant_dogOrHuman_Dog
-                                          ).
-                                            name;
-                                        value;
-                                      },
-                                      barkVolume: {
+                                      let barkVolume = {
                                         let value =
                                           (
                                             value: Raw.t_mutationForVariant_dogOrHuman_Dog
                                           ).
                                             barkVolume;
                                         value;
-                                      },
+                                      }
+                                      and name = {
+                                        let value =
+                                          (
+                                            value: Raw.t_mutationForVariant_dogOrHuman_Dog
+                                          ).
+                                            name;
+                                        value;
+                                      };
+                                      {
+
+                                        name,
+
+                                        barkVolume,
+                                      };
                                     }: t_mutationForVariant_dogOrHuman_Dog
                                   );
                                 },
@@ -182,14 +190,18 @@ module MyQuery = {
                                     Obj.magic(value);
                                   (
                                     {
-                                      name: {
+                                      let name = {
                                         let value =
                                           (
                                             value: Raw.t_mutationForVariant_dogOrHuman_Human
                                           ).
                                             name;
                                         value;
-                                      },
+                                      };
+                                      {
+
+                                        name: name,
+                                      };
                                     }: t_mutationForVariant_dogOrHuman_Human
                                   );
                                 },
@@ -213,7 +225,11 @@ module MyQuery = {
               };
             };
           };
-        },
+        };
+        {
+
+          mutationForVariant: mutationForVariant,
+        };
       }: t
     );
   let serialize: t => Raw.t =

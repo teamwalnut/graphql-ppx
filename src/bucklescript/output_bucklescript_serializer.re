@@ -83,52 +83,58 @@ let rec serialize_type =
   | Type(Interface(_)) => [%expr (v => None)]
   | TypeNotFound(_) => [%expr (v => None)];
 
-/*
- * This creates a serialize function for variables and/or input types
- * the return type is Js.Json.t.
- */
-let serialize_fun = (config, fields, type_name) => {
+let record_to_object = (loc, record) => {
+  Ast_helper.(
+    Exp.extension((
+      {txt: "bs.obj", loc: conv_loc(loc)},
+      PStr([[%stri [%e record]]]),
+    ))
+  );
+};
+
+let serialize_fun = (config, loc, fields, type_name) => {
   let arg = "inp";
+  open Ast_helper;
+  let record =
+    Exp.record(
+      fields
+      |> List.map((InputField({name, type_, loc})) => {
+           (
+             {txt: Longident.parse(name), loc: conv_loc(loc)},
+             [%expr
+               [%e serialize_type(type_)](
+                 if%e (config.records) {
+                   Exp.field(
+                     Exp.constraint_(
+                       ident_from_string(arg),
+                       base_type_name(type_name),
+                     ),
+                     {
+                       loc: Location.none,
+                       Location.txt: Longident.parse(to_valid_ident(name)),
+                     },
+                   );
+                 } else {
+                   %expr
+                   [%e ident_from_string(arg)]##[%e
+                                                   ident_from_string(
+                                                     to_valid_ident(name),
+                                                   )
+                                                 ];
+                 },
+               )
+             ],
+           )
+         }),
+      None,
+    );
+  let record = !config.records ? record_to_object(loc, record) : record;
   Ast_helper.(
     Exp.fun_(
       Nolabel,
       None,
       Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
-      {
-        Exp.record(
-          fields
-          |> List.map((InputField({name, type_, loc})) => {
-               (
-                 {txt: Longident.parse(name), loc: conv_loc(loc)},
-                 [%expr
-                   [%e serialize_type(type_)](
-                     if%e (config.records) {
-                       Exp.field(
-                         Exp.constraint_(
-                           ident_from_string(arg),
-                           base_type_name(type_name),
-                         ),
-                         {
-                           loc: Location.none,
-                           Location.txt:
-                             Longident.parse(to_valid_ident(name)),
-                         },
-                       );
-                     } else {
-                       %expr
-                       [%e ident_from_string(arg)]##[%e
-                                                       ident_from_string(
-                                                         to_valid_ident(name),
-                                                       )
-                                                     ];
-                     },
-                   )
-                 ],
-               )
-             }),
-          None,
-        );
-      },
+      record,
     )
   );
 };
@@ -174,7 +180,7 @@ let generate_serialize_variables =
                      base_type_name("Raw." ++ type_name),
                    ),
                  ),
-                 serialize_fun(config, fields, type_name),
+                 serialize_fun(config, loc, fields, type_name),
                );
              }),
         )
@@ -244,13 +250,7 @@ let generate_variable_constructors =
                    )
                  );
 
-               let object_ =
-                 Ast_helper.(
-                   Exp.extension((
-                     {txt: "bs.obj", loc: conv_loc(loc)},
-                     PStr([[%stri [%e record]]]),
-                   ))
-                 );
+               let object_ = record_to_object(loc, record);
 
                let body =
                  Ast_helper.(
@@ -407,7 +407,17 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
     );
   }
 and generate_object_encoder =
-    (config, loc, name, fields, path, definition, existing_record, typename) => {
+    (
+      config,
+      loc,
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+      typename,
+      force_record,
+    ) => {
   open Ast_helper;
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
@@ -465,13 +475,7 @@ and generate_object_encoder =
           None,
         );
 
-      let record =
-        wrap
-          ? Exp.extension((
-              {txt: "bs.obj", loc},
-              PStr([[%stri [%e record]]]),
-            ))
-          : record;
+      let record = wrap ? record_to_object(loc, record) : record;
 
       let bindings =
         fields
@@ -501,7 +505,10 @@ and generate_object_encoder =
   };
 
   let do_obj_constructor = with_objects =>
-    [@metaloc conv_loc(loc)] do_obj_constructor_base(with_objects, true);
+    [@metaloc conv_loc(loc)]
+    {
+      do_obj_constructor_base(with_objects, true);
+    };
 
   let do_obj_constructor_records = () =>
     [@metaloc conv_loc(loc)]
@@ -586,10 +593,12 @@ and generate_object_encoder =
          | _ => false,
        );
 
-  switch (has_fragment_spreads, config.records) {
-  | (true, records) => merge_into_opaque(!records)
-  | (false, true) => do_obj_constructor_records()
-  | (false, false) => do_obj_constructor(true)
+  switch (has_fragment_spreads, config.records, existing_record, force_record) {
+  | (true, records, _, _) => merge_into_opaque(!records)
+  | (false, true, _, _) => do_obj_constructor_records()
+  | (false, false, _, true) => do_obj_constructor(false)
+  | (false, false, Some(_), _) => do_obj_constructor(false)
+  | (false, false, _, _) => do_obj_constructor(true)
   };
 }
 and generate_poly_variant_union_encoder =
@@ -704,6 +713,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
+      true,
     )
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
@@ -715,6 +725,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
+      false,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union_encoder(

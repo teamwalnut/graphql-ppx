@@ -50,10 +50,14 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "scalarsInput": {
+      let scalarsInput = {
         let value = value##scalarsInput;
         value;
-      },
+      };
+      {
+
+        "scalarsInput": scalarsInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {
@@ -70,7 +74,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      nullableString:
+      "nullableString":
         (
           a =>
             switch (a) {
@@ -81,9 +85,9 @@ module MyQuery = {
           inp##nullableString,
         ),
 
-      string: (a => a)(inp##string),
+      "string": (a => a)(inp##string),
 
-      nullableInt:
+      "nullableInt":
         (
           a =>
             switch (a) {
@@ -94,9 +98,9 @@ module MyQuery = {
           inp##nullableInt,
         ),
 
-      int: (a => a)(inp##int),
+      "int": (a => a)(inp##int),
 
-      nullableFloat:
+      "nullableFloat":
         (
           a =>
             switch (a) {
@@ -107,9 +111,9 @@ module MyQuery = {
           inp##nullableFloat,
         ),
 
-      float: (a => a)(inp##float),
+      "float": (a => a)(inp##float),
 
-      nullableBoolean:
+      "nullableBoolean":
         (
           a =>
             switch (a) {
@@ -120,9 +124,9 @@ module MyQuery = {
           inp##nullableBoolean,
         ),
 
-      boolean: (a => a)(inp##boolean),
+      "boolean": (a => a)(inp##boolean),
 
-      nullableID:
+      "nullableID":
         (
           a =>
             switch (a) {
@@ -133,7 +137,7 @@ module MyQuery = {
           inp##nullableID,
         ),
 
-      id: (a => a)(inp##id),
+      "id": (a => a)(inp##id),
     };
   let makeVariables =
       (

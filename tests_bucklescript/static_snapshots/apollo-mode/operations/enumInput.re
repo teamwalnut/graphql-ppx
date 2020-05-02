@@ -27,10 +27,14 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        enumInput: {
+        let enumInput = {
           let value = (value: Raw.t).enumInput;
           value;
-        },
+        };
+        {
+
+          enumInput: enumInput,
+        };
       }: t
     );
   let serialize: t => Raw.t =

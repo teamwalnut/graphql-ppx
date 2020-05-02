@@ -38,10 +38,14 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "recursiveInput": {
+      let recursiveInput = {
         let value = value##recursiveInput;
         value;
-      },
+      };
+      {
+
+        "recursiveInput": recursiveInput,
+      };
     };
   let serialize: t => Raw.t =
     value => {
@@ -59,14 +63,14 @@ module MyQuery = {
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      arg: (a => serializeInputObjectRecursiveInput(a))(inp##arg),
+      "arg": (a => serializeInputObjectRecursiveInput(a))(inp##arg),
     }
 
   and serializeInputObjectRecursiveInput:
     t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
 
-      otherField:
+      "otherField":
         (
           a =>
             switch (a) {
@@ -77,7 +81,7 @@ module MyQuery = {
           inp##otherField,
         ),
 
-      inner:
+      "inner":
         (
           a =>
             switch (a) {
@@ -91,7 +95,7 @@ module MyQuery = {
           inp##inner,
         ),
 
-      enum:
+      "enum":
         (
           a =>
             switch (a) {

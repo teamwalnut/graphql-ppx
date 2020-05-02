@@ -51,10 +51,14 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        scalarsInput: {
+        let scalarsInput = {
           let value = (value: Raw.t).scalarsInput;
           value;
-        },
+        };
+        {
+
+          scalarsInput: scalarsInput,
+        };
       }: t
     );
   let serialize: t => Raw.t =

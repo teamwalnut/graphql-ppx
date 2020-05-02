@@ -44,26 +44,38 @@ module MyQuery = {
   };
   let parse: Raw.t => t =
     value => {
-      "pokemon": {
+      let pokemon = {
         let value = value##pokemon;
         switch (Js.toOption(value)) {
         | Some(value) =>
-          Some({
-            "id": {
-              let value = value##id;
-              value;
-            },
-            "name": {
-              let value = value##name;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+          Some(
+            {
+              let name = {
+                let value = value##name;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              }
+              and id = {
+                let value = value##id;
+                value;
+              };
+              {
+
+                "id": id,
+
+                "name": name,
               };
             },
-          })
+          )
         | None => None
         };
-      },
+      };
+      {
+
+        "pokemon": pokemon,
+      };
     };
   let serialize: t => Raw.t =
     value => {
@@ -106,7 +118,7 @@ module MyQuery = {
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
 
-      id:
+      "id":
         (
           a =>
             switch (a) {
@@ -117,7 +129,7 @@ module MyQuery = {
           inp##id,
         ),
 
-      name:
+      "name":
         (
           a =>
             switch (a) {
