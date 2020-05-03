@@ -244,11 +244,20 @@ module Visitor = (V: VisitorSig) => {
     | Iv_object(o) => V.exit_object_value(self, ctx, o)
     };
 
-  let rec visit_input_value = (self, ctx, value) => {
+  let rec visit_input_value =
+          (self, ctx, arg_type: option(Schema.type_ref), value) => {
     let () = enter_input_value(self, ctx, value);
     let () =
-      switch (value.item) {
-      | Iv_object(fields) =>
+      switch (
+        arg_type
+        |> Option.map(Schema.innermost_name)
+        |> Option.flat_map(Schema.lookup_type(ctx.schema)),
+        value.item,
+      ) {
+      | (Some(Scalar(_) as ty), _)
+          when ty |> Schema.is_type_default === false =>
+        ()
+      | (_, Iv_object(fields)) =>
         List.iter(
           ((key, value)) => {
             let inner_type =
@@ -264,12 +273,12 @@ module Visitor = (V: VisitorSig) => {
               |> Option.map(am => am.Schema.am_arg_type);
             let ctx = Context.push_input_type(ctx, inner_type);
             let () = V.enter_object_field(self, ctx, (key, value));
-            let () = visit_input_value(self, ctx, value);
+            let () = visit_input_value(self, ctx, inner_type, value);
             V.exit_object_field(self, ctx, (key, value));
           },
           fields,
         )
-      | Iv_list(items) =>
+      | (_, Iv_list(items)) =>
         let inner_type =
           Context.current_input_type_literal(ctx)
           |> Option.flat_map(
@@ -279,7 +288,7 @@ module Visitor = (V: VisitorSig) => {
                | _ => None,
              );
         let ctx = Context.push_input_type(ctx, inner_type);
-        List.iter(visit_input_value(self, ctx), items);
+        List.iter(visit_input_value(self, ctx, inner_type), items);
       | _ => ()
       };
     exit_input_value(self, ctx, value);
@@ -353,7 +362,7 @@ module Visitor = (V: VisitorSig) => {
             |> Option.map(am => am.Schema.am_arg_type);
           let ctx = Context.push_input_type(ctx, arg_type);
           let () = V.enter_argument(self, ctx, (name, value));
-          let () = visit_input_value(self, ctx, value);
+          let () = visit_input_value(self, ctx, arg_type, value);
           V.exit_argument(self, ctx, (name, value));
         },
         item,
@@ -384,7 +393,13 @@ module Visitor = (V: VisitorSig) => {
           let () =
             switch (def.vd_default_value) {
             | None => ()
-            | Some(value) => visit_input_value(self, ctx, value)
+            | Some(value) =>
+              visit_input_value(
+                self,
+                ctx,
+                Some(def.vd_type.item |> Type_utils.to_schema_type_ref),
+                value,
+              )
             };
           V.exit_variable_definition(self, ctx, (name, def));
         },
