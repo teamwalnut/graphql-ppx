@@ -83,7 +83,6 @@ module Visitor: Traversal_utils.VisitorSig = {
     self.argType = None;
     self.nameSpan = None;
   };
-  
   let exit_argument = (self, _, _) => {
     self.argType = None;
     self.nameSpan = None;

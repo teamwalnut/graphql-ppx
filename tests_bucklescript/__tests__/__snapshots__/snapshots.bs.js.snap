@@ -768,6 +768,7 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -775,10 +776,7 @@ module MyQuery = {
           let value = (value: Raw.t).defaultObjectValueOnScalar;
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: t
     );
   let serialize: t => Raw.t =
@@ -786,13 +784,9 @@ module MyQuery = {
       {
         let defaultObjectValueOnScalar = {
           let value = (value: t).defaultObjectValueOnScalar;
-
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
   let definition = (parse, query, serialize);
@@ -7015,6 +7009,58 @@ exports[`Errors deprecatedFields.re 1`] = `
 Alert deprecated: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
 `;
 
+exports[`Errors invalidDefaultValue1.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidDefaultValue1.re 21:14-26
+  
+  19 ┆ query invalidDefaultValues {
+  20 ┆   invalidDefaultValues(
+  21 ┆       int: \\"Some string\\"
+  22 ┆   )
+  23 ┆ }
+  
+  Invalid default value. Expected \\"Int\\" but received \\"String\\""
+`;
+
+exports[`Errors invalidDefaultValue2.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidDefaultValue2.re 8:14-26
+  
+   6 ┆ query invalidDefaultValues {
+   7 ┆   invalidDefaultValues(
+   8 ┆       int: {test: \\"xxx\\"}
+   9 ┆   )
+  10 ┆ }
+  
+  Invalid default value. Expected \\"Int\\" but received \\"Object\\""
+`;
+
+exports[`Errors invalidDefaultValue3.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidDefaultValue3.re 21:13
+  
+  19 ┆ query invalidDefaultValues {
+  20 ┆   invalidDefaultValues(
+  21 ┆       id: 5
+  22 ┆   )
+  23 ┆ }
+  
+  Invalid default value. Expected \\"ID\\" but received \\"Int\\""
+`;
+
+exports[`Errors invalidDefaultValue4.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidDefaultValue4.re 8:17-26
+  
+   6 ┆ query invalidDefaultValues {
+   7 ┆   invalidDefaultValues(
+   8 ┆       string: [\\"1\\", \\"2\\"]
+   9 ┆   )
+  10 ┆ }
+  
+  Invalid default value. Expected \\"String\\" but received \\"List\\""
+`;
+
 exports[`Errors missingField1.re 1`] = `
 "File \\"operations/errors/missingField1.re\\", line 6, characters 6-27:
 6 |       thisFieldDoesNotExist
@@ -7794,28 +7840,22 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
         let value = value##defaultObjectValueOnScalar;
         value;
       };
-      {
-
-        \\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar,
-      };
+      {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let serialize: t => Raw.t =
     value => {
       let defaultObjectValueOnScalar = {
         let value = value##defaultObjectValueOnScalar;
-
         value;
       };
-      {
-
-        \\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar,
-      };
+      {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let make = () => {
     \\"query\\": query,
@@ -14201,28 +14241,22 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
         let value = value##defaultObjectValueOnScalar;
         value;
       };
-      {
-
-        \\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar,
-      };
+      {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let serialize: t => Raw.t =
     value => {
       let defaultObjectValueOnScalar = {
         let value = value##defaultObjectValueOnScalar;
-
         value;
       };
-      {
-
-        \\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar,
-      };
+      {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let definition = (parse, query, serialize);
 };
@@ -20351,6 +20385,7 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20358,10 +20393,7 @@ module MyQuery = {
           let value = (value: Raw.t).defaultObjectValueOnScalar;
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: t
     );
   let serialize: t => Raw.t =
@@ -20369,13 +20401,9 @@ module MyQuery = {
       {
         let defaultObjectValueOnScalar = {
           let value = (value: t).defaultObjectValueOnScalar;
-
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
   let definition = (parse, query, serialize);
