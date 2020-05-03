@@ -58,6 +58,13 @@ type Query {
     float: Float
     bool: Boolean
   ): String!
+  invalidArgValues(
+    stringRequired: String!
+    string: String
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+  ): String!
 
   dogOrHuman: DogOrHuman!
 

@@ -1,6 +1,6 @@
 module MyQuery = [%graphql
   {|
-  query ($query: String!) {
+  query ($query: Int!) {
     argNamedQuery(query: $query)
   }
 |}

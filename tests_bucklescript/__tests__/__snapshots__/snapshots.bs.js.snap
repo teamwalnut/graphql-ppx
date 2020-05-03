@@ -92,12 +92,12 @@ exports[`Apollo argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {argNamedQuery: int};
-    type t_variables = {query: string};
+    type t_variables = {query: int};
   };
-  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
   type operation = t;
-  type t_variables = {query: string};
+  type t_variables = {query: int};
   let parse: Raw.t => t =
     (value) => (
       {
@@ -7009,6 +7009,71 @@ exports[`Errors deprecatedFields.re 1`] = `
 Alert deprecated: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
 `;
 
+exports[`Errors invalidArgVariableType1.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidArgVariableType1.re 9:25-28
+  
+   7 ┆ query invalidArgValues($arg: Int) {
+   8 ┆   invalidArgValues(
+   9 ┆       stringRequired: $arg
+  10 ┆   )
+  11 ┆ }
+  
+  Invalid argument. Expected \\"String\\" but received \\"Int\\"."
+`;
+
+exports[`Errors invalidArgVariableType2.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidArgVariableType2.re 8:25-28
+  
+   6 ┆ query invalidArgValues($arg: String) {
+   7 ┆   invalidArgValues(
+   8 ┆       stringRequired: $arg
+   9 ┆   )
+  10 ┆ }
+  
+  Invalid argument. Trying to apply the nullable variable \\"$arg\\" to the required argument \\"stringRequired\\"."
+`;
+
+exports[`Errors invalidArgVariableType3.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidArgVariableType3.re 9:17-21
+  
+   7 ┆   invalidArgValues(
+   8 ┆       stringRequired: $arg
+   9 ┆       string: $arg2
+  10 ┆   )
+  11 ┆ }
+  
+  Invalid argument. Expected \\"String\\" but received \\"Int\\"."
+`;
+
+exports[`Errors invalidArgVariableType4.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidArgVariableType4.re 10:14-18
+  
+   8 ┆ invalidArgValues(
+   9 ┆     custom: $arg
+  10 ┆     obj: $arg2
+  11 ┆     stringRequired: \\"\\"
+  12 ┆ )
+  
+  Invalid argument. Expected \\"Object\\" but received \\"Int\\"."
+`;
+
+exports[`Errors invalidArgVariableType5.re 1`] = `
+"We've found a bug for you!
+  operations/errors/invalidArgVariableType5.re 9:25-28
+  
+   7 ┆   invalidArgValues(
+   8 ┆       id: $arg
+   9 ┆       stringRequired: $arg
+  10 ┆   )
+  11 ┆ }
+  
+  Invalid argument. Trying to apply the nullable variable \\"$arg\\" to the required argument \\"stringRequired\\"."
+`;
+
 exports[`Errors invalidDefaultValue1.re 1`] = `
 "We've found a bug for you!
   operations/errors/invalidDefaultValue1.re 21:14-26
@@ -7019,7 +7084,7 @@ exports[`Errors invalidDefaultValue1.re 1`] = `
   22 ┆   )
   23 ┆ }
   
-  Invalid default value. Expected \\"Int\\" but received \\"String\\""
+  Invalid default value. Expected \\"Int\\" but received \\"String\\"."
 `;
 
 exports[`Errors invalidDefaultValue2.re 1`] = `
@@ -7032,7 +7097,7 @@ exports[`Errors invalidDefaultValue2.re 1`] = `
    9 ┆   )
   10 ┆ }
   
-  Invalid default value. Expected \\"Int\\" but received \\"Object\\""
+  Invalid default value. Expected \\"Int\\" but received \\"Object\\"."
 `;
 
 exports[`Errors invalidDefaultValue3.re 1`] = `
@@ -7045,7 +7110,7 @@ exports[`Errors invalidDefaultValue3.re 1`] = `
   22 ┆   )
   23 ┆ }
   
-  Invalid default value. Expected \\"ID\\" but received \\"Int\\""
+  Invalid default value. Expected \\"ID\\" but received \\"Int\\"."
 `;
 
 exports[`Errors invalidDefaultValue4.re 1`] = `
@@ -7058,7 +7123,7 @@ exports[`Errors invalidDefaultValue4.re 1`] = `
    9 ┆   )
   10 ┆ }
   
-  Invalid default value. Expected \\"String\\" but received \\"List\\""
+  Invalid default value. Expected \\"String\\" but received \\"List\\"."
 `;
 
 exports[`Errors missingField1.re 1`] = `
@@ -7196,12 +7261,12 @@ exports[`Legacy argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
-    type t_variables = {. \\"query\\": string};
+    type t_variables = {. \\"query\\": int};
   };
-  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
   type operation = t;
-  type t_variables = {. \\"query\\": string};
+  type t_variables = {. \\"query\\": int};
   let parse: Raw.t => t =
     value => {
       let argNamedQuery = {
@@ -13637,12 +13702,12 @@ exports[`Objects argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
-    type t_variables = {. \\"query\\": string};
+    type t_variables = {. \\"query\\": int};
   };
-  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
   type operation = t;
-  type t_variables = {. \\"query\\": string};
+  type t_variables = {. \\"query\\": int};
   let parse: Raw.t => t =
     value => {
       let argNamedQuery = {
@@ -19751,12 +19816,12 @@ exports[`Records argNamedQuery.re 1`] = `
 module MyQuery = {
   module Raw = {
     type t = {argNamedQuery: int};
-    type t_variables = {query: string};
+    type t_variables = {query: int};
   };
-  let query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+  let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
   type operation = t;
-  type t_variables = {query: string};
+  type t_variables = {query: int};
   let parse: Raw.t => t =
     (value) => (
       {

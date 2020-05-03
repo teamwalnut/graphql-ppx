@@ -164,4 +164,15 @@ module Visitor: Traversal_utils.VisitorSig = {
     | _ => ()
     };
   };
+
+  let enter_object_value = (self, ctx, value) => {
+    // We are done, as the above functions also apply to object fields
+    self.argType = None;
+    self.nameSpan = None;
+  };
+
+  let exit_argument = (self, _, _) => {
+    self.argType = None;
+    self.nameSpan = None;
+  };
 };
