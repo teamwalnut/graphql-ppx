@@ -2,7 +2,7 @@ open Traversal_utils;
 
 module AllRulesImpl =
   Multi_visitor.Visitor(
-    Rule_known_argument_names.Visitor,
+    Rule_no_invalid_default_values.Visitor,
     (
       Multi_visitor.Visitor(
         Rule_no_unused_variables.Visitor,
@@ -14,8 +14,13 @@ module AllRulesImpl =
                 Rule_no_undefined_variables.Visitor,
                 (
                   Multi_visitor.Visitor(
-                    Rule_deprecated_fields.Visitor,
-                    Multi_visitor.NullVisitor,
+                    Rule_known_argument_names.Visitor,
+                    (
+                      Multi_visitor.Visitor(
+                        Rule_deprecated_fields.Visitor,
+                        Multi_visitor.NullVisitor,
+                      )
+                    ),
                   )
                 ),
               )

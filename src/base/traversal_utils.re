@@ -37,7 +37,12 @@ module type VisitorSig = {
   let exit_directive: (t, ctx, spanning(directive)) => unit;
 
   let enter_argument:
-    (t, ctx, (spanning(string), spanning(input_value))) => unit;
+    (
+      t,
+      ctx,
+      (spanning(string), option(Schema.type_ref), spanning(input_value))
+    ) =>
+    unit;
   let exit_argument:
     (t, ctx, (spanning(string), spanning(input_value))) => unit;
 
@@ -74,13 +79,17 @@ module type VisitorSig = {
   let enter_variable_value: (t, ctx, spanning(string)) => unit;
   let exit_variable_value: (t, ctx, spanning(string)) => unit;
 
-  let enter_list_value: (t, ctx, list(spanning(input_value))) => unit;
-  let exit_list_value: (t, ctx, list(spanning(input_value))) => unit;
+  let enter_list_value:
+    (t, ctx, spanning(list(spanning(input_value)))) => unit;
+  let exit_list_value:
+    (t, ctx, spanning(list(spanning(input_value)))) => unit;
 
   let enter_object_value:
-    (t, ctx, list((spanning(string), spanning(input_value)))) => unit;
+    (t, ctx, spanning(list((spanning(string), spanning(input_value))))) =>
+    unit;
   let exit_object_value:
-    (t, ctx, list((spanning(string), spanning(input_value)))) => unit;
+    (t, ctx, spanning(list((spanning(string), spanning(input_value))))) =>
+    unit;
 
   let enter_object_field:
     (t, ctx, (spanning(string), spanning(input_value))) => unit;
@@ -222,8 +231,10 @@ module Visitor = (V: VisitorSig) => {
       V.enter_enum_value(self, ctx, Source_pos.replace(value, e))
     | Iv_variable(v) =>
       V.enter_variable_value(self, ctx, Source_pos.replace(value, v))
-    | Iv_list(l) => V.enter_list_value(self, ctx, l)
-    | Iv_object(o) => V.enter_object_value(self, ctx, o)
+    | Iv_list(l) =>
+      V.enter_list_value(self, ctx, Source_pos.replace(value, l))
+    | Iv_object(o) =>
+      V.enter_object_value(self, ctx, Source_pos.replace(value, o))
     };
 
   let exit_input_value = (self, ctx, value) =>
@@ -240,8 +251,10 @@ module Visitor = (V: VisitorSig) => {
       V.exit_enum_value(self, ctx, Source_pos.replace(value, e))
     | Iv_variable(v) =>
       V.exit_variable_value(self, ctx, Source_pos.replace(value, v))
-    | Iv_list(l) => V.exit_list_value(self, ctx, l)
-    | Iv_object(o) => V.exit_object_value(self, ctx, o)
+    | Iv_list(l) =>
+      V.exit_list_value(self, ctx, Source_pos.replace(value, l))
+    | Iv_object(o) =>
+      V.exit_object_value(self, ctx, Source_pos.replace(value, o))
     };
 
   let rec visit_input_value =
@@ -269,7 +282,14 @@ module Visitor = (V: VisitorSig) => {
                      Schema.lookup_type(ctx.schema, name)
                    | _ => None,
                  )
-              |> Option.flat_map(t => Schema.lookup_input_field(t, key.item))
+              |> Option.flat_map(t =>
+                   try(Schema.lookup_input_field(t, key.item)) {
+                   | Schema.Invalid_type(msg) =>
+                     Context.push_error(ctx, key.span, msg);
+                     None;
+                   | other => raise(other)
+                   }
+                 )
               |> Option.map(am => am.Schema.am_arg_type);
             let ctx = Context.push_input_type(ctx, inner_type);
             let () = V.enter_object_field(self, ctx, (key, value));
@@ -361,7 +381,7 @@ module Visitor = (V: VisitorSig) => {
                )
             |> Option.map(am => am.Schema.am_arg_type);
           let ctx = Context.push_input_type(ctx, arg_type);
-          let () = V.enter_argument(self, ctx, (name, value));
+          let () = V.enter_argument(self, ctx, (name, arg_type, value));
           let () = visit_input_value(self, ctx, arg_type, value);
           V.exit_argument(self, ctx, (name, value));
         },
