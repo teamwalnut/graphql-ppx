@@ -35,7 +35,7 @@ module Visitor: Traversal_utils.VisitorSig = {
       ctx,
       span,
       Printf.sprintf(
-        "Invalid default value. Expected \"%s\" but received \"%s\"",
+        "Invalid default value. Expected \"%s\" but received \"%s\".",
         expected,
         received,
       ),

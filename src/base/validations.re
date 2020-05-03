@@ -8,17 +8,22 @@ module AllRulesImpl =
         Rule_no_unused_variables.Visitor,
         (
           Multi_visitor.Visitor(
-            Rule_all_required_arguments.Visitor,
+            Rule_no_undefined_variables.Visitor,
             (
               Multi_visitor.Visitor(
-                Rule_no_undefined_variables.Visitor,
+                Rule_no_invalid_arg_variables.Visitor,
                 (
                   Multi_visitor.Visitor(
-                    Rule_known_argument_names.Visitor,
+                    Rule_all_required_arguments.Visitor,
                     (
                       Multi_visitor.Visitor(
-                        Rule_deprecated_fields.Visitor,
-                        Multi_visitor.NullVisitor,
+                        Rule_known_argument_names.Visitor,
+                        (
+                          Multi_visitor.Visitor(
+                            Rule_deprecated_fields.Visitor,
+                            Multi_visitor.NullVisitor,
+                          )
+                        ),
                       )
                     ),
                   )
