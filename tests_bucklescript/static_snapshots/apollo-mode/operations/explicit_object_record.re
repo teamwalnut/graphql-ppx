@@ -36,6 +36,7 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -85,24 +86,16 @@ module RecordsQuery = {
                 value;
               };
               {
-
                 __typename,
-
                 nullableOfNullable,
-
                 nullableOfNonNullable,
-
                 nonNullableOfNullable,
-
                 nonNullableOfNonNullable,
               };
             }: t_lists
           );
         };
-        {
-
-          lists: lists,
-        };
+        {lists: lists};
       }: t
     );
   let serialize: t => Raw.t =
@@ -114,12 +107,10 @@ module RecordsQuery = {
             {
               let nonNullableOfNonNullable = {
                 let value = (value: t_lists).nonNullableOfNonNullable;
-
                 value |> Js.Array.map(value => value);
               }
               and nonNullableOfNullable = {
                 let value = (value: t_lists).nonNullableOfNullable;
-
                 value
                 |> Js.Array.map(value =>
                      switch (value) {
@@ -130,7 +121,6 @@ module RecordsQuery = {
               }
               and nullableOfNonNullable = {
                 let value = (value: t_lists).nullableOfNonNullable;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(value |> Js.Array.map(value => value))
@@ -139,7 +129,6 @@ module RecordsQuery = {
               }
               and nullableOfNullable = {
                 let value = (value: t_lists).nullableOfNullable;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
@@ -156,28 +145,19 @@ module RecordsQuery = {
               }
               and __typename = {
                 let value = (value: t_lists).__typename;
-
                 value;
               };
               {
-
                 __typename,
-
                 nullableOfNullable,
-
                 nullableOfNonNullable,
-
                 nonNullableOfNullable,
-
                 nonNullableOfNonNullable,
               };
             }: Raw.t_lists
           );
         };
-        {
-
-          lists: lists,
-        };
+        {lists: lists};
       }: Raw.t
     );
   let definition = (parse, query, serialize);
@@ -205,6 +185,7 @@ module ObjectsQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -251,22 +232,14 @@ module ObjectsQuery = {
           value;
         };
         {
-
           "__typename": __typename,
-
           "nullableOfNullable": nullableOfNullable,
-
           "nullableOfNonNullable": nullableOfNonNullable,
-
           "nonNullableOfNullable": nonNullableOfNullable,
-
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
       };
-      {
-
-        "lists": lists,
-      };
+      {"lists": lists};
     };
   let serialize: t => Raw.t =
     value => {
@@ -274,12 +247,10 @@ module ObjectsQuery = {
         let value = value##lists;
         let nonNullableOfNonNullable = {
           let value = value##nonNullableOfNonNullable;
-
           value |> Js.Array.map(value => value);
         }
         and nonNullableOfNullable = {
           let value = value##nonNullableOfNullable;
-
           value
           |> Js.Array.map(value =>
                switch (value) {
@@ -290,7 +261,6 @@ module ObjectsQuery = {
         }
         and nullableOfNonNullable = {
           let value = value##nullableOfNonNullable;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(value |> Js.Array.map(value => value))
@@ -299,7 +269,6 @@ module ObjectsQuery = {
         }
         and nullableOfNullable = {
           let value = value##nullableOfNullable;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
@@ -316,26 +285,17 @@ module ObjectsQuery = {
         }
         and __typename = {
           let value = value##__typename;
-
           value;
         };
         {
-
           "__typename": __typename,
-
           "nullableOfNullable": nullableOfNullable,
-
           "nullableOfNonNullable": nullableOfNonNullable,
-
           "nonNullableOfNullable": nonNullableOfNullable,
-
           "nonNullableOfNonNullable": nonNullableOfNonNullable,
         };
       };
-      {
-
-        "lists": lists,
-      };
+      {"lists": lists};
     };
   let definition = (parse, query, serialize);
 };

@@ -38,6 +38,7 @@ module MyQuery = {
     | `Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -57,10 +58,7 @@ module MyQuery = {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
                         value;
                       };
-                      {
-
-                        name: name,
-                      };
+                      {name: name};
                     }: t_simpleSubscription_Dog
                   );
                 },
@@ -76,10 +74,7 @@ module MyQuery = {
                           (value: Raw.t_simpleSubscription_Human).name;
                         value;
                       };
-                      {
-
-                        name: name,
-                      };
+                      {name: name};
                     }: t_simpleSubscription_Human
                   );
                 },
@@ -88,10 +83,7 @@ module MyQuery = {
             }: t_simpleSubscription
           );
         };
-        {
-
-          simpleSubscription: simpleSubscription,
-        };
+        {simpleSubscription: simpleSubscription};
       }: t
     );
   let serialize: t => Raw.t =
@@ -105,15 +97,9 @@ module MyQuery = {
                 {
                   let name = {
                     let value = (value: t_simpleSubscription_Dog).name;
-
                     value;
                   };
-                  {
-
-                    __typename: "Dog",
-
-                    name,
-                  };
+                  {__typename: "Dog", name};
                 }: Raw.t_simpleSubscription_Dog,
               ): Raw.t_simpleSubscription
             )
@@ -122,15 +108,9 @@ module MyQuery = {
                 {
                   let name = {
                     let value = (value: t_simpleSubscription_Human).name;
-
                     value;
                   };
-                  {
-
-                    __typename: "Human",
-
-                    name,
-                  };
+                  {__typename: "Human", name};
                 }: Raw.t_simpleSubscription_Human,
               ): Raw.t_simpleSubscription
             )
@@ -139,10 +119,7 @@ module MyQuery = {
             )
           };
         };
-        {
-
-          simpleSubscription: simpleSubscription,
-        };
+        {simpleSubscription: simpleSubscription};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

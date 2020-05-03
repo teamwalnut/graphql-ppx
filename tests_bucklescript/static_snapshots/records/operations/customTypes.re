@@ -34,6 +34,7 @@ module MyQuery = {
     nullableColor: option(GraphqlHelpers.DateTime.t),
   };
   type t = {customFields: t_customFields};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -68,23 +69,11 @@ module MyQuery = {
                 let value = (value: Raw.t_customFields).currentTime;
                 GraphqlHelpers.DateTime.parse(value);
               };
-              {
-
-                currentTime,
-
-                favoriteColor,
-
-                futureTime,
-
-                nullableColor,
-              };
+              {currentTime, favoriteColor, futureTime, nullableColor};
             }: t_customFields
           );
         };
-        {
-
-          customFields: customFields,
-        };
+        {customFields: customFields};
       }: t
     );
   let serialize: t => Raw.t =
@@ -96,7 +85,6 @@ module MyQuery = {
             {
               let nullableColor = {
                 let value = (value: t_customFields).nullableColor;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
@@ -109,7 +97,6 @@ module MyQuery = {
               }
               and futureTime = {
                 let value = (value: t_customFields).futureTime;
-
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
@@ -120,31 +107,17 @@ module MyQuery = {
               }
               and favoriteColor = {
                 let value = (value: t_customFields).favoriteColor;
-
                 GraphqlHelpers.Color.serialize(value);
               }
               and currentTime = {
                 let value = (value: t_customFields).currentTime;
-
                 GraphqlHelpers.DateTime.serialize(value);
               };
-              {
-
-                currentTime,
-
-                favoriteColor,
-
-                futureTime,
-
-                nullableColor,
-              };
+              {currentTime, favoriteColor, futureTime, nullableColor};
             }: Raw.t_customFields
           );
         };
-        {
-
-          customFields: customFields,
-        };
+        {customFields: customFields};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

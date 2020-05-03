@@ -30,9 +30,22 @@ module MyQuery = {
         Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
     }
     and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+}
+```*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
   };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "nonrecursiveInput": string};
+  type operation = t;
   type t_variables = {. "arg": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -43,42 +56,42 @@ module MyQuery = {
     "embeddedInput": option(array(option(t_variables_EmbeddedInput))),
   }
   and t_variables_EmbeddedInput = {. "field": option(string)};
+  type nonrec _graphql_NonrecursiveInput_49;
+  /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+}
+```*/
+  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
         value;
       };
-      {
-
-        "nonrecursiveInput": nonrecursiveInput,
-      };
+      {"nonrecursiveInput": nonrecursiveInput};
     };
   let serialize: t => Raw.t =
     value => {
       let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
-
         value;
       };
-      {
-
-        "nonrecursiveInput": nonrecursiveInput,
-      };
+      {"nonrecursiveInput": nonrecursiveInput};
     };
-
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       "arg": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
     }
-
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
-
       "nonNullableField": (a => a)(inp##nonNullableField),
-
       "nullableArray":
         (
           a =>
@@ -109,7 +122,6 @@ module MyQuery = {
         )(
           inp##nullableArray,
         ),
-
       "field":
         (
           a =>
@@ -120,7 +132,6 @@ module MyQuery = {
         )(
           inp##field,
         ),
-
       "enum":
         (
           a =>
@@ -143,7 +154,6 @@ module MyQuery = {
         )(
           inp##enum,
         ),
-
       "embeddedInput":
         (
           a =>
@@ -180,11 +190,9 @@ module MyQuery = {
           inp##embeddedInput,
         ),
     }
-
   and serializeInputObjectEmbeddedInput:
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
-
       "field":
         (
           a =>
@@ -197,12 +205,7 @@ module MyQuery = {
         ),
     };
   let makeVariables = (~arg, ()) =>
-    serializeVariables(
-      {
-
-        "arg": arg,
-      }: t_variables,
-    )
+    serializeVariables({"arg": arg}: t_variables)
   and makeInputObjectNonrecursiveInput =
       (
         ~nonNullableField,
@@ -213,19 +216,13 @@ module MyQuery = {
         (),
       )
       : t_variables_NonrecursiveInput => {
-
     "nonNullableField": nonNullableField,
-
     "nullableArray": nullableArray,
-
     "field": field,
-
     "enum": enum,
-
     "embeddedInput": embeddedInput,
   }
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
-
     "field": field,
   };
   let definition = (parse, query, serialize);

@@ -32,9 +32,27 @@ module MyQuery = {
       nullableID: Js.Nullable.t(string),
       id: string,
     };
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
   };
   let query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
   type t = {scalarsInput: string};
+  type operation = t;
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -48,6 +66,23 @@ module MyQuery = {
     nullableID: option(string),
     id: string,
   };
+  type nonrec _graphql_VariousScalarsInput_47;
+  /**```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -55,10 +90,7 @@ module MyQuery = {
           let value = (value: Raw.t).scalarsInput;
           value;
         };
-        {
-
-          scalarsInput: scalarsInput,
-        };
+        {scalarsInput: scalarsInput};
       }: t
     );
   let serialize: t => Raw.t =
@@ -66,29 +98,21 @@ module MyQuery = {
       {
         let scalarsInput = {
           let value = (value: t).scalarsInput;
-
           value;
         };
-        {
-
-          scalarsInput: scalarsInput,
-        };
+        {scalarsInput: scalarsInput};
       }: Raw.t
     );
-
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       arg:
         (a => serializeInputObjectVariousScalarsInput(a))(
           (inp: t_variables).arg,
         ),
     }
-
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
-
       nullableString:
         (
           a =>
@@ -99,9 +123,7 @@ module MyQuery = {
         )(
           (inp: t_variables_VariousScalarsInput).nullableString,
         ),
-
       string: (a => a)((inp: t_variables_VariousScalarsInput).string),
-
       nullableInt:
         (
           a =>
@@ -112,9 +134,7 @@ module MyQuery = {
         )(
           (inp: t_variables_VariousScalarsInput).nullableInt,
         ),
-
       int: (a => a)((inp: t_variables_VariousScalarsInput).int),
-
       nullableFloat:
         (
           a =>
@@ -125,9 +145,7 @@ module MyQuery = {
         )(
           (inp: t_variables_VariousScalarsInput).nullableFloat,
         ),
-
       float: (a => a)((inp: t_variables_VariousScalarsInput).float),
-
       nullableBoolean:
         (
           a =>
@@ -138,9 +156,7 @@ module MyQuery = {
         )(
           (inp: t_variables_VariousScalarsInput).nullableBoolean,
         ),
-
       boolean: (a => a)((inp: t_variables_VariousScalarsInput).boolean),
-
       nullableID:
         (
           a =>
@@ -151,16 +167,10 @@ module MyQuery = {
         )(
           (inp: t_variables_VariousScalarsInput).nullableID,
         ),
-
       id: (a => a)((inp: t_variables_VariousScalarsInput).id),
     };
   let makeVariables = (~arg, ()) =>
-    serializeVariables(
-      {
-
-        arg: arg,
-      }: t_variables,
-    )
+    serializeVariables({arg: arg}: t_variables)
   and makeInputObjectVariousScalarsInput =
       (
         ~nullableString=?,
@@ -176,25 +186,15 @@ module MyQuery = {
         (),
       )
       : t_variables_VariousScalarsInput => {
-
     nullableString,
-
     string,
-
     nullableInt,
-
     int,
-
     nullableFloat,
-
     float,
-
     nullableBoolean,
-
     boolean,
-
     nullableID,
-
     id,
   };
   let definition = (parse, query, serialize);

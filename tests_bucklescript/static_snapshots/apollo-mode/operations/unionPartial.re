@@ -37,6 +37,7 @@ module MyQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -64,14 +65,7 @@ module MyQuery = {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
                         value;
                       };
-                      {
-
-                        __typename,
-
-                        name,
-
-                        barkVolume,
-                      };
+                      {__typename, name, barkVolume};
                     }: t_dogOrHuman_Dog
                   );
                 },
@@ -80,10 +74,7 @@ module MyQuery = {
             }: t_dogOrHuman
           );
         };
-        {
-
-          dogOrHuman: dogOrHuman,
-        };
+        {dogOrHuman: dogOrHuman};
       }: t
     );
   let serialize: t => Raw.t =
@@ -97,37 +88,24 @@ module MyQuery = {
                 {
                   let barkVolume = {
                     let value = (value: t_dogOrHuman_Dog).barkVolume;
-
                     value;
                   }
                   and name = {
                     let value = (value: t_dogOrHuman_Dog).name;
-
                     value;
                   }
                   and __typename = {
                     let value = (value: t_dogOrHuman_Dog).__typename;
-
                     value;
                   };
-                  {
-
-                    __typename: "Dog",
-
-                    name,
-
-                    barkVolume,
-                  };
+                  {__typename: "Dog", name, barkVolume};
                 }: Raw.t_dogOrHuman_Dog,
               ): Raw.t_dogOrHuman
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
         };
-        {
-
-          dogOrHuman: dogOrHuman,
-        };
+        {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

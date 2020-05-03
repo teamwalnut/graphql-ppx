@@ -28,6 +28,7 @@ module MyQuery = {
   };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
   type t = {listsInput: string};
+  type operation = t;
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
@@ -41,10 +42,7 @@ module MyQuery = {
           let value = (value: Raw.t).listsInput;
           value;
         };
-        {
-
-          listsInput: listsInput,
-        };
+        {listsInput: listsInput};
       }: t
     );
   let serialize: t => Raw.t =
@@ -52,18 +50,13 @@ module MyQuery = {
       {
         let listsInput = {
           let value = (value: t).listsInput;
-
           value;
         };
-        {
-
-          listsInput: listsInput,
-        };
+        {listsInput: listsInput};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       nullableOfNullable:
         (
           a =>
@@ -94,7 +87,6 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableOfNullable,
         ),
-
       nullableOfNonNullable:
         (
           a =>
@@ -106,7 +98,6 @@ module MyQuery = {
         )(
           (inp: t_variables).nullableOfNonNullable,
         ),
-
       nonNullableOfNullable:
         (
           a =>
@@ -126,7 +117,6 @@ module MyQuery = {
         )(
           (inp: t_variables).nonNullableOfNullable,
         ),
-
       nonNullableOfNonNullable:
         (a => Array.map(b => (a => a)(b), a))(
           (inp: t_variables).nonNullableOfNonNullable,
@@ -142,13 +132,9 @@ module MyQuery = {
       ) =>
     serializeVariables(
       {
-
         nullableOfNullable,
-
         nullableOfNonNullable,
-
         nonNullableOfNullable,
-
         nonNullableOfNonNullable,
       }: t_variables,
     );

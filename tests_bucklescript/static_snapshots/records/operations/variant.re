@@ -64,13 +64,13 @@ module MyQuery = {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
         let mutationForVariant = {
           let value = (value: Raw.t).mutationForVariant;
           switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
           | None =>
             Js.Exn.raiseError(
               "graphql_ppx: "
@@ -78,7 +78,6 @@ module MyQuery = {
               ++ "VariantTestResult"
               ++ " to be an object",
             )
-
           | Some(value) =>
             let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType");
             switch (Js.Json.decodeNull(temp)) {
@@ -107,12 +106,7 @@ module MyQuery = {
                         let value = (value: Raw.t_mutationForVariant_dog).name;
                         value;
                       };
-                      {
-
-                        name,
-
-                        barkVolume,
-                      };
+                      {name, barkVolume};
                     }: t_mutationForVariant_dog,
                   );
                 | Some(_) =>
@@ -127,10 +121,7 @@ module MyQuery = {
                             (value: Raw.t_mutationForVariant_human).name;
                           value;
                         };
-                        {
-
-                          name: name,
-                        };
+                        {name: name};
                       }: t_mutationForVariant_human,
                     );
                   | Some(_) =>
@@ -173,12 +164,7 @@ module MyQuery = {
                                             name;
                                         value;
                                       };
-                                      {
-
-                                        name,
-
-                                        barkVolume,
-                                      };
+                                      {name, barkVolume};
                                     }: t_mutationForVariant_dogOrHuman_Dog
                                   );
                                 },
@@ -198,10 +184,7 @@ module MyQuery = {
                                             name;
                                         value;
                                       };
-                                      {
-
-                                        name: name,
-                                      };
+                                      {name: name};
                                     }: t_mutationForVariant_dogOrHuman_Human
                                   );
                                 },
@@ -226,10 +209,7 @@ module MyQuery = {
             };
           };
         };
-        {
-
-          mutationForVariant: mutationForVariant,
-        };
+        {mutationForVariant: mutationForVariant};
       }: t
     );
   let serialize: t => Raw.t =
@@ -237,12 +217,9 @@ module MyQuery = {
       {
         let mutationForVariant = {
           let value = (value: t).mutationForVariant;
-          Js.Json.null;
+          Obj.magic(Js.Json.null);
         };
-        {
-
-          mutationForVariant: mutationForVariant,
-        };
+        {mutationForVariant: mutationForVariant};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

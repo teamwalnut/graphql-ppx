@@ -18,10 +18,12 @@
 ];
 module StringOfInt = {
   let parse = string_of_int;
+  let serialize = int_of_string;
   type t = string;
 };
 module IntOfString = {
   let parse = int_of_string;
+  let serialize = string_of_int;
   type t = int;
 };
 
@@ -39,6 +41,7 @@ module MyQuery = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -54,19 +57,11 @@ module MyQuery = {
                 let value = (value: Raw.t_variousScalars).string;
                 IntOfString.parse(value);
               };
-              {
-
-                string,
-
-                int,
-              };
+              {string, int};
             }: t_variousScalars
           );
         };
-        {
-
-          variousScalars: variousScalars,
-        };
+        {variousScalars: variousScalars};
       }: t
     );
   let serialize: t => Raw.t =
@@ -78,27 +73,17 @@ module MyQuery = {
             {
               let int = {
                 let value = (value: t_variousScalars).int;
-
                 StringOfInt.serialize(value);
               }
               and string = {
                 let value = (value: t_variousScalars).string;
-
                 IntOfString.serialize(value);
               };
-              {
-
-                string,
-
-                int,
-              };
+              {string, int};
             }: Raw.t_variousScalars
           );
         };
-        {
-
-          variousScalars: variousScalars,
-        };
+        {variousScalars: variousScalars};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

@@ -51,6 +51,7 @@ module MyQuery = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -75,12 +76,7 @@ module MyQuery = {
                      | other => `FutureAddedValue(other)
                      };
                    };
-                   {
-
-                     "field": field,
-
-                     "message": message,
-                   };
+                   {"field": field, "message": message};
                  ),
             )
           | None => None
@@ -96,26 +92,15 @@ module MyQuery = {
                   let value = value##stringField;
                   value;
                 };
-                {
-
-                  "stringField": stringField,
-                };
+                {"stringField": stringField};
               },
             )
           | None => None
           };
         };
-        {
-
-          "value": value,
-
-          "errors": errors,
-        };
+        {"value": value, "errors": errors};
       };
-      {
-
-        "mutationWithError": mutationWithError,
-      };
+      {"mutationWithError": mutationWithError};
     };
   let serialize: t => Raw.t =
     value => {
@@ -123,7 +108,6 @@ module MyQuery = {
         let value = value##mutationWithError;
         let errors = {
           let value = value##errors;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
@@ -131,7 +115,6 @@ module MyQuery = {
               |> Js.Array.map(value =>
                    let message = {
                      let value = value##message;
-
                      value;
                    }
                    and field = {
@@ -143,12 +126,7 @@ module MyQuery = {
                      | `FutureAddedValue(other) => other
                      };
                    };
-                   {
-
-                     "field": field,
-
-                     "message": message,
-                   };
+                   {"field": field, "message": message};
                  ),
             )
           | None => Js.Nullable.null
@@ -156,36 +134,23 @@ module MyQuery = {
         }
         and value = {
           let value = value##value;
-
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
               {
                 let stringField = {
                   let value = value##stringField;
-
                   value;
                 };
-                {
-
-                  "stringField": stringField,
-                };
+                {"stringField": stringField};
               },
             )
           | None => Js.Nullable.null
           };
         };
-        {
-
-          "value": value,
-
-          "errors": errors,
-        };
+        {"value": value, "errors": errors};
       };
-      {
-
-        "mutationWithError": mutationWithError,
-      };
+      {"mutationWithError": mutationWithError};
     };
   let definition = (parse, query, serialize);
 };

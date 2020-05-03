@@ -70,12 +70,12 @@ module MyQuery = {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. "mutationForVariant": t_mutationForVariant};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
         let value = value##mutationForVariant;
         switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-
         | None =>
           Js.Exn.raiseError(
             "graphql_ppx: "
@@ -83,7 +83,6 @@ module MyQuery = {
             ++ "VariantTestResult"
             ++ " to be an object",
           )
-
         | Some(value) =>
           let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType");
           switch (Js.Json.decodeNull(temp)) {
@@ -111,12 +110,7 @@ module MyQuery = {
                       let value = value##name;
                       value;
                     };
-                    {
-
-                      "name": name,
-
-                      "barkVolume": barkVolume,
-                    };
+                    {"name": name, "barkVolume": barkVolume};
                   },
                 );
               | Some(_) =>
@@ -130,10 +124,7 @@ module MyQuery = {
                         let value = value##name;
                         value;
                       };
-                      {
-
-                        "name": name,
-                      };
+                      {"name": name};
                     },
                   );
                 | Some(_) =>
@@ -166,12 +157,7 @@ module MyQuery = {
                                   let value = value##name;
                                   value;
                                 };
-                                {
-
-                                  "name": name,
-
-                                  "barkVolume": barkVolume,
-                                };
+                                {"name": name, "barkVolume": barkVolume};
                               },
                             )
                           | "Human" =>
@@ -183,10 +169,7 @@ module MyQuery = {
                                   let value = value##name;
                                   value;
                                 };
-                                {
-
-                                  "name": name,
-                                };
+                                {"name": name};
                               },
                             )
                           | _ =>
@@ -209,21 +192,15 @@ module MyQuery = {
           };
         };
       };
-      {
-
-        "mutationForVariant": mutationForVariant,
-      };
+      {"mutationForVariant": mutationForVariant};
     };
   let serialize: t => Raw.t =
     value => {
       let mutationForVariant = {
         let value = value##mutationForVariant;
-        Js.Json.null;
+        Obj.magic(Js.Json.null);
       };
-      {
-
-        "mutationForVariant": mutationForVariant,
-      };
+      {"mutationForVariant": mutationForVariant};
     };
   let definition = (parse, query, serialize);
 };

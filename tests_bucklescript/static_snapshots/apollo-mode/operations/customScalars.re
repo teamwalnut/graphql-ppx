@@ -36,6 +36,7 @@ module MyQuery = {
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
+  type operation = t;
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
@@ -62,21 +63,11 @@ module MyQuery = {
                 let value = (value: Raw.t_customScalarField).__typename;
                 value;
               };
-              {
-
-                __typename,
-
-                nullable,
-
-                nonNullable,
-              };
+              {__typename, nullable, nonNullable};
             }: t_customScalarField
           );
         };
-        {
-
-          customScalarField: customScalarField,
-        };
+        {customScalarField: customScalarField};
       }: t
     );
   let serialize: t => Raw.t =
@@ -88,12 +79,10 @@ module MyQuery = {
             {
               let nonNullable = {
                 let value = (value: t_customScalarField).nonNullable;
-
                 value;
               }
               and nullable = {
                 let value = (value: t_customScalarField).nullable;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
@@ -101,29 +90,17 @@ module MyQuery = {
               }
               and __typename = {
                 let value = (value: t_customScalarField).__typename;
-
                 value;
               };
-              {
-
-                __typename,
-
-                nullable,
-
-                nonNullable,
-              };
+              {__typename, nullable, nonNullable};
             }: Raw.t_customScalarField
           );
         };
-        {
-
-          customScalarField: customScalarField,
-        };
+        {customScalarField: customScalarField};
       }: Raw.t
     );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       opt:
         (
           a =>
@@ -134,17 +111,9 @@ module MyQuery = {
         )(
           (inp: t_variables).opt,
         ),
-
       req: (a => a)((inp: t_variables).req),
     };
   let makeVariables = (~opt=?, ~req, ()) =>
-    serializeVariables(
-      {
-
-        opt,
-
-        req,
-      }: t_variables,
-    );
+    serializeVariables({opt, req}: t_variables);
   let definition = (parse, query, serialize);
 };

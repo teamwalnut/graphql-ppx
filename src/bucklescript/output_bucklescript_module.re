@@ -337,6 +337,33 @@ let generate_default_operation =
       false,
       None,
     );
+  let types =
+    List.append(
+      types,
+      [
+        Ast_helper.Str.type_(
+          Recursive,
+          [
+            Type.mk(
+              ~manifest=
+                Output_bucklescript_types.base_type(
+                  ~loc=
+                    Output_bucklescript_utils.extend_loc_from_start(
+                      conv_loc(config.map_loc(operation.span)),
+                      switch (operation.item.o_type) {
+                      | Query => 5
+                      | Mutation => 8
+                      | Subscription => 12
+                      },
+                    ),
+                  "t",
+                ),
+              Location.mknoloc("operation"),
+            ),
+          ],
+        ),
+      ],
+    );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
@@ -384,10 +411,7 @@ let generate_default_operation =
         List.concat([
           wrap_module(
             "Raw",
-            List.append(
-              raw_types,
-              extracted_args == [] ? [] : [raw_arg_types],
-            ),
+            List.append(raw_types, extracted_args == [] ? [] : raw_arg_types),
           ),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
@@ -397,7 +421,7 @@ let generate_default_operation =
           types,
           switch (extracted_args) {
           | [] => []
-          | _ => [arg_types]
+          | _ => arg_types
           },
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
@@ -458,14 +482,20 @@ let generate_fragment_module =
       config,
       res_structure,
       false,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
       res_structure,
       true,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
 
   let rec make_labeled_fun = body =>
@@ -515,14 +545,13 @@ let generate_fragment_module =
     } else {
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-      let parse =
-        [@metaloc conv_loc(config.map_loc(fragment.span))]
-        [%stri
-          let parse = [%e make_labeled_fun(parse_fn, required_variables)]
-        ];
+      let parse = [%stri
+        let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+      ];
       List.concat(
         List.concat([
           [
+            Output_bucklescript_docstrings.for_fragment(config, fragment),
             switch (pre_printed_query) {
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []

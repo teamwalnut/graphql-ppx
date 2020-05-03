@@ -37,6 +37,7 @@ module MyQuery = {
     "name": option(string),
   };
   type t = {. "pokemon": option(t_pokemon)};
+  type operation = t;
   type t_variables = {
     .
     "id": option(string),
@@ -61,34 +62,24 @@ module MyQuery = {
                 let value = value##id;
                 value;
               };
-              {
-
-                "id": id,
-
-                "name": name,
-              };
+              {"id": id, "name": name};
             },
           )
         | None => None
         };
       };
-      {
-
-        "pokemon": pokemon,
-      };
+      {"pokemon": pokemon};
     };
   let serialize: t => Raw.t =
     value => {
       let pokemon = {
         let value = value##pokemon;
-
         switch (value) {
         | Some(value) =>
           Js.Nullable.return(
             {
               let name = {
                 let value = value##name;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
@@ -96,28 +87,18 @@ module MyQuery = {
               }
               and id = {
                 let value = value##id;
-
                 value;
               };
-              {
-
-                "id": id,
-
-                "name": name,
-              };
+              {"id": id, "name": name};
             },
           )
         | None => Js.Nullable.null
         };
       };
-      {
-
-        "pokemon": pokemon,
-      };
+      {"pokemon": pokemon};
     };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
-
       "id":
         (
           a =>
@@ -128,7 +109,6 @@ module MyQuery = {
         )(
           inp##id,
         ),
-
       "name":
         (
           a =>
@@ -141,13 +121,6 @@ module MyQuery = {
         ),
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
-    serializeVariables(
-      {
-
-        "id": id,
-
-        "name": name,
-      }: t_variables,
-    );
+    serializeVariables({"id": id, "name": name}: t_variables);
   let definition = (parse, query, serialize);
 };

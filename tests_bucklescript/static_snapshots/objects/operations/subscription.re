@@ -40,6 +40,7 @@ module MyQuery = {
     | `Human(t_simpleSubscription_Human)
   ];
   type t = {. "simpleSubscription": t_simpleSubscription};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
       let simpleSubscription = {
@@ -56,10 +57,7 @@ module MyQuery = {
                   let value = value##name;
                   value;
                 };
-                {
-
-                  "name": name,
-                };
+                {"name": name};
               },
             )
           | "Human" =>
@@ -70,20 +68,14 @@ module MyQuery = {
                   let value = value##name;
                   value;
                 };
-                {
-
-                  "name": name,
-                };
+                {"name": name};
               },
             )
           | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
           }: t_simpleSubscription
         );
       };
-      {
-
-        "simpleSubscription": simpleSubscription,
-      };
+      {"simpleSubscription": simpleSubscription};
     };
   let serialize: t => Raw.t =
     value => {
@@ -95,15 +87,9 @@ module MyQuery = {
               {
                 let name = {
                   let value = value##name;
-
                   value;
                 };
-                {
-
-                  "__typename": "Dog",
-
-                  "name": name,
-                };
+                {"__typename": "Dog", "name": name};
               },
             ): Raw.t_simpleSubscription
           )
@@ -112,15 +98,9 @@ module MyQuery = {
               {
                 let name = {
                   let value = value##name;
-
                   value;
                 };
-                {
-
-                  "__typename": "Human",
-
-                  "name": name,
-                };
+                {"__typename": "Human", "name": name};
               },
             ): Raw.t_simpleSubscription
           )
@@ -129,10 +109,7 @@ module MyQuery = {
           )
         };
       };
-      {
-
-        "simpleSubscription": simpleSubscription,
-      };
+      {"simpleSubscription": simpleSubscription};
     };
   let definition = (parse, query, serialize);
 };

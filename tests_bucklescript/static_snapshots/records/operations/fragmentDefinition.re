@@ -19,6 +19,16 @@
 
 module Fragments = {
   module ListFragment = {
+    type graphql;
+    /**```
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+    let _: graphql = Obj.magic(0);
     let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
@@ -32,7 +42,6 @@ module Fragments = {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
-
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -57,19 +66,13 @@ module Fragments = {
         | None => None
         };
       };
-      {
-
-        nullableOfNullable,
-
-        nullableOfNonNullable,
-      };
+      {nullableOfNullable, nullableOfNonNullable};
     };
     let serialize: t => Raw.t =
       (value) => (
         {
           let nullableOfNonNullable = {
             let value = (value: t).nullableOfNonNullable;
-
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(value |> Js.Array.map(value => value))
@@ -78,7 +81,6 @@ module Fragments = {
           }
           and nullableOfNullable = {
             let value = (value: t).nullableOfNullable;
-
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(
@@ -93,17 +95,22 @@ module Fragments = {
             | None => Js.Nullable.null
             };
           };
-          {
-
-            nullableOfNullable,
-
-            nullableOfNonNullable,
-          };
+          {nullableOfNullable, nullableOfNonNullable};
         }: Raw.t
       );
     let name = "ListFragment";
   };
   module Another = {
+    type graphql;
+    /**```
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+    let _: graphql = Obj.magic(0);
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -111,7 +118,6 @@ module Fragments = {
     };
     type t = {nullableOfNonNullable: option(array(string))};
     type nonrec t_Lists = t;
-
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -120,27 +126,20 @@ module Fragments = {
         | None => None
         };
       };
-      {
-
-        nullableOfNonNullable: nullableOfNonNullable,
-      };
+      {nullableOfNonNullable: nullableOfNonNullable};
     };
     let serialize: t => Raw.t =
       (value) => (
         {
           let nullableOfNonNullable = {
             let value = (value: t).nullableOfNonNullable;
-
             switch (value) {
             | Some(value) =>
               Js.Nullable.return(value |> Js.Array.map(value => value))
             | None => Js.Nullable.null
             };
           };
-          {
-
-            nullableOfNonNullable: nullableOfNonNullable,
-          };
+          {nullableOfNonNullable: nullableOfNonNullable};
         }: Raw.t
       );
     let name = "Another";
@@ -217,6 +216,7 @@ module MyQuery = {
     l3: t_l3,
     l4: t_l4,
   };
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -250,12 +250,7 @@ module MyQuery = {
                 | None => None
                 };
               };
-              {
-
-                nullableOfNullable,
-
-                listFragment,
-              };
+              {nullableOfNullable, listFragment};
             }: t_l4
           );
         }
@@ -293,14 +288,7 @@ module MyQuery = {
                 | None => None
                 };
               };
-              {
-
-                nullableOfNullable,
-
-                frag1,
-
-                frag2,
-              };
+              {nullableOfNullable, frag1, frag2};
             }: t_l3
           );
         }
@@ -316,12 +304,7 @@ module MyQuery = {
                 let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
                 Fragments.ListFragment.parse(value);
               };
-              {
-
-                frag1,
-
-                frag2,
-              };
+              {frag1, frag2};
             }: t_l2
           );
         }
@@ -329,16 +312,7 @@ module MyQuery = {
           let value = (value: Raw.t).l1;
           Fragments.ListFragment.parse(value);
         };
-        {
-
-          l1,
-
-          l2,
-
-          l3,
-
-          l4,
-        };
+        {l1, l2, l3, l4};
       }: t
     );
   let serialize: t => Raw.t =
@@ -354,7 +328,6 @@ module MyQuery = {
                   {
                     let nullableOfNullable = {
                       let value = (value: t_l4).nullableOfNullable;
-
                       switch (value) {
                       | Some(value) =>
                         Js.Nullable.return(
@@ -369,10 +342,7 @@ module MyQuery = {
                       | None => Js.Nullable.null
                       };
                     };
-                    {
-
-                      "nullableOfNullable": nullableOfNullable,
-                    };
+                    {"nullableOfNullable": nullableOfNullable};
                   },
                 ): Js.Json.t,
                 [|
@@ -398,7 +368,6 @@ module MyQuery = {
                   {
                     let nullableOfNullable = {
                       let value = (value: t_l3).nullableOfNullable;
-
                       switch (value) {
                       | Some(value) =>
                         Js.Nullable.return(
@@ -413,10 +382,7 @@ module MyQuery = {
                       | None => Js.Nullable.null
                       };
                     };
-                    {
-
-                      "nullableOfNullable": nullableOfNullable,
-                    };
+                    {"nullableOfNullable": nullableOfNullable};
                   },
                 ): Js.Json.t,
                 [|
@@ -462,16 +428,7 @@ module MyQuery = {
           let value = (value: t).l1;
           Fragments.ListFragment.serialize(value);
         };
-        {
-
-          l1,
-
-          l2,
-
-          l3,
-
-          l4,
-        };
+        {l1, l2, l3, l4};
       }: Raw.t
     );
   let definition = (parse, query, serialize);
@@ -488,6 +445,7 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -495,10 +453,7 @@ module MyQuery2 = {
           let value = (value: Raw.t).lists;
           Fragments.ListFragment.parse(value);
         };
-        {
-
-          lists: lists,
-        };
+        {lists: lists};
       }: t
     );
   let serialize: t => Raw.t =
@@ -508,10 +463,7 @@ module MyQuery2 = {
           let value = (value: t).lists;
           Fragments.ListFragment.serialize(value);
         };
-        {
-
-          lists: lists,
-        };
+        {lists: lists};
       }: Raw.t
     );
   let definition = (parse, query, serialize);

@@ -12,6 +12,10 @@ open Output_bucklescript_utils;
 open Output_bucklescript_types;
 open Extract_type_definitions;
 
+// Cheap way of preventing location override from types module
+// Might refactor this later
+let conv_loc = _ => Location.none;
+
 let record_to_object = (loc, record) => {
   Ast_helper.(
     Exp.extension((
@@ -162,6 +166,7 @@ let generate_solo_fragment_spread_decoder =
 };
 
 let generate_error = (loc, message) => {
+  let loc = Output_bucklescript_utils.conv_loc(loc);
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;
   %e
@@ -221,14 +226,17 @@ and generate_object_decoder =
         fields
         |> List.map(
              fun
-             | Fr_fragment_spread(key, _, _, _, _)
-             | Fr_named_field(key, _, _) => (
-                 {
-                   txt: Longident.parse(to_valid_ident(key)),
-                   loc: conv_loc(loc),
-                 },
-                 ident_from_string(to_valid_ident(key)),
-               ),
+             | Fr_fragment_spread(key, _, _, _, _) => key
+             | Fr_named_field({name}) => name,
+           )
+        |> List.map(key =>
+             (
+               {
+                 txt: Longident.parse(to_valid_ident(key)),
+                 loc: conv_loc(loc),
+               },
+               ident_from_string(to_valid_ident(key)),
+             )
            ),
         None,
       );
@@ -238,73 +246,75 @@ and generate_object_decoder =
       fields
       |> List.map(
            fun
-           | Fr_named_field(key, _, _) as field
-           | Fr_fragment_spread(key, _, _, _, _) as field =>
-             Vb.mk(
-               Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
-               {
-                 switch (field) {
-                 | Fr_named_field(key, _, inner) =>
-                   [@metaloc conv_loc(loc)]
-                   {
-                     let%expr value =
-                       switch%e (opaque, is_object) {
-                       | (true, _) =>
-                         %expr
-                         Obj.magic(
-                           Js.Dict.unsafeGet(
-                             Obj.magic(value),
-                             [%e const_str_expr(key)],
-                           ),
-                         )
-
-                       | (_, true) =>
-                         %expr
-                         value##[%e ident_from_string(to_valid_ident(key))]
-                       | (_, false) =>
-                         %expr
-                         [%e
-                           Ast_helper.Exp.field(
-                             Exp.constraint_(
-                               ident_from_string("value"),
-                               object_type,
-                             ),
-                             {
-                               loc: Location.none,
-                               Location.txt:
-                                 Longident.parse(to_valid_ident(key)),
-                             },
-                           )
-                         ]
-                       };
-
-                     %e
-                     generate_parser(
-                       config,
-                       [key, ...path],
-                       definition,
-                       inner,
-                     );
-                   }
-
-                 | Fr_fragment_spread(key, loc, name, _, arguments) =>
-                   [@metaloc conv_loc(loc)]
-                   {
-                     let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
-                       Obj.magic(value);
-                     %e
-                     generate_fragment_parse_fun(
-                       config,
-                       conv_loc(loc),
-                       name,
-                       arguments,
-                       definition,
-                     );
-                   }
-                 };
-               },
-             ),
+           | Fr_named_field({name}) as field => (name, field)
+           | Fr_fragment_spread(key, _, _, _, _) as field => (key, field),
          )
+      |> List.map(((key, field)) => {
+           Vb.mk(
+             Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
+             {
+               switch (field) {
+               | Fr_named_field({name as key, type_ as inner}) =>
+                 [@metaloc conv_loc(loc)]
+                 {
+                   let%expr value =
+                     switch%e (opaque, is_object) {
+                     | (true, _) =>
+                       %expr
+                       Obj.magic(
+                         Js.Dict.unsafeGet(
+                           Obj.magic(value),
+                           [%e const_str_expr(key)],
+                         ),
+                       )
+
+                     | (_, true) =>
+                       %expr
+                       value##[%e ident_from_string(to_valid_ident(key))]
+                     | (_, false) =>
+                       %expr
+                       [%e
+                         Ast_helper.Exp.field(
+                           Exp.constraint_(
+                             ident_from_string("value"),
+                             object_type,
+                           ),
+                           {
+                             loc: Location.none,
+                             Location.txt:
+                               Longident.parse(to_valid_ident(key)),
+                           },
+                         )
+                       ]
+                     };
+
+                   %e
+                   generate_parser(
+                     config,
+                     [key, ...path],
+                     definition,
+                     inner,
+                   );
+                 }
+
+               | Fr_fragment_spread(key, loc, name, _, arguments) =>
+                 [@metaloc conv_loc(loc)]
+                 {
+                   let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
+                     Obj.magic(value);
+                   %e
+                   generate_fragment_parse_fun(
+                     config,
+                     conv_loc(loc),
+                     name,
+                     arguments,
+                     definition,
+                   );
+                 }
+               };
+             },
+           )
+         })
       |> List.rev;
     Exp.let_(Nonrecursive, bindings, record);
   };
@@ -337,7 +347,7 @@ and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [({item: field}: Result_structure.name, inner), ...next] => {
         let field_name = Compat.capitalize_ascii(field);
         let variant_decoder =
           Ast_helper.(
@@ -447,7 +457,7 @@ and generate_poly_variant_union_decoder =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
            Ast_helper.(
              Exp.case(
                const_str_pat(type_name),
@@ -602,4 +612,4 @@ and generate_parser = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
+  | Res_error(loc, message) => generate_error(loc, message);
