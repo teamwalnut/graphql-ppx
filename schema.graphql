@@ -48,6 +48,7 @@ type Query {
   ): CustomScalarObject!
   customFields: customFieldsResult!
   deprecatedFields: deprecatedFieldsResult!
+  defaultObjectValueOnScalar(filter: JsonScalar!, arg: EmbeddedInput!): String!
 
   dogOrHuman: DogOrHuman!
 
@@ -184,6 +185,7 @@ type VariantTestResult {
 
 scalar DateTime
 scalar Color
+scalar JsonScalar
 
 type customFieldsResult {
   currentTime: DateTime!
