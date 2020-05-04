@@ -53,20 +53,6 @@ module Visitor: Traversal_utils.VisitorSig = {
     Context.push_error(ctx, span, msg);
   };
 
-  //   let enter_fragment_definition = (self, ctx, def) => {
-  //     let () = Hashtbl.clear(self.types_);
-  //     Result_decoder.getFragmentArgumentDefinitions(def.item.fg_directives)
-  //     |> List.iter(((name, type_, _, _)) => {
-  //          Hashtbl.add(
-  //            self.types_,
-  //            name,
-  //            type_
-  //            |> Schema.lookup_type(ctx.schema)
-  //            |> Option.map({name: toGenericTypeName, }),
-  //          )
-  //        });
-  //   };
-
   let enter_operation_definition = (self, ctx, def) => {
     let () = Hashtbl.clear(self.types_);
     switch (def.item.o_variable_definitions) {
