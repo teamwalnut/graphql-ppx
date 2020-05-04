@@ -1,5 +1,5 @@
 {
-  "checksum": "cb6fcc766484db97a3071b6b8375432f",
+  "checksum": "e95b44360c613f5551a8d3e5b90a2879",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "refmterr@3.3.0@d41d8cd9": {
@@ -44,7 +44,7 @@
       "overrides": [],
       "dependencies": [
         "@opam/yojson@opam:1.7.0@7056d985", "@opam/result@opam:1.5@6b753c82",
-        "@opam/reason@opam:3.6.0@2da53ff9",
+        "@opam/reason@github:facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13@d41d8cd9",
         "@opam/ppx_tools_versioned@opam:5.2.3@4994ec80",
         "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
         "@opam/menhir@opam:20200211@26571604",
@@ -427,21 +427,17 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
-    "@opam/reason@opam:3.6.0@2da53ff9": {
-      "id": "@opam/reason@opam:3.6.0@2da53ff9",
+    "@opam/reason@github:facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13@d41d8cd9": {
+      "id":
+        "@opam/reason@github:facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13@d41d8cd9",
       "name": "@opam/reason",
-      "version": "opam:3.6.0",
+      "version":
+        "github:facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/d4/d4d729804bc509bca0ac6223e06f7314#md5:d4d729804bc509bca0ac6223e06f7314",
-          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.6.0.tgz#md5:d4d729804bc509bca0ac6223e06f7314"
-        ],
-        "opam": {
-          "name": "reason",
-          "version": "3.6.0",
-          "path": "esy.lock/opam/reason.3.6.0"
-        }
+          "github:facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -450,16 +446,9 @@
         "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
         "@opam/merlin-extend@opam:0.5@a5dd7d4b",
         "@opam/menhir@opam:20200211@26571604",
-        "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.1@a0c1e658",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.5@6b753c82",
-        "@opam/ocaml-migrate-parsetree@opam:1.7.2@bc8b618e",
-        "@opam/merlin-extend@opam:0.5@a5dd7d4b",
-        "@opam/menhir@opam:20200211@26571604",
         "@opam/fix@opam:20200131@0ecd2f01", "@opam/dune@opam:2.5.1@a0c1e658"
-      ]
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
     "@opam/re@opam:1.9.0@d4d5e13d": {
       "id": "@opam/re@opam:1.9.0@d4d5e13d",
