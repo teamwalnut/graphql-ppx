@@ -31,6 +31,18 @@ module Visitor: Traversal_utils.VisitorSig = {
     | Union(_) => "Union"
     };
 
+  let rec toGenericTypeRef = (~schema: Schema.t, type_ref: Schema.type_ref) => {
+    switch (type_ref) {
+    | Schema.Named(n) =>
+      n
+      |> Schema.lookup_type(schema)
+      |> Option.map(toGenericTypeName)
+      |> Option.get_or_else(n)
+    | List(t) => "[" ++ toGenericTypeRef(schema, t) ++ "]"
+    | NonNull(t) => toGenericTypeRef(schema, t) ++ "!"
+    };
+  };
+
   type error =
     | MismatchedTypes(string, string)
     | MismatchedRequired(string, string);
@@ -63,22 +75,19 @@ module Visitor: Traversal_utils.VisitorSig = {
           Hashtbl.add(
             self.types_,
             name.item,
-            type_
-            |> innermost_name
-            |> Schema.lookup_type(ctx.schema)
-            |> Option.map(toGenericTypeName)
-            |> Option.map(name =>
-                 {
-                   name,
-                   required:
-                     switch (type_) {
-                     | Tr_non_null_named(_)
-                     | Tr_non_null_list(_) => true
-                     | Tr_named(_)
-                     | Tr_list(_) => false
-                     },
-                 }
-               ),
+            Some({
+              name:
+                type_
+                |> Type_utils.to_schema_type_ref
+                |> toGenericTypeRef(~schema=ctx.schema),
+              required:
+                switch (type_) {
+                | Tr_non_null_named(_)
+                | Tr_non_null_list(_) => true
+                | Tr_named(_)
+                | Tr_list(_) => false
+                },
+            }),
           ),
         item,
       )
@@ -95,15 +104,11 @@ module Visitor: Traversal_utils.VisitorSig = {
           value: spanning(input_value),
         ),
       ) => {
-    switch (
-      arg_type
-      |> Option.map(Schema.innermost_name)
-      |> Option.flat_map(Schema.lookup_type(ctx.schema))
-    ) {
-    | Some(type_meta) =>
+    switch (arg_type |> Option.map(toGenericTypeRef(~schema=ctx.schema))) {
+    | Some(type_name) =>
       self.argType =
         Some({
-          name: type_meta |> toGenericTypeName,
+          name: type_name,
           required:
             switch (arg_type |> Option.unsafe_unwrap) {
             | NonNull(_) => true
