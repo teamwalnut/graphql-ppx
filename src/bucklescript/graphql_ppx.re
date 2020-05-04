@@ -405,6 +405,7 @@ let rewrite_query =
       | (Some(errs), _) =>
         let errs =
           errs
+          |> List.rev
           |> List.map(((loc, msg)) => {
                let loc = conv_loc(loc);
                %stri

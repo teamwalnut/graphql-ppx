@@ -49,6 +49,22 @@ type Query {
   customFields: customFieldsResult!
   deprecatedFields: deprecatedFieldsResult!
   defaultObjectValueOnScalar(filter: JsonScalar!, arg: EmbeddedInput!): String!
+  invalidDefaultValues(
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    string: String
+    int: Int
+    float: Float
+    bool: Boolean
+  ): String!
+  invalidArgValues(
+    stringRequired: String!
+    string: String
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+  ): String!
 
   dogOrHuman: DogOrHuman!
 

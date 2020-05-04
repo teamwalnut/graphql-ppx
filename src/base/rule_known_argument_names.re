@@ -36,7 +36,7 @@ module Visitor: Traversal_utils.VisitorSig = {
     Context.push_error(ctx, span, msg);
   };
 
-  let enter_argument = (known_args, ctx, (name, _)) =>
+  let enter_argument = (known_args, ctx, (name, _, _)) =>
     switch (known_args^) {
     | None => ()
     | Some((pos, known_args)) =>

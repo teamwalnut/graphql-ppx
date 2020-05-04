@@ -22,6 +22,7 @@ module MyQuery = {
   };
   let query = "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n";
   type t = {defaultObjectValueOnScalar: string};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -29,10 +30,7 @@ module MyQuery = {
           let value = (value: Raw.t).defaultObjectValueOnScalar;
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: t
     );
   let serialize: t => Raw.t =
@@ -40,13 +38,9 @@ module MyQuery = {
       {
         let defaultObjectValueOnScalar = {
           let value = (value: t).defaultObjectValueOnScalar;
-
           value;
         };
-        {
-
-          defaultObjectValueOnScalar: defaultObjectValueOnScalar,
-        };
+        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
   let definition = (parse, query, serialize);
