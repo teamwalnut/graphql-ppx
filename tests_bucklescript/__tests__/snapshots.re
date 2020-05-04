@@ -35,7 +35,7 @@ let refmt =
   |> Js.String.trim;
 let refmt = "\"" ++ refmt ++ "\"";
 
-let ppx = {|"../_build/default/src/bucklescript_bin/bin.exe"|};
+let ppx = Filename.( "bin.exe" |> concat("bucklescript_bin") |> concat("src") |> concat("default") |> concat("_build") |> concat(".."));
 
 let rm = win ? "del" : "rm";
 
@@ -92,6 +92,8 @@ describe("Apollo", () =>
      })
 );
 
+let bsc = Filename.("bsc" |> concat(".bin") |> concat("node_modules") |> concat("."));
+
 let tests =
   readdirSync("operations/errors")
   ->Belt.Array.keep(Js.String.endsWith(".re"));
@@ -99,7 +101,7 @@ let tests =
 let run_bsc_with_ppx = (fileName, pathIn, pathOut) => {
   Js.Promise.make((~resolve as resolvePromise, ~reject as _) => {
     exec(
-      {j|./node_modules/.bin/bsc -ppx ../_build/default/src/bucklescript_bin/bin.exe $pathIn/$fileName|j},
+      bsc ++ " -ppx " ++ ppx ++ {j| $pathIn/$fileName|j},
       {cwd: resolve(dirname, "..")},
       (_error, _stdout, stderr) => {
         let result = {
