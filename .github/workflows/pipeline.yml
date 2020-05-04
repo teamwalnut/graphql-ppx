@@ -104,7 +104,6 @@ jobs:
       #     CI: true
 
       - name: test-bucklescript
-        if: runner.os != 'Windows'
         run: |
           cd tests_bucklescript
           npm ci --no-optional
