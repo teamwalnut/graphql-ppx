@@ -151,7 +151,10 @@ let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) =
         item: {
           fd_alias: None,
           fd_name: {
-            span: parent_span,
+            span: (
+              {Source_pos.index: (-1), line: (-1), col: (-1)},
+              {Source_pos.index: (-1), line: (-1), col: (-1)},
+            ),
             item: "__typename",
           },
           fd_arguments: None,
