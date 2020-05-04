@@ -167,6 +167,7 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -341,6 +342,7 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
