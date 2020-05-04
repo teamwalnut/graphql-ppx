@@ -85,7 +85,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     if (raw) {
       base_type(module_name ++ ".Raw.t");
     } else {
-      base_type(~loc=?atLoc, module_name ++ ".t");
+      base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
@@ -127,7 +127,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
     |> List.fold_left(
          acc =>
            fun
-           | Fragment({key, module_name, type_name}) => [
+           | Fragment({key, loc_key, module_name, type_name}) => [
                Ast_helper.Type.field(
                  {Location.txt: key, loc: Location.none},
                  Ast_helper.Typ.constr(
@@ -143,7 +143,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                            }
                          ),
                        ),
-                     loc: Location.none,
+                     loc: conv_loc(loc_key),
                    },
                    [],
                  ),
@@ -389,7 +389,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
     |> List.fold_left(
          acc =>
            fun
-           | Fragment({key, module_name, type_name}) => [
+           | Fragment({key, loc_key, module_name, type_name}) => [
                {
                  pof_desc:
                    Otag(
@@ -407,7 +407,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                                }
                              ),
                            ),
-                         loc: Location.none,
+                         loc: conv_loc(loc_key),
                        },
                        [],
                      ),

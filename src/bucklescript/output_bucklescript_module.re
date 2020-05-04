@@ -487,6 +487,29 @@ let generate_fragment_module =
         fragment.item.fg_name.span,
       )),
     );
+  let types =
+    List.append(
+      types,
+      [
+        Ast_helper.Str.type_(
+          Recursive,
+          [
+            Type.mk(
+              ~manifest=
+                Output_bucklescript_types.base_type(
+                  ~loc=
+                    Output_bucklescript_utils.extend_loc_from_start(
+                      conv_loc(config.map_loc(fragment.span)),
+                      8,
+                    ),
+                  "t",
+                ),
+              Location.mknoloc("fragment"),
+            ),
+          ],
+        ),
+      ],
+    );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
