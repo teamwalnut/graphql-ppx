@@ -105,7 +105,7 @@ let run_bsc_with_ppx = (fileName, pathIn, pathOut) => {
       {cwd: resolve(dirname, "..")},
       (_error, _stdout, stderr) => {
         let result = {
-          let lines = stderr |> Js.String.split("\n");
+          let lines = stderr |> Js.String.replaceByRe([%re "/\\r\\n/g"], "\n") |> Js.String.split("\n");
           let stderr =
             lines
             |> Js.Array.reduce(
