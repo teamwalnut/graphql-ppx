@@ -1,12 +1,12 @@
-// module MyQuery = [%graphql
-//   {|
-//   {
-//     dogOrHuman {
-//       ...on Dog {
-//         name
-//         barkVolume
-//       }
-//     }
-//   }
-// |}
-// ];
+module MyQuery = [%graphql
+  {|
+  {
+    dogOrHuman {
+      ...on Dog {
+        name
+        barkVolume
+      }
+    }
+  }
+|}
+];
