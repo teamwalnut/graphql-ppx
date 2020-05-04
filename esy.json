@@ -11,7 +11,7 @@
     "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": ">=1.6.0",
     "@opam/ppx_tools_versioned": "5.2.3",
-    "@opam/reason": ">=3.6.0",
+    "@opam/reason": "facebook/reason:reason.json#3ccf9d8febaa0ee0fdf99e65ab396a1421325c13",
     "@opam/menhir": "*"
   },
   "devDependencies": {
