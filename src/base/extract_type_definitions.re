@@ -22,6 +22,7 @@ type object_field =
   | Fragment({
       module_name: string,
       key: string,
+      loc_key: Source_pos.ast_location,
       type_name: option(string),
     })
 and type_def =
@@ -173,8 +174,8 @@ and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
              | Fr_named_field({name, loc, loc_key, type_}) => {
                  Field({loc, loc_key, path: [name, ...path], type_});
                }
-             | Fr_fragment_spread(key, _loc, name, type_name, _arguments) =>
-               Fragment({module_name: name, key, type_name}),
+             | Fr_fragment_spread(key, loc_key, name, type_name, _arguments) =>
+               Fragment({module_name: name, key, loc_key, type_name}),
            ),
     }),
     ...create_children(path, raw, fields),
