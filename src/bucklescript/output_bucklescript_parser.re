@@ -210,6 +210,9 @@ and generate_object_decoder =
       existing_record,
       force_record,
     ) => {
+  // whether we can use inline values, this compiles to better javascript
+  // but we can't use this if we are constructing objects instead of records
+  let inline_values = config.records;
   let do_obj_constructor_base = (is_object, wrap) => {
     open Ast_helper;
     let opaque =
@@ -221,102 +224,106 @@ and generate_object_decoder =
          );
     let object_type = base_type_name("Raw." ++ generate_type_name(path));
 
+    let get_value =
+      fun
+      | Fr_named_field({name as key, type_ as inner}) =>
+        [@metaloc conv_loc(loc)]
+        {
+          let%expr value =
+            switch%e (opaque, is_object) {
+            | (true, _) =>
+              %expr
+              Obj.magic(
+                Js.Dict.unsafeGet(
+                  Obj.magic(value),
+                  [%e const_str_expr(key)],
+                ),
+              )
+
+            | (_, true) =>
+              %expr
+              value##[%e ident_from_string(to_valid_ident(key))]
+            | (_, false) =>
+              %expr
+              [%e
+                Ast_helper.Exp.field(
+                  Exp.constraint_(ident_from_string("value"), object_type),
+                  {
+                    loc: Location.none,
+                    Location.txt: Longident.parse(to_valid_ident(key)),
+                  },
+                )
+              ]
+            };
+
+          %e
+          generate_parser(config, [key, ...path], definition, inner);
+        }
+
+      | Fr_fragment_spread(key, loc, name, _, arguments) =>
+        [@metaloc conv_loc(loc)]
+        {
+          let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
+            Obj.magic(value);
+          %e
+          generate_fragment_parse_fun(
+            config,
+            conv_loc(loc),
+            name,
+            arguments,
+            definition,
+          );
+        };
+
+    let get_record_contents =
+      fun
+      | Fr_fragment_spread(key, _, _, _, _)
+      | Fr_named_field({name: key}) => (
+          {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
+          ident_from_string(to_valid_ident(key)),
+        );
+
+    let get_record_contents_inline =
+      fun
+      | Fr_fragment_spread(key, _, _, _, _) as field
+      | Fr_named_field({name: key}) as field => (
+          {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
+          get_value(field),
+        );
+
     let record =
       Exp.record(
-        fields
-        |> List.map(
-             fun
-             | Fr_fragment_spread(key, _, _, _, _) => key
-             | Fr_named_field({name}) => name,
-           )
-        |> List.map(key =>
-             (
-               {
-                 txt: Longident.parse(to_valid_ident(key)),
-                 loc: conv_loc(loc),
-               },
-               ident_from_string(to_valid_ident(key)),
-             )
-           ),
+        List.map(
+          inline_values ? get_record_contents_inline : get_record_contents,
+          fields,
+        ),
         None,
       );
 
     let record = wrap ? record_to_object(loc, record) : record;
-    let bindings =
-      fields
-      |> List.map(
-           fun
-           | Fr_named_field({name}) as field => (name, field)
-           | Fr_fragment_spread(key, _, _, _, _) as field => (key, field),
-         )
-      |> List.map(((key, field)) => {
-           Vb.mk(
-             Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
-             {
-               switch (field) {
-               | Fr_named_field({name as key, type_ as inner}) =>
-                 [@metaloc conv_loc(loc)]
-                 {
-                   let%expr value =
-                     switch%e (opaque, is_object) {
-                     | (true, _) =>
-                       %expr
-                       Obj.magic(
-                         Js.Dict.unsafeGet(
-                           Obj.magic(value),
-                           [%e const_str_expr(key)],
-                         ),
-                       )
 
-                     | (_, true) =>
-                       %expr
-                       value##[%e ident_from_string(to_valid_ident(key))]
-                     | (_, false) =>
-                       %expr
-                       [%e
-                         Ast_helper.Exp.field(
-                           Exp.constraint_(
-                             ident_from_string("value"),
-                             object_type,
-                           ),
-                           {
-                             loc: Location.none,
-                             Location.txt:
-                               Longident.parse(to_valid_ident(key)),
-                           },
-                         )
-                       ]
-                     };
-
-                   %e
-                   generate_parser(
-                     config,
-                     [key, ...path],
-                     definition,
-                     inner,
-                   );
-                 }
-
-               | Fr_fragment_spread(key, loc, name, _, arguments) =>
-                 [@metaloc conv_loc(loc)]
-                 {
-                   let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
-                     Obj.magic(value);
-                   %e
-                   generate_fragment_parse_fun(
-                     config,
-                     conv_loc(loc),
-                     name,
-                     arguments,
-                     definition,
-                   );
-                 }
-               };
-             },
-           )
-         })
-      |> List.rev;
-    Exp.let_(Nonrecursive, bindings, record);
+    inline_values
+      ? record
+      : {
+        let bindings =
+          fields
+          |> List.map(
+               fun
+               | Fr_named_field({name}) as field => (name, field)
+               | Fr_fragment_spread(key, _, _, _, _) as field => (
+                   key,
+                   field,
+                 ),
+             )
+          |> List.map(((key, field)) => {
+               Vb.mk(
+                 Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
+                 get_value(field),
+               )
+             })
+          |> List.rev;
+        Exp.let_(Nonrecursive, bindings, record);
+      };
   };
   let do_obj_constructor = () =>
     [@metaloc loc]
