@@ -1215,6 +1215,7 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -1305,6 +1306,7 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -3941,6 +3943,7 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = (value: Raw.t).int;
@@ -4132,6 +4135,7 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = (value: Raw.t).barkVolume;
@@ -8345,6 +8349,7 @@ Lists {
       \\"nullableOfNonNullable\\": option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -8425,6 +8430,7 @@ Lists {
     };
     type t = {. \\"nullableOfNonNullable\\": option(array(string))};
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -10782,6 +10788,7 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -10956,6 +10963,7 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
@@ -14721,6 +14729,7 @@ Lists {
       \\"nullableOfNonNullable\\": option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -14801,6 +14810,7 @@ Lists {
     };
     type t = {. \\"nullableOfNonNullable\\": option(array(string))};
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -17033,6 +17043,7 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -17197,6 +17208,7 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
@@ -20871,6 +20883,7 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -20947,6 +20960,7 @@ Lists {
     };
     type t = {nullableOfNonNullable: option(array(string))};
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -23304,6 +23318,7 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = (value: Raw.t).int;
@@ -23476,6 +23491,7 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = (value: Raw.t).barkVolume;

@@ -16,6 +16,7 @@ type object_field =
   | Fragment({
       module_name: string,
       key: string,
+      loc_key: Source_pos.ast_location,
       type_name: option(string),
     })
 and type_def =

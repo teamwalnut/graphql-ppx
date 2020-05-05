@@ -44,6 +44,7 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -134,6 +135,7 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
       let nullableOfNonNullable = {
         let value = (value: Raw.t).nullableOfNonNullable;
