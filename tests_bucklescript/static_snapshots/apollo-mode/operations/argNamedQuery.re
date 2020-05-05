@@ -28,11 +28,10 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let argNamedQuery = {
+        argNamedQuery: {
           let value = (value: Raw.t).argNamedQuery;
           value;
-        };
-        {argNamedQuery: argNamedQuery};
+        },
       }: t
     );
   let serialize: t => Raw.t =

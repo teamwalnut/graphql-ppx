@@ -56,11 +56,10 @@ RecursiveInput {
   let parse: Raw.t => t =
     (value) => (
       {
-        let recursiveInput = {
+        recursiveInput: {
           let value = (value: Raw.t).recursiveInput;
           value;
-        };
-        {recursiveInput: recursiveInput};
+        },
       }: t
     );
   let serialize: t => Raw.t =

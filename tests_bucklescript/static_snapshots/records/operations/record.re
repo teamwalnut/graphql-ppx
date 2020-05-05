@@ -42,23 +42,21 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let variousScalars = {
+        variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              let int = {
-                let value = (value: Raw.t_variousScalars).int;
-                value;
-              }
-              and string = {
+              string: {
                 let value = (value: Raw.t_variousScalars).string;
                 value;
-              };
-              {string, int};
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
             }: scalars
           );
-        };
-        {variousScalars: variousScalars};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -98,22 +96,20 @@ module OneFieldQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let variousScalars = {
+        variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              let nullableString = {
+              nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
-              };
-              {nullableString: nullableString};
+              },
             }: t_variousScalars
           );
-        };
-        {variousScalars: variousScalars};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -173,15 +169,14 @@ VariousScalars {
     type nonrec t_VariousScalars = t;
     type fragment = t;
     let parse = (value: Raw.t): t => {
-      let int = {
-        let value = (value: Raw.t).int;
-        value;
-      }
-      and string = {
+      string: {
         let value = (value: Raw.t).string;
         value;
-      };
-      {string, int};
+      },
+      int: {
+        let value = (value: Raw.t).int;
+        value;
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -214,11 +209,10 @@ VariousScalars {
     let parse: Raw.t => t =
       (value) => (
         {
-          let variousScalars = {
+          variousScalars: {
             let value = (value: Raw.t).variousScalars;
             Fragment.parse(value);
-          };
-          {variousScalars: variousScalars};
+          },
         }: t
       );
     let serialize: t => Raw.t =
@@ -259,7 +253,7 @@ module InlineFragmentQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let dogOrHuman = {
+        dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -271,15 +265,14 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-                      let barkVolume = {
-                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                        value;
-                      }
-                      and name = {
+                      name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
                         value;
-                      };
-                      {name, barkVolume};
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
                     }: t_dogOrHuman_Dog
                   );
                 },
@@ -287,8 +280,7 @@ module InlineFragmentQuery = {
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_dogOrHuman
           );
-        };
-        {dogOrHuman: dogOrHuman};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -346,15 +338,14 @@ Dog {
     type nonrec t_Dog = t;
     type fragment = t;
     let parse = (value: Raw.t): t => {
-      let barkVolume = {
-        let value = (value: Raw.t).barkVolume;
-        value;
-      }
-      and name = {
+      name: {
         let value = (value: Raw.t).name;
         value;
-      };
-      {name, barkVolume};
+      },
+      barkVolume: {
+        let value = (value: Raw.t).barkVolume;
+        value;
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -395,7 +386,7 @@ Dog {
     let parse: Raw.t => t =
       (value) => (
         {
-          let dogOrHuman = {
+          dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
             let typename: string =
               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -411,8 +402,7 @@ Dog {
               | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
               }: t_dogOrHuman
             );
-          };
-          {dogOrHuman: dogOrHuman};
+          },
         }: t
       );
     let serialize: t => Raw.t =

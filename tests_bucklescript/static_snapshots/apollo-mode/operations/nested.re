@@ -113,162 +113,152 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let let_ = {
-          let value = (value: Raw.t).let_;
-          (
-            {
-              let inner = {
-                let value = (value: Raw.t_let).inner;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      let inner = {
-                        let value = (value: Raw.t_let_inner).inner;
-                        switch (Js.toOption(value)) {
-                        | Some(value) =>
-                          Some(
-                            {
-                              let field = {
-                                let value =
-                                  (value: Raw.t_let_inner_inner).field;
-                                value;
-                              }
-                              and __typename = {
-                                let value =
-                                  (value: Raw.t_let_inner_inner).__typename;
-                                value;
-                              };
-                              {__typename, field};
-                            }: t_let_inner_inner,
-                          )
-                        | None => None
-                        };
-                      }
-                      and __typename = {
-                        let value = (value: Raw.t_let_inner).__typename;
-                        value;
-                      };
-                      {__typename, inner};
-                    }: t_let_inner,
-                  )
-                | None => None
-                };
-              }
-              and __typename = {
-                let value = (value: Raw.t_let).__typename;
-                value;
-              };
-              {__typename, inner};
-            }: t_let
-          );
-        }
-        and second = {
-          let value = (value: Raw.t).second;
-          (
-            {
-              let inner = {
-                let value = (value: Raw.t_second).inner;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      let inner = {
-                        let value = (value: Raw.t_second_inner).inner;
-                        switch (Js.toOption(value)) {
-                        | Some(value) =>
-                          Some(
-                            {
-                              let f2 = {
-                                let value =
-                                  (value: Raw.t_second_inner_inner).f2;
-                                value;
-                              }
-                              and f1 = {
-                                let value =
-                                  (value: Raw.t_second_inner_inner).f1;
-                                value;
-                              }
-                              and __typename = {
-                                let value =
-                                  (value: Raw.t_second_inner_inner).__typename;
-                                value;
-                              };
-                              {__typename, f1, f2};
-                            }: t_second_inner_inner,
-                          )
-                        | None => None
-                        };
-                      }
-                      and __typename = {
-                        let value = (value: Raw.t_second_inner).__typename;
-                        value;
-                      };
-                      {__typename, inner};
-                    }: t_second_inner,
-                  )
-                | None => None
-                };
-              }
-              and __typename = {
-                let value = (value: Raw.t_second).__typename;
-                value;
-              };
-              {__typename, inner};
-            }: t_second
-          );
-        }
-        and first = {
+        first: {
           let value = (value: Raw.t).first;
           (
             {
-              let inner = {
+              __typename: {
+                let value = (value: Raw.t_first).__typename;
+                value;
+              },
+              inner: {
                 let value = (value: Raw.t_first).inner;
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-                      let inner = {
+                      __typename: {
+                        let value = (value: Raw.t_first_inner).__typename;
+                        value;
+                      },
+                      inner: {
                         let value = (value: Raw.t_first_inner).inner;
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-                              let field = {
-                                let value =
-                                  (value: Raw.t_first_inner_inner).field;
-                                value;
-                              }
-                              and __typename = {
+                              __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
                                 value;
-                              };
-                              {__typename, field};
+                              },
+                              field: {
+                                let value =
+                                  (value: Raw.t_first_inner_inner).field;
+                                value;
+                              },
                             }: t_first_inner_inner,
                           )
                         | None => None
                         };
-                      }
-                      and __typename = {
-                        let value = (value: Raw.t_first_inner).__typename;
-                        value;
-                      };
-                      {__typename, inner};
+                      },
                     }: t_first_inner,
                   )
                 | None => None
                 };
-              }
-              and __typename = {
-                let value = (value: Raw.t_first).__typename;
-                value;
-              };
-              {__typename, inner};
+              },
             }: t_first
           );
-        };
-        {first, second, let_};
+        },
+        second: {
+          let value = (value: Raw.t).second;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_second).__typename;
+                value;
+              },
+              inner: {
+                let value = (value: Raw.t_second).inner;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_second_inner).__typename;
+                        value;
+                      },
+                      inner: {
+                        let value = (value: Raw.t_second_inner).inner;
+                        switch (Js.toOption(value)) {
+                        | Some(value) =>
+                          Some(
+                            {
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_second_inner_inner).__typename;
+                                value;
+                              },
+                              f1: {
+                                let value =
+                                  (value: Raw.t_second_inner_inner).f1;
+                                value;
+                              },
+                              f2: {
+                                let value =
+                                  (value: Raw.t_second_inner_inner).f2;
+                                value;
+                              },
+                            }: t_second_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_second_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_second
+          );
+        },
+        let_: {
+          let value = (value: Raw.t).let_;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_let).__typename;
+                value;
+              },
+              inner: {
+                let value = (value: Raw.t_let).inner;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_let_inner).__typename;
+                        value;
+                      },
+                      inner: {
+                        let value = (value: Raw.t_let_inner).inner;
+                        switch (Js.toOption(value)) {
+                        | Some(value) =>
+                          Some(
+                            {
+                              __typename: {
+                                let value =
+                                  (value: Raw.t_let_inner_inner).__typename;
+                                value;
+                              },
+                              field: {
+                                let value =
+                                  (value: Raw.t_let_inner_inner).field;
+                                value;
+                              },
+                            }: t_let_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_let_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_let
+          );
+        },
       }: t
     );
   let serialize: t => Raw.t =

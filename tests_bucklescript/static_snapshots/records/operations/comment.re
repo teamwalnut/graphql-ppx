@@ -69,11 +69,10 @@ NonrecursiveInput {
   let parse: Raw.t => t =
     (value) => (
       {
-        let nonrecursiveInput = {
+        nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
           value;
-        };
-        {nonrecursiveInput: nonrecursiveInput};
+        },
       }: t
     );
   let serialize: t => Raw.t =
