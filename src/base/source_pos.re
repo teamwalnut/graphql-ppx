@@ -11,6 +11,8 @@ type spanning('a) = {
 };
 
 let origin = {index: 0, line: 0, col: 0};
+let nopos = {index: (-1), line: (-1), col: (-1)};
+let nospan = (nopos, nopos);
 
 let advance_line = ({index, line, col: _}) => {
   index: index + 1,
