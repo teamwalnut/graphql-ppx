@@ -594,17 +594,17 @@ let mapper = (_config, _cookies) => {
                          },
                        ]) =>
                        List.append(
+                         rewrite_query(
+                           ~query_config=get_query_config(fields),
+                           ~loc=conv_loc_from_ast(loc),
+                           ~delim,
+                           ~query,
+                           ~module_definition=false,
+                           (),
+                         )
+                         |> List.concat
+                         |> List.rev,
                          acc,
-                         List.concat(
-                           rewrite_query(
-                             ~query_config=get_query_config(fields),
-                             ~loc=conv_loc_from_ast(loc),
-                             ~delim,
-                             ~query,
-                             ~module_definition=false,
-                             (),
-                           ),
-                         ),
                        )
                      | PStr([
                          {
@@ -624,17 +624,17 @@ let mapper = (_config, _cookies) => {
                          },
                        ]) =>
                        List.append(
+                         rewrite_query(
+                           ~query_config=empty_query_config,
+                           ~loc=conv_loc_from_ast(loc),
+                           ~delim,
+                           ~query,
+                           ~module_definition=false,
+                           (),
+                         )
+                         |> List.concat
+                         |> List.rev,
                          acc,
-                         List.concat(
-                           rewrite_query(
-                             ~query_config=empty_query_config,
-                             ~loc=conv_loc_from_ast(loc),
-                             ~delim,
-                             ~query,
-                             ~module_definition=false,
-                             (),
-                           ),
-                         ),
                        )
                      | _ =>
                        raise(
@@ -646,13 +646,13 @@ let mapper = (_config, _cookies) => {
                          ),
                        )
                      }
-                   | other =>
-                     List.append(
-                       acc,
-                       [default_mapper.structure_item(mapper, other)],
-                     ),
+                   | other => [
+                       default_mapper.structure_item(mapper, other),
+                       ...acc,
+                     ],
                  [],
-               );
+               )
+            |> List.rev;
           },
         }
       )
