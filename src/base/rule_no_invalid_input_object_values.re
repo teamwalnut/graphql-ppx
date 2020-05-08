@@ -6,25 +6,25 @@ module Visitor: Traversal_utils.VisitorSig = {
   include AbstractVisitor;
 
   type t = {
-    types_: Hashtbl.t(string, Type_utils.Generic.tree),
+    variable_types: Hashtbl.t(string, Type_utils.Generic.tree),
     arg_type: Hashtbl.t(string, Type_utils.Generic.tree),
     mutable name_span: option(spanning(string)),
   };
   let make_self = () => {
-    types_: Hashtbl.create(0),
+    variable_types: Hashtbl.create(0),
     arg_type: Hashtbl.create(0),
     name_span: None,
   };
 
   let enter_operation_definition = (self, ctx, def) => {
-    let () = Hashtbl.clear(self.types_);
+    let () = Hashtbl.clear(self.variable_types);
     switch (def.item.o_variable_definitions) {
     | None => ()
     | Some({item, _}) =>
       List.iter(
         ((name, {vd_type: {item as type_}})) =>
           Hashtbl.add(
-            self.types_,
+            self.variable_types,
             name.item,
             type_
             |> Type_utils.Generic.from_graphql_ast_tr(~schema=ctx.schema),
@@ -94,7 +94,7 @@ module Visitor: Traversal_utils.VisitorSig = {
                      value,
                      value.item
                      |> from_graphql_ast_iv(
-                          ~arguments=self.types_,
+                          ~arguments=self.variable_types,
                           ~schema=ctx.schema,
                         ),
                    ),

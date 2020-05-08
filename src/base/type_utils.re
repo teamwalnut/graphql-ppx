@@ -92,14 +92,21 @@ module Generic = {
     | RequiredMismatch;
   let rec can_apply = (to_: tree, from: tree) => {
     switch (to_, from) {
-    | (T(t1), T(t2))
-    | (T(t1), NonNull(T(t2))) => eq(t1, t2) ? Ok : Unequal
+    // Disable checks for custom scalars
+    | (T(CustomScalar), T(_)) => Ok
+    | (T(CustomScalar), NonNull(_)) => Ok
+    // Needs recursive check
     | (NonNull(t1), NonNull(t2))
     | (List(t1), List(t2))
     | (List(t1), NonNull(List(t2))) => can_apply(t1, t2)
+    // Normal type equality
+    | (T(t1), T(t2))
+    | (T(t1), NonNull(T(t2))) => eq(t1, t2) ? Ok : Unequal
+    // Default value "EmptyList" is acceptable for list types
     | (List(_), T(EmptyList))
     | (List(_), NonNull(T(EmptyList)))
     | (NonNull(List(_)), T(EmptyList)) => Ok
+    // Left side is required, right side is not
     | (NonNull(_), T(_))
     | (NonNull(_), List(_)) => RequiredMismatch
     | _ => Unequal
@@ -177,7 +184,8 @@ module Generic = {
   type error =
     | MismatchedTypes(string, string)
     | MismatchedRequiredVar(string, string)
-    | RequiredFieldMissing(string, string);
+    | RequiredFieldMissing(string, string)
+    | RequiredVariableMissing(string, string);
   let generate_error = (error: error) => {
     switch (error) {
     | MismatchedTypes(expected, received) =>
@@ -196,6 +204,12 @@ module Generic = {
       Printf.sprintf(
         "Invalid argument. The field \"%s\" on argument \"%s\" is missing.",
         key_name,
+        arg_name,
+      )
+    | RequiredVariableMissing(arg_name, variable_name) =>
+      Printf.sprintf(
+        "Invalid argument. The variable \"$%s\" on argument \"%s\" is missing.",
+        variable_name,
         arg_name,
       )
     };

@@ -1,10 +1,10 @@
 /**
- * Mismatched types shold take priority over required status
- * Expecting this to be a type related error, not a required one
+ * Required argument error should take prioroty over type error
+ * Expecting this to be a required related error, not a type one
  */
 module MyQuery = [%graphql
   {|
-  query invalidArgValues($arg: Int) {
+  query invalidArgValues {
     invalidArgValues(
         stringRequired: $arg
     )

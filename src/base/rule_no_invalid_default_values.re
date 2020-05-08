@@ -1,90 +1,133 @@
 module Visitor: Traversal_utils.VisitorSig = {
   open Traversal_utils;
-  open Schema;
+  open Graphql_ast;
   open Source_pos;
+  open Type_utils.Generic;
 
   include AbstractVisitor;
 
   type t = {
-    mutable argType: option(string),
-    mutable nameSpan: option(span),
+    variable_types: Hashtbl.t(string, tree),
+    mutable arg_type: option((spanning(string), tree)),
   };
-  let make_self = () => {argType: None, nameSpan: None};
+  let make_self = () => {variable_types: Hashtbl.create(0), arg_type: None};
+
+  let enter_operation_definition = (self, ctx, def) => {
+    let () = Hashtbl.clear(self.variable_types);
+    switch (def.item.o_variable_definitions) {
+    | None => ()
+    | Some({item, _}) =>
+      List.iter(
+        ((name, {vd_type: {item as type_}})) =>
+          Hashtbl.add(
+            self.variable_types,
+            name.item,
+            type_ |> from_graphql_ast_tr(~schema=ctx.schema),
+          ),
+        item,
+      )
+    };
+  };
 
   let enter_argument =
       (
         self,
         ctx,
-        (name: spanning(string), arg_type: option(type_ref), value),
+        (name: spanning(string), arg_type: option(Schema.type_ref), value),
       ) => {
-    switch (
+    self.arg_type =
       arg_type
-      |> Option.map(innermost_name)
-      |> Option.flat_map(lookup_type(ctx.schema))
+      |> Option.map(from_schema_tr(~schema=ctx.schema))
+      |> Option.map(tr => (name, tr));
+  };
+
+  let check_apply =
+      (
+        ctx,
+        tr1: tree,
+        tr2: tree,
+        arg_name: spanning(string),
+        name: spanning(string),
+      ) =>
+    switch (can_apply(tr1, tr2)) {
+    | Ok => ()
+    | Unequal =>
+      Traversal_utils.Context.push_error(
+        ctx,
+        name.span,
+        generate_error(
+          MismatchedTypes(tr1 |> string_of_tree, tr2 |> string_of_tree),
+        ),
+      )
+    | RequiredMismatch =>
+      Traversal_utils.Context.push_error(
+        ctx,
+        name.span,
+        generate_error(MismatchedRequiredVar(arg_name.item, name.item)),
+      )
+    };
+
+  let enter_variable_value = (self, ctx, name) => {
+    switch (
+      self.arg_type,
+      try(Some((name, Hashtbl.find(self.variable_types, name.item)))) {
+      | Not_found => None
+      },
     ) {
-    | Some(type_meta) when type_meta |> is_type_default =>
-      self.argType = Some(type_meta |> type_name);
-      self.nameSpan = Some(name.span);
-    | Some(_)
+    | (None, _) => ()
+    | (Some((arg_name, NonNull(_))), None) =>
+      // TODO: This could be redundant now, check if rule_all_required_arguments.re is still necessary (or if it covers more cases like Fragments, etc.)
+      Traversal_utils.Context.push_error(
+        ctx,
+        name.span,
+        generate_error(RequiredVariableMissing(arg_name.item, name.item)),
+      )
+    | (Some((_, T(_))), None)
+    | (Some((_, List(_))), None) => ()
+    | (Some((arg_name, arg_type)), Some((v_name, value_type))) =>
+      check_apply(ctx, arg_type, value_type, arg_name, name)
+    };
+  };
+
+  let check_pre_value = (~reset=false, generic, self, ctx, value) => {
+    switch (self.arg_type) {
+    | Some((arg_name, arg_type)) =>
+      check_apply(
+        ctx,
+        arg_type,
+        NonNull(T(generic)),
+        arg_name,
+        Source_pos.replace(value, ""),
+      )
     | None => ()
     };
-  };
-
-  let report_error = (ctx, expected, received, span) => {
-    Context.push_error(
-      ctx,
-      span,
-      Printf.sprintf(
-        "Invalid default value. Expected \"%s\" but received \"%s\".",
-        expected,
-        received,
-      ),
-    );
-  };
-
-  let check_input = (ctx, expected, received, span) => {
-    switch (expected) {
-    | None => ()
-    | Some(expected) when expected == received => ()
-    | Some(expected) => report_error(ctx, expected, received, span)
+    if (reset) {
+      self.arg_type = None;
     };
   };
 
-  let enter_int_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "Int", value.span);
-  };
-  let enter_float_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "Float", value.span);
-  };
-  let enter_string_value = (self, ctx, value) => {
-    switch (self.argType) {
-    | Some("ID") => check_input(ctx, self.argType, "ID", value.span)
-    | _ => check_input(ctx, self.argType, "String", value.span)
-    };
-  };
-  let enter_bool_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "Bool", value.span);
-  };
-  let enter_object_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "Object", value.span);
-    // We are done, as the above functions also apply to object fields
-    self.argType = None;
-    self.nameSpan = None;
-  };
+  let enter_int_value = check_pre_value(Int);
+  let enter_float_value = check_pre_value(Float);
+  let enter_string_value = check_pre_value(String);
+  let enter_bool_value = check_pre_value(Boolean);
+  let enter_object_value = check_pre_value(~reset=true, InputObject);
+  let enter_enum_value = check_pre_value(~reset=true, Enum);
   let enter_list_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "List", value.span);
+    switch (self.arg_type) {
+    | Some((_, NonNull(List(_))))
+    | Some((_, List(_)))
+    | None => ()
+    | Some((name, arg_type)) =>
+      Traversal_utils.Context.push_error(
+        ctx,
+        value.span,
+        generate_error(MismatchedTypes(arg_type |> string_of_tree, "List")),
+      )
+    };
     // We are done, as the above functions also apply to list object fields
-    self.argType = None;
-    self.nameSpan = None;
-  };
-  let enter_enum_value = (self, ctx, value) => {
-    check_input(ctx, self.argType, "Enum", value.span);
-    // We are done, as the above functions also apply to enum object fields
-    self.argType = None;
-    self.nameSpan = None;
+    self.arg_type = None;
   };
   let exit_argument = (self, _, _) => {
-    self.argType = None;
-    self.nameSpan = None;
+    self.arg_type = None;
   };
 };
