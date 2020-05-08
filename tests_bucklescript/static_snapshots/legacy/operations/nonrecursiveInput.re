@@ -253,7 +253,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {

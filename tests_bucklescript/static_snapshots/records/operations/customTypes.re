@@ -38,11 +38,26 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let customFields = {
+        customFields: {
           let value = (value: Raw.t).customFields;
           (
             {
-              let nullableColor = {
+              currentTime: {
+                let value = (value: Raw.t_customFields).currentTime;
+                GraphqlHelpers.DateTime.parse(value);
+              },
+              favoriteColor: {
+                let value = (value: Raw.t_customFields).favoriteColor;
+                GraphqlHelpers.Color.parse(value);
+              },
+              futureTime: {
+                let value = (value: Raw.t_customFields).futureTime;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+                | None => None
+                };
+              },
+              nullableColor: {
                 let value = (value: Raw.t_customFields).nullableColor;
                 switch (Js.toOption(value)) {
                 | Some(value) =>
@@ -53,27 +68,10 @@ module MyQuery = {
                   )
                 | None => None
                 };
-              }
-              and futureTime = {
-                let value = (value: Raw.t_customFields).futureTime;
-                switch (Js.toOption(value)) {
-                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
-                | None => None
-                };
-              }
-              and favoriteColor = {
-                let value = (value: Raw.t_customFields).favoriteColor;
-                GraphqlHelpers.Color.parse(value);
-              }
-              and currentTime = {
-                let value = (value: Raw.t_customFields).currentTime;
-                GraphqlHelpers.DateTime.parse(value);
-              };
-              {currentTime, favoriteColor, futureTime, nullableColor};
+              },
             }: t_customFields
           );
-        };
-        {customFields: customFields};
+        },
       }: t
     );
   let serialize: t => Raw.t =

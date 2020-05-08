@@ -42,7 +42,7 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let simpleSubscription = {
+        simpleSubscription: {
           let value = (value: Raw.t).simpleSubscription;
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -54,11 +54,10 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
                   (
                     {
-                      let name = {
+                      name: {
                         let value = (value: Raw.t_simpleSubscription_Dog).name;
                         value;
-                      };
-                      {name: name};
+                      },
                     }: t_simpleSubscription_Dog
                   );
                 },
@@ -69,12 +68,11 @@ module MyQuery = {
                   let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
                   (
                     {
-                      let name = {
+                      name: {
                         let value =
                           (value: Raw.t_simpleSubscription_Human).name;
                         value;
-                      };
-                      {name: name};
+                      },
                     }: t_simpleSubscription_Human
                   );
                 },
@@ -82,8 +80,7 @@ module MyQuery = {
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_simpleSubscription
           );
-        };
-        {simpleSubscription: simpleSubscription};
+        },
       }: t
     );
   let serialize: t => Raw.t =

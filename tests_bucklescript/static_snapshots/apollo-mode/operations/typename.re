@@ -50,57 +50,53 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let first = {
+        first: {
           let value = (value: Raw.t).first;
           (
             {
-              let inner = {
+              __typename: {
+                let value = (value: Raw.t_first).__typename;
+                value;
+              },
+              inner: {
                 let value = (value: Raw.t_first).inner;
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
                     {
-                      let inner = {
+                      __typename: {
+                        let value = (value: Raw.t_first_inner).__typename;
+                        value;
+                      },
+                      inner: {
                         let value = (value: Raw.t_first_inner).inner;
                         switch (Js.toOption(value)) {
                         | Some(value) =>
                           Some(
                             {
-                              let field = {
-                                let value =
-                                  (value: Raw.t_first_inner_inner).field;
-                                value;
-                              }
-                              and __typename = {
+                              __typename: {
                                 let value =
                                   (value: Raw.t_first_inner_inner).__typename;
                                 value;
-                              };
-                              {__typename, field};
+                              },
+                              field: {
+                                let value =
+                                  (value: Raw.t_first_inner_inner).field;
+                                value;
+                              },
                             }: t_first_inner_inner,
                           )
                         | None => None
                         };
-                      }
-                      and __typename = {
-                        let value = (value: Raw.t_first_inner).__typename;
-                        value;
-                      };
-                      {__typename, inner};
+                      },
                     }: t_first_inner,
                   )
                 | None => None
                 };
-              }
-              and __typename = {
-                let value = (value: Raw.t_first).__typename;
-                value;
-              };
-              {__typename, inner};
+              },
             }: t_first
           );
-        };
-        {first: first};
+        },
       }: t
     );
   let serialize: t => Raw.t =

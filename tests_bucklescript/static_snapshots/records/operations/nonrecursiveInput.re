@@ -73,11 +73,10 @@ NonrecursiveInput {
   let parse: Raw.t => t =
     (value) => (
       {
-        let nonrecursiveInput = {
+        nonrecursiveInput: {
           let value = (value: Raw.t).nonrecursiveInput;
           value;
-        };
-        {nonrecursiveInput: nonrecursiveInput};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -249,7 +248,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {
@@ -345,15 +343,14 @@ NonrecursiveInput {
   let parse: Raw.t => t =
     (value) => (
       {
-        let more = {
-          let value = (value: Raw.t).more;
-          value;
-        }
-        and scalarsInput = {
+        scalarsInput: {
           let value = (value: Raw.t).scalarsInput;
           value;
-        };
-        {scalarsInput, more};
+        },
+        more: {
+          let value = (value: Raw.t).more;
+          value;
+        },
       }: t
     );
   let serialize: t => Raw.t =

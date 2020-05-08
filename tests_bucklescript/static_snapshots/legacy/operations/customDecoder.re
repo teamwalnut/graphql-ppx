@@ -26,7 +26,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {

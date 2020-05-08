@@ -42,26 +42,24 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let customScalarField = {
+        customScalarField: {
           let value = (value: Raw.t).customScalarField;
           (
             {
-              let nonNullable = {
-                let value = (value: Raw.t_customScalarField).nonNullable;
-                value;
-              }
-              and nullable = {
+              nullable: {
                 let value = (value: Raw.t_customScalarField).nullable;
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
-              };
-              {nullable, nonNullable};
+              },
+              nonNullable: {
+                let value = (value: Raw.t_customScalarField).nonNullable;
+                value;
+              },
             }: t_customScalarField
           );
-        };
-        {customScalarField: customScalarField};
+        },
       }: t
     );
   let serialize: t => Raw.t =

@@ -54,59 +54,56 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let v2 = {
-          let value = (value: Raw.t).v2;
-          (
-            {
-              let string = {
-                let value = (value: Raw.t_v2).string;
-                switch (Js.toOption(value)) {
-                | Some(value) => Some(value)
-                | None => None
-                };
-              }
-              and nullableString = {
-                let value = (value: Raw.t_v2).nullableString;
-                switch (Js.toOption(value)) {
-                | Some(value) => Some(value)
-                | None => None
-                };
-              }
-              and __typename = {
-                let value = (value: Raw.t_v2).__typename;
-                value;
-              };
-              {__typename, nullableString, string};
-            }: t_v2
-          );
-        }
-        and v1 = {
+        v1: {
           let value = (value: Raw.t).v1;
           (
             {
-              let string = {
-                let value = (value: Raw.t_v1).string;
-                switch (Js.toOption(value)) {
-                | Some(value) => Some(value)
-                | None => None
-                };
-              }
-              and nullableString = {
+              __typename: {
+                let value = (value: Raw.t_v1).__typename;
+                value;
+              },
+              nullableString: {
                 let value = (value: Raw.t_v1).nullableString;
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
-              }
-              and __typename = {
-                let value = (value: Raw.t_v1).__typename;
-                value;
-              };
-              {__typename, nullableString, string};
+              },
+              string: {
+                let value = (value: Raw.t_v1).string;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
             }: t_v1
           );
-        };
-        {v1, v2};
+        },
+        v2: {
+          let value = (value: Raw.t).v2;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_v2).__typename;
+                value;
+              },
+              nullableString: {
+                let value = (value: Raw.t_v2).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_v2).string;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+            }: t_v2
+          );
+        },
       }: t
     );
   let serialize: t => Raw.t =

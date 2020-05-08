@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -44,15 +43,13 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
-      let nullableOfNonNullable = {
-        let value = (value: Raw.t).nullableOfNonNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value |> Js.Array.map(value => value))
-        | None => None
-        };
-      }
-      and nullableOfNullable = {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
         switch (Js.toOption(value)) {
         | Some(value) =>
@@ -67,12 +64,14 @@ Lists {
           )
         | None => None
         };
-      }
-      and __typename = {
-        let value = (value: Raw.t).__typename;
-        value;
-      };
-      {__typename, nullableOfNullable, nullableOfNonNullable};
+      },
+      nullableOfNonNullable: {
+        let value = (value: Raw.t).nullableOfNonNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -134,19 +133,19 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
-      let nullableOfNonNullable = {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
         switch (Js.toOption(value)) {
         | Some(value) => Some(value |> Js.Array.map(value => value))
         | None => None
         };
-      }
-      and __typename = {
-        let value = (value: Raw.t).__typename;
-        value;
-      };
-      {__typename, nullableOfNonNullable};
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -169,7 +168,6 @@ Lists {
     let name = "Another";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -247,120 +245,116 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let l4 = {
-          let value = (value: Raw.t).l4;
-          (
-            {
-              let listFragment = {
-                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-                Fragments.ListFragment.parse(value);
-              }
-              and nullableOfNullable = {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(
-                      Obj.magic(value),
-                      "nullableOfNullable",
-                    ),
-                  );
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
-                  )
-                | None => None
-                };
-              }
-              and __typename = {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
-                  );
-                value;
-              };
-              {__typename, nullableOfNullable, listFragment};
-            }: t_l4
-          );
-        }
-        and l3 = {
-          let value = (value: Raw.t).l3;
-          (
-            {
-              let frag2 = {
-                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-                Fragments.ListFragment.parse(value);
-              }
-              and frag1 = {
-                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-                Fragments.ListFragment.parse(value);
-              }
-              and nullableOfNullable = {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(
-                      Obj.magic(value),
-                      "nullableOfNullable",
-                    ),
-                  );
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
-                  )
-                | None => None
-                };
-              }
-              and __typename = {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
-                  );
-                value;
-              };
-              {__typename, nullableOfNullable, frag1, frag2};
-            }: t_l3
-          );
-        }
-        and l2 = {
+        l1: {
+          let value = (value: Raw.t).l1;
+          Fragments.ListFragment.parse(value);
+        },
+        l2: {
           let value = (value: Raw.t).l2;
           (
             {
-              let frag2 = {
-                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-                Fragments.ListFragment.parse(value);
-              }
-              and frag1 = {
-                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
-                Fragments.ListFragment.parse(value);
-              }
-              and __typename = {
+              __typename: {
                 let value =
                   Obj.magic(
                     Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
                   );
                 value;
-              };
-              {__typename, frag1, frag2};
+              },
+              frag1: {
+                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+                Fragments.ListFragment.parse(value);
+              },
+              frag2: {
+                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+                Fragments.ListFragment.parse(value);
+              },
             }: t_l2
           );
-        }
-        and l1 = {
-          let value = (value: Raw.t).l1;
-          Fragments.ListFragment.parse(value);
-        };
-        {l1, l2, l3, l4};
+        },
+        l3: {
+          let value = (value: Raw.t).l3;
+          (
+            {
+              __typename: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                  );
+                value;
+              },
+              nullableOfNullable: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(
+                      Obj.magic(value),
+                      "nullableOfNullable",
+                    ),
+                  );
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (Js.toOption(value)) {
+                         | Some(value) => Some(value)
+                         | None => None
+                         }
+                       ),
+                  )
+                | None => None
+                };
+              },
+              frag1: {
+                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+                Fragments.ListFragment.parse(value);
+              },
+              frag2: {
+                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+                Fragments.ListFragment.parse(value);
+              },
+            }: t_l3
+          );
+        },
+        l4: {
+          let value = (value: Raw.t).l4;
+          (
+            {
+              __typename: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                  );
+                value;
+              },
+              nullableOfNullable: {
+                let value =
+                  Obj.magic(
+                    Js.Dict.unsafeGet(
+                      Obj.magic(value),
+                      "nullableOfNullable",
+                    ),
+                  );
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (Js.toOption(value)) {
+                         | Some(value) => Some(value)
+                         | None => None
+                         }
+                       ),
+                  )
+                | None => None
+                };
+              },
+              listFragment: {
+                let value: Fragments.ListFragment.Raw.t = Obj.magic(value);
+                Fragments.ListFragment.parse(value);
+              },
+            }: t_l4
+          );
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -503,7 +497,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
@@ -519,11 +512,10 @@ module MyQuery2 = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let lists = {
+        lists: {
           let value = (value: Raw.t).lists;
           Fragments.ListFragment.parse(value);
-        };
-        {lists: lists};
+        },
       }: t
     );
   let serialize: t => Raw.t =

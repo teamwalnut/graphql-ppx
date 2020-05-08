@@ -27,7 +27,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -43,27 +42,25 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let variousScalars = {
+        variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              let int = {
-                let value = (value: Raw.t_variousScalars).int;
-                value;
-              }
-              and string = {
-                let value = (value: Raw.t_variousScalars).string;
-                value;
-              }
-              and __typename = {
+              __typename: {
                 let value = (value: Raw.t_variousScalars).__typename;
                 value;
-              };
-              {__typename, string, int};
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
             }: scalars
           );
-        };
-        {variousScalars: variousScalars};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -94,7 +91,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -113,26 +109,24 @@ module OneFieldQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let variousScalars = {
+        variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              let nullableString = {
+              __typename: {
+                let value = (value: Raw.t_variousScalars).__typename;
+                value;
+              },
+              nullableString: {
                 let value = (value: Raw.t_variousScalars).nullableString;
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
-              }
-              and __typename = {
-                let value = (value: Raw.t_variousScalars).__typename;
-                value;
-              };
-              {__typename, nullableString};
+              },
             }: t_variousScalars
           );
-        };
-        {variousScalars: variousScalars};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -162,7 +156,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     type graphql;
@@ -196,20 +189,20 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
-      let int = {
-        let value = (value: Raw.t).int;
-        value;
-      }
-      and string = {
-        let value = (value: Raw.t).string;
-        value;
-      }
-      and __typename = {
+      __typename: {
         let value = (value: Raw.t).__typename;
         value;
-      };
-      {__typename, string, int};
+      },
+      string: {
+        let value = (value: Raw.t).string;
+        value;
+      },
+      int: {
+        let value = (value: Raw.t).int;
+        value;
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -246,11 +239,10 @@ VariousScalars {
     let parse: Raw.t => t =
       (value) => (
         {
-          let variousScalars = {
+          variousScalars: {
             let value = (value: Raw.t).variousScalars;
             Fragment.parse(value);
-          };
-          {variousScalars: variousScalars};
+          },
         }: t
       );
     let serialize: t => Raw.t =
@@ -266,7 +258,6 @@ VariousScalars {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -292,7 +283,7 @@ module InlineFragmentQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let dogOrHuman = {
+        dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -304,19 +295,18 @@ module InlineFragmentQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-                      let barkVolume = {
-                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                        value;
-                      }
-                      and name = {
-                        let value = (value: Raw.t_dogOrHuman_Dog).name;
-                        value;
-                      }
-                      and __typename = {
+                      __typename: {
                         let value = (value: Raw.t_dogOrHuman_Dog).__typename;
                         value;
-                      };
-                      {__typename, name, barkVolume};
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
                     }: t_dogOrHuman_Dog
                   );
                 },
@@ -324,8 +314,7 @@ module InlineFragmentQuery = {
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_dogOrHuman
           );
-        };
-        {dogOrHuman: dogOrHuman};
+        },
       }: t
     );
   let serialize: t => Raw.t =
@@ -361,7 +350,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     type graphql;
@@ -387,20 +375,20 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    type fragment = t;
     let parse = (value: Raw.t): t => {
-      let barkVolume = {
-        let value = (value: Raw.t).barkVolume;
-        value;
-      }
-      and name = {
-        let value = (value: Raw.t).name;
-        value;
-      }
-      and __typename = {
+      __typename: {
         let value = (value: Raw.t).__typename;
         value;
-      };
-      {__typename, name, barkVolume};
+      },
+      name: {
+        let value = (value: Raw.t).name;
+        value;
+      },
+      barkVolume: {
+        let value = (value: Raw.t).barkVolume;
+        value;
+      },
     };
     let serialize: t => Raw.t =
       (value) => (
@@ -445,7 +433,7 @@ Dog {
     let parse: Raw.t => t =
       (value) => (
         {
-          let dogOrHuman = {
+          dogOrHuman: {
             let value = (value: Raw.t).dogOrHuman;
             let typename: string =
               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
@@ -461,8 +449,7 @@ Dog {
               | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
               }: t_dogOrHuman
             );
-          };
-          {dogOrHuman: dogOrHuman};
+          },
         }: t
       );
     let serialize: t => Raw.t =

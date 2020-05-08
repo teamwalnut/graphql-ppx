@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -44,6 +43,7 @@ Lists {
       "nullableOfNonNullable": option(array(string)),
     };
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -124,6 +124,7 @@ Lists {
     };
     type t = {. "nullableOfNonNullable": option(array(string))};
     type nonrec t_Lists = t;
+    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -149,7 +150,6 @@ Lists {
     let name = "Another";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -417,7 +417,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {. "lists": Fragments.ListFragment.Raw.t};

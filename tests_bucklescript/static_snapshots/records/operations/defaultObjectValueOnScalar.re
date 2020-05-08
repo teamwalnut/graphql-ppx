@@ -26,11 +26,10 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let defaultObjectValueOnScalar = {
+        defaultObjectValueOnScalar: {
           let value = (value: Raw.t).defaultObjectValueOnScalar;
           value;
-        };
-        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
+        },
       }: t
     );
   let serialize: t => Raw.t =

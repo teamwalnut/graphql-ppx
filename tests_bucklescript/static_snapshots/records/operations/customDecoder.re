@@ -26,7 +26,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -45,23 +44,21 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-        let variousScalars = {
+        variousScalars: {
           let value = (value: Raw.t).variousScalars;
           (
             {
-              let int = {
-                let value = (value: Raw.t_variousScalars).int;
-                StringOfInt.parse(value);
-              }
-              and string = {
+              string: {
                 let value = (value: Raw.t_variousScalars).string;
                 IntOfString.parse(value);
-              };
-              {string, int};
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                StringOfInt.parse(value);
+              },
             }: t_variousScalars
           );
-        };
-        {variousScalars: variousScalars};
+        },
       }: t
     );
   let serialize: t => Raw.t =

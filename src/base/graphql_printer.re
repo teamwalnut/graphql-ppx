@@ -28,7 +28,7 @@ let rec print_input_value = iv =>
   switch (iv) {
   | Iv_null => "null"
   | Iv_int(i) => string_of_int(i)
-  | Iv_float(f) => string_of_float(f)
+  | Iv_float(f) => Printf.sprintf("%.16g", f)
   | Iv_string(s) => "\"" ++ String.escaped(s) ++ "\""
   | Iv_boolean(b) => string_of_bool(b)
   | Iv_enum(s) => s
