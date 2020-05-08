@@ -196,7 +196,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t_variousScalars = {
@@ -381,7 +380,6 @@ module MyQuery2 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery3 = {
   module Raw = {
     type t_variousScalars = {
@@ -566,7 +564,6 @@ module MyQuery3 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery4 = {
   module Raw = {
     type t_variousScalars = {

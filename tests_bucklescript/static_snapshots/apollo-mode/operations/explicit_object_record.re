@@ -154,7 +154,6 @@ module RecordsQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ObjectsQuery = {
   module Raw = {
     type t_lists = {

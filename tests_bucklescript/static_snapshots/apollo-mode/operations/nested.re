@@ -20,7 +20,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {

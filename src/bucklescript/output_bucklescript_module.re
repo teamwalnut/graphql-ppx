@@ -613,24 +613,44 @@ let generate_operation = config =>
       structure,
     );
 
-let generate_modules = (config, module_definition, operations) => {
+let generate_modules = (config, module_name, operations) => {
   switch (operations) {
   | [] => []
   | [operation] =>
     switch (generate_operation(config, operation)) {
     | (Some(name), contents) =>
-      config.inline || module_definition
-        ? [contents] : [wrap_module(name, contents)]
-    | (None, contents) => [contents]
+      config.inline
+        ? [contents]
+        : [
+          wrap_module(
+            switch (module_name) {
+            | Some(name) => name
+            | None => name
+            },
+            contents,
+          ),
+        ]
+    | (None, contents) =>
+      switch (module_name) {
+      | Some(name) => [wrap_module(name, contents)]
+      | None => [contents]
+      }
     }
   | operations =>
-    operations
-    |> List.map(generate_operation(config))
-    |> List.mapi((i, (name, contents)) =>
-         switch (name) {
-         | Some(name) => wrap_module(name, contents)
-         | None => wrap_module("Untitled" ++ string_of_int(i), contents)
-         }
-       )
+    let contents =
+      operations
+      |> List.map(generate_operation(config))
+      |> List.mapi((i, (name, contents)) =>
+           switch (name) {
+           | Some(name) => wrap_module(name, contents)
+           | None => wrap_module("Untitled" ++ string_of_int(i), contents)
+           }
+         );
+    switch (module_name) {
+    | Some(module_name) => [
+        wrap_module(module_name, List.concat(contents)),
+      ]
+    | None => contents
+    };
   };
 };

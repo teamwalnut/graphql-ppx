@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -145,7 +144,6 @@ Lists {
     let name = "Another";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -429,7 +427,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};

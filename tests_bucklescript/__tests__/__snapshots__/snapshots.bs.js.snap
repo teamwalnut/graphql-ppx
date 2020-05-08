@@ -393,7 +393,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -1004,7 +1003,6 @@ module RecordsQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ObjectsQuery = {
   module Raw = {
     type t_lists = {
@@ -1163,7 +1161,6 @@ exports[`Apollo fragmentDefinition.re 1`] = `
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -1316,7 +1313,6 @@ Lists {
     let name = \\"Another\\";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -1646,7 +1642,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
@@ -2533,7 +2528,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {
@@ -3171,7 +3165,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {
@@ -3712,7 +3705,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -3777,7 +3769,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -3843,7 +3834,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     type graphql;
@@ -3946,7 +3936,6 @@ VariousScalars {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -4039,7 +4028,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     type graphql;
@@ -5421,7 +5409,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t_variousScalars = {
@@ -5617,7 +5604,6 @@ module MyQuery2 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery3 = {
   module Raw = {
     type t_variousScalars = {
@@ -5813,7 +5799,6 @@ module MyQuery3 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery4 = {
   module Raw = {
     type t_variousScalars = {
@@ -6327,7 +6312,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -7410,7 +7394,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -7994,7 +7977,6 @@ module RecordsQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module ObjectsQuery = {
   module Raw = {
     type t_lists = {
@@ -8146,7 +8128,6 @@ exports[`Legacy fragmentDefinition.re 1`] = `
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -8281,7 +8262,6 @@ Lists {
     let name = \\"Another\\";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -8554,7 +8534,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
@@ -9428,7 +9407,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
@@ -9929,7 +9907,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {
@@ -10473,7 +10450,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -10529,7 +10505,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
@@ -10580,7 +10555,6 @@ module OneFieldQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     type graphql;
@@ -10675,7 +10649,6 @@ VariousScalars {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -10763,7 +10736,6 @@ module InlineFragmentQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     type graphql;
@@ -12129,7 +12101,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t_variousScalars = {
@@ -12322,7 +12293,6 @@ module MyQuery2 = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery3 = {
   module Raw = {
     type t_variousScalars = {
@@ -12515,7 +12485,6 @@ module MyQuery3 = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery4 = {
   module Raw = {
     type t_variousScalars = {
@@ -13005,7 +12974,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -13828,7 +13796,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -14372,7 +14339,6 @@ module RecordsQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ObjectsQuery = {
   module Raw = {
     type t_lists = {
@@ -14519,7 +14485,6 @@ exports[`Objects fragmentDefinition.re 1`] = `
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -14654,7 +14619,6 @@ Lists {
     let name = \\"Another\\";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -14922,7 +14886,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
@@ -15726,7 +15689,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
@@ -16212,7 +16174,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {
@@ -16731,7 +16692,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -16782,7 +16742,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
@@ -16828,7 +16787,6 @@ module OneFieldQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     type graphql;
@@ -16918,7 +16876,6 @@ VariousScalars {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -17001,7 +16958,6 @@ module InlineFragmentQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     type graphql;
@@ -18280,7 +18236,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t_variousScalars = {
@@ -18468,7 +18423,6 @@ module MyQuery2 = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery3 = {
   module Raw = {
     type t_variousScalars = {
@@ -18656,7 +18610,6 @@ module MyQuery3 = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery4 = {
   module Raw = {
     type t_variousScalars = {
@@ -19131,7 +19084,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -19947,7 +19899,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -20511,7 +20462,6 @@ module RecordsQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ObjectsQuery = {
   module Raw = {
     type t_lists = {
@@ -20658,7 +20608,6 @@ exports[`Records fragmentDefinition.re 1`] = `
     cookies: [],
   }
 ];
-
 module Fragments = {
   module ListFragment = {
     type graphql;
@@ -20787,7 +20736,6 @@ Lists {
     let name = \\"Another\\";
   };
 };
-
 module MyQuery = {
   module Raw = {
     type t_l2;
@@ -21071,7 +21019,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
@@ -21907,7 +21854,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {field: string};
@@ -22417,7 +22363,6 @@ NonrecursiveInput {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t = {
@@ -22938,7 +22883,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -22994,7 +22938,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
@@ -23046,7 +22989,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     type graphql;
@@ -23139,7 +23081,6 @@ VariousScalars {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -23223,7 +23164,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     type graphql;
@@ -24529,7 +24469,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery2 = {
   module Raw = {
     type t_variousScalars = {
@@ -24714,7 +24653,6 @@ module MyQuery2 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery3 = {
   module Raw = {
     type t_variousScalars = {
@@ -24899,7 +24837,6 @@ module MyQuery3 = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQuery4 = {
   module Raw = {
     type t_variousScalars = {
@@ -25382,7 +25319,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
