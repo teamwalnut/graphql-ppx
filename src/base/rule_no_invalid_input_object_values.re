@@ -38,6 +38,14 @@ module Visitor: Traversal_utils.VisitorSig = {
       type_ |> Schema.innermost_name |> Schema.lookup_type(ctx.schema),
       value.item,
     ) {
+    | (
+        Some(InputObject(obj_meta)),
+        Iv_list([{item: Iv_object(value), _}, ..._]),
+      )
+    // | (
+    //     Some(InputObject(obj_meta)),
+    //     Iv_list([{item: Iv_object(value), _}, ..._]),
+    //   )
     | (Some(InputObject(obj_meta)), Iv_object(value)) =>
       obj_meta.iom_input_fields
       |> List.iter(({Schema.am_arg_type, am_name}) => {

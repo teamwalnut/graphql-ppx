@@ -67,6 +67,7 @@ type Query {
     list: [String]
   ): String!
   invalidObjectValues(nonRec: NonrecursiveInput!, rec: RecursiveInput!): String!
+  invalidObjectValuesLst(embeddedList: [EmbeddedInputReq]!): String!
 
   dogOrHuman: DogOrHuman!
 
@@ -149,6 +150,10 @@ input ListsInput {
 
 input EmbeddedInput {
   field: String
+}
+
+input EmbeddedInputReq {
+  field: String!
 }
 
 input NonrecursiveInput {
