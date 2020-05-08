@@ -1,5 +1,5 @@
 /**
- * Should throw with type "Object"
+ * Should throw with type "InputObject"
  */
 module Case1 = [%graphql
   {|

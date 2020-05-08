@@ -64,7 +64,10 @@ type Query {
     custom: CustomScalar
     obj: EmbeddedInput
     id: ID
+    list: [String]
   ): String!
+  invalidObjectValues(nonRec: NonrecursiveInput!, rec: RecursiveInput!): String!
+  invalidObjectValuesLst(embeddedList: [EmbeddedInputReq]!): String!
 
   dogOrHuman: DogOrHuman!
 
@@ -149,12 +152,17 @@ input EmbeddedInput {
   field: String
 }
 
+input EmbeddedInputReq {
+  field: String!
+}
+
 input NonrecursiveInput {
   nonNullableField: String!
   nullableArray: [String]
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 
 input RecursiveInput {

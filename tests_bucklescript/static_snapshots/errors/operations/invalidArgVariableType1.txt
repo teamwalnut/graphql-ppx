@@ -1,10 +1,10 @@
 We've found a bug for you!
   operations/errors/invalidArgVariableType1.re 9:25-28
   
-   7 ┆ query invalidArgValues($arg: Int) {
+   7 ┆ query invalidArgValues {
    8 ┆   invalidArgValues(
    9 ┆       stringRequired: $arg
   10 ┆   )
   11 ┆ }
   
-  Invalid argument. Expected "String" but received "Int".
+  Invalid argument. The variable "$arg" on argument "stringRequired" is missing.

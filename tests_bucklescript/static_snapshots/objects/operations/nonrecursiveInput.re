@@ -28,6 +28,7 @@ module MyQuery = {
       "enum": Js.Nullable.t(string),
       "embeddedInput":
         Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+      "custom": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
     type nonrec _graphql_NonrecursiveInput_49;
@@ -38,6 +39,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
     let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
@@ -54,6 +56,7 @@ NonrecursiveInput {
     "field": option(string),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
     "embeddedInput": option(array(option(t_variables_EmbeddedInput))),
+    "custom": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. "field": option(string)};
   type nonrec _graphql_NonrecursiveInput_49;
@@ -64,6 +67,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
   let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
@@ -189,6 +193,16 @@ NonrecursiveInput {
         )(
           inp##embeddedInput,
         ),
+      "custom":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##custom,
+        ),
     }
   and serializeInputObjectEmbeddedInput:
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
@@ -213,6 +227,7 @@ NonrecursiveInput {
         ~field=?,
         ~enum=?,
         ~embeddedInput=?,
+        ~custom=?,
         (),
       )
       : t_variables_NonrecursiveInput => {
@@ -221,6 +236,7 @@ NonrecursiveInput {
     "field": field,
     "enum": enum,
     "embeddedInput": embeddedInput,
+    "custom": custom,
   }
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,
@@ -247,6 +263,7 @@ module MyQuery2 = {
       "enum": Js.Nullable.t(string),
       "embeddedInput":
         Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+      "custom": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
     type nonrec _graphql_NonrecursiveInput_169;
@@ -257,6 +274,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
     let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
@@ -269,6 +287,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
     let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
@@ -293,6 +312,7 @@ NonrecursiveInput {
     "field": option(string),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
     "embeddedInput": option(array(option(t_variables_EmbeddedInput))),
+    "custom": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. "field": option(string)};
   type nonrec _graphql_NonrecursiveInput_169;
@@ -303,6 +323,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
   let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
@@ -315,6 +336,7 @@ NonrecursiveInput {
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 ```*/
   let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
@@ -449,6 +471,16 @@ NonrecursiveInput {
         )(
           inp##embeddedInput,
         ),
+      "custom":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##custom,
+        ),
     }
   and serializeInputObjectEmbeddedInput:
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
@@ -473,6 +505,7 @@ NonrecursiveInput {
         ~field=?,
         ~enum=?,
         ~embeddedInput=?,
+        ~custom=?,
         (),
       )
       : t_variables_NonrecursiveInput => {
@@ -481,6 +514,7 @@ NonrecursiveInput {
     "field": field,
     "enum": enum,
     "embeddedInput": embeddedInput,
+    "custom": custom,
   }
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,

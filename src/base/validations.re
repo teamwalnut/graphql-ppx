@@ -11,7 +11,7 @@ module AllRulesImpl =
             Rule_no_undefined_variables.Visitor,
             (
               Multi_visitor.Visitor(
-                Rule_no_invalid_arg_variables.Visitor,
+                Rule_no_invalid_input_object_values.Visitor,
                 (
                   Multi_visitor.Visitor(
                     Rule_all_required_arguments.Visitor,
