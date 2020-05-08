@@ -111,11 +111,14 @@ module Visitor: Traversal_utils.VisitorSig = {
   let enter_string_value = check_pre_value(String);
   let enter_bool_value = check_pre_value(Boolean);
   let enter_object_value = check_pre_value(~reset=true, InputObject);
+  // TODO: For Enum, check enum fields from schema
   let enter_enum_value = check_pre_value(~reset=true, Enum);
   let enter_list_value = (self, ctx, value) => {
     switch (self.arg_type) {
     | Some((_, NonNull(List(_))))
     | Some((_, List(_)))
+    | Some((_, NonNull(T(EmptyList))))
+    | Some((_, T(EmptyList)))
     | None => ()
     | Some((name, arg_type)) =>
       Traversal_utils.Context.push_error(

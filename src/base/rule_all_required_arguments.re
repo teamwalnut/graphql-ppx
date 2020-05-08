@@ -41,7 +41,7 @@ module Visitor: Traversal_utils.VisitorSig = {
                def.item.fd_name.item,
              );
 
-           Context.push_error(ctx, def.span, message);
+           Context.push_error(ctx, def.item.fd_name.span, message);
          };
        });
   };
