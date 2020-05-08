@@ -7,4 +7,4 @@ We've found a bug for you!
   11 ┆     stringRequired: ""
   12 ┆ )
   
-  Invalid argument. Expected "Object" but received "Int".
+  Invalid argument. Expected "InputObject" but received "Int".
