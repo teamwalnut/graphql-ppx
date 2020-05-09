@@ -237,6 +237,8 @@ let extract_template_tag_import_from_config =
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
+let extract_future_added_value_from_config =
+  extract_bool_from_config("future_added_value");
 let extract_definition_from_config = extract_bool_from_config("definition");
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
@@ -251,6 +253,7 @@ type query_config = {
   template_tag_location: option(string),
   template_tag_import: option(string),
   tagged_template: option(bool),
+  future_added_value: option(bool),
 };
 
 let get_query_config = fields => {
@@ -264,6 +267,7 @@ let get_query_config = fields => {
     template_tag_import: extract_template_tag_import_from_config(fields),
     template_tag_location: extract_template_tag_location_from_config(fields),
     tagged_template: extract_tagged_template_config(fields),
+    future_added_value: extract_future_added_value_from_config(fields),
   };
 };
 let empty_query_config = {
@@ -276,6 +280,7 @@ let empty_query_config = {
   template_tag: None,
   template_tag_location: None,
   template_tag_import: None,
+  future_added_value: None,
 };
 
 let get_with_default = (value, default_value) => {
@@ -383,6 +388,11 @@ let rewrite_query =
           switch (query_config.inline) {
           | Some(value) => value
           | None => false
+          },
+        future_added_value:
+          switch (query_config.future_added_value) {
+          | Some(value) => value
+          | None => Ppx_config.future_added_value()
           },
         definition:
           switch (query_config.definition) {
@@ -633,6 +643,14 @@ let args = [
         ),
     ),
     "Defines if output string or AST",
+  ),
+  (
+    "-future-added-value",
+    Arg.Bool(
+      future_added_value =>
+        Ppx_config.update_config(current => {...current, future_added_value}),
+    ),
+    "Omits the `FutureAddedValue variant for enums if set to false",
   ),
   (
     "-o",

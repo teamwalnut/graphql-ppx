@@ -428,6 +428,9 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let key = key.item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let is_omit_future_value =
+    has_directive("ppxOmitFutureValue", ast_field.fd_directives)
+    || !config.future_added_value;
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
   let has_skip =

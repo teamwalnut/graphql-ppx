@@ -17,6 +17,7 @@ type config = {
   template_tag_location: option(string),
   template_tag_import: option(string),
   custom_fields: Hashtbl.t(string, string),
+  future_added_value: bool,
 };
 
 let config_ref = ref(None);
@@ -31,6 +32,9 @@ let verbose_logging = () =>
 let output_mode = () => (config_ref^ |> Option.unsafe_unwrap).output_mode;
 
 let custom_fields = () => (config_ref^ |> Option.unsafe_unwrap).custom_fields;
+
+let future_added_value = () =>
+  (config_ref^ |> Option.unsafe_unwrap).future_added_value;
 
 let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 

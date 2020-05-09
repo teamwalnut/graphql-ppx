@@ -131,6 +131,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         inline: false,
         legacy: false,
         definition: true,
+        future_added_value: Ppx_config.future_added_value(),
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -228,6 +229,7 @@ let () =
       template_tag_location: None,
       template_tag_import: None,
       custom_fields: Hashtbl.create(0),
+      future_added_value: true,
     })
   );
 
@@ -350,6 +352,14 @@ let args = [
         Ppx_config.update_config(current => {...current, schema_file}),
     ),
     "<path/to/schema.json>",
+  ),
+  (
+    "-future-added-value",
+    Arg.Bool(
+      future_added_value =>
+        Ppx_config.update_config(current => {...current, future_added_value}),
+    ),
+    "Omits the `FutureAddedValue variant for enums if set to false",
   ),
   (
     "-ast-out",
