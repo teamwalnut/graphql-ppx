@@ -1,5 +1,6 @@
 open Graphql_ppx_base;
 open Output_bucklescript_utils;
+open Graphql_ast;
 
 open Migrate_parsetree;
 open Ast_408;
@@ -10,6 +11,28 @@ let str_items: ref(list(Parsetree.structure_item)) = ref([]);
 let reset = () => {
   str_items := [];
 };
+
+let generate_text_struct = (name, loc, text) => [
+  Str.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
+  Str.value(
+    Nonrecursive,
+    [
+      Vb.mk(
+        ~attrs=[
+          Docstrings.docs_attr(Docstrings.docstring(text, conv_loc(loc))),
+        ],
+        Ast_helper.Pat.var(Location.mkloc(name, conv_loc(loc))),
+        Exp.constraint_(
+          Exp.apply(
+            Exp.ident(Location.mknoloc(Longident.parse("Obj.magic"))),
+            [(Nolabel, Exp.constant(Pconst_integer("0", None)))],
+          ),
+          Typ.constr(Location.mknoloc(Longident.parse(name)), []),
+        ),
+      ),
+    ],
+  ),
+];
 
 let for_field_arguments =
     (
@@ -25,73 +48,104 @@ let for_field_arguments =
         str_items^,
         ...arguments
            |> List.map(((name, type_): Graphql_ast.argument) => {
-                switch (
-                  fm_arguments
-                  |> List.find_opt(({am_name}: Schema.argument_meta) => {
-                       am_name == name.item
-                     })
-                ) {
-                | None => []
-                | Some({am_arg_type}) =>
-                  let name_loc = config.map_loc(name.span);
-                  let safe_name =
-                    "_graphql_"
-                    ++ name.item
-                    ++ "_"
-                    ++ (name_loc.loc_start.pos_cnum |> string_of_int);
-                  Ast_helper.[
-                    Str.type_(
-                      Nonrecursive,
-                      [Type.mk(Location.mknoloc(safe_name))],
-                    ),
-                    Str.value(
-                      Nonrecursive,
-                      [
-                        Vb.mk(
-                          ~attrs=[
-                            Docstrings.docs_attr(
-                              Docstrings.docstring(
-                                "Argument **"
-                                ++ name.item
-                                ++ "** on field **"
-                                ++ fm_name
-                                ++ "** has the following graphql type:\n\n```\n"
-                                ++ Schema_printer.print_type_from_ref(
-                                     am_arg_type,
-                                     config.schema,
-                                   )
-                                ++ "\n```",
-                                conv_loc(name_loc),
-                              ),
-                            ),
-                          ],
-                          Ast_helper.Pat.var(
-                            Location.mkloc(safe_name, conv_loc(name_loc)),
-                          ),
-                          Exp.constraint_(
-                            Exp.apply(
-                              Exp.ident(
-                                Location.mknoloc(
-                                  Longident.parse("Obj.magic"),
-                                ),
-                              ),
-                              [
-                                (
-                                  Nolabel,
-                                  Exp.constant(Pconst_integer("0", None)),
-                                ),
-                              ],
-                            ),
-                            Typ.constr(
-                              Location.mknoloc(Longident.parse(safe_name)),
-                              [],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ];
-                }
+                List.concat([
+                  switch (type_.item) {
+                  | Iv_variable(var_name) =>
+                    config.full_document
+                    |> List.fold_left(
+                         (p, def) => {
+                           switch (def) {
+                           | Fragment(_)
+                           | Operation({
+                               item: {o_variable_definitions: None},
+                             })
+                           | Operation({
+                               item: {
+                                 o_variable_definitions: Some({item: []}),
+                               },
+                             }) => p
+                           | Operation({
+                               item: {
+                                 o_variable_definitions:
+                                   Some({item as variable_definitions}),
+                               },
+                             }) =>
+                             switch (
+                               variable_definitions
+                               |> List.find_opt(
+                                    (
+                                      (
+                                        s_var_name:
+                                          Source_pos.spanning(string),
+                                        _,
+                                      ),
+                                    ) => {
+                                    s_var_name.item == var_name
+                                  })
+                             ) {
+                             | None => p
+                             | Some((
+                                 s_var_name,
+                                 {vd_type: {item as s_type}},
+                               )) =>
+                               let loc = config.map_loc(type_.span);
+                               let safe_name =
+                                 "_graphql_"
+                                 ++ var_name
+                                 ++ "_"
+                                 ++ (loc.loc_start.pos_cnum |> string_of_int);
+                               List.append(
+                                 p,
+                                 generate_text_struct(
+                                   safe_name,
+                                   loc,
+                                   "Variable **$"
+                                   ++ var_name
+                                   ++ "** has the following graphql type:\n\n```\n"
+                                   ++ Schema_printer.print_type_from_ref(
+                                        s_type |> Type_utils.to_schema_type_ref,
+                                        config.schema,
+                                      )
+                                   ++ "\n```",
+                                 ),
+                               );
+                             }
+                           }
+                         },
+                         [],
+                       )
+                  | _ => []
+                  },
+                  switch (
+                    fm_arguments
+                    |> List.find_opt(({am_name}: Schema.argument_meta) => {
+                         am_name == name.item
+                       })
+                  ) {
+                  | None => []
+                  | Some({am_arg_type}) =>
+                    let name_loc = config.map_loc(name.span);
+                    let safe_name =
+                      "_graphql_"
+                      ++ name.item
+                      ++ "_"
+                      ++ (name_loc.loc_start.pos_cnum |> string_of_int);
+                    generate_text_struct(
+                      safe_name,
+                      name_loc,
+                      "Argument **"
+                      ++ name.item
+                      ++ "** on field **"
+                      ++ fm_name
+                      ++ "** has the following graphql type:\n\n```\n"
+                      ++ Schema_printer.print_type_from_ref(
+                           am_arg_type,
+                           config.schema,
+                         )
+                      ++ "\n```",
+                    );
+                  },
+                ])
               }),
       ])
   };
@@ -180,39 +234,11 @@ let for_input_constraint =
     str_items :=
       List.append(
         str_items^,
-        Ast_helper.[
-          Str.type_(Nonrecursive, [Type.mk(Location.mknoloc(safe_name))]),
-          Str.value(
-            Nonrecursive,
-            [
-              Vb.mk(
-                ~attrs=[
-                  Docstrings.docs_attr(
-                    Docstrings.docstring(
-                      "```\n" ++ printed_type ++ "\n```",
-                      conv_loc(loc_type),
-                    ),
-                  ),
-                ],
-                Ast_helper.Pat.var(
-                  Location.mkloc(safe_name, conv_loc(loc_type)),
-                ),
-                Exp.constraint_(
-                  Exp.apply(
-                    Exp.ident(
-                      Location.mknoloc(Longident.parse("Obj.magic")),
-                    ),
-                    [(Nolabel, Exp.constant(Pconst_integer("0", None)))],
-                  ),
-                  Typ.constr(
-                    Location.mknoloc(Longident.parse(safe_name)),
-                    [],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        generate_text_struct(
+          safe_name,
+          loc_type,
+          "```\n" ++ printed_type ++ "\n```",
+        ),
       );
   | (None, _)
   | (_, None) => ()
@@ -230,37 +256,16 @@ let for_fragment =
   ) {
   | None => ()
   | Some(printed_type) =>
-    let loc = conv_loc(config.map_loc(fragment.item.fg_type_condition.span));
-    let doc_string =
-      Docstrings.docstring("```\n" ++ printed_type ++ "\n```", loc);
+    let loc = config.map_loc(fragment.item.fg_type_condition.span);
 
     str_items :=
       List.append(
         str_items^,
-        [
-          [%stri type graphql],
-          Str.value(
-            Nonrecursive,
-            [
-              Vb.mk(
-                ~attrs=[Docstrings.docs_attr(doc_string)],
-                Ast_helper.Pat.var(Location.mkloc("_", loc)),
-                Exp.constraint_(
-                  Exp.apply(
-                    Exp.ident(
-                      Location.mknoloc(Longident.parse("Obj.magic")),
-                    ),
-                    [(Nolabel, Exp.constant(Pconst_integer("0", None)))],
-                  ),
-                  Typ.constr(
-                    Location.mknoloc(Longident.parse("graphql")),
-                    [],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        generate_text_struct(
+          "graphql",
+          loc,
+          "```\n" ++ printed_type ++ "\n```",
+        ),
       );
   };
 };
