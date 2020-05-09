@@ -2,6 +2,8 @@
 title: Getting Started
 ---
 
+## Our first query
+
 Let's create our first query with GraphQL ppx. In this case we will write a
 query to fetch the current user. We can create a query with the following code.
 
@@ -53,14 +55,15 @@ So once we successfully get data back from the server it is of type `Js.Json.t`.
 To work with it we can typecast it into `UserQuery.Raw.t`.
 
 ```reason
-let typedData = (Obj.magic(data): UserQuery.Raw.t)
+let typedData = UserQuery.cast(data)
 ```
 
-`Obj.magic` is a helper function that allows us to tell the compiler that we
-know a result is of a certain type. With GraphQL ppx we know this because this
-has been deduced from our schema. This allows us to convert the generic
-`Js.Json.t` to richer and more specific type. To get the user's id, we can get
-it like we are used to in ReasonML:
+`UserQuery.cast` is a helper function that will cast a Js.Json.t to the GraphQL
+`Raw` type. In JavaScript this will not generate any code, it will just tell the
+compiler to cast it into the `Raw` type. With GraphQL we know that if we get a
+response that this conforms to the shape of our query. This allows us to convert
+the generic `Js.Json.t` to richer and more specific type. To get the user's id,
+we can get it like we are used to in ReasonML:
 
 ```reason
 let userName = typedData.user.id
@@ -74,6 +77,8 @@ let userName = switch(user) {
   | {user: {id}} => id
 }
 ```
+
+## Parsing data
 
 However it's not perfect. In this example it would be nice if the user's name
 could be converted to a more idiomatic ReasonML data structure like an `option`
@@ -98,9 +103,17 @@ let name = switch(parsedData) {
 Also in some cases the JSON data can not be directly represented by a ReasonML
 type. For instance in case of a union, ReasonML doesn't allow arrays to contain
 values with different types, so it cannot be directly mapped. In those cases the
-raw type will be an _opaque_ type. When the raw result is parsed it is converted
-to a list of a variant.
+raw type will be an _opaque_ type[^1]. When the raw result is parsed it is
+converted to a list of a variant.
 
 Usually you will not be working with the raw type. This is an implementation
 detail that is normally only used inside of the GraphQL client. In most cases
 the parsed result will be what you get back from the library.
+
+## Fragments
+
+## Using a client
+
+[^1]:
+  An opaque type is essentially a value that you can't access directly. So the
+  value is _opaque_ to the user

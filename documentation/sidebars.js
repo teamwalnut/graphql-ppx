@@ -16,7 +16,7 @@ module.exports = {
       "serialization",
     ],
     "API Reference": ["query", "mutation", "fragment"],
-    Guides: ["using-with-apollo", "using-with-gatsby"],
+    Guides: ["extending-graphql-ppx", "using-with-apollo", "using-with-gatsby"],
     Advanced: [
       "parse-and-serialize",
       "using-custom-records",

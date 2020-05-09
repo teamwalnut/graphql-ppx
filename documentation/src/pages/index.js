@@ -19,7 +19,7 @@ function Home() {
           <div className={styles.heroInner}>
             <h1 className={styles.heroProjectTagline}>
               <img
-                alt="GraphQL PPX"
+                alt="Graphql-ppx"
                 className={styles.heroLogo}
                 src={useBaseUrl("img/logo.svg")}
               />

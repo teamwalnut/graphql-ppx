@@ -1,5 +1,5 @@
 module.exports = {
-  title: "GraphQL PPX",
+  title: "Graphql-ppx",
   tagline: "GraphQL infrastructure for ReasonML",
   url: "https://graphql-ppx.com",
   baseUrl: "/",
@@ -13,7 +13,7 @@ module.exports = {
       darkTheme: require("prism-react-renderer/themes/oceanicNext"),
     },
     navbar: {
-      title: "Graphql PPX",
+      title: "Graphql-ppx",
       logo: {
         alt: "GraphQL Logo",
         src: "img/logo.svg",
