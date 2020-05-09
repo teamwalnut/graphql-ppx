@@ -487,6 +487,10 @@ let mapper = (_config, _cookies) => {
                            Some(name)
                          | _ => None
                          };
+                       Output_bucklescript_docstrings.for_module_information(
+                         loc,
+                         module_name,
+                       );
                        switch (pstr) {
                        | PStr([
                            {
