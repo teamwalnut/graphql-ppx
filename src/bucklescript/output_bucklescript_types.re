@@ -738,37 +738,29 @@ let generate_input_object =
 let generate_arg_types = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
+  // Add to internal module
+  if (!raw) {
+    input_objects
+    |> List.iter((InputObject({name, fields})) => {
+         switch (name) {
+         | None =>
+           fields
+           |> List.iter(field => {
+                Output_bucklescript_docstrings.for_input_constraint(
+                  config,
+                  field,
+                )
+              })
+         | Some(_) => ()
+         }
+       });
+  };
+
   [
     input_objects
     |> List.map((InputObject({name, fields})) => {
          generate_input_object(raw, config, name, fields)
        })
     |> Ast_helper.Str.type_(Recursive),
-    ...input_objects
-       |> List.fold_left(
-            (p, InputObject({name, fields})) => {
-              switch (name) {
-              | None =>
-                List.append(
-                  p,
-                  fields
-                  |> List.fold_left(
-                       (p, field) => {
-                         List.append(
-                           p,
-                           Output_bucklescript_docstrings.for_input_constraint(
-                             config,
-                             field,
-                           ),
-                         )
-                       },
-                       [],
-                     ),
-                )
-              | Some(_) => p
-              }
-            },
-            [],
-          ),
   ];
 };
