@@ -4,12 +4,15 @@ type source_position = {
   col: int,
 };
 
+type span = (source_position, source_position);
 type spanning('a) = {
   item: 'a,
-  span: (source_position, source_position),
+  span,
 };
 
 let origin = {index: 0, line: 0, col: 0};
+let nopos = {index: (-1), line: (-1), col: (-1)};
+let nospan = (nopos, nopos);
 
 let advance_line = ({index, line, col: _}) => {
   index: index + 1,

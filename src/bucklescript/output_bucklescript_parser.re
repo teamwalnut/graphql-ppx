@@ -12,6 +12,19 @@ open Output_bucklescript_utils;
 open Output_bucklescript_types;
 open Extract_type_definitions;
 
+// Cheap way of preventing location override from types module
+// Might refactor this later
+let conv_loc = _ => Location.none;
+
+let record_to_object = (loc, record) => {
+  Ast_helper.(
+    Exp.extension((
+      {txt: "bs.obj", loc: conv_loc(loc)},
+      PStr([[%stri [%e record]]]),
+    ))
+  );
+};
+
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
   | Tr_named({item: name}) => name
@@ -111,7 +124,7 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
   let match_expr =
     Ast_helper.(
       Exp.match(
-        [%expr Obj.magic(value: string)],
+        [@metaloc conv_loc(loc)] [%expr Obj.magic(value: string)],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
@@ -153,6 +166,7 @@ let generate_solo_fragment_spread_decoder =
 };
 
 let generate_error = (loc, message) => {
+  let loc = Output_bucklescript_utils.conv_loc(loc);
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;
   %e
@@ -186,8 +200,21 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) =>
     );
   }
 and generate_object_decoder =
-    (config, loc, name, fields, path, definition, existing_record) => {
-  let do_obj_constructor_base = is_object => {
+    (
+      config,
+      loc,
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+      force_record,
+    ) => {
+  // whether we can use inline values, this compiles to better javascript
+  // but we can't use this if we are constructing objects instead of records
+  let inline_values = config.records;
+  let do_obj_constructor_base = (is_object, wrap) => {
+    open Ast_helper;
     let opaque =
       fields
       |> List.exists(
@@ -196,87 +223,112 @@ and generate_object_decoder =
            | _ => false,
          );
     let object_type = base_type_name("Raw." ++ generate_type_name(path));
-    Ast_helper.(
+
+    let get_value =
+      fun
+      | Fr_named_field({name as key, type_ as inner}) =>
+        [@metaloc conv_loc(loc)]
+        {
+          let%expr value =
+            switch%e (opaque, is_object) {
+            | (true, _) =>
+              %expr
+              Obj.magic(
+                Js.Dict.unsafeGet(
+                  Obj.magic(value),
+                  [%e const_str_expr(key)],
+                ),
+              )
+
+            | (_, true) =>
+              %expr
+              value##[%e ident_from_string(to_valid_ident(key))]
+            | (_, false) =>
+              %expr
+              [%e
+                Ast_helper.Exp.field(
+                  Exp.constraint_(ident_from_string("value"), object_type),
+                  {
+                    loc: Location.none,
+                    Location.txt: Longident.parse(to_valid_ident(key)),
+                  },
+                )
+              ]
+            };
+
+          %e
+          generate_parser(config, [key, ...path], definition, inner);
+        }
+
+      | Fr_fragment_spread(key, loc, name, _, arguments) =>
+        [@metaloc conv_loc(loc)]
+        {
+          let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
+            Obj.magic(value);
+          %e
+          generate_fragment_parse_fun(
+            config,
+            conv_loc(loc),
+            name,
+            arguments,
+            definition,
+          );
+        };
+
+    let get_record_contents =
+      fun
+      | Fr_fragment_spread(key, _, _, _, _)
+      | Fr_named_field({name: key}) => (
+          {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
+          ident_from_string(to_valid_ident(key)),
+        );
+
+    let get_record_contents_inline =
+      fun
+      | Fr_fragment_spread(key, _, _, _, _) as field
+      | Fr_named_field({name: key}) as field => (
+          {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
+          get_value(field),
+        );
+
+    let record =
       Exp.record(
-        fields
-        |> List.map(
-             fun
-             | Fr_named_field(key, _, inner) => (
-                 {txt: Longident.parse(to_valid_ident(key)), loc},
-                 {
-                   let%expr value =
-                     switch%e (opaque, is_object) {
-                     | (true, _) =>
-                       %expr
-                       Obj.magic(
-                         Js.Dict.unsafeGet(
-                           Obj.magic(value),
-                           [%e const_str_expr(key)],
-                         ),
-                       )
-
-                     | (_, true) =>
-                       %expr
-                       value##[%e ident_from_string(to_valid_ident(key))]
-                     | (_, false) =>
-                       %expr
-                       [%e
-                         Ast_helper.Exp.field(
-                           Exp.constraint_(
-                             ident_from_string("value"),
-                             object_type,
-                           ),
-                           {
-                             loc: Location.none,
-                             Location.txt:
-                               Longident.parse(to_valid_ident(key)),
-                           },
-                         )
-                       ]
-                     };
-
-                   %e
-                   generate_parser(
-                     config,
-                     [key, ...path],
-                     definition,
-                     inner,
-                   );
-                 },
-               )
-             | Fr_fragment_spread(key, loc, name, _, arguments) => {
-                 (
-                   {txt: Longident.parse(key), loc: conv_loc(loc)},
-                   {
-                     let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
-                       Obj.magic(value);
-                     %e
-                     generate_fragment_parse_fun(
-                       config,
-                       conv_loc(loc),
-                       name,
-                       arguments,
-                       definition,
-                     );
-                   },
-                 );
-               },
-           ),
+        List.map(
+          inline_values ? get_record_contents_inline : get_record_contents,
+          fields,
+        ),
         None,
-      )
-    );
+      );
+
+    let record = wrap ? record_to_object(loc, record) : record;
+
+    inline_values
+      ? record
+      : {
+        let bindings =
+          fields
+          |> List.map(
+               fun
+               | Fr_named_field({name}) as field => (name, field)
+               | Fr_fragment_spread(key, _, _, _, _) as field => (
+                   key,
+                   field,
+                 ),
+             )
+          |> List.map(((key, field)) => {
+               Vb.mk(
+                 Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
+                 get_value(field),
+               )
+             })
+          |> List.rev;
+        Exp.let_(Nonrecursive, bindings, record);
+      };
   };
   let do_obj_constructor = () =>
     [@metaloc loc]
     {
-      Ast_408.(
-        Ast_helper.(
-          Exp.extension((
-            {txt: "bs.obj", loc},
-            PStr([[%stri [%e do_obj_constructor_base(true)]]]),
-          ))
-        )
-      );
+      do_obj_constructor_base(true, true);
     };
 
   let do_obj_constructor_records = () =>
@@ -284,7 +336,7 @@ and generate_object_decoder =
     {
       Ast_helper.(
         Exp.constraint_(
-          do_obj_constructor_base(false),
+          do_obj_constructor_base(!config.records, false),
           base_type_name(
             switch (existing_record) {
             | None => generate_type_name(path)
@@ -295,40 +347,38 @@ and generate_object_decoder =
       );
     };
 
-  config.records ? do_obj_constructor_records() : do_obj_constructor();
+  config.records || existing_record != None || force_record
+    ? do_obj_constructor_records() : do_obj_constructor();
 }
 and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [({item: field}: Result_structure.name, inner), ...next] => {
         let field_name = Compat.capitalize_ascii(field);
         let variant_decoder =
           Ast_helper.(
             Exp.variant(
               field_name,
               Some(
-                generate_parser(
-                  config,
-                  [field_name, ...path],
-                  definition,
-                  inner,
-                ),
+                generate_parser(config, [field, ...path], definition, inner),
               ),
             )
           );
+        [@metaloc loc]
+        {
+          let%expr temp =
+            Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
 
-        let%expr temp =
-          Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
-
-        switch (Js.Json.decodeNull(temp)) {
-        | None =>
-          let value = temp;
-          %e
-          variant_decoder;
-        | Some(_) =>
-          %e
-          generator_loop(next)
+          switch (Js.Json.decodeNull(temp)) {
+          | None =>
+            let value = temp;
+            %e
+            variant_decoder;
+          | Some(_) =>
+            %e
+            generator_loop(next)
+          };
         };
       }
     | [] =>
@@ -403,16 +453,18 @@ and generate_poly_variant_interface_decoder =
     );
 
   [@metaloc loc]
-  let%expr typename: string =
-    Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  {
+    let%expr typename: string =
+      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  };
 }
 and generate_poly_variant_union_decoder =
     (config, loc, name, fragments, exhaustive_flag, path, definition) => {
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
            Ast_helper.(
              Exp.case(
                const_str_pat(type_name),
@@ -421,9 +473,14 @@ and generate_poly_variant_union_decoder =
                  Some(
                    {
                      let%expr value: [%t
-                       base_type_name(
-                         "Raw." ++ generate_type_name([type_name, ...path]),
-                       )
+                       switch (inner) {
+                       | Res_solo_fragment_spread(_, name, _) =>
+                         base_type_name(name ++ ".Raw.t")
+                       | _ =>
+                         base_type_name(
+                           "Raw." ++ generate_type_name([type_name, ...path]),
+                         )
+                       }
                      ] =
                        Obj.magic(value);
                      %e
@@ -473,9 +530,11 @@ and generate_poly_variant_union_decoder =
     );
 
   [@metaloc loc]
-  let%expr typename: string =
-    Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-  ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  {
+    let%expr typename: string =
+      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+  };
 }
 and generate_parser = (config, path: list(string), definition) =>
   fun
@@ -503,22 +562,24 @@ and generate_parser = (config, path: list(string), definition) =>
   | Res_record(loc, name, fields, existing_record) =>
     generate_object_decoder(
       config,
-      conv_loc(loc),
+      loc,
       name,
       fields,
       path,
       definition,
       existing_record,
+      true,
     )
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_decoder(
       config,
-      conv_loc(loc),
+      loc,
       name,
       fields,
       path,
       definition,
       existing_record,
+      false,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union_decoder(
@@ -558,4 +619,4 @@ and generate_parser = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
+  | Res_error(loc, message) => generate_error(loc, message);

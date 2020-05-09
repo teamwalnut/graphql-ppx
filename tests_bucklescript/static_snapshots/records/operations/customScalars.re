@@ -18,18 +18,23 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {customScalarField: t_customScalarField}
-    and t_customScalarField = {
+    type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),
       nonNullable: Js.Json.t,
     };
+    type t = {customScalarField: t_customScalarField};
+    type t_variables = {
+      opt: Js.Nullable.t(Js.Json.t),
+      req: Js.Json.t,
+    };
   };
   let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n";
-  type t = {customScalarField: t_customScalarField}
-  and t_customScalarField = {
+  type t_customScalarField = {
     nullable: option(Js.Json.t),
     nonNullable: Js.Json.t,
   };
+  type t = {customScalarField: t_customScalarField};
+  type operation = t;
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
@@ -37,24 +42,19 @@ module MyQuery = {
   let parse: Raw.t => t =
     (value) => (
       {
-
         customScalarField: {
           let value = (value: Raw.t).customScalarField;
           (
             {
-
               nullable: {
                 let value = (value: Raw.t_customScalarField).nullable;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               nonNullable: {
                 let value = (value: Raw.t_customScalarField).nonNullable;
-
                 value;
               },
             }: t_customScalarField
@@ -71,72 +71,37 @@ module MyQuery = {
             {
               let nonNullable = {
                 let value = (value: t_customScalarField).nonNullable;
-
                 value;
               }
               and nullable = {
                 let value = (value: t_customScalarField).nullable;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                nullable,
-
-                nonNullable,
-              };
+              {nullable, nonNullable};
             }: Raw.t_customScalarField
           );
         };
-        {
-
-          customScalarField: customScalarField,
-        };
+        {customScalarField: customScalarField};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      opt:
         (
-          "opt",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(a))(b)
-              }
-          )(
-            inp.opt,
-          ),
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables).opt,
         ),
-        ("req", (a => Some(a))(inp.req)),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~opt=?, ~req, ()) =>
-    f(
-      serializeVariables(
-        {
-
-          opt,
-
-          req,
-        }: t_variables,
-      ),
-    );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+      req: (a => a)((inp: t_variables).req),
+    };
+  let makeVariables = (~opt=?, ~req, ()) =>
+    serializeVariables({opt, req}: t_variables);
+  let definition = (parse, query, serialize);
 };

@@ -58,7 +58,7 @@ let rec ser_value =
   | {item: Iv_float(f), _} =>
     `Assoc([
       ("kind", `String("FloatValue")),
-      ("value", `String(string_of_float(f))),
+      ("value", `String(Printf.sprintf("%.16g", f))),
     ])
   | {item: Iv_string(s), _} =>
     `Assoc([("kind", `String("StringValue")), ("value", `String(s))])

@@ -18,54 +18,51 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {
-      v1: t_v1,
-      v2: t_v2,
-    }
-    and t_v2 = {
-      nullableString: Js.Nullable.t(string),
-      string: Js.Nullable.t(string),
-    }
-    and t_v1 = {
+    type t_v1 = {
       nullableString: Js.Nullable.t(string),
       string: Js.Nullable.t(string),
     };
+    type t_v2 = {
+      nullableString: Js.Nullable.t(string),
+      string: Js.Nullable.t(string),
+    };
+    type t = {
+      v1: t_v1,
+      v2: t_v2,
+    };
+    type t_variables = {var: bool};
   };
   let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
+  type t_v1 = {
+    nullableString: option(string),
+    string: option(string),
+  };
+  type t_v2 = {
+    nullableString: option(string),
+    string: option(string),
+  };
   type t = {
     v1: t_v1,
     v2: t_v2,
-  }
-  and t_v2 = {
-    nullableString: option(string),
-    string: option(string),
-  }
-  and t_v1 = {
-    nullableString: option(string),
-    string: option(string),
   };
+  type operation = t;
   type t_variables = {var: bool};
   let parse: Raw.t => t =
     (value) => (
       {
-
         v1: {
           let value = (value: Raw.t).v1;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v1).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v1).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -74,24 +71,19 @@ module MyQuery = {
             }: t_v1
           );
         },
-
         v2: {
           let value = (value: Raw.t).v2;
           (
             {
-
               nullableString: {
                 let value = (value: Raw.t_v2).nullableString;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
                 };
               },
-
               string: {
                 let value = (value: Raw.t_v2).string;
-
                 switch (Js.toOption(value)) {
                 | Some(value) => Some(value)
                 | None => None
@@ -111,7 +103,6 @@ module MyQuery = {
             {
               let string = {
                 let value = (value: t_v2).string;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
@@ -119,18 +110,12 @@ module MyQuery = {
               }
               and nullableString = {
                 let value = (value: t_v2).nullableString;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                nullableString,
-
-                string,
-              };
+              {nullableString, string};
             }: Raw.t_v2
           );
         }
@@ -140,7 +125,6 @@ module MyQuery = {
             {
               let string = {
                 let value = (value: t_v1).string;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
@@ -148,53 +132,21 @@ module MyQuery = {
               }
               and nullableString = {
                 let value = (value: t_v1).nullableString;
-
                 switch (value) {
                 | Some(value) => Js.Nullable.return(value)
                 | None => Js.Nullable.null
                 };
               };
-              {
-
-                nullableString,
-
-                string,
-              };
+              {nullableString, string};
             }: Raw.t_v1
           );
         };
-        {
-
-          v1,
-
-          v2,
-        };
+        {v1, v2};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("var", (a => Some(Js.Json.boolean(a)))(inp.var))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~var, ()) =>
-    f(
-      serializeVariables(
-        {
-
-          var: var,
-        }: t_variables,
-      ),
-    );
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {var: (a => a)((inp: t_variables).var)};
+  let makeVariables = (~var, ()) =>
+    serializeVariables({var: var}: t_variables);
+  let definition = (parse, query, serialize);
 };

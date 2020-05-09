@@ -19,64 +19,41 @@
 module MyQuery = {
   module Raw = {
     type t = {. "argNamedQuery": int};
+    type t_variables = {. "query": int};
   };
-  let query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
+  let query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {. "argNamedQuery": int};
-  type t_variables = {. "query": string};
+  type operation = t;
+  type t_variables = {. "query": int};
   let parse: Raw.t => t =
     value => {
-
-      "argNamedQuery": {
+      let argNamedQuery = {
         let value = value##argNamedQuery;
-
         value;
-      },
+      };
+      {"argNamedQuery": argNamedQuery};
     };
   let serialize: t => Raw.t =
     value => {
       let argNamedQuery = {
         let value = value##argNamedQuery;
-
         value;
       };
-      {
-
-        "argNamedQuery": argNamedQuery,
-      };
+      {"argNamedQuery": argNamedQuery};
     };
-  let serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|("query", (a => Some(Js.Json.string(a)))(inp##query))|]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~query, ()) =>
-    f(
-      serializeVariables(
-        {
-
-          "query": query,
-        }: t_variables,
-      ),
-    );
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {"query": (a => a)(inp##query)};
+  let make = (~query, ()) => {
+    "query": query,
+    "variables": serializeVariables({"query": query}: t_variables),
+    "parse": parse,
+  }
+  and makeVariables = (~query, ()) =>
+    serializeVariables({"query": query}: t_variables);
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
 };

@@ -4,24 +4,37 @@ open Source_pos;
 
 open Output_bucklescript_utils;
 
-let add_pos = (delimLength, base, pos) => {
-  let (_, _, col) = Location.get_pos_info(conv_pos(base));
-  {
-    pos_fname: base.pos_fname,
-    pos_lnum: base.pos_lnum + pos.line,
-    pos_bol: 0,
-    pos_cnum:
-      switch (pos.line) {
-      | 0 => delimLength + col + pos.col
-      | _ => pos.col
-      },
-  };
-};
-
 let add_loc = (delimLength, base, span) => {
-  loc_start: add_pos(delimLength, base.loc_start, fst(span)),
-  loc_end: add_pos(delimLength, base.loc_start, snd(span)),
-  loc_ghost: false,
+  let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
+  let pos_bol_start =
+    base.loc_start.pos_bol
+    + col
+    + delimLength
+    + fst(span).index
+    - fst(span).col;
+  let pos_bol_end =
+    base.loc_start.pos_bol
+    + col
+    + delimLength
+    + snd(span).index
+    - snd(span).col;
+  let start = pos_bol_start + fst(span).col;
+  let end_ = pos_bol_end + snd(span).col;
+  {
+    loc_start: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + fst(span).line,
+      pos_bol: pos_bol_start,
+      pos_cnum: start,
+    },
+    loc_end: {
+      pos_fname: base.loc_start.pos_fname,
+      pos_lnum: base.loc_start.pos_lnum + snd(span).line,
+      pos_bol: pos_bol_end,
+      pos_cnum: end_,
+    },
+    loc_ghost: false,
+  };
 };
 
 let fmt_lex_err = err =>
@@ -272,15 +285,45 @@ let get_with_default = (value, default_value) => {
   };
 };
 
+let get_template_tag = query_config => {
+  switch (query_config.tagged_template) {
+  | Some(false) => (None, None, None)
+  | _ =>
+    switch (
+      get_with_default(query_config.template_tag, global_template_tag()),
+      get_with_default(
+        query_config.template_tag_location,
+        global_template_tag_location(),
+      ),
+      get_with_default(
+        query_config.template_tag_import,
+        global_template_tag_import(),
+      ),
+    ) {
+    | (Some(tag), Some(location), Some(import)) => (
+        Some(tag),
+        Some(location),
+        Some(import),
+      )
+    | (None, Some(location), Some(import)) => (
+        Some(import),
+        Some(location),
+        Some(import),
+      )
+    | (Some(tag), Some(location), None) => (
+        Some(tag),
+        Some(location),
+        Some("default"),
+      )
+    | (Some(tag), None, Some(_))
+    | (Some(tag), None, None) => (Some(tag), None, None)
+    | (None, _, _) => (None, None, None)
+    }
+  };
+};
+
 let rewrite_query =
-    (
-      ~query_config: query_config,
-      ~loc,
-      ~delim,
-      ~query,
-      ~module_definition,
-      (),
-    ) => {
+    (~query_config: query_config, ~loc, ~delim, ~query, ~module_name, ()) => {
   open Ast_408;
   open Ast_helper;
 
@@ -313,44 +356,17 @@ let rewrite_query =
         ),
       )
     | Result.Ok(document) =>
-      let template_tag =
-        switch (query_config.tagged_template) {
-        | Some(false) => (None, None, None)
-        | _ =>
-          switch (
-            get_with_default(
-              query_config.template_tag,
-              global_template_tag(),
-            ),
-            get_with_default(
-              query_config.template_tag_location,
-              global_template_tag_location(),
-            ),
-            get_with_default(
-              query_config.template_tag_import,
-              global_template_tag_import(),
-            ),
-          ) {
-          | (Some(tag), Some(location), Some(import)) => (
-              Some(tag),
-              Some(location),
-              Some(import),
-            )
-          | (None, Some(location), Some(import)) => (
-              Some(import),
-              Some(location),
-              Some(import),
-            )
-          | (Some(tag), Some(location), None) => (
-              Some(tag),
-              Some(location),
-              Some("default"),
-            )
-          | (Some(tag), None, Some(_))
-          | (Some(tag), None, None) => (Some(tag), None, None)
-          | (None, _, _) => (None, None, None)
+      let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+      let document =
+        (
+          if (Ppx_config.apollo_mode()) {
+            document |> Ast_transforms.add_typename_to_selection_set(schema);
+          } else {
+            document;
           }
-        };
+        )
+        |> Ast_transforms.remove_typename_from_union(schema);
+      let template_tag = get_template_tag(query_config);
 
       let config = {
         Generator_utils.map_loc: add_loc(delimLength, loc),
@@ -375,57 +391,46 @@ let rewrite_query =
           },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(query_config.schema)),
+        schema,
         template_tag,
       };
       switch (Validations.run_validators(config, document)) {
-      | Some(errs) =>
+      | (Some(errs), _) =>
         let errs =
           errs
+          |> List.rev
           |> List.map(((loc, msg)) => {
                let loc = conv_loc(loc);
                %stri
                [%e make_error_expr(loc, msg)];
              });
         [errs];
-      | None =>
+      | (None, warnings) =>
+        warnings
+        |> List.iter(((loc, message)) => {
+             let loc = conv_loc(loc);
+             let loc_as_ghost = {...loc, loc_ghost: true};
+             Location.print_alert(
+               loc,
+               Location.formatter_for_warnings^,
+               {
+                 kind: "deprecated",
+                 message,
+                 def: loc_as_ghost,
+                 use: loc_as_ghost,
+               },
+             );
+             ();
+           });
         Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(
-             config,
-             module_definition,
-           )
+        |> Output_bucklescript_module.generate_modules(config, module_name);
       };
     };
   };
 };
 
 // Default configuration
-let () =
-  Ppx_config.(
-    set_config({
-      verbose_logging: false,
-      output_mode: Ppx_config.String,
-      verbose_error_handling:
-        switch (Sys.getenv("NODE_ENV")) {
-        | "production" => false
-        | _ => true
-        | exception Not_found => true
-        },
-      apollo_mode: false,
-      schema_file: "graphql_schema.json",
-      root_directory: Sys.getcwd(),
-      raise_error_with_loc: (loc, message) => {
-        let loc = conv_loc(loc);
-        raise(Location.Error(Location.error(~loc, message)));
-      },
-      records: true,
-      legacy: false,
-      template_tag: None,
-      template_tag_location: None,
-      template_tag_import: None,
-      definition: true,
-    })
-  );
+let () = Bucklescript_config.read_config();
 
 let mapper = (_config, _cookies) => {
   Ast_408.(
@@ -433,97 +438,21 @@ let mapper = (_config, _cookies) => {
       Parsetree.(
         Asttypes.{
           ...default_mapper,
-          module_expr: (mapper, mexpr) =>
-            switch (mexpr) {
-            | {pmod_desc: Pmod_extension(({txt: "graphql", loc}, pstr)), _} =>
-              switch (pstr) {
-              | PStr([
-                  {
-                    pstr_desc:
-                      Pstr_eval(
-                        {
-                          pexp_loc: loc,
-                          pexp_desc:
-                            Pexp_constant(Pconst_string(query, delim)),
-                          _,
-                        },
-                        _,
-                      ),
-                    _,
-                  },
-                  {
-                    pstr_desc:
-                      Pstr_eval(
-                        {pexp_desc: Pexp_record(fields, None), _},
-                        _,
-                      ),
-                    _,
-                  },
-                ]) =>
-                Ast_helper.(
-                  Mod.mk(
-                    Pmod_structure(
-                      List.concat(
-                        rewrite_query(
-                          ~query_config=get_query_config(fields),
-                          ~loc=conv_loc_from_ast(loc),
-                          ~delim,
-                          ~query,
-                          ~module_definition=true,
-                          (),
-                        ),
-                      ),
-                    ),
-                  )
-                )
-              | PStr([
-                  {
-                    pstr_desc:
-                      Pstr_eval(
-                        {
-                          pexp_loc: loc,
-                          pexp_desc:
-                            Pexp_constant(Pconst_string(query, delim)),
-                          _,
-                        },
-                        _,
-                      ),
-                    _,
-                  },
-                ]) =>
-                Ast_helper.(
-                  Mod.mk(
-                    Pmod_structure(
-                      List.concat(
-                        rewrite_query(
-                          ~query_config=empty_query_config,
-                          ~loc=conv_loc_from_ast(loc),
-                          ~delim,
-                          ~query,
-                          ~module_definition=true,
-                          (),
-                        ),
-                      ),
-                    ),
-                  )
-                )
-              | _ =>
-                raise(
-                  Location.Error(
-                    Location.error(
-                      ~loc,
-                      "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-                    ),
-                  ),
-                )
-              }
-            | other => default_mapper.module_expr(mapper, other)
-            },
           structure: (mapper, struc) => {
             struc
             |> List.fold_left(
                  acc =>
                    fun
+                   | {
+                       pstr_desc:
+                         Pstr_module({
+                           pmb_name: {txt: _},
+                           pmb_expr: {
+                             pmod_desc:
+                               Pmod_extension(({txt: "graphql", loc}, pstr)),
+                           },
+                         }),
+                     } as item
                    | {
                        pstr_desc:
                          Pstr_eval(
@@ -533,7 +462,7 @@ let mapper = (_config, _cookies) => {
                            },
                            _,
                          ),
-                     }
+                     } as item
                    | {
                        pstr_desc:
                          Pstr_value(
@@ -551,93 +480,100 @@ let mapper = (_config, _cookies) => {
                              },
                            ],
                          ),
-                     } =>
-                     switch (pstr) {
-                     | PStr([
-                         {
-                           pstr_desc:
-                             Pstr_eval(
-                               {
-                                 pexp_loc: loc,
-                                 pexp_desc:
-                                   Pexp_constant(
-                                     Pconst_string(query, delim),
-                                   ),
+                     } as item => {
+                       let module_name =
+                         switch (item) {
+                         | {pstr_desc: Pstr_module({pmb_name: {txt: name}})} =>
+                           Some(name)
+                         | _ => None
+                         };
+                       switch (pstr) {
+                       | PStr([
+                           {
+                             pstr_desc:
+                               Pstr_eval(
+                                 {
+                                   pexp_loc: loc,
+                                   pexp_desc:
+                                     Pexp_constant(
+                                       Pconst_string(query, delim),
+                                     ),
+                                   _,
+                                 },
                                  _,
-                               },
-                               _,
-                             ),
-                           _,
-                         },
-                         {
-                           pstr_desc:
-                             Pstr_eval(
-                               {pexp_desc: Pexp_record(fields, None), _},
-                               _,
-                             ),
-                           _,
-                         },
-                       ]) =>
-                       List.append(
-                         acc,
-                         List.concat(
+                               ),
+                             _,
+                           },
+                           {
+                             pstr_desc:
+                               Pstr_eval(
+                                 {pexp_desc: Pexp_record(fields, None), _},
+                                 _,
+                               ),
+                             _,
+                           },
+                         ]) =>
+                         List.append(
                            rewrite_query(
                              ~query_config=get_query_config(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
-                             ~module_definition=false,
+                             ~module_name,
                              (),
-                           ),
-                         ),
-                       )
-                     | PStr([
-                         {
-                           pstr_desc:
-                             Pstr_eval(
-                               {
-                                 pexp_loc: loc,
-                                 pexp_desc:
-                                   Pexp_constant(
-                                     Pconst_string(query, delim),
-                                   ),
+                           )
+                           |> List.concat
+                           |> List.rev,
+                           acc,
+                         )
+                       | PStr([
+                           {
+                             pstr_desc:
+                               Pstr_eval(
+                                 {
+                                   pexp_loc: loc,
+                                   pexp_desc:
+                                     Pexp_constant(
+                                       Pconst_string(query, delim),
+                                     ),
+                                   _,
+                                 },
                                  _,
-                               },
-                               _,
-                             ),
-                           _,
-                         },
-                       ]) =>
-                       List.append(
-                         acc,
-                         List.concat(
+                               ),
+                             _,
+                           },
+                         ]) =>
+                         List.append(
                            rewrite_query(
                              ~query_config=empty_query_config,
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
-                             ~module_definition=false,
+                             ~module_name,
                              (),
+                           )
+                           |> List.concat
+                           |> List.rev,
+                           acc,
+                         )
+                       | _ =>
+                         raise(
+                           Location.Error(
+                             Location.error(
+                               ~loc,
+                               "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                             ),
                            ),
-                         ),
-                       )
-                     | _ =>
-                       raise(
-                         Location.Error(
-                           Location.error(
-                             ~loc,
-                             "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-                           ),
-                         ),
-                       )
+                         )
+                       };
                      }
-                   | other =>
-                     List.append(
-                       acc,
-                       [default_mapper.structure_item(mapper, other)],
-                     ),
+                   | other => [
+                       default_mapper.structure_item(mapper, other),
+                       ...acc,
+                     ],
                  [],
-               );
+               )
+            |> List.rev;
           },
         }
       )
@@ -645,7 +581,20 @@ let mapper = (_config, _cookies) => {
   );
 };
 
+let argKey = ref("");
 let args = [
+  (
+    "-custom-field",
+    Arg.Tuple([
+      Arg.String(key => {argKey := key}),
+      Arg.String(
+        moduleKey => {
+          Hashtbl.add(Ppx_config.custom_fields(), argKey^, moduleKey)
+        },
+      ),
+    ]),
+    "Adds a global custom field decoder/serializer (format: -custom-field ScalarType Module)",
+  ),
   (
     "-verbose",
     Arg.Unit(
@@ -662,7 +611,7 @@ let args = [
       () =>
         Ppx_config.update_config(current => {...current, apollo_mode: true}),
     ),
-    "Defines if apply Apollo specific code generation",
+    "Automatically add __typename everywhere (necessary for apollo)",
   ),
   (
     "-schema",

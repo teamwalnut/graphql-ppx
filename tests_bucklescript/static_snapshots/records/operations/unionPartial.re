@@ -18,30 +18,30 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {dogOrHuman: t_dogOrHuman}
-    and t_dogOrHuman
-    and t_dogOrHuman_Dog = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
       name: string,
       barkVolume: float,
     };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
-  type t = {dogOrHuman: t_dogOrHuman}
-  and t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ]
-  and t_dogOrHuman_Dog = {
+  type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
   };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
-
         dogOrHuman: {
           let value = (value: Raw.t).dogOrHuman;
-          [@metaloc loc]
           let typename: string =
             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
           (
@@ -52,16 +52,12 @@ module MyQuery = {
                   let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
                   (
                     {
-
                       name: {
                         let value = (value: Raw.t_dogOrHuman_Dog).name;
-
                         value;
                       },
-
                       barkVolume: {
                         let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-
                         value;
                       },
                     }: t_dogOrHuman_Dog
@@ -85,32 +81,21 @@ module MyQuery = {
                 {
                   let barkVolume = {
                     let value = (value: t_dogOrHuman_Dog).barkVolume;
-
                     value;
                   }
                   and name = {
                     let value = (value: t_dogOrHuman_Dog).name;
-
                     value;
                   };
-                  {
-
-                    name,
-
-                    barkVolume,
-                  };
+                  {__typename: "Dog", name, barkVolume};
                 }: Raw.t_dogOrHuman_Dog,
               ): Raw.t_dogOrHuman
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };
         };
-        {
-
-          dogOrHuman: dogOrHuman,
-        };
+        {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

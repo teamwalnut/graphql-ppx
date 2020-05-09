@@ -18,8 +18,7 @@
 ];
 module MyQuery = {
   module Raw = {
-    type t = {. "variousScalars": t_variousScalars}
-    and t_variousScalars = {
+    type t_variousScalars = {
       .
       "nullableString": Js.Nullable.t(string),
       "string": string,
@@ -32,10 +31,10 @@ module MyQuery = {
       "nullableID": Js.Nullable.t(string),
       "id": string,
     };
+    type t = {. "variousScalars": t_variousScalars};
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-  type t = {. "variousScalars": t_variousScalars}
-  and t_variousScalars = {
+  type t_variousScalars = {
     .
     "nullableString": option(string),
     "string": string,
@@ -48,89 +47,81 @@ module MyQuery = {
     "nullableID": option(string),
     "id": string,
   };
+  type t = {. "variousScalars": t_variousScalars};
+  type operation = t;
   let parse: Raw.t => t =
     value => {
-
-      "variousScalars": {
+      let variousScalars = {
         let value = value##variousScalars;
-        {
-
-          "nullableString": {
-            let value = value##nullableString;
-
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-
-          "string": {
-            let value = value##string;
-
-            value;
-          },
-
-          "nullableInt": {
-            let value = value##nullableInt;
-
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-
-          "int": {
-            let value = value##int;
-
-            value;
-          },
-
-          "nullableFloat": {
-            let value = value##nullableFloat;
-
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-
-          "float": {
-            let value = value##float;
-
-            value;
-          },
-
-          "nullableBoolean": {
-            let value = value##nullableBoolean;
-
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-
-          "boolean": {
-            let value = value##boolean;
-
-            value;
-          },
-
-          "nullableID": {
-            let value = value##nullableID;
-
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
-            };
-          },
-
-          "id": {
-            let value = value##id;
-
-            value;
-          },
+        let id = {
+          let value = value##id;
+          value;
+        }
+        and nullableID = {
+          let value = value##nullableID;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and boolean = {
+          let value = value##boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = value##nullableBoolean;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and float = {
+          let value = value##float;
+          value;
+        }
+        and nullableFloat = {
+          let value = value##nullableFloat;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and int = {
+          let value = value##int;
+          value;
+        }
+        and nullableInt = {
+          let value = value##nullableInt;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and string = {
+          let value = value##string;
+          value;
+        }
+        and nullableString = {
+          let value = value##nullableString;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
         };
-      },
+        {
+          "nullableString": nullableString,
+          "string": string,
+          "nullableInt": nullableInt,
+          "int": int,
+          "nullableFloat": nullableFloat,
+          "float": float,
+          "nullableBoolean": nullableBoolean,
+          "boolean": boolean,
+          "nullableID": nullableID,
+          "id": id,
+        };
+      };
+      {"variousScalars": variousScalars};
     };
   let serialize: t => Raw.t =
     value => {
@@ -138,12 +129,10 @@ module MyQuery = {
         let value = value##variousScalars;
         let id = {
           let value = value##id;
-
           value;
         }
         and nullableID = {
           let value = value##nullableID;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -151,12 +140,10 @@ module MyQuery = {
         }
         and boolean = {
           let value = value##boolean;
-
           value;
         }
         and nullableBoolean = {
           let value = value##nullableBoolean;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -164,12 +151,10 @@ module MyQuery = {
         }
         and float = {
           let value = value##float;
-
           value;
         }
         and nullableFloat = {
           let value = value##nullableFloat;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -177,12 +162,10 @@ module MyQuery = {
         }
         and int = {
           let value = value##int;
-
           value;
         }
         and nullableInt = {
           let value = value##nullableInt;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
@@ -190,54 +173,34 @@ module MyQuery = {
         }
         and string = {
           let value = value##string;
-
           value;
         }
         and nullableString = {
           let value = value##nullableString;
-
           switch (value) {
           | Some(value) => Js.Nullable.return(value)
           | None => Js.Nullable.null
           };
         };
         {
-
           "nullableString": nullableString,
-
           "string": string,
-
           "nullableInt": nullableInt,
-
           "int": int,
-
           "nullableFloat": nullableFloat,
-
           "float": float,
-
           "nullableBoolean": nullableBoolean,
-
           "boolean": boolean,
-
           "nullableID": nullableID,
-
           "id": id,
         };
       };
-      {
-
-        "variousScalars": variousScalars,
-      };
+      {"variousScalars": variousScalars};
     };
-  let makeVar = (~f, ()) => f(Js.Json.null);
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
-  let makeWithVariables = variables => {
+  let make = () => {
     "query": query,
-    "variables": serializeVariables(variables),
+    "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
+  let definition = (parse, query, serialize);
 };

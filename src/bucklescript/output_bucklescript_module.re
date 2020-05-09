@@ -73,7 +73,6 @@ let compress_parts = (parts: array(Graphql_printer.t)) => {
                String(s1 ++ s2),
                ...rest,
              ]
-           | (acc, Empty) => acc
            | (acc, curr) => [curr, ...acc]
            }
          },
@@ -93,7 +92,6 @@ let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
       Array.fold_left(
         acc =>
           fun
-          | Empty => acc
           | String(s) => acc ++ s
           | FragmentNameRef(f) => {
               let name =
@@ -136,7 +134,6 @@ let emit_printed_query = parts => {
   open Graphql_printer;
   let generate_expr = (acc, part) =>
     switch (acc, part) {
-    | (acc, Empty) => acc
     | (None, String(s)) => Some(make_string(s))
     | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
     | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
@@ -330,6 +327,7 @@ let generate_default_operation =
       config,
       [],
       Graphql_ast.Operation(operation),
+      None,
       res_structure,
     );
   let types =
@@ -339,6 +337,33 @@ let generate_default_operation =
       false,
       None,
     );
+  let types =
+    List.append(
+      types,
+      [
+        Ast_helper.Str.type_(
+          Recursive,
+          [
+            Type.mk(
+              ~manifest=
+                Output_bucklescript_types.base_type(
+                  ~loc=
+                    Output_bucklescript_utils.extend_loc_from_start(
+                      conv_loc(config.map_loc(operation.span)),
+                      switch (operation.item.o_type) {
+                      | Query => 5
+                      | Mutation => 8
+                      | Subscription => 12
+                      },
+                    ),
+                  "t",
+                ),
+              Location.mknoloc("operation"),
+            ),
+          ],
+        ),
+      ],
+    );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
@@ -347,7 +372,13 @@ let generate_default_operation =
       None,
     );
   let arg_types =
-    Output_bucklescript_types.generate_arg_types(config, variable_defs);
+    Output_bucklescript_types.generate_arg_types(
+      false,
+      config,
+      variable_defs,
+    );
+  let raw_arg_types =
+    Output_bucklescript_types.generate_arg_types(true, config, variable_defs);
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
@@ -368,9 +399,20 @@ let generate_default_operation =
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
+      let legacy_make_with_variables = [%stri
+        let makeWithVariables = variables => {
+          "query": query,
+          "variables": serializeVariables(variables),
+          "parse": parse,
+        }
+      ];
+
       List.concat([
         List.concat([
-          wrap_module("Raw", raw_types),
+          wrap_module(
+            "Raw",
+            List.append(raw_types, extracted_args == [] ? [] : raw_arg_types),
+          ),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -379,7 +421,7 @@ let generate_default_operation =
           types,
           switch (extracted_args) {
           | [] => []
-          | _ => [arg_types]
+          | _ => arg_types
           },
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
@@ -387,37 +429,25 @@ let generate_default_operation =
           | None => []
           | Some(f) => [f]
           },
-          switch (variable_constructors, config.legacy, config.definition) {
-          | (None, true, _)
-          | (None, _, true) => [
-              [%stri let makeVar = (~f, ()) => f(Js.Json.null)],
-            ]
-          | (None, _, _) => []
-          | (Some(c), _, _) => [c]
+          switch (variable_constructors) {
+          | None => []
+          | Some(c) => [c]
           },
-          config.legacy
+          config.legacy && variable_constructors != None
+            ? [legacy_make_with_variables] : [],
+          config.legacy && variable_constructors == None
             ? [
               [%stri
-                let make =
-                  makeVar(~f=variables => {
-                    {"query": query, "variables": variables, "parse": parse}
-                  })
-              ],
-              [%stri
-                let makeWithVariables = variables => {
+                let make = () => {
                   "query": query,
-                  "variables": serializeVariables(variables),
+                  "variables": Js.Json.null,
                   "parse": parse,
                 }
               ],
             ]
             : [],
           config.definition
-            ? [[%stri let definition = (parse, query, makeVar)]] : [],
-          switch (extracted_args) {
-          | [] => []
-          | _ => [[%stri let makeVariables = makeVar(~f=f => f)]]
-          },
+            ? [[%stri let definition = (parse, query, serialize)]] : [],
         ]),
       ]);
     };
@@ -444,6 +474,7 @@ let generate_fragment_module =
       config,
       [],
       Graphql_ast.Fragment(fragment),
+      None,
       res_structure,
     );
   let types =
@@ -451,14 +482,43 @@ let generate_fragment_module =
       config,
       res_structure,
       false,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
+    );
+  let types =
+    List.append(
+      types,
+      [
+        Ast_helper.Str.type_(
+          Recursive,
+          [
+            Type.mk(
+              ~manifest=
+                Output_bucklescript_types.base_type(
+                  ~loc=
+                    Output_bucklescript_utils.extend_loc_from_start(
+                      conv_loc(config.map_loc(fragment.span)),
+                      8,
+                    ),
+                  "t",
+                ),
+              Location.mknoloc("fragment"),
+            ),
+          ],
+        ),
+      ],
     );
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
       res_structure,
       true,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
 
   let rec make_labeled_fun = body =>
@@ -502,28 +562,19 @@ let generate_fragment_module =
         );
       };
 
-  let (pre_printed_query, printed_query) =
-    make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-  let parse =
-    [@metaloc conv_loc(config.map_loc(fragment.span))]
-    [%stri let parse = [%e make_labeled_fun(parse_fn, required_variables)]];
-
-  let variable_obj_type =
-    Typ.constr(
-      {txt: Longident.Lident("t_variables"), loc: Location.none},
-      [],
-    );
   let contents =
     if (has_error) {
-      [
-        [%stri
-          let make = (_vars: [%t variable_obj_type], value) => [%e parse_fn]
-        ],
-      ];
+      [[%stri let make = (_vars, value) => [%e parse_fn]]];
     } else {
+      let (pre_printed_query, printed_query) =
+        make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+      let parse = [%stri
+        let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+      ];
       List.concat(
         List.concat([
           [
+            Output_bucklescript_docstrings.for_fragment(config, fragment),
             switch (pre_printed_query) {
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []
@@ -550,9 +601,9 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | Mod_default_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Mod_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
     generate_fragment_module(
       config,
       name,
@@ -562,24 +613,44 @@ let generate_operation = config =>
       structure,
     );
 
-let generate_modules = (config, module_definition, operations) => {
+let generate_modules = (config, module_name, operations) => {
   switch (operations) {
   | [] => []
   | [operation] =>
     switch (generate_operation(config, operation)) {
     | (Some(name), contents) =>
-      config.inline || module_definition
-        ? [contents] : [wrap_module(name, contents)]
-    | (None, contents) => [contents]
+      config.inline
+        ? [contents]
+        : [
+          wrap_module(
+            switch (module_name) {
+            | Some(name) => name
+            | None => name
+            },
+            contents,
+          ),
+        ]
+    | (None, contents) =>
+      switch (module_name) {
+      | Some(name) => [wrap_module(name, contents)]
+      | None => [contents]
+      }
     }
   | operations =>
-    operations
-    |> List.map(generate_operation(config))
-    |> List.mapi((i, (name, contents)) =>
-         switch (name) {
-         | Some(name) => wrap_module(name, contents)
-         | None => wrap_module("Untitled" ++ string_of_int(i), contents)
-         }
-       )
+    let contents =
+      operations
+      |> List.map(generate_operation(config))
+      |> List.mapi((i, (name, contents)) =>
+           switch (name) {
+           | Some(name) => wrap_module(name, contents)
+           | None => wrap_module("Untitled" ++ string_of_int(i), contents)
+           }
+         );
+    switch (module_name) {
+    | Some(module_name) => [
+        wrap_module(module_name, List.concat(contents)),
+      ]
+    | None => contents
+    };
   };
 };

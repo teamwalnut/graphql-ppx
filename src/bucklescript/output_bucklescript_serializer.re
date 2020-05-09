@@ -14,6 +14,11 @@ open Extract_type_definitions;
 open Result_structure;
 open Output_bucklescript_types;
 
+// Cheap way of preventing location override from types module
+// Might refactor this later
+let conv_loc = _ => Location.none;
+
+let raw_value = loc => [@metaloc loc] [%expr value];
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -32,26 +37,13 @@ open Output_bucklescript_types;
 let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => [%expr
-      (a => Some(Js.Json.string(a)))
-    ]
-  | Type(Scalar({sm_name: "Int"})) => [%expr
-      (a => Some(Js.Json.number(float_of_int(a))))
-    ]
-  | Type(Scalar({sm_name: "Float"})) => [%expr
-      (a => Some(Js.Json.number(a)))
-    ]
-  | Type(Scalar({sm_name: "Boolean"})) => [%expr
-      (a => Some(Js.Json.boolean(a)))
-    ]
-  | Type(Scalar({sm_name: _})) => [%expr (a => Some(a))]
+  | Type(Scalar({sm_name: "String"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Int"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Float"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "Boolean"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: _})) => [%expr (a => a)]
   | Type(InputObject({iom_name})) => [%expr
-      (
-        a =>
-          Some(
-            [%e ident_from_string("serializeInputObject" ++ iom_name)](a),
-          )
-      )
+      (a => [%e ident_from_string("serializeInputObject" ++ iom_name)](a))
     ]
   | Type(Enum({em_values})) => {
       let case_exp =
@@ -62,115 +54,87 @@ let rec serialize_type =
             |> List.map(value => {
                  Exp.case(
                    Pat.variant(value.evm_name, None),
-                   Exp.apply(
-                     ident_from_string("Js.Json.string"),
-                     [
-                       (
-                         Nolabel,
-                         Ast_helper.Exp.constant(
-                           Parsetree.Pconst_string(value.evm_name, None),
-                         ),
-                       ),
-                     ],
+                   Ast_helper.Exp.constant(
+                     Parsetree.Pconst_string(value.evm_name, None),
                    ),
                  )
                }),
           )
         );
       %expr
-      (a => Some([%e case_exp]));
+      (a => [%e case_exp]);
     }
   | Nullable(inner) => [%expr
       (
         a =>
           switch (a) {
-          | None => None
-          | Some(b) => [%e serialize_type(inner)](b)
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
           }
       )
     ]
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
   | List(inner) => [%expr
-      (
-        a =>
-          Some(
-            a
-            |> Array.map(b =>
-                 switch ([%e serialize_type(inner)](b)) {
-                 | Some(c) => c
-                 | None => Js.Json.null
-                 }
-               )
-            |> Js.Json.array,
-          )
-      )
+      (a => Array.map(b => {[%e serialize_type(inner)](b)}, a))
     ]
   | Type(Object(_)) => [%expr (v => None)]
   | Type(Union(_)) => [%expr (v => None)]
   | Type(Interface(_)) => [%expr (v => None)]
   | TypeNotFound(_) => [%expr (v => None)];
 
-/*
- * This creates a serialize function for variables and/or input types
- * the return type is Js.Json.t.
- */
-let serialize_fun = (config, fields) => {
+let record_to_object = (loc, record) => {
+  Ast_helper.(
+    Exp.extension((
+      {txt: "bs.obj", loc: conv_loc(loc)},
+      PStr([[%stri [%e record]]]),
+    ))
+  );
+};
+
+let serialize_fun = (config, loc, fields, type_name) => {
   let arg = "inp";
+  open Ast_helper;
+  let record =
+    Exp.record(
+      fields
+      |> List.map((InputField({name, type_, loc})) => {
+           (
+             {txt: Longident.parse(name), loc: conv_loc(loc)},
+             [%expr
+               [%e serialize_type(type_)](
+                 if%e (config.records) {
+                   Exp.field(
+                     Exp.constraint_(
+                       ident_from_string(arg),
+                       base_type_name(type_name),
+                     ),
+                     {
+                       loc: Location.none,
+                       Location.txt: Longident.parse(to_valid_ident(name)),
+                     },
+                   );
+                 } else {
+                   %expr
+                   [%e ident_from_string(arg)]##[%e
+                                                   ident_from_string(
+                                                     to_valid_ident(name),
+                                                   )
+                                                 ];
+                 },
+               )
+             ],
+           )
+         }),
+      None,
+    );
+  let record = !config.records ? record_to_object(loc, record) : record;
   Ast_helper.(
     Exp.fun_(
       Nolabel,
       None,
       Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
-      {
-        let field_array =
-          fields
-          |> List.map((InputField({name, type_, loc})) => {
-               %expr
-               {
-                 (
-                   [%e
-                     Ast_helper.Exp.constant(
-                       Parsetree.Pconst_string(name, None),
-                     )
-                   ],
-                   [%e serialize_type(type_)](
-                     switch%e (config.records) {
-                     | true =>
-                       Exp.field(
-                         ident_from_string(arg),
-                         {
-                           Location.txt: Longident.Lident(name),
-                           loc: conv_loc(loc),
-                         },
-                       )
-                     | false =>
-                       %expr
-                       [%e ident_from_string(arg)]##[%e
-                                                       ident_from_string(name)
-                                                     ]
-                     },
-                   ),
-                 );
-               }
-             })
-          |> Ast_helper.Exp.array;
-
-        %expr
-        [%e field_array]
-        |> Js.Array.filter(
-             fun
-             | (_, None) => false
-             | (_, Some(_)) => true,
-           )
-        |> Js.Array.map(
-             fun
-             | (k, Some(v)) => (k, v)
-             | (k, None) => (k, Js.Json.null),
-           )
-        |> Js.Dict.fromArray
-        |> Js.Json.object_;
-      },
+      record,
     )
   );
 };
@@ -183,16 +147,23 @@ let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
   | [] => None
-  | _ =>
+  | arg_type_defs =>
     Some(
       Ast_helper.(
         Str.value(
           is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) =>
+          |> List.map((InputObject({name, fields, loc})) => {
+               let type_name =
+                 switch (name) {
+                 | None => "t_variables"
+                 | Some(input_object_name) =>
+                   "t_variables_" ++ input_object_name
+                 };
                [@metaloc conv_loc(loc)]
                Vb.mk(
                  Pat.constraint_(
+                   ~loc=conv_loc(loc),
                    Pat.var({
                      loc: conv_loc(loc),
                      txt:
@@ -203,20 +174,15 @@ let generate_serialize_variables =
                        },
                    }),
                    Typ.arrow(
+                     ~loc=conv_loc(loc),
                      Nolabel,
-                     base_type_name(
-                       switch (name) {
-                       | None => "t_variables"
-                       | Some(input_object_name) =>
-                         "t_variables_" ++ input_object_name
-                       },
-                     ),
-                     base_type_name("Js.Json.t"),
+                     base_type_name(type_name),
+                     base_type_name("Raw." ++ type_name),
                    ),
                  ),
-                 serialize_fun(config, fields),
-               )
-             ),
+                 serialize_fun(config, loc, fields, type_name),
+               );
+             }),
         )
       ),
     )
@@ -245,129 +211,126 @@ let generate_variable_constructors =
         Str.value(
           Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) =>
+          |> List.map((InputObject({name, fields, loc})) => {
+               let rec make_labeled_fun = body =>
+                 fun
+                 | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
+                 | [InputField({name, loc, type_}), ...tl] => {
+                     let name_loc = loc |> conv_loc;
+                     Ast_helper.(
+                       Exp.fun_(
+                         ~loc=name_loc,
+                         switch (type_) {
+                         | List(_)
+                         | Type(_) => Labelled(name)
+                         | _ => Optional(name)
+                         },
+                         None,
+                         Pat.var(~loc=name_loc, {txt: name, loc: name_loc}),
+                         make_labeled_fun(body, tl),
+                       )
+                     );
+                   };
+
+               let record =
+                 Ast_helper.(
+                   Exp.record(
+                     ~loc=loc |> conv_loc,
+                     fields
+                     |> List.map((InputField({name, loc})) =>
+                          (
+                            {
+                              Location.txt: Longident.parse(name),
+                              loc: conv_loc(loc),
+                            },
+                            ident_from_string(name),
+                          )
+                        ),
+                     None,
+                   )
+                 );
+
+               let object_ = record_to_object(loc, record);
+
+               let body =
+                 Ast_helper.(
+                   Exp.constraint_(
+                     ~loc=conv_loc(loc),
+                     config.records ? record : object_,
+                     base_type_name(
+                       switch (name) {
+                       | None => "t_variables"
+                       | Some(input_type_name) =>
+                         "t_variables_" ++ input_type_name
+                       },
+                     ),
+                   )
+                 );
+
+               switch (name) {
+               | None =>
+                 let make_variables_body =
+                   Ast_helper.(
+                     make_labeled_fun(
+                       Exp.apply(
+                         Exp.ident({
+                           Location.txt:
+                             Longident.Lident("serializeVariables"),
+                           loc: conv_loc(loc),
+                         }),
+                         [(Nolabel, body)],
+                       ),
+                       fields,
+                     )
+                   );
+                 if (config.legacy && name == None) {
+                   let make_body =
+                     Ast_helper.(
+                       make_labeled_fun(
+                         [%expr
+                           {
+                             "query": query,
+                             "variables": serializeVariables([%e body]),
+                             "parse": parse,
+                           }
+                         ],
+                         fields,
+                       )
+                     );
+
+                   [
+                     (Some("make"), loc, make_body),
+                     (name, loc, make_variables_body),
+                   ];
+                 } else {
+                   [(name, loc, make_variables_body)];
+                 };
+
+               | Some(_) => [(name, loc, make_labeled_fun(body, fields))]
+               };
+             })
+          |> List.concat
+          |> List.map(((name, loc, expr)) => {
                [@metaloc conv_loc(loc)]
                Vb.mk(
                  Pat.var({
                    loc: conv_loc(loc),
                    txt:
                      switch (name) {
-                     | None => "makeVar"
+                     | None => "makeVariables"
+                     | Some("make") => "make"
                      | Some(input_object_name) =>
                        "makeInputObject" ++ input_object_name
                      },
                  }),
-                 {
-                   let rec make_labeled_fun = body =>
-                     fun
-                     | [] =>
-                       [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
-                     | [InputField({name, loc, type_}), ...tl] => {
-                         let name_loc = loc |> conv_loc;
-                         Ast_helper.(
-                           Exp.fun_(
-                             ~loc=name_loc,
-                             switch (type_) {
-                             | List(_)
-                             | Type(_) => Labelled(name)
-                             | _ => Optional(name)
-                             },
-                             None,
-                             Pat.var(
-                               ~loc=name_loc,
-                               {txt: name, loc: name_loc},
-                             ),
-                             make_labeled_fun(body, tl),
-                           )
-                         );
-                       };
-
-                   let make_labeled_fun_with_f = (body, fields) => {
-                     Ast_helper.(
-                       Exp.fun_(
-                         ~loc=loc |> conv_loc,
-                         Labelled("f"),
-                         None,
-                         Pat.var(
-                           ~loc=loc |> conv_loc,
-                           {txt: "f", loc: loc |> conv_loc},
-                         ),
-                         make_labeled_fun([%expr f([%e body])], fields),
-                       )
-                     );
-                   };
-
-                   let record =
-                     Ast_helper.(
-                       Exp.record(
-                         ~loc=loc |> conv_loc,
-                         fields
-                         |> List.map((InputField({name, loc})) =>
-                              (
-                                {
-                                  Location.txt: Longident.parse(name),
-                                  loc: conv_loc(loc),
-                                },
-                                ident_from_string(name),
-                              )
-                            ),
-                         None,
-                       )
-                     );
-
-                   let object_ =
-                     Ast_helper.(
-                       Exp.extension((
-                         {txt: "bs.obj", loc: conv_loc(loc)},
-                         PStr([[%stri [%e record]]]),
-                       ))
-                     );
-
-                   let body =
-                     Ast_helper.(
-                       Exp.constraint_(
-                         config.records ? record : object_,
-                         base_type_name(
-                           switch (name) {
-                           | None => "t_variables"
-                           | Some(input_type_name) =>
-                             "t_variables_" ++ input_type_name
-                           },
-                         ),
-                       )
-                     );
-
-                   switch (name) {
-                   | None =>
-                     Ast_helper.(
-                       make_labeled_fun_with_f(
-                         Exp.apply(
-                           Exp.ident({
-                             Location.txt:
-                               Longident.Lident("serializeVariables"),
-                             loc: conv_loc(loc),
-                           }),
-                           [(Nolabel, body)],
-                         ),
-                         fields,
-                       )
-                     )
-
-                   | Some(_) => make_labeled_fun(body, fields)
-                   };
-                 },
+                 expr,
                )
-             ),
+             }),
         )
       ),
     )
   };
 };
-
-let raw_value = loc => [@metaloc loc] [%expr value];
-let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
-let ident_from_string = (~loc=Location.none, ident) =>
-  Ast_helper.(Exp.ident(~loc, {txt: Longident.parse(ident), loc}));
 
 let get_field = (is_object, key, existing_record, path) => {
   is_object
@@ -398,7 +361,7 @@ let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
     switch%expr (value) {
     | Some(value) =>
       Js.Nullable.return(
-        [%e generate_serializer(config, path, definition, inner)],
+        [%e generate_serializer(config, path, definition, None, inner)],
       )
     | None => Js.Nullable.null
     }
@@ -409,7 +372,7 @@ and generate_array_encoder = (config, loc, inner, path, definition) =>
     value
     |> Js.Array.map(value => {
          %e
-         generate_serializer(config, path, definition, inner)
+         generate_serializer(config, path, definition, None, inner)
        })
   ]
 and generate_poly_enum_encoder = (loc, enum_meta) => {
@@ -422,10 +385,7 @@ and generate_poly_enum_encoder = (loc, enum_meta) => {
 
   let fallback_arm =
     Exp.case(
-      Pat.variant(
-        "FutureAddedValue",
-        Some(Pat.var({loc: conv_loc(loc), txt: "other"})),
-      ),
+      Pat.variant("FutureAddedValue", Some(Pat.var({loc, txt: "other"}))),
       ident_from_string("other"),
     );
 
@@ -443,11 +403,21 @@ and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   {
     %expr
     [%e ident_from_string(ident ++ ".serialize")](
-      [%e generate_serializer(config, path, definition, inner)],
+      [%e generate_serializer(config, path, definition, None, inner)],
     );
   }
 and generate_object_encoder =
-    (config, loc, name, fields, path, definition, existing_record) => {
+    (
+      config,
+      loc,
+      name,
+      fields,
+      path,
+      definition,
+      existing_record,
+      typename,
+      force_record,
+    ) => {
   open Ast_helper;
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
@@ -455,7 +425,7 @@ and generate_object_encoder =
       |> List.filter_map(
            fun
            | Fr_fragment_spread(_, _, _, _, _) => None
-           | Fr_named_field(key, _, inner) => Some((key, inner)),
+           | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
     | [] =>
@@ -464,23 +434,48 @@ and generate_object_encoder =
     | fields =>
       let record =
         Exp.record(
-          fields
-          |> List.map(((key, inner)) =>
-               (
-                 {Location.txt: Longident.parse(to_valid_ident(key)), loc},
-                 ident_from_string(to_valid_ident(key)),
-               )
-             ),
+          {
+            let fields =
+              // if the object is part of a union, it gets passed a typename
+              // the typename needs to exist on the raw type, because it is used
+              // to parse it into a union type. So if this is supplied, and
+              // typename is not already explicitly in the fields, add this.
+              if (typename != None
+                  && !(
+                       fields
+                       |> List.exists(
+                            fun
+                            | ("__typename", _) => true
+                            | _ => false,
+                          )
+                     )) {
+                [
+                  ("__typename", Res_string(conv_loc_from_ast(loc))),
+                  ...fields,
+                ];
+              } else {
+                fields;
+              };
+
+            fields
+            |> List.map(((key, inner)) => {
+                 let key_value = {
+                   Location.txt: Longident.parse(to_valid_ident(key)),
+                   loc,
+                 };
+                 switch (key, typename) {
+                 | ("__typename", Some(typename)) => (
+                     key_value,
+                     const_str_expr(typename),
+                   )
+                 | _ => (key_value, ident_from_string(to_valid_ident(key)))
+                 };
+               });
+          },
           None,
         );
 
-      let record =
-        wrap
-          ? Exp.extension((
-              {txt: "bs.obj", loc},
-              PStr([[%stri [%e record]]]),
-            ))
-          : record;
+      let record = wrap ? record_to_object(loc, record) : record;
 
       let bindings =
         fields
@@ -498,6 +493,7 @@ and generate_object_encoder =
                    config,
                    [key, ...path],
                    definition,
+                   None,
                    inner,
                  );
                },
@@ -509,10 +505,13 @@ and generate_object_encoder =
   };
 
   let do_obj_constructor = with_objects =>
-    [@metaloc loc] do_obj_constructor_base(with_objects, true);
+    [@metaloc conv_loc(loc)]
+    {
+      do_obj_constructor_base(with_objects, true);
+    };
 
   let do_obj_constructor_records = () =>
-    [@metaloc loc]
+    [@metaloc conv_loc(loc)]
     {
       Exp.constraint_(
         do_obj_constructor_base(false, false),
@@ -554,7 +553,7 @@ and generate_object_encoder =
             |> List.fold_left(
                  acc =>
                    fun
-                   | Fr_named_field(key, _, inner) => acc
+                   | Fr_named_field(_) => acc
                    | Fr_fragment_spread(key, loc, name, _, arguments) => [
                        [%expr
                          (
@@ -594,10 +593,12 @@ and generate_object_encoder =
          | _ => false,
        );
 
-  switch (has_fragment_spreads, config.records) {
-  | (true, records) => merge_into_opaque(!records)
-  | (false, true) => do_obj_constructor_records()
-  | (false, false) => do_obj_constructor(true)
+  switch (has_fragment_spreads, config.records, existing_record, force_record) {
+  | (true, records, _, _) => merge_into_opaque(!records)
+  | (false, true, _, _) => do_obj_constructor_records()
+  | (false, false, _, true) => do_obj_constructor(false)
+  | (false, false, Some(_), _) => do_obj_constructor(false)
+  | (false, false, _, _) => do_obj_constructor(true)
   };
 }
 and generate_poly_variant_union_encoder =
@@ -605,7 +606,7 @@ and generate_poly_variant_union_encoder =
   open Ast_helper;
   let fragment_cases =
     fragments
-    |> List.map(((type_name, inner)) => {
+    |> List.map((({item: type_name}: Result_structure.name, inner)) => {
          Ast_helper.(
            Exp.case(
              Pat.variant(
@@ -620,6 +621,7 @@ and generate_poly_variant_union_encoder =
                        config,
                        [type_name, ...path],
                        definition,
+                       Some(type_name),
                        inner,
                      )
                    ],
@@ -658,11 +660,11 @@ and generate_poly_variant_union_encoder =
 }
 and generate_poly_variant_selection_set_encoder =
     (config, loc, name, fields, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
     (config, loc, name, base, fragments, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_solo_fragment_spread_encorder =
     (config, loc, name, arguments, definition) => [%expr
@@ -672,12 +674,13 @@ and generate_solo_fragment_spread_encorder =
 ]
 
 and generate_error = (loc, message) => {
+  let loc = Output_bucklescript_utils.conv_loc(loc);
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;
   %e
   Ast_helper.Exp.extension(~loc, ext);
 }
-and generate_serializer = (config, path: list(string), definition) =>
+and generate_serializer = (config, path: list(string), definition, typename) =>
   fun
   | Res_nullable(loc, inner) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
@@ -690,7 +693,7 @@ and generate_serializer = (config, path: list(string), definition) =>
   | Res_boolean(loc) => raw_value(conv_loc(loc))
   | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
   | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_encoder(loc, enum_meta)
+    generate_poly_enum_encoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_encoder(
       config,
@@ -709,6 +712,8 @@ and generate_serializer = (config, path: list(string), definition) =>
       path,
       definition,
       existing_record,
+      typename,
+      true,
     )
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
@@ -719,6 +724,8 @@ and generate_serializer = (config, path: list(string), definition) =>
       path,
       definition,
       existing_record,
+      typename,
+      false,
     )
   | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
     generate_poly_variant_union_encoder(
@@ -757,4 +764,4 @@ and generate_serializer = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
+  | Res_error(loc, message) => generate_error(loc, message);

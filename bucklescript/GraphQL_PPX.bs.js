@@ -21,30 +21,18 @@ function deepMerge(json1, json2) {
     } else {
       return json2;
     }
-  }
-  if (match_000) {
+  } else if (match_000 || !(match_002 && !(match_000$1 || match_001$1 || !match_002$1))) {
     return json2;
+  } else {
+    var obj1 = Object.assign({ }, json1);
+    Object.keys(json2).forEach((function (key) {
+            var existingVal = obj1[key];
+            var newVal = json2[key];
+            obj1[key] = typeof existingVal !== "object" ? newVal : deepMerge(existingVal, newVal);
+            return /* () */0;
+          }));
+    return obj1;
   }
-  if (!match_002) {
-    return json2;
-  }
-  if (match_000$1) {
-    return json2;
-  }
-  if (match_001$1) {
-    return json2;
-  }
-  if (!match_002$1) {
-    return json2;
-  }
-  var obj1 = Object.assign({ }, json1);
-  Object.keys(json2).forEach((function (key) {
-          var existingVal = obj1[key];
-          var newVal = obj1[key];
-          obj1[key] = typeof existingVal !== "object" ? newVal : deepMerge(existingVal, newVal);
-          
-        }));
-  return obj1;
 }
 
 export {

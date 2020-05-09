@@ -19,7 +19,7 @@ type output_config = {
     ((Source_pos.source_position, Source_pos.source_position)) =>
     Source_pos.ast_location,
   delimiter: option(string),
-  schema: Schema.schema,
+  schema: Schema.t,
   full_document: Graphql_ast.document,
   template_tag: (option(string), option(string), option(string)),
   records: bool,

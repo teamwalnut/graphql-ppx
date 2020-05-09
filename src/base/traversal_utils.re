@@ -4,8 +4,9 @@ open Source_pos;
 type ctx = {
   map_loc: ((source_position, source_position)) => Result_structure.loc,
   fragments: Hashtbl.t(string, Graphql_ast.fragment),
-  schema: Schema.schema,
+  schema: Schema.t,
   errors: ref(list((Result_structure.loc, string))),
+  warnings: ref(list((Result_structure.loc, string))),
   type_stack: list(option(Schema.type_meta)),
   type_literal_stack: list(option(Schema.type_ref)),
   input_type_stack: list(option(Schema.type_meta)),
@@ -36,7 +37,12 @@ module type VisitorSig = {
   let exit_directive: (t, ctx, spanning(directive)) => unit;
 
   let enter_argument:
-    (t, ctx, (spanning(string), spanning(input_value))) => unit;
+    (
+      t,
+      ctx,
+      (spanning(string), option(Schema.type_ref), spanning(input_value))
+    ) =>
+    unit;
   let exit_argument:
     (t, ctx, (spanning(string), spanning(input_value))) => unit;
 
@@ -73,13 +79,17 @@ module type VisitorSig = {
   let enter_variable_value: (t, ctx, spanning(string)) => unit;
   let exit_variable_value: (t, ctx, spanning(string)) => unit;
 
-  let enter_list_value: (t, ctx, list(spanning(input_value))) => unit;
-  let exit_list_value: (t, ctx, list(spanning(input_value))) => unit;
+  let enter_list_value:
+    (t, ctx, spanning(list(spanning(input_value)))) => unit;
+  let exit_list_value:
+    (t, ctx, spanning(list(spanning(input_value)))) => unit;
 
   let enter_object_value:
-    (t, ctx, list((spanning(string), spanning(input_value)))) => unit;
+    (t, ctx, spanning(list((spanning(string), spanning(input_value))))) =>
+    unit;
   let exit_object_value:
-    (t, ctx, list((spanning(string), spanning(input_value)))) => unit;
+    (t, ctx, spanning(list((spanning(string), spanning(input_value))))) =>
+    unit;
 
   let enter_object_field:
     (t, ctx, (spanning(string), spanning(input_value))) => unit;
@@ -194,6 +204,8 @@ module Context = {
     };
   let push_error = (ctx, loc, msg) =>
     ctx.errors := [(ctx.map_loc(loc), msg), ...ctx.errors^];
+  let push_warning = (ctx, loc, msg) =>
+    ctx.warnings := [(ctx.map_loc(loc), msg), ...ctx.warnings^];
 };
 
 let rec as_schema_type_ref =
@@ -219,8 +231,10 @@ module Visitor = (V: VisitorSig) => {
       V.enter_enum_value(self, ctx, Source_pos.replace(value, e))
     | Iv_variable(v) =>
       V.enter_variable_value(self, ctx, Source_pos.replace(value, v))
-    | Iv_list(l) => V.enter_list_value(self, ctx, l)
-    | Iv_object(o) => V.enter_object_value(self, ctx, o)
+    | Iv_list(l) =>
+      V.enter_list_value(self, ctx, Source_pos.replace(value, l))
+    | Iv_object(o) =>
+      V.enter_object_value(self, ctx, Source_pos.replace(value, o))
     };
 
   let exit_input_value = (self, ctx, value) =>
@@ -237,15 +251,26 @@ module Visitor = (V: VisitorSig) => {
       V.exit_enum_value(self, ctx, Source_pos.replace(value, e))
     | Iv_variable(v) =>
       V.exit_variable_value(self, ctx, Source_pos.replace(value, v))
-    | Iv_list(l) => V.exit_list_value(self, ctx, l)
-    | Iv_object(o) => V.exit_object_value(self, ctx, o)
+    | Iv_list(l) =>
+      V.exit_list_value(self, ctx, Source_pos.replace(value, l))
+    | Iv_object(o) =>
+      V.exit_object_value(self, ctx, Source_pos.replace(value, o))
     };
 
-  let rec visit_input_value = (self, ctx, value) => {
+  let rec visit_input_value =
+          (self, ctx, arg_type: option(Schema.type_ref), value) => {
     let () = enter_input_value(self, ctx, value);
     let () =
-      switch (value.item) {
-      | Iv_object(fields) =>
+      switch (
+        arg_type
+        |> Option.map(Schema.innermost_name)
+        |> Option.flat_map(Schema.lookup_type(ctx.schema)),
+        value.item,
+      ) {
+      | (Some(Scalar(_) as ty), _)
+          when ty |> Schema.is_type_default === false =>
+        ()
+      | (_, Iv_object(fields)) =>
         List.iter(
           ((key, value)) => {
             let inner_type =
@@ -257,16 +282,23 @@ module Visitor = (V: VisitorSig) => {
                      Schema.lookup_type(ctx.schema, name)
                    | _ => None,
                  )
-              |> Option.flat_map(t => Schema.lookup_input_field(t, key.item))
+              |> Option.flat_map(t =>
+                   try(Schema.lookup_input_field(t, key.item)) {
+                   | Schema.Invalid_type(msg) =>
+                     Context.push_error(ctx, key.span, msg);
+                     None;
+                   | other => raise(other)
+                   }
+                 )
               |> Option.map(am => am.Schema.am_arg_type);
             let ctx = Context.push_input_type(ctx, inner_type);
             let () = V.enter_object_field(self, ctx, (key, value));
-            let () = visit_input_value(self, ctx, value);
+            let () = visit_input_value(self, ctx, inner_type, value);
             V.exit_object_field(self, ctx, (key, value));
           },
           fields,
         )
-      | Iv_list(items) =>
+      | (_, Iv_list(items)) =>
         let inner_type =
           Context.current_input_type_literal(ctx)
           |> Option.flat_map(
@@ -276,7 +308,7 @@ module Visitor = (V: VisitorSig) => {
                | _ => None,
              );
         let ctx = Context.push_input_type(ctx, inner_type);
-        List.iter(visit_input_value(self, ctx), items);
+        List.iter(visit_input_value(self, ctx, inner_type), items);
       | _ => ()
       };
     exit_input_value(self, ctx, value);
@@ -349,8 +381,8 @@ module Visitor = (V: VisitorSig) => {
                )
             |> Option.map(am => am.Schema.am_arg_type);
           let ctx = Context.push_input_type(ctx, arg_type);
-          let () = V.enter_argument(self, ctx, (name, value));
-          let () = visit_input_value(self, ctx, value);
+          let () = V.enter_argument(self, ctx, (name, arg_type, value));
+          let () = visit_input_value(self, ctx, arg_type, value);
           V.exit_argument(self, ctx, (name, value));
         },
         item,
@@ -381,7 +413,13 @@ module Visitor = (V: VisitorSig) => {
           let () =
             switch (def.vd_default_value) {
             | None => ()
-            | Some(value) => visit_input_value(self, ctx, value)
+            | Some(value) =>
+              visit_input_value(
+                self,
+                ctx,
+                Some(def.vd_type.item |> Type_utils.to_schema_type_ref),
+                value,
+              )
             };
           V.exit_variable_definition(self, ctx, (name, def));
         },
@@ -462,6 +500,7 @@ let make_context = (config, document) => {
   fragments: find_fragments(document),
   schema: config.Generator_utils.schema,
   errors: ref([]),
+  warnings: ref([]),
   type_stack: [],
   type_literal_stack: [],
   input_type_stack: [],

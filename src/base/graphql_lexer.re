@@ -34,7 +34,7 @@ let string_of_token = t =>
   switch (t) {
   | Name(s) => s
   | Int(i) => string_of_int(i)
-  | Float(f) => string_of_float(f)
+  | Float(f) => Printf.sprintf("%.16g", f)
   | String(s) => "\"" ++ s ++ "\""
   | Exclamation_mark => "!"
   | Dollar => "$"

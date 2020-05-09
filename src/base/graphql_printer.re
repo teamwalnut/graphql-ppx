@@ -4,7 +4,7 @@ open Source_pos;
 open Schema;
 
 /*
-   We rely on graphql_ppx.ml having created the result decoder before running
+   We rely on graphql_ppx.re having created the result decoder before running
    the functions in this file. The result decoder produces proper and located
    error messages for missing or invalid types, which means that we can - for
    simplicity's sake - skip any kind of error handling here.
@@ -14,7 +14,6 @@ open Schema;
  */
 
 type t =
-  | Empty
   | String(string)
   | FragmentNameRef(string)
   | FragmentQueryRef(string);
@@ -29,7 +28,7 @@ let rec print_input_value = iv =>
   switch (iv) {
   | Iv_null => "null"
   | Iv_int(i) => string_of_int(i)
-  | Iv_float(f) => string_of_float(f)
+  | Iv_float(f) => Printf.sprintf("%.16g", f)
   | Iv_string(s) => "\"" ++ String.escaped(s) ++ "\""
   | Iv_boolean(b) => string_of_bool(b)
   | Iv_enum(s) => s
@@ -119,19 +118,14 @@ let rec print_selection_set = (schema, ty, selection_set) =>
       switch (ty) {
       | Interface(_)
       | Union(_) => true
-      | Object({om_name, _}) =>
-        let is_top_level_subscrption_type =
-          schema.meta.sm_subscription_type == Some(om_name);
-
-        !is_top_level_subscrption_type && Ppx_config.apollo_mode();
       | _ => false
       };
 
     let maybe_typename =
       if (add_typename) {
-        String("__typename\n");
+        Some(String("__typename\n"));
       } else {
-        Empty;
+        None;
       };
 
     let selection =
@@ -142,7 +136,10 @@ let rec print_selection_set = (schema, ty, selection_set) =>
       |> Array.concat;
 
     Array.concat([
-      [|String("{\n"), maybe_typename|],
+      switch (maybe_typename) {
+      | Some(typename) => [|String("{\n"), typename|]
+      | None => [|String("{\n")|]
+      },
       selection,
       [|String("}\n")|],
     ]);
@@ -155,33 +152,40 @@ and print_selection = (schema, ty, selection) =>
   }
 and print_field = (schema, ty, f) => {
   let ty_fields =
-    Option.unsafe_unwrap @@
-    (
-      switch (ty) {
-      | Interface({im_fields, _}) => Some(im_fields)
-      | Object({om_fields, _}) => Some(om_fields)
-      | _ => None
-      }
-    );
+    switch (ty) {
+    | Interface({im_fields, _}) => im_fields
+    | Object({om_fields, _}) => om_fields
+    | _ => []
+    };
 
   let field_ty =
     List.find(fm => fm.fm_name == f.fd_name.item, ty_fields).fm_field_type
     |> type_ref_name
     |> lookup_type(schema)
     |> Option.unsafe_unwrap;
+
   Array.append(
-    [|
+    [
       switch (f.fd_alias) {
-      | Some({item, _}) => String(item ++ ": ")
-      | None => Empty
+      | Some({item, _}) => Some(String(item ++ ": "))
+      | None => None
       },
-      String(f.fd_name.item),
+      Some(String(f.fd_name.item)),
       switch (f.fd_arguments) {
-      | Some({item, _}) => String(print_arguments(item))
-      | None => Empty
+      | Some({item, _}) => Some(String(print_arguments(item)))
+      | None => None
       },
-      String(print_directives(f.fd_directives)),
-    |],
+      Some(String(print_directives(f.fd_directives))),
+    ]
+    |> List.fold_left(
+         acc =>
+           fun
+           | Some(r) => [r, ...acc]
+           | None => acc,
+         [],
+       )
+    |> List.rev
+    |> Array.of_list,
     switch (f.fd_selection_set) {
     | Some({item, _}) => print_selection_set(schema, field_ty, item)
     | None => [||]
@@ -233,24 +237,35 @@ let print_operation = (schema, op) => {
     | Subscription => Option.unsafe_unwrap(schema.meta.sm_subscription_type)
     };
   Array.append(
-    [|
-      String(
-        switch (op.o_type) {
-        | Query => "query "
-        | Mutation => "mutation "
-        | Subscription => "subscription "
-        },
+    [
+      Some(
+        String(
+          switch (op.o_type) {
+          | Query => "query "
+          | Mutation => "mutation "
+          | Subscription => "subscription "
+          },
+        ),
       ),
       switch (op.o_name) {
-      | Some({item, _}) => String(item)
-      | None => Empty
+      | Some({item, _}) => Some(String(item))
+      | None => None
       },
       switch (op.o_variable_definitions) {
-      | Some({item, _}) => String(print_variable_definitions(item))
-      | None => Empty
+      | Some({item, _}) => Some(String(print_variable_definitions(item)))
+      | None => None
       },
-      String(print_directives(op.o_directives)),
-    |],
+      Some(String(print_directives(op.o_directives))),
+    ]
+    |> List.fold_left(
+         acc =>
+           fun
+           | Some(r) => [r, ...acc]
+           | None => acc,
+         [],
+       )
+    |> List.rev
+    |> Array.of_list,
     print_selection_set(
       schema,
       lookup_type(schema, ty_name) |> Option.unsafe_unwrap,
@@ -291,7 +306,6 @@ let find_fragment_refs = parts =>
   |> Array.fold_left(
        acc =>
          fun
-         | Empty => acc
          | String(_) => acc
          | FragmentNameRef(r) => StringSet.add(r, acc)
          | FragmentQueryRef(_) => acc,
@@ -309,7 +323,6 @@ let compress_parts = (parts: array(t)) => {
              String(s1 ++ s2),
              ...rest,
            ]
-         | (acc, Empty) => acc
          | (acc, curr) => [curr, ...acc]
          }
        },

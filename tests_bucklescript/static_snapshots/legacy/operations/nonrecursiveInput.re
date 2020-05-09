@@ -19,134 +19,525 @@
 module MyQuery = {
   module Raw = {
     type t = {. "nonrecursiveInput": string};
+    type t_variables = {. "arg": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      "nonNullableField": string,
+      "nullableArray": Js.Nullable.t(array(Js.Nullable.t(string))),
+      "field": Js.Nullable.t(string),
+      "enum": Js.Nullable.t(string),
+      "embeddedInput":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+      "custom": Js.Nullable.t(Js.Json.t),
+    }
+    and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
   };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "nonrecursiveInput": string};
+  type operation = t;
   type t_variables = {. "arg": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
+    "nonNullableField": string,
+    "nullableArray": option(array(option(string))),
     "field": option(string),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
-  };
+    "embeddedInput": option(array(option(t_variables_EmbeddedInput))),
+    "custom": option(Js.Json.t),
+  }
+  and t_variables_EmbeddedInput = {. "field": option(string)};
+  type nonrec _graphql_NonrecursiveInput_49;
+  /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
-
-      "nonrecursiveInput": {
+      let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
-
         value;
-      },
+      };
+      {"nonrecursiveInput": nonrecursiveInput};
     };
   let serialize: t => Raw.t =
     value => {
       let nonrecursiveInput = {
         let value = value##nonrecursiveInput;
-
         value;
       };
-      {
-
-        "nonrecursiveInput": nonrecursiveInput,
-      };
+      {"nonrecursiveInput": nonrecursiveInput};
     };
-  let rec serializeVariables: t_variables => Js.Json.t =
-    inp =>
-      [|
-        (
-          "arg",
-          (a => Some(serializeInputObjectNonrecursiveInput(a)))(inp##arg),
-        ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      "arg": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+    }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Js.Json.t =
-    inp =>
-      [|
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    inp => {
+      "nonNullableField": (a => a)(inp##nonNullableField),
+      "nullableArray":
         (
-          "field",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) => (a => Some(Js.Json.string(a)))(b)
-              }
-          )(
-            inp##field,
-          ),
-        ),
-        (
-          "enum",
-          (
-            a =>
-              switch (a) {
-              | None => None
-              | Some(b) =>
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
                 (
                   a =>
-                    Some(
-                      switch (a) {
-                      | `FIRST => Js.Json.string("FIRST")
-                      | `SECOND => Js.Json.string("SECOND")
-                      | `THIRD => Js.Json.string("THIRD")
-                      },
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
                     )
                 )(
                   b,
-                )
-              }
-          )(
-            inp##enum,
-          ),
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
         ),
-      |]
-      |> Js.Array.filter(
-           fun
-           | (_, None) => false
-           | (_, Some(_)) => true,
-         )
-      |> Js.Array.map(
-           fun
-           | (k, Some(v)) => (k, v)
-           | (k, None) => (k, Js.Json.null),
-         )
-      |> Js.Dict.fromArray
-      |> Js.Json.object_;
-  let makeVar = (~f, ~arg, ()) =>
-    f(
-      serializeVariables(
-        {
-
-          "arg": arg,
-        }: t_variables,
-      ),
-    )
+      "field":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
+      "enum":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    switch (a) {
+                    | `FIRST => "FIRST"
+                    | `SECOND => "SECOND"
+                    | `THIRD => "THIRD"
+                    }
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##enum,
+        ),
+      "embeddedInput":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+      "custom":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##custom,
+        ),
+    }
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+      "field":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
+    };
+  let make = (~arg, ()) => {
+    "query": query,
+    "variables": serializeVariables({"arg": arg}: t_variables),
+    "parse": parse,
+  }
+  and makeVariables = (~arg, ()) =>
+    serializeVariables({"arg": arg}: t_variables)
   and makeInputObjectNonrecursiveInput =
-      (~field=?, ~enum=?, ()): t_variables_NonrecursiveInput => {
-
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        ~custom=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+    "nonNullableField": nonNullableField,
+    "nullableArray": nullableArray,
     "field": field,
-
     "enum": enum,
+    "embeddedInput": embeddedInput,
+    "custom": custom,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+    "field": field,
   };
-  let make =
-    makeVar(~f=variables =>
-      {"query": query, "variables": variables, "parse": parse}
-    );
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, makeVar);
-  let makeVariables = makeVar(~f=f => f);
+  let definition = (parse, query, serialize);
+};
+module MyQuery2 = {
+  module Raw = {
+    type t = {
+      .
+      "scalarsInput": string,
+      "more": string,
+    };
+    type t_variables = {
+      .
+      "arg": t_variables_NonrecursiveInput,
+      "arg2": t_variables_NonrecursiveInput,
+    }
+    and t_variables_NonrecursiveInput = {
+      .
+      "nonNullableField": string,
+      "nullableArray": Js.Nullable.t(array(Js.Nullable.t(string))),
+      "field": Js.Nullable.t(string),
+      "enum": Js.Nullable.t(string),
+      "embeddedInput":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+      "custom": Js.Nullable.t(Js.Json.t),
+    }
+    and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
+    type nonrec _graphql_NonrecursiveInput_169;
+    /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+      Obj.magic(0);
+    type nonrec _graphql_NonrecursiveInput_196;
+    /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+      Obj.magic(0);
+  };
+  let query = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
+  type t = {
+    .
+    "scalarsInput": string,
+    "more": string,
+  };
+  type operation = t;
+  type t_variables = {
+    .
+    "arg": t_variables_NonrecursiveInput,
+    "arg2": t_variables_NonrecursiveInput,
+  }
+  and t_variables_NonrecursiveInput = {
+    .
+    "nonNullableField": string,
+    "nullableArray": option(array(option(string))),
+    "field": option(string),
+    "enum": option([ | `FIRST | `SECOND | `THIRD]),
+    "embeddedInput": option(array(option(t_variables_EmbeddedInput))),
+    "custom": option(Js.Json.t),
+  }
+  and t_variables_EmbeddedInput = {. "field": option(string)};
+  type nonrec _graphql_NonrecursiveInput_169;
+  /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+  let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+    Obj.magic(0);
+  type nonrec _graphql_NonrecursiveInput_196;
+  /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+  let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+    Obj.magic(0);
+  let parse: Raw.t => t =
+    value => {
+      let more = {
+        let value = value##more;
+        value;
+      }
+      and scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {"scalarsInput": scalarsInput, "more": more};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let more = {
+        let value = value##more;
+        value;
+      }
+      and scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {"scalarsInput": scalarsInput, "more": more};
+    };
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      "arg": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
+      "arg2": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg2),
+    }
+  and serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    inp => {
+      "nonNullableField": (a => a)(inp##nonNullableField),
+      "nullableArray":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##nullableArray,
+        ),
+      "field":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
+      "enum":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    switch (a) {
+                    | `FIRST => "FIRST"
+                    | `SECOND => "SECOND"
+                    | `THIRD => "THIRD"
+                    }
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##enum,
+        ),
+      "embeddedInput":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) =>
+                              Js.Nullable.return(
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                ),
+                              )
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          inp##embeddedInput,
+        ),
+      "custom":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##custom,
+        ),
+    }
+  and serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    inp => {
+      "field":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##field,
+        ),
+    };
+  let make = (~arg, ~arg2, ()) => {
+    "query": query,
+    "variables": serializeVariables({"arg": arg, "arg2": arg2}: t_variables),
+    "parse": parse,
+  }
+  and makeVariables = (~arg, ~arg2, ()) =>
+    serializeVariables({"arg": arg, "arg2": arg2}: t_variables)
+  and makeInputObjectNonrecursiveInput =
+      (
+        ~nonNullableField,
+        ~nullableArray=?,
+        ~field=?,
+        ~enum=?,
+        ~embeddedInput=?,
+        ~custom=?,
+        (),
+      )
+      : t_variables_NonrecursiveInput => {
+    "nonNullableField": nonNullableField,
+    "nullableArray": nullableArray,
+    "field": field,
+    "enum": enum,
+    "embeddedInput": embeddedInput,
+    "custom": custom,
+  }
+  and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
+    "field": field,
+  };
+  let makeWithVariables = variables => {
+    "query": query,
+    "variables": serializeVariables(variables),
+    "parse": parse,
+  };
+  let definition = (parse, query, serialize);
 };

@@ -90,7 +90,7 @@ type directive_meta = {
   dm_arguments: list(argument_meta),
 };
 
-type schema = {
+type t = {
   meta: schema_meta,
   type_map: Hashtbl.t(string, type_meta),
   directive_map: Hashtbl.t(string, directive_meta),
@@ -175,6 +175,16 @@ let type_name = ty =>
   | Interface({im_name, _}) => im_name
   | Union({um_name, _}) => um_name
   | InputObject({iom_name, _}) => iom_name
+  };
+
+let is_type_default = ty =>
+  switch (ty |> type_name) {
+  | "ID"
+  | "String"
+  | "Int"
+  | "Float"
+  | "Boolean" => true
+  | _ => false
   };
 
 let lookup_type = (schema, name) =>

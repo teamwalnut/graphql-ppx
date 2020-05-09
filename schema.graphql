@@ -46,6 +46,28 @@ type Query {
     argOptional: CustomScalar
     argRequired: CustomScalar!
   ): CustomScalarObject!
+  customFields: customFieldsResult!
+  deprecatedFields: deprecatedFieldsResult!
+  defaultObjectValueOnScalar(filter: JsonScalar!, arg: EmbeddedInput!): String!
+  invalidDefaultValues(
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    string: String
+    int: Int
+    float: Float
+    bool: Boolean
+  ): String!
+  invalidArgValues(
+    stringRequired: String!
+    string: String
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    list: [String]
+  ): String!
+  invalidObjectValues(nonRec: NonrecursiveInput!, rec: RecursiveInput!): String!
+  invalidObjectValuesLst(embeddedList: [EmbeddedInputReq]!): String!
 
   dogOrHuman: DogOrHuman!
 
@@ -54,6 +76,7 @@ type Query {
 
 type Mutation {
   mutationWithError: MutationWithErrorResult!
+  mutationForVariant: VariantTestResult!
   optionalInputArgs(
     required: String!
     optional: String
@@ -125,9 +148,21 @@ input ListsInput {
   nonNullableOfNonNullable: [String!]!
 }
 
+input EmbeddedInput {
+  field: String
+}
+
+input EmbeddedInputReq {
+  field: String!
+}
+
 input NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
   field: String
   enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 
 input RecursiveInput {
@@ -162,4 +197,29 @@ scalar CustomScalar
 type CustomScalarObject {
   nullable: CustomScalar
   nonNullable: CustomScalar!
+}
+
+type VariantTestResult {
+  baseType: String
+  baseTypeList: [String!]
+  dog: Dog
+  human: Human
+  dogOrHuman: DogOrHuman
+}
+
+scalar DateTime
+scalar Color
+scalar JsonScalar
+
+type customFieldsResult {
+  currentTime: DateTime!
+  favoriteColor: Color!
+  futureTime: DateTime
+  nullableColor: Color
+}
+
+type deprecatedFieldsResult {
+  field1: String
+  field2: Int!
+  deprecatedField: String! @deprecated(reason: "Use something else instead")
 }

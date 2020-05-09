@@ -3,9 +3,15 @@ type exhaustive_flag =
   | Nonexhaustive;
 
 type loc = Source_pos.ast_location;
+type name = Source_pos.spanning(string);
 
 type field_result =
-  | Fr_named_field(string, loc, t)
+  | Fr_named_field({
+      name: string,
+      loc_key: loc,
+      loc,
+      type_: t,
+    })
   | Fr_fragment_spread(string, loc, string, option(string), list(string))
 and t =
   | Res_nullable(loc, t)
@@ -20,28 +26,21 @@ and t =
   | Res_custom_decoder(loc, string, t)
   | Res_record(loc, string, list(field_result), option(string))
   | Res_object(loc, string, list(field_result), option(string))
-  | Res_poly_variant_selection_set(loc, string, list((string, t)))
-  | Res_poly_variant_union(loc, string, list((string, t)), exhaustive_flag)
+  | Res_poly_variant_selection_set(loc, string, list((name, t)))
+  | Res_poly_variant_union(loc, string, list((name, t)), exhaustive_flag)
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
   | Res_solo_fragment_spread(loc, string, list(string))
   | Res_error(loc, string);
 
-type mod_ =
-  | Mod_fragment(
+type definition =
+  | Def_fragment(
       string,
-      list(
-        (
-          string,
-          string,
-          (Source_pos.source_position, Source_pos.source_position),
-          (Source_pos.source_position, Source_pos.source_position),
-        ),
-      ),
+      list((string, string, Source_pos.span, Source_pos.span)),
       bool,
       Source_pos.spanning(Graphql_ast.fragment),
       t,
     )
-  | Mod_default_operation(
+  | Def_operation(
       option(Source_pos.spanning(Graphql_ast.variable_definitions)),
       bool,
       Source_pos.spanning(Graphql_ast.operation),
