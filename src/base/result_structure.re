@@ -11,6 +11,7 @@ type field_result =
       loc_key: loc,
       loc,
       type_: t,
+      arguments: Graphql_ast.arguments,
     })
   | Fr_fragment_spread(string, loc, string, option(string), list(string))
 and t =

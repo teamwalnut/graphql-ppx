@@ -150,7 +150,16 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_, loc, loc_key}) => {
+           | Field({path: [name, ...path], type_, loc, loc_key, arguments}) => {
+               // Add field to internal module
+               if (!raw) {
+                 Output_bucklescript_docstrings.for_field_arguments(
+                   config,
+                   name
+                   |> Schema.lookup_field(Schema.query_type(config.schema)),
+                   arguments,
+                 );
+               };
                [
                  Ast_helper.Type.field(
                    {Location.txt: to_valid_ident(name), loc: Location.none},

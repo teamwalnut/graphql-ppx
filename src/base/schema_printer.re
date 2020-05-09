@@ -41,6 +41,30 @@ let print_input_object = ({iom_input_fields, iom_name}: input_object_meta) => {
   ++ "\n}";
 };
 
+let print_enum = ({em_name, em_values}: enum_meta) => {
+  em_name
+  ++ " {\n"
+  ++ (
+    em_values
+    |> List.fold_left(
+         (p, {evm_name, evm_deprecation_reason}) => {
+           p
+           ++ "  "
+           ++ evm_name
+           ++ (
+             switch (evm_deprecation_reason) {
+             | None => ""
+             | Some(_) => " (DEPRECATED)"
+             }
+           )
+           ++ "\n"
+         },
+         "",
+       )
+  )
+  ++ "}";
+};
+
 let print_scalar = ({sm_name}: scalar_meta) => sm_name;
 
 let print_type = (name: string, schema: t) => {
@@ -51,8 +75,16 @@ let print_type = (name: string, schema: t) => {
        | Scalar(scalar_meta) => Some(print_scalar(scalar_meta))
        | InputObject(input_obj_meta) =>
          Some(print_input_object(input_obj_meta))
-       | Enum(_)
+       | Enum(enum_meta) => Some(print_enum(enum_meta))
        | Interface(_)
        | Union(_) => None,
      );
+};
+
+let rec print_type_from_ref = (type_ref: type_ref, schema: t) => {
+  switch (type_ref) {
+  | Schema.Named(n) => print_type(n, schema) |> Option.get_or_else("N/A")
+  | List(t) => "[" ++ print_type_from_ref(t, schema) ++ "]"
+  | NonNull(t) => print_type_from_ref(t, schema) ++ "!"
+  };
 };

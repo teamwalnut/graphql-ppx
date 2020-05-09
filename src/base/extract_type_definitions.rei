@@ -12,6 +12,7 @@ type object_field =
       loc_key: Source_pos.ast_location,
       loc: Source_pos.ast_location,
       path,
+      arguments: Graphql_ast.arguments,
     })
   | Fragment({
       module_name: string,

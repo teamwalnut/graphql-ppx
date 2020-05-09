@@ -18,6 +18,7 @@ type object_field =
       loc_key: Source_pos.ast_location,
       loc: Source_pos.ast_location,
       path,
+      arguments: Graphql_ast.arguments,
     })
   | Fragment({
       module_name: string,
@@ -171,8 +172,14 @@ and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
         fields
         |> List.map(
              fun
-             | Fr_named_field({name, loc, loc_key, type_}) => {
-                 Field({loc, loc_key, path: [name, ...path], type_});
+             | Fr_named_field({name, loc, loc_key, type_, arguments}) => {
+                 Field({
+                   loc,
+                   loc_key,
+                   path: [name, ...path],
+                   type_,
+                   arguments,
+                 });
                }
              | Fr_fragment_spread(key, loc_key, name, type_name, _arguments) =>
                Fragment({module_name: name, key, loc_key, type_name}),

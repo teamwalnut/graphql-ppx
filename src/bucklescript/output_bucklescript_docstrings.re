@@ -11,6 +11,92 @@ let reset = () => {
   str_items := [];
 };
 
+let for_field_arguments =
+    (
+      config: Generator_utils.output_config,
+      field_meta: option(Schema.field_meta),
+      arguments: Graphql_ast.arguments,
+    ) => {
+  switch (field_meta) {
+  | None => ()
+  | Some({fm_arguments, fm_name}) =>
+    str_items :=
+      List.concat([
+        str_items^,
+        ...arguments
+           |> List.map(((name, type_): Graphql_ast.argument) => {
+                switch (
+                  fm_arguments
+                  |> List.find_opt(({am_name}: Schema.argument_meta) => {
+                       am_name == name.item
+                     })
+                ) {
+                | None => []
+                | Some({am_arg_type}) =>
+                  let name_loc = config.map_loc(name.span);
+                  let safe_name =
+                    "_graphql_"
+                    ++ name.item
+                    ++ "_"
+                    ++ (name_loc.loc_start.pos_cnum |> string_of_int);
+                  Ast_helper.[
+                    Str.type_(
+                      Nonrecursive,
+                      [Type.mk(Location.mknoloc(safe_name))],
+                    ),
+                    Str.value(
+                      Nonrecursive,
+                      [
+                        Vb.mk(
+                          ~attrs=[
+                            Docstrings.docs_attr(
+                              Docstrings.docstring(
+                                "Argument **"
+                                ++ name.item
+                                ++ "** on field **"
+                                ++ fm_name
+                                ++ "** has the following graphql type:\n\n```\n"
+                                ++ Schema_printer.print_type_from_ref(
+                                     am_arg_type,
+                                     config.schema,
+                                   )
+                                ++ "\n```",
+                                conv_loc(name_loc),
+                              ),
+                            ),
+                          ],
+                          Ast_helper.Pat.var(
+                            Location.mkloc(safe_name, conv_loc(name_loc)),
+                          ),
+                          Exp.constraint_(
+                            Exp.apply(
+                              Exp.ident(
+                                Location.mknoloc(
+                                  Longident.parse("Obj.magic"),
+                                ),
+                              ),
+                              [
+                                (
+                                  Nolabel,
+                                  Exp.constant(Pconst_integer("0", None)),
+                                ),
+                              ],
+                            ),
+                            Typ.constr(
+                              Location.mknoloc(Longident.parse(safe_name)),
+                              [],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ];
+                }
+              }),
+      ])
+  };
+};
+
 let for_root_identifier = (config: Generator_utils.output_config, loc) => {
   str_items :=
     List.append(

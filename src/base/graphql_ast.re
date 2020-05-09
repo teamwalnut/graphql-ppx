@@ -24,7 +24,8 @@ type variable_definition = {
 
 type variable_definitions = list((spanning(string), variable_definition));
 
-type arguments = list((spanning(string), spanning(input_value)));
+type argument = (spanning(string), spanning(input_value));
+type arguments = list(argument);
 
 type directive = {
   d_name: spanning(string),
