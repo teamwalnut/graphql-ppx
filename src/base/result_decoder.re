@@ -81,6 +81,7 @@ let rec unify_type =
           error_marker,
           as_record,
           existing_record,
+          omit_future_value,
           config,
           span,
           ty,
@@ -94,6 +95,7 @@ let rec unify_type =
         error_marker,
         as_record,
         existing_record,
+        omit_future_value,
         config,
         span,
         t,
@@ -107,6 +109,7 @@ let rec unify_type =
         error_marker,
         as_record,
         existing_record,
+        omit_future_value,
         config,
         span,
         t,
@@ -147,7 +150,7 @@ let rec unify_type =
         selection_set,
       )
     | Some(Enum(enum_meta)) =>
-      Res_poly_enum(config.map_loc(span), enum_meta)
+      Res_poly_enum(config.map_loc(span), enum_meta, omit_future_value)
     | Some(Interface(im) as ty) =>
       unify_interface(
         error_marker,
@@ -166,7 +169,14 @@ let rec unify_type =
         "Can't have fields on input objects",
       )
     | Some(Union(um)) =>
-      unify_union(error_marker, config, span, um, selection_set)
+      unify_union(
+        error_marker,
+        config,
+        span,
+        um,
+        omit_future_value,
+        selection_set,
+      )
     }
   }
 and unify_interface =
@@ -239,7 +249,8 @@ and unify_interface =
       fragment_cases,
     );
   }
-and unify_union = (error_marker, config, span, union_meta, selection_set) =>
+and unify_union =
+    (error_marker, config, span, union_meta, omit_future_value, selection_set) =>
   switch (selection_set) {
   | None =>
     make_error(
@@ -318,6 +329,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
       } else {
         Nonexhaustive;
       },
+      omit_future_value,
     );
   }
 and unify_variant = (error_marker, config, span, ty, selection_set) =>
@@ -393,6 +405,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                        error_marker,
                        false,
                        None,
+                       false,
                        config,
                        span,
                        inner_type,
@@ -428,7 +441,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let key = key.item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
-  let is_omit_future_value =
+  let omit_future_value =
     has_directive("ppxOmitFutureValue", ast_field.fd_directives)
     || !config.future_added_value;
   let existing_record = get_ppx_as(ast_field.fd_directives);
@@ -440,7 +453,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     if (is_variant) {
       unify_variant(error_marker);
     } else {
-      unify_type(error_marker, is_record, existing_record);
+      unify_type(error_marker, is_record, existing_record, omit_future_value);
     };
 
   let parser_expr =

@@ -168,7 +168,7 @@ let rec generate_decoder = config =>
   | Res_float(loc) => float_decoder(conv_loc(loc))
   | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_loc) => [%expr value]
-  | Res_poly_enum(loc, enum_meta) =>
+  | Res_poly_enum(loc, enum_meta, _) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
@@ -178,7 +178,7 @@ let rec generate_decoder = config =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_poly_variant_selection_set(loc, name, fields) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(loc, name, fragments, exhaustive, _) =>
     generate_poly_variant_union(
       config,
       conv_loc(loc),

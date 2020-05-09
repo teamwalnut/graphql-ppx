@@ -36,6 +36,7 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       fields: list((Result_structure.name, Result_structure.t)),
+      omit_future_value: bool,
     })
   | VariantInterface({
       loc: Source_pos.ast_location,
@@ -47,6 +48,7 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       fields: list(string),
+      omit_future_value: bool,
     });
 
 type input_object_field =
