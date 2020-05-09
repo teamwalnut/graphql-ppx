@@ -34,7 +34,6 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -147,6 +146,9 @@ module RecordsQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ObjectsQuery = {
   module Raw = {
@@ -168,7 +170,6 @@ module ObjectsQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -276,4 +277,7 @@ module ObjectsQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

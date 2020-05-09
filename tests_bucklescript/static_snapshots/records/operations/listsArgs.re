@@ -28,7 +28,6 @@ module MyQuery = {
   };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
@@ -138,4 +137,19 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_219;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+```*/
+    let _graphql_arg_219: _graphql_arg_219 = Obj.magic(0);
+    type root = t;
+  };
 };

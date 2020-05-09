@@ -37,7 +37,6 @@ module MyQuery = {
     "nonNullable": Js.Json.t,
   };
   type t = {. "customScalarField": t_customScalarField};
-  type operation = t;
   type t_variables = {
     .
     "opt": option(Js.Json.t),
@@ -98,4 +97,7 @@ module MyQuery = {
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({"opt": opt, "req": req}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

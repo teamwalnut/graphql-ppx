@@ -23,7 +23,6 @@ module MyQuery = {
   };
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
   type t = {enumInput: string};
-  type operation = t;
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
   let parse: Raw.t => t =
     (value) => (
@@ -61,4 +60,38 @@ module MyQuery = {
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+```
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+```*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **enumInput** has the following graphql type:
+
+```
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+```*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_SampleField_47;
+    /**```
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+```*/
+    let _graphql_SampleField_47: _graphql_SampleField_47 = Obj.magic(0);
+  };
 };

@@ -23,7 +23,6 @@ module MyQuery = {
   };
   let query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {. "argNamedQuery": int};
-  type operation = t;
   type t_variables = {. "query": int};
   let parse: Raw.t => t =
     value => {
@@ -46,4 +45,7 @@ module MyQuery = {
   let makeVariables = (~query, ()) =>
     serializeVariables({"query": query}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

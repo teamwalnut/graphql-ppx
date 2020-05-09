@@ -52,7 +52,6 @@ module MyQuery = {
     "inner": option(t_first_inner),
   };
   type t = {. "first": t_first};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let first = {
@@ -150,4 +149,7 @@ module MyQuery = {
       {"first": first};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

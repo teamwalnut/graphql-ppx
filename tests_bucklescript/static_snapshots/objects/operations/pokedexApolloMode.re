@@ -32,7 +32,6 @@ module MyQuery = {
     "name": option(string),
   };
   type t = {. "pokemon": option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -88,4 +87,7 @@ module MyQuery = {
       {"pokemon": pokemon};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

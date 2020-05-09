@@ -51,7 +51,6 @@ module MyQuery = {
     "v1": t_v1,
     "v2": t_v2,
   };
-  type operation = t;
   type t_variables = {. "var": bool};
   let parse: Raw.t => t =
     value => {
@@ -148,4 +147,7 @@ module MyQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

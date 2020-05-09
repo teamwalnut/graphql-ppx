@@ -37,7 +37,6 @@ module MyQuery = {
     "name": option(string),
   };
   type t = {. "pokemon": option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     .
     "id": option(string),
@@ -123,4 +122,7 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({"id": id, "name": name}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

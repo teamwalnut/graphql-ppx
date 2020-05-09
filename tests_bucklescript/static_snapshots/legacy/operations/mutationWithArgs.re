@@ -23,7 +23,6 @@ module MyQuery = {
   };
   let query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
   type t = {. "optionalInputArgs": string};
-  type operation = t;
   type t_variables = {. "required": string};
   let parse: Raw.t => t =
     value => {
@@ -56,4 +55,7 @@ module MyQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

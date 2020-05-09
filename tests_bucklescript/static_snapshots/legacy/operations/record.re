@@ -38,7 +38,6 @@ module MyQuery = {
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
   type t = {. "variousScalars": scalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -81,6 +80,9 @@ module MyQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -90,7 +92,6 @@ module OneFieldQuery = {
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -131,25 +132,12 @@ module OneFieldQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**```
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-```*/
-    let _: graphql = Obj.magic(0);
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
       type t = {
@@ -164,7 +152,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -189,6 +176,25 @@ VariousScalars {
         {"string": string, "int": int};
       };
     let name = "Fragment";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -201,7 +207,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {. "variousScalars": Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let variousScalars = {
@@ -224,6 +229,9 @@ VariousScalars {
       "parse": parse,
     };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -247,7 +255,6 @@ module InlineFragmentQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {. "dogOrHuman": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -312,17 +319,12 @@ module InlineFragmentQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**```
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-```*/
-    let _: graphql = Obj.magic(0);
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
@@ -337,7 +339,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
@@ -362,6 +363,17 @@ Dog {
         {"name": name, "barkVolume": barkVolume};
       };
     let name = "DogFragment";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+```*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -382,7 +394,6 @@ Dog {
       | `Dog(DogFragment.t)
     ];
     type t = {. "dogOrHuman": t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let dogOrHuman = {
@@ -423,5 +434,8 @@ Dog {
       "parse": parse,
     };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };

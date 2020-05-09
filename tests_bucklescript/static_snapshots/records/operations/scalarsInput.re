@@ -32,27 +32,9 @@ module MyQuery = {
       nullableID: Js.Nullable.t(string),
       id: string,
     };
-    type nonrec _graphql_VariousScalarsInput_47;
-    /**```
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-```*/
-    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-      Obj.magic(0);
   };
   let query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -66,23 +48,6 @@ VariousScalarsInput {
     nullableID: option(string),
     id: string,
   };
-  type nonrec _graphql_VariousScalarsInput_47;
-  /**```
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-```*/
-  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -197,4 +162,60 @@ VariousScalarsInput {
     id,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_93;
+    /**Variable **$arg** has the following graphql type:
+
+```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+```*/
+    let _graphql_arg_93: _graphql_arg_93 = Obj.magic(0);
+    type nonrec _graphql_arg_88;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+```*/
+    let _graphql_arg_88: _graphql_arg_88 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
+  };
 };

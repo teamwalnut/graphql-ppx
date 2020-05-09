@@ -48,7 +48,6 @@ module MyQuery = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -198,4 +197,7 @@ module MyQuery = {
       {"variousScalars": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

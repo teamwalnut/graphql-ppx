@@ -61,7 +61,6 @@ module MyQuery = {
     "second": t_second,
     "let_": t_let,
   };
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -271,4 +270,7 @@ module MyQuery = {
       {"first": first, "second": second, "let_": let_};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

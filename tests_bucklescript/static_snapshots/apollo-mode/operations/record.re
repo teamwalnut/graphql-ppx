@@ -38,7 +38,6 @@ module MyQuery = {
   };
   let query = "query   {\nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
   type t = {variousScalars: scalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -90,6 +89,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -105,7 +107,6 @@ module OneFieldQuery = {
     nullableString: option(string),
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -155,25 +156,12 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**```
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-```*/
-    let _: graphql = Obj.magic(0);
     let query = "fragment Fragment on VariousScalars   {\n__typename  \nstring  \nint  \n}\n";
     module Raw = {
       type t = {
@@ -189,7 +177,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -223,6 +210,25 @@ VariousScalars {
         }: Raw.t
       );
     let name = "Fragment";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -235,7 +241,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -256,6 +261,9 @@ VariousScalars {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -279,7 +287,6 @@ module InlineFragmentQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -349,17 +356,12 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**```
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-```*/
-    let _: graphql = Obj.magic(0);
     let query = "fragment DogFragment on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
@@ -375,7 +377,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -409,6 +410,17 @@ Dog {
         }: Raw.t
       );
     let name = "DogFragment";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+```*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -429,7 +441,6 @@ Dog {
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -470,5 +481,8 @@ Dog {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };

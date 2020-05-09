@@ -23,7 +23,6 @@ module MyQuery = {
   };
   let query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
   type t = {argNamedQuery: int};
-  type operation = t;
   type t_variables = {query: int};
   let parse: Raw.t => t =
     (value) => (
@@ -49,4 +48,21 @@ module MyQuery = {
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_query_82;
+    /**Variable **$query** has the following graphql type:
+
+```
+Int!
+```*/
+    let _graphql_query_82: _graphql_query_82 = Obj.magic(0);
+    type nonrec _graphql_query_75;
+    /**Argument **query** on field **argNamedQuery** has the following graphql type:
+
+```
+Int!
+```*/
+    let _graphql_query_75: _graphql_query_75 = Obj.magic(0);
+    type root = t;
+  };
 };

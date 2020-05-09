@@ -26,20 +26,9 @@ module MyQuery = {
       nonNullableOfNullable: array(Js.Nullable.t(string)),
       nonNullableOfNonNullable: array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**```
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-```*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -47,16 +36,6 @@ ListsInput {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**```
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-```*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -165,4 +144,41 @@ ListsInput {
     nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+```*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+```*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };

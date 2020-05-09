@@ -30,23 +30,9 @@ module MyQuery = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**```
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-```*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
   type t = {nonrecursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -57,19 +43,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**```
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-```*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -247,4 +220,48 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_100;
+    /**Variable **$arg** has the following graphql type:
+
+```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+```*/
+    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
+    type nonrec _graphql_arg_95;
+    /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
+
+```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+```*/
+    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**```
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+```*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };

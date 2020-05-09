@@ -96,7 +96,6 @@ module MyQuery = {
   };
   let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
-  type operation = t;
   type t_variables = {query: int};
   let parse: Raw.t => t =
     (value) => (
@@ -122,6 +121,23 @@ module MyQuery = {
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_query_82;
+    /**Variable **$query** has the following graphql type:
+
+\`\`\`
+Int!
+\`\`\`*/
+    let _graphql_query_82: _graphql_query_82 = Obj.magic(0);
+    type nonrec _graphql_query_75;
+    /**Argument **query** on field **argNamedQuery** has the following graphql type:
+
+\`\`\`
+Int!
+\`\`\`*/
+    let _graphql_query_75: _graphql_query_75 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -159,23 +175,9 @@ module MyQuery = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -186,19 +188,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -376,6 +365,50 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_100;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
+    type nonrec _graphql_arg_95;
+    /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -425,7 +458,6 @@ module MyQuery = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -477,6 +509,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -520,7 +555,6 @@ module MyQuery = {
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
-  type operation = t;
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
@@ -598,6 +632,37 @@ module MyQuery = {
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_opt_119;
+    /**Variable **$opt** has the following graphql type:
+
+\`\`\`
+CustomScalar
+\`\`\`*/
+    let _graphql_opt_119: _graphql_opt_119 = Obj.magic(0);
+    type nonrec _graphql_argOptional_106;
+    /**Argument **argOptional** on field **customScalarField** has the following graphql type:
+
+\`\`\`
+CustomScalar
+\`\`\`*/
+    let _graphql_argOptional_106: _graphql_argOptional_106 = Obj.magic(0);
+    type nonrec _graphql_req_138;
+    /**Variable **$req** has the following graphql type:
+
+\`\`\`
+CustomScalar!
+\`\`\`*/
+    let _graphql_req_138: _graphql_req_138 = Obj.magic(0);
+    type nonrec _graphql_argRequired_125;
+    /**Argument **argRequired** on field **customScalarField** has the following graphql type:
+
+\`\`\`
+CustomScalar!
+\`\`\`*/
+    let _graphql_argRequired_125: _graphql_argRequired_125 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -641,7 +706,6 @@ module MyQuery = {
     nullableColor: option(GraphqlHelpers.DateTime.t),
   };
   type t = {customFields: t_customFields};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -740,6 +804,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -769,7 +836,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -790,6 +856,25 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_filter_92;
+    /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
+
+\`\`\`
+JsonScalar!
+\`\`\`*/
+    let _graphql_filter_92: _graphql_filter_92 = Obj.magic(0);
+    type nonrec _graphql_arg_140;
+    /**Argument **arg** on field **defaultObjectValueOnScalar** has the following graphql type:
+
+\`\`\`
+EmbeddedInput {
+  field: String
+}!
+\`\`\`*/
+    let _graphql_arg_140: _graphql_arg_140 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -820,7 +905,6 @@ module MyQuery = {
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {enumInput: string};
-  type operation = t;
   type t_variables = {arg: [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     (value) => (
@@ -858,6 +942,40 @@ module MyQuery = {
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+\`\`\`*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **enumInput** has the following graphql type:
+
+\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+\`\`\`*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_SampleField_47;
+    /**\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+\`\`\`*/
+    let _graphql_SampleField_47: _graphql_SampleField_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -901,7 +1019,6 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1018,6 +1135,9 @@ module RecordsQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ObjectsQuery = {
   module Raw = {
@@ -1041,7 +1161,6 @@ module ObjectsQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -1154,6 +1273,9 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -1179,16 +1301,6 @@ exports[`Apollo fragmentDefinition.re 1`] = `
 ];
 module Fragments = {
   module ListFragment = {
-    type graphql;
-    /**\`\`\`
-Lists {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -1204,7 +1316,6 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -1269,10 +1380,10 @@ Lists {
         }: Raw.t
       );
     let name = \\"ListFragment\\";
-  };
-  module Another = {
-    type graphql;
-    /**\`\`\`
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
 Lists {
   nullableOfNullable: [String]
   nullableOfNonNullable: [String!]
@@ -1280,7 +1391,10 @@ Lists {
   nonNullableOfNonNullable: [String!]!
 }
 \`\`\`*/
-    let _: graphql = Obj.magic(0);
+      let graphql: graphql = Obj.magic(0);
+    };
+  };
+  module Another = {
     let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -1294,7 +1408,6 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -1327,6 +1440,19 @@ Lists {
         }: Raw.t
       );
     let name = \\"Another\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
 };
 module MyQuery = {
@@ -1402,7 +1528,6 @@ module MyQuery = {
     l3: t_l3,
     l4: t_l4,
   };
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1657,6 +1782,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -1669,7 +1797,6 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1690,6 +1817,9 @@ module MyQuery2 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -1755,7 +1885,6 @@ module MyQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1872,6 +2001,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -1907,7 +2039,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
@@ -2017,6 +2148,21 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_219;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_219: _graphql_arg_219 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -2050,20 +2196,9 @@ module MyQuery = {
       nonNullableOfNullable: array(Js.Nullable.t(string)),
       nonNullableOfNonNullable: array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -2071,16 +2206,6 @@ ListsInput {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -2189,6 +2314,43 @@ ListsInput {
     nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -2253,7 +2415,6 @@ module MyQuery = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -2408,6 +2569,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -2438,7 +2602,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {optionalInputArgs: string};
-  type operation = t;
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
@@ -2464,6 +2627,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -2494,7 +2660,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -2517,6 +2682,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -2632,7 +2800,6 @@ module MyQuery = {
     second: t_second,
     let_: t_let,
   };
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -2942,6 +3109,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -2979,23 +3149,9 @@ module MyQuery = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -3006,19 +3162,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3196,6 +3339,50 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_100;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
+    type nonrec _graphql_arg_95;
+    /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -3217,39 +3404,12 @@ module MyQuery2 = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_169;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-      Obj.magic(0);
-    type nonrec _graphql_NonrecursiveInput_196;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\nmore: scalarsInput(arg: $arg2)  \\\\n}\\\\n\\";
   type t = {
     scalarsInput: string,
     more: string,
   };
-  type operation = t;
   type t_variables = {
     arg: t_variables_NonrecursiveInput,
     arg2: t_variables_NonrecursiveInput,
@@ -3263,32 +3423,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_169;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-    Obj.magic(0);
-  type nonrec _graphql_NonrecursiveInput_196;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3478,6 +3612,67 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_240;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_240: _graphql_arg_240 = Obj.magic(0);
+    type nonrec _graphql_arg_235;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_235: _graphql_arg_235 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_169;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+      Obj.magic(0);
+    type nonrec _graphql_NonrecursiveInput_196;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -3517,7 +3712,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3583,6 +3777,16 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_52;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_52: _graphql_name_52 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -3626,7 +3830,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     id: option(string),
     name: option(string),
@@ -3721,6 +3924,37 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_100;
+    /**Variable **$name** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_100: _graphql_name_100 = Obj.magic(0);
+    type nonrec _graphql_name_94;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_94: _graphql_name_94 = Obj.magic(0);
+    type nonrec _graphql_id_111;
+    /**Variable **$id** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_id_111: _graphql_id_111 = Obj.magic(0);
+    type nonrec _graphql_id_107;
+    /**Argument **id** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_id_107: _graphql_id_107 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -3766,7 +4000,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {variousScalars: scalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3818,6 +4051,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -3833,7 +4069,6 @@ module OneFieldQuery = {
     nullableString: option(string),
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3883,25 +4118,12 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**\`\`\`
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -3917,7 +4139,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -3951,6 +4172,25 @@ VariousScalars {
         }: Raw.t
       );
     let name = \\"Fragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -3963,7 +4203,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -3984,6 +4223,9 @@ VariousScalars {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -4007,7 +4249,6 @@ module InlineFragmentQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4077,17 +4318,12 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**\`\`\`
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -4103,7 +4339,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       __typename: {
         let value = (value: Raw.t).__typename;
@@ -4137,6 +4372,17 @@ Dog {
         }: Raw.t
       );
     let name = \\"DogFragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -4157,7 +4403,6 @@ Dog {
       | \`Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -4198,6 +4443,9 @@ Dog {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 "
@@ -4231,34 +4479,15 @@ module MyQuery = {
       inner: Js.Nullable.t(t_variables_RecursiveInput),
       enum: Js.Nullable.t(string),
     };
-    type nonrec _graphql_RecursiveInput_47;
-    /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {recursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     otherField: option(string),
     inner: option(t_variables_RecursiveInput),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
-  type nonrec _graphql_RecursiveInput_47;
-  /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4341,6 +4570,40 @@ RecursiveInput {
     enum,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_90;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}!
+\`\`\`*/
+    let _graphql_arg_90: _graphql_arg_90 = Obj.magic(0);
+    type nonrec _graphql_arg_85;
+    /**Argument **arg** on field **recursiveInput** has the following graphql type:
+
+\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}!
+\`\`\`*/
+    let _graphql_arg_85: _graphql_arg_85 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_RecursiveInput_47;
+    /**\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+\`\`\`*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -4396,7 +4659,6 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4554,6 +4816,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -4595,7 +4860,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {
     nullableString: option(string),
     string,
@@ -4714,6 +4978,27 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_292;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_292: _graphql_arg_292 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -4753,27 +5038,9 @@ module MyQuery = {
       nullableID: Js.Nullable.t(string),
       id: string,
     };
-    type nonrec _graphql_VariousScalarsInput_47;
-    /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -4787,23 +5054,6 @@ VariousScalarsInput {
     nullableID: option(string),
     id: string,
   };
-  type nonrec _graphql_VariousScalarsInput_47;
-  /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4918,6 +5168,62 @@ VariousScalarsInput {
     id,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_93;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_93: _graphql_arg_93 = Obj.magic(0);
+    type nonrec _graphql_arg_88;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_88: _graphql_arg_88 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -4974,7 +5280,6 @@ module MyQuery = {
     v1: t_v1,
     v2: t_v2,
   };
-  type operation = t;
   type t_variables = {var: bool};
   let parse: Raw.t => t =
     (value) => (
@@ -5094,6 +5399,9 @@ module MyQuery = {
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -5145,7 +5453,6 @@ module MyQuery = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5245,6 +5552,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -5300,7 +5610,6 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5458,6 +5767,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -5495,7 +5807,6 @@ module MyQuery2 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5653,6 +5964,9 @@ module MyQuery2 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery3 = {
   module Raw = {
@@ -5690,7 +6004,6 @@ module MyQuery3 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5848,6 +6161,9 @@ module MyQuery3 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery4 = {
   module Raw = {
@@ -5885,7 +6201,6 @@ module MyQuery4 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6043,6 +6358,9 @@ module MyQuery4 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -6096,7 +6414,6 @@ module MyQuery = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6205,6 +6522,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -6258,7 +6578,6 @@ module MyQuery = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6361,6 +6680,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQueryNoError = {
   module Raw = {
@@ -6392,7 +6714,6 @@ module MyQueryNoError = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6495,6 +6816,9 @@ module MyQueryNoError = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -6539,7 +6863,6 @@ module MyQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6609,6 +6932,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -6688,7 +7014,6 @@ module MyQuery = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6868,6 +7193,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7239,7 +7567,6 @@ module MyQuery = {
   };
   let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
-  type operation = t;
   type t_variables = {. \\"query\\": int};
   let parse: Raw.t => t =
     value => {
@@ -7272,6 +7599,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7310,23 +7640,9 @@ module MyQuery = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -7338,19 +7654,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let nonrecursiveInput = {
@@ -7531,6 +7834,22 @@ NonrecursiveInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -7580,7 +7899,6 @@ module MyQuery = {
     \\"int\\": StringOfInt.t,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -7619,6 +7937,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7663,7 +7984,6 @@ module MyQuery = {
     \\"nonNullable\\": Js.Json.t,
   };
   type t = {. \\"customScalarField\\": t_customScalarField};
-  type operation = t;
   type t_variables = {
     .
     \\"opt\\": option(Js.Json.t),
@@ -7734,6 +8054,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7777,7 +8100,6 @@ module MyQuery = {
     \\"nullableColor\\": option(GraphqlHelpers.DateTime.t),
   };
   type t = {. \\"customFields\\": t_customFields};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -7865,6 +8187,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7894,7 +8219,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
@@ -7917,6 +8241,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -7947,7 +8274,6 @@ module MyQuery = {
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"enumInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     value => {
@@ -7992,6 +8318,18 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_SampleField_47;
+    /**\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+\`\`\`*/
+    let _graphql_SampleField_47: _graphql_SampleField_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -8033,7 +8371,6 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8146,6 +8483,9 @@ module RecordsQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ObjectsQuery = {
   module Raw = {
@@ -8167,7 +8507,6 @@ module ObjectsQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -8275,6 +8614,9 @@ module ObjectsQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -8300,16 +8642,6 @@ exports[`Legacy fragmentDefinition.re 1`] = `
 ];
 module Fragments = {
   module ListFragment = {
-    type graphql;
-    /**\`\`\`
-Lists {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -8325,7 +8657,6 @@ Lists {
       \\"nullableOfNonNullable\\": option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -8387,10 +8718,10 @@ Lists {
         };
       };
     let name = \\"ListFragment\\";
-  };
-  module Another = {
-    type graphql;
-    /**\`\`\`
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
 Lists {
   nullableOfNullable: [String]
   nullableOfNonNullable: [String!]
@@ -8398,7 +8729,10 @@ Lists {
   nonNullableOfNonNullable: [String!]!
 }
 \`\`\`*/
-    let _: graphql = Obj.magic(0);
+      let graphql: graphql = Obj.magic(0);
+    };
+  };
+  module Another = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
@@ -8406,7 +8740,6 @@ Lists {
     };
     type t = {. \\"nullableOfNonNullable\\": option(array(string))};
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -8430,6 +8763,19 @@ Lists {
         {\\"nullableOfNonNullable\\": nullableOfNonNullable};
       };
     let name = \\"Another\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
 };
 module MyQuery = {
@@ -8507,7 +8853,6 @@ module MyQuery = {
     \\"l3\\": t_l3,
     \\"l4\\": t_l4,
   };
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let l4 = {
@@ -8703,6 +9048,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -8715,7 +9063,6 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {. \\"lists\\": Fragments.ListFragment.t};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -8738,6 +9085,9 @@ module MyQuery2 = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -8803,7 +9153,6 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -8911,6 +9260,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -8947,7 +9299,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
-  type operation = t;
   type t_variables = {
     .
     \\"nullableOfNullable\\": option(array(option(string))),
@@ -9080,6 +9431,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -9114,20 +9468,9 @@ module MyQuery = {
       \\"nonNullableOfNullable\\": array(Js.Nullable.t(string)),
       \\"nonNullableOfNonNullable\\": array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_ListsInput}
   and t_variables_ListsInput = {
     .
@@ -9136,16 +9479,6 @@ ListsInput {
     \\"nonNullableOfNullable\\": array(option(string)),
     \\"nonNullableOfNonNullable\\": array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let listsInput = {
@@ -9259,6 +9592,19 @@ ListsInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -9317,7 +9663,6 @@ module MyQuery = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -9424,6 +9769,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -9454,7 +9802,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -9487,6 +9834,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -9517,7 +9867,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -9550,6 +9899,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -9618,7 +9970,6 @@ module MyQuery = {
     \\"second\\": t_second,
     \\"let_\\": t_let,
   };
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -9833,6 +10184,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -9871,23 +10225,9 @@ module MyQuery = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -9899,19 +10239,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let nonrecursiveInput = {
@@ -10092,6 +10419,22 @@ NonrecursiveInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -10116,32 +10459,6 @@ module MyQuery2 = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_169;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-      Obj.magic(0);
-    type nonrec _graphql_NonrecursiveInput_196;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\nmore: scalarsInput(arg: $arg2)  \\\\n}\\\\n\\";
   type t = {
@@ -10149,7 +10466,6 @@ NonrecursiveInput {
     \\"scalarsInput\\": string,
     \\"more\\": string,
   };
-  type operation = t;
   type t_variables = {
     .
     \\"arg\\": t_variables_NonrecursiveInput,
@@ -10165,32 +10481,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_169;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-    Obj.magic(0);
-  type nonrec _graphql_NonrecursiveInput_196;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let more = {
@@ -10380,6 +10670,35 @@ NonrecursiveInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_169;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+      Obj.magic(0);
+    type nonrec _graphql_NonrecursiveInput_196;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -10419,7 +10738,6 @@ module MyQuery = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -10480,6 +10798,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -10524,7 +10845,6 @@ module MyQuery = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     .
     \\"id\\": option(string),
@@ -10620,6 +10940,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -10665,7 +10988,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {. \\"variousScalars\\": scalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -10708,6 +11030,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -10717,7 +11042,6 @@ module OneFieldQuery = {
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -10758,25 +11082,12 @@ module OneFieldQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**\`\`\`
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -10791,7 +11102,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -10816,6 +11126,25 @@ VariousScalars {
         {\\"string\\": string, \\"int\\": int};
       };
     let name = \\"Fragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -10828,7 +11157,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {. \\"variousScalars\\": Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let variousScalars = {
@@ -10851,6 +11179,9 @@ VariousScalars {
       \\"parse\\": parse,
     };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -10874,7 +11205,6 @@ module InlineFragmentQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -10939,17 +11269,12 @@ module InlineFragmentQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**\`\`\`
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -10964,7 +11289,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
@@ -10989,6 +11313,17 @@ Dog {
         {\\"name\\": name, \\"barkVolume\\": barkVolume};
       };
     let name = \\"DogFragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -11009,7 +11344,6 @@ Dog {
       | \`Dog(DogFragment.t)
     ];
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let dogOrHuman = {
@@ -11050,6 +11384,9 @@ Dog {
       \\"parse\\": parse,
     };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 "
@@ -11084,19 +11421,9 @@ module MyQuery = {
       \\"inner\\": Js.Nullable.t(t_variables_RecursiveInput),
       \\"enum\\": Js.Nullable.t(string),
     };
-    type nonrec _graphql_RecursiveInput_47;
-    /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"recursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .
@@ -11104,15 +11431,6 @@ RecursiveInput {
     \\"inner\\": option(t_variables_RecursiveInput),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
-  type nonrec _graphql_RecursiveInput_47;
-  /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let recursiveInput = {
@@ -11199,6 +11517,18 @@ RecursiveInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_RecursiveInput_47;
+    /**\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+\`\`\`*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -11254,7 +11584,6 @@ module MyQuery = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -11409,6 +11738,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -11451,7 +11783,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
-  type operation = t;
   type t_variables = {
     .
     \\"nullableString\\": option(string),
@@ -11605,6 +11936,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -11645,27 +11979,9 @@ module MyQuery = {
       \\"nullableID\\": Js.Nullable.t(string),
       \\"id\\": string,
     };
-    type nonrec _graphql_VariousScalarsInput_47;
-    /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     .
@@ -11680,23 +11996,6 @@ VariousScalarsInput {
     \\"nullableID\\": option(string),
     \\"id\\": string,
   };
-  type nonrec _graphql_VariousScalarsInput_47;
-  /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let scalarsInput = {
@@ -11815,6 +12114,26 @@ VariousScalarsInput {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -11873,7 +12192,6 @@ module MyQuery = {
     \\"v1\\": t_v1,
     \\"v2\\": t_v2,
   };
-  type operation = t;
   type t_variables = {. \\"var\\": bool};
   let parse: Raw.t => t =
     value => {
@@ -11970,6 +12288,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -12017,7 +12338,6 @@ module MyQuery = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let simpleSubscription = {
@@ -12094,6 +12414,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -12149,7 +12472,6 @@ module MyQuery = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -12304,6 +12626,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -12341,7 +12666,6 @@ module MyQuery2 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -12496,6 +12820,9 @@ module MyQuery2 = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery3 = {
   module Raw = {
@@ -12533,7 +12860,6 @@ module MyQuery3 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -12688,6 +13014,9 @@ module MyQuery3 = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery4 = {
   module Raw = {
@@ -12725,7 +13054,6 @@ module MyQuery4 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -12880,6 +13208,9 @@ module MyQuery4 = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -12939,7 +13270,6 @@ module MyQuery = {
     \\"inner\\": option(t_first_inner),
   };
   type t = {. \\"first\\": t_first};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let first = {
@@ -13042,6 +13372,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -13094,7 +13427,6 @@ module MyQuery = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -13177,6 +13509,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQueryNoError = {
   module Raw = {
@@ -13207,7 +13542,6 @@ module MyQueryNoError = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -13290,6 +13624,9 @@ module MyQueryNoError = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -13335,7 +13672,6 @@ module MyQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -13396,6 +13732,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -13473,7 +13812,6 @@ module MyQuery = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. \\"mutationForVariant\\": t_mutationForVariant};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
@@ -13611,6 +13949,9 @@ module MyQuery = {
     \\"parse\\": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -13711,7 +14052,6 @@ module MyQuery = {
   };
   let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {. \\"argNamedQuery\\": int};
-  type operation = t;
   type t_variables = {. \\"query\\": int};
   let parse: Raw.t => t =
     value => {
@@ -13734,6 +14074,9 @@ module MyQuery = {
   let makeVariables = (~query, ()) =>
     serializeVariables({\\"query\\": query}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -13772,23 +14115,9 @@ module MyQuery = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -13800,19 +14129,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let nonrecursiveInput = {
@@ -13983,6 +14299,22 @@ NonrecursiveInput {
     \\"field\\": field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -14032,7 +14364,6 @@ module MyQuery = {
     \\"int\\": StringOfInt.t,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -14066,6 +14397,9 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -14110,7 +14444,6 @@ module MyQuery = {
     \\"nonNullable\\": Js.Json.t,
   };
   type t = {. \\"customScalarField\\": t_customScalarField};
-  type operation = t;
   type t_variables = {
     .
     \\"opt\\": option(Js.Json.t),
@@ -14171,6 +14504,9 @@ module MyQuery = {
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({\\"opt\\": opt, \\"req\\": req}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -14214,7 +14550,6 @@ module MyQuery = {
     \\"nullableColor\\": option(GraphqlHelpers.DateTime.t),
   };
   type t = {. \\"customFields\\": t_customFields};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -14297,6 +14632,9 @@ module MyQuery = {
       {\\"customFields\\": customFields};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -14326,7 +14664,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
@@ -14344,6 +14681,9 @@ module MyQuery = {
       {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -14374,7 +14714,6 @@ module MyQuery = {
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"enumInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     value => {
@@ -14409,6 +14748,18 @@ module MyQuery = {
   let makeVariables = (~arg, ()) =>
     serializeVariables({\\"arg\\": arg}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_SampleField_47;
+    /**\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+\`\`\`*/
+    let _graphql_SampleField_47: _graphql_SampleField_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -14450,7 +14801,6 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -14558,6 +14908,9 @@ module RecordsQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ObjectsQuery = {
   module Raw = {
@@ -14579,7 +14932,6 @@ module ObjectsQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -14682,6 +15034,9 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -14707,16 +15062,6 @@ exports[`Objects fragmentDefinition.re 1`] = `
 ];
 module Fragments = {
   module ListFragment = {
-    type graphql;
-    /**\`\`\`
-Lists {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -14732,7 +15077,6 @@ Lists {
       \\"nullableOfNonNullable\\": option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -14794,10 +15138,10 @@ Lists {
         };
       };
     let name = \\"ListFragment\\";
-  };
-  module Another = {
-    type graphql;
-    /**\`\`\`
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
 Lists {
   nullableOfNullable: [String]
   nullableOfNonNullable: [String!]
@@ -14805,7 +15149,10 @@ Lists {
   nonNullableOfNonNullable: [String!]!
 }
 \`\`\`*/
-    let _: graphql = Obj.magic(0);
+      let graphql: graphql = Obj.magic(0);
+    };
+  };
+  module Another = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
@@ -14813,7 +15160,6 @@ Lists {
     };
     type t = {. \\"nullableOfNonNullable\\": option(array(string))};
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t) => {
       let nullableOfNonNullable = {
         let value = value##nullableOfNonNullable;
@@ -14837,6 +15183,19 @@ Lists {
         {\\"nullableOfNonNullable\\": nullableOfNonNullable};
       };
     let name = \\"Another\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
 };
 module MyQuery = {
@@ -14914,7 +15273,6 @@ module MyQuery = {
     \\"l3\\": t_l3,
     \\"l4\\": t_l4,
   };
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let l4 = {
@@ -15105,6 +15463,9 @@ module MyQuery = {
       {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -15117,7 +15478,6 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {. \\"lists\\": Fragments.ListFragment.t};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -15135,6 +15495,9 @@ module MyQuery2 = {
       {\\"lists\\": lists};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15200,7 +15563,6 @@ module MyQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -15303,6 +15665,9 @@ module MyQuery = {
       {\\"lists\\": lists};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15339,7 +15704,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
-  type operation = t;
   type t_variables = {
     .
     \\"nullableOfNullable\\": option(array(option(string))),
@@ -15447,6 +15811,9 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15481,20 +15848,9 @@ module MyQuery = {
       \\"nonNullableOfNullable\\": array(Js.Nullable.t(string)),
       \\"nonNullableOfNonNullable\\": array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"listsInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_ListsInput}
   and t_variables_ListsInput = {
     .
@@ -15503,16 +15859,6 @@ ListsInput {
     \\"nonNullableOfNullable\\": array(option(string)),
     \\"nonNullableOfNonNullable\\": array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let listsInput = {
@@ -15616,6 +15962,19 @@ ListsInput {
     \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -15674,7 +16033,6 @@ module MyQuery = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -15776,6 +16134,9 @@ module MyQuery = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15806,7 +16167,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -15829,6 +16189,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15859,7 +16222,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -15882,6 +16244,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -15950,7 +16315,6 @@ module MyQuery = {
     \\"second\\": t_second,
     \\"let_\\": t_let,
   };
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -16160,6 +16524,9 @@ module MyQuery = {
       {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -16198,23 +16565,9 @@ module MyQuery = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"nonrecursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -16226,19 +16579,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let nonrecursiveInput = {
@@ -16409,6 +16749,22 @@ NonrecursiveInput {
     \\"field\\": field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -16433,32 +16789,6 @@ module MyQuery2 = {
       \\"custom\\": Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {. \\"field\\": Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_169;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-      Obj.magic(0);
-    type nonrec _graphql_NonrecursiveInput_196;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\nmore: scalarsInput(arg: $arg2)  \\\\n}\\\\n\\";
   type t = {
@@ -16466,7 +16796,6 @@ NonrecursiveInput {
     \\"scalarsInput\\": string,
     \\"more\\": string,
   };
-  type operation = t;
   type t_variables = {
     .
     \\"arg\\": t_variables_NonrecursiveInput,
@@ -16482,32 +16811,6 @@ NonrecursiveInput {
     \\"custom\\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \\"field\\": option(string)};
-  type nonrec _graphql_NonrecursiveInput_169;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-    Obj.magic(0);
-  type nonrec _graphql_NonrecursiveInput_196;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let more = {
@@ -16687,6 +16990,35 @@ NonrecursiveInput {
     \\"field\\": field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_169;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+      Obj.magic(0);
+    type nonrec _graphql_NonrecursiveInput_196;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -16726,7 +17058,6 @@ module MyQuery = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -16782,6 +17113,9 @@ module MyQuery = {
       {\\"pokemon\\": pokemon};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -16826,7 +17160,6 @@ module MyQuery = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     .
     \\"id\\": option(string),
@@ -16912,6 +17245,9 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({\\"id\\": id, \\"name\\": name}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -16957,7 +17293,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {. \\"variousScalars\\": scalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -16995,6 +17330,9 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -17004,7 +17342,6 @@ module OneFieldQuery = {
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -17040,25 +17377,12 @@ module OneFieldQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**\`\`\`
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -17073,7 +17397,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let int = {
         let value = value##int;
@@ -17098,6 +17421,25 @@ VariousScalars {
         {\\"string\\": string, \\"int\\": int};
       };
     let name = \\"Fragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -17110,7 +17452,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {. \\"variousScalars\\": Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let variousScalars = {
@@ -17128,6 +17469,9 @@ VariousScalars {
         {\\"variousScalars\\": variousScalars};
       };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -17151,7 +17495,6 @@ module InlineFragmentQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -17211,17 +17554,12 @@ module InlineFragmentQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**\`\`\`
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -17236,7 +17574,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       let barkVolume = {
         let value = value##barkVolume;
@@ -17261,6 +17598,17 @@ Dog {
         {\\"name\\": name, \\"barkVolume\\": barkVolume};
       };
     let name = \\"DogFragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -17281,7 +17629,6 @@ Dog {
       | \`Dog(DogFragment.t)
     ];
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       value => {
         let dogOrHuman = {
@@ -17317,6 +17664,9 @@ Dog {
         {\\"dogOrHuman\\": dogOrHuman};
       };
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 "
@@ -17351,19 +17701,9 @@ module MyQuery = {
       \\"inner\\": Js.Nullable.t(t_variables_RecursiveInput),
       \\"enum\\": Js.Nullable.t(string),
     };
-    type nonrec _graphql_RecursiveInput_47;
-    /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"recursiveInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .
@@ -17371,15 +17711,6 @@ RecursiveInput {
     \\"inner\\": option(t_variables_RecursiveInput),
     \\"enum\\": option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
-  type nonrec _graphql_RecursiveInput_47;
-  /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let recursiveInput = {
@@ -17456,6 +17787,18 @@ RecursiveInput {
     \\"enum\\": enum,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_RecursiveInput_47;
+    /**\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+\`\`\`*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -17511,7 +17854,6 @@ module MyQuery = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -17661,6 +18003,9 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -17703,7 +18048,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
-  type operation = t;
   type t_variables = {
     .
     \\"nullableString\\": option(string),
@@ -17820,6 +18164,9 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -17860,27 +18207,9 @@ module MyQuery = {
       \\"nullableID\\": Js.Nullable.t(string),
       \\"id\\": string,
     };
-    type nonrec _graphql_VariousScalarsInput_47;
-    /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {. \\"scalarsInput\\": string};
-  type operation = t;
   type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     .
@@ -17895,23 +18224,6 @@ VariousScalarsInput {
     \\"nullableID\\": option(string),
     \\"id\\": string,
   };
-  type nonrec _graphql_VariousScalarsInput_47;
-  /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let scalarsInput = {
@@ -18020,6 +18332,26 @@ VariousScalarsInput {
     \\"id\\": id,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -18078,7 +18410,6 @@ module MyQuery = {
     \\"v1\\": t_v1,
     \\"v2\\": t_v2,
   };
-  type operation = t;
   type t_variables = {. \\"var\\": bool};
   let parse: Raw.t => t =
     value => {
@@ -18165,6 +18496,9 @@ module MyQuery = {
   let makeVariables = (~var, ()) =>
     serializeVariables({\\"var\\": var}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -18212,7 +18546,6 @@ module MyQuery = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let simpleSubscription = {
@@ -18284,6 +18617,9 @@ module MyQuery = {
       {\\"simpleSubscription\\": simpleSubscription};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -18339,7 +18675,6 @@ module MyQuery = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -18489,6 +18824,9 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -18526,7 +18864,6 @@ module MyQuery2 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -18676,6 +19013,9 @@ module MyQuery2 = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery3 = {
   module Raw = {
@@ -18713,7 +19053,6 @@ module MyQuery3 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -18863,6 +19202,9 @@ module MyQuery3 = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery4 = {
   module Raw = {
@@ -18900,7 +19242,6 @@ module MyQuery4 = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -19050,6 +19391,9 @@ module MyQuery4 = {
       {\\"variousScalars\\": variousScalars};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -19109,7 +19453,6 @@ module MyQuery = {
     \\"inner\\": option(t_first_inner),
   };
   type t = {. \\"first\\": t_first};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let first = {
@@ -19207,6 +19550,9 @@ module MyQuery = {
       {\\"first\\": first};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -19259,7 +19605,6 @@ module MyQuery = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -19337,6 +19682,9 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQueryNoError = {
   module Raw = {
@@ -19367,7 +19715,6 @@ module MyQueryNoError = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -19445,6 +19792,9 @@ module MyQueryNoError = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -19490,7 +19840,6 @@ module MyQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -19546,6 +19895,9 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -19623,7 +19975,6 @@ module MyQuery = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. \\"mutationForVariant\\": t_mutationForVariant};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
@@ -19756,6 +20107,9 @@ module MyQuery = {
       {\\"mutationForVariant\\": mutationForVariant};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -19856,7 +20210,6 @@ module MyQuery = {
   };
   let query = \\"query ($query: Int!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
   type t = {argNamedQuery: int};
-  type operation = t;
   type t_variables = {query: int};
   let parse: Raw.t => t =
     (value) => (
@@ -19882,6 +20235,23 @@ module MyQuery = {
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_query_82;
+    /**Variable **$query** has the following graphql type:
+
+\`\`\`
+Int!
+\`\`\`*/
+    let _graphql_query_82: _graphql_query_82 = Obj.magic(0);
+    type nonrec _graphql_query_75;
+    /**Argument **query** on field **argNamedQuery** has the following graphql type:
+
+\`\`\`
+Int!
+\`\`\`*/
+    let _graphql_query_75: _graphql_query_75 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -19919,23 +20289,9 @@ module MyQuery = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -19946,19 +20302,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20136,6 +20479,50 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_100;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
+    type nonrec _graphql_arg_95;
+    /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -20183,7 +20570,6 @@ module MyQuery = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20227,6 +20613,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -20268,7 +20657,6 @@ module MyQuery = {
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
-  type operation = t;
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
@@ -20338,6 +20726,37 @@ module MyQuery = {
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_opt_119;
+    /**Variable **$opt** has the following graphql type:
+
+\`\`\`
+CustomScalar
+\`\`\`*/
+    let _graphql_opt_119: _graphql_opt_119 = Obj.magic(0);
+    type nonrec _graphql_argOptional_106;
+    /**Argument **argOptional** on field **customScalarField** has the following graphql type:
+
+\`\`\`
+CustomScalar
+\`\`\`*/
+    let _graphql_argOptional_106: _graphql_argOptional_106 = Obj.magic(0);
+    type nonrec _graphql_req_138;
+    /**Variable **$req** has the following graphql type:
+
+\`\`\`
+CustomScalar!
+\`\`\`*/
+    let _graphql_req_138: _graphql_req_138 = Obj.magic(0);
+    type nonrec _graphql_argRequired_125;
+    /**Argument **argRequired** on field **customScalarField** has the following graphql type:
+
+\`\`\`
+CustomScalar!
+\`\`\`*/
+    let _graphql_argRequired_125: _graphql_argRequired_125 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -20379,7 +20798,6 @@ module MyQuery = {
     nullableColor: option(GraphqlHelpers.DateTime.t),
   };
   type t = {customFields: t_customFields};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20464,6 +20882,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -20493,7 +20914,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20514,6 +20934,25 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_filter_92;
+    /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
+
+\`\`\`
+JsonScalar!
+\`\`\`*/
+    let _graphql_filter_92: _graphql_filter_92 = Obj.magic(0);
+    type nonrec _graphql_arg_140;
+    /**Argument **arg** on field **defaultObjectValueOnScalar** has the following graphql type:
+
+\`\`\`
+EmbeddedInput {
+  field: String
+}!
+\`\`\`*/
+    let _graphql_arg_140: _graphql_arg_140 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -20544,7 +20983,6 @@ module MyQuery = {
   };
   let query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {enumInput: string};
-  type operation = t;
   type t_variables = {arg: [ | \`FIRST | \`SECOND | \`THIRD]};
   let parse: Raw.t => t =
     (value) => (
@@ -20582,6 +21020,40 @@ module MyQuery = {
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+\`\`\`*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **enumInput** has the following graphql type:
+
+\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}!
+\`\`\`*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_SampleField_47;
+    /**\`\`\`
+SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+\`\`\`*/
+    let _graphql_SampleField_47: _graphql_SampleField_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -20623,7 +21095,6 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20731,6 +21202,9 @@ module RecordsQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ObjectsQuery = {
   module Raw = {
@@ -20752,7 +21226,6 @@ module ObjectsQuery = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -20855,6 +21328,9 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -20880,16 +21356,6 @@ exports[`Records fragmentDefinition.re 1`] = `
 ];
 module Fragments = {
   module ListFragment = {
-    type graphql;
-    /**\`\`\`
-Lists {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -20903,7 +21369,6 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
@@ -20960,10 +21425,10 @@ Lists {
         }: Raw.t
       );
     let name = \\"ListFragment\\";
-  };
-  module Another = {
-    type graphql;
-    /**\`\`\`
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
 Lists {
   nullableOfNullable: [String]
   nullableOfNonNullable: [String!]
@@ -20971,7 +21436,10 @@ Lists {
   nonNullableOfNonNullable: [String!]!
 }
 \`\`\`*/
-    let _: graphql = Obj.magic(0);
+      let graphql: graphql = Obj.magic(0);
+    };
+  };
+  module Another = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -20979,7 +21447,6 @@ Lists {
     };
     type t = {nullableOfNonNullable: option(array(string))};
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -21004,6 +21471,19 @@ Lists {
         }: Raw.t
       );
     let name = \\"Another\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
 };
 module MyQuery = {
@@ -21076,7 +21556,6 @@ module MyQuery = {
     l3: t_l3,
     l4: t_l4,
   };
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21288,6 +21767,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -21300,7 +21782,6 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21321,6 +21802,9 @@ module MyQuery2 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -21384,7 +21868,6 @@ module MyQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21492,6 +21975,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -21527,7 +22013,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {
     nullableOfNullable: option(array(option(string))),
     nullableOfNonNullable: option(array(string)),
@@ -21637,6 +22122,21 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_219;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_219: _graphql_arg_219 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -21670,20 +22170,9 @@ module MyQuery = {
       nonNullableOfNullable: array(Js.Nullable.t(string)),
       nonNullableOfNonNullable: array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {listsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -21691,16 +22180,6 @@ ListsInput {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**\`\`\`
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-\`\`\`*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21809,6 +22288,43 @@ ListsInput {
     nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_82;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_82: _graphql_arg_82 = Obj.magic(0);
+    type nonrec _graphql_arg_77;
+    /**Argument **arg** on field **listsInput** has the following graphql type:
+
+\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}!
+\`\`\`*/
+    let _graphql_arg_77: _graphql_arg_77 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**\`\`\`
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+\`\`\`*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -21863,7 +22379,6 @@ module MyQuery = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21988,6 +22503,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -22018,7 +22536,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {optionalInputArgs: string};
-  type operation = t;
   type t_variables = {required: string};
   let parse: Raw.t => t =
     (value) => (
@@ -22044,6 +22561,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -22074,7 +22594,6 @@ module MyQuery = {
   };
   let query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
   type t = {. \\"optionalInputArgs\\": string};
-  type operation = t;
   type t_variables = {. \\"required\\": string};
   let parse: Raw.t => t =
     value => {
@@ -22097,6 +22616,9 @@ module MyQuery = {
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -22162,7 +22684,6 @@ module MyQuery = {
     second: t_second,
     let_: t_let,
   };
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -22394,6 +22915,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -22431,23 +22955,9 @@ module MyQuery = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_49;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {nonrecursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -22458,19 +22968,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_49;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -22648,6 +23145,50 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_100;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
+    type nonrec _graphql_arg_95;
+    /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_49;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+      Obj.magic(0);
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -22669,39 +23210,12 @@ module MyQuery2 = {
       custom: Js.Nullable.t(Js.Json.t),
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
-    type nonrec _graphql_NonrecursiveInput_169;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-      Obj.magic(0);
-    type nonrec _graphql_NonrecursiveInput_196;
-    /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\nmore: scalarsInput(arg: $arg2)  \\\\n}\\\\n\\";
   type t = {
     scalarsInput: string,
     more: string,
   };
-  type operation = t;
   type t_variables = {
     arg: t_variables_NonrecursiveInput,
     arg2: t_variables_NonrecursiveInput,
@@ -22715,32 +23229,6 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  type nonrec _graphql_NonrecursiveInput_169;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
-    Obj.magic(0);
-  type nonrec _graphql_NonrecursiveInput_196;
-  /**\`\`\`
-NonrecursiveInput {
-  nonNullableField: String!
-  nullableArray: [String]
-  field: String
-  enum: SampleField
-  embeddedInput: [EmbeddedInput]
-  custom: CustomScalar
-}
-\`\`\`*/
-  let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -22930,6 +23418,67 @@ NonrecursiveInput {
     field: field,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_240;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}!
+\`\`\`*/
+    let _graphql_arg_240: _graphql_arg_240 = Obj.magic(0);
+    type nonrec _graphql_arg_235;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_235: _graphql_arg_235 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_NonrecursiveInput_169;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+      Obj.magic(0);
+    type nonrec _graphql_NonrecursiveInput_196;
+    /**\`\`\`
+NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+\`\`\`*/
+    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -22967,7 +23516,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23025,6 +23573,16 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_52;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_52: _graphql_name_52 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -23066,7 +23624,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     id: option(string),
     name: option(string),
@@ -23153,6 +23710,37 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_100;
+    /**Variable **$name** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_100: _graphql_name_100 = Obj.magic(0);
+    type nonrec _graphql_name_94;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_name_94: _graphql_name_94 = Obj.magic(0);
+    type nonrec _graphql_id_111;
+    /**Variable **$id** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_id_111: _graphql_id_111 = Obj.magic(0);
+    type nonrec _graphql_id_107;
+    /**Argument **id** on field **pokemon** has the following graphql type:
+
+\`\`\`
+String
+\`\`\`*/
+    let _graphql_id_107: _graphql_id_107 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -23197,7 +23785,6 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {variousScalars: scalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23241,6 +23828,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module OneFieldQuery = {
   module Raw = {
@@ -23250,7 +23840,6 @@ module OneFieldQuery = {
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23292,25 +23881,12 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module ExternalFragmentQuery = {
   module Fragment = {
-    type graphql;
-    /**\`\`\`
-VariousScalars {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -23324,7 +23900,6 @@ VariousScalars {
       int,
     };
     type nonrec t_VariousScalars = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       string: {
         let value = (value: Raw.t).string;
@@ -23350,6 +23925,25 @@ VariousScalars {
         }: Raw.t
       );
     let name = \\"Fragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -23362,7 +23956,6 @@ VariousScalars {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -23383,6 +23976,9 @@ VariousScalars {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 module InlineFragmentQuery = {
@@ -23405,7 +24001,6 @@ module InlineFragmentQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23467,17 +24062,12 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
-    type graphql;
-    /**\`\`\`
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-\`\`\`*/
-    let _: graphql = Obj.magic(0);
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -23491,7 +24081,6 @@ Dog {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       name: {
         let value = (value: Raw.t).name;
@@ -23517,6 +24106,17 @@ Dog {
         }: Raw.t
       );
     let name = \\"DogFragment\\";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**\`\`\`
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+\`\`\`*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
   module Untitled1 = {
     module Raw = {
@@ -23537,7 +24137,6 @@ Dog {
       | \`Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
-    type operation = t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -23578,6 +24177,9 @@ Dog {
         }: Raw.t
       );
     let definition = (parse, query, serialize);
+    module Z__INTERNAL = {
+      type root = t;
+    };
   };
 };
 "
@@ -23611,34 +24213,15 @@ module MyQuery = {
       inner: Js.Nullable.t(t_variables_RecursiveInput),
       enum: Js.Nullable.t(string),
     };
-    type nonrec _graphql_RecursiveInput_47;
-    /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {recursiveInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     otherField: option(string),
     inner: option(t_variables_RecursiveInput),
     enum: option([ | \`FIRST | \`SECOND | \`THIRD]),
   };
-  type nonrec _graphql_RecursiveInput_47;
-  /**\`\`\`
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-\`\`\`*/
-  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23721,6 +24304,40 @@ RecursiveInput {
     enum,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_90;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}!
+\`\`\`*/
+    let _graphql_arg_90: _graphql_arg_90 = Obj.magic(0);
+    type nonrec _graphql_arg_85;
+    /**Argument **arg** on field **recursiveInput** has the following graphql type:
+
+\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}!
+\`\`\`*/
+    let _graphql_arg_85: _graphql_arg_85 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_RecursiveInput_47;
+    /**\`\`\`
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+\`\`\`*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
+  };
 };
 "
 `;
@@ -23774,7 +24391,6 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -23923,6 +24539,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -23964,7 +24583,6 @@ module MyQuery = {
   };
   let query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {
     nullableString: option(string),
     string,
@@ -24083,6 +24701,27 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_292;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_292: _graphql_arg_292 = Obj.magic(0);
+    type root = t;
+  };
 };
 "
 `;
@@ -24122,27 +24761,9 @@ module MyQuery = {
       nullableID: Js.Nullable.t(string),
       id: string,
     };
-    type nonrec _graphql_VariousScalarsInput_47;
-    /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-      Obj.magic(0);
   };
   let query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -24156,23 +24777,6 @@ VariousScalarsInput {
     nullableID: option(string),
     id: string,
   };
-  type nonrec _graphql_VariousScalarsInput_47;
-  /**\`\`\`
-VariousScalarsInput {
-  nullableString: String
-  string: String!
-  nullableInt: Int
-  int: Int!
-  nullableFloat: Float
-  float: Float!
-  nullableBoolean: Boolean
-  boolean: Boolean!
-  nullableID: ID
-  id: ID!
-}
-\`\`\`*/
-  let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
-    Obj.magic(0);
   let parse: Raw.t => t =
     (value) => (
       {
@@ -24287,6 +24891,62 @@ VariousScalarsInput {
     id,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_93;
+    /**Variable **$arg** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_93: _graphql_arg_93 = Obj.magic(0);
+    type nonrec _graphql_arg_88;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+\`\`\`*/
+    let _graphql_arg_88: _graphql_arg_88 = Obj.magic(0);
+    type root = t;
+    type nonrec _graphql_VariousScalarsInput_47;
+    /**\`\`\`
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+\`\`\`*/
+    let _graphql_VariousScalarsInput_47: _graphql_VariousScalarsInput_47 =
+      Obj.magic(0);
+  };
 };
 "
 `;
@@ -24339,7 +24999,6 @@ module MyQuery = {
     v1: t_v1,
     v2: t_v2,
   };
-  type operation = t;
   type t_variables = {var: bool};
   let parse: Raw.t => t =
     (value) => (
@@ -24443,6 +25102,9 @@ module MyQuery = {
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -24488,7 +25150,6 @@ module MyQuery = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -24570,6 +25231,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -24623,7 +25287,6 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -24772,6 +25435,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -24807,7 +25473,6 @@ module MyQuery2 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -24956,6 +25621,9 @@ module MyQuery2 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery3 = {
   module Raw = {
@@ -24991,7 +25659,6 @@ module MyQuery3 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25140,6 +25807,9 @@ module MyQuery3 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery4 = {
   module Raw = {
@@ -25175,7 +25845,6 @@ module MyQuery4 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25324,6 +25993,9 @@ module MyQuery4 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -25377,7 +26049,6 @@ module MyQuery = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25486,6 +26157,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -25535,7 +26209,6 @@ module MyQuery = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25622,6 +26295,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQueryNoError = {
   module Raw = {
@@ -25649,7 +26325,6 @@ module MyQueryNoError = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25736,6 +26411,9 @@ module MyQueryNoError = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -25779,7 +26457,6 @@ module MyQuery = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -25841,6 +26518,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;
@@ -25912,7 +26592,6 @@ module MyQuery = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -26066,6 +26745,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 "
 `;

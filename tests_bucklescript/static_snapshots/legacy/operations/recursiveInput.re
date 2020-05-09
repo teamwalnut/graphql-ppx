@@ -26,19 +26,9 @@ module MyQuery = {
       "inner": Js.Nullable.t(t_variables_RecursiveInput),
       "enum": Js.Nullable.t(string),
     };
-    type nonrec _graphql_RecursiveInput_47;
-    /**```
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-```*/
-    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   };
   let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
   type t = {. "recursiveInput": string};
-  type operation = t;
   type t_variables = {. "arg": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .
@@ -46,15 +36,6 @@ RecursiveInput {
     "inner": option(t_variables_RecursiveInput),
     "enum": option([ | `FIRST | `SECOND | `THIRD]),
   };
-  type nonrec _graphql_RecursiveInput_47;
-  /**```
-RecursiveInput {
-  otherField: String
-  inner: RecursiveInput
-  enum: SampleField
-}
-```*/
-  let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let recursiveInput = {
@@ -141,4 +122,16 @@ RecursiveInput {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_RecursiveInput_47;
+    /**```
+RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+```*/
+    let _graphql_RecursiveInput_47: _graphql_RecursiveInput_47 = Obj.magic(0);
+  };
 };

@@ -36,7 +36,6 @@ module MyQuery = {
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
-  type operation = t;
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,
@@ -114,4 +113,35 @@ module MyQuery = {
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_opt_119;
+    /**Variable **$opt** has the following graphql type:
+
+```
+CustomScalar
+```*/
+    let _graphql_opt_119: _graphql_opt_119 = Obj.magic(0);
+    type nonrec _graphql_argOptional_106;
+    /**Argument **argOptional** on field **customScalarField** has the following graphql type:
+
+```
+CustomScalar
+```*/
+    let _graphql_argOptional_106: _graphql_argOptional_106 = Obj.magic(0);
+    type nonrec _graphql_req_138;
+    /**Variable **$req** has the following graphql type:
+
+```
+CustomScalar!
+```*/
+    let _graphql_req_138: _graphql_req_138 = Obj.magic(0);
+    type nonrec _graphql_argRequired_125;
+    /**Argument **argRequired** on field **customScalarField** has the following graphql type:
+
+```
+CustomScalar!
+```*/
+    let _graphql_argRequired_125: _graphql_argRequired_125 = Obj.magic(0);
+    type root = t;
+  };
 };

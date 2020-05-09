@@ -32,7 +32,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -98,4 +97,14 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_52;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+```
+String
+```*/
+    let _graphql_name_52: _graphql_name_52 = Obj.magic(0);
+    type root = t;
+  };
 };

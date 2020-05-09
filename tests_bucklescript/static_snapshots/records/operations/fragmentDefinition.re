@@ -18,16 +18,6 @@
 ];
 module Fragments = {
   module ListFragment = {
-    type graphql;
-    /**```
-Lists {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-```*/
-    let _: graphql = Obj.magic(0);
     let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
@@ -41,7 +31,6 @@ Lists {
       nullableOfNonNullable: option(array(string)),
     };
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       nullableOfNullable: {
         let value = (value: Raw.t).nullableOfNullable;
@@ -98,10 +87,10 @@ Lists {
         }: Raw.t
       );
     let name = "ListFragment";
-  };
-  module Another = {
-    type graphql;
-    /**```
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
 Lists {
   nullableOfNullable: [String]
   nullableOfNonNullable: [String!]
@@ -109,7 +98,10 @@ Lists {
   nonNullableOfNonNullable: [String!]!
 }
 ```*/
-    let _: graphql = Obj.magic(0);
+      let graphql: graphql = Obj.magic(0);
+    };
+  };
+  module Another = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -117,7 +109,6 @@ Lists {
     };
     type t = {nullableOfNonNullable: option(array(string))};
     type nonrec t_Lists = t;
-    type fragment = t;
     let parse = (value: Raw.t): t => {
       nullableOfNonNullable: {
         let value = (value: Raw.t).nullableOfNonNullable;
@@ -142,6 +133,19 @@ Lists {
         }: Raw.t
       );
     let name = "Another";
+    module Z__INTERNAL = {
+      type root = t;
+      type nonrec graphql;
+      /**```
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+      let graphql: graphql = Obj.magic(0);
+    };
   };
 };
 module MyQuery = {
@@ -214,7 +218,6 @@ module MyQuery = {
     l3: t_l3,
     l4: t_l4,
   };
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -426,6 +429,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -438,7 +444,6 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -459,4 +464,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

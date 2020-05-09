@@ -34,7 +34,6 @@ module MyQuery = {
   };
   let query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
   type t = {scalarsInput: string};
-  type operation = t;
   type t_variables = {
     nullableString: option(string),
     string,
@@ -153,4 +152,25 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_arg_292;
+    /**Argument **arg** on field **scalarsInput** has the following graphql type:
+
+```
+VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}!
+```*/
+    let _graphql_arg_292: _graphql_arg_292 = Obj.magic(0);
+    type root = t;
+  };
 };

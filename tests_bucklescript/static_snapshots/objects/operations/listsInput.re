@@ -27,20 +27,9 @@ module MyQuery = {
       "nonNullableOfNullable": array(Js.Nullable.t(string)),
       "nonNullableOfNonNullable": array(string),
     };
-    type nonrec _graphql_ListsInput_47;
-    /**```
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-```*/
-    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   };
   let query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
   type t = {. "listsInput": string};
-  type operation = t;
   type t_variables = {. "arg": t_variables_ListsInput}
   and t_variables_ListsInput = {
     .
@@ -49,16 +38,6 @@ ListsInput {
     "nonNullableOfNullable": array(option(string)),
     "nonNullableOfNonNullable": array(string),
   };
-  type nonrec _graphql_ListsInput_47;
-  /**```
-ListsInput {
-  nullableOfNullable: [String]
-  nullableOfNonNullable: [String!]
-  nonNullableOfNullable: [String]!
-  nonNullableOfNonNullable: [String!]!
-}
-```*/
-  let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
   let parse: Raw.t => t =
     value => {
       let listsInput = {
@@ -162,4 +141,17 @@ ListsInput {
     "nonNullableOfNonNullable": nonNullableOfNonNullable,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec _graphql_ListsInput_47;
+    /**```
+ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+```*/
+    let _graphql_ListsInput_47: _graphql_ListsInput_47 = Obj.magic(0);
+  };
 };

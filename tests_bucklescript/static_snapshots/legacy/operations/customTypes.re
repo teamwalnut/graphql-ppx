@@ -36,7 +36,6 @@ module MyQuery = {
     "nullableColor": option(GraphqlHelpers.DateTime.t),
   };
   type t = {. "customFields": t_customFields};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -124,4 +123,7 @@ module MyQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

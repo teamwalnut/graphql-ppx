@@ -29,7 +29,6 @@ module MyQuery = {
   };
   let query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
   type t = {. "listsInput": string};
-  type operation = t;
   type t_variables = {
     .
     "nullableOfNullable": option(array(option(string))),
@@ -137,4 +136,7 @@ module MyQuery = {
       }: t_variables,
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

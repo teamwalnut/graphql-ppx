@@ -38,7 +38,6 @@ module MyQuery = {
     | `Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -120,4 +119,7 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

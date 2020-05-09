@@ -37,7 +37,6 @@ module MyQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -107,4 +106,7 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

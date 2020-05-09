@@ -34,7 +34,6 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
-  type operation = t;
   type t_variables = {
     id: option(string),
     name: option(string),
@@ -121,4 +120,35 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type nonrec _graphql_name_100;
+    /**Variable **$name** has the following graphql type:
+
+```
+String
+```*/
+    let _graphql_name_100: _graphql_name_100 = Obj.magic(0);
+    type nonrec _graphql_name_94;
+    /**Argument **name** on field **pokemon** has the following graphql type:
+
+```
+String
+```*/
+    let _graphql_name_94: _graphql_name_94 = Obj.magic(0);
+    type nonrec _graphql_id_111;
+    /**Variable **$id** has the following graphql type:
+
+```
+String
+```*/
+    let _graphql_id_111: _graphql_id_111 = Obj.magic(0);
+    type nonrec _graphql_id_107;
+    /**Argument **id** on field **pokemon** has the following graphql type:
+
+```
+String
+```*/
+    let _graphql_id_107: _graphql_id_107 = Obj.magic(0);
+    type root = t;
+  };
 };

@@ -42,7 +42,6 @@ module MyQuery = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -129,6 +128,9 @@ module MyQuery = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQueryNoError = {
   module Raw = {
@@ -156,7 +158,6 @@ module MyQueryNoError = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type operation = t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -243,4 +244,7 @@ module MyQueryNoError = {
       }: Raw.t
     );
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };

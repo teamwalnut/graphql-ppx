@@ -48,7 +48,6 @@ module MyQuery = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -203,6 +202,9 @@ module MyQuery = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery2 = {
   module Raw = {
@@ -240,7 +242,6 @@ module MyQuery2 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -395,6 +396,9 @@ module MyQuery2 = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery3 = {
   module Raw = {
@@ -432,7 +436,6 @@ module MyQuery3 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -587,6 +590,9 @@ module MyQuery3 = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
 module MyQuery4 = {
   module Raw = {
@@ -624,7 +630,6 @@ module MyQuery4 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type operation = t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -779,4 +784,7 @@ module MyQuery4 = {
     "parse": parse,
   };
   let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+  };
 };
