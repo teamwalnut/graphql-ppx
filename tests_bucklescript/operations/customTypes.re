@@ -5,7 +5,7 @@ module MyQuery = [%graphql
         currentTime
         favoriteColor
         futureTime
-        nullableColor @ppxDecoder(module: "GraphqlHelpers.DateTime")
+        nullableColor @ppxDecoder(module: "GraphqlHelpers.Color")
     }
   }
 |}
