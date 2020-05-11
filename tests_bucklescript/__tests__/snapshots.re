@@ -137,6 +137,8 @@ let run_bsc_with_ppx = (fileName, pathIn, pathOut) => {
                )
           )
           ++ ".txt";
+        let toBase64 = x => [%raw {|Buffer.from(x).toString("base64")|}];
+        Js.log(toBase64(result));
         writeFileSync(
           {j|static_snapshots/$pathOut/$newFileName|j},
           result ++ "\n",
