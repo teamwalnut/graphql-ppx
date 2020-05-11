@@ -8000,9 +8000,8 @@ exports[`Errors missingField1.re 1`] = `
 6 |       thisFieldDoesNotExist
           ^^^^^^^^^^^^^^^^^^^^^
 Error: Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject
-
-  We've found a bug for you!
-  operations/errors/missingField1.re"
+File \\"operations/errors/missingField1.re\\", line 1, characters 0-0:
+Error:"
 `;
 
 exports[`Errors missingField2.re 1`] = `
@@ -8010,9 +8009,8 @@ exports[`Errors missingField2.re 1`] = `
 13 |     l1: thisTypeDoesNotExist {
              ^^^^^^^^^^^^^^^^^^^^
 Error: Unknown field 'thisTypeDoesNotExist' on type Query
-
-  We've found a bug for you!
-  operations/errors/missingField2.re"
+File \\"operations/errors/missingField2.re\\", line 1, characters 0-0:
+Error:"
 `;
 
 exports[`Errors missingField3.re 1`] = `
@@ -8020,22 +8018,13 @@ exports[`Errors missingField3.re 1`] = `
 15 |       doesNotExist
            ^^^^^^^^^^^^
 Error: Unknown field 'doesNotExist' on type Lists
-
-  We've found a bug for you!
-  operations/errors/missingField3.re"
+File \\"operations/errors/missingField3.re\\", line 1, characters 0-0:
+Error:"
 `;
 
 exports[`Errors missingFragment.re 1`] = `
-"We've found a bug for you!
-  operations/errors/missingFragment.re 3:28-42
-  
-  1 │ module Fragment = [%graphql
-  2 │   {|
-  3 │   fragment ListFragment on UnknownFragment {
-  4 │     nullableOfNullable
-  5 │     nullableOfNonNullable
-  
-  Unknown type \\"UnknownFragment\\""
+"File \\"operations/errors/missingFragment.re\\", line 3, characters 28-43:
+Error: Unknown type \\"UnknownFragment\\""
 `;
 
 exports[`Legacy GraphQL_PPX.re 1`] = `

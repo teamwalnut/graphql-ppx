@@ -2,6 +2,5 @@ File "operations/errors/missingField3.re", line 15, characters 6-18:
 15 |       doesNotExist
            ^^^^^^^^^^^^
 Error: Unknown field 'doesNotExist' on type Lists
-
-  We've found a bug for you!
-  operations/errors/missingField3.re
+File "operations/errors/missingField3.re", line 1, characters 0-0:
+Error:
