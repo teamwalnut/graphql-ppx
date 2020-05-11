@@ -99,7 +99,7 @@ describe("Apollo", () =>
 let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) =>
   Js.Promise.make((~resolve as resolvePromise, ~reject as _) =>
     exec(
-      {j|./node_modules/.bin/bsc -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" $pathIn/$fileName|j},
+      {j|./node_modules/.bin/bsc -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" -I utils $pathIn/$fileName|j},
       {cwd: resolve(dirname, "..")},
       (_error, _stdout, stderr) => {
       resolvePromise(. stderr)
@@ -149,22 +149,32 @@ let write_compilation_error_snapshot_to_disk = (fileName, pathIn, pathOut) =>
        result |> Js.Promise.resolve;
      });
 
-describe("Legacy compilation", () =>
+let runCompilationTests = (~ppxOptions) =>
   tests
   |> Array.iter(t => {
        testPromise(t, () =>
-         get_bsb_error(
-           ~ppxOptions="-objects",
-           ~pathIn="operations",
-           ~fileName=t,
-         )
+         get_bsb_error(~ppxOptions, ~pathIn="operations", ~fileName=t)
          |> Js.Promise.then_(error =>
               expect(error) |> toEqual("") |> Js.Promise.resolve
             )
        )
-     })
+     });
+
+describe("Legacy compilation", () =>
+  runCompilationTests(~ppxOptions="-legacy")
 );
 
+describe("Objects compilation", () =>
+  runCompilationTests(~ppxOptions="-objects")
+);
+
+describe("Records compilation", () =>
+  runCompilationTests(~ppxOptions="")
+);
+
+describe("Apollo-mode compilation", () =>
+  runCompilationTests(~ppxOptions="-apollo-mode")
+);
 let tests =
   readdirSync("operations/errors")
   ->Belt.Array.keep(Js.String.endsWith(".re"));
