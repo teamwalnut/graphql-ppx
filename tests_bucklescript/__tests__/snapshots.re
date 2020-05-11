@@ -19,6 +19,9 @@ external exec:
 external readdirSync: string => array(string) = "readdirSync";
 
 [@bs.module "fs"]
+external unlinkSync: string => unit = "unlinkSync";
+
+[@bs.module "fs"]
 external writeFileSync: (string, string) => unit = "writeFileSync";
 
 [@bs.module "os"] external platform: unit => string = "platform";
@@ -46,7 +49,9 @@ let run_ppx = (path, opts, testType) => {
   let _:buffer = execSync(ppx ++ " -schema ../graphql_schema.json --dump-ast " ++ opts ++ " " ++ path ++ ".ml " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")});
   let ret = execSync(refmt ++ " --parse binary --print re " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")})
   |> toString;
-  let _:buffer = execSync(rm ++ " " ++ path ++ ".ml " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")});
+  //let _:buffer = execSync(rm ++ " " ++ path ++ ".ml " ++ path ++ ".pp.ml", {cwd: resolve(dirname, "..")});
+  unlinkSync(path ++ ".ml" |> Filename.concat("..") |> Filename.concat(dirname));
+  unlinkSync(path ++ ".pp.ml" |> Filename.concat("..") |> Filename.concat(dirname));
   writeFileSync("static_snapshots/" ++ testType ++ "/" ++ path, ret);
   // here we should clean file.
   ret;
