@@ -111,6 +111,7 @@ jobs:
           npm ci --no-optional
           npm run test
         env:
+          BS_VSCODE: 1
           CI: true
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
