@@ -5,6 +5,7 @@ module MyQuery = [%graphql
     }
   |}
 ];
+
 module MyQuery2 = [%graphql
   {|
   query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!) {

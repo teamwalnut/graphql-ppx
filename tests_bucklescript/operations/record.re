@@ -2,11 +2,14 @@ type scalars = {
   string,
   int,
 };
+
 type dog = {
   name: string,
   barkVolume: float,
 };
+
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = [%graphql
   {|
   {
@@ -17,6 +20,7 @@ module MyQuery = [%graphql
   }
 |}
 ];
+
 module OneFieldQuery = [%graphql
   {|
   {
@@ -26,6 +30,7 @@ module OneFieldQuery = [%graphql
   }
 |}
 ];
+
 module ExternalFragmentQuery = [%graphql
   {|
   fragment Fragment on VariousScalars @bsRecord {
@@ -39,6 +44,7 @@ module ExternalFragmentQuery = [%graphql
   }
 |}
 ];
+
 module InlineFragmentQuery = [%graphql
   {|
   {
@@ -51,6 +57,7 @@ module InlineFragmentQuery = [%graphql
   }
 |}
 ];
+
 module UnionExternalFragmentQuery = [%graphql
   {|
   fragment DogFragment on Dog @bsRecord {
