@@ -195,7 +195,9 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) =>
   [@metaloc loc]
   {
     %expr
-      [%e generate_parser(config, path, definition, inner)]
+    [%e ident_from_string(ident ++ ".parse")](
+      [%e generate_parser(config, path, definition, inner)],
+    );
   }
 and generate_object_decoder =
     (
