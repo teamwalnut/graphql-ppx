@@ -53,6 +53,9 @@ let run_ppx = (path, opts, testType) => {
   result;
 };
 
+let utils =
+  readdirSync("utils")->Belt.Array.keep(Js.String.endsWith(".re"));
+
 let tests =
   readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
@@ -96,10 +99,10 @@ describe("Apollo", () =>
      })
 );
 
-let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) =>
+let get_bsb_error = (~fileName, ~pathIn: string) =>
   Js.Promise.make((~resolve as resolvePromise, ~reject as _) =>
     exec(
-      {j|./node_modules/.bin/bsc -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" -I utils $pathIn/$fileName|j},
+      {j|./node_modules/.bin/bsc -w -A -warn-error -A -ppx "../_build/default/src/bucklescript_bin/bin.exe" -bs-suffix -I ./utils $pathIn/$fileName|j},
       {cwd: resolve(dirname, "..")},
       (_error, _stdout, stderr) => {
       resolvePromise(. stderr)
@@ -107,7 +110,7 @@ let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) =>
   );
 
 let write_compilation_error_snapshot_to_disk = (fileName, pathIn, pathOut) =>
-  get_bsb_error(~ppxOptions="", ~fileName, ~pathIn)
+  get_bsb_error(~fileName, ~pathIn)
   |> Js.Promise.then_(stderr => {
        let result = {
          let lines = stderr |> Js.String.split("\n");
@@ -149,32 +152,27 @@ let write_compilation_error_snapshot_to_disk = (fileName, pathIn, pathOut) =>
        result |> Js.Promise.resolve;
      });
 
-let runCompilationTests = (~ppxOptions) =>
+let runCompilationTests = () =>
   tests
-  |> Array.iter(t => {
+  |> Array.iter(t =>
        testPromise(t, () =>
-         get_bsb_error(~ppxOptions, ~pathIn="operations", ~fileName=t)
+         get_bsb_error(~pathIn="operations", ~fileName=t)
          |> Js.Promise.then_(error =>
               expect(error) |> toEqual("") |> Js.Promise.resolve
             )
        )
-     });
+     );
 
-describe("Legacy compilation", () =>
-  runCompilationTests(~ppxOptions="-legacy")
-);
+describe("Records compilation", () => {
+  // We need to generate the compiler artifacts for all of the `util` files in order for manually building the `operations` files to work
+  beforeAllPromise(() =>
+    utils
+    |> Array.map(t => get_bsb_error(~pathIn="utils", ~fileName=t))
+    |> Js.Promise.all
+  );
+  runCompilationTests();
+});
 
-describe("Objects compilation", () =>
-  runCompilationTests(~ppxOptions="-objects")
-);
-
-describe("Records compilation", () =>
-  runCompilationTests(~ppxOptions="")
-);
-
-describe("Apollo-mode compilation", () =>
-  runCompilationTests(~ppxOptions="-apollo-mode")
-);
 let tests =
   readdirSync("operations/errors")
   ->Belt.Array.keep(Js.String.endsWith(".re"));
