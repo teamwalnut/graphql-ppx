@@ -66,12 +66,7 @@ module MyQuery = {
               nullableColor: {
                 let value = (value: Raw.t_customFields).nullableColor;
                 switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    GraphqlHelpers.DateTime.parse(
-                      GraphqlHelpers.Color.parse(value),
-                    ),
-                  )
+                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
                 | None => None
                 };
               },
@@ -92,9 +87,7 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(
-                      GraphqlHelpers.Color.serialize(value),
-                    ),
+                    GraphqlHelpers.DateTime.serialize(value),
                   )
                 | None => Js.Nullable.null
                 };

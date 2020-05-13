@@ -44,12 +44,7 @@ module MyQuery = {
         let nullableColor = {
           let value = value##nullableColor;
           switch (Js.toOption(value)) {
-          | Some(value) =>
-            Some(
-              GraphqlHelpers.DateTime.parse(
-                GraphqlHelpers.Color.parse(value),
-              ),
-            )
+          | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
           | None => None
           };
         }
@@ -85,11 +80,7 @@ module MyQuery = {
           let value = value##nullableColor;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(
-              GraphqlHelpers.DateTime.serialize(
-                GraphqlHelpers.Color.serialize(value),
-              ),
-            )
+            Js.Nullable.return(GraphqlHelpers.DateTime.serialize(value))
           | None => Js.Nullable.null
           };
         }
