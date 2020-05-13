@@ -78,6 +78,7 @@ let get_ppx_as = directives => {
 
 let rec unify_type =
         (
+          ~has_decoder,
           error_marker,
           as_record,
           existing_record,
@@ -91,6 +92,7 @@ let rec unify_type =
     Res_nullable(
       config.map_loc(span),
       unify_type(
+        ~has_decoder,
         error_marker,
         as_record,
         existing_record,
@@ -104,6 +106,7 @@ let rec unify_type =
     Res_array(
       config.map_loc(span),
       unify_type(
+        ~has_decoder,
         error_marker,
         as_record,
         existing_record,
@@ -124,7 +127,7 @@ let rec unify_type =
       Res_float(config.map_loc(span))
     | Some(Scalar({sm_name: "Boolean", _})) =>
       Res_boolean(config.map_loc(span))
-    | Some(Scalar({sm_name})) =>
+    | Some(Scalar({sm_name})) when !has_decoder =>
       try({
         let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
         Res_custom_decoder(
@@ -136,6 +139,7 @@ let rec unify_type =
       | Not_found => Res_raw_scalar(config.map_loc(span))
       | other => raise(other)
       }
+    | Some(Scalar({sm_name})) => Res_raw_scalar(config.map_loc(span))
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -390,6 +394,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                    (
                      key,
                      unify_type(
+                       ~has_decoder=false,
                        error_marker,
                        false,
                        None,
@@ -428,6 +433,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let key = key.item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let has_decoder = has_directive("ppxDecoder", ast_field.fd_directives);
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
   let has_skip =
@@ -437,7 +443,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     if (is_variant) {
       unify_variant(error_marker);
     } else {
-      unify_type(error_marker, is_record, existing_record);
+      unify_type(~has_decoder, error_marker, is_record, existing_record);
     };
 
   let parser_expr =
