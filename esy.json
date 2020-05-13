@@ -12,15 +12,14 @@
     "@opam/ocaml-migrate-parsetree": ">=1.6.0",
     "@opam/ppx_tools_versioned": "5.2.3",
     "@opam/reason": ">=3.6.0",
-    "@opam/menhir": "*",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#7592d32",
-    "@opam/merlin": "*"
+    "@opam/menhir": "*"
   },
   "devDependencies": {
     "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
     "ocaml": "~4.8.0",
-    "refmterr": "*"
+    "refmterr": "*",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#7592d32"
   },
   "esy": {
     "build": [["refmterr", "dune", "build", "-p", "#{self.name}"]],
