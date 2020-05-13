@@ -23,12 +23,18 @@ and t =
   | Res_float(loc)
   | Res_boolean(loc)
   | Res_raw_scalar(loc)
-  | Res_poly_enum(loc, Schema.enum_meta)
+  | Res_poly_enum(loc, Schema.enum_meta, bool)
   | Res_custom_decoder(loc, string, t)
   | Res_record(loc, string, list(field_result), option(string))
   | Res_object(loc, string, list(field_result), option(string))
   | Res_poly_variant_selection_set(loc, string, list((name, t)))
-  | Res_poly_variant_union(loc, string, list((name, t)), exhaustive_flag)
+  | Res_poly_variant_union(
+      loc,
+      string,
+      list((name, t)),
+      exhaustive_flag,
+      bool,
+    )
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
   | Res_solo_fragment_spread(loc, string, list(string))
   | Res_error(loc, string);
@@ -58,12 +64,12 @@ let res_loc =
   | Res_float(loc)
   | Res_boolean(loc)
   | Res_raw_scalar(loc)
-  | Res_poly_enum(loc, _)
+  | Res_poly_enum(loc, _, _)
   | Res_custom_decoder(loc, _, _)
   | Res_record(loc, _, _, _)
   | Res_object(loc, _, _, _)
   | Res_poly_variant_selection_set(loc, _, _)
-  | Res_poly_variant_union(loc, _, _, _)
+  | Res_poly_variant_union(loc, _, _, _, _)
   | Res_poly_variant_interface(loc, _, _, _)
   | Res_solo_fragment_spread(loc, _, _)
   | Res_error(loc, _) => loc;

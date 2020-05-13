@@ -93,7 +93,7 @@ let make_error_raiser = message =>
 
 let raw_value = loc => [@metaloc loc] [%expr value];
 
-let generate_poly_enum_decoder = (loc, enum_meta) => {
+let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
   let enum_match_arms =
     Ast_helper.(
       enum_meta.em_values
@@ -106,20 +106,38 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
     );
 
   let fallback_arm =
-    Ast_helper.(
-      Exp.case(
-        Pat.var({loc: conv_loc(loc), txt: "other"}),
-        Exp.variant(
-          "FutureAddedValue",
-          Some(
-            Exp.ident({
-              Location.txt: Longident.parse("other"),
-              loc: conv_loc(loc),
-            }),
-          ),
-        ),
-      )
-    );
+    omit_future_value
+      ? Ast_helper.(
+          Exp.case(
+            Pat.any(),
+            Exp.apply(
+              Exp.ident(Location.mknoloc(Longident.parse("raise"))),
+              [
+                (
+                  Nolabel,
+                  Exp.construct(
+                    Location.mknoloc(Longident.parse("Not_found")),
+                    None,
+                  ),
+                ),
+              ],
+            ),
+          )
+        )
+      : Ast_helper.(
+          Exp.case(
+            Pat.var({loc: conv_loc(loc), txt: "other"}),
+            Exp.variant(
+              "FutureAddedValue",
+              Some(
+                Exp.ident({
+                  Location.txt: Longident.parse("other"),
+                  loc: conv_loc(loc),
+                }),
+              ),
+            ),
+          )
+        );
 
   let match_expr =
     Ast_helper.(
@@ -460,7 +478,16 @@ and generate_poly_variant_interface_decoder =
   };
 }
 and generate_poly_variant_union_decoder =
-    (config, loc, name, fragments, exhaustive_flag, path, definition) => {
+    (
+      config,
+      loc,
+      name,
+      fragments,
+      exhaustive_flag,
+      omit_future_value,
+      path,
+      definition,
+    ) => {
   let fragment_cases =
     Ast_helper.(
       fragments
@@ -498,28 +525,46 @@ and generate_poly_variant_union_decoder =
          })
     );
   let fallback_case =
-    Ast_helper.(
-      Exp.case(
-        Pat.any(),
-        Exp.variant(
-          "FutureAddedValue",
-          Some(
-            [%expr
-              (
-                Obj.magic(
-                  [%e
-                    Exp.ident({
-                      Location.txt: Longident.parse("value"),
-                      loc: Location.none,
-                    })
-                  ],
-                ): Js.Json.t
-              )
-            ],
-          ),
-        ),
-      )
-    );
+    omit_future_value
+      ? Ast_helper.(
+          Exp.case(
+            Pat.any(),
+            Exp.apply(
+              Exp.ident(Location.mknoloc(Longident.parse("raise"))),
+              [
+                (
+                  Nolabel,
+                  Exp.construct(
+                    Location.mknoloc(Longident.parse("Not_found")),
+                    None,
+                  ),
+                ),
+              ],
+            ),
+          )
+        )
+      : Ast_helper.(
+          Exp.case(
+            Pat.any(),
+            Exp.variant(
+              "FutureAddedValue",
+              Some(
+                [%expr
+                  (
+                    Obj.magic(
+                      [%e
+                        Exp.ident({
+                          Location.txt: Longident.parse("value"),
+                          loc: Location.none,
+                        })
+                      ],
+                    ): Js.Json.t
+                  )
+                ],
+              ),
+            ),
+          )
+        );
 
   let typename_matcher =
     Ast_helper.(
@@ -548,8 +593,8 @@ and generate_parser = (config, path: list(string), definition) =>
   | Res_float(loc) => raw_value(conv_loc(loc))
   | Res_boolean(loc) => raw_value(conv_loc(loc))
   | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_decoder(loc, enum_meta)
+  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+    generate_poly_enum_decoder(loc, enum_meta, omit_future_value)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(
       config,
@@ -581,13 +626,20 @@ and generate_parser = (config, path: list(string), definition) =>
       existing_record,
       false,
     )
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(
+      loc,
+      name,
+      fragments,
+      exhaustive,
+      omit_future_value,
+    ) =>
     generate_poly_variant_union_decoder(
       config,
       conv_loc(loc),
       name,
       fragments,
       exhaustive,
+      omit_future_value,
       path,
       definition,
     )

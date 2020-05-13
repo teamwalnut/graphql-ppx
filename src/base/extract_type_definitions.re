@@ -43,6 +43,7 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       fields: list((Result_structure.name, Result_structure.t)),
+      omit_future_value: bool,
     })
   | VariantInterface({
       loc: Source_pos.ast_location,
@@ -54,6 +55,7 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       fields: list(string),
+      omit_future_value: bool,
     });
 
 type input_object_field =
@@ -96,8 +98,8 @@ let rec extract = (~variant=false, ~path, ~raw) =>
       create_object(path, raw, fields, true, loc, variant)
     | (_, _, _) => create_object(path, raw, fields, false, loc, variant)
     }
-  | Res_poly_variant_union(loc, _name, fragments, _) => [
-      VariantUnion({path, fields: fragments, loc}),
+  | Res_poly_variant_union(loc, _name, fragments, _, omit_future_value) => [
+      VariantUnion({path, fields: fragments, loc, omit_future_value}),
       ...extract_fragments(
            fragments
            |> List.map((({item: name}: Result_structure.name, t)) =>
@@ -131,11 +133,12 @@ let rec extract = (~variant=false, ~path, ~raw) =>
   | Res_float(_loc) => []
   | Res_boolean(_loc) => []
   | Res_raw_scalar(_) => []
-  | Res_poly_enum(loc, enum_meta) => [
+  | Res_poly_enum(loc, enum_meta, omit_future_value) => [
       Enum({
         path,
         fields: enum_meta.em_values |> List.map(({evm_name, _}) => evm_name),
         loc,
+        omit_future_value,
       }),
     ]
 and fragment_names = f => f |> List.map(((name, _)) => name)

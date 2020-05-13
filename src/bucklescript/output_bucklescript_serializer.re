@@ -375,7 +375,7 @@ and generate_array_encoder = (config, loc, inner, path, definition) =>
          generate_serializer(config, path, definition, None, inner)
        })
   ]
-and generate_poly_enum_encoder = (loc, enum_meta) => {
+and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
   open Ast_helper;
   let enum_match_arms =
     enum_meta.em_values
@@ -392,7 +392,10 @@ and generate_poly_enum_encoder = (loc, enum_meta) => {
   let match_expr =
     Exp.match(
       [%expr value],
-      List.concat([enum_match_arms, [fallback_arm]]),
+      List.concat([
+        enum_match_arms,
+        omit_future_value ? [] : [fallback_arm],
+      ]),
     );
 
   %expr
@@ -602,7 +605,16 @@ and generate_object_encoder =
   };
 }
 and generate_poly_variant_union_encoder =
-    (config, loc, name, fragments, exhaustive, path, definition) => {
+    (
+      config,
+      loc,
+      name,
+      fragments,
+      exhaustive,
+      omit_future_value,
+      path,
+      definition,
+    ) => {
   open Ast_helper;
   let fragment_cases =
     fragments
@@ -652,7 +664,10 @@ and generate_poly_variant_union_encoder =
   let typename_matcher =
     Exp.match(
       [%expr value],
-      List.concat([fragment_cases, [fallback_case]]),
+      List.concat([
+        fragment_cases,
+        omit_future_value ? [] : [fallback_case],
+      ]),
     );
 
   %expr
@@ -692,8 +707,8 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_float(loc) => raw_value(conv_loc(loc))
   | Res_boolean(loc) => raw_value(conv_loc(loc))
   | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_encoder(conv_loc(loc), enum_meta)
+  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+    generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_encoder(
       config,
@@ -727,13 +742,20 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       typename,
       false,
     )
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(
+      loc,
+      name,
+      fragments,
+      exhaustive,
+      omit_future_value,
+    ) =>
     generate_poly_variant_union_encoder(
       config,
       conv_loc(loc),
       name,
       fragments,
       exhaustive,
+      omit_future_value,
       path,
       definition,
     )

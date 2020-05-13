@@ -4506,6 +4506,1108 @@ module MyQuery2 {
 "
 `;
 
+exports[`Apollo omitFutureValueEnum.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      __typename: string,
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      __typename: string,
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ];
+  type t_mutationWithError_errors = {
+    __typename: string,
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    __typename: string,
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_mutationWithError).__typename;
+                value;
+              },
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             __typename: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             },
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | other => \`FutureAddedValue(other)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               | \`FutureAddedValue(other) => other
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             }
+                             and __typename = {
+                               let value =
+                                 (value: t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             };
+                             {__typename, message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_mutationWithError).__typename;
+                value;
+              };
+              {__typename, errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      __typename: string,
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      __typename: string,
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    __typename: string,
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    __typename: string,
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_mutationWithError).__typename;
+                value;
+              },
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             __typename: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             },
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             }
+                             and __typename = {
+                               let value =
+                                 (value: t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             };
+                             {__typename, message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_mutationWithError).__typename;
+                value;
+              };
+              {__typename, errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      __typename: string,
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      __typename: string,
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    __typename: string,
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    __typename: string,
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_mutationWithError).__typename;
+                value;
+              },
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             __typename: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             },
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             }
+                             and __typename = {
+                               let value =
+                                 (value: t_mutationWithError_errors).
+                                   __typename;
+                               value;
+                             };
+                             {__typename, message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_mutationWithError).__typename;
+                value;
+              };
+              {__typename, errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Apollo omitFutureValueUnion.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
+  type t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => raise(Not_found)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+                        value;
+                      },
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => raise(Not_found)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Dog).__typename;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  }
+                  and __typename = {
+                    let value = (value: t_dogOrHuman_Human).__typename;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
 exports[`Apollo pokedexApolloMode.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -13271,6 +14373,934 @@ module MyQuery2 {
 "
 `;
 
+exports[`Legacy omitFutureValueEnum.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | other => \`FutureAddedValue(other)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     | \`FutureAddedValue(other) => other
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | _ => raise(Not_found)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | _ => raise(Not_found)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Legacy omitFutureValueUnion.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => raise(Not_found)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => raise(Not_found)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
 exports[`Legacy pokedexApolloMode.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -21295,6 +23325,904 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Objects omitFutureValueEnum.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | other => \`FutureAddedValue(other)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     | \`FutureAddedValue(other) => other
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | _ => raise(Not_found)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      .
+      \\"message\\": string,
+      \\"field\\": t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      .
+      \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {. \\"mutationWithError\\": t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    .
+    \\"message\\": string,
+    \\"field\\": t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    .
+    \\"errors\\": option(array(t_mutationWithError_errors)),
+  };
+  type t = {. \\"mutationWithError\\": t_mutationWithError};
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \\"FIRST\\" => \`FIRST
+                     | \\"SECOND\\" => \`SECOND
+                     | \\"THIRD\\" => \`THIRD
+                     | _ => raise(Not_found)
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => None
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let field = {
+                     let value = value##field;
+                     switch (value) {
+                     | \`FIRST => \\"FIRST\\"
+                     | \`SECOND => \\"SECOND\\"
+                     | \`THIRD => \\"THIRD\\"
+                     };
+                   }
+                   and message = {
+                     let value = value##message;
+                     value;
+                   };
+                   {\\"message\\": message, \\"field\\": field};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\\"errors\\": errors};
+      };
+      {\\"mutationWithError\\": mutationWithError};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Objects omitFutureValueUnion.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => raise(Not_found)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+      \\"barkVolume\\": float,
+    };
+    type t_dogOrHuman_Human = {
+      .
+      \\"__typename\\": string,
+      \\"name\\": string,
+    };
+    type t_dogOrHuman;
+    type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    .
+    \\"name\\": string,
+    \\"barkVolume\\": float,
+  };
+  type t_dogOrHuman_Human = {. \\"name\\": string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        (
+          switch (typename) {
+          | \\"Dog\\" =>
+            \`Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            )
+          | \\"Human\\" =>
+            \`Human(
+              {
+                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"name\\": name};
+              },
+            )
+          | _ => raise(Not_found)
+          }: t_dogOrHuman
+        );
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | \`Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = value##barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Dog\\", \\"name\\": name, \\"barkVolume\\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | \`Human(value) => (
+            Obj.magic(
+              {
+                let name = {
+                  let value = value##name;
+                  value;
+                };
+                {\\"__typename\\": \\"Human\\", \\"name\\": name};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        };
+      };
+      {\\"dogOrHuman\\": dogOrHuman};
+    };
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
   // This is the stringified representation of your query, which gets sent to the server.
   let query: string;
 
@@ -29496,6 +32424,976 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Records omitFutureValueEnum.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [
+    | \`FutureAddedValue(string)
+    | \`FIRST
+    | \`SECOND
+    | \`THIRD
+  ];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | other => \`FutureAddedValue(other)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               | \`FutureAddedValue(other) => other
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             };
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             };
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+  };
+  let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \\"FIRST\\" => \`FIRST
+                               | \\"SECOND\\" => \`SECOND
+                               | \\"THIRD\\" => \`THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | \`FIRST => \\"FIRST\\"
+                               | \`SECOND => \\"SECOND\\"
+                               | \`THIRD => \\"THIRD\\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
+                             };
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Records omitFutureValueUnion.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Normal = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | \`FutureAddedValue(Js.Json.t)
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          | \`FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module Normal {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByConfig = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => raise(Not_found)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByConfig {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module ByDirective = {
+  module Raw = {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+  };
+  let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | \`Dog(t_dogOrHuman_Dog)
+    | \`Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+          (
+            switch (typename) {
+            | \\"Dog\\" =>
+              \`Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \\"Human\\" =>
+              \`Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => raise(Not_found)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | \`Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \\"Dog\\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
+            )
+          | \`Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  };
+                  {__typename: \\"Human\\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
+            )
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let definition = (parse, query, serialize);
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module ByDirective {
   // This is the stringified representation of your query, which gets sent to the server.
   let query: string;
 

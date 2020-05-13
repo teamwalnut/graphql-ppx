@@ -77,7 +77,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
   | Res_poly_variant_selection_set(loc, name, _)
-  | Res_poly_variant_union(loc, name, _, _)
+  | Res_poly_variant_union(loc, name, _, _, _)
   | Res_poly_variant_interface(loc, name, _, _) => {
       base_type(~loc=?atLoc, generate_type_name(path));
     }
@@ -89,7 +89,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(loc, enum_meta) =>
+  | Res_poly_enum(loc, enum_meta, _) =>
     base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
@@ -255,6 +255,7 @@ let generate_variant_union =
     (
       config,
       fields: list((Result_structure.name, Result_structure.t)),
+      omit_future_value,
       path,
       loc,
       raw,
@@ -262,18 +263,21 @@ let generate_variant_union =
   if (raw) {
     generate_opaque(path, loc);
   } else {
-    let fallback_case_ty = [
-      {
-        prf_desc:
-          Rtag(
-            {txt: "FutureAddedValue", loc: conv_loc(loc)},
-            false,
-            [base_type("Js.Json.t")],
-          ),
-        prf_loc: conv_loc(loc),
-        prf_attributes: [],
-      },
-    ];
+    let fallback_case_ty =
+      omit_future_value
+        ? []
+        : [
+          {
+            prf_desc:
+              Rtag(
+                {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                false,
+                [base_type("Js.Json.t")],
+              ),
+            prf_loc: conv_loc(loc),
+            prf_attributes: [],
+          },
+        ];
 
     let fragment_case_tys =
       fields
@@ -343,7 +347,7 @@ let generate_variant_interface = (config, fields, base, path, loc, raw) =>
     );
   };
 
-let generate_enum = (config, fields, path, loc, raw) =>
+let generate_enum = (config, fields, path, loc, raw, omit_future_value) =>
   wrap_type_declaration(
     Ptype_abstract,
     ~manifest=
@@ -354,34 +358,35 @@ let generate_enum = (config, fields, path, loc, raw) =>
           [@metaloc conv_loc(loc)]
           Ast_helper.(
             Typ.variant(
-              [
-                {
-                  prf_desc:
-                    Rtag(
-                      {txt: "FutureAddedValue", loc: conv_loc(loc)},
-                      false,
-                      [base_type("string")],
-                    ),
-                  prf_loc: conv_loc(loc),
-                  prf_attributes: [],
-                },
-                ...fields
-                   |> List.map(field =>
-                        {
-                          prf_desc:
-                            Rtag(
-                              {
-                                txt: to_valid_ident(field),
-                                loc: conv_loc(loc),
-                              },
-                              true,
-                              [],
-                            ),
-                          prf_loc: conv_loc(loc),
-                          prf_attributes: [],
-                        }
-                      ),
-              ],
+              List.append(
+                omit_future_value
+                  ? []
+                  : [
+                    {
+                      prf_desc:
+                        Rtag(
+                          {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                          false,
+                          [base_type("string")],
+                        ),
+                      prf_loc: conv_loc(loc),
+                      prf_attributes: [],
+                    },
+                  ],
+                fields
+                |> List.map(field =>
+                     {
+                       prf_desc:
+                         Rtag(
+                           {txt: to_valid_ident(field), loc: conv_loc(loc)},
+                           true,
+                           [],
+                         ),
+                       prf_loc: conv_loc(loc),
+                       prf_attributes: [],
+                     }
+                   ),
+              ),
               Closed,
               None,
             )
@@ -527,12 +532,19 @@ let generate_types =
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)
-         | VariantUnion({loc, path, fields}) =>
-           generate_variant_union(config, fields, path, loc, raw)
+         | VariantUnion({loc, path, fields, omit_future_value}) =>
+           generate_variant_union(
+             config,
+             fields,
+             omit_future_value,
+             path,
+             loc,
+             raw,
+           )
          | VariantInterface({loc, path, base, fields}) =>
            generate_variant_interface(config, fields, base, path, loc, raw)
-         | Enum({loc, path, fields}) =>
-           generate_enum(config, fields, path, loc, raw),
+         | Enum({loc, path, fields, omit_future_value}) =>
+           generate_enum(config, fields, path, loc, raw, omit_future_value),
        )
     |> List.rev;
 

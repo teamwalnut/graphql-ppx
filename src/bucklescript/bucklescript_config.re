@@ -65,6 +65,7 @@ let defaultConfig =
     template_tag_import: None,
     definition: true,
     custom_fields: Hashtbl.create(0),
+    future_added_value: true,
   };
 
 module JsonHelper = {
@@ -113,6 +114,10 @@ let read_config = () => {
     ppxConfig
     |> JsonHelper.mapBool("verbose", verbose_logging => {
          Ppx_config.update_config(current => {...current, verbose_logging})
+       });
+    ppxConfig
+    |> JsonHelper.mapBool("future-added-value", future_added_value => {
+         Ppx_config.update_config(current => {...current, future_added_value})
        });
     ppxConfig
     |> JsonHelper.mapBool("apollo-mode", apollo_mode => {
