@@ -47,13 +47,12 @@ jobs:
       - name: test-bucklescript
         env:
           NODE_NO_WARNINGS: 1
+          CI: true
         run: |
           esy release-static
           cd tests_bucklescript
           npm ci --no-optional
           npm run test
-        env:
-          CI: true
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
