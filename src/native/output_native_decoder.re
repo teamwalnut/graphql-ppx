@@ -168,7 +168,7 @@ let rec generate_decoder = config =>
   | Res_float(loc) => float_decoder(conv_loc(loc))
   | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
   | Res_raw_scalar(_loc) => [%expr value]
-  | Res_poly_enum(loc, enum_meta) =>
+  | Res_poly_enum(loc, enum_meta, _) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
@@ -178,7 +178,7 @@ let rec generate_decoder = config =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
   | Res_poly_variant_selection_set(loc, name, fields) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(loc, name, fragments, exhaustive, _) =>
     generate_poly_variant_union(
       config,
       conv_loc(loc),
@@ -259,8 +259,8 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | Fr_named_field(field, _, _) =>
-             Some(Pat.var({loc, txt: "field_" ++ field}))
+           | Fr_named_field({name}) =>
+             Some(Pat.var({loc, txt: "field_" ++ name}))
            | Fr_fragment_spread(_) => None,
          )
       |> Pat.tuple
@@ -271,7 +271,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | Fr_named_field(field, loc, inner) => {
+           | Fr_named_field({name as field, loc, type_ as inner}) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
@@ -307,7 +307,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> List.map(
            fun
-           | Fr_named_field(field, loc, _) => {
+           | Fr_named_field({name as field, loc}) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -362,7 +362,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
             Pat.any(),
             List.map(
               fun
-              | Fr_named_field(key, _, inner) =>
+              | Fr_named_field({name as key, type_ as inner}) =>
                 Cf.method(
                   {txt: key, loc: Location.none},
                   Public,
@@ -418,7 +418,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
 and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let rec generator_loop =
     fun
-    | [(field, inner), ...next] => {
+    | [({item: field}: Result_structure.name, inner), ...next] => {
         let variant_decoder =
           Ast_helper.(
             Exp.variant(
@@ -462,7 +462,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     Ast_helper.(
       Typ.variant(
         List.map(
-          ((name, _)) =>
+          (({item: name}: Result_structure.name, _)) =>
             {
               prf_desc:
                 Rtag(
@@ -602,7 +602,7 @@ and generate_poly_variant_union =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map(((type_name, inner)) => {
+      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
            let name_pattern = Pat.constant(Pconst_string(type_name, None));
            let variant =
              Ast_helper.(
@@ -642,7 +642,7 @@ and generate_poly_variant_union =
     );
   let fragment_case_tys =
     List.map(
-      ((name, _)) =>
+      (({item: name}: Result_structure.name, _)) =>
         {
           prf_desc:
             Rtag(

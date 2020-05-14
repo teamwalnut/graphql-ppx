@@ -53,6 +53,9 @@ let run_ppx = (path, opts, testType) => {
   result;
 };
 
+let utils =
+  readdirSync("utils")->Belt.Array.keep(Js.String.endsWith(".re"));
+
 let tests =
   readdirSync("operations")->Belt.Array.keep(Js.String.endsWith(".re"));
 
@@ -99,7 +102,7 @@ describe("Apollo", () =>
 let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) =>
   Js.Promise.make((~resolve as resolvePromise, ~reject as _) =>
     exec(
-      {j|./node_modules/.bin/bsc -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" $pathIn/$fileName|j},
+      {j|./node_modules/.bin/bsc -w -A -warn-error -A -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" $pathIn/$fileName|j},
       {cwd: resolve(dirname, "..")},
       (_error, _stdout, stderr) => {
       resolvePromise(. stderr)

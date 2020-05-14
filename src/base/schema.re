@@ -177,6 +177,16 @@ let type_name = ty =>
   | InputObject({iom_name, _}) => iom_name
   };
 
+let is_type_default = ty =>
+  switch (ty |> type_name) {
+  | "ID"
+  | "String"
+  | "Int"
+  | "Float"
+  | "Boolean" => true
+  | _ => false
+  };
+
 let lookup_type = (schema, name) =>
   switch (Hashtbl.find_all(schema.type_map, name)) {
   | [] => None

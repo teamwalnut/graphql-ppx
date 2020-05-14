@@ -35,26 +35,25 @@ let base_type = (~inner=[], ~loc=?, name) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = (config, path, raw) =>
+let rec generate_type = (~atLoc=?, config, path, raw) =>
   fun
-  | Res_string(loc) => base_type(~loc=conv_loc(loc), "string")
+  | Res_string(loc) => base_type(~loc=?atLoc, "string")
   | Res_nullable(loc, inner) =>
     if (raw) {
       base_type(
-        ~loc=conv_loc(loc),
         ~inner=[generate_type(config, path, raw, inner)],
         "Js.Nullable.t",
       );
     } else {
       base_type(
-        ~loc=conv_loc(loc),
+        ~loc=?atLoc,
         ~inner=[generate_type(config, path, raw, inner)],
         "option",
       );
     }
   | Res_array(loc, inner) =>
     base_type(
-      ~loc=conv_loc(loc),
+      ~loc=?atLoc,
       ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
@@ -62,44 +61,47 @@ let rec generate_type = (config, path, raw) =>
     if (raw) {
       generate_type(config, path, raw, inner);
     } else {
-      base_type(~loc=conv_loc(loc), module_name ++ ".t");
+      base_type(~loc=?atLoc, module_name ++ ".t");
     }
-  | Res_id(loc) => base_type(~loc=conv_loc(loc), "string")
-  | Res_int(loc) => base_type(~loc=conv_loc(loc), "int")
-  | Res_float(loc) => base_type(~loc=conv_loc(loc), "float")
-  | Res_boolean(loc) => base_type(~loc=conv_loc(loc), "bool")
-  | Res_raw_scalar(loc) => base_type(~loc=conv_loc(loc), "Js.Json.t")
+  | Res_id(loc) => base_type(~loc=?atLoc, "string")
+  | Res_int(loc) => {
+      base_type(~loc=?atLoc, "int");
+    }
+  | Res_float(loc) => base_type(~loc=?atLoc, "float")
+  | Res_boolean(loc) => base_type(~loc=?atLoc, "bool")
+  | Res_raw_scalar(loc) => base_type(~loc=?atLoc, "Js.Json.t")
   | Res_object(loc, name, _fields, type_name)
   | Res_record(loc, name, _fields, type_name) =>
     switch (type_name, raw) {
-    | (Some(type_name), false) => base_type(~loc=conv_loc(loc), type_name)
-    | (_, _) => base_type(~loc=conv_loc(loc), generate_type_name(path))
+    | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
+    | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
   | Res_poly_variant_selection_set(loc, name, _)
-  | Res_poly_variant_union(loc, name, _, _)
-  | Res_poly_variant_interface(loc, name, _, _) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path))
+  | Res_poly_variant_union(loc, name, _, _, _)
+  | Res_poly_variant_interface(loc, name, _, _) => {
+      base_type(~loc=?atLoc, generate_type_name(path));
+    }
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
     if (raw) {
       base_type(module_name ++ ".Raw.t");
     } else {
-      base_type(module_name ++ ".t");
+      base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(loc, enum_meta) =>
-    base_type(~loc=conv_loc(loc), generate_type_name(path));
+  | Res_poly_enum(loc, enum_meta, _) =>
+    base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
   Ast_helper.Type.mk(
     ~kind=inner,
     ~manifest?,
-    {loc: conv_loc(loc), txt: generate_type_name(path)},
+    {loc: Location.none, txt: generate_type_name(path)},
   );
 };
 
 let generate_opaque = (path, loc) => {
-  Ast_helper.Type.mk({loc: conv_loc(loc), txt: generate_type_name(path)});
+  Ast_helper.Type.mk({loc: Location.none, txt: generate_type_name(path)});
 };
 
 let raw_opaque_object = fields => {
@@ -125,7 +127,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
     |> List.fold_left(
          acc =>
            fun
-           | Fragment({key, module_name, type_name}) => [
+           | Fragment({key, loc_key, module_name, type_name}) => [
                Ast_helper.Type.field(
                  {Location.txt: key, loc: Location.none},
                  Ast_helper.Typ.constr(
@@ -141,20 +143,37 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                            }
                          ),
                        ),
-                     loc: Location.none,
+                     loc: conv_loc(loc_key),
                    },
                    [],
                  ),
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_}) => [
-               Ast_helper.Type.field(
-                 {Location.txt: to_valid_ident(name), loc: Location.none},
-                 generate_type(config, [name, ...path], raw, type_),
-               ),
-               ...acc,
-             ]
+           | Field({path: [name, ...path], type_, loc, loc_key, arguments}) => {
+               // Add field to internal module
+               if (!raw) {
+                 Output_bucklescript_docstrings.for_field_arguments(
+                   config,
+                   name
+                   |> Schema.lookup_field(Schema.query_type(config.schema)),
+                   arguments,
+                 );
+               };
+               [
+                 Ast_helper.Type.field(
+                   {Location.txt: to_valid_ident(name), loc: Location.none},
+                   generate_type(
+                     ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                     config,
+                     [name, ...path],
+                     raw,
+                     type_,
+                   ),
+                 ),
+                 ...acc,
+               ];
+             }
            | Field({path: [], loc}) =>
              // I don't think this should ever happen but we need to
              // cover this case, perhaps we can constrain the type
@@ -197,16 +216,27 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
         Ast_helper.(
           Typ.variant(
             fields
-            |> List.map(((name, res)) =>
+            |> List.map(((name: Result_structure.name, res)) =>
                  {
                    prf_desc:
                      Rtag(
                        {
-                         txt: Compat.capitalize_ascii(name),
-                         loc: conv_loc(loc),
+                         txt: Compat.capitalize_ascii(name.item),
+                         loc: Location.none,
                        },
                        false,
-                       [generate_type(config, [name, ...path], raw, res)],
+                       [
+                         generate_type(
+                           ~atLoc=
+                             conv_loc(
+                               config.Generator_utils.map_loc(name.span),
+                             ),
+                           config,
+                           [name.item, ...path],
+                           raw,
+                           res,
+                         ),
+                       ],
                      ),
                    prf_loc: Location.none,
                    prf_attributes: [],
@@ -221,22 +251,33 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
     );
   };
 
-let generate_variant_union = (config, fields, path, loc, raw) =>
+let generate_variant_union =
+    (
+      config,
+      fields: list((Result_structure.name, Result_structure.t)),
+      omit_future_value,
+      path,
+      loc,
+      raw,
+    ) =>
   if (raw) {
     generate_opaque(path, loc);
   } else {
-    let fallback_case_ty = [
-      {
-        prf_desc:
-          Rtag(
-            {txt: "FutureAddedValue", loc: conv_loc(loc)},
-            false,
-            [base_type("Js.Json.t")],
-          ),
-        prf_loc: conv_loc(loc),
-        prf_attributes: [],
-      },
-    ];
+    let fallback_case_ty =
+      omit_future_value
+        ? []
+        : [
+          {
+            prf_desc:
+              Rtag(
+                {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                false,
+                [base_type("Js.Json.t")],
+              ),
+            prf_loc: conv_loc(loc),
+            prf_attributes: [],
+          },
+        ];
 
     let fragment_case_tys =
       fields
@@ -244,9 +285,18 @@ let generate_variant_union = (config, fields, path, loc, raw) =>
            {
              prf_desc:
                Rtag(
-                 {txt: name, loc: conv_loc(loc)},
+                 {txt: name.item, loc: conv_loc(loc)},
                  false,
-                 [generate_type(config, [name, ...path], raw, res)],
+                 [
+                   generate_type(
+                     ~atLoc=
+                       conv_loc(config.Generator_utils.map_loc(name.span)),
+                     config,
+                     [name.item, ...path],
+                     raw,
+                     res,
+                   ),
+                 ],
                ),
              prf_loc: conv_loc(loc),
              prf_attributes: [],
@@ -297,7 +347,7 @@ let generate_variant_interface = (config, fields, base, path, loc, raw) =>
     );
   };
 
-let generate_enum = (config, fields, path, loc, raw) =>
+let generate_enum = (config, fields, path, loc, raw, omit_future_value) =>
   wrap_type_declaration(
     Ptype_abstract,
     ~manifest=
@@ -308,34 +358,35 @@ let generate_enum = (config, fields, path, loc, raw) =>
           [@metaloc conv_loc(loc)]
           Ast_helper.(
             Typ.variant(
-              [
-                {
-                  prf_desc:
-                    Rtag(
-                      {txt: "FutureAddedValue", loc: conv_loc(loc)},
-                      false,
-                      [base_type("string")],
-                    ),
-                  prf_loc: conv_loc(loc),
-                  prf_attributes: [],
-                },
-                ...fields
-                   |> List.map(field =>
-                        {
-                          prf_desc:
-                            Rtag(
-                              {
-                                txt: to_valid_ident(field),
-                                loc: conv_loc(loc),
-                              },
-                              true,
-                              [],
-                            ),
-                          prf_loc: conv_loc(loc),
-                          prf_attributes: [],
-                        }
-                      ),
-              ],
+              List.append(
+                omit_future_value
+                  ? []
+                  : [
+                    {
+                      prf_desc:
+                        Rtag(
+                          {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                          false,
+                          [base_type("string")],
+                        ),
+                      prf_loc: conv_loc(loc),
+                      prf_attributes: [],
+                    },
+                  ],
+                fields
+                |> List.map(field =>
+                     {
+                       prf_desc:
+                         Rtag(
+                           {txt: to_valid_ident(field), loc: conv_loc(loc)},
+                           true,
+                           [],
+                         ),
+                       prf_loc: conv_loc(loc),
+                       prf_attributes: [],
+                     }
+                   ),
+              ),
               Closed,
               None,
             )
@@ -352,7 +403,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
     |> List.fold_left(
          acc =>
            fun
-           | Fragment({key, module_name, type_name}) => [
+           | Fragment({key, loc_key, module_name, type_name}) => [
                {
                  pof_desc:
                    Otag(
@@ -370,7 +421,7 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                                }
                              ),
                            ),
-                         loc: Location.none,
+                         loc: conv_loc(loc_key),
                        },
                        [],
                      ),
@@ -381,12 +432,18 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                ...acc,
              ]
 
-           | Field({path: [name, ...path], type_}) => [
+           | Field({path: [name, ...path], loc_key, type_}) => [
                {
                  pof_desc:
                    Otag(
                      {txt: to_valid_ident(name), loc: Location.none},
-                     generate_type(config, [name, ...path], raw, type_),
+                     generate_type(
+                       ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                       config,
+                       [name, ...path],
+                       raw,
+                       type_,
+                     ),
                    ),
                  pof_loc: Location.none,
                  pof_attributes: [],
@@ -475,19 +532,26 @@ let generate_types =
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)
-         | VariantUnion({loc, path, fields}) =>
-           generate_variant_union(config, fields, path, loc, raw)
+         | VariantUnion({loc, path, fields, omit_future_value}) =>
+           generate_variant_union(
+             config,
+             fields,
+             omit_future_value,
+             path,
+             loc,
+             raw,
+           )
          | VariantInterface({loc, path, base, fields}) =>
            generate_variant_interface(config, fields, base, path, loc, raw)
-         | Enum({loc, path, fields}) =>
-           generate_enum(config, fields, path, loc, raw),
+         | Enum({loc, path, fields, omit_future_value}) =>
+           generate_enum(config, fields, path, loc, raw, omit_future_value),
        )
     |> List.rev;
 
   let types =
     types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
   switch (fragment_name) {
-  | Some(fragment_name) =>
+  | Some((fragment_name, fragment_name_loc)) =>
     List.append(
       types,
       [
@@ -498,10 +562,15 @@ let generate_types =
               Type.mk(
                 ~manifest=
                   Typ.constr(
-                    {loc: Location.none, txt: Longident.Lident("t")},
+                    raw
+                      ? Location.mknoloc(Longident.Lident("t"))
+                      : Location.mkloc(
+                          Longident.Lident("t"),
+                          conv_loc(config.map_loc(fragment_name_loc)),
+                        ),
                     [],
                   ),
-                {loc: Location.none, txt: "t_" ++ fragment_name},
+                Location.mknoloc("t_" ++ fragment_name),
               ),
             ],
           )
@@ -512,14 +581,15 @@ let generate_types =
   };
 };
 
-let rec generate_arg_type = (raw, loc) =>
+let rec generate_arg_type = (raw, loc as originalLoc) => {
+  let loc = raw ? None : Some(conv_loc(originalLoc));
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => base_type("string")
-  | Type(Scalar({sm_name: "Int"})) => base_type("int")
-  | Type(Scalar({sm_name: "Float"})) => base_type("float")
-  | Type(Scalar({sm_name: "Boolean"})) => base_type("bool")
-  | Type(Scalar({sm_name: _})) => base_type("Js.Json.t")
+  | Type(Scalar({sm_name: "String"})) => base_type(~loc?, "string")
+  | Type(Scalar({sm_name: "Int"})) => base_type(~loc?, "int")
+  | Type(Scalar({sm_name: "Float"})) => base_type(~loc?, "float")
+  | Type(Scalar({sm_name: "Boolean"})) => base_type(~loc?, "bool")
+  | Type(Scalar({sm_name: _})) => base_type(~loc?, "Js.Json.t")
   | Type(Enum(enum_meta)) =>
     if (raw) {
       base_type("string");
@@ -527,6 +597,7 @@ let rec generate_arg_type = (raw, loc) =>
       Graphql_ppx_base__.Schema.(
         Ast_helper.(
           Typ.variant(
+            ~loc?,
             enum_meta.em_values
             |> List.map(({evm_name, _}) =>
                  {
@@ -543,41 +614,60 @@ let rec generate_arg_type = (raw, loc) =>
       );
     }
   | Type(InputObject({iom_name})) =>
-    base_type(generate_type_name(~prefix="t_variables", [iom_name]))
+    base_type(~loc?, generate_type_name(~prefix="t_variables", [iom_name]))
   | Type(Object(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Object not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Object not allowed in args",
+        ),
       ),
     )
   | Type(Union(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Union not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Union not allowed in args",
+        ),
       ),
     )
   | Type(Interface(_)) =>
     raise(
       Location.Error(
-        Location.error(~loc=loc |> conv_loc, "Interface not allowed in args"),
+        Location.error(
+          ~loc=originalLoc |> conv_loc,
+          "Interface not allowed in args",
+        ),
       ),
     )
   | Nullable(inner) =>
     base_type(
-      ~inner=[generate_arg_type(raw, loc, inner)],
+      ~loc?,
+      ~inner=[
+        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+      ],
       raw ? "Js.Nullable.t" : "option",
     )
   | List(inner) =>
-    base_type(~inner=[generate_arg_type(raw, loc, inner)], "array")
+    base_type(
+      ~loc?,
+      ~inner=[
+        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+      ],
+      "array",
+    )
   | TypeNotFound(name) =>
     raise(
       Location.Error(
         Location.error(
-          ~loc=loc |> conv_loc,
+          ~loc=originalLoc |> conv_loc,
           "Type " ++ name ++ " not found!",
         ),
       ),
     );
+};
 
 let generate_record_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.Type.mk(
@@ -586,10 +676,21 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
         fields
         |> List.map(
              fun
-             | InputField({name, type_, loc}) => {
+             | InputField({name, type_, loc, loc_type}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
-                   generate_arg_type(raw, loc, type_),
+                   generate_arg_type(
+                     raw,
+                     {
+                       ...loc,
+                       loc_ghost:
+                         switch (input_obj_name) {
+                         | None => false
+                         | Some(_) => true
+                         },
+                     },
+                     type_,
+                   ),
                  );
                },
            ),
@@ -658,9 +759,29 @@ let generate_input_object =
 let generate_arg_types = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
-  input_objects
-  |> List.map((InputObject({name, fields})) =>
-       generate_input_object(raw, config, name, fields)
-     )
-  |> Ast_helper.Str.type_(Recursive);
+  // Add to internal module
+  if (!raw) {
+    input_objects
+    |> List.iter((InputObject({name, fields})) => {
+         switch (name) {
+         | None =>
+           fields
+           |> List.iter(field => {
+                Output_bucklescript_docstrings.for_input_constraint(
+                  config,
+                  field,
+                )
+              })
+         | Some(_) => ()
+         }
+       });
+  };
+
+  [
+    input_objects
+    |> List.map((InputObject({name, fields})) => {
+         generate_input_object(raw, config, name, fields)
+       })
+    |> Ast_helper.Str.type_(Recursive),
+  ];
 };

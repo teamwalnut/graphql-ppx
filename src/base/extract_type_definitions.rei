@@ -9,12 +9,15 @@ type extracted_type =
 type object_field =
   | Field({
       type_: Result_structure.t,
+      loc_key: Source_pos.ast_location,
       loc: Source_pos.ast_location,
       path,
+      arguments: Graphql_ast.arguments,
     })
   | Fragment({
       module_name: string,
       key: string,
+      loc_key: Source_pos.ast_location,
       type_name: option(string),
     })
 and type_def =
@@ -28,12 +31,13 @@ and type_def =
   | VariantSelection({
       loc: Source_pos.ast_location,
       path,
-      fields: list((string, Result_structure.t)),
+      fields: list((Result_structure.name, Result_structure.t)),
     })
   | VariantUnion({
       loc: Source_pos.ast_location,
       path,
-      fields: list((string, Result_structure.t)),
+      fields: list((Result_structure.name, Result_structure.t)),
+      omit_future_value: bool,
     })
   | VariantInterface({
       loc: Source_pos.ast_location,
@@ -45,6 +49,7 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       fields: list(string),
+      omit_future_value: bool,
     });
 
 type input_object_field =
@@ -52,6 +57,7 @@ type input_object_field =
       type_: extracted_type,
       name: string,
       loc: Source_pos.ast_location,
+      loc_type: option(Source_pos.ast_location),
     });
 
 type arg_type_def =
@@ -72,3 +78,5 @@ let extract_args:
     option(Source_pos.spanning(Graphql_ast.variable_definitions))
   ) =>
   list(arg_type_def);
+
+let get_inner_type: extracted_type => option(extracted_type);

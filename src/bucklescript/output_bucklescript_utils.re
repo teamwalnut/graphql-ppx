@@ -26,6 +26,16 @@ let conv_loc_from_ast = loc => {
   Source_pos.loc_ghost: loc.Location.loc_ghost,
 };
 
+let extend_loc_from_start = (loc: Location.t, cnum) => {
+  {
+    ...loc,
+    loc_end: {
+      ...loc.loc_start,
+      pos_cnum: loc.loc_start.pos_cnum + cnum,
+    },
+  };
+};
+
 let base_type_name = name =>
   Ast_helper.(
     Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])

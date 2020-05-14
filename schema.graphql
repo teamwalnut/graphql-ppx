@@ -48,6 +48,26 @@ type Query {
   ): CustomScalarObject!
   customFields: customFieldsResult!
   deprecatedFields: deprecatedFieldsResult!
+  defaultObjectValueOnScalar(filter: JsonScalar!, arg: EmbeddedInput!): String!
+  invalidDefaultValues(
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    string: String
+    int: Int
+    float: Float
+    bool: Boolean
+  ): String!
+  invalidArgValues(
+    stringRequired: String!
+    string: String
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    list: [String]
+  ): String!
+  invalidObjectValues(nonRec: NonrecursiveInput!, rec: RecursiveInput!): String!
+  invalidObjectValuesLst(embeddedList: [EmbeddedInputReq]!): String!
 
   dogOrHuman: DogOrHuman!
 
@@ -132,12 +152,17 @@ input EmbeddedInput {
   field: String
 }
 
+input EmbeddedInputReq {
+  field: String!
+}
+
 input NonrecursiveInput {
   nonNullableField: String!
   nullableArray: [String]
   field: String
   enum: SampleField
   embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
 }
 
 input RecursiveInput {
@@ -184,6 +209,7 @@ type VariantTestResult {
 
 scalar DateTime
 scalar Color
+scalar JsonScalar
 
 type customFieldsResult {
   currentTime: DateTime!

@@ -315,6 +315,7 @@ let wrap_module = (name: string, contents) => {
 
 let generate_default_operation =
     (config, variable_defs, has_error, operation, res_structure) => {
+  Output_bucklescript_docstrings.reset();
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
       config,
@@ -337,6 +338,8 @@ let generate_default_operation =
       false,
       None,
     );
+  // Add to internal module
+  Output_bucklescript_docstrings.for_operation(config, operation);
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
@@ -384,10 +387,7 @@ let generate_default_operation =
         List.concat([
           wrap_module(
             "Raw",
-            List.append(
-              raw_types,
-              extracted_args == [] ? [] : [raw_arg_types],
-            ),
+            List.append(raw_types, extracted_args == [] ? [] : raw_arg_types),
           ),
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
@@ -397,7 +397,7 @@ let generate_default_operation =
           types,
           switch (extracted_args) {
           | [] => []
-          | _ => [arg_types]
+          | _ => arg_types
           },
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
@@ -424,6 +424,7 @@ let generate_default_operation =
             : [],
           config.definition
             ? [[%stri let definition = (parse, query, serialize)]] : [],
+          Output_bucklescript_docstrings.get_module(),
         ]),
       ]);
     };
@@ -438,6 +439,7 @@ let generate_default_operation =
 
 let generate_fragment_module =
     (config, name, required_variables, has_error, fragment, res_structure) => {
+  Output_bucklescript_docstrings.reset();
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
       config,
@@ -458,14 +460,22 @@ let generate_fragment_module =
       config,
       res_structure,
       false,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
+  // Add to internal module
+  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
   let raw_types =
     Output_bucklescript_types.generate_types(
       config,
       res_structure,
       true,
-      Some(fragment.item.fg_type_condition.item),
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
     );
 
   let rec make_labeled_fun = body =>
@@ -515,11 +525,11 @@ let generate_fragment_module =
     } else {
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-      let parse =
-        [@metaloc conv_loc(config.map_loc(fragment.span))]
-        [%stri
-          let parse = [%e make_labeled_fun(parse_fn, required_variables)]
-        ];
+      let parse = [%stri
+        let parse = [%e make_labeled_fun(parse_fn, required_variables)]
+      ];
+      // Add to internal module
+      Output_bucklescript_docstrings.for_fragment(config, fragment);
       List.concat(
         List.concat([
           [
@@ -539,6 +549,7 @@ let generate_fragment_module =
                 ]
               ],
             ],
+            Output_bucklescript_docstrings.get_module(),
           ],
         ]),
       );
@@ -561,24 +572,44 @@ let generate_operation = config =>
       structure,
     );
 
-let generate_modules = (config, module_definition, operations) => {
+let generate_modules = (config, module_name, operations) => {
   switch (operations) {
   | [] => []
   | [operation] =>
     switch (generate_operation(config, operation)) {
     | (Some(name), contents) =>
-      config.inline || module_definition
-        ? [contents] : [wrap_module(name, contents)]
-    | (None, contents) => [contents]
+      config.inline
+        ? [contents]
+        : [
+          wrap_module(
+            switch (module_name) {
+            | Some(name) => name
+            | None => name
+            },
+            contents,
+          ),
+        ]
+    | (None, contents) =>
+      switch (module_name) {
+      | Some(name) => [wrap_module(name, contents)]
+      | None => [contents]
+      }
     }
   | operations =>
-    operations
-    |> List.map(generate_operation(config))
-    |> List.mapi((i, (name, contents)) =>
-         switch (name) {
-         | Some(name) => wrap_module(name, contents)
-         | None => wrap_module("Untitled" ++ string_of_int(i), contents)
-         }
-       )
+    let contents =
+      operations
+      |> List.map(generate_operation(config))
+      |> List.mapi((i, (name, contents)) =>
+           switch (name) {
+           | Some(name) => wrap_module(name, contents)
+           | None => wrap_module("Untitled" ++ string_of_int(i), contents)
+           }
+         );
+    switch (module_name) {
+    | Some(module_name) => [
+        wrap_module(module_name, List.concat(contents)),
+      ]
+    | None => contents
+    };
   };
 };

@@ -78,9 +78,11 @@ let get_ppx_as = directives => {
 
 let rec unify_type =
         (
+          ~has_decoder,
           error_marker,
           as_record,
           existing_record,
+          omit_future_value,
           config,
           span,
           ty,
@@ -91,9 +93,11 @@ let rec unify_type =
     Res_nullable(
       config.map_loc(span),
       unify_type(
+        ~has_decoder,
         error_marker,
         as_record,
         existing_record,
+        omit_future_value,
         config,
         span,
         t,
@@ -104,9 +108,11 @@ let rec unify_type =
     Res_array(
       config.map_loc(span),
       unify_type(
+        ~has_decoder,
         error_marker,
         as_record,
         existing_record,
+        omit_future_value,
         config,
         span,
         t,
@@ -124,7 +130,7 @@ let rec unify_type =
       Res_float(config.map_loc(span))
     | Some(Scalar({sm_name: "Boolean", _})) =>
       Res_boolean(config.map_loc(span))
-    | Some(Scalar({sm_name})) =>
+    | Some(Scalar({sm_name})) when !has_decoder =>
       try({
         let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
         Res_custom_decoder(
@@ -136,6 +142,7 @@ let rec unify_type =
       | Not_found => Res_raw_scalar(config.map_loc(span))
       | other => raise(other)
       }
+    | Some(Scalar({sm_name})) => Res_raw_scalar(config.map_loc(span))
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -147,7 +154,7 @@ let rec unify_type =
         selection_set,
       )
     | Some(Enum(enum_meta)) =>
-      Res_poly_enum(config.map_loc(span), enum_meta)
+      Res_poly_enum(config.map_loc(span), enum_meta, omit_future_value)
     | Some(Interface(im) as ty) =>
       unify_interface(
         error_marker,
@@ -166,7 +173,14 @@ let rec unify_type =
         "Can't have fields on input objects",
       )
     | Some(Union(um)) =>
-      unify_union(error_marker, config, span, um, selection_set)
+      unify_union(
+        error_marker,
+        config,
+        span,
+        um,
+        omit_future_value,
+        selection_set,
+      )
     }
   }
 and unify_interface =
@@ -239,7 +253,8 @@ and unify_interface =
       fragment_cases,
     );
   }
-and unify_union = (error_marker, config, span, union_meta, selection_set) =>
+and unify_union =
+    (error_marker, config, span, union_meta, omit_future_value, selection_set) =>
   switch (selection_set) {
   | None =>
     make_error(
@@ -300,7 +315,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
             type_cond_ty,
             Some(if_selection_set),
           );
-        (if_type_condition.item, result_decoder);
+        (if_type_condition, result_decoder);
       | None => assert(false)
       };
 
@@ -318,6 +333,7 @@ and unify_union = (error_marker, config, span, union_meta, selection_set) =>
       } else {
         Nonexhaustive;
       },
+      omit_future_value,
     );
   }
 and unify_variant = (error_marker, config, span, ty, selection_set) =>
@@ -375,7 +391,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                      "Unknown field on type " ++ type_name(ty),
                    )
                  | Some(field_meta) =>
-                   let key = some_or(item.fd_alias, item.fd_name).item;
+                   let key = some_or(item.fd_alias, item.fd_name);
                    let inner_type =
                      switch (to_native_type_ref(field_meta.fm_field_type)) {
                      | Ntr_list(_)
@@ -390,9 +406,11 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                    (
                      key,
                      unify_type(
+                       ~has_decoder=false,
                        error_marker,
                        false,
                        None,
+                       false,
                        config,
                        span,
                        inner_type,
@@ -423,9 +441,15 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let ast_field = field_span.item;
   let field_name = ast_field.fd_name.item;
   let field_meta = lookup_field(ty, field_name);
-  let key = some_or(ast_field.fd_alias, ast_field.fd_name).item;
+  let key = some_or(ast_field.fd_alias, ast_field.fd_name);
+  let key_span = key.span;
+  let key = key.item;
   let is_variant = has_directive("bsVariant", ast_field.fd_directives);
   let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let omit_future_value =
+    has_directive("ppxOmitFutureValue", ast_field.fd_directives)
+    || !config.future_added_value;
+  let has_decoder = has_directive("ppxDecoder", ast_field.fd_directives);
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
   let has_skip =
@@ -435,7 +459,13 @@ and unify_field = (error_marker, config, field_span, ty) => {
     if (is_variant) {
       unify_variant(error_marker);
     } else {
-      unify_type(error_marker, is_record, existing_record);
+      unify_type(
+        ~has_decoder,
+        error_marker,
+        is_record,
+        existing_record,
+        omit_future_value,
+      );
     };
 
   let parser_expr =
@@ -464,59 +494,85 @@ and unify_field = (error_marker, config, field_span, ty) => {
     };
 
   let loc = config.map_loc(field_span.span);
+  let loc_key = config.map_loc(key_span);
+  let arguments =
+    switch (ast_field.fd_arguments) {
+    | None => []
+    | Some({item}) => item
+    };
   switch (ast_field.fd_directives |> find_directive("ppxDecoder")) {
-  | None => Fr_named_field(key, loc, parser_expr)
+  | None =>
+    Fr_named_field({name: key, loc_key, loc, type_: parser_expr, arguments})
   | Some({item: {d_arguments, _}, span}) =>
     switch (find_argument("module", d_arguments)) {
     | None =>
-      Fr_named_field(
-        key,
+      Fr_named_field({
+        name: key,
         loc,
-        make_error(
-          error_marker,
-          config.map_loc,
-          span,
-          "pxxDecoder must be given 'module' argument",
-        ),
-      )
+        loc_key,
+        type_:
+          make_error(
+            error_marker,
+            config.map_loc,
+            span,
+            "pxxDecoder must be given 'module' argument",
+          ),
+        arguments,
+      })
     | Some((_, {item: Iv_string(module_name), span})) =>
       switch (parser_expr) {
       | Res_nullable(loc, t) =>
-        Fr_named_field(
-          key,
+        Fr_named_field({
+          name: key,
+          loc_key,
           loc,
-          Res_nullable(
-            loc,
-            Res_custom_decoder(config.map_loc(span), module_name, t),
-          ),
-        )
+          type_:
+            Res_nullable(
+              loc,
+              Res_custom_decoder(config.map_loc(span), module_name, t),
+            ),
+          arguments,
+        })
       | Res_array(loc, t) =>
-        Fr_named_field(
-          key,
+        Fr_named_field({
+          name: key,
+          loc_key,
           loc,
-          Res_array(
-            loc,
-            Res_custom_decoder(config.map_loc(span), module_name, t),
-          ),
-        )
+          type_:
+            Res_array(
+              loc,
+              Res_custom_decoder(config.map_loc(span), module_name, t),
+            ),
+          arguments,
+        })
       | _ =>
-        Fr_named_field(
-          key,
+        Fr_named_field({
+          name: key,
+          loc_key,
           loc,
-          Res_custom_decoder(config.map_loc(span), module_name, parser_expr),
-        )
+          type_:
+            Res_custom_decoder(
+              config.map_loc(span),
+              module_name,
+              parser_expr,
+            ),
+          arguments,
+        })
       }
     | Some((_, {span, _})) =>
-      Fr_named_field(
-        key,
+      Fr_named_field({
+        name: key,
+        loc_key,
         loc,
-        make_error(
-          error_marker,
-          config.map_loc,
-          span,
-          "The 'module' argument must be a string",
-        ),
-      )
+        type_:
+          make_error(
+            error_marker,
+            config.map_loc,
+            span,
+            "The 'module' argument must be a string",
+          ),
+        arguments,
+      })
     }
   };
 }

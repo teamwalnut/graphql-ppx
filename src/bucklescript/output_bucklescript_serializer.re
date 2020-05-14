@@ -14,6 +14,10 @@ open Extract_type_definitions;
 open Result_structure;
 open Output_bucklescript_types;
 
+// Cheap way of preventing location override from types module
+// Might refactor this later
+let conv_loc = _ => Location.none;
+
 let raw_value = loc => [@metaloc loc] [%expr value];
 /*
   * This serializes a variable type to an option type with a JSON value
@@ -371,7 +375,7 @@ and generate_array_encoder = (config, loc, inner, path, definition) =>
          generate_serializer(config, path, definition, None, inner)
        })
   ]
-and generate_poly_enum_encoder = (loc, enum_meta) => {
+and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
   open Ast_helper;
   let enum_match_arms =
     enum_meta.em_values
@@ -381,17 +385,17 @@ and generate_poly_enum_encoder = (loc, enum_meta) => {
 
   let fallback_arm =
     Exp.case(
-      Pat.variant(
-        "FutureAddedValue",
-        Some(Pat.var({loc: conv_loc(loc), txt: "other"})),
-      ),
+      Pat.variant("FutureAddedValue", Some(Pat.var({loc, txt: "other"}))),
       ident_from_string("other"),
     );
 
   let match_expr =
     Exp.match(
       [%expr value],
-      List.concat([enum_match_arms, [fallback_arm]]),
+      List.concat([
+        enum_match_arms,
+        omit_future_value ? [] : [fallback_arm],
+      ]),
     );
 
   %expr
@@ -424,7 +428,7 @@ and generate_object_encoder =
       |> List.filter_map(
            fun
            | Fr_fragment_spread(_, _, _, _, _) => None
-           | Fr_named_field(key, _, inner) => Some((key, inner)),
+           | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
     | [] =>
@@ -448,7 +452,10 @@ and generate_object_encoder =
                             | _ => false,
                           )
                      )) {
-                [("__typename", Res_string(loc)), ...fields];
+                [
+                  ("__typename", Res_string(conv_loc_from_ast(loc))),
+                  ...fields,
+                ];
               } else {
                 fields;
               };
@@ -457,7 +464,7 @@ and generate_object_encoder =
             |> List.map(((key, inner)) => {
                  let key_value = {
                    Location.txt: Longident.parse(to_valid_ident(key)),
-                   loc: conv_loc(loc),
+                   loc,
                  };
                  switch (key, typename) {
                  | ("__typename", Some(typename)) => (
@@ -477,7 +484,7 @@ and generate_object_encoder =
         fields
         |> List.map(((key, inner)) =>
              Vb.mk(
-               Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
+               Pat.var({txt: to_valid_ident(key), loc}),
                {
                  // TODO: would be nice to pass the input instead of relying
                  // on a static identifier called `value`
@@ -549,7 +556,7 @@ and generate_object_encoder =
             |> List.fold_left(
                  acc =>
                    fun
-                   | Fr_named_field(key, _, inner) => acc
+                   | Fr_named_field(_) => acc
                    | Fr_fragment_spread(key, loc, name, _, arguments) => [
                        [%expr
                          (
@@ -598,11 +605,20 @@ and generate_object_encoder =
   };
 }
 and generate_poly_variant_union_encoder =
-    (config, loc, name, fragments, exhaustive, path, definition) => {
+    (
+      config,
+      loc,
+      name,
+      fragments,
+      exhaustive,
+      omit_future_value,
+      path,
+      definition,
+    ) => {
   open Ast_helper;
   let fragment_cases =
     fragments
-    |> List.map(((type_name, inner)) => {
+    |> List.map((({item: type_name}: Result_structure.name, inner)) => {
          Ast_helper.(
            Exp.case(
              Pat.variant(
@@ -648,7 +664,10 @@ and generate_poly_variant_union_encoder =
   let typename_matcher =
     Exp.match(
       [%expr value],
-      List.concat([fragment_cases, [fallback_case]]),
+      List.concat([
+        fragment_cases,
+        omit_future_value ? [] : [fallback_case],
+      ]),
     );
 
   %expr
@@ -656,11 +675,11 @@ and generate_poly_variant_union_encoder =
 }
 and generate_poly_variant_selection_set_encoder =
     (config, loc, name, fields, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
     (config, loc, name, base, fragments, path, definition) => [%expr
-  Js.Json.null
+  Obj.magic(Js.Json.null)
 ]
 and generate_solo_fragment_spread_encorder =
     (config, loc, name, arguments, definition) => [%expr
@@ -670,6 +689,7 @@ and generate_solo_fragment_spread_encorder =
 ]
 
 and generate_error = (loc, message) => {
+  let loc = Output_bucklescript_utils.conv_loc(loc);
   let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
   let%expr _value = value;
   %e
@@ -687,8 +707,8 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_float(loc) => raw_value(conv_loc(loc))
   | Res_boolean(loc) => raw_value(conv_loc(loc))
   | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta) =>
-    generate_poly_enum_encoder(loc, enum_meta)
+  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+    generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)
   | Res_custom_decoder(loc, ident, inner) =>
     generate_custom_encoder(
       config,
@@ -701,7 +721,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_record(loc, name, fields, existing_record) =>
     generate_object_encoder(
       config,
-      loc,
+      conv_loc(loc),
       name,
       fields,
       path,
@@ -713,7 +733,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
   | Res_object(loc, name, fields, existing_record) =>
     generate_object_encoder(
       config,
-      loc,
+      conv_loc(loc),
       name,
       fields,
       path,
@@ -722,13 +742,20 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       typename,
       false,
     )
-  | Res_poly_variant_union(loc, name, fragments, exhaustive) =>
+  | Res_poly_variant_union(
+      loc,
+      name,
+      fragments,
+      exhaustive,
+      omit_future_value,
+    ) =>
     generate_poly_variant_union_encoder(
       config,
       conv_loc(loc),
       name,
       fragments,
       exhaustive,
+      omit_future_value,
       path,
       definition,
     )
@@ -759,4 +786,4 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message);
+  | Res_error(loc, message) => generate_error(loc, message);
