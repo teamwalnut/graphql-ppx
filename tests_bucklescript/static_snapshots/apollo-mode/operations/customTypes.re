@@ -16,6 +16,39 @@
     cookies: [],
   }
 ];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some("green") => Green
+    | Some("blue") => Blue
+    | Some("red")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => "red"
+      | Green => "green"
+      | Blue => "blue"
+      }
+    )
+    |> Js.Json.string;
+};
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+
 module MyQuery = {
   module Raw = {
     type t_customFields = {
@@ -30,10 +63,10 @@ module MyQuery = {
   let query = "query   {\ncustomFields  {\n__typename  \ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
   type t_customFields = {
     __typename: string,
-    currentTime: GraphqlHelpers.DateTime.t,
-    favoriteColor: GraphqlHelpers.Color.t,
-    futureTime: option(GraphqlHelpers.DateTime.t),
-    nullableColor: option(GraphqlHelpers.DateTime.t),
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
+    nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
   let parse: Raw.t => t =
@@ -46,29 +79,24 @@ module MyQuery = {
               let nullableColor = {
                 let value = (value: Raw.t_customFields).nullableColor;
                 switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    GraphqlHelpers.DateTime.parse(
-                      GraphqlHelpers.Color.parse(value),
-                    ),
-                  )
+                | Some(value) => Some(Color.parse(Color.parse(value)))
                 | None => None
                 };
               }
               and futureTime = {
                 let value = (value: Raw.t_customFields).futureTime;
                 switch (Js.toOption(value)) {
-                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+                | Some(value) => Some(DateTime.parse(value))
                 | None => None
                 };
               }
               and favoriteColor = {
                 let value = (value: Raw.t_customFields).favoriteColor;
-                GraphqlHelpers.Color.parse(value);
+                Color.parse(value);
               }
               and currentTime = {
                 let value = (value: Raw.t_customFields).currentTime;
-                GraphqlHelpers.DateTime.parse(value);
+                DateTime.parse(value);
               }
               and __typename = {
                 let value = (value: Raw.t_customFields).__typename;
@@ -108,9 +136,7 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(
-                      GraphqlHelpers.Color.serialize(value),
-                    ),
+                    Color.serialize(Color.serialize(value)),
                   )
                 | None => Js.Nullable.null
                 };
@@ -120,21 +146,19 @@ module MyQuery = {
 
                 switch (value) {
                 | Some(value) =>
-                  Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(value),
-                  )
+                  Js.Nullable.return(DateTime.serialize(value))
                 | None => Js.Nullable.null
                 };
               }
               and favoriteColor = {
                 let value = (value: t_customFields).favoriteColor;
 
-                GraphqlHelpers.Color.serialize(value);
+                Color.serialize(value);
               }
               and currentTime = {
                 let value = (value: t_customFields).currentTime;
 
-                GraphqlHelpers.DateTime.serialize(value);
+                DateTime.serialize(value);
               }
               and __typename = {
                 let value = (value: t_customFields).__typename;

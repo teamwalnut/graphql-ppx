@@ -161,7 +161,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {

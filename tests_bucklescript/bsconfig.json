@@ -1,6 +1,6 @@
 {
   "name": "tests_bucklescript",
-  "sources": ["__tests__", "utils", "operations"],
+  "sources": ["__tests__"],
   "package-specs": {
     "module": "commonjs",
     "in-source": true
@@ -19,8 +19,8 @@
     "mode": "records",
     "schema": "../graphql_schema.json",
     "custom-fields": {
-      "DateTime": "GraphqlHelpers.DateTime",
-      "Color": "GraphqlHelpers.Color"
+      "DateTime": "DateTime",
+      "Color": "Color"
     }
   }
 }

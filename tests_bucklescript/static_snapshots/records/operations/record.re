@@ -27,7 +27,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -102,7 +101,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
@@ -168,7 +166,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
@@ -264,7 +261,6 @@ module ExternalFragmentQuery = {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -369,7 +365,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";

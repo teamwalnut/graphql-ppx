@@ -106,8 +106,19 @@ let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) =>
     })
   );
 
-let write_compilation_error_snapshot_to_disk = (fileName, pathIn, pathOut) =>
-  get_bsb_error(~ppxOptions="", ~fileName, ~pathIn)
+let get_bsb_output = (~ppxOptions, ~fileName, ~pathIn: string) =>
+  Js.Promise.make((~resolve as resolvePromise, ~reject as _) =>
+    exec(
+      {j|./node_modules/.bin/bsc -ppx "../_build/default/src/bucklescript_bin/bin.exe $ppxOptions" $pathIn/$fileName|j},
+      {cwd: resolve(dirname, "..")},
+      (_error, stdout, _stderr) => {
+      resolvePromise(. stdout)
+    })
+  );
+
+let get_bsb_error_with_static_snapshot =
+    (~ppxOptions, ~fileName, ~pathIn, ~pathOut) =>
+  get_bsb_error(~ppxOptions, ~fileName, ~pathIn)
   |> Js.Promise.then_(stderr => {
        let result = {
          let lines = stderr |> Js.String.split("\n");
@@ -148,18 +159,52 @@ let write_compilation_error_snapshot_to_disk = (fileName, pathIn, pathOut) =>
        );
        result |> Js.Promise.resolve;
      });
+let get_bsb_output_with_static_snapshot =
+    (~ppxOptions, ~fileName, ~pathIn, ~pathOut) =>
+  get_bsb_output(~ppxOptions, ~fileName, ~pathIn)
+  |> Js.Promise.then_(output => {
+       let newFileName =
+         (
+           fileName
+           |> Js.String.substring(
+                ~from=0,
+                ~to_=(fileName |> Js.String.length) - 3,
+              )
+         )
+         ++ ".js";
+       writeFileSync({j|static_snapshots/$pathOut/$newFileName|j}, output);
+       output |> Js.Promise.resolve;
+     });
 
-describe("Legacy compilation", () =>
+describe("Compilation (Objects)", () =>
   tests
   |> Array.iter(t => {
        testPromise(t, () =>
-         get_bsb_error(
+         get_bsb_output_with_static_snapshot(
            ~ppxOptions="-objects",
-           ~pathIn="operations",
            ~fileName=t,
+           ~pathIn="operations",
+           ~pathOut="objects/operations",
          )
-         |> Js.Promise.then_(error =>
-              expect(error) |> toEqual("") |> Js.Promise.resolve
+         |> Js.Promise.then_(output =>
+              Js.Promise.resolve(expect(output) |> toMatchSnapshot)
+            )
+       )
+     })
+);
+
+describe("Compilation (Records)", () =>
+  tests
+  |> Array.iter(t => {
+       testPromise(t, () =>
+         get_bsb_output_with_static_snapshot(
+           ~ppxOptions="",
+           ~fileName=t,
+           ~pathIn="operations",
+           ~pathOut="records/operations",
+         )
+         |> Js.Promise.then_(output =>
+              Js.Promise.resolve(expect(output) |> toMatchSnapshot)
             )
        )
      })
@@ -169,14 +214,32 @@ let tests =
   readdirSync("operations/errors")
   ->Belt.Array.keep(Js.String.endsWith(".re"));
 
-describe("Errors", () =>
+describe("Errors (Records)", () =>
   tests
   |> Array.iter(t => {
        testPromise(t, () =>
-         write_compilation_error_snapshot_to_disk(
-           t,
-           "operations/errors",
-           "errors/operations",
+         get_bsb_error_with_static_snapshot(
+           ~ppxOptions="",
+           ~fileName=t,
+           ~pathIn="operations/errors",
+           ~pathOut="records/errors",
+         )
+         |> Js.Promise.then_(result =>
+              Js.Promise.resolve(expect(result) |> toMatchSnapshot)
+            )
+       )
+     })
+);
+
+describe("Errors (Objects)", () =>
+  tests
+  |> Array.iter(t => {
+       testPromise(t, () =>
+         get_bsb_error_with_static_snapshot(
+           ~ppxOptions="-objects",
+           ~fileName=t,
+           ~pathIn="operations/errors",
+           ~pathOut="objects/errors",
          )
          |> Js.Promise.then_(result =>
               Js.Promise.resolve(expect(result) |> toMatchSnapshot)

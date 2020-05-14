@@ -334,13 +334,14 @@ exports[`Apollo customDecoder.re 1`] = `
 ];
 module StringOfInt = {
   let parse = string_of_int;
+  let serialize = int_of_string;
   type t = string;
 };
 module IntOfString = {
   let parse = int_of_string;
+  let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -610,6 +611,39 @@ exports[`Apollo customTypes.re 1`] = `
     cookies: [],
   }
 ];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(\\"green\\") => Green
+    | Some(\\"blue\\") => Blue
+    | Some(\\"red\\")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => \\"red\\"
+      | Green => \\"green\\"
+      | Blue => \\"blue\\"
+      }
+    )
+    |> Js.Json.string;
+};
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+
 module MyQuery = {
   module Raw = {
     type t_customFields = {
@@ -624,10 +658,10 @@ module MyQuery = {
   let query = \\"query   {\\\\ncustomFields  {\\\\n__typename  \\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
     __typename: string,
-    currentTime: GraphqlHelpers.DateTime.t,
-    favoriteColor: GraphqlHelpers.Color.t,
-    futureTime: option(GraphqlHelpers.DateTime.t),
-    nullableColor: option(GraphqlHelpers.DateTime.t),
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
+    nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
   let parse: Raw.t => t =
@@ -640,29 +674,24 @@ module MyQuery = {
               let nullableColor = {
                 let value = (value: Raw.t_customFields).nullableColor;
                 switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    GraphqlHelpers.DateTime.parse(
-                      GraphqlHelpers.Color.parse(value),
-                    ),
-                  )
+                | Some(value) => Some(Color.parse(Color.parse(value)))
                 | None => None
                 };
               }
               and futureTime = {
                 let value = (value: Raw.t_customFields).futureTime;
                 switch (Js.toOption(value)) {
-                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+                | Some(value) => Some(DateTime.parse(value))
                 | None => None
                 };
               }
               and favoriteColor = {
                 let value = (value: Raw.t_customFields).favoriteColor;
-                GraphqlHelpers.Color.parse(value);
+                Color.parse(value);
               }
               and currentTime = {
                 let value = (value: Raw.t_customFields).currentTime;
-                GraphqlHelpers.DateTime.parse(value);
+                DateTime.parse(value);
               }
               and __typename = {
                 let value = (value: Raw.t_customFields).__typename;
@@ -702,9 +731,7 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(
-                      GraphqlHelpers.Color.serialize(value),
-                    ),
+                    Color.serialize(Color.serialize(value)),
                   )
                 | None => Js.Nullable.null
                 };
@@ -714,21 +741,19 @@ module MyQuery = {
 
                 switch (value) {
                 | Some(value) =>
-                  Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(value),
-                  )
+                  Js.Nullable.return(DateTime.serialize(value))
                 | None => Js.Nullable.null
                 };
               }
               and favoriteColor = {
                 let value = (value: t_customFields).favoriteColor;
 
-                GraphqlHelpers.Color.serialize(value);
+                Color.serialize(value);
               }
               and currentTime = {
                 let value = (value: t_customFields).currentTime;
 
-                GraphqlHelpers.DateTime.serialize(value);
+                DateTime.serialize(value);
               }
               and __typename = {
                 let value = (value: t_customFields).__typename;
@@ -3900,7 +3925,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -3989,7 +4013,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -4074,7 +4097,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -4185,7 +4207,6 @@ module ExternalFragmentQuery = {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -4302,7 +4323,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -7066,7 +7086,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -7674,14 +7693,6597 @@ module MyQuery = {
 "
 `;
 
-exports[`Errors deprecatedFields.re 1`] = `
+exports[`Compilation (Objects) argNamedQuery.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          argNamedQuery: value.argNamedQuery
+        };
+}
+
+function serialize(value) {
+  return {
+          argNamedQuery: value.argNamedQuery
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          query: inp.query
+        };
+}
+
+function makeVariables(query, param) {
+  return serializeVariables({
+              query: query
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) comment.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          nonrecursiveInput: value.nonrecursiveInput
+        };
+}
+
+function serialize(value) {
+  return {
+          nonrecursiveInput: value.nonrecursiveInput
+        };
+}
+
+function serializeInputObjectEmbeddedInput(inp) {
+  var a = inp.field;
+  return {
+          field: a !== undefined ? a : undefined
+        };
+}
+
+function serializeInputObjectNonrecursiveInput(inp) {
+  var a = inp.nullableArray;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.field;
+  var a$3 = inp.enum;
+  var tmp$1;
+  if (a$3 !== undefined) {
+    var a$4 = a$3;
+    tmp$1 = a$4 !== 225952583 ? (
+        a$4 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$5 = inp.embeddedInput;
+  var tmp$2;
+  if (a$5 !== undefined) {
+    var a$6 = a$5;
+    tmp$2 = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return serializeInputObjectEmbeddedInput(Caml_option.valFromOption(b));
+            }
+            
+          }), a$6);
+  } else {
+    tmp$2 = undefined;
+  }
+  return {
+          nonNullableField: inp.nonNullableField,
+          nullableArray: tmp,
+          field: a$2 !== undefined ? a$2 : undefined,
+          enum: tmp$1,
+          embeddedInput: tmp$2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, param) {
+  return {
+          nonNullableField: nonNullableField,
+          nullableArray: nullableArray,
+          field: field,
+          enum: $$enum,
+          embeddedInput: embeddedInput
+        };
+}
+
+function makeInputObjectEmbeddedInput(field, param) {
+  return {
+          field: field
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) customDecoder.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_format = require(\\"bs-platform/lib/js/caml_format.js\\");
+
+function parse(prim) {
+  return String(prim);
+}
+
+var serialize = Caml_format.caml_int_of_string;
+
+var StringOfInt = {
+  parse: parse,
+  serialize: serialize
+};
+
+var parse$1 = Caml_format.caml_int_of_string;
+
+function serialize$1(prim) {
+  return String(prim);
+}
+
+var IntOfString = {
+  parse: parse$1,
+  serialize: serialize$1
+};
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var $$int = String(value$2);
+  var value$3 = value$1.string;
+  var string = Caml_format.caml_int_of_string(value$3);
+  return {
+          variousScalars: {
+            string: string,
+            int: $$int
+          }
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var $$int = Caml_format.caml_int_of_string(value$2);
+  var value$3 = value$1.string;
+  var string = String(value$3);
+  return {
+          variousScalars: {
+            string: string,
+            int: $$int
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse$2,
+  query,
+  serialize$2
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition
+};
+
+exports.StringOfInt = StringOfInt;
+exports.IntOfString = IntOfString;
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) customScalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.customScalarField;
+  var value$2 = value$1.nonNullable;
+  var value$3 = value$1.nullable;
+  var nullable = (value$3 == null) ? undefined : Caml_option.some(value$3);
+  return {
+          customScalarField: {
+            nullable: nullable,
+            nonNullable: value$2
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.customScalarField;
+  var value$2 = value$1.nonNullable;
+  var value$3 = value$1.nullable;
+  var nullable = value$3 !== undefined ? Caml_option.valFromOption(value$3) : null;
+  return {
+          customScalarField: {
+            nullable: nullable,
+            nonNullable: value$2
+          }
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.opt;
+  return {
+          opt: a !== undefined ? Caml_option.valFromOption(a) : undefined,
+          req: inp.req
+        };
+}
+
+function makeVariables(opt, req, param) {
+  return serializeVariables({
+              opt: opt,
+              req: req
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) customTypes.re 1`] = `""`;
+
+exports[`Compilation (Objects) enumInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          enumInput: value.enumInput
+        };
+}
+
+function serialize(value) {
+  return {
+          enumInput: value.enumInput
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.arg;
+  return {
+          arg: a !== 225952583 ? (
+              a >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+            ) : \\"THIRD\\"
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) explicit_object_record.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var RecordsQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var ObjectsQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+exports.RecordsQuery = RecordsQuery;
+exports.ObjectsQuery = ObjectsQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) fragmentDefinition.re 1`] = `""`;
+
+exports[`Compilation (Objects) interface.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+/* This output is empty. Its source's type definitions, externals and/or unused code got optimized away. */
+"
+`;
+
+exports[`Compilation (Objects) lists.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) listsArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          listsInput: value.listsInput
+        };
+}
+
+function serialize(value) {
+  return {
+          listsInput: value.listsInput
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.nullableOfNullable;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.nullableOfNonNullable;
+  var tmp$1;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp$1 = $$Array.map((function (b) {
+            return b;
+          }), a$3);
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$4 = inp.nonNullableOfNullable;
+  var a$5 = inp.nonNullableOfNonNullable;
+  return {
+          nullableOfNullable: tmp,
+          nullableOfNonNullable: tmp$1,
+          nonNullableOfNullable: $$Array.map((function (b) {
+                  if (b !== undefined) {
+                    return b;
+                  }
+                  
+                }), a$4),
+          nonNullableOfNonNullable: $$Array.map((function (b) {
+                  return b;
+                }), a$5)
+        };
+}
+
+function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
+  return serializeVariables({
+              nullableOfNullable: nullableOfNullable,
+              nullableOfNonNullable: nullableOfNonNullable,
+              nonNullableOfNullable: nonNullableOfNullable,
+              nonNullableOfNonNullable: nonNullableOfNonNullable
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) listsInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          listsInput: value.listsInput
+        };
+}
+
+function serialize(value) {
+  return {
+          listsInput: value.listsInput
+        };
+}
+
+function serializeInputObjectListsInput(inp) {
+  var a = inp.nullableOfNullable;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.nullableOfNonNullable;
+  var tmp$1;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp$1 = $$Array.map((function (b) {
+            return b;
+          }), a$3);
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$4 = inp.nonNullableOfNullable;
+  var a$5 = inp.nonNullableOfNonNullable;
+  return {
+          nullableOfNullable: tmp,
+          nullableOfNonNullable: tmp$1,
+          nonNullableOfNullable: $$Array.map((function (b) {
+                  if (b !== undefined) {
+                    return b;
+                  }
+                  
+                }), a$4),
+          nonNullableOfNonNullable: $$Array.map((function (b) {
+                  return b;
+                }), a$5)
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectListsInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable,
+          nonNullableOfNullable: nonNullableOfNullable,
+          nonNullableOfNonNullable: nonNullableOfNonNullable
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectListsInput: serializeInputObjectListsInput,
+  makeVariables: makeVariables,
+  makeInputObjectListsInput: makeInputObjectListsInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) mutation.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.mutationWithError;
+  var value$2 = value$1.errors;
+  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
+            var value$1 = value.message;
+            var value$2 = value.field;
+            var field;
+            switch (value$2) {
+              case \\"FIRST\\" :
+                  field = /* FIRST */-24399856;
+                  break;
+              case \\"SECOND\\" :
+                  field = /* SECOND */382368628;
+                  break;
+              case \\"THIRD\\" :
+                  field = /* THIRD */225952583;
+                  break;
+              default:
+                field = /* \`FutureAddedValue */[
+                  -31101740,
+                  value$2
+                ];
+            }
+            return {
+                    field: field,
+                    message: value$1
+                  };
+          }));
+  var value$3 = value$1.value;
+  var value$4 = (value$3 == null) ? undefined : ({
+        stringField: value$3.stringField
+      });
+  return {
+          mutationWithError: {
+            value: value$4,
+            errors: errors
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.mutationWithError;
+  var value$2 = value$1.errors;
+  var errors = value$2 !== undefined ? value$2.map((function (value) {
+            var value$1 = value.message;
+            var value$2 = value.field;
+            var field = typeof value$2 === \\"number\\" ? (
+                value$2 !== 225952583 ? (
+                    value$2 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+                  ) : \\"THIRD\\"
+              ) : value$2[1];
+            return {
+                    field: field,
+                    message: value$1
+                  };
+          })) : null;
+  var value$3 = value$1.value;
+  var value$4 = value$3 !== undefined ? ({
+        stringField: Caml_option.valFromOption(value$3).stringField
+      }) : null;
+  return {
+          mutationWithError: {
+            value: value$4,
+            errors: errors
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) mutationWithArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serialize(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          required: inp.required
+        };
+}
+
+function makeVariables(required, param) {
+  return serializeVariables({
+              required: required
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) mutationWithArgsAndNoRecords.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serialize(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          required: inp.required
+        };
+}
+
+function makeVariables(required, param) {
+  return serializeVariables({
+              required: required
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) nested.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.let_;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    inner = {
+      inner: (value$3 == null) ? undefined : ({
+            field: value$3.field
+          })
+    };
+  }
+  var let_ = {
+    inner: inner
+  };
+  var value$4 = value.second;
+  var value$5 = value$4.inner;
+  var inner$1;
+  if (value$5 == null) {
+    inner$1 = undefined;
+  } else {
+    var value$6 = value$5.inner;
+    var tmp;
+    if (value$6 == null) {
+      tmp = undefined;
+    } else {
+      var value$7 = value$6.f2;
+      var value$8 = value$6.f1;
+      tmp = {
+        f1: value$8,
+        f2: value$7
+      };
+    }
+    inner$1 = {
+      inner: tmp
+    };
+  }
+  var second = {
+    inner: inner$1
+  };
+  var value$9 = value.first;
+  var value$10 = value$9.inner;
+  var inner$2;
+  if (value$10 == null) {
+    inner$2 = undefined;
+  } else {
+    var value$11 = value$10.inner;
+    inner$2 = {
+      inner: (value$11 == null) ? undefined : ({
+            field: value$11.field
+          })
+    };
+  }
+  var first = {
+    inner: inner$2
+  };
+  return {
+          first: first,
+          second: second,
+          let_: let_
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.let_;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = Caml_option.valFromOption(value$2).inner;
+    inner = {
+      inner: value$3 !== undefined ? ({
+            field: Caml_option.valFromOption(value$3).field
+          }) : null
+    };
+  } else {
+    inner = null;
+  }
+  var let_ = {
+    inner: inner
+  };
+  var value$4 = value.second;
+  var value$5 = value$4.inner;
+  var inner$1;
+  if (value$5 !== undefined) {
+    var value$6 = Caml_option.valFromOption(value$5).inner;
+    var tmp;
+    if (value$6 !== undefined) {
+      var value$7 = value$6;
+      var value$8 = value$7.f2;
+      var value$9 = value$7.f1;
+      tmp = {
+        f1: value$9,
+        f2: value$8
+      };
+    } else {
+      tmp = null;
+    }
+    inner$1 = {
+      inner: tmp
+    };
+  } else {
+    inner$1 = null;
+  }
+  var second = {
+    inner: inner$1
+  };
+  var value$10 = value.first;
+  var value$11 = value$10.inner;
+  var inner$2;
+  if (value$11 !== undefined) {
+    var value$12 = Caml_option.valFromOption(value$11).inner;
+    inner$2 = {
+      inner: value$12 !== undefined ? ({
+            field: Caml_option.valFromOption(value$12).field
+          }) : null
+    };
+  } else {
+    inner$2 = null;
+  }
+  var first = {
+    inner: inner$2
+  };
+  return {
+          first: first,
+          second: second,
+          let_: let_
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) nonrecursiveInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          nonrecursiveInput: value.nonrecursiveInput
+        };
+}
+
+function serialize(value) {
+  return {
+          nonrecursiveInput: value.nonrecursiveInput
+        };
+}
+
+function serializeInputObjectEmbeddedInput(inp) {
+  var a = inp.field;
+  return {
+          field: a !== undefined ? a : undefined
+        };
+}
+
+function serializeInputObjectNonrecursiveInput(inp) {
+  var a = inp.nullableArray;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.field;
+  var a$3 = inp.enum;
+  var tmp$1;
+  if (a$3 !== undefined) {
+    var a$4 = a$3;
+    tmp$1 = a$4 !== 225952583 ? (
+        a$4 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$5 = inp.embeddedInput;
+  var tmp$2;
+  if (a$5 !== undefined) {
+    var a$6 = a$5;
+    tmp$2 = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return serializeInputObjectEmbeddedInput(Caml_option.valFromOption(b));
+            }
+            
+          }), a$6);
+  } else {
+    tmp$2 = undefined;
+  }
+  return {
+          nonNullableField: inp.nonNullableField,
+          nullableArray: tmp,
+          field: a$2 !== undefined ? a$2 : undefined,
+          enum: tmp$1,
+          embeddedInput: tmp$2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, param) {
+  return {
+          nonNullableField: nonNullableField,
+          nullableArray: nullableArray,
+          field: field,
+          enum: $$enum,
+          embeddedInput: embeddedInput
+        };
+}
+
+function makeInputObjectEmbeddedInput(field, param) {
+  return {
+          field: field
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) pokedexApolloMode.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.pokemon;
+  var tmp;
+  if (value$1 == null) {
+    tmp = undefined;
+  } else {
+    var value$2 = value$1.name;
+    var name = (value$2 == null) ? undefined : value$2;
+    var value$3 = value$1.id;
+    tmp = {
+      id: value$3,
+      name: name
+    };
+  }
+  return {
+          pokemon: tmp
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.pokemon;
+  var tmp;
+  if (value$1 !== undefined) {
+    var value$2 = Caml_option.valFromOption(value$1);
+    var value$3 = value$2.name;
+    var name = value$3 !== undefined ? value$3 : null;
+    var value$4 = value$2.id;
+    tmp = {
+      id: value$4,
+      name: name
+    };
+  } else {
+    tmp = null;
+  }
+  return {
+          pokemon: tmp
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) pokedexScalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.pokemon;
+  var tmp;
+  if (value$1 == null) {
+    tmp = undefined;
+  } else {
+    var value$2 = value$1.name;
+    var name = (value$2 == null) ? undefined : value$2;
+    var value$3 = value$1.id;
+    tmp = {
+      id: value$3,
+      name: name
+    };
+  }
+  return {
+          pokemon: tmp
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.pokemon;
+  var tmp;
+  if (value$1 !== undefined) {
+    var value$2 = Caml_option.valFromOption(value$1);
+    var value$3 = value$2.name;
+    var name = value$3 !== undefined ? value$3 : null;
+    var value$4 = value$2.id;
+    tmp = {
+      id: value$4,
+      name: name
+    };
+  } else {
+    tmp = null;
+  }
+  return {
+          pokemon: tmp
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.id;
+  var a$1 = inp.name;
+  return {
+          id: a !== undefined ? a : undefined,
+          name: a$1 !== undefined ? a$1 : undefined
+        };
+}
+
+function makeVariables(id, name, param) {
+  return serializeVariables({
+              id: id,
+              name: name
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) record.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var value$3 = value$1.string;
+  return {
+          variousScalars: {
+            string: value$3,
+            int: value$2
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var value$3 = value$1.string;
+  return {
+          variousScalars: {
+            string: value$3,
+            int: value$2
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.nullableString;
+  var nullableString = (value$2 == null) ? undefined : value$2;
+  return {
+          variousScalars: {
+            nullableString: nullableString
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.nullableString;
+  var nullableString = value$2 !== undefined ? value$2 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString
+          }
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var OneFieldQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+var query$2 = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+
+var Raw$2 = { };
+
+function parse$2(value) {
+  var value$1 = value.int;
+  var value$2 = value.string;
+  return {
+          string: value$2,
+          int: value$1
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.int;
+  var value$2 = value.string;
+  return {
+          string: value$2,
+          int: value$1
+        };
+}
+
+var name = \\"Fragment\\";
+
+var Fragment = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  name: name
+};
+
+var Raw$3 = { };
+
+var query$3 = \\"query   {\\\\nvariousScalars  {\\\\n...Fragment   \\\\n}\\\\n\\\\n}\\\\nfragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+
+function parse$3(value) {
+  var value$1 = value.variousScalars;
+  return {
+          variousScalars: parse$2(value$1)
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.variousScalars;
+  return {
+          variousScalars: serialize$2(value$1)
+        };
+}
+
+var definition$2 = /* tuple */[
+  parse$3,
+  query$3,
+  serialize$3
+];
+
+var Untitled1 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$2
+};
+
+var ExternalFragmentQuery = {
+  Fragment: Fragment,
+  Untitled1: Untitled1
+};
+
+var Raw$4 = { };
+
+var query$4 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$4(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var tmp;
+  if (typename === \\"Dog\\") {
+    var value$2 = value$1.barkVolume;
+    var value$3 = value$1.name;
+    tmp = /* \`Dog */[
+      3406428,
+      {
+        name: value$3,
+        barkVolume: value$2
+      }
+    ];
+  } else {
+    tmp = /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.dogOrHuman;
+  var tmp;
+  if (value$1[0] >= 3406428) {
+    var value$2 = value$1[1];
+    var value$3 = value$2.barkVolume;
+    var value$4 = value$2.name;
+    tmp = {
+      __typename: \\"Dog\\",
+      name: value$4,
+      barkVolume: value$3
+    };
+  } else {
+    tmp = value$1[1];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+var definition$3 = /* tuple */[
+  parse$4,
+  query$4,
+  serialize$4
+];
+
+var InlineFragmentQuery = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  definition: definition$3
+};
+
+var query$5 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+
+var Raw$5 = { };
+
+function parse$5(value) {
+  var value$1 = value.barkVolume;
+  var value$2 = value.name;
+  return {
+          name: value$2,
+          barkVolume: value$1
+        };
+}
+
+function serialize$5(value) {
+  var value$1 = value.barkVolume;
+  var value$2 = value.name;
+  return {
+          name: value$2,
+          barkVolume: value$1
+        };
+}
+
+var name$1 = \\"DogFragment\\";
+
+var DogFragment = {
+  query: query$5,
+  Raw: Raw$5,
+  parse: parse$5,
+  serialize: serialize$5,
+  name: name$1
+};
+
+var Raw$6 = { };
+
+var query$6 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n...DogFragment   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\nfragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+
+function parse$6(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var tmp = typename === \\"Dog\\" ? /* \`Dog */[
+      3406428,
+      parse$5(value$1)
+    ] : /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$6(value) {
+  var value$1 = value.dogOrHuman;
+  return {
+          dogOrHuman: value$1[0] >= 3406428 ? serialize$5(value$1[1]) : value$1[1]
+        };
+}
+
+var definition$4 = /* tuple */[
+  parse$6,
+  query$6,
+  serialize$6
+];
+
+var Untitled1$1 = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
+  definition: definition$4
+};
+
+var UnionExternalFragmentQuery = {
+  DogFragment: DogFragment,
+  Untitled1: Untitled1$1
+};
+
+exports.MyQuery = MyQuery;
+exports.OneFieldQuery = OneFieldQuery;
+exports.ExternalFragmentQuery = ExternalFragmentQuery;
+exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) recursiveInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          recursiveInput: value.recursiveInput
+        };
+}
+
+function serialize(value) {
+  return {
+          recursiveInput: value.recursiveInput
+        };
+}
+
+function serializeInputObjectRecursiveInput(inp) {
+  var a = inp.otherField;
+  var a$1 = inp.inner;
+  var a$2 = inp.enum;
+  var tmp;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp = a$3 !== 225952583 ? (
+        a$3 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp = undefined;
+  }
+  return {
+          otherField: a !== undefined ? a : undefined,
+          inner: a$1 !== undefined ? serializeInputObjectRecursiveInput(Caml_option.valFromOption(a$1)) : undefined,
+          enum: tmp
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectRecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
+  return {
+          otherField: otherField,
+          inner: inner,
+          enum: $$enum
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
+  makeVariables: makeVariables,
+  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) scalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) scalarsArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          scalarsInput: value.scalarsInput
+        };
+}
+
+function serialize(value) {
+  return {
+          scalarsInput: value.scalarsInput
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.nullableString;
+  var a$1 = inp.nullableInt;
+  var a$2 = inp.nullableFloat;
+  var a$3 = inp.nullableBoolean;
+  var a$4 = inp.nullableID;
+  return {
+          nullableString: a !== undefined ? a : undefined,
+          string: inp.string,
+          nullableInt: a$1 !== undefined ? a$1 : undefined,
+          int: inp.int,
+          nullableFloat: a$2 !== undefined ? a$2 : undefined,
+          float: inp.float,
+          nullableBoolean: a$3 !== undefined ? a$3 : undefined,
+          boolean: inp.boolean,
+          nullableID: a$4 !== undefined ? a$4 : undefined,
+          id: inp.id
+        };
+}
+
+function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
+  return serializeVariables({
+              nullableString: nullableString,
+              string: string,
+              nullableInt: nullableInt,
+              int: $$int,
+              nullableFloat: nullableFloat,
+              float: $$float,
+              nullableBoolean: nullableBoolean,
+              boolean: $$boolean,
+              nullableID: nullableID,
+              id: id
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) scalarsInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          scalarsInput: value.scalarsInput
+        };
+}
+
+function serialize(value) {
+  return {
+          scalarsInput: value.scalarsInput
+        };
+}
+
+function serializeInputObjectVariousScalarsInput(inp) {
+  var a = inp.nullableString;
+  var a$1 = inp.nullableInt;
+  var a$2 = inp.nullableFloat;
+  var a$3 = inp.nullableBoolean;
+  var a$4 = inp.nullableID;
+  return {
+          nullableString: a !== undefined ? a : undefined,
+          string: inp.string,
+          nullableInt: a$1 !== undefined ? a$1 : undefined,
+          int: inp.int,
+          nullableFloat: a$2 !== undefined ? a$2 : undefined,
+          float: inp.float,
+          nullableBoolean: a$3 !== undefined ? a$3 : undefined,
+          boolean: inp.boolean,
+          nullableID: a$4 !== undefined ? a$4 : undefined,
+          id: inp.id
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectVariousScalarsInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
+  return {
+          nullableString: nullableString,
+          string: string,
+          nullableInt: nullableInt,
+          int: $$int,
+          nullableFloat: nullableFloat,
+          float: $$float,
+          nullableBoolean: nullableBoolean,
+          boolean: $$boolean,
+          nullableID: nullableID,
+          id: id
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
+  makeVariables: makeVariables,
+  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) skipDirectives.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.v2;
+  var value$2 = value$1.string;
+  var string = (value$2 == null) ? undefined : value$2;
+  var value$3 = value$1.nullableString;
+  var nullableString = (value$3 == null) ? undefined : value$3;
+  var v2 = {
+    nullableString: nullableString,
+    string: string
+  };
+  var value$4 = value.v1;
+  var value$5 = value$4.string;
+  var string$1 = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$4.nullableString;
+  var nullableString$1 = (value$6 == null) ? undefined : value$6;
+  var v1 = {
+    nullableString: nullableString$1,
+    string: string$1
+  };
+  return {
+          v1: v1,
+          v2: v2
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.v2;
+  var value$2 = value$1.string;
+  var string = value$2 !== undefined ? value$2 : null;
+  var value$3 = value$1.nullableString;
+  var nullableString = value$3 !== undefined ? value$3 : null;
+  var v2 = {
+    nullableString: nullableString,
+    string: string
+  };
+  var value$4 = value.v1;
+  var value$5 = value$4.string;
+  var string$1 = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$4.nullableString;
+  var nullableString$1 = value$6 !== undefined ? value$6 : null;
+  var v1 = {
+    nullableString: nullableString$1,
+    string: string$1
+  };
+  return {
+          v1: v1,
+          v2: v2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          var: inp.var
+        };
+}
+
+function makeVariables($$var, param) {
+  return serializeVariables({
+              var: $$var
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) subscription.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.simpleSubscription;
+  var typename = value$1[\\"__typename\\"];
+  var tmp;
+  switch (typename) {
+    case \\"Dog\\" :
+        tmp = /* \`Dog */[
+          3406428,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        tmp = /* \`Human */[
+          -1031617139,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    default:
+      tmp = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          simpleSubscription: tmp
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.simpleSubscription;
+  var variant = value$1[0];
+  var tmp;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1].name;
+      tmp = {
+        __typename: \\"Dog\\",
+        name: value$2
+      };
+    } else {
+      var value$3 = value$1[1].name;
+      tmp = {
+        __typename: \\"Human\\",
+        name: value$3
+      };
+    }
+  } else {
+    tmp = value$1[1];
+  }
+  return {
+          simpleSubscription: tmp
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) tagged_template.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+let { graphql } = require(\\"gatsby\\")
+;
+
+var query$1 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+var Raw$2 = { };
+
+let { graphql } = require(\\"gatsby\\")
+;
+
+var query$2 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+var definition$2 = /* tuple */[
+  parse$2,
+  query$2,
+  serialize$2
+];
+
+var MyQuery3 = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2
+};
+
+var Raw$3 = { };
+
+let graphql = require(\\"gatsby\\")
+;
+
+var query$3 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$3(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  return {
+          variousScalars: {
+            nullableString: nullableString,
+            string: value$10,
+            nullableInt: nullableInt,
+            int: value$8,
+            nullableFloat: nullableFloat,
+            float: value$6,
+            nullableBoolean: nullableBoolean,
+            boolean: value$4,
+            nullableID: nullableID,
+            id: value$2
+          }
+        };
+}
+
+var definition$3 = /* tuple */[
+  parse$3,
+  query$3,
+  serialize$3
+];
+
+var MyQuery4 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$3
+};
+
+exports.MyQuery = MyQuery;
+exports.MyQuery2 = MyQuery2;
+exports.MyQuery3 = MyQuery3;
+exports.MyQuery4 = MyQuery4;
+/*  Not a pure module */
+"
+`;
+
+exports[`Compilation (Objects) typename.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.first;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 == null) {
+      inner$1 = undefined;
+    } else {
+      var value$4 = value$3.field;
+      var value$5 = value$3.__typename;
+      inner$1 = {
+        __typename: value$5,
+        field: value$4
+      };
+    }
+    var value$6 = value$2.__typename;
+    inner = {
+      __typename: value$6,
+      inner: inner$1
+    };
+  }
+  var value$7 = value$1.__typename;
+  return {
+          first: {
+            __typename: value$7,
+            inner: inner
+          }
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.first;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = Caml_option.valFromOption(value$2);
+    var value$4 = value$3.inner;
+    var inner$1;
+    if (value$4 !== undefined) {
+      var value$5 = Caml_option.valFromOption(value$4);
+      var value$6 = value$5.field;
+      var value$7 = value$5.__typename;
+      inner$1 = {
+        __typename: value$7,
+        field: value$6
+      };
+    } else {
+      inner$1 = null;
+    }
+    var value$8 = value$3.__typename;
+    inner = {
+      __typename: value$8,
+      inner: inner$1
+    };
+  } else {
+    inner = null;
+  }
+  var value$9 = value$1.__typename;
+  return {
+          first: {
+            __typename: value$9,
+            inner: inner
+          }
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) union.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var tmp;
+  switch (typename) {
+    case \\"Dog\\" :
+        var value$2 = value$1.barkVolume;
+        var value$3 = value$1.name;
+        tmp = /* \`Dog */[
+          3406428,
+          {
+            name: value$3,
+            barkVolume: value$2
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        tmp = /* \`Human */[
+          -1031617139,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    default:
+      tmp = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.dogOrHuman;
+  var variant = value$1[0];
+  var tmp;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1];
+      var value$3 = value$2.barkVolume;
+      var value$4 = value$2.name;
+      tmp = {
+        __typename: \\"Dog\\",
+        name: value$4,
+        barkVolume: value$3
+      };
+    } else {
+      var value$5 = value$1[1].name;
+      tmp = {
+        __typename: \\"Human\\",
+        name: value$5
+      };
+    }
+  } else {
+    tmp = value$1[1];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var tmp;
+  switch (typename) {
+    case \\"Dog\\" :
+        var value$2 = value$1.barkVolume;
+        var value$3 = value$1.name;
+        tmp = /* \`Dog */[
+          3406428,
+          {
+            name: value$3,
+            barkVolume: value$2
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        tmp = /* \`Human */[
+          -1031617139,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    default:
+      tmp = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.dogOrHuman;
+  var variant = value$1[0];
+  var tmp;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1];
+      var value$3 = value$2.barkVolume;
+      var value$4 = value$2.name;
+      tmp = {
+        __typename: \\"Dog\\",
+        name: value$4,
+        barkVolume: value$3
+      };
+    } else {
+      var value$5 = value$1[1].name;
+      tmp = {
+        __typename: \\"Human\\",
+        name: value$5
+      };
+    }
+  } else {
+    tmp = value$1[1];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var MyQueryNoError = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+exports.MyQuery = MyQuery;
+exports.MyQueryNoError = MyQueryNoError;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) unionPartial.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var tmp;
+  if (typename === \\"Dog\\") {
+    var value$2 = value$1.barkVolume;
+    var value$3 = value$1.name;
+    tmp = /* \`Dog */[
+      3406428,
+      {
+        name: value$3,
+        barkVolume: value$2
+      }
+    ];
+  } else {
+    tmp = /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.dogOrHuman;
+  var tmp;
+  if (value$1[0] >= 3406428) {
+    var value$2 = value$1[1];
+    var value$3 = value$2.barkVolume;
+    var value$4 = value$2.name;
+    tmp = {
+      __typename: \\"Dog\\",
+      name: value$4,
+      barkVolume: value$3
+    };
+  } else {
+    tmp = value$1[1];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) variant.re 1`] = `""`;
+
+exports[`Compilation (Records) argNamedQuery.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($query: String!)  {\\\\nargNamedQuery(query: $query)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.argNamedQuery;
+  return {
+          argNamedQuery: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.argNamedQuery;
+  return {
+          argNamedQuery: value$1
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          query: inp.query
+        };
+}
+
+function makeVariables(query, param) {
+  return {
+          query: query
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) comment.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.nonrecursiveInput;
+  return {
+          nonrecursiveInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.nonrecursiveInput;
+  return {
+          nonrecursiveInput: value$1
+        };
+}
+
+function serializeInputObjectEmbeddedInput(inp) {
+  var a = inp.field;
+  return {
+          field: a !== undefined ? a : undefined
+        };
+}
+
+function serializeInputObjectNonrecursiveInput(inp) {
+  var a = inp.nullableArray;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.field;
+  var a$3 = inp.enum;
+  var tmp$1;
+  if (a$3 !== undefined) {
+    var a$4 = a$3;
+    tmp$1 = a$4 !== 225952583 ? (
+        a$4 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$5 = inp.embeddedInput;
+  var tmp$2;
+  if (a$5 !== undefined) {
+    var a$6 = a$5;
+    tmp$2 = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return serializeInputObjectEmbeddedInput(b);
+            }
+            
+          }), a$6);
+  } else {
+    tmp$2 = undefined;
+  }
+  return {
+          nonNullableField: inp.nonNullableField,
+          nullableArray: tmp,
+          field: a$2 !== undefined ? a$2 : undefined,
+          enum: tmp$1,
+          embeddedInput: tmp$2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(arg)
+        };
+}
+
+function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, param) {
+  return {
+          nonNullableField: nonNullableField,
+          nullableArray: nullableArray,
+          field: field,
+          enum: $$enum,
+          embeddedInput: embeddedInput
+        };
+}
+
+function makeInputObjectEmbeddedInput(field, param) {
+  return {
+          field: field
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) customDecoder.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_format = require(\\"bs-platform/lib/js/caml_format.js\\");
+
+function parse(prim) {
+  return String(prim);
+}
+
+var serialize = Caml_format.caml_int_of_string;
+
+var StringOfInt = {
+  parse: parse,
+  serialize: serialize
+};
+
+var parse$1 = Caml_format.caml_int_of_string;
+
+function serialize$1(prim) {
+  return String(prim);
+}
+
+var IntOfString = {
+  parse: parse$1,
+  serialize: serialize$1
+};
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var $$int = String(value$2);
+  var value$3 = value$1.string;
+  var string = Caml_format.caml_int_of_string(value$3);
+  var variousScalars = {
+    string: string,
+    int: $$int
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var $$int = Caml_format.caml_int_of_string(value$2);
+  var value$3 = value$1.string;
+  var string = String(value$3);
+  var variousScalars = {
+    string: string,
+    int: $$int
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition = /* tuple */[
+  parse$2,
+  query,
+  serialize$2
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition
+};
+
+exports.StringOfInt = StringOfInt;
+exports.IntOfString = IntOfString;
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) customScalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var Caml_option = require(\\"bs-platform/lib/js/caml_option.js\\");
+
+var Raw = { };
+
+var query = \\"query ($opt: CustomScalar, $req: CustomScalar!)  {\\\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\\\nnullable  \\\\nnonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.customScalarField;
+  var value$2 = value$1.nonNullable;
+  var value$3 = value$1.nullable;
+  var nullable = (value$3 == null) ? undefined : Caml_option.some(value$3);
+  var customScalarField = {
+    nullable: nullable,
+    nonNullable: value$2
+  };
+  return {
+          customScalarField: customScalarField
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.customScalarField;
+  var value$2 = value$1.nonNullable;
+  var value$3 = value$1.nullable;
+  var nullable = value$3 !== undefined ? Caml_option.valFromOption(value$3) : null;
+  var customScalarField = {
+    nullable: nullable,
+    nonNullable: value$2
+  };
+  return {
+          customScalarField: customScalarField
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.opt;
+  return {
+          opt: a !== undefined ? Caml_option.valFromOption(a) : undefined,
+          req: inp.req
+        };
+}
+
+function makeVariables(opt, req, param) {
+  return serializeVariables({
+              opt: opt,
+              req: req
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) customTypes.re 1`] = `""`;
+
+exports[`Compilation (Records) enumInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($arg: SampleField!)  {\\\\nenumInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.enumInput;
+  return {
+          enumInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.enumInput;
+  return {
+          enumInput: value$1
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.arg;
+  return {
+          arg: a !== 225952583 ? (
+              a >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+            ) : \\"THIRD\\"
+        };
+}
+
+function makeVariables(arg, param) {
+  return serializeVariables({
+              arg: arg
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) explicit_object_record.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var RecordsQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          lists: {
+            nullableOfNullable: nullableOfNullable,
+            nullableOfNonNullable: nullableOfNonNullable,
+            nonNullableOfNullable: nonNullableOfNullable,
+            nonNullableOfNonNullable: nonNullableOfNonNullable
+          }
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var ObjectsQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+exports.RecordsQuery = RecordsQuery;
+exports.ObjectsQuery = ObjectsQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) fragmentDefinition.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+function deepMerge(json1, json2) {
+  var match_000 = json1 === null;
+  var match_001 = Array.isArray(json1);
+  var match_002 = typeof json1 === \\"object\\";
+  var match_000$1 = json2 === null;
+  var match_001$1 = Array.isArray(json2);
+  var match_002$1 = typeof json2 === \\"object\\";
+  if (match_001) {
+    if (match_001$1) {
+      return json1.map((function (el1, idx) {
+                    var el2 = json2[idx];
+                    if (typeof el2 === \\"object\\") {
+                      return deepMerge(el1, el2);
+                    } else {
+                      return el2;
+                    }
+                  }));
+    } else {
+      return json2;
+    }
+  } else if (match_000 || !(match_002 && !(match_000$1 || match_001$1 || !match_002$1))) {
+    return json2;
+  } else {
+    var obj1 = Object.assign({ }, json1);
+    Object.keys(json2).forEach((function (key) {
+            var existingVal = obj1[key];
+            var newVal = obj1[key];
+            obj1[key] = typeof existingVal !== \\"object\\" ? newVal : deepMerge(existingVal, newVal);
+            return /* () */0;
+          }));
+    return obj1;
+  }
+}
+
+var GraphQL_PPX = {
+  deepMerge: deepMerge
+};
+
+var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+
+var Raw = { };
+
+function parse(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$1 == null) ? undefined : value$1.map((function (value) {
+            return value;
+          }));
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = (value$2 == null) ? undefined : value$2.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
+            return value;
+          })) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+var name = \\"ListFragment\\";
+
+var ListFragment = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize,
+  name: name
+};
+
+var Raw$1 = { };
+
+function parse$1(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$1 == null) ? undefined : value$1.map((function (value) {
+            return value;
+          }));
+  return {
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
+            return value;
+          })) : null;
+  return {
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+var Another = {
+  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  name: \\"Another\\"
+};
+
+var Fragments = {
+  ListFragment: ListFragment,
+  Another: Another
+};
+
+var Raw$2 = { };
+
+var query$1 = \\"query   {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+
+function parse$2(value) {
+  var value$1 = value.l4;
+  var listFragment = parse(value$1);
+  var value$2 = value$1[\\"nullableOfNullable\\"];
+  var nullableOfNullable = (value$2 == null) ? undefined : value$2.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  var l4 = {
+    nullableOfNullable: nullableOfNullable,
+    listFragment: listFragment
+  };
+  var value$3 = value.l3;
+  var frag2 = parse(value$3);
+  var frag1 = parse(value$3);
+  var value$4 = value$3[\\"nullableOfNullable\\"];
+  var nullableOfNullable$1 = (value$4 == null) ? undefined : value$4.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  var l3 = {
+    nullableOfNullable: nullableOfNullable$1,
+    frag1: frag1,
+    frag2: frag2
+  };
+  var value$5 = value.l2;
+  var frag2$1 = parse(value$5);
+  var frag1$1 = parse(value$5);
+  var l2 = {
+    frag1: frag1$1,
+    frag2: frag2$1
+  };
+  var value$6 = value.l1;
+  var l1 = parse(value$6);
+  return {
+          l1: l1,
+          l2: l2,
+          l3: l3,
+          l4: l4
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.l4;
+  var value$2 = value$1.nullableOfNullable;
+  var l4 = [serialize(value$1.listFragment)].reduce(deepMerge, {
+        nullableOfNullable: value$2 !== undefined ? value$2.map((function (value) {
+                  if (value !== undefined) {
+                    return value;
+                  } else {
+                    return null;
+                  }
+                })) : null
+      });
+  var value$3 = value.l3;
+  var value$4 = value$3.nullableOfNullable;
+  var l3 = [
+      serialize(value$3.frag1),
+      serialize(value$3.frag2)
+    ].reduce(deepMerge, {
+        nullableOfNullable: value$4 !== undefined ? value$4.map((function (value) {
+                  if (value !== undefined) {
+                    return value;
+                  } else {
+                    return null;
+                  }
+                })) : null
+      });
+  var value$5 = value.l2;
+  var l2 = [
+      serialize(value$5.frag1),
+      serialize(value$5.frag2)
+    ].reduce(deepMerge, (function (prim) {
+          return { };
+        }));
+  var value$6 = value.l1;
+  var l1 = serialize(value$6);
+  return {
+          l1: l1,
+          l2: l2,
+          l3: l3,
+          l4: l4
+        };
+}
+
+var definition = /* tuple */[
+  parse$2,
+  query$1,
+  serialize$2
+];
+
+var MyQuery = {
+  Raw: Raw$2,
+  query: query$1,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition
+};
+
+exports.GraphQL_PPX = GraphQL_PPX;
+exports.Fragments = Fragments;
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) interface.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+/* This output is empty. Its source's type definitions, externals and/or unused code got optimized away. */
+"
+`;
+
+exports[`Compilation (Records) lists.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value == null) {
+            return ;
+          } else {
+            return value;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
+            return value;
+          }));
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
+            if (value == null) {
+              return ;
+            } else {
+              return value;
+            }
+          }));
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) listsArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.listsInput;
+  return {
+          listsInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.listsInput;
+  return {
+          listsInput: value$1
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.nullableOfNullable;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.nullableOfNonNullable;
+  var tmp$1;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp$1 = $$Array.map((function (b) {
+            return b;
+          }), a$3);
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$4 = inp.nonNullableOfNullable;
+  var a$5 = inp.nonNullableOfNonNullable;
+  return {
+          nullableOfNullable: tmp,
+          nullableOfNonNullable: tmp$1,
+          nonNullableOfNullable: $$Array.map((function (b) {
+                  if (b !== undefined) {
+                    return b;
+                  }
+                  
+                }), a$4),
+          nonNullableOfNonNullable: $$Array.map((function (b) {
+                  return b;
+                }), a$5)
+        };
+}
+
+function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
+  return serializeVariables({
+              nullableOfNullable: nullableOfNullable,
+              nullableOfNonNullable: nullableOfNonNullable,
+              nonNullableOfNullable: nonNullableOfNullable,
+              nonNullableOfNonNullable: nonNullableOfNonNullable
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) listsInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: ListsInput!)  {\\\\nlistsInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.listsInput;
+  return {
+          listsInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.listsInput;
+  return {
+          listsInput: value$1
+        };
+}
+
+function serializeInputObjectListsInput(inp) {
+  var a = inp.nullableOfNullable;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.nullableOfNonNullable;
+  var tmp$1;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp$1 = $$Array.map((function (b) {
+            return b;
+          }), a$3);
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$4 = inp.nonNullableOfNullable;
+  var a$5 = inp.nonNullableOfNonNullable;
+  return {
+          nullableOfNullable: tmp,
+          nullableOfNonNullable: tmp$1,
+          nonNullableOfNullable: $$Array.map((function (b) {
+                  if (b !== undefined) {
+                    return b;
+                  }
+                  
+                }), a$4),
+          nonNullableOfNonNullable: $$Array.map((function (b) {
+                  return b;
+                }), a$5)
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectListsInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return {
+          arg: serializeInputObjectListsInput(arg)
+        };
+}
+
+function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable,
+          nonNullableOfNullable: nonNullableOfNullable,
+          nonNullableOfNonNullable: nonNullableOfNonNullable
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectListsInput: serializeInputObjectListsInput,
+  makeVariables: makeVariables,
+  makeInputObjectListsInput: makeInputObjectListsInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) mutation.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.mutationWithError;
+  var value$2 = value$1.errors;
+  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
+            var value$1 = value.message;
+            var value$2 = value.field;
+            var field;
+            switch (value$2) {
+              case \\"FIRST\\" :
+                  field = /* FIRST */-24399856;
+                  break;
+              case \\"SECOND\\" :
+                  field = /* SECOND */382368628;
+                  break;
+              case \\"THIRD\\" :
+                  field = /* THIRD */225952583;
+                  break;
+              default:
+                field = /* \`FutureAddedValue */[
+                  -31101740,
+                  value$2
+                ];
+            }
+            return {
+                    field: field,
+                    message: value$1
+                  };
+          }));
+  var value$3 = value$1.value;
+  var value$4;
+  if (value$3 == null) {
+    value$4 = undefined;
+  } else {
+    var value$5 = value$3.stringField;
+    value$4 = {
+      stringField: value$5
+    };
+  }
+  var mutationWithError = {
+    value: value$4,
+    errors: errors
+  };
+  return {
+          mutationWithError: mutationWithError
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.mutationWithError;
+  var value$2 = value$1.errors;
+  var errors = value$2 !== undefined ? value$2.map((function (value) {
+            var value$1 = value.message;
+            var value$2 = value.field;
+            var field = typeof value$2 === \\"number\\" ? (
+                value$2 !== 225952583 ? (
+                    value$2 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+                  ) : \\"THIRD\\"
+              ) : value$2[1];
+            return {
+                    field: field,
+                    message: value$1
+                  };
+          })) : null;
+  var value$3 = value$1.value;
+  var value$4;
+  if (value$3 !== undefined) {
+    var value$5 = value$3.stringField;
+    value$4 = {
+      stringField: value$5
+    };
+  } else {
+    value$4 = null;
+  }
+  var mutationWithError = {
+    value: value$4,
+    errors: errors
+  };
+  return {
+          mutationWithError: mutationWithError
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) mutationWithArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.optionalInputArgs;
+  return {
+          optionalInputArgs: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.optionalInputArgs;
+  return {
+          optionalInputArgs: value$1
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          required: inp.required
+        };
+}
+
+function makeVariables(required, param) {
+  return {
+          required: required
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) mutationWithArgsAndNoRecords.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"mutation MyMutation($required: String!)  {\\\\noptionalInputArgs(required: $required, anotherRequired: \\\\\\"val\\\\\\")  \\\\n}\\\\n\\";
+
+function parse(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serialize(value) {
+  return {
+          optionalInputArgs: value.optionalInputArgs
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          required: inp.required
+        };
+}
+
+function makeVariables(required, param) {
+  return serializeVariables({
+              required: required
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) nested.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.let_;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 == null) {
+      inner$1 = undefined;
+    } else {
+      var value$4 = value$3.field;
+      inner$1 = {
+        field: value$4
+      };
+    }
+    inner = {
+      inner: inner$1
+    };
+  }
+  var let_ = {
+    inner: inner
+  };
+  var value$5 = value.second;
+  var value$6 = value$5.inner;
+  var inner$2;
+  if (value$6 == null) {
+    inner$2 = undefined;
+  } else {
+    var value$7 = value$6.inner;
+    var inner$3;
+    if (value$7 == null) {
+      inner$3 = undefined;
+    } else {
+      var value$8 = value$7.f2;
+      var value$9 = value$7.f1;
+      inner$3 = {
+        f1: value$9,
+        f2: value$8
+      };
+    }
+    inner$2 = {
+      inner: inner$3
+    };
+  }
+  var second = {
+    inner: inner$2
+  };
+  var value$10 = value.first;
+  var value$11 = value$10.inner;
+  var inner$4;
+  if (value$11 == null) {
+    inner$4 = undefined;
+  } else {
+    var value$12 = value$11.inner;
+    var inner$5;
+    if (value$12 == null) {
+      inner$5 = undefined;
+    } else {
+      var value$13 = value$12.field;
+      inner$5 = {
+        field: value$13
+      };
+    }
+    inner$4 = {
+      inner: inner$5
+    };
+  }
+  var first = {
+    inner: inner$4
+  };
+  return {
+          first: first,
+          second: second,
+          let_: let_
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.let_;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 !== undefined) {
+      var value$4 = value$3.field;
+      inner$1 = {
+        field: value$4
+      };
+    } else {
+      inner$1 = null;
+    }
+    inner = {
+      inner: inner$1
+    };
+  } else {
+    inner = null;
+  }
+  var let_ = {
+    inner: inner
+  };
+  var value$5 = value.second;
+  var value$6 = value$5.inner;
+  var inner$2;
+  if (value$6 !== undefined) {
+    var value$7 = value$6.inner;
+    var inner$3;
+    if (value$7 !== undefined) {
+      var value$8 = value$7;
+      var value$9 = value$8.f2;
+      var value$10 = value$8.f1;
+      inner$3 = {
+        f1: value$10,
+        f2: value$9
+      };
+    } else {
+      inner$3 = null;
+    }
+    inner$2 = {
+      inner: inner$3
+    };
+  } else {
+    inner$2 = null;
+  }
+  var second = {
+    inner: inner$2
+  };
+  var value$11 = value.first;
+  var value$12 = value$11.inner;
+  var inner$4;
+  if (value$12 !== undefined) {
+    var value$13 = value$12.inner;
+    var inner$5;
+    if (value$13 !== undefined) {
+      var value$14 = value$13.field;
+      inner$5 = {
+        field: value$14
+      };
+    } else {
+      inner$5 = null;
+    }
+    inner$4 = {
+      inner: inner$5
+    };
+  } else {
+    inner$4 = null;
+  }
+  var first = {
+    inner: inner$4
+  };
+  return {
+          first: first,
+          second: second,
+          let_: let_
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) nonrecursiveInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var $$Array = require(\\"bs-platform/lib/js/array.js\\");
+
+var Raw = { };
+
+var query = \\"query ($arg: NonrecursiveInput!)  {\\\\nnonrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.nonrecursiveInput;
+  return {
+          nonrecursiveInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.nonrecursiveInput;
+  return {
+          nonrecursiveInput: value$1
+        };
+}
+
+function serializeInputObjectEmbeddedInput(inp) {
+  var a = inp.field;
+  return {
+          field: a !== undefined ? a : undefined
+        };
+}
+
+function serializeInputObjectNonrecursiveInput(inp) {
+  var a = inp.nullableArray;
+  var tmp;
+  if (a !== undefined) {
+    var a$1 = a;
+    tmp = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return b;
+            }
+            
+          }), a$1);
+  } else {
+    tmp = undefined;
+  }
+  var a$2 = inp.field;
+  var a$3 = inp.enum;
+  var tmp$1;
+  if (a$3 !== undefined) {
+    var a$4 = a$3;
+    tmp$1 = a$4 !== 225952583 ? (
+        a$4 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp$1 = undefined;
+  }
+  var a$5 = inp.embeddedInput;
+  var tmp$2;
+  if (a$5 !== undefined) {
+    var a$6 = a$5;
+    tmp$2 = $$Array.map((function (b) {
+            if (b !== undefined) {
+              return serializeInputObjectEmbeddedInput(b);
+            }
+            
+          }), a$6);
+  } else {
+    tmp$2 = undefined;
+  }
+  return {
+          nonNullableField: inp.nonNullableField,
+          nullableArray: tmp,
+          field: a$2 !== undefined ? a$2 : undefined,
+          enum: tmp$1,
+          embeddedInput: tmp$2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return {
+          arg: serializeInputObjectNonrecursiveInput(arg)
+        };
+}
+
+function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, param) {
+  return {
+          nonNullableField: nonNullableField,
+          nullableArray: nullableArray,
+          field: field,
+          enum: $$enum,
+          embeddedInput: embeddedInput
+        };
+}
+
+function makeInputObjectEmbeddedInput(field, param) {
+  return {
+          field: field
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) pokedexApolloMode.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.pokemon;
+  var pokemon;
+  if (value$1 == null) {
+    pokemon = undefined;
+  } else {
+    var value$2 = value$1.name;
+    var name = (value$2 == null) ? undefined : value$2;
+    var value$3 = value$1.id;
+    pokemon = {
+      id: value$3,
+      name: name
+    };
+  }
+  return {
+          pokemon: pokemon
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.pokemon;
+  var pokemon;
+  if (value$1 !== undefined) {
+    var value$2 = value$1;
+    var value$3 = value$2.name;
+    var name = value$3 !== undefined ? value$3 : null;
+    var value$4 = value$2.id;
+    pokemon = {
+      id: value$4,
+      name: name
+    };
+  } else {
+    pokemon = null;
+  }
+  return {
+          pokemon: pokemon
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) pokedexScalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query pokemon($id: String, $name: String)  {\\\\npokemon(name: $name, id: $id)  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.pokemon;
+  var pokemon;
+  if (value$1 == null) {
+    pokemon = undefined;
+  } else {
+    var value$2 = value$1.name;
+    var name = (value$2 == null) ? undefined : value$2;
+    var value$3 = value$1.id;
+    pokemon = {
+      id: value$3,
+      name: name
+    };
+  }
+  return {
+          pokemon: pokemon
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.pokemon;
+  var pokemon;
+  if (value$1 !== undefined) {
+    var value$2 = value$1;
+    var value$3 = value$2.name;
+    var name = value$3 !== undefined ? value$3 : null;
+    var value$4 = value$2.id;
+    pokemon = {
+      id: value$4,
+      name: name
+    };
+  } else {
+    pokemon = null;
+  }
+  return {
+          pokemon: pokemon
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.id;
+  var a$1 = inp.name;
+  return {
+          id: a !== undefined ? a : undefined,
+          name: a$1 !== undefined ? a$1 : undefined
+        };
+}
+
+function makeVariables(id, name, param) {
+  return serializeVariables({
+              id: id,
+              name: name
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) record.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var value$3 = value$1.string;
+  var variousScalars = {
+    string: value$3,
+    int: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.int;
+  var value$3 = value$1.string;
+  var variousScalars = {
+    string: value$3,
+    int: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.nullableString;
+  var nullableString = (value$2 == null) ? undefined : value$2;
+  var variousScalars = {
+    nullableString: nullableString
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.nullableString;
+  var nullableString = value$2 !== undefined ? value$2 : null;
+  var variousScalars = {
+    nullableString: nullableString
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var OneFieldQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+var query$2 = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+
+var Raw$2 = { };
+
+function parse$2(value) {
+  var value$1 = value.int;
+  var value$2 = value.string;
+  return {
+          string: value$2,
+          int: value$1
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.int;
+  var value$2 = value.string;
+  return {
+          string: value$2,
+          int: value$1
+        };
+}
+
+var name = \\"Fragment\\";
+
+var Fragment = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  name: name
+};
+
+var Raw$3 = { };
+
+var query$3 = \\"query   {\\\\nvariousScalars  {\\\\n...Fragment   \\\\n}\\\\n\\\\n}\\\\nfragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
+
+function parse$3(value) {
+  var value$1 = value.variousScalars;
+  var variousScalars = parse$2(value$1);
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.variousScalars;
+  var variousScalars = serialize$2(value$1);
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition$2 = /* tuple */[
+  parse$3,
+  query$3,
+  serialize$3
+];
+
+var Untitled1 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$2
+};
+
+var ExternalFragmentQuery = {
+  Fragment: Fragment,
+  Untitled1: Untitled1
+};
+
+var Raw$4 = { };
+
+var query$4 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$4(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var dogOrHuman;
+  if (typename === \\"Dog\\") {
+    var value$2 = value$1.barkVolume;
+    var value$3 = value$1.name;
+    dogOrHuman = /* \`Dog */[
+      3406428,
+      {
+        name: value$3,
+        barkVolume: value$2
+      }
+    ];
+  } else {
+    dogOrHuman = /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.dogOrHuman;
+  var dogOrHuman;
+  if (value$1[0] >= 3406428) {
+    var value$2 = value$1[1];
+    var value$3 = value$2.barkVolume;
+    var value$4 = value$2.name;
+    dogOrHuman = {
+      __typename: \\"Dog\\",
+      name: value$4,
+      barkVolume: value$3
+    };
+  } else {
+    dogOrHuman = value$1[1];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+var definition$3 = /* tuple */[
+  parse$4,
+  query$4,
+  serialize$4
+];
+
+var InlineFragmentQuery = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  definition: definition$3
+};
+
+var query$5 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+
+var Raw$5 = { };
+
+function parse$5(value) {
+  var value$1 = value.barkVolume;
+  var value$2 = value.name;
+  return {
+          name: value$2,
+          barkVolume: value$1
+        };
+}
+
+function serialize$5(value) {
+  var value$1 = value.barkVolume;
+  var value$2 = value.name;
+  return {
+          name: value$2,
+          barkVolume: value$1
+        };
+}
+
+var name$1 = \\"DogFragment\\";
+
+var DogFragment = {
+  query: query$5,
+  Raw: Raw$5,
+  parse: parse$5,
+  serialize: serialize$5,
+  name: name$1
+};
+
+var Raw$6 = { };
+
+var query$6 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n...DogFragment   \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\nfragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
+
+function parse$6(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var dogOrHuman = typename === \\"Dog\\" ? /* \`Dog */[
+      3406428,
+      parse$5(value$1)
+    ] : /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serialize$6(value) {
+  var value$1 = value.dogOrHuman;
+  var dogOrHuman = value$1[0] >= 3406428 ? serialize$5(value$1[1]) : value$1[1];
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+var definition$4 = /* tuple */[
+  parse$6,
+  query$6,
+  serialize$6
+];
+
+var Untitled1$1 = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
+  definition: definition$4
+};
+
+var UnionExternalFragmentQuery = {
+  DogFragment: DogFragment,
+  Untitled1: Untitled1$1
+};
+
+exports.MyQuery = MyQuery;
+exports.OneFieldQuery = OneFieldQuery;
+exports.ExternalFragmentQuery = ExternalFragmentQuery;
+exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) recursiveInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($arg: RecursiveInput!)  {\\\\nrecursiveInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.recursiveInput;
+  return {
+          recursiveInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.recursiveInput;
+  return {
+          recursiveInput: value$1
+        };
+}
+
+function serializeInputObjectRecursiveInput(inp) {
+  var a = inp.otherField;
+  var a$1 = inp.inner;
+  var a$2 = inp.enum;
+  var tmp;
+  if (a$2 !== undefined) {
+    var a$3 = a$2;
+    tmp = a$3 !== 225952583 ? (
+        a$3 >= 382368628 ? \\"SECOND\\" : \\"FIRST\\"
+      ) : \\"THIRD\\";
+  } else {
+    tmp = undefined;
+  }
+  return {
+          otherField: a !== undefined ? a : undefined,
+          inner: a$1 !== undefined ? serializeInputObjectRecursiveInput(a$1) : undefined,
+          enum: tmp
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectRecursiveInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return {
+          arg: serializeInputObjectRecursiveInput(arg)
+        };
+}
+
+function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
+  return {
+          otherField: otherField,
+          inner: inner,
+          enum: $$enum
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
+  makeVariables: makeVariables,
+  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) scalars.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) scalarsArgs.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.scalarsInput;
+  return {
+          scalarsInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.scalarsInput;
+  return {
+          scalarsInput: value$1
+        };
+}
+
+function serializeVariables(inp) {
+  var a = inp.nullableString;
+  var a$1 = inp.nullableInt;
+  var a$2 = inp.nullableFloat;
+  var a$3 = inp.nullableBoolean;
+  var a$4 = inp.nullableID;
+  return {
+          nullableString: a !== undefined ? a : undefined,
+          string: inp.string,
+          nullableInt: a$1 !== undefined ? a$1 : undefined,
+          int: inp.int,
+          nullableFloat: a$2 !== undefined ? a$2 : undefined,
+          float: inp.float,
+          nullableBoolean: a$3 !== undefined ? a$3 : undefined,
+          boolean: inp.boolean,
+          nullableID: a$4 !== undefined ? a$4 : undefined,
+          id: inp.id
+        };
+}
+
+function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
+  return serializeVariables({
+              nullableString: nullableString,
+              string: string,
+              nullableInt: nullableInt,
+              int: $$int,
+              nullableFloat: nullableFloat,
+              float: $$float,
+              nullableBoolean: nullableBoolean,
+              boolean: $$boolean,
+              nullableID: nullableID,
+              id: id
+            });
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) scalarsInput.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($arg: VariousScalarsInput!)  {\\\\nscalarsInput(arg: $arg)  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.scalarsInput;
+  return {
+          scalarsInput: value$1
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.scalarsInput;
+  return {
+          scalarsInput: value$1
+        };
+}
+
+function serializeInputObjectVariousScalarsInput(inp) {
+  var a = inp.nullableString;
+  var a$1 = inp.nullableInt;
+  var a$2 = inp.nullableFloat;
+  var a$3 = inp.nullableBoolean;
+  var a$4 = inp.nullableID;
+  return {
+          nullableString: a !== undefined ? a : undefined,
+          string: inp.string,
+          nullableInt: a$1 !== undefined ? a$1 : undefined,
+          int: inp.int,
+          nullableFloat: a$2 !== undefined ? a$2 : undefined,
+          float: inp.float,
+          nullableBoolean: a$3 !== undefined ? a$3 : undefined,
+          boolean: inp.boolean,
+          nullableID: a$4 !== undefined ? a$4 : undefined,
+          id: inp.id
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          arg: serializeInputObjectVariousScalarsInput(inp.arg)
+        };
+}
+
+function makeVariables(arg, param) {
+  return {
+          arg: serializeInputObjectVariousScalarsInput(arg)
+        };
+}
+
+function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
+  return {
+          nullableString: nullableString,
+          string: string,
+          nullableInt: nullableInt,
+          int: $$int,
+          nullableFloat: nullableFloat,
+          float: $$float,
+          nullableBoolean: nullableBoolean,
+          boolean: $$boolean,
+          nullableID: nullableID,
+          id: id
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
+  makeVariables: makeVariables,
+  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) skipDirectives.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query ($var: Boolean!)  {\\\\nv1: variousScalars  {\\\\nnullableString @skip(if: $var) \\\\nstring @skip(if: $var) \\\\n}\\\\n\\\\nv2: variousScalars  {\\\\nnullableString @include(if: $var) \\\\nstring @include(if: $var) \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.v2;
+  var value$2 = value$1.string;
+  var string = (value$2 == null) ? undefined : value$2;
+  var value$3 = value$1.nullableString;
+  var nullableString = (value$3 == null) ? undefined : value$3;
+  var v2 = {
+    nullableString: nullableString,
+    string: string
+  };
+  var value$4 = value.v1;
+  var value$5 = value$4.string;
+  var string$1 = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$4.nullableString;
+  var nullableString$1 = (value$6 == null) ? undefined : value$6;
+  var v1 = {
+    nullableString: nullableString$1,
+    string: string$1
+  };
+  return {
+          v1: v1,
+          v2: v2
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.v2;
+  var value$2 = value$1.string;
+  var string = value$2 !== undefined ? value$2 : null;
+  var value$3 = value$1.nullableString;
+  var nullableString = value$3 !== undefined ? value$3 : null;
+  var v2 = {
+    nullableString: nullableString,
+    string: string
+  };
+  var value$4 = value.v1;
+  var value$5 = value$4.string;
+  var string$1 = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$4.nullableString;
+  var nullableString$1 = value$6 !== undefined ? value$6 : null;
+  var v1 = {
+    nullableString: nullableString$1,
+    string: string$1
+  };
+  return {
+          v1: v1,
+          v2: v2
+        };
+}
+
+function serializeVariables(inp) {
+  return {
+          var: inp.var
+        };
+}
+
+function makeVariables($$var, param) {
+  return {
+          var: $$var
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) subscription.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.simpleSubscription;
+  var typename = value$1[\\"__typename\\"];
+  var simpleSubscription;
+  switch (typename) {
+    case \\"Dog\\" :
+        var value$2 = value$1.name;
+        simpleSubscription = /* \`Dog */[
+          3406428,
+          {
+            name: value$2
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        var value$3 = value$1.name;
+        simpleSubscription = /* \`Human */[
+          -1031617139,
+          {
+            name: value$3
+          }
+        ];
+        break;
+    default:
+      simpleSubscription = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          simpleSubscription: simpleSubscription
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.simpleSubscription;
+  var variant = value$1[0];
+  var simpleSubscription;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1].name;
+      simpleSubscription = {
+        __typename: \\"Dog\\",
+        name: value$2
+      };
+    } else {
+      var value$3 = value$1[1].name;
+      simpleSubscription = {
+        __typename: \\"Human\\",
+        name: value$3
+      };
+    }
+  } else {
+    simpleSubscription = value$1[1];
+  }
+  return {
+          simpleSubscription: simpleSubscription
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) tagged_template.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+let { graphql } = require(\\"gatsby\\")
+;
+
+var query$1 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+var Raw$2 = { };
+
+let { graphql } = require(\\"gatsby\\")
+;
+
+var query$2 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition$2 = /* tuple */[
+  parse$2,
+  query$2,
+  serialize$2
+];
+
+var MyQuery3 = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2
+};
+
+var Raw$3 = { };
+
+let graphql = require(\\"gatsby\\")
+;
+
+var query$3 = (graphql\`
+  query   {
+    variousScalars  {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+\`);
+
+function parse$3(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = (value$3 == null) ? undefined : value$3;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = (value$5 == null) ? undefined : value$5;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = (value$7 == null) ? undefined : value$7;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = (value$9 == null) ? undefined : value$9;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = (value$11 == null) ? undefined : value$11;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.id;
+  var value$3 = value$1.nullableID;
+  var nullableID = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.boolean;
+  var value$5 = value$1.nullableBoolean;
+  var nullableBoolean = value$5 !== undefined ? value$5 : null;
+  var value$6 = value$1.float;
+  var value$7 = value$1.nullableFloat;
+  var nullableFloat = value$7 !== undefined ? value$7 : null;
+  var value$8 = value$1.int;
+  var value$9 = value$1.nullableInt;
+  var nullableInt = value$9 !== undefined ? value$9 : null;
+  var value$10 = value$1.string;
+  var value$11 = value$1.nullableString;
+  var nullableString = value$11 !== undefined ? value$11 : null;
+  var variousScalars = {
+    nullableString: nullableString,
+    string: value$10,
+    nullableInt: nullableInt,
+    int: value$8,
+    nullableFloat: nullableFloat,
+    float: value$6,
+    nullableBoolean: nullableBoolean,
+    boolean: value$4,
+    nullableID: nullableID,
+    id: value$2
+  };
+  return {
+          variousScalars: variousScalars
+        };
+}
+
+var definition$3 = /* tuple */[
+  parse$3,
+  query$3,
+  serialize$3
+];
+
+var MyQuery4 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$3
+};
+
+exports.MyQuery = MyQuery;
+exports.MyQuery2 = MyQuery2;
+exports.MyQuery3 = MyQuery3;
+exports.MyQuery4 = MyQuery4;
+/*  Not a pure module */
+"
+`;
+
+exports[`Compilation (Records) typename.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.first;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 == null) {
+      inner$1 = undefined;
+    } else {
+      var value$4 = value$3.field;
+      var value$5 = value$3.__typename;
+      inner$1 = {
+        __typename: value$5,
+        field: value$4
+      };
+    }
+    var value$6 = value$2.__typename;
+    inner = {
+      __typename: value$6,
+      inner: inner$1
+    };
+  }
+  var value$7 = value$1.__typename;
+  var first = {
+    __typename: value$7,
+    inner: inner
+  };
+  return {
+          first: first
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.first;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = value$2;
+    var value$4 = value$3.inner;
+    var inner$1;
+    if (value$4 !== undefined) {
+      var value$5 = value$4;
+      var value$6 = value$5.field;
+      var value$7 = value$5.__typename;
+      inner$1 = {
+        __typename: value$7,
+        field: value$6
+      };
+    } else {
+      inner$1 = null;
+    }
+    var value$8 = value$3.__typename;
+    inner = {
+      __typename: value$8,
+      inner: inner$1
+    };
+  } else {
+    inner = null;
+  }
+  var value$9 = value$1.__typename;
+  var first = {
+    __typename: value$9,
+    inner: inner
+  };
+  return {
+          first: first
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) union.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var dogOrHuman;
+  switch (typename) {
+    case \\"Dog\\" :
+        var value$2 = value$1.barkVolume;
+        var value$3 = value$1.name;
+        dogOrHuman = /* \`Dog */[
+          3406428,
+          {
+            name: value$3,
+            barkVolume: value$2
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        var value$4 = value$1.name;
+        dogOrHuman = /* \`Human */[
+          -1031617139,
+          {
+            name: value$4
+          }
+        ];
+        break;
+    default:
+      dogOrHuman = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.dogOrHuman;
+  var variant = value$1[0];
+  var dogOrHuman;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1];
+      var value$3 = value$2.barkVolume;
+      var value$4 = value$2.name;
+      dogOrHuman = {
+        __typename: \\"Dog\\",
+        name: value$4,
+        barkVolume: value$3
+      };
+    } else {
+      var value$5 = value$1[1].name;
+      dogOrHuman = {
+        __typename: \\"Human\\",
+        name: value$5
+      };
+    }
+  } else {
+    dogOrHuman = value$1[1];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var dogOrHuman;
+  switch (typename) {
+    case \\"Dog\\" :
+        var value$2 = value$1.barkVolume;
+        var value$3 = value$1.name;
+        dogOrHuman = /* \`Dog */[
+          3406428,
+          {
+            name: value$3,
+            barkVolume: value$2
+          }
+        ];
+        break;
+    case \\"Human\\" :
+        var value$4 = value$1.name;
+        dogOrHuman = /* \`Human */[
+          -1031617139,
+          {
+            name: value$4
+          }
+        ];
+        break;
+    default:
+      dogOrHuman = /* \`FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.dogOrHuman;
+  var variant = value$1[0];
+  var dogOrHuman;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1];
+      var value$3 = value$2.barkVolume;
+      var value$4 = value$2.name;
+      dogOrHuman = {
+        __typename: \\"Dog\\",
+        name: value$4,
+        barkVolume: value$3
+      };
+    } else {
+      var value$5 = value$1[1].name;
+      dogOrHuman = {
+        __typename: \\"Human\\",
+        name: value$5
+      };
+    }
+  } else {
+    dogOrHuman = value$1[1];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+var definition$1 = /* tuple */[
+  parse$1,
+  query$1,
+  serialize$1
+];
+
+var MyQueryNoError = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1
+};
+
+exports.MyQuery = MyQuery;
+exports.MyQueryNoError = MyQueryNoError;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) unionPartial.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+
+var Raw = { };
+
+var query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\\"__typename\\"];
+  var dogOrHuman;
+  if (typename === \\"Dog\\") {
+    var value$2 = value$1.barkVolume;
+    var value$3 = value$1.name;
+    dogOrHuman = /* \`Dog */[
+      3406428,
+      {
+        name: value$3,
+        barkVolume: value$2
+      }
+    ];
+  } else {
+    dogOrHuman = /* \`FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serialize(value) {
+  var value$1 = value.dogOrHuman;
+  var dogOrHuman;
+  if (value$1[0] >= 3406428) {
+    var value$2 = value$1[1];
+    var value$3 = value$2.barkVolume;
+    var value$4 = value$2.name;
+    dogOrHuman = {
+      __typename: \\"Dog\\",
+      name: value$4,
+      barkVolume: value$3
+    };
+  } else {
+    dogOrHuman = value$1[1];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+var definition = /* tuple */[
+  parse,
+  query,
+  serialize
+];
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition
+};
+
+exports.MyQuery = MyQuery;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) variant.re 1`] = `""`;
+
+exports[`Errors (Objects) deprecatedFields.re 1`] = `
 "File \\"operations/errors/deprecatedFields.re\\", line 7, characters 6-21:
 7 |       deprecatedField
           ^^^^^^^^^^^^^^^
 Alert deprecated: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
 `;
 
-exports[`Errors missingField1.re 1`] = `
+exports[`Errors (Objects) missingField1.re 1`] = `
 "File \\"operations/errors/missingField1.re\\", line 6, characters 6-27:
 6 |       thisFieldDoesNotExist
           ^^^^^^^^^^^^^^^^^^^^^
@@ -7691,7 +14293,7 @@ Error: Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject
   operations/errors/missingField1.re"
 `;
 
-exports[`Errors missingField2.re 1`] = `
+exports[`Errors (Objects) missingField2.re 1`] = `
 "File \\"operations/errors/missingField2.re\\", line 13, characters 8-28:
 13 |     l1: thisTypeDoesNotExist {
              ^^^^^^^^^^^^^^^^^^^^
@@ -7701,7 +14303,7 @@ Error: Unknown field 'thisTypeDoesNotExist' on type Query
   operations/errors/missingField2.re"
 `;
 
-exports[`Errors missingField3.re 1`] = `
+exports[`Errors (Objects) missingField3.re 1`] = `
 "File \\"operations/errors/missingField3.re\\", line 15, characters 6-18:
 15 |       doesNotExist
            ^^^^^^^^^^^^
@@ -7711,7 +14313,57 @@ Error: Unknown field 'doesNotExist' on type Lists
   operations/errors/missingField3.re"
 `;
 
-exports[`Errors missingFragment.re 1`] = `
+exports[`Errors (Objects) missingFragment.re 1`] = `
+"We've found a bug for you!
+  operations/errors/missingFragment.re 3:28-42
+  
+  1 │ module Fragment = [%graphql
+  2 │   {|
+  3 │   fragment ListFragment on UnknownFragment {
+  4 │     nullableOfNullable
+  5 │     nullableOfNonNullable
+  
+  Unknown type \\"UnknownFragment\\""
+`;
+
+exports[`Errors (Records) deprecatedFields.re 1`] = `
+"File \\"operations/errors/deprecatedFields.re\\", line 7, characters 6-21:
+7 |       deprecatedField
+          ^^^^^^^^^^^^^^^
+Alert deprecated: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
+`;
+
+exports[`Errors (Records) missingField1.re 1`] = `
+"File \\"operations/errors/missingField1.re\\", line 6, characters 6-27:
+6 |       thisFieldDoesNotExist
+          ^^^^^^^^^^^^^^^^^^^^^
+Error: Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject
+
+  We've found a bug for you!
+  operations/errors/missingField1.re"
+`;
+
+exports[`Errors (Records) missingField2.re 1`] = `
+"File \\"operations/errors/missingField2.re\\", line 13, characters 8-28:
+13 |     l1: thisTypeDoesNotExist {
+             ^^^^^^^^^^^^^^^^^^^^
+Error: Unknown field 'thisTypeDoesNotExist' on type Query
+
+  We've found a bug for you!
+  operations/errors/missingField2.re"
+`;
+
+exports[`Errors (Records) missingField3.re 1`] = `
+"File \\"operations/errors/missingField3.re\\", line 15, characters 6-18:
+15 |       doesNotExist
+           ^^^^^^^^^^^^
+Error: Unknown field 'doesNotExist' on type Lists
+
+  We've found a bug for you!
+  operations/errors/missingField3.re"
+`;
+
+exports[`Errors (Records) missingFragment.re 1`] = `
 "We've found a bug for you!
   operations/errors/missingFragment.re 3:28-42
   
@@ -8080,13 +14732,14 @@ exports[`Legacy customDecoder.re 1`] = `
 ];
 module StringOfInt = {
   let parse = string_of_int;
+  let serialize = int_of_string;
   type t = string;
 };
 module IntOfString = {
   let parse = int_of_string;
+  let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -8331,6 +14984,39 @@ exports[`Legacy customTypes.re 1`] = `
     cookies: [],
   }
 ];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(\\"green\\") => Green
+    | Some(\\"blue\\") => Blue
+    | Some(\\"red\\")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => \\"red\\"
+      | Green => \\"green\\"
+      | Blue => \\"blue\\"
+      }
+    )
+    |> Js.Json.string;
+};
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+
 module MyQuery = {
   module Raw = {
     type t_customFields = {
@@ -8345,10 +15031,10 @@ module MyQuery = {
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
     .
-    \\"currentTime\\": GraphqlHelpers.DateTime.t,
-    \\"favoriteColor\\": GraphqlHelpers.Color.t,
-    \\"futureTime\\": option(GraphqlHelpers.DateTime.t),
-    \\"nullableColor\\": option(GraphqlHelpers.DateTime.t),
+    \\"currentTime\\": DateTime.t,
+    \\"favoriteColor\\": Color.t,
+    \\"futureTime\\": option(DateTime.t),
+    \\"nullableColor\\": option(Color.t),
   };
   type t = {. \\"customFields\\": t_customFields};
   let parse: Raw.t => t =
@@ -8358,29 +15044,24 @@ module MyQuery = {
         let nullableColor = {
           let value = value##nullableColor;
           switch (Js.toOption(value)) {
-          | Some(value) =>
-            Some(
-              GraphqlHelpers.DateTime.parse(
-                GraphqlHelpers.Color.parse(value),
-              ),
-            )
+          | Some(value) => Some(Color.parse(Color.parse(value)))
           | None => None
           };
         }
         and futureTime = {
           let value = value##futureTime;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+          | Some(value) => Some(DateTime.parse(value))
           | None => None
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
-          GraphqlHelpers.Color.parse(value);
+          Color.parse(value);
         }
         and currentTime = {
           let value = value##currentTime;
-          GraphqlHelpers.DateTime.parse(value);
+          DateTime.parse(value);
         };
         {
 
@@ -8407,11 +15088,7 @@ module MyQuery = {
 
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(
-              GraphqlHelpers.DateTime.serialize(
-                GraphqlHelpers.Color.serialize(value),
-              ),
-            )
+            Js.Nullable.return(Color.serialize(Color.serialize(value)))
           | None => Js.Nullable.null
           };
         }
@@ -8419,20 +15096,19 @@ module MyQuery = {
           let value = value##futureTime;
 
           switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(GraphqlHelpers.DateTime.serialize(value))
+          | Some(value) => Js.Nullable.return(DateTime.serialize(value))
           | None => Js.Nullable.null
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
 
-          GraphqlHelpers.Color.serialize(value);
+          Color.serialize(value);
         }
         and currentTime = {
           let value = value##currentTime;
 
-          GraphqlHelpers.DateTime.serialize(value);
+          DateTime.serialize(value);
         };
         {
 
@@ -11257,7 +17933,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -11330,7 +18005,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
@@ -11393,7 +18067,6 @@ module OneFieldQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -11489,7 +18162,6 @@ module ExternalFragmentQuery = {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -11596,7 +18268,6 @@ module InlineFragmentQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -14214,7 +20885,6 @@ module MyQuery = {
   };
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -15046,13 +21716,14 @@ exports[`Objects customDecoder.re 1`] = `
 ];
 module StringOfInt = {
   let parse = string_of_int;
+  let serialize = int_of_string;
   type t = string;
 };
 module IntOfString = {
   let parse = int_of_string;
+  let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -15274,6 +21945,39 @@ exports[`Objects customTypes.re 1`] = `
     cookies: [],
   }
 ];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(\\"green\\") => Green
+    | Some(\\"blue\\") => Blue
+    | Some(\\"red\\")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => \\"red\\"
+      | Green => \\"green\\"
+      | Blue => \\"blue\\"
+      }
+    )
+    |> Js.Json.string;
+};
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+
 module MyQuery = {
   module Raw = {
     type t_customFields = {
@@ -15288,10 +21992,10 @@ module MyQuery = {
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
     .
-    \\"currentTime\\": GraphqlHelpers.DateTime.t,
-    \\"favoriteColor\\": GraphqlHelpers.Color.t,
-    \\"futureTime\\": option(GraphqlHelpers.DateTime.t),
-    \\"nullableColor\\": option(GraphqlHelpers.DateTime.t),
+    \\"currentTime\\": DateTime.t,
+    \\"favoriteColor\\": Color.t,
+    \\"futureTime\\": option(DateTime.t),
+    \\"nullableColor\\": option(Color.t),
   };
   type t = {. \\"customFields\\": t_customFields};
   let parse: Raw.t => t =
@@ -15301,29 +22005,24 @@ module MyQuery = {
         let nullableColor = {
           let value = value##nullableColor;
           switch (Js.toOption(value)) {
-          | Some(value) =>
-            Some(
-              GraphqlHelpers.DateTime.parse(
-                GraphqlHelpers.Color.parse(value),
-              ),
-            )
+          | Some(value) => Some(Color.parse(Color.parse(value)))
           | None => None
           };
         }
         and futureTime = {
           let value = value##futureTime;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+          | Some(value) => Some(DateTime.parse(value))
           | None => None
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
-          GraphqlHelpers.Color.parse(value);
+          Color.parse(value);
         }
         and currentTime = {
           let value = value##currentTime;
-          GraphqlHelpers.DateTime.parse(value);
+          DateTime.parse(value);
         };
         {
 
@@ -15350,11 +22049,7 @@ module MyQuery = {
 
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(
-              GraphqlHelpers.DateTime.serialize(
-                GraphqlHelpers.Color.serialize(value),
-              ),
-            )
+            Js.Nullable.return(Color.serialize(Color.serialize(value)))
           | None => Js.Nullable.null
           };
         }
@@ -15362,20 +22057,19 @@ module MyQuery = {
           let value = value##futureTime;
 
           switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(GraphqlHelpers.DateTime.serialize(value))
+          | Some(value) => Js.Nullable.return(DateTime.serialize(value))
           | None => Js.Nullable.null
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
 
-          GraphqlHelpers.Color.serialize(value);
+          Color.serialize(value);
         }
         and currentTime = {
           let value = value##currentTime;
 
-          GraphqlHelpers.DateTime.serialize(value);
+          DateTime.serialize(value);
         };
         {
 
@@ -18033,7 +24727,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -18101,7 +24794,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
@@ -18159,7 +24851,6 @@ module OneFieldQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -18250,7 +24941,6 @@ module ExternalFragmentQuery = {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -18352,7 +25042,6 @@ module InlineFragmentQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -20830,7 +27519,6 @@ module MyQuery = {
     };
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -21657,13 +28345,14 @@ exports[`Records customDecoder.re 1`] = `
 ];
 module StringOfInt = {
   let parse = string_of_int;
+  let serialize = int_of_string;
   type t = string;
 };
 module IntOfString = {
   let parse = int_of_string;
+  let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -21903,6 +28592,39 @@ exports[`Records customTypes.re 1`] = `
     cookies: [],
   }
 ];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(\\"green\\") => Green
+    | Some(\\"blue\\") => Blue
+    | Some(\\"red\\")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => \\"red\\"
+      | Green => \\"green\\"
+      | Blue => \\"blue\\"
+      }
+    )
+    |> Js.Json.string;
+};
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+
 module MyQuery = {
   module Raw = {
     type t_customFields = {
@@ -21915,10 +28637,10 @@ module MyQuery = {
   };
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
-    currentTime: GraphqlHelpers.DateTime.t,
-    favoriteColor: GraphqlHelpers.Color.t,
-    futureTime: option(GraphqlHelpers.DateTime.t),
-    nullableColor: option(GraphqlHelpers.DateTime.t),
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
+    nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
   let parse: Raw.t => t =
@@ -21931,29 +28653,24 @@ module MyQuery = {
               let nullableColor = {
                 let value = (value: Raw.t_customFields).nullableColor;
                 switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    GraphqlHelpers.DateTime.parse(
-                      GraphqlHelpers.Color.parse(value),
-                    ),
-                  )
+                | Some(value) => Some(Color.parse(Color.parse(value)))
                 | None => None
                 };
               }
               and futureTime = {
                 let value = (value: Raw.t_customFields).futureTime;
                 switch (Js.toOption(value)) {
-                | Some(value) => Some(GraphqlHelpers.DateTime.parse(value))
+                | Some(value) => Some(DateTime.parse(value))
                 | None => None
                 };
               }
               and favoriteColor = {
                 let value = (value: Raw.t_customFields).favoriteColor;
-                GraphqlHelpers.Color.parse(value);
+                Color.parse(value);
               }
               and currentTime = {
                 let value = (value: Raw.t_customFields).currentTime;
-                GraphqlHelpers.DateTime.parse(value);
+                DateTime.parse(value);
               };
               {
 
@@ -21987,9 +28704,7 @@ module MyQuery = {
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(
-                      GraphqlHelpers.Color.serialize(value),
-                    ),
+                    Color.serialize(Color.serialize(value)),
                   )
                 | None => Js.Nullable.null
                 };
@@ -21999,21 +28714,19 @@ module MyQuery = {
 
                 switch (value) {
                 | Some(value) =>
-                  Js.Nullable.return(
-                    GraphqlHelpers.DateTime.serialize(value),
-                  )
+                  Js.Nullable.return(DateTime.serialize(value))
                 | None => Js.Nullable.null
                 };
               }
               and favoriteColor = {
                 let value = (value: t_customFields).favoriteColor;
 
-                GraphqlHelpers.Color.serialize(value);
+                Color.serialize(value);
               }
               and currentTime = {
                 let value = (value: t_customFields).currentTime;
 
-                GraphqlHelpers.DateTime.serialize(value);
+                DateTime.serialize(value);
               };
               {
 
@@ -24785,7 +31498,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   module Raw = {
     type t_variousScalars = {
@@ -24860,7 +31572,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
@@ -24926,7 +31637,6 @@ module OneFieldQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module ExternalFragmentQuery = {
   module Fragment = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -25022,7 +31732,6 @@ module ExternalFragmentQuery = {
     let definition = (parse, query, serialize);
   };
 };
-
 module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -25127,7 +31836,6 @@ module InlineFragmentQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -27715,7 +34423,6 @@ module MyQuery = {
     );
   let definition = (parse, query, serialize);
 };
-
 module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
