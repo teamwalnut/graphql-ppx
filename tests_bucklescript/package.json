@@ -2,7 +2,7 @@
   "name": "ppx_example",
   "version": "0.1.0",
   "scripts": {
-    "test": "npm_config_loglevel=silent bsb -clean-world -make-world && jest --verbose .",
+    "test": "NODE_NO_WARNINGS=1 bsb -clean-world -make-world && jest --verbose .",
     "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ../graphql_schema.json ../schema.graphql"
   },
   "keywords": [
