@@ -56,6 +56,18 @@ let execSyncWithErr = (cmd, args, opts) => {
   result;
 };
 
+let removeKnownError = error => {
+  Js.String.trim(
+    Js.String.replaceByRe(
+      Js.Re.fromString(
+        "/node: /usr/lib/libstdc++.so.6: no version information available (required by node)/g",
+      ),
+      "",
+      error,
+    ),
+  );
+};
+
 let refmt =
   execSync(
     "esy build echo \"#{@opam/reason.bin / }refmt\"",
@@ -192,6 +204,7 @@ let get_bsb_error_with_static_snapshot =
   writeFileSync({j|static_snapshots/$pathOut/$newFileName|j}, result ++ "\n");
   result;
 };
+
 let get_bsb_output_with_static_snapshot =
     (~ppxOptions, ~fileName, ~pathIn, ~pathOut) => {
   let (output, err) = get_bsb_output(~ppxOptions, ~fileName, ~pathIn);
@@ -219,7 +232,7 @@ describe("Compilation (Objects)", () =>
          expect(output) |> toMatchSnapshot
        );
        test(t, () =>
-         expect(err) |> toBe("")
+         expect(removeKnownError(err)) |> toBe("")
        );
      })
 );
@@ -238,7 +251,7 @@ describe("Compilation (Records)", () =>
          expect(output) |> toMatchSnapshot
        );
        test(t, () => {
-         expect(err) |> toBe("")
+         expect(removeKnownError(err)) |> toBe("")
        });
      })
 );
