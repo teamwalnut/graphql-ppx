@@ -9,34 +9,32 @@ var query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\
 function parse(value) {
   var value$1 = value.simpleSubscription;
   var typename = value$1["__typename"];
-  var simpleSubscription;
+  var tmp;
   switch (typename) {
     case "Dog" :
-        var value$2 = value$1.name;
-        simpleSubscription = /* `Dog */[
+        tmp = /* `Dog */[
           3406428,
           {
-            name: value$2
+            name: value$1.name
           }
         ];
         break;
     case "Human" :
-        var value$3 = value$1.name;
-        simpleSubscription = /* `Human */[
+        tmp = /* `Human */[
           -1031617139,
           {
-            name: value$3
+            name: value$1.name
           }
         ];
         break;
     default:
-      simpleSubscription = /* `FutureAddedValue */[
+      tmp = /* `FutureAddedValue */[
         -31101740,
         value$1
       ];
   }
   return {
-          simpleSubscription: simpleSubscription
+          simpleSubscription: tmp
         };
 }
 
@@ -72,12 +70,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

@@ -9,35 +9,24 @@ var query = "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typena
 function parse(value) {
   var value$1 = value.first;
   var value$2 = value$1.inner;
-  var inner;
+  var tmp;
   if (value$2 == null) {
-    inner = undefined;
+    tmp = undefined;
   } else {
     var value$3 = value$2.inner;
-    var inner$1;
-    if (value$3 == null) {
-      inner$1 = undefined;
-    } else {
-      var value$4 = value$3.field;
-      var value$5 = value$3.__typename;
-      inner$1 = {
-        __typename: value$5,
-        field: value$4
-      };
-    }
-    var value$6 = value$2.__typename;
-    inner = {
-      __typename: value$6,
-      inner: inner$1
+    tmp = {
+      __typename: value$2.__typename,
+      inner: (value$3 == null) ? undefined : ({
+            __typename: value$3.__typename,
+            field: value$3.field
+          })
     };
   }
-  var value$7 = value$1.__typename;
-  var first = {
-    __typename: value$7,
-    inner: inner
-  };
   return {
-          first: first
+          first: {
+            __typename: value$1.__typename,
+            inner: tmp
+          }
         };
 }
 
@@ -84,12 +73,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

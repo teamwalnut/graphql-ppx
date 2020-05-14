@@ -9,25 +9,18 @@ var query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVo
 function parse(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1["__typename"];
-  var dogOrHuman;
-  if (typename === "Dog") {
-    var value$2 = value$1.barkVolume;
-    var value$3 = value$1.name;
-    dogOrHuman = /* `Dog */[
+  var tmp = typename === "Dog" ? /* `Dog */[
       3406428,
       {
-        name: value$3,
-        barkVolume: value$2
+        name: value$1.name,
+        barkVolume: value$1.barkVolume
       }
-    ];
-  } else {
-    dogOrHuman = /* `FutureAddedValue */[
+    ] : /* `FutureAddedValue */[
       -31101740,
       value$1
     ];
-  }
   return {
-          dogOrHuman: dogOrHuman
+          dogOrHuman: tmp
         };
 }
 
@@ -57,12 +50,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

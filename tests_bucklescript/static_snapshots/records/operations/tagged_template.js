@@ -8,35 +8,24 @@ var query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableI
 
 function parse(value) {
   var value$1 = value.variousScalars;
-  var value$2 = value$1.id;
-  var value$3 = value$1.nullableID;
-  var nullableID = (value$3 == null) ? undefined : value$3;
-  var value$4 = value$1.boolean;
+  var value$2 = value$1.nullableString;
+  var value$3 = value$1.nullableInt;
+  var value$4 = value$1.nullableFloat;
   var value$5 = value$1.nullableBoolean;
-  var nullableBoolean = (value$5 == null) ? undefined : value$5;
-  var value$6 = value$1.float;
-  var value$7 = value$1.nullableFloat;
-  var nullableFloat = (value$7 == null) ? undefined : value$7;
-  var value$8 = value$1.int;
-  var value$9 = value$1.nullableInt;
-  var nullableInt = (value$9 == null) ? undefined : value$9;
-  var value$10 = value$1.string;
-  var value$11 = value$1.nullableString;
-  var nullableString = (value$11 == null) ? undefined : value$11;
-  var variousScalars = {
-    nullableString: nullableString,
-    string: value$10,
-    nullableInt: nullableInt,
-    int: value$8,
-    nullableFloat: nullableFloat,
-    float: value$6,
-    nullableBoolean: nullableBoolean,
-    boolean: value$4,
-    nullableID: nullableID,
-    id: value$2
-  };
+  var value$6 = value$1.nullableID;
   return {
-          variousScalars: variousScalars
+          variousScalars: {
+            nullableString: (value$2 == null) ? undefined : value$2,
+            string: value$1.string,
+            nullableInt: (value$3 == null) ? undefined : value$3,
+            int: value$1.int,
+            nullableFloat: (value$4 == null) ? undefined : value$4,
+            float: value$1.float,
+            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            boolean: value$1.boolean,
+            nullableID: (value$6 == null) ? undefined : value$6,
+            id: value$1.id
+          }
         };
 }
 
@@ -80,12 +69,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
@@ -112,35 +106,24 @@ var query$1 = (graphql`
 
 function parse$1(value) {
   var value$1 = value.variousScalars;
-  var value$2 = value$1.id;
-  var value$3 = value$1.nullableID;
-  var nullableID = (value$3 == null) ? undefined : value$3;
-  var value$4 = value$1.boolean;
+  var value$2 = value$1.nullableString;
+  var value$3 = value$1.nullableInt;
+  var value$4 = value$1.nullableFloat;
   var value$5 = value$1.nullableBoolean;
-  var nullableBoolean = (value$5 == null) ? undefined : value$5;
-  var value$6 = value$1.float;
-  var value$7 = value$1.nullableFloat;
-  var nullableFloat = (value$7 == null) ? undefined : value$7;
-  var value$8 = value$1.int;
-  var value$9 = value$1.nullableInt;
-  var nullableInt = (value$9 == null) ? undefined : value$9;
-  var value$10 = value$1.string;
-  var value$11 = value$1.nullableString;
-  var nullableString = (value$11 == null) ? undefined : value$11;
-  var variousScalars = {
-    nullableString: nullableString,
-    string: value$10,
-    nullableInt: nullableInt,
-    int: value$8,
-    nullableFloat: nullableFloat,
-    float: value$6,
-    nullableBoolean: nullableBoolean,
-    boolean: value$4,
-    nullableID: nullableID,
-    id: value$2
-  };
+  var value$6 = value$1.nullableID;
   return {
-          variousScalars: variousScalars
+          variousScalars: {
+            nullableString: (value$2 == null) ? undefined : value$2,
+            string: value$1.string,
+            nullableInt: (value$3 == null) ? undefined : value$3,
+            int: value$1.int,
+            nullableFloat: (value$4 == null) ? undefined : value$4,
+            float: value$1.float,
+            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            boolean: value$1.boolean,
+            nullableID: (value$6 == null) ? undefined : value$6,
+            id: value$1.id
+          }
         };
 }
 
@@ -184,12 +167,17 @@ var definition$1 = /* tuple */[
   serialize$1
 ];
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var MyQuery2 = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var Raw$2 = { };
@@ -216,35 +204,24 @@ var query$2 = (graphql`
 
 function parse$2(value) {
   var value$1 = value.variousScalars;
-  var value$2 = value$1.id;
-  var value$3 = value$1.nullableID;
-  var nullableID = (value$3 == null) ? undefined : value$3;
-  var value$4 = value$1.boolean;
+  var value$2 = value$1.nullableString;
+  var value$3 = value$1.nullableInt;
+  var value$4 = value$1.nullableFloat;
   var value$5 = value$1.nullableBoolean;
-  var nullableBoolean = (value$5 == null) ? undefined : value$5;
-  var value$6 = value$1.float;
-  var value$7 = value$1.nullableFloat;
-  var nullableFloat = (value$7 == null) ? undefined : value$7;
-  var value$8 = value$1.int;
-  var value$9 = value$1.nullableInt;
-  var nullableInt = (value$9 == null) ? undefined : value$9;
-  var value$10 = value$1.string;
-  var value$11 = value$1.nullableString;
-  var nullableString = (value$11 == null) ? undefined : value$11;
-  var variousScalars = {
-    nullableString: nullableString,
-    string: value$10,
-    nullableInt: nullableInt,
-    int: value$8,
-    nullableFloat: nullableFloat,
-    float: value$6,
-    nullableBoolean: nullableBoolean,
-    boolean: value$4,
-    nullableID: nullableID,
-    id: value$2
-  };
+  var value$6 = value$1.nullableID;
   return {
-          variousScalars: variousScalars
+          variousScalars: {
+            nullableString: (value$2 == null) ? undefined : value$2,
+            string: value$1.string,
+            nullableInt: (value$3 == null) ? undefined : value$3,
+            int: value$1.int,
+            nullableFloat: (value$4 == null) ? undefined : value$4,
+            float: value$1.float,
+            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            boolean: value$1.boolean,
+            nullableID: (value$6 == null) ? undefined : value$6,
+            id: value$1.id
+          }
         };
 }
 
@@ -288,12 +265,17 @@ var definition$2 = /* tuple */[
   serialize$2
 ];
 
+var Z__INTERNAL$2 = {
+  graphql_module: 0
+};
+
 var MyQuery3 = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 var Raw$3 = { };
@@ -320,35 +302,24 @@ var query$3 = (graphql`
 
 function parse$3(value) {
   var value$1 = value.variousScalars;
-  var value$2 = value$1.id;
-  var value$3 = value$1.nullableID;
-  var nullableID = (value$3 == null) ? undefined : value$3;
-  var value$4 = value$1.boolean;
+  var value$2 = value$1.nullableString;
+  var value$3 = value$1.nullableInt;
+  var value$4 = value$1.nullableFloat;
   var value$5 = value$1.nullableBoolean;
-  var nullableBoolean = (value$5 == null) ? undefined : value$5;
-  var value$6 = value$1.float;
-  var value$7 = value$1.nullableFloat;
-  var nullableFloat = (value$7 == null) ? undefined : value$7;
-  var value$8 = value$1.int;
-  var value$9 = value$1.nullableInt;
-  var nullableInt = (value$9 == null) ? undefined : value$9;
-  var value$10 = value$1.string;
-  var value$11 = value$1.nullableString;
-  var nullableString = (value$11 == null) ? undefined : value$11;
-  var variousScalars = {
-    nullableString: nullableString,
-    string: value$10,
-    nullableInt: nullableInt,
-    int: value$8,
-    nullableFloat: nullableFloat,
-    float: value$6,
-    nullableBoolean: nullableBoolean,
-    boolean: value$4,
-    nullableID: nullableID,
-    id: value$2
-  };
+  var value$6 = value$1.nullableID;
   return {
-          variousScalars: variousScalars
+          variousScalars: {
+            nullableString: (value$2 == null) ? undefined : value$2,
+            string: value$1.string,
+            nullableInt: (value$3 == null) ? undefined : value$3,
+            int: value$1.int,
+            nullableFloat: (value$4 == null) ? undefined : value$4,
+            float: value$1.float,
+            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            boolean: value$1.boolean,
+            nullableID: (value$6 == null) ? undefined : value$6,
+            id: value$1.id
+          }
         };
 }
 
@@ -392,12 +363,17 @@ var definition$3 = /* tuple */[
   serialize$3
 ];
 
+var Z__INTERNAL$3 = {
+  graphql_module: 0
+};
+
 var MyQuery4 = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 exports.MyQuery = MyQuery;

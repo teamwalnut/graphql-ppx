@@ -8,38 +8,33 @@ var query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \
 
 function parse(value) {
   var value$1 = value.lists;
-  var value$2 = value$1.nonNullableOfNonNullable;
-  var nonNullableOfNonNullable = value$2.map((function (value) {
-          return value;
-        }));
-  var value$3 = value$1.nonNullableOfNullable;
-  var nonNullableOfNullable = value$3.map((function (value) {
-          if (value == null) {
-            return ;
-          } else {
-            return value;
-          }
-        }));
-  var value$4 = value$1.nullableOfNonNullable;
-  var nullableOfNonNullable = (value$4 == null) ? undefined : value$4.map((function (value) {
-            return value;
-          }));
-  var value$5 = value$1.nullableOfNullable;
-  var nullableOfNullable = (value$5 == null) ? undefined : value$5.map((function (value) {
-            if (value == null) {
-              return ;
-            } else {
-              return value;
-            }
-          }));
-  var lists = {
-    nullableOfNullable: nullableOfNullable,
-    nullableOfNonNullable: nullableOfNonNullable,
-    nonNullableOfNullable: nonNullableOfNullable,
-    nonNullableOfNonNullable: nonNullableOfNonNullable
-  };
+  var value$2 = value$1.nullableOfNullable;
+  var value$3 = value$1.nullableOfNonNullable;
+  var value$4 = value$1.nonNullableOfNullable;
+  var value$5 = value$1.nonNullableOfNonNullable;
   return {
-          lists: lists
+          lists: {
+            nullableOfNullable: (value$2 == null) ? undefined : value$2.map((function (value) {
+                      if (value == null) {
+                        return ;
+                      } else {
+                        return value;
+                      }
+                    })),
+            nullableOfNonNullable: (value$3 == null) ? undefined : value$3.map((function (value) {
+                      return value;
+                    })),
+            nonNullableOfNullable: value$4.map((function (value) {
+                    if (value == null) {
+                      return ;
+                    } else {
+                      return value;
+                    }
+                  })),
+            nonNullableOfNonNullable: value$5.map((function (value) {
+                    return value;
+                  }))
+          }
         };
 }
 
@@ -86,12 +81,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

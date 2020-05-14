@@ -7,9 +7,8 @@ var Raw = { };
 var query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
 
 function parse(value) {
-  var value$1 = value.scalarsInput;
   return {
-          scalarsInput: value$1
+          scalarsInput: value.scalarsInput
         };
 }
 
@@ -61,6 +60,11 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_arg_292: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -68,7 +72,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

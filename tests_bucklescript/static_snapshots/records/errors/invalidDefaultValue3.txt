@@ -1,0 +1,10 @@
+We've found a bug for you!
+  operations/errors/invalidDefaultValue3.re 21:13
+  
+  19 ┆ query invalidDefaultValues {
+  20 ┆   invalidDefaultValues(
+  21 ┆       id: 5
+  22 ┆   )
+  23 ┆ }
+  
+  Invalid argument. Expected "ID" but received "Int!".

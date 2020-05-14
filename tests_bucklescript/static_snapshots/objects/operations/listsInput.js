@@ -87,6 +87,11 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_ListsInput_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -96,7 +101,8 @@ var MyQuery = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

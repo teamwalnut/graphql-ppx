@@ -8,20 +8,18 @@ var query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
 
 function parse(value) {
   var value$1 = value.pokemon;
-  var pokemon;
+  var tmp;
   if (value$1 == null) {
-    pokemon = undefined;
+    tmp = undefined;
   } else {
     var value$2 = value$1.name;
-    var name = (value$2 == null) ? undefined : value$2;
-    var value$3 = value$1.id;
-    pokemon = {
-      id: value$3,
-      name: name
+    tmp = {
+      id: value$1.id,
+      name: (value$2 == null) ? undefined : value$2
     };
   }
   return {
-          pokemon: pokemon
+          pokemon: tmp
         };
 }
 
@@ -51,12 +49,18 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_name_52: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

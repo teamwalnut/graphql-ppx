@@ -7,9 +7,8 @@ var Raw = { };
 var query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
 
 function parse(value) {
-  var value$1 = value.enumInput;
   return {
-          enumInput: value$1
+          enumInput: value.enumInput
         };
 }
 
@@ -41,6 +40,13 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_arg_82: 0,
+  _graphql_arg_77: 0,
+  _graphql_SampleField_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -48,7 +54,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

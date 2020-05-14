@@ -9,15 +9,12 @@ var query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarFie
 
 function parse(value) {
   var value$1 = value.customScalarField;
-  var value$2 = value$1.nonNullable;
-  var value$3 = value$1.nullable;
-  var nullable = (value$3 == null) ? undefined : Caml_option.some(value$3);
-  var customScalarField = {
-    nullable: nullable,
-    nonNullable: value$2
-  };
+  var value$2 = value$1.nullable;
   return {
-          customScalarField: customScalarField
+          customScalarField: {
+            nullable: (value$2 == null) ? undefined : Caml_option.some(value$2),
+            nonNullable: value$1.nonNullable
+          }
         };
 }
 
@@ -56,6 +53,14 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_opt_119: 0,
+  _graphql_argOptional_106: 0,
+  _graphql_req_138: 0,
+  _graphql_argRequired_125: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -63,7 +68,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

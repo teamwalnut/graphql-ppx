@@ -7,81 +7,56 @@ var Raw = { };
 var query = "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
 
 function parse(value) {
-  var value$1 = value.let_;
+  var value$1 = value.first;
   var value$2 = value$1.inner;
-  var inner;
+  var tmp;
   if (value$2 == null) {
-    inner = undefined;
+    tmp = undefined;
   } else {
     var value$3 = value$2.inner;
-    var inner$1;
-    if (value$3 == null) {
-      inner$1 = undefined;
-    } else {
-      var value$4 = value$3.field;
-      inner$1 = {
-        field: value$4
-      };
-    }
-    inner = {
-      inner: inner$1
+    tmp = {
+      inner: (value$3 == null) ? undefined : ({
+            field: value$3.field
+          })
     };
   }
-  var let_ = {
-    inner: inner
-  };
-  var value$5 = value.second;
-  var value$6 = value$5.inner;
-  var inner$2;
-  if (value$6 == null) {
-    inner$2 = undefined;
+  var value$4 = value.second;
+  var value$5 = value$4.inner;
+  var tmp$1;
+  if (value$5 == null) {
+    tmp$1 = undefined;
   } else {
-    var value$7 = value$6.inner;
-    var inner$3;
-    if (value$7 == null) {
-      inner$3 = undefined;
-    } else {
-      var value$8 = value$7.f2;
-      var value$9 = value$7.f1;
-      inner$3 = {
-        f1: value$9,
-        f2: value$8
-      };
-    }
-    inner$2 = {
-      inner: inner$3
+    var value$6 = value$5.inner;
+    tmp$1 = {
+      inner: (value$6 == null) ? undefined : ({
+            f1: value$6.f1,
+            f2: value$6.f2
+          })
     };
   }
-  var second = {
-    inner: inner$2
-  };
-  var value$10 = value.first;
-  var value$11 = value$10.inner;
-  var inner$4;
-  if (value$11 == null) {
-    inner$4 = undefined;
+  var value$7 = value.let_;
+  var value$8 = value$7.inner;
+  var tmp$2;
+  if (value$8 == null) {
+    tmp$2 = undefined;
   } else {
-    var value$12 = value$11.inner;
-    var inner$5;
-    if (value$12 == null) {
-      inner$5 = undefined;
-    } else {
-      var value$13 = value$12.field;
-      inner$5 = {
-        field: value$13
-      };
-    }
-    inner$4 = {
-      inner: inner$5
+    var value$9 = value$8.inner;
+    tmp$2 = {
+      inner: (value$9 == null) ? undefined : ({
+            field: value$9.field
+          })
     };
   }
-  var first = {
-    inner: inner$4
-  };
   return {
-          first: first,
-          second: second,
-          let_: let_
+          first: {
+            inner: tmp
+          },
+          second: {
+            inner: tmp$1
+          },
+          let_: {
+            inner: tmp$2
+          }
         };
 }
 
@@ -171,12 +146,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

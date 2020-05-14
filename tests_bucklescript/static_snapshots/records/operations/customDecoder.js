@@ -31,16 +31,11 @@ var query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
 
 function parse$2(value) {
   var value$1 = value.variousScalars;
-  var value$2 = value$1.int;
-  var $$int = String(value$2);
-  var value$3 = value$1.string;
-  var string = Caml_format.caml_int_of_string(value$3);
-  var variousScalars = {
-    string: string,
-    int: $$int
-  };
   return {
-          variousScalars: variousScalars
+          variousScalars: {
+            string: Caml_format.caml_int_of_string(value$1.string),
+            int: String(value$1.int)
+          }
         };
 }
 
@@ -65,12 +60,17 @@ var definition = /* tuple */[
   serialize$2
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.StringOfInt = StringOfInt;

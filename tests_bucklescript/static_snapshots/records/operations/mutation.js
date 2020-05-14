@@ -8,48 +8,38 @@ var query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\ne
 
 function parse(value) {
   var value$1 = value.mutationWithError;
-  var value$2 = value$1.errors;
-  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
-            var value$1 = value.message;
-            var value$2 = value.field;
-            var field;
-            switch (value$2) {
-              case "FIRST" :
-                  field = /* FIRST */-24399856;
-                  break;
-              case "SECOND" :
-                  field = /* SECOND */382368628;
-                  break;
-              case "THIRD" :
-                  field = /* THIRD */225952583;
-                  break;
-              default:
-                field = /* `FutureAddedValue */[
-                  -31101740,
-                  value$2
-                ];
-            }
-            return {
-                    field: field,
-                    message: value$1
-                  };
-          }));
-  var value$3 = value$1.value;
-  var value$4;
-  if (value$3 == null) {
-    value$4 = undefined;
-  } else {
-    var value$5 = value$3.stringField;
-    value$4 = {
-      stringField: value$5
-    };
-  }
-  var mutationWithError = {
-    value: value$4,
-    errors: errors
-  };
+  var value$2 = value$1.value;
+  var value$3 = value$1.errors;
   return {
-          mutationWithError: mutationWithError
+          mutationWithError: {
+            value: (value$2 == null) ? undefined : ({
+                  stringField: value$2.stringField
+                }),
+            errors: (value$3 == null) ? undefined : value$3.map((function (value) {
+                      var value$1 = value.field;
+                      var tmp;
+                      switch (value$1) {
+                        case "FIRST" :
+                            tmp = /* FIRST */-24399856;
+                            break;
+                        case "SECOND" :
+                            tmp = /* SECOND */382368628;
+                            break;
+                        case "THIRD" :
+                            tmp = /* THIRD */225952583;
+                            break;
+                        default:
+                          tmp = /* `FutureAddedValue */[
+                            -31101740,
+                            value$1
+                          ];
+                      }
+                      return {
+                              field: tmp,
+                              message: value.message
+                            };
+                    }))
+          }
         };
 }
 
@@ -94,12 +84,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

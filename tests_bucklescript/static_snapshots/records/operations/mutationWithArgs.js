@@ -7,9 +7,8 @@ var Raw = { };
 var query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
 
 function parse(value) {
-  var value$1 = value.optionalInputArgs;
   return {
-          optionalInputArgs: value$1
+          optionalInputArgs: value.optionalInputArgs
         };
 }
 
@@ -38,6 +37,10 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -45,7 +48,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

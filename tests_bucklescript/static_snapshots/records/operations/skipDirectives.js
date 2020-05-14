@@ -7,27 +7,21 @@ var Raw = { };
 var query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
 
 function parse(value) {
-  var value$1 = value.v2;
-  var value$2 = value$1.string;
-  var string = (value$2 == null) ? undefined : value$2;
-  var value$3 = value$1.nullableString;
-  var nullableString = (value$3 == null) ? undefined : value$3;
-  var v2 = {
-    nullableString: nullableString,
-    string: string
-  };
-  var value$4 = value.v1;
-  var value$5 = value$4.string;
-  var string$1 = (value$5 == null) ? undefined : value$5;
-  var value$6 = value$4.nullableString;
-  var nullableString$1 = (value$6 == null) ? undefined : value$6;
-  var v1 = {
-    nullableString: nullableString$1,
-    string: string$1
-  };
+  var value$1 = value.v1;
+  var value$2 = value$1.nullableString;
+  var value$3 = value$1.string;
+  var value$4 = value.v2;
+  var value$5 = value$4.nullableString;
+  var value$6 = value$4.string;
   return {
-          v1: v1,
-          v2: v2
+          v1: {
+            nullableString: (value$2 == null) ? undefined : value$2,
+            string: (value$3 == null) ? undefined : value$3
+          },
+          v2: {
+            nullableString: (value$5 == null) ? undefined : value$5,
+            string: (value$6 == null) ? undefined : value$6
+          }
         };
 }
 
@@ -74,6 +68,10 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -81,7 +79,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

@@ -63,12 +63,17 @@ var definition = /* tuple */[
   serialize$2
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.StringOfInt = StringOfInt;

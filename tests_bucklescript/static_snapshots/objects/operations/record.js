@@ -36,12 +36,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
@@ -76,12 +81,17 @@ var definition$1 = /* tuple */[
   serialize$1
 ];
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var OneFieldQuery = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var query$2 = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
@@ -108,12 +118,18 @@ function serialize$2(value) {
 
 var name = "Fragment";
 
+var Z__INTERNAL$2 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
 var Fragment = {
   query: query$2,
   Raw: Raw$2,
   parse: parse$2,
   serialize: serialize$2,
-  name: name
+  name: name,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 var Raw$3 = { };
@@ -140,12 +156,17 @@ var definition$2 = /* tuple */[
   serialize$3
 ];
 
+var Z__INTERNAL$3 = {
+  graphql_module: 0
+};
+
 var Untitled1 = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var ExternalFragmentQuery = {
@@ -208,12 +229,17 @@ var definition$3 = /* tuple */[
   serialize$4
 ];
 
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
 var InlineFragmentQuery = {
   Raw: Raw$4,
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 var query$5 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
@@ -240,12 +266,18 @@ function serialize$5(value) {
 
 var name$1 = "DogFragment";
 
+var Z__INTERNAL$5 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
 var DogFragment = {
   query: query$5,
   Raw: Raw$5,
   parse: parse$5,
   serialize: serialize$5,
-  name: name$1
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$5
 };
 
 var Raw$6 = { };
@@ -280,12 +312,17 @@ var definition$4 = /* tuple */[
   serialize$6
 ];
 
+var Z__INTERNAL$6 = {
+  graphql_module: 0
+};
+
 var Untitled1$1 = {
   Raw: Raw$6,
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4
+  definition: definition$4,
+  Z__INTERNAL: Z__INTERNAL$6
 };
 
 var UnionExternalFragmentQuery = {

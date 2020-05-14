@@ -76,12 +76,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
@@ -158,12 +163,17 @@ var definition$1 = /* tuple */[
   serialize$1
 ];
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var MyQueryNoError = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 exports.MyQuery = MyQuery;

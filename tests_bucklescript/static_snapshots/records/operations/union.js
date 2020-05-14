@@ -9,36 +9,33 @@ var query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVo
 function parse(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1["__typename"];
-  var dogOrHuman;
+  var tmp;
   switch (typename) {
     case "Dog" :
-        var value$2 = value$1.barkVolume;
-        var value$3 = value$1.name;
-        dogOrHuman = /* `Dog */[
+        tmp = /* `Dog */[
           3406428,
           {
-            name: value$3,
-            barkVolume: value$2
+            name: value$1.name,
+            barkVolume: value$1.barkVolume
           }
         ];
         break;
     case "Human" :
-        var value$4 = value$1.name;
-        dogOrHuman = /* `Human */[
+        tmp = /* `Human */[
           -1031617139,
           {
-            name: value$4
+            name: value$1.name
           }
         ];
         break;
     default:
-      dogOrHuman = /* `FutureAddedValue */[
+      tmp = /* `FutureAddedValue */[
         -31101740,
         value$1
       ];
   }
   return {
-          dogOrHuman: dogOrHuman
+          dogOrHuman: tmp
         };
 }
 
@@ -77,12 +74,17 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
@@ -92,36 +94,33 @@ var query$1 = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbark
 function parse$1(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1["__typename"];
-  var dogOrHuman;
+  var tmp;
   switch (typename) {
     case "Dog" :
-        var value$2 = value$1.barkVolume;
-        var value$3 = value$1.name;
-        dogOrHuman = /* `Dog */[
+        tmp = /* `Dog */[
           3406428,
           {
-            name: value$3,
-            barkVolume: value$2
+            name: value$1.name,
+            barkVolume: value$1.barkVolume
           }
         ];
         break;
     case "Human" :
-        var value$4 = value$1.name;
-        dogOrHuman = /* `Human */[
+        tmp = /* `Human */[
           -1031617139,
           {
-            name: value$4
+            name: value$1.name
           }
         ];
         break;
     default:
-      dogOrHuman = /* `FutureAddedValue */[
+      tmp = /* `FutureAddedValue */[
         -31101740,
         value$1
       ];
   }
   return {
-          dogOrHuman: dogOrHuman
+          dogOrHuman: tmp
         };
 }
 
@@ -160,12 +159,17 @@ var definition$1 = /* tuple */[
   serialize$1
 ];
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var MyQueryNoError = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 exports.MyQuery = MyQuery;

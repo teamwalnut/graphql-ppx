@@ -4,12 +4,11 @@
 
 var Raw = { };
 
-var query = "query ($query: String!)  {\nargNamedQuery(query: $query)  \n}\n";
+var query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
 
 function parse(value) {
-  var value$1 = value.argNamedQuery;
   return {
-          argNamedQuery: value$1
+          argNamedQuery: value.argNamedQuery
         };
 }
 
@@ -38,6 +37,12 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_query_82: 0,
+  _graphql_query_75: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -45,7 +50,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

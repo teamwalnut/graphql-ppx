@@ -65,12 +65,14 @@ function serializeInputObjectNonrecursiveInput(inp) {
   } else {
     tmp$2 = undefined;
   }
+  var a$7 = inp.custom;
   return {
           nonNullableField: inp.nonNullableField,
           nullableArray: tmp,
           field: a$2 !== undefined ? a$2 : undefined,
           enum: tmp$1,
-          embeddedInput: tmp$2
+          embeddedInput: tmp$2,
+          custom: a$7 !== undefined ? Caml_option.valFromOption(a$7) : undefined
         };
 }
 
@@ -86,13 +88,14 @@ function makeVariables(arg, param) {
             });
 }
 
-function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, param) {
+function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, custom, param) {
   return {
           nonNullableField: nonNullableField,
           nullableArray: nullableArray,
           field: field,
           enum: $$enum,
-          embeddedInput: embeddedInput
+          embeddedInput: embeddedInput,
+          custom: custom
         };
 }
 
@@ -108,6 +111,11 @@ var definition = /* tuple */[
   serialize
 ];
 
+var Z__INTERNAL = {
+  _graphql_NonrecursiveInput_49: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -119,7 +127,8 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;
