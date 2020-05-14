@@ -59,8 +59,9 @@ let execSyncWithErr = (cmd, args, opts) => {
 let removeKnownError = error => {
   Js.String.trim(
     Js.String.replaceByRe(
-      Js.Re.fromString(
-        "/node: /usr/lib/libstdc++.so.6: no version information available (required by node)/g",
+      Js.Re.fromStringWithFlags(
+        "node: \\/usr\\/lib\\/libstdc\\+\\+\\.so\\.6: no version information available \\(required by node\\)",
+        ~flags="g",
       ),
       "",
       error,
