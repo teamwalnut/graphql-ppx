@@ -116,7 +116,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -131,5 +131,22 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */

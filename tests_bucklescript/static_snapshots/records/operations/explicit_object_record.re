@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module RecordsQuery = {
+module RecordsQuery' = {
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -183,7 +183,12 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ObjectsQuery = {
+module RecordsQuery = {
+  include RecordsQuery';
+  module type query_type = (module type of RecordsQuery');
+  let self: module query_type = (module RecordsQuery');
+};
+module ObjectsQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -346,4 +351,9 @@ module ObjectsQuery {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module ObjectsQuery = {
+  include ObjectsQuery';
+  module type query_type = (module type of ObjectsQuery');
+  let self: module query_type = (module ObjectsQuery');
 };

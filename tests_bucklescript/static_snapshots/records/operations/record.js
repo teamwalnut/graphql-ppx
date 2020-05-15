@@ -39,13 +39,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -84,13 +94,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var OneFieldQuery = {
+var OneFieldQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var OneFieldQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: OneFieldQuery$prime
 };
 
 var query$2 = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
@@ -120,13 +140,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var Fragment = {
+var Fragment$prime = {
   query: query$2,
   Raw: Raw$2,
   parse: parse$2,
   serialize: serialize$2,
   name: name,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var Fragment = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  name: name,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: Fragment$prime
 };
 
 var Raw$3 = { };
@@ -157,7 +187,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var Untitled1 = {
+var Untitled1$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -166,9 +196,29 @@ var Untitled1 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var ExternalFragmentQuery = {
+var Untitled1 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: Untitled1$prime
+};
+
+var ExternalFragmentQuery$prime = {
+  Fragment$prime: Fragment$prime,
   Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
   Untitled1: Untitled1
+};
+
+var ExternalFragmentQuery = {
+  Fragment$prime: Fragment$prime,
+  Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
+  Untitled1: Untitled1,
+  self: ExternalFragmentQuery$prime
 };
 
 var Raw$4 = { };
@@ -223,13 +273,23 @@ var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
-var InlineFragmentQuery = {
+var InlineFragmentQuery$prime = {
   Raw: Raw$4,
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
   definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
+};
+
+var InlineFragmentQuery = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$4,
+  self: InlineFragmentQuery$prime
 };
 
 var query$5 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
@@ -259,13 +319,23 @@ var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
-var DogFragment = {
+var DogFragment$prime = {
   query: query$5,
   Raw: Raw$5,
   parse: parse$5,
   serialize: serialize$5,
   name: name$1,
   Z__INTERNAL: Z__INTERNAL$5
+};
+
+var DogFragment = {
+  query: query$5,
+  Raw: Raw$5,
+  parse: parse$5,
+  serialize: serialize$5,
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$5,
+  self: DogFragment$prime
 };
 
 var Raw$6 = { };
@@ -305,7 +375,7 @@ var Z__INTERNAL$6 = {
   graphql_module: 0
 };
 
-var Untitled1$1 = {
+var Untitled1$prime$1 = {
   Raw: Raw$6,
   query: query$6,
   parse: parse$6,
@@ -314,14 +384,39 @@ var Untitled1$1 = {
   Z__INTERNAL: Z__INTERNAL$6
 };
 
-var UnionExternalFragmentQuery = {
+var Untitled1$1 = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
+  definition: definition$4,
+  Z__INTERNAL: Z__INTERNAL$6,
+  self: Untitled1$prime$1
+};
+
+var UnionExternalFragmentQuery$prime = {
+  DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
+var UnionExternalFragmentQuery = {
+  DogFragment$prime: DogFragment$prime,
+  DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
+  Untitled1: Untitled1$1,
+  self: UnionExternalFragmentQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
+exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
+exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */

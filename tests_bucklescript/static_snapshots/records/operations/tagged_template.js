@@ -73,13 +73,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -171,13 +181,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
 };
 
 var Raw$2 = { };
@@ -269,13 +289,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery3 = {
+var MyQuery3$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var MyQuery3 = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: MyQuery3$prime
 };
 
 var Raw$3 = { };
@@ -367,7 +397,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery4 = {
+var MyQuery4$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -376,8 +406,22 @@ var MyQuery4 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var MyQuery4 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: MyQuery4$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
+exports.MyQuery3$prime = MyQuery3$prime;
 exports.MyQuery3 = MyQuery3;
+exports.MyQuery4$prime = MyQuery4$prime;
 exports.MyQuery4 = MyQuery4;
 /*  Not a pure module */

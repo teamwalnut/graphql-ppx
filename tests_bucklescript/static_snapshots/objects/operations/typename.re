@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -190,4 +190,9 @@ module MyQuery {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
 };

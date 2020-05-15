@@ -66,8 +66,8 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments = {
-  module ListFragment = {
+module Fragments' = {
+  module ListFragment' = {
     let query = "fragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
@@ -199,7 +199,12 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
+  module ListFragment = {
+    include ListFragment';
+    module type query_type = (module type of ListFragment');
+    let self: module query_type = (module ListFragment');
+  };
+  module Another' = {
     let query = "fragment Another on Lists   {\n__typename  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
@@ -297,8 +302,18 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Another = {
+    include Another';
+    module type query_type = (module type of Another');
+    let self: module query_type = (module Another');
+  };
 };
-module MyQuery = {
+module Fragments = {
+  include Fragments';
+  module type query_type = (module type of Fragments');
+  let self: module query_type = (module Fragments');
+};
+module MyQuery' = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -667,7 +682,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
   };
@@ -739,4 +759,9 @@ module MyQuery2 {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
 };

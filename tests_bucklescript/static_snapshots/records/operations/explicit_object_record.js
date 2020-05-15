@@ -85,13 +85,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var RecordsQuery = {
+var RecordsQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var RecordsQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: RecordsQuery$prime
 };
 
 var Raw$1 = { };
@@ -180,7 +190,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ObjectsQuery = {
+var ObjectsQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -189,6 +199,18 @@ var ObjectsQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var ObjectsQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ObjectsQuery$prime
+};
+
+exports.RecordsQuery$prime = RecordsQuery$prime;
 exports.RecordsQuery = RecordsQuery;
+exports.ObjectsQuery$prime = ObjectsQuery$prime;
 exports.ObjectsQuery = ObjectsQuery;
 /* No side effect */

@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -176,7 +176,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -330,7 +335,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -483,4 +493,9 @@ module ByDirective {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
 };

@@ -18,3 +18,4 @@ npm-debug.log
 *.cmi
 *.cmj
 *.cmt
+.vscode

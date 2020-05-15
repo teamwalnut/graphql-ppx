@@ -20,7 +20,7 @@ type record = {
   f1: string,
   f2: string,
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {. "field": string};
     type t_first_inner = {. "inner": Js.Nullable.t(t_first_inner_inner)};
@@ -311,4 +311,9 @@ module MyQuery {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
 };

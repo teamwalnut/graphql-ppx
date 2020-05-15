@@ -296,20 +296,73 @@ let make_printed_query = (config, document) => {
 };
 
 let wrap_module = (name: string, contents) => {
+  {
+    pstr_desc:
+      Pstr_module({
+        pmb_name: {
+          txt: Generator_utils.capitalize_ascii(name),
+          loc: Location.none,
+        },
+        pmb_expr: Mod.structure(contents),
+        pmb_attributes: [],
+        pmb_loc: Location.none,
+      }),
+    pstr_loc: Location.none,
+  };
+};
+
+let wrap_query_module = (name: string, contents) => {
   [
-    {
-      pstr_desc:
-        Pstr_module({
-          pmb_name: {
-            txt: Generator_utils.capitalize_ascii(name),
-            loc: Location.none,
-          },
-          pmb_expr: Mod.structure(contents),
-          pmb_attributes: [],
-          pmb_loc: Location.none,
-        }),
-      pstr_loc: Location.none,
-    },
+    wrap_module(name ++ "'", contents),
+    Ast_helper.(
+      wrap_module(
+        name,
+        [
+          Str.include_(
+            Incl.mk(
+              Mod.ident({
+                txt:
+                  Longident.Lident(
+                    Generator_utils.capitalize_ascii(name ++ "'"),
+                  ),
+                loc: Location.none,
+              }),
+            ),
+          ),
+          Str.modtype(
+            Mtd.mk(
+              ~typ=
+                Mty.mk(
+                  Pmty_typeof(
+                    Mod.ident({
+                      txt:
+                        Longident.Lident(
+                          Generator_utils.capitalize_ascii(name ++ "'"),
+                        ),
+                      loc: Location.none,
+                    }),
+                  ),
+                ),
+              {txt: "query_type", loc: Location.none},
+            ),
+          ),
+          // Sig.modtyp
+          [%stri
+            let self: module query_type = [%e
+              Exp.pack(
+                Mod.ident({
+                  txt:
+                    Longident.Lident(
+                      Generator_utils.capitalize_ascii(name ++ "'"),
+                    ),
+                  loc: Location.none,
+                }),
+              )
+            ]
+          ],
+        ],
+      )
+    ),
   ];
 };
 
@@ -385,10 +438,15 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
-          wrap_module(
-            "Raw",
-            List.append(raw_types, extracted_args == [] ? [] : raw_arg_types),
-          ),
+          [
+            wrap_module(
+              "Raw",
+              List.append(
+                raw_types,
+                extracted_args == [] ? [] : raw_arg_types,
+              ),
+            ),
+          ],
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -538,7 +596,7 @@ let generate_fragment_module =
             | None => []
             },
             [[%stri let query = [%e printed_query]]],
-            wrap_module("Raw", raw_types),
+            [wrap_module("Raw", raw_types)],
             types,
             [parse],
             [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
@@ -581,7 +639,7 @@ let generate_modules = (config, module_name, operations) => {
       config.inline
         ? [contents]
         : [
-          wrap_module(
+          wrap_query_module(
             switch (module_name) {
             | Some(name) => name
             | None => name
@@ -591,7 +649,7 @@ let generate_modules = (config, module_name, operations) => {
         ]
     | (None, contents) =>
       switch (module_name) {
-      | Some(name) => [wrap_module(name, contents)]
+      | Some(name) => [wrap_query_module(name, contents)]
       | None => [contents]
       }
     }
@@ -601,13 +659,14 @@ let generate_modules = (config, module_name, operations) => {
       |> List.map(generate_operation(config))
       |> List.mapi((i, (name, contents)) =>
            switch (name) {
-           | Some(name) => wrap_module(name, contents)
-           | None => wrap_module("Untitled" ++ string_of_int(i), contents)
+           | Some(name) => wrap_query_module(name, contents)
+           | None =>
+             wrap_query_module("Untitled" ++ string_of_int(i), contents)
            }
          );
     switch (module_name) {
     | Some(module_name) => [
-        wrap_module(module_name, List.concat(contents)),
+        wrap_query_module(module_name, List.concat(contents)),
       ]
     | None => contents
     };

@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -247,7 +247,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -482,7 +487,12 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
+module MyQuery3' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -717,7 +727,12 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery3 = {
+  include MyQuery3';
+  module type query_type = (module type of MyQuery3');
+  let self: module query_type = (module MyQuery3');
+};
+module MyQuery4' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -951,4 +966,9 @@ module MyQuery4 {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery4 = {
+  include MyQuery4';
+  module type query_type = (module type of MyQuery4');
+  let self: module query_type = (module MyQuery4');
 };

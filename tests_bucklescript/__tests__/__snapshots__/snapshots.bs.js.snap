@@ -19,7 +19,7 @@ exports[`Apollo argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -107,6 +107,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -129,7 +134,7 @@ exports[`Apollo comment.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -416,6 +421,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -448,7 +458,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -557,6 +567,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -579,7 +594,7 @@ exports[`Apollo customScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customScalarField = {
       __typename: string,
@@ -746,6 +761,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -800,7 +820,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customFields = {
       __typename: string,
@@ -948,6 +968,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -970,7 +995,7 @@ exports[`Apollo defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
   };
@@ -1054,6 +1079,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -1076,7 +1106,7 @@ exports[`Apollo enumInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {enumInput: string};
     type t_variables = {arg: string};
@@ -1193,6 +1223,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -1215,7 +1250,7 @@ exports[`Apollo explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-module RecordsQuery = {
+module RecordsQuery' = {
   module Raw = {
     type t_lists = {
       __typename: string,
@@ -1393,7 +1428,12 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ObjectsQuery = {
+module RecordsQuery = {
+  include RecordsQuery';
+  module type query_type = (module type of RecordsQuery');
+  let self: module query_type = (module RecordsQuery');
+};
+module ObjectsQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -1569,6 +1609,11 @@ module ObjectsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ObjectsQuery = {
+  include ObjectsQuery';
+  module type query_type = (module type of ObjectsQuery');
+  let self: module query_type = (module ObjectsQuery');
+};
 "
 `;
 
@@ -1641,8 +1686,8 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments = {
-  module ListFragment = {
+module Fragments' = {
+  module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -1774,7 +1819,12 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
+  module ListFragment = {
+    include ListFragment';
+    module type query_type = (module type of ListFragment');
+    let self: module query_type = (module ListFragment');
+  };
+  module Another' = {
     let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -1872,8 +1922,18 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Another = {
+    include Another';
+    module type query_type = (module type of Another');
+    let self: module query_type = (module Another');
+  };
 };
-module MyQuery = {
+module Fragments = {
+  include Fragments';
+  module type query_type = (module type of Fragments');
+  let self: module query_type = (module Fragments');
+};
+module MyQuery' = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -2242,7 +2302,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
   };
@@ -2315,6 +2380,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -2359,7 +2429,7 @@ exports[`Apollo lists.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_lists = {
       __typename: string,
@@ -2537,6 +2607,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -2559,7 +2634,7 @@ exports[`Apollo listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {
@@ -2734,6 +2809,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -2756,7 +2836,7 @@ exports[`Apollo listsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {arg: t_variables_ListsInput}
@@ -2960,6 +3040,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -2982,7 +3067,7 @@ exports[`Apollo mutation.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationWithError_value = {
       __typename: string,
@@ -3219,6 +3304,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -3241,7 +3331,7 @@ exports[`Apollo mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {optionalInputArgs: string};
     type t_variables = {required: string};
@@ -3315,6 +3405,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -3337,7 +3432,7 @@ exports[`Apollo mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -3408,6 +3503,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -3434,7 +3534,7 @@ type record = {
   f1: string,
   f2: string,
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -3873,6 +3973,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -3895,7 +4000,7 @@ exports[`Apollo nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -4182,7 +4287,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {
       scalarsInput: string,
@@ -4510,6 +4620,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -4532,7 +4647,7 @@ exports[`Apollo omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -4716,7 +4831,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -4894,7 +5014,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -5072,6 +5197,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -5094,7 +5224,7 @@ exports[`Apollo omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -5268,7 +5398,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -5440,7 +5575,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -5612,6 +5752,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -5634,7 +5779,7 @@ exports[`Apollo pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       __typename: string,
@@ -5764,6 +5909,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -5786,7 +5936,7 @@ exports[`Apollo pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       __typename: string,
@@ -5970,6 +6120,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -6003,7 +6158,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -6107,7 +6262,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -6212,8 +6372,13 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ExternalFragmentQuery = {
-  module Fragment = {
+module OneFieldQuery = {
+  include OneFieldQuery';
+  module type query_type = (module type of OneFieldQuery');
+  let self: module query_type = (module OneFieldQuery');
+};
+module ExternalFragmentQuery' = {
+  module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -6320,7 +6485,12 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Fragment = {
+    include Fragment';
+    module type query_type = (module type of Fragment');
+    let self: module query_type = (module Fragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
     };
@@ -6393,8 +6563,18 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
 };
-module InlineFragmentQuery = {
+module ExternalFragmentQuery = {
+  include ExternalFragmentQuery';
+  module type query_type = (module type of ExternalFragmentQuery');
+  let self: module query_type = (module ExternalFragmentQuery');
+};
+module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -6526,8 +6706,13 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module UnionExternalFragmentQuery = {
-  module DogFragment = {
+module InlineFragmentQuery = {
+  include InlineFragmentQuery';
+  module type query_type = (module type of InlineFragmentQuery');
+  let self: module query_type = (module InlineFragmentQuery');
+};
+module UnionExternalFragmentQuery' = {
+  module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -6626,7 +6811,12 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module DogFragment = {
+    include DogFragment';
+    module type query_type = (module type of DogFragment');
+    let self: module query_type = (module DogFragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -6727,6 +6917,16 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
+};
+module UnionExternalFragmentQuery = {
+  include UnionExternalFragmentQuery';
+  module type query_type = (module type of UnionExternalFragmentQuery');
+  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -6750,7 +6950,7 @@ exports[`Apollo recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {recursiveInput: string};
     type t_variables = {arg: t_variables_RecursiveInput}
@@ -6923,6 +7123,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -6945,7 +7150,7 @@ exports[`Apollo scalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -7176,6 +7381,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -7198,7 +7408,7 @@ exports[`Apollo scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {
@@ -7394,6 +7604,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -7416,7 +7631,7 @@ exports[`Apollo scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -7657,6 +7872,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -7679,7 +7899,7 @@ exports[`Apollo skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_v1 = {
       __typename: string,
@@ -7873,6 +8093,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -7895,7 +8120,7 @@ exports[`Apollo subscription.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_simpleSubscription_Dog = {
       __typename: string,
@@ -8064,6 +8289,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -8086,7 +8316,7 @@ exports[`Apollo tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -8317,7 +8547,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -8552,7 +8787,12 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
+module MyQuery3' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -8787,7 +9027,12 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery3 = {
+  include MyQuery3';
+  module type query_type = (module type of MyQuery3');
+  let self: module query_type = (module MyQuery3');
+};
+module MyQuery4' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -9022,6 +9267,11 @@ module MyQuery4 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery4 = {
+  include MyQuery4';
+  module type query_type = (module type of MyQuery4');
+  let self: module query_type = (module MyQuery4');
+};
 "
 `;
 
@@ -9044,7 +9294,7 @@ exports[`Apollo typename.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -9224,6 +9474,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -9246,7 +9501,7 @@ exports[`Apollo union.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -9420,7 +9675,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQueryNoError = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQueryNoError' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -9594,6 +9854,11 @@ module MyQueryNoError {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQueryNoError = {
+  include MyQueryNoError';
+  module type query_type = (module type of MyQueryNoError');
+  let self: module query_type = (module MyQueryNoError');
+};
 "
 `;
 
@@ -9616,7 +9881,7 @@ exports[`Apollo unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -9748,6 +10013,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -9770,7 +10040,7 @@ exports[`Apollo variant.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationForVariant_dog = {
       __typename: string,
@@ -10047,6 +10317,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -10093,7 +10368,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -10104,6 +10379,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10228,7 +10516,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -10243,6 +10531,23 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10318,7 +10623,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse$2,
@@ -10327,8 +10632,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
 exports.StringOfInt = StringOfInt;
 exports.IntOfString = IntOfString;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10395,7 +10711,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -10406,6 +10722,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10525,7 +10854,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse$2,
@@ -10534,8 +10863,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
 exports.Color = Color;
 exports.DateTime = DateTime;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10572,7 +10912,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -10581,6 +10921,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10633,7 +10984,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -10644,6 +10995,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -10737,13 +11101,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var RecordsQuery = {
+var RecordsQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var RecordsQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: RecordsQuery$prime
 };
 
 var Raw$1 = { };
@@ -10832,7 +11206,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ObjectsQuery = {
+var ObjectsQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -10841,7 +11215,19 @@ var ObjectsQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var ObjectsQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ObjectsQuery$prime
+};
+
+exports.RecordsQuery$prime = RecordsQuery$prime;
 exports.RecordsQuery = RecordsQuery;
+exports.ObjectsQuery$prime = ObjectsQuery$prime;
 exports.ObjectsQuery = ObjectsQuery;
 /* No side effect */
 "
@@ -10939,7 +11325,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var ListFragment = {
+var ListFragment$prime = {
   query: query,
   Raw: Raw,
   parse: parse,
@@ -10947,6 +11333,18 @@ var ListFragment = {
   name: name,
   Z__INTERNAL: Z__INTERNAL
 };
+
+var ListFragment = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize,
+  name: name,
+  Z__INTERNAL: Z__INTERNAL,
+  self: ListFragment$prime
+};
+
+var query$1 = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 var Raw$1 = { };
 
@@ -10968,28 +11366,50 @@ function serialize$1(value) {
         };
 }
 
+var name$1 = \\"Another\\";
+
 var Z__INTERNAL$1 = {
   graphql: 0,
   graphql_module: 0
 };
 
-var Another = {
-  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
+var Another$prime = {
+  query: query$1,
   Raw: Raw$1,
   parse: parse$1,
   serialize: serialize$1,
-  name: \\"Another\\",
+  name: name$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Fragments = {
+var Another = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: Another$prime
+};
+
+var Fragments$prime = {
+  ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
+  Another$prime: Another$prime,
   Another: Another
+};
+
+var Fragments = {
+  ListFragment$prime: ListFragment$prime,
+  ListFragment: ListFragment,
+  Another$prime: Another$prime,
+  Another: Another,
+  self: Fragments$prime
 };
 
 var Raw$2 = { };
 
-var query$1 = \\"query   {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$2 = \\"query   {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   var value$1 = value.l4;
@@ -11084,7 +11504,7 @@ function serialize$2(value) {
 
 var definition = /* tuple */[
   parse$2,
-  query$1,
+  query$2,
   serialize$2
 ];
 
@@ -11092,18 +11512,28 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw$2,
-  query: query$1,
+  query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var MyQuery = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: MyQuery$prime
+};
+
 var Raw$3 = { };
 
-var query$2 = \\"query   {\\\\nlists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$3 = \\"query   {\\\\nlists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$3(value) {
   var value$1 = value.lists;
@@ -11121,7 +11551,7 @@ function serialize$3(value) {
 
 var definition$1 = /* tuple */[
   parse$3,
-  query$2,
+  query$3,
   serialize$3
 ];
 
@@ -11129,18 +11559,31 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$3,
-  query: query$2,
+  query: query$3,
   parse: parse$3,
   serialize: serialize$3,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var MyQuery2 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: MyQuery2$prime
+};
+
 exports.GraphQL_PPX = GraphQL_PPX;
+exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
 "
@@ -11243,7 +11686,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11252,6 +11695,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11339,7 +11793,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11350,6 +11804,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11450,7 +11917,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11463,6 +11930,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectListsInput: serializeInputObjectListsInput,
+  makeVariables: makeVariables,
+  makeInputObjectListsInput: makeInputObjectListsInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11556,7 +12038,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11565,6 +12047,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11613,7 +12106,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11624,6 +12117,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11672,7 +12178,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11683,6 +12189,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11839,7 +12358,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11848,6 +12367,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -11972,7 +12502,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -11985,6 +12515,22 @@ var MyQuery = {
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -12108,7 +12654,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -12123,7 +12669,25 @@ var MyQuery2 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput$1,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
+  makeVariables: makeVariables$1,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
 "
@@ -12207,13 +12771,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal = {
+var Normal$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var Normal = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: Normal$prime
 };
 
 var Raw$1 = { };
@@ -12283,13 +12857,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig = {
+var ByConfig$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var ByConfig = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ByConfig$prime
 };
 
 var Raw$2 = { };
@@ -12359,7 +12943,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective = {
+var ByDirective$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -12368,8 +12952,21 @@ var ByDirective = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var ByDirective = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: ByDirective$prime
+};
+
+exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
+exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
+exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */
 "
@@ -12459,13 +13056,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal = {
+var Normal$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var Normal = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: Normal$prime
 };
 
 var Raw$1 = { };
@@ -12538,13 +13145,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig = {
+var ByConfig$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var ByConfig = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ByConfig$prime
 };
 
 var Raw$2 = { };
@@ -12617,7 +13234,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective = {
+var ByDirective$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -12626,8 +13243,21 @@ var ByDirective = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var ByDirective = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: ByDirective$prime
+};
+
+exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
+exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
+exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */
 "
@@ -12692,7 +13322,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -12701,6 +13331,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -12781,7 +13422,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -12792,6 +13433,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -12840,13 +13494,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -12885,13 +13549,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var OneFieldQuery = {
+var OneFieldQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var OneFieldQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: OneFieldQuery$prime
 };
 
 var query$2 = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -12923,13 +13597,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var Fragment = {
+var Fragment$prime = {
   query: query$2,
   Raw: Raw$2,
   parse: parse$2,
   serialize: serialize$2,
   name: name,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var Fragment = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  name: name,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: Fragment$prime
 };
 
 var Raw$3 = { };
@@ -12960,7 +13644,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var Untitled1 = {
+var Untitled1$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -12969,9 +13653,29 @@ var Untitled1 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var ExternalFragmentQuery = {
+var Untitled1 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: Untitled1$prime
+};
+
+var ExternalFragmentQuery$prime = {
+  Fragment$prime: Fragment$prime,
   Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
   Untitled1: Untitled1
+};
+
+var ExternalFragmentQuery = {
+  Fragment$prime: Fragment$prime,
+  Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
+  Untitled1: Untitled1,
+  self: ExternalFragmentQuery$prime
 };
 
 var Raw$4 = { };
@@ -13033,13 +13737,23 @@ var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
-var InlineFragmentQuery = {
+var InlineFragmentQuery$prime = {
   Raw: Raw$4,
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
   definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
+};
+
+var InlineFragmentQuery = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$4,
+  self: InlineFragmentQuery$prime
 };
 
 var query$5 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -13071,13 +13785,23 @@ var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
-var DogFragment = {
+var DogFragment$prime = {
   query: query$5,
   Raw: Raw$5,
   parse: parse$5,
   serialize: serialize$5,
   name: name$1,
   Z__INTERNAL: Z__INTERNAL$5
+};
+
+var DogFragment = {
+  query: query$5,
+  Raw: Raw$5,
+  parse: parse$5,
+  serialize: serialize$5,
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$5,
+  self: DogFragment$prime
 };
 
 var Raw$6 = { };
@@ -13116,7 +13840,7 @@ var Z__INTERNAL$6 = {
   graphql_module: 0
 };
 
-var Untitled1$1 = {
+var Untitled1$prime$1 = {
   Raw: Raw$6,
   query: query$6,
   parse: parse$6,
@@ -13125,15 +13849,40 @@ var Untitled1$1 = {
   Z__INTERNAL: Z__INTERNAL$6
 };
 
-var UnionExternalFragmentQuery = {
+var Untitled1$1 = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
+  definition: definition$4,
+  Z__INTERNAL: Z__INTERNAL$6,
+  self: Untitled1$prime$1
+};
+
+var UnionExternalFragmentQuery$prime = {
+  DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
+var UnionExternalFragmentQuery = {
+  DogFragment$prime: DogFragment$prime,
+  DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
+  Untitled1: Untitled1$1,
+  self: UnionExternalFragmentQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
+exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
+exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -13212,7 +13961,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13225,6 +13974,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
+  makeVariables: makeVariables,
+  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13315,7 +14079,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13324,6 +14088,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13395,7 +14170,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13406,6 +14181,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13490,7 +14278,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13503,6 +14291,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
+  makeVariables: makeVariables,
+  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13589,7 +14392,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13600,6 +14403,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13682,7 +14498,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -13691,6 +14507,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -13781,13 +14608,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -13888,13 +14725,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
 };
 
 var Raw$2 = { };
@@ -13995,13 +14842,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery3 = {
+var MyQuery3$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var MyQuery3 = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: MyQuery3$prime
 };
 
 var Raw$3 = { };
@@ -14102,7 +14959,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery4 = {
+var MyQuery4$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -14111,9 +14968,23 @@ var MyQuery4 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var MyQuery4 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: MyQuery4$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
+exports.MyQuery3$prime = MyQuery3$prime;
 exports.MyQuery3 = MyQuery3;
+exports.MyQuery4$prime = MyQuery4$prime;
 exports.MyQuery4 = MyQuery4;
 /*  Not a pure module */
 "
@@ -14209,7 +15080,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14218,6 +15089,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14306,13 +15188,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -14393,7 +15285,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQueryNoError = {
+var MyQueryNoError$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -14402,7 +15294,19 @@ var MyQueryNoError = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var MyQueryNoError = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQueryNoError$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQueryNoError$prime = MyQueryNoError$prime;
 exports.MyQueryNoError = MyQueryNoError;
 /* No side effect */
 "
@@ -14472,7 +15376,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14481,6 +15385,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14612,7 +15527,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14621,6 +15536,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14672,7 +15598,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14683,6 +15609,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14810,7 +15749,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14825,6 +15764,23 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14897,7 +15853,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse$2,
@@ -14906,8 +15862,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
 exports.StringOfInt = StringOfInt;
 exports.IntOfString = IntOfString;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -14977,7 +15944,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -14988,6 +15955,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -15102,7 +16082,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse$2,
@@ -15111,8 +16091,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
 exports.Color = Color;
 exports.DateTime = DateTime;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -15152,7 +16143,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -15161,6 +16152,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -15216,7 +16218,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -15227,6 +16229,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -15320,13 +16335,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var RecordsQuery = {
+var RecordsQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var RecordsQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: RecordsQuery$prime
 };
 
 var Raw$1 = { };
@@ -15415,7 +16440,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ObjectsQuery = {
+var ObjectsQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -15424,7 +16449,19 @@ var ObjectsQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var ObjectsQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ObjectsQuery$prime
+};
+
+exports.RecordsQuery$prime = RecordsQuery$prime;
 exports.RecordsQuery = RecordsQuery;
+exports.ObjectsQuery$prime = ObjectsQuery$prime;
 exports.ObjectsQuery = ObjectsQuery;
 /* No side effect */
 "
@@ -15520,7 +16557,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var ListFragment = {
+var ListFragment$prime = {
   query: query,
   Raw: Raw,
   parse: parse,
@@ -15528,6 +16565,18 @@ var ListFragment = {
   name: name,
   Z__INTERNAL: Z__INTERNAL
 };
+
+var ListFragment = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize,
+  name: name,
+  Z__INTERNAL: Z__INTERNAL,
+  self: ListFragment$prime
+};
+
+var query$1 = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 var Raw$1 = { };
 
@@ -15550,28 +16599,50 @@ function serialize$1(value) {
         };
 }
 
+var name$1 = \\"Another\\";
+
 var Z__INTERNAL$1 = {
   graphql: 0,
   graphql_module: 0
 };
 
-var Another = {
-  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
+var Another$prime = {
+  query: query$1,
   Raw: Raw$1,
   parse: parse$1,
   serialize: serialize$1,
-  name: \\"Another\\",
+  name: name$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Fragments = {
+var Another = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: Another$prime
+};
+
+var Fragments$prime = {
+  ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
+  Another$prime: Another$prime,
   Another: Another
+};
+
+var Fragments = {
+  ListFragment$prime: ListFragment$prime,
+  ListFragment: ListFragment,
+  Another$prime: Another$prime,
+  Another: Another,
+  self: Fragments$prime
 };
 
 var Raw$2 = { };
 
-var query$1 = \\"query   {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$2 = \\"query   {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   var value$1 = value.l2;
@@ -15654,7 +16725,7 @@ function serialize$2(value) {
 
 var definition = /* tuple */[
   parse$2,
-  query$1,
+  query$2,
   serialize$2
 ];
 
@@ -15662,18 +16733,28 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw$2,
-  query: query$1,
+  query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var MyQuery = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: MyQuery$prime
+};
+
 var Raw$3 = { };
 
-var query$2 = \\"query   {\\\\nlists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$3 = \\"query   {\\\\nlists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$3(value) {
   return {
@@ -15691,7 +16772,7 @@ function serialize$3(value) {
 
 var definition$1 = /* tuple */[
   parse$3,
-  query$2,
+  query$3,
   serialize$3
 ];
 
@@ -15699,18 +16780,31 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$3,
-  query: query$2,
+  query: query$3,
   parse: parse$3,
   serialize: serialize$3,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var MyQuery2 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: MyQuery2$prime
+};
+
 exports.GraphQL_PPX = GraphQL_PPX;
+exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
 "
@@ -15810,7 +16904,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -15819,6 +16913,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -15908,7 +17013,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -15919,6 +17024,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16022,7 +17140,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16035,6 +17153,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectListsInput: serializeInputObjectListsInput,
+  makeVariables: makeVariables,
+  makeInputObjectListsInput: makeInputObjectListsInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16131,7 +17264,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16140,6 +17273,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16189,7 +17333,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16200,6 +17344,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16248,7 +17405,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16259,6 +17416,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16417,7 +17587,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16426,6 +17596,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -16553,7 +17734,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -16566,6 +17747,22 @@ var MyQuery = {
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -16689,7 +17886,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -16704,7 +17901,25 @@ var MyQuery2 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput$1,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
+  makeVariables: makeVariables$1,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
 "
@@ -16787,13 +18002,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal = {
+var Normal$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var Normal = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: Normal$prime
 };
 
 var Raw$1 = { };
@@ -16862,13 +18087,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig = {
+var ByConfig$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var ByConfig = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ByConfig$prime
 };
 
 var Raw$2 = { };
@@ -16937,7 +18172,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective = {
+var ByDirective$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -16946,8 +18181,21 @@ var ByDirective = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var ByDirective = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: ByDirective$prime
+};
+
+exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
+exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
+exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */
 "
@@ -17035,13 +18283,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal = {
+var Normal$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var Normal = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: Normal$prime
 };
 
 var Raw$1 = { };
@@ -17112,13 +18370,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig = {
+var ByConfig$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var ByConfig = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ByConfig$prime
 };
 
 var Raw$2 = { };
@@ -17189,7 +18457,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective = {
+var ByDirective$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -17198,8 +18466,21 @@ var ByDirective = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var ByDirective = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: ByDirective$prime
+};
+
+exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
+exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
+exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */
 "
@@ -17262,7 +18543,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -17271,6 +18552,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -17352,7 +18644,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -17363,6 +18655,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -17410,13 +18715,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -17455,13 +18770,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var OneFieldQuery = {
+var OneFieldQuery$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var OneFieldQuery = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: OneFieldQuery$prime
 };
 
 var query$2 = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
@@ -17491,13 +18816,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var Fragment = {
+var Fragment$prime = {
   query: query$2,
   Raw: Raw$2,
   parse: parse$2,
   serialize: serialize$2,
   name: name,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var Fragment = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  name: name,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: Fragment$prime
 };
 
 var Raw$3 = { };
@@ -17528,7 +18863,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var Untitled1 = {
+var Untitled1$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -17537,9 +18872,29 @@ var Untitled1 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var ExternalFragmentQuery = {
+var Untitled1 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: Untitled1$prime
+};
+
+var ExternalFragmentQuery$prime = {
+  Fragment$prime: Fragment$prime,
   Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
   Untitled1: Untitled1
+};
+
+var ExternalFragmentQuery = {
+  Fragment$prime: Fragment$prime,
+  Fragment: Fragment,
+  Untitled1$prime: Untitled1$prime,
+  Untitled1: Untitled1,
+  self: ExternalFragmentQuery$prime
 };
 
 var Raw$4 = { };
@@ -17594,13 +18949,23 @@ var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
-var InlineFragmentQuery = {
+var InlineFragmentQuery$prime = {
   Raw: Raw$4,
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
   definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
+};
+
+var InlineFragmentQuery = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$4,
+  self: InlineFragmentQuery$prime
 };
 
 var query$5 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
@@ -17630,13 +18995,23 @@ var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
-var DogFragment = {
+var DogFragment$prime = {
   query: query$5,
   Raw: Raw$5,
   parse: parse$5,
   serialize: serialize$5,
   name: name$1,
   Z__INTERNAL: Z__INTERNAL$5
+};
+
+var DogFragment = {
+  query: query$5,
+  Raw: Raw$5,
+  parse: parse$5,
+  serialize: serialize$5,
+  name: name$1,
+  Z__INTERNAL: Z__INTERNAL$5,
+  self: DogFragment$prime
 };
 
 var Raw$6 = { };
@@ -17676,7 +19051,7 @@ var Z__INTERNAL$6 = {
   graphql_module: 0
 };
 
-var Untitled1$1 = {
+var Untitled1$prime$1 = {
   Raw: Raw$6,
   query: query$6,
   parse: parse$6,
@@ -17685,15 +19060,40 @@ var Untitled1$1 = {
   Z__INTERNAL: Z__INTERNAL$6
 };
 
-var UnionExternalFragmentQuery = {
+var Untitled1$1 = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
+  definition: definition$4,
+  Z__INTERNAL: Z__INTERNAL$6,
+  self: Untitled1$prime$1
+};
+
+var UnionExternalFragmentQuery$prime = {
+  DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
+var UnionExternalFragmentQuery = {
+  DogFragment$prime: DogFragment$prime,
+  DogFragment: DogFragment,
+  Untitled1$prime: Untitled1$prime$1,
+  Untitled1: Untitled1$1,
+  self: UnionExternalFragmentQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
+exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
+exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -17774,7 +19174,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -17787,6 +19187,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
+  makeVariables: makeVariables,
+  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -17868,7 +19283,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -17877,6 +19292,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -17950,7 +19376,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -17961,6 +19387,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -18048,7 +19487,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -18061,6 +19500,21 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
+  makeVariables: makeVariables,
+  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -18141,7 +19595,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -18152,6 +19606,19 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -18234,7 +19701,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -18243,6 +19710,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -18324,13 +19802,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -18422,13 +19910,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
 };
 
 var Raw$2 = { };
@@ -18520,13 +20018,23 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery3 = {
+var MyQuery3$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
+};
+
+var MyQuery3 = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: MyQuery3$prime
 };
 
 var Raw$3 = { };
@@ -18618,7 +20126,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery4 = {
+var MyQuery4$prime = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
@@ -18627,9 +20135,23 @@ var MyQuery4 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var MyQuery4 = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  definition: definition$3,
+  Z__INTERNAL: Z__INTERNAL$3,
+  self: MyQuery4$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
+exports.MyQuery3$prime = MyQuery3$prime;
 exports.MyQuery3 = MyQuery3;
+exports.MyQuery4$prime = MyQuery4$prime;
 exports.MyQuery4 = MyQuery4;
 /*  Not a pure module */
 "
@@ -18715,7 +20237,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -18724,6 +20246,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -18810,13 +20343,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -18895,7 +20438,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQueryNoError = {
+var MyQueryNoError$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -18904,7 +20447,19 @@ var MyQueryNoError = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var MyQueryNoError = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQueryNoError$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQueryNoError$prime = MyQueryNoError$prime;
 exports.MyQueryNoError = MyQueryNoError;
 /* No side effect */
 "
@@ -18967,7 +20522,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -18976,6 +20531,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -19103,7 +20669,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -19112,6 +20678,17 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
 "
@@ -19678,7 +21255,7 @@ exports[`Legacy argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
     type t_variables = {. \\"query\\": int};
@@ -19759,6 +21336,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -19781,7 +21363,7 @@ exports[`Legacy comment.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -20045,6 +21627,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20077,7 +21664,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -20173,6 +21760,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20195,7 +21787,7 @@ exports[`Legacy customScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customScalarField = {
       .
@@ -20328,6 +21920,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20382,7 +21979,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customFields = {
       .
@@ -20520,6 +22117,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20542,7 +22144,7 @@ exports[`Legacy defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
   };
@@ -20612,6 +22214,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20634,7 +22241,7 @@ exports[`Legacy enumInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"enumInput\\": string};
     type t_variables = {. \\"arg\\": string};
@@ -20736,6 +22343,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -20758,7 +22370,7 @@ exports[`Legacy explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-module RecordsQuery = {
+module RecordsQuery' = {
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -20930,7 +22542,12 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ObjectsQuery = {
+module RecordsQuery = {
+  include RecordsQuery';
+  module type query_type = (module type of RecordsQuery');
+  let self: module query_type = (module RecordsQuery');
+};
+module ObjectsQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -21099,6 +22716,11 @@ module ObjectsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ObjectsQuery = {
+  include ObjectsQuery';
+  module type query_type = (module type of ObjectsQuery');
+  let self: module query_type = (module ObjectsQuery');
+};
 "
 `;
 
@@ -21171,8 +22793,8 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments = {
-  module ListFragment = {
+module Fragments' = {
+  module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -21301,7 +22923,12 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
+  module ListFragment = {
+    include ListFragment';
+    module type query_type = (module type of ListFragment');
+    let self: module query_type = (module ListFragment');
+  };
+  module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
@@ -21384,8 +23011,18 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Another = {
+    include Another';
+    module type query_type = (module type of Another');
+    let self: module query_type = (module Another');
+  };
 };
-module MyQuery = {
+module Fragments = {
+  include Fragments';
+  module type query_type = (module type of Fragments');
+  let self: module query_type = (module Fragments');
+};
+module MyQuery' = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -21697,7 +23334,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
   };
@@ -21772,6 +23414,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -21816,7 +23463,7 @@ exports[`Legacy lists.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -21985,6 +23632,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -22007,7 +23659,7 @@ exports[`Legacy listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {
@@ -22194,6 +23846,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -22216,7 +23873,7 @@ exports[`Legacy listsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_ListsInput}
@@ -22403,6 +24060,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -22425,7 +24087,7 @@ exports[`Legacy mutation.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationWithError_value = {. \\"stringField\\": string};
     type t_mutationWithError_errors_field = string;
@@ -22608,6 +24270,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -22630,7 +24297,7 @@ exports[`Legacy mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -22711,6 +24378,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -22733,7 +24405,7 @@ exports[`Legacy mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -22813,6 +24485,11 @@ module MyQuery {
 \`\`\`*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
 };
 "
 `;
@@ -22840,7 +24517,7 @@ type record = {
   f1: string,
   f2: string,
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
     type t_first_inner = {. \\"inner\\": Js.Nullable.t(t_first_inner_inner)};
@@ -23137,6 +24814,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -23159,7 +24841,7 @@ exports[`Legacy nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -23423,7 +25105,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {
       .
@@ -23725,6 +25412,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -23747,7 +25439,7 @@ exports[`Legacy omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -23894,7 +25586,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -24035,7 +25732,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -24176,6 +25878,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -24198,7 +25905,7 @@ exports[`Legacy omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -24351,7 +26058,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -24502,7 +26214,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -24653,6 +26370,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -24675,7 +26397,7 @@ exports[`Legacy pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       .
@@ -24793,6 +26515,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -24815,7 +26542,7 @@ exports[`Legacy pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       .
@@ -24973,6 +26700,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -25006,7 +26738,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -25101,7 +26833,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
@@ -25191,8 +26928,13 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ExternalFragmentQuery = {
-  module Fragment = {
+module OneFieldQuery = {
+  include OneFieldQuery';
+  module type query_type = (module type of OneFieldQuery');
+  let self: module query_type = (module OneFieldQuery');
+};
+module ExternalFragmentQuery' = {
+  module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -25289,7 +27031,12 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Fragment = {
+    include Fragment';
+    module type query_type = (module type of Fragment');
+    let self: module query_type = (module Fragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
     };
@@ -25364,8 +27111,18 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
 };
-module InlineFragmentQuery = {
+module ExternalFragmentQuery = {
+  include ExternalFragmentQuery';
+  module type query_type = (module type of ExternalFragmentQuery');
+  let self: module query_type = (module ExternalFragmentQuery');
+};
+module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -25492,8 +27249,13 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module UnionExternalFragmentQuery = {
-  module DogFragment = {
+module InlineFragmentQuery = {
+  include InlineFragmentQuery';
+  module type query_type = (module type of InlineFragmentQuery');
+  let self: module query_type = (module InlineFragmentQuery');
+};
+module UnionExternalFragmentQuery' = {
+  module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -25582,7 +27344,12 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module DogFragment = {
+    include DogFragment';
+    module type query_type = (module type of DogFragment');
+    let self: module query_type = (module DogFragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
@@ -25683,6 +27450,16 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
+};
+module UnionExternalFragmentQuery = {
+  include UnionExternalFragmentQuery';
+  module type query_type = (module type of UnionExternalFragmentQuery');
+  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -25706,7 +27483,7 @@ exports[`Legacy recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
@@ -25863,6 +27640,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -25885,7 +27667,7 @@ exports[`Legacy scalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -26113,6 +27895,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -26135,7 +27922,7 @@ exports[`Legacy scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {
@@ -26349,6 +28136,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -26371,7 +28163,7 @@ exports[`Legacy scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
@@ -26582,6 +28374,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -26604,7 +28401,7 @@ exports[`Legacy skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_v1 = {
       .
@@ -26777,6 +28574,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -26799,7 +28601,7 @@ exports[`Legacy subscription.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_simpleSubscription_Dog = {
       .
@@ -26941,6 +28743,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -26963,7 +28770,7 @@ exports[`Legacy tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -27191,7 +28998,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -27423,7 +29235,12 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
+module MyQuery3' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -27655,7 +29472,12 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery3 = {
+  include MyQuery3';
+  module type query_type = (module type of MyQuery3');
+  let self: module query_type = (module MyQuery3');
+};
+module MyQuery4' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -27887,6 +29709,11 @@ module MyQuery4 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery4 = {
+  include MyQuery4';
+  module type query_type = (module type of MyQuery4');
+  let self: module query_type = (module MyQuery4');
+};
 "
 `;
 
@@ -27909,7 +29736,7 @@ exports[`Legacy typename.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -28089,6 +29916,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -28111,7 +29943,7 @@ exports[`Legacy union.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -28264,7 +30096,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQueryNoError = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQueryNoError' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -28417,6 +30254,11 @@ module MyQueryNoError {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQueryNoError = {
+  include MyQueryNoError';
+  module type query_type = (module type of MyQueryNoError');
+  let self: module query_type = (module MyQueryNoError');
+};
 "
 `;
 
@@ -28439,7 +30281,7 @@ exports[`Legacy unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -28563,6 +30405,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -28585,7 +30432,7 @@ exports[`Legacy variant.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationForVariant_dog = {
       .
@@ -28818,6 +30665,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -28840,7 +30692,7 @@ exports[`Objects argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
     type t_variables = {. \\"query\\": int};
@@ -28911,6 +30763,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -28933,7 +30790,7 @@ exports[`Objects comment.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -29187,6 +31044,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29219,7 +31081,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -29310,6 +31172,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29332,7 +31199,7 @@ exports[`Objects customScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customScalarField = {
       .
@@ -29455,6 +31322,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29509,7 +31381,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customFields = {
       .
@@ -29642,6 +31514,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29664,7 +31541,7 @@ exports[`Objects defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
   };
@@ -29729,6 +31606,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29751,7 +31633,7 @@ exports[`Objects enumInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"enumInput\\": string};
     type t_variables = {. \\"arg\\": string};
@@ -29843,6 +31725,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -29865,7 +31752,7 @@ exports[`Objects explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-module RecordsQuery = {
+module RecordsQuery' = {
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -30032,7 +31919,12 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ObjectsQuery = {
+module RecordsQuery = {
+  include RecordsQuery';
+  module type query_type = (module type of RecordsQuery');
+  let self: module query_type = (module RecordsQuery');
+};
+module ObjectsQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -30196,6 +32088,11 @@ module ObjectsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ObjectsQuery = {
+  include ObjectsQuery';
+  module type query_type = (module type of ObjectsQuery');
+  let self: module query_type = (module ObjectsQuery');
+};
 "
 `;
 
@@ -30268,8 +32165,8 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments = {
-  module ListFragment = {
+module Fragments' = {
+  module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -30398,7 +32295,12 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
+  module ListFragment = {
+    include ListFragment';
+    module type query_type = (module type of ListFragment');
+    let self: module query_type = (module ListFragment');
+  };
+  module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
@@ -30481,8 +32383,18 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Another = {
+    include Another';
+    module type query_type = (module type of Another');
+    let self: module query_type = (module Another');
+  };
 };
-module MyQuery = {
+module Fragments = {
+  include Fragments';
+  module type query_type = (module type of Fragments');
+  let self: module query_type = (module Fragments');
+};
+module MyQuery' = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -30789,7 +32701,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
   };
@@ -30859,6 +32776,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -30903,7 +32825,7 @@ exports[`Objects lists.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -31067,6 +32989,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -31089,7 +33016,7 @@ exports[`Objects listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {
@@ -31251,6 +33178,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -31273,7 +33205,7 @@ exports[`Objects listsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_ListsInput}
@@ -31450,6 +33382,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -31472,7 +33409,7 @@ exports[`Objects mutation.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationWithError_value = {. \\"stringField\\": string};
     type t_mutationWithError_errors_field = string;
@@ -31650,6 +33587,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -31672,7 +33614,7 @@ exports[`Objects mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -31743,6 +33685,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -31765,7 +33712,7 @@ exports[`Objects mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -31835,6 +33782,11 @@ module MyQuery {
 \`\`\`*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
 };
 "
 `;
@@ -31862,7 +33814,7 @@ type record = {
   f1: string,
   f2: string,
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
     type t_first_inner = {. \\"inner\\": Js.Nullable.t(t_first_inner_inner)};
@@ -32154,6 +34106,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -32176,7 +34133,7 @@ exports[`Objects nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -32430,7 +34387,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {
       .
@@ -32722,6 +34684,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -32744,7 +34711,7 @@ exports[`Objects omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -32886,7 +34853,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -33022,7 +34994,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -33158,6 +35135,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -33180,7 +35162,7 @@ exports[`Objects omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -33328,7 +35310,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -33474,7 +35461,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -33620,6 +35612,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -33642,7 +35639,7 @@ exports[`Objects pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       .
@@ -33755,6 +35752,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -33777,7 +35779,7 @@ exports[`Objects pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       .
@@ -33925,6 +35927,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -33958,7 +35965,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -34048,7 +36055,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
@@ -34133,8 +36145,13 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ExternalFragmentQuery = {
-  module Fragment = {
+module OneFieldQuery = {
+  include OneFieldQuery';
+  module type query_type = (module type of OneFieldQuery');
+  let self: module query_type = (module OneFieldQuery');
+};
+module ExternalFragmentQuery' = {
+  module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -34231,7 +36248,12 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Fragment = {
+    include Fragment';
+    module type query_type = (module type of Fragment');
+    let self: module query_type = (module Fragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
     };
@@ -34301,8 +36323,18 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
 };
-module InlineFragmentQuery = {
+module ExternalFragmentQuery = {
+  include ExternalFragmentQuery';
+  module type query_type = (module type of ExternalFragmentQuery');
+  let self: module query_type = (module ExternalFragmentQuery');
+};
+module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -34424,8 +36456,13 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module UnionExternalFragmentQuery = {
-  module DogFragment = {
+module InlineFragmentQuery = {
+  include InlineFragmentQuery';
+  module type query_type = (module type of InlineFragmentQuery');
+  let self: module query_type = (module InlineFragmentQuery');
+};
+module UnionExternalFragmentQuery' = {
+  module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -34514,7 +36551,12 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module DogFragment = {
+    include DogFragment';
+    module type query_type = (module type of DogFragment');
+    let self: module query_type = (module DogFragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
@@ -34610,6 +36652,16 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
+};
+module UnionExternalFragmentQuery = {
+  include UnionExternalFragmentQuery';
+  module type query_type = (module type of UnionExternalFragmentQuery');
+  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -34633,7 +36685,7 @@ exports[`Objects recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
@@ -34780,6 +36832,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -34802,7 +36859,7 @@ exports[`Objects scalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -35025,6 +37082,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -35047,7 +37109,7 @@ exports[`Objects scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {
@@ -35224,6 +37286,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -35246,7 +37313,7 @@ exports[`Objects scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
@@ -35447,6 +37514,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -35469,7 +37541,7 @@ exports[`Objects skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_v1 = {
       .
@@ -35632,6 +37704,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -35654,7 +37731,7 @@ exports[`Objects subscription.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_simpleSubscription_Dog = {
       .
@@ -35791,6 +37868,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -35813,7 +37895,7 @@ exports[`Objects tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -36036,7 +38118,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -36263,7 +38350,12 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
+module MyQuery3' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -36490,7 +38582,12 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery3 = {
+  include MyQuery3';
+  module type query_type = (module type of MyQuery3');
+  let self: module query_type = (module MyQuery3');
+};
+module MyQuery4' = {
   module Raw = {
     type t_variousScalars = {
       .
@@ -36717,6 +38814,11 @@ module MyQuery4 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery4 = {
+  include MyQuery4';
+  module type query_type = (module type of MyQuery4');
+  let self: module query_type = (module MyQuery4');
+};
 "
 `;
 
@@ -36739,7 +38841,7 @@ exports[`Objects typename.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -36914,6 +39016,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -36936,7 +39043,7 @@ exports[`Objects union.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -37084,7 +39191,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQueryNoError = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQueryNoError' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -37232,6 +39344,11 @@ module MyQueryNoError {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQueryNoError = {
+  include MyQueryNoError';
+  module type query_type = (module type of MyQueryNoError');
+  let self: module query_type = (module MyQueryNoError');
+};
 "
 `;
 
@@ -37254,7 +39371,7 @@ exports[`Objects unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -37373,6 +39490,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -37395,7 +39517,7 @@ exports[`Objects variant.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationForVariant_dog = {
       .
@@ -37623,6 +39745,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -37645,7 +39772,7 @@ exports[`Records argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -37733,6 +39860,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -37755,7 +39887,7 @@ exports[`Records comment.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -38042,6 +40174,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38074,7 +40211,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       string,
@@ -38173,6 +40310,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38195,7 +40337,7 @@ exports[`Records customScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),
@@ -38352,6 +40494,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38406,7 +40553,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_customFields = {
       currentTime: Js.Json.t,
@@ -38538,6 +40685,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38560,7 +40712,7 @@ exports[`Records defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
   };
@@ -38644,6 +40796,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38666,7 +40823,7 @@ exports[`Records enumInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {enumInput: string};
     type t_variables = {arg: string};
@@ -38783,6 +40940,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -38805,7 +40967,7 @@ exports[`Records explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-module RecordsQuery = {
+module RecordsQuery' = {
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -38972,7 +41134,12 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ObjectsQuery = {
+module RecordsQuery = {
+  include RecordsQuery';
+  module type query_type = (module type of RecordsQuery');
+  let self: module query_type = (module RecordsQuery');
+};
+module ObjectsQuery' = {
   module Raw = {
     type t_lists = {
       .
@@ -39136,6 +41303,11 @@ module ObjectsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ObjectsQuery = {
+  include ObjectsQuery';
+  module type query_type = (module type of ObjectsQuery');
+  let self: module query_type = (module ObjectsQuery');
+};
 "
 `;
 
@@ -39208,8 +41380,8 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments = {
-  module ListFragment = {
+module Fragments' = {
+  module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -39331,7 +41503,12 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
+  module ListFragment = {
+    include ListFragment';
+    module type query_type = (module type of ListFragment');
+    let self: module query_type = (module ListFragment');
+  };
+  module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -39415,8 +41592,18 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Another = {
+    include Another';
+    module type query_type = (module type of Another');
+    let self: module query_type = (module Another');
+  };
 };
-module MyQuery = {
+module Fragments = {
+  include Fragments';
+  module type query_type = (module type of Fragments');
+  let self: module query_type = (module Fragments');
+};
+module MyQuery' = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -39739,7 +41926,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
   };
@@ -39812,6 +42004,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -39856,7 +42053,7 @@ exports[`Records lists.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -40023,6 +42220,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40045,7 +42247,7 @@ exports[`Records listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {
@@ -40220,6 +42422,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40242,7 +42449,7 @@ exports[`Records listsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {arg: t_variables_ListsInput}
@@ -40446,6 +42653,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40468,7 +42680,7 @@ exports[`Records mutation.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationWithError_value = {stringField: string};
     type t_mutationWithError_errors_field = string;
@@ -40665,6 +42877,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40687,7 +42904,7 @@ exports[`Records mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {optionalInputArgs: string};
     type t_variables = {required: string};
@@ -40761,6 +42978,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40783,7 +43005,7 @@ exports[`Records mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -40854,6 +43076,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -40880,7 +43107,7 @@ type record = {
   f1: string,
   f2: string,
 };
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {field: string};
     type t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)};
@@ -41191,6 +43418,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -41213,7 +43445,7 @@ exports[`Records nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -41500,7 +43732,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t = {
       scalarsInput: string,
@@ -41828,6 +44065,11 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
 "
 `;
 
@@ -41850,7 +44092,7 @@ exports[`Records omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -42010,7 +44252,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -42164,7 +44411,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -42318,6 +44570,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -42340,7 +44597,7 @@ exports[`Records omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-module Normal = {
+module Normal' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -42494,7 +44751,12 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module Normal = {
+  include Normal';
+  module type query_type = (module type of Normal');
+  let self: module query_type = (module Normal');
+};
+module ByConfig' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -42646,7 +44908,12 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByConfig = {
+  include ByConfig';
+  module type query_type = (module type of ByConfig');
+  let self: module query_type = (module ByConfig');
+};
+module ByDirective' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -42798,6 +45065,11 @@ module ByDirective {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module ByDirective = {
+  include ByDirective';
+  module type query_type = (module type of ByDirective');
+  let self: module query_type = (module ByDirective');
+};
 "
 `;
 
@@ -42820,7 +45092,7 @@ exports[`Records pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       id: string,
@@ -42940,6 +45212,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -42962,7 +45239,7 @@ exports[`Records pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_pokemon = {
       id: string,
@@ -43136,6 +45413,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -43169,7 +45451,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       string,
@@ -43264,7 +45546,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
@@ -43355,8 +45642,13 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ExternalFragmentQuery = {
-  module Fragment = {
+module OneFieldQuery = {
+  include OneFieldQuery';
+  module type query_type = (module type of OneFieldQuery');
+  let self: module query_type = (module OneFieldQuery');
+};
+module ExternalFragmentQuery' = {
+  module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -43453,7 +45745,12 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Fragment = {
+    include Fragment';
+    module type query_type = (module type of Fragment');
+    let self: module query_type = (module Fragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
     };
@@ -43526,8 +45823,18 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
 };
-module InlineFragmentQuery = {
+module ExternalFragmentQuery = {
+  include ExternalFragmentQuery';
+  module type query_type = (module type of ExternalFragmentQuery');
+  let self: module query_type = (module ExternalFragmentQuery');
+};
+module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -43650,8 +45957,13 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module UnionExternalFragmentQuery = {
-  module DogFragment = {
+module InlineFragmentQuery = {
+  include InlineFragmentQuery';
+  module type query_type = (module type of InlineFragmentQuery');
+  let self: module query_type = (module InlineFragmentQuery');
+};
+module UnionExternalFragmentQuery' = {
+  module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
@@ -43740,7 +46052,12 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module DogFragment = {
+    include DogFragment';
+    module type query_type = (module type of DogFragment');
+    let self: module query_type = (module DogFragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -43841,6 +46158,16 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
+};
+module UnionExternalFragmentQuery = {
+  include UnionExternalFragmentQuery';
+  module type query_type = (module type of UnionExternalFragmentQuery');
+  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -43864,7 +46191,7 @@ exports[`Records recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {recursiveInput: string};
     type t_variables = {arg: t_variables_RecursiveInput}
@@ -44037,6 +46364,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -44059,7 +46391,7 @@ exports[`Records scalars.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -44279,6 +46611,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -44301,7 +46638,7 @@ exports[`Records scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {
@@ -44497,6 +46834,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -44519,7 +46861,7 @@ exports[`Records scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -44760,6 +47102,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -44782,7 +47129,7 @@ exports[`Records skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_v1 = {
       nullableString: Js.Nullable.t(string),
@@ -44956,6 +47303,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -44978,7 +47330,7 @@ exports[`Records subscription.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_simpleSubscription_Dog = {
       __typename: string,
@@ -45123,6 +47475,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -45145,7 +47502,7 @@ exports[`Records tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -45365,7 +47722,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQuery2' = {
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -45589,7 +47951,12 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery2 = {
+  include MyQuery2';
+  module type query_type = (module type of MyQuery2');
+  let self: module query_type = (module MyQuery2');
+};
+module MyQuery3' = {
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -45813,7 +48180,12 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery3 = {
+  include MyQuery3';
+  module type query_type = (module type of MyQuery3');
+  let self: module query_type = (module MyQuery3');
+};
+module MyQuery4' = {
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -46037,6 +48409,11 @@ module MyQuery4 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery4 = {
+  include MyQuery4';
+  module type query_type = (module type of MyQuery4');
+  let self: module query_type = (module MyQuery4');
+};
 "
 `;
 
@@ -46059,7 +48436,7 @@ exports[`Records typename.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -46239,6 +48616,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -46261,7 +48643,7 @@ exports[`Records union.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -46415,7 +48797,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQueryNoError = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module MyQueryNoError' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -46569,6 +48956,11 @@ module MyQueryNoError {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQueryNoError = {
+  include MyQueryNoError';
+  module type query_type = (module type of MyQueryNoError');
+  let self: module query_type = (module MyQueryNoError');
+};
 "
 `;
 
@@ -46591,7 +48983,7 @@ exports[`Records unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -46714,6 +49106,11 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
 "
 `;
 
@@ -46736,7 +49133,7 @@ exports[`Records variant.re 1`] = `
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_mutationForVariant_dog = {
       __typename: string,
@@ -46978,6 +49375,11 @@ module MyQuery {
 \`\`\`*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
+};
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
 };
 "
 `;

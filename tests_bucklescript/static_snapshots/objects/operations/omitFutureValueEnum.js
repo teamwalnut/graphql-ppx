@@ -75,13 +75,23 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal = {
+var Normal$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var Normal = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: Normal$prime
 };
 
 var Raw$1 = { };
@@ -151,13 +161,23 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig = {
+var ByConfig$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
+};
+
+var ByConfig = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: ByConfig$prime
 };
 
 var Raw$2 = { };
@@ -227,7 +247,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective = {
+var ByDirective$prime = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -236,7 +256,20 @@ var ByDirective = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var ByDirective = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition$2,
+  Z__INTERNAL: Z__INTERNAL$2,
+  self: ByDirective$prime
+};
+
+exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
+exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
+exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */

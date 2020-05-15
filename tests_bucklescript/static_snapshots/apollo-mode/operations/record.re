@@ -27,7 +27,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -131,7 +131,12 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module MyQuery = {
+  include MyQuery';
+  module type query_type = (module type of MyQuery');
+  let self: module query_type = (module MyQuery');
+};
+module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -236,8 +241,13 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ExternalFragmentQuery = {
-  module Fragment = {
+module OneFieldQuery = {
+  include OneFieldQuery';
+  module type query_type = (module type of OneFieldQuery');
+  let self: module query_type = (module OneFieldQuery');
+};
+module ExternalFragmentQuery' = {
+  module Fragment' = {
     let query = "fragment Fragment on VariousScalars   {\n__typename  \nstring  \nint  \n}\n";
     module Raw = {
       type t = {
@@ -344,7 +354,12 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Fragment = {
+    include Fragment';
+    module type query_type = (module type of Fragment');
+    let self: module query_type = (module Fragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
     };
@@ -417,8 +432,18 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
 };
-module InlineFragmentQuery = {
+module ExternalFragmentQuery = {
+  include ExternalFragmentQuery';
+  module type query_type = (module type of ExternalFragmentQuery');
+  let self: module query_type = (module ExternalFragmentQuery');
+};
+module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -550,8 +575,13 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module UnionExternalFragmentQuery = {
-  module DogFragment = {
+module InlineFragmentQuery = {
+  include InlineFragmentQuery';
+  module type query_type = (module type of InlineFragmentQuery');
+  let self: module query_type = (module InlineFragmentQuery');
+};
+module UnionExternalFragmentQuery' = {
+  module DogFragment' = {
     let query = "fragment DogFragment on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
@@ -650,7 +680,12 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module DogFragment = {
+    include DogFragment';
+    module type query_type = (module type of DogFragment');
+    let self: module query_type = (module DogFragment');
+  };
+  module Untitled1' = {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -751,4 +786,14 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
+  module Untitled1 = {
+    include Untitled1';
+    module type query_type = (module type of Untitled1');
+    let self: module query_type = (module Untitled1');
+  };
+};
+module UnionExternalFragmentQuery = {
+  include UnionExternalFragmentQuery';
+  module type query_type = (module type of UnionExternalFragmentQuery');
+  let self: module query_type = (module UnionExternalFragmentQuery');
 };

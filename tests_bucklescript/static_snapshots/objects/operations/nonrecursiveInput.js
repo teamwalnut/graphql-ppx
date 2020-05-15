@@ -116,7 +116,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -129,6 +129,22 @@ var MyQuery = {
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
   definition: definition,
   Z__INTERNAL: Z__INTERNAL
+};
+
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
+  makeVariables: makeVariables,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
 };
 
 var Raw$1 = { };
@@ -252,7 +268,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2 = {
+var MyQuery2$prime = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -267,6 +283,24 @@ var MyQuery2 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var MyQuery2 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput$1,
+  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
+  makeVariables: makeVariables$1,
+  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
+  definition: definition$1,
+  Z__INTERNAL: Z__INTERNAL$1,
+  self: MyQuery2$prime
+};
+
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
+exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */

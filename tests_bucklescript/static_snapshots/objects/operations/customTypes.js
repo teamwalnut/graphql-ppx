@@ -111,7 +111,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery = {
+var MyQuery$prime = {
   Raw: Raw,
   query: query,
   parse: parse$2,
@@ -120,7 +120,18 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var MyQuery = {
+  Raw: Raw,
+  query: query,
+  parse: parse$2,
+  serialize: serialize$2,
+  definition: definition,
+  Z__INTERNAL: Z__INTERNAL,
+  self: MyQuery$prime
+};
+
 exports.Color = Color;
 exports.DateTime = DateTime;
+exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
