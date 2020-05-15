@@ -304,8 +304,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -636,6 +636,6 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };

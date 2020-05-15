@@ -108,8 +108,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -421,8 +421,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -568,8 +568,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -761,8 +761,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -969,8 +969,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -1081,8 +1081,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -1224,8 +1224,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -1430,8 +1430,8 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type query_type = (module type of RecordsQuery');
-  let self: module query_type = (module RecordsQuery');
+  module type QueryType = (module type of RecordsQuery');
+  let self: module QueryType = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -1612,8 +1612,8 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type query_type = (module type of ObjectsQuery');
-  let self: module query_type = (module ObjectsQuery');
+  module type QueryType = (module type of ObjectsQuery');
+  let self: module QueryType = (module ObjectsQuery');
 };
 "
 `;
@@ -1822,8 +1822,8 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    module type query_type = (module type of ListFragment');
-    let self: module query_type = (module ListFragment');
+    module type QueryType = (module type of ListFragment');
+    let self: module QueryType = (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -1925,8 +1925,8 @@ module Fragments {
   };
   module Another = {
     include Another';
-    module type query_type = (module type of Another');
-    let self: module query_type = (module Another');
+    module type QueryType = (module type of Another');
+    let self: module QueryType = (module Another');
   };
 };
 module MyQuery' = {
@@ -2301,8 +2301,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -2380,8 +2380,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -2608,8 +2608,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -2809,8 +2809,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -3039,8 +3039,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -3304,8 +3304,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -3404,8 +3404,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -3501,8 +3501,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -3972,8 +3972,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -4285,8 +4285,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -4617,8 +4617,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -4829,8 +4829,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -5013,8 +5013,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -5197,8 +5197,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -5399,8 +5399,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -5577,8 +5577,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -5755,8 +5755,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -5913,8 +5913,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -6123,8 +6123,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -6266,8 +6266,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -6377,8 +6377,8 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  module type query_type = (module type of OneFieldQuery');
-  let self: module query_type = (module OneFieldQuery');
+  module type QueryType = (module type of OneFieldQuery');
+  let self: module QueryType = (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -6490,8 +6490,8 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    module type query_type = (module type of Fragment');
-    let self: module query_type = (module Fragment');
+    module type QueryType = (module type of Fragment');
+    let self: module QueryType = (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -6569,8 +6569,8 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -6708,8 +6708,8 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  module type query_type = (module type of InlineFragmentQuery');
-  let self: module query_type = (module InlineFragmentQuery');
+  module type QueryType = (module type of InlineFragmentQuery');
+  let self: module QueryType = (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -6813,8 +6813,8 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    module type query_type = (module type of DogFragment');
-    let self: module query_type = (module DogFragment');
+    module type QueryType = (module type of DogFragment');
+    let self: module QueryType = (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -6920,8 +6920,8 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 "
@@ -7120,8 +7120,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -7379,8 +7379,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -7601,8 +7601,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -7868,8 +7868,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -8088,8 +8088,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -8285,8 +8285,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -8544,8 +8544,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -8785,8 +8785,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -9026,8 +9026,8 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  module type query_type = (module type of MyQuery3');
-  let self: module query_type = (module MyQuery3');
+  module type QueryType = (module type of MyQuery3');
+  let self: module QueryType = (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -9267,8 +9267,8 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  module type query_type = (module type of MyQuery4');
-  let self: module query_type = (module MyQuery4');
+  module type QueryType = (module type of MyQuery4');
+  let self: module QueryType = (module MyQuery4');
 };
 "
 `;
@@ -9475,8 +9475,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -9677,8 +9677,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -9857,8 +9857,8 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  module type query_type = (module type of MyQueryNoError');
-  let self: module query_type = (module MyQueryNoError');
+  module type QueryType = (module type of MyQueryNoError');
+  let self: module QueryType = (module MyQueryNoError');
 };
 "
 `;
@@ -10017,8 +10017,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -10322,8 +10322,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -20518,8 +20518,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -20808,8 +20808,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -20942,8 +20942,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -21101,8 +21101,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -21299,8 +21299,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -21397,8 +21397,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -21525,8 +21525,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -21725,8 +21725,8 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type query_type = (module type of RecordsQuery');
-  let self: module query_type = (module RecordsQuery');
+  module type QueryType = (module type of RecordsQuery');
+  let self: module QueryType = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -21900,8 +21900,8 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type query_type = (module type of ObjectsQuery');
-  let self: module query_type = (module ObjectsQuery');
+  module type QueryType = (module type of ObjectsQuery');
+  let self: module QueryType = (module ObjectsQuery');
 };
 "
 `;
@@ -22107,8 +22107,8 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    module type query_type = (module type of ListFragment');
-    let self: module query_type = (module ListFragment');
+    module type QueryType = (module type of ListFragment');
+    let self: module QueryType = (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -22195,8 +22195,8 @@ module Fragments {
   };
   module Another = {
     include Another';
-    module type query_type = (module type of Another');
-    let self: module query_type = (module Another');
+    module type QueryType = (module type of Another');
+    let self: module QueryType = (module Another');
   };
 };
 module MyQuery' = {
@@ -22514,8 +22514,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -22595,8 +22595,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -22814,8 +22814,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23027,8 +23027,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23240,8 +23240,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23451,8 +23451,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23558,8 +23558,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23665,8 +23665,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -23994,8 +23994,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -24284,8 +24284,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -24590,8 +24590,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -24765,8 +24765,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -24912,8 +24912,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -25059,8 +25059,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -25240,8 +25240,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -25397,8 +25397,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -25554,8 +25554,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -25700,8 +25700,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -25884,8 +25884,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -26018,8 +26018,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -26114,8 +26114,8 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  module type query_type = (module type of OneFieldQuery');
-  let self: module query_type = (module OneFieldQuery');
+  module type QueryType = (module type of OneFieldQuery');
+  let self: module QueryType = (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -26217,8 +26217,8 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    module type query_type = (module type of Fragment');
-    let self: module query_type = (module Fragment');
+    module type QueryType = (module type of Fragment');
+    let self: module QueryType = (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -26298,8 +26298,8 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -26432,8 +26432,8 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  module type query_type = (module type of InlineFragmentQuery');
-  let self: module query_type = (module InlineFragmentQuery');
+  module type QueryType = (module type of InlineFragmentQuery');
+  let self: module QueryType = (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -26527,8 +26527,8 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    module type query_type = (module type of DogFragment');
-    let self: module query_type = (module DogFragment');
+    module type QueryType = (module type of DogFragment');
+    let self: module QueryType = (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -26634,8 +26634,8 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 "
@@ -26818,8 +26818,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -27074,8 +27074,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -27314,8 +27314,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -27551,8 +27551,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -27750,8 +27750,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -27920,8 +27920,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -28176,8 +28176,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -28414,8 +28414,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -28652,8 +28652,8 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  module type query_type = (module type of MyQuery3');
-  let self: module query_type = (module MyQuery3');
+  module type QueryType = (module type of MyQuery3');
+  let self: module QueryType = (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -28890,8 +28890,8 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  module type query_type = (module type of MyQuery4');
-  let self: module query_type = (module MyQuery4');
+  module type QueryType = (module type of MyQuery4');
+  let self: module QueryType = (module MyQuery4');
 };
 "
 `;
@@ -29098,8 +29098,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -29279,8 +29279,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -29438,8 +29438,8 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  module type query_type = (module type of MyQueryNoError');
-  let self: module query_type = (module MyQueryNoError');
+  module type QueryType = (module type of MyQueryNoError');
+  let self: module QueryType = (module MyQueryNoError');
 };
 "
 `;
@@ -29590,8 +29590,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -29851,8 +29851,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -29948,8 +29948,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30228,8 +30228,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30357,8 +30357,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30506,8 +30506,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30699,8 +30699,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30792,8 +30792,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -30910,8 +30910,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -31105,8 +31105,8 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type query_type = (module type of RecordsQuery');
-  let self: module query_type = (module RecordsQuery');
+  module type QueryType = (module type of RecordsQuery');
+  let self: module QueryType = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -31275,8 +31275,8 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type query_type = (module type of ObjectsQuery');
-  let self: module query_type = (module ObjectsQuery');
+  module type QueryType = (module type of ObjectsQuery');
+  let self: module QueryType = (module ObjectsQuery');
 };
 "
 `;
@@ -31482,8 +31482,8 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    module type query_type = (module type of ListFragment');
-    let self: module query_type = (module ListFragment');
+    module type QueryType = (module type of ListFragment');
+    let self: module QueryType = (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -31570,8 +31570,8 @@ module Fragments {
   };
   module Another = {
     include Another';
-    module type query_type = (module type of Another');
-    let self: module query_type = (module Another');
+    module type QueryType = (module type of Another');
+    let self: module QueryType = (module Another');
   };
 };
 module MyQuery' = {
@@ -31884,8 +31884,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -31960,8 +31960,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -32174,8 +32174,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -32362,8 +32362,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -32565,8 +32565,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -32771,8 +32771,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -32868,8 +32868,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -32965,8 +32965,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -33289,8 +33289,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -33569,8 +33569,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -33865,8 +33865,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -34035,8 +34035,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -34177,8 +34177,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -34319,8 +34319,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -34495,8 +34495,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -34647,8 +34647,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -34799,8 +34799,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -34940,8 +34940,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -35114,8 +35114,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -35243,8 +35243,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -35334,8 +35334,8 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  module type query_type = (module type of OneFieldQuery');
-  let self: module query_type = (module OneFieldQuery');
+  module type QueryType = (module type of OneFieldQuery');
+  let self: module QueryType = (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -35437,8 +35437,8 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    module type query_type = (module type of Fragment');
-    let self: module query_type = (module Fragment');
+    module type QueryType = (module type of Fragment');
+    let self: module QueryType = (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -35513,8 +35513,8 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -35642,8 +35642,8 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  module type query_type = (module type of InlineFragmentQuery');
-  let self: module query_type = (module InlineFragmentQuery');
+  module type QueryType = (module type of InlineFragmentQuery');
+  let self: module QueryType = (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -35737,8 +35737,8 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    module type query_type = (module type of DogFragment');
-    let self: module query_type = (module DogFragment');
+    module type QueryType = (module type of DogFragment');
+    let self: module QueryType = (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -35839,8 +35839,8 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 "
@@ -36013,8 +36013,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -36264,8 +36264,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -36467,8 +36467,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -36694,8 +36694,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -36883,8 +36883,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -37048,8 +37048,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -37299,8 +37299,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -37532,8 +37532,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -37765,8 +37765,8 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  module type query_type = (module type of MyQuery3');
-  let self: module query_type = (module MyQuery3');
+  module type QueryType = (module type of MyQuery3');
+  let self: module QueryType = (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -37998,8 +37998,8 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  module type query_type = (module type of MyQuery4');
-  let self: module query_type = (module MyQuery4');
+  module type QueryType = (module type of MyQuery4');
+  let self: module QueryType = (module MyQuery4');
 };
 "
 `;
@@ -38201,8 +38201,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -38377,8 +38377,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -38531,8 +38531,8 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  module type query_type = (module type of MyQueryNoError');
-  let self: module query_type = (module MyQueryNoError');
+  module type QueryType = (module type of MyQueryNoError');
+  let self: module QueryType = (module MyQueryNoError');
 };
 "
 `;
@@ -38678,8 +38678,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -38934,8 +38934,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39048,8 +39048,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39361,8 +39361,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39498,8 +39498,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39681,8 +39681,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39873,8 +39873,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -39985,8 +39985,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -40128,8 +40128,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -40323,8 +40323,8 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type query_type = (module type of RecordsQuery');
-  let self: module query_type = (module RecordsQuery');
+  module type QueryType = (module type of RecordsQuery');
+  let self: module QueryType = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -40493,8 +40493,8 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type query_type = (module type of ObjectsQuery');
-  let self: module query_type = (module ObjectsQuery');
+  module type QueryType = (module type of ObjectsQuery');
+  let self: module QueryType = (module ObjectsQuery');
 };
 "
 `;
@@ -40693,8 +40693,8 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    module type query_type = (module type of ListFragment');
-    let self: module query_type = (module ListFragment');
+    module type QueryType = (module type of ListFragment');
+    let self: module QueryType = (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -40782,8 +40782,8 @@ module Fragments {
   };
   module Another = {
     include Another';
-    module type query_type = (module type of Another');
-    let self: module query_type = (module Another');
+    module type QueryType = (module type of Another');
+    let self: module QueryType = (module Another');
   };
 };
 module MyQuery' = {
@@ -41112,8 +41112,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -41191,8 +41191,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -41408,8 +41408,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -41609,8 +41609,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -41839,8 +41839,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -42064,8 +42064,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -42164,8 +42164,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -42261,8 +42261,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -42604,8 +42604,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -42917,8 +42917,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -43249,8 +43249,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 "
 `;
@@ -43437,8 +43437,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -43597,8 +43597,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -43757,8 +43757,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -43939,8 +43939,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type query_type = (module type of Normal');
-  let self: module query_type = (module Normal');
+  module type QueryType = (module type of Normal');
+  let self: module QueryType = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -44097,8 +44097,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type query_type = (module type of ByConfig');
-  let self: module query_type = (module ByConfig');
+  module type QueryType = (module type of ByConfig');
+  let self: module QueryType = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -44255,8 +44255,8 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type query_type = (module type of ByDirective');
-  let self: module query_type = (module ByDirective');
+  module type QueryType = (module type of ByDirective');
+  let self: module QueryType = (module ByDirective');
 };
 "
 `;
@@ -44403,8 +44403,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -44603,8 +44603,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -44737,8 +44737,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -44834,8 +44834,8 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  module type query_type = (module type of OneFieldQuery');
-  let self: module query_type = (module OneFieldQuery');
+  module type QueryType = (module type of OneFieldQuery');
+  let self: module QueryType = (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -44937,8 +44937,8 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    module type query_type = (module type of Fragment');
-    let self: module query_type = (module Fragment');
+    module type QueryType = (module type of Fragment');
+    let self: module QueryType = (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -45016,8 +45016,8 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -45146,8 +45146,8 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  module type query_type = (module type of InlineFragmentQuery');
-  let self: module query_type = (module InlineFragmentQuery');
+  module type QueryType = (module type of InlineFragmentQuery');
+  let self: module QueryType = (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -45241,8 +45241,8 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    module type query_type = (module type of DogFragment');
-    let self: module query_type = (module DogFragment');
+    module type QueryType = (module type of DogFragment');
+    let self: module QueryType = (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -45348,8 +45348,8 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type query_type = (module type of Untitled1');
-    let self: module query_type = (module Untitled1');
+    module type QueryType = (module type of Untitled1');
+    let self: module QueryType = (module Untitled1');
   };
 };
 "
@@ -45548,8 +45548,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -45796,8 +45796,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -46018,8 +46018,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -46285,8 +46285,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -46485,8 +46485,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -46658,8 +46658,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -46906,8 +46906,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -47136,8 +47136,8 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type query_type = (module type of MyQuery2');
-  let self: module query_type = (module MyQuery2');
+  module type QueryType = (module type of MyQuery2');
+  let self: module QueryType = (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -47366,8 +47366,8 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  module type query_type = (module type of MyQuery3');
-  let self: module query_type = (module MyQuery3');
+  module type QueryType = (module type of MyQuery3');
+  let self: module QueryType = (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -47596,8 +47596,8 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  module type query_type = (module type of MyQuery4');
-  let self: module query_type = (module MyQuery4');
+  module type QueryType = (module type of MyQuery4');
+  let self: module QueryType = (module MyQuery4');
 };
 "
 `;
@@ -47804,8 +47804,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -47986,8 +47986,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -48146,8 +48146,8 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  module type query_type = (module type of MyQueryNoError');
-  let self: module query_type = (module MyQueryNoError');
+  module type QueryType = (module type of MyQueryNoError');
+  let self: module QueryType = (module MyQueryNoError');
 };
 "
 `;
@@ -48297,8 +48297,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;
@@ -48568,8 +48568,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type query_type = (module type of MyQuery');
-  let self: module query_type = (module MyQuery');
+  module type QueryType = (module type of MyQuery');
+  let self: module QueryType = (module MyQuery');
 };
 "
 `;

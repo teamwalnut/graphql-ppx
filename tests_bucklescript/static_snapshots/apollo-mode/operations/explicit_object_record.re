@@ -197,8 +197,8 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type query_type = (module type of RecordsQuery');
-  let self: module query_type = (module RecordsQuery');
+  module type QueryType = (module type of RecordsQuery');
+  let self: module QueryType = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -379,6 +379,6 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type query_type = (module type of ObjectsQuery');
-  let self: module query_type = (module ObjectsQuery');
+  module type QueryType = (module type of ObjectsQuery');
+  let self: module QueryType = (module ObjectsQuery');
 };

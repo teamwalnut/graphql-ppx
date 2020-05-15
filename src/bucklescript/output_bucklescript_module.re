@@ -343,11 +343,11 @@ let wrap_query_module = (name: string, contents) => {
                     }),
                   ),
                 ),
-              {txt: "query_type", loc: Location.none},
+              {txt: "QueryType", loc: Location.none},
             ),
           ),
           [%stri
-            let self: module query_type = [%e
+            let self: module QueryType = [%e
               Exp.pack(
                 Mod.ident({
                   txt:
