@@ -23,6 +23,7 @@ module MyQuery' = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
@@ -30,6 +31,7 @@ module MyQuery' = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {

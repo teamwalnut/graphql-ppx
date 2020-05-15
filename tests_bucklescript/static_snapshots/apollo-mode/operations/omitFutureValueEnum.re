@@ -29,6 +29,7 @@ module Normal' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = "mutation   {\nmutationWithError  {\n__typename  \nerrors  {\n__typename  \nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [
@@ -47,6 +48,7 @@ module Normal' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -217,6 +219,7 @@ module ByConfig' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = "mutation   {\nmutationWithError  {\n__typename  \nerrors  {\n__typename  \nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
@@ -230,6 +233,7 @@ module ByConfig' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -399,6 +403,7 @@ module ByDirective' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = "mutation   {\nmutationWithError  {\n__typename  \nerrors  {\n__typename  \nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
@@ -412,6 +417,7 @@ module ByDirective' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {

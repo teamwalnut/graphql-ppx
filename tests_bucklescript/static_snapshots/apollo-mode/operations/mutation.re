@@ -34,6 +34,7 @@ module MyQuery' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
   type t_mutationWithError_value = {
@@ -57,6 +58,7 @@ module MyQuery' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {

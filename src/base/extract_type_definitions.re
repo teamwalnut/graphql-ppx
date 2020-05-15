@@ -67,6 +67,7 @@ type input_object_field =
     });
 
 type arg_type_def =
+  | NoVariables
   | InputObject({
       name: option(string),
       fields: list(input_object_field),
@@ -316,7 +317,8 @@ let rec extract_input_object =
                   acc
                   |> List.exists(
                        fun
-                       | InputObject({name}) => name == Some(iom_name),
+                       | InputObject({name}) => name == Some(iom_name)
+                       | NoVariables => false,
                      );
 
                 if (already_created_earlier || already_created_in_same_list) {
@@ -364,5 +366,5 @@ let extract_args = (config, args): list(arg_type_def) =>
       config.map_loc(span),
     )
     |> extract_input_object(config.schema, [])
-  | _ => []
+  | _ => [NoVariables]
   };

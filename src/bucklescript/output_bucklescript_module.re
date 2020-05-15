@@ -437,25 +437,14 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
-          [
-            wrap_module(
-              "Raw",
-              List.append(
-                raw_types,
-                extracted_args == [] ? [] : raw_arg_types,
-              ),
-            ),
-          ],
+          [wrap_module("Raw", List.append(raw_types, raw_arg_types))],
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
           },
           [[%stri let query = [%e printed_query]]],
           types,
-          switch (extracted_args) {
-          | [] => []
-          | _ => arg_types
-          },
+          arg_types,
           [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
           [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
           switch (serialize_variable_functions) {

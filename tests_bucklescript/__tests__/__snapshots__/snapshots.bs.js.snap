@@ -464,6 +464,7 @@ module MyQuery' = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -472,6 +473,7 @@ module MyQuery' = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -826,6 +828,7 @@ module MyQuery' = {
       nullableColor: Js.Nullable.t(Js.Json.t),
     };
     type t = {customFields: t_customFields};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ncustomFields  {\\\\n__typename  \\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
@@ -836,6 +839,7 @@ module MyQuery' = {
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -993,9 +997,11 @@ exports[`Apollo defaultObjectValueOnScalar.re 1`] = `
 module MyQuery' = {
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1253,6 +1259,7 @@ module RecordsQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -1263,6 +1270,7 @@ module RecordsQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -1436,6 +1444,7 @@ module ObjectsQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -1447,6 +1456,7 @@ module ObjectsQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -1930,6 +1940,7 @@ module MyQuery' = {
       l3: t_l3,
       l4: t_l4,
     };
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -1992,6 +2003,7 @@ module MyQuery' = {
     l3: t_l3,
     l4: t_l4,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -2295,6 +2307,7 @@ module MyQuery = {
 module MyQuery2' = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -2303,6 +2316,7 @@ module MyQuery2' = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -2423,6 +2437,7 @@ module MyQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -2433,6 +2448,7 @@ module MyQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3066,6 +3082,7 @@ module MyQuery' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nvalue  {\\\\n__typename  \\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\n__typename  \\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_value = {
@@ -3089,6 +3106,7 @@ module MyQuery' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -3556,6 +3574,7 @@ module MyQuery' = {
       second: t_second,
       let_: t_let,
     };
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {
@@ -3600,6 +3619,7 @@ module MyQuery' = {
     second: t_second,
     let_: t_let,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4635,6 +4655,7 @@ module Normal' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [
@@ -4653,6 +4674,7 @@ module Normal' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -4823,6 +4845,7 @@ module ByConfig' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -4836,6 +4859,7 @@ module ByConfig' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5005,6 +5029,7 @@ module ByDirective' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\n__typename  \\\\nerrors  {\\\\n__typename  \\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -5018,6 +5043,7 @@ module ByDirective' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5209,6 +5235,7 @@ module Normal' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -5226,6 +5253,7 @@ module Normal' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5387,6 +5415,7 @@ module ByConfig' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -5403,6 +5432,7 @@ module ByConfig' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5563,6 +5593,7 @@ module ByDirective' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -5579,6 +5610,7 @@ module ByDirective' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -5756,6 +5788,7 @@ module MyQuery' = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\n__typename  \\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -5764,6 +5797,7 @@ module MyQuery' = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6133,9 +6167,11 @@ module MyQuery' = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {variousScalars: scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6240,6 +6276,7 @@ module OneFieldQuery' = {
       nullableString: Js.Nullable.t(string),
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -6247,6 +6284,7 @@ module OneFieldQuery' = {
     nullableString: option(string),
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6458,6 +6496,7 @@ module ExternalFragmentQuery {
   module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -6466,6 +6505,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -6542,6 +6582,7 @@ module InlineFragmentQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -6554,6 +6595,7 @@ module InlineFragmentQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -6778,6 +6820,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -6793,6 +6836,7 @@ module UnionExternalFragmentQuery {
       | \`Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -7117,6 +7161,7 @@ module MyQuery' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -7133,6 +7178,7 @@ module MyQuery' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8079,6 +8125,7 @@ module MyQuery' = {
     };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
+    type t_variables = Js.Json.t;
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_simpleSubscription_Dog = {
@@ -8095,6 +8142,7 @@ module MyQuery' = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8278,6 +8326,7 @@ module MyQuery' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\n__typename  \\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -8294,6 +8343,7 @@ module MyQuery' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8513,6 +8563,7 @@ module MyQuery2' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -8533,6 +8584,7 @@ module MyQuery2' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8752,6 +8804,7 @@ module MyQuery3' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -8772,6 +8825,7 @@ module MyQuery3' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -8991,6 +9045,7 @@ module MyQuery4' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
@@ -9011,6 +9066,7 @@ module MyQuery4' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -9251,6 +9307,7 @@ module MyQuery' = {
       inner: Js.Nullable.t(t_first_inner),
     };
     type t = {first: t_first};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {
@@ -9266,6 +9323,7 @@ module MyQuery' = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -9455,6 +9513,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -9472,6 +9531,7 @@ module MyQuery' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -9633,6 +9693,7 @@ module MyQueryNoError' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -9650,6 +9711,7 @@ module MyQueryNoError' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -9829,6 +9891,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -9841,6 +9904,7 @@ module MyQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -10001,6 +10065,7 @@ module MyQuery' = {
     type t_mutationForVariant_dogOrHuman;
     type t_mutationForVariant;
     type t = {mutationForVariant: t_mutationForVariant};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\n__typename  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationForVariant_dog = {
@@ -10034,6 +10099,7 @@ module MyQuery' = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -20785,6 +20851,7 @@ module MyQuery' = {
       \\"int\\": int,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -20793,6 +20860,7 @@ module MyQuery' = {
     \\"int\\": StringOfInt.t,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -21100,6 +21168,7 @@ module MyQuery' = {
       \\"nullableColor\\": Js.Nullable.t(Js.Json.t),
     };
     type t = {. \\"customFields\\": t_customFields};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
@@ -21110,6 +21179,7 @@ module MyQuery' = {
     \\"nullableColor\\": option(Color.t),
   };
   type t = {. \\"customFields\\": t_customFields};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -21257,9 +21327,11 @@ exports[`Legacy defaultObjectValueOnScalar.re 1`] = `
 module MyQuery' = {
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
@@ -21487,6 +21559,7 @@ module RecordsQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -21496,6 +21569,7 @@ module RecordsQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -21664,6 +21738,7 @@ module ObjectsQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -21674,6 +21749,7 @@ module ObjectsQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -22135,6 +22211,7 @@ module MyQuery' = {
       \\"l3\\": t_l3,
       \\"l4\\": t_l4,
     };
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -22198,6 +22275,7 @@ module MyQuery' = {
     \\"l3\\": t_l3,
     \\"l4\\": t_l4,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let l4 = {
@@ -22442,6 +22520,7 @@ module MyQuery = {
 module MyQuery2' = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -22450,6 +22529,7 @@ module MyQuery2' = {
     )
     ++ Fragments.ListFragment.query;
   type t = {. \\"lists\\": Fragments.ListFragment.t};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -22572,6 +22652,7 @@ module MyQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -22582,6 +22663,7 @@ module MyQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -23198,6 +23280,7 @@ module MyQuery' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_value = {. \\"stringField\\": string};
@@ -23218,6 +23301,7 @@ module MyQuery' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -23631,6 +23715,7 @@ module MyQuery' = {
       \\"second\\": t_second,
       \\"let_\\": t_let,
     };
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {. \\"field\\": string};
@@ -23651,6 +23736,7 @@ module MyQuery' = {
     \\"second\\": t_second,
     \\"let_\\": t_let,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -24542,6 +24628,7 @@ module Normal' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [
@@ -24560,6 +24647,7 @@ module Normal' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -24693,6 +24781,7 @@ module ByConfig' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -24706,6 +24795,7 @@ module ByConfig' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -24838,6 +24928,7 @@ module ByDirective' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -24851,6 +24942,7 @@ module ByDirective' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -25007,6 +25099,7 @@ module Normal' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -25021,6 +25114,7 @@ module Normal' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -25164,6 +25258,7 @@ module ByConfig' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -25177,6 +25272,7 @@ module ByConfig' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -25319,6 +25415,7 @@ module ByDirective' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -25332,6 +25429,7 @@ module ByDirective' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -25489,6 +25587,7 @@ module MyQuery' = {
       \\"name\\": Js.Nullable.t(string),
     };
     type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -25497,6 +25596,7 @@ module MyQuery' = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -25828,9 +25928,11 @@ module MyQuery' = {
       \\"int\\": int,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {. \\"variousScalars\\": scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -25923,10 +26025,12 @@ module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -26119,6 +26223,7 @@ module ExternalFragmentQuery {
   module Untitled1' = {
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -26127,6 +26232,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {. \\"variousScalars\\": Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       value => {
         let variousScalars = {
@@ -26206,6 +26312,7 @@ module InlineFragmentQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -26217,6 +26324,7 @@ module InlineFragmentQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -26426,6 +26534,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -26441,6 +26550,7 @@ module UnionExternalFragmentQuery {
       | \`Dog(DogFragment.t)
     ];
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       value => {
         let dogOrHuman = {
@@ -26749,6 +26859,7 @@ module MyQuery' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -26765,6 +26876,7 @@ module MyQuery' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -27677,6 +27789,7 @@ module MyQuery' = {
     };
     type t_simpleSubscription;
     type t = {. \\"simpleSubscription\\": t_simpleSubscription};
+    type t_variables = Js.Json.t;
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_simpleSubscription_Dog = {. \\"name\\": string};
@@ -27687,6 +27800,7 @@ module MyQuery' = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let simpleSubscription = {
@@ -27847,6 +27961,7 @@ module MyQuery' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -27863,6 +27978,7 @@ module MyQuery' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -28079,6 +28195,7 @@ module MyQuery2' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -28099,6 +28216,7 @@ module MyQuery2' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -28315,6 +28433,7 @@ module MyQuery3' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -28335,6 +28454,7 @@ module MyQuery3' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -28551,6 +28671,7 @@ module MyQuery4' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
@@ -28571,6 +28692,7 @@ module MyQuery4' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -28811,6 +28933,7 @@ module MyQuery' = {
       \\"inner\\": Js.Nullable.t(t_first_inner),
     };
     type t = {. \\"first\\": t_first};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {
@@ -28829,6 +28952,7 @@ module MyQuery' = {
     \\"inner\\": option(t_first_inner),
   };
   type t = {. \\"first\\": t_first};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let first = {
@@ -29014,6 +29138,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -29028,6 +29153,7 @@ module MyQuery' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -29171,6 +29297,7 @@ module MyQueryNoError' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -29185,6 +29312,7 @@ module MyQueryNoError' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -29345,6 +29473,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -29357,6 +29486,7 @@ module MyQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -29512,6 +29642,7 @@ module MyQuery' = {
     type t_mutationForVariant_dogOrHuman;
     type t_mutationForVariant;
     type t = {. \\"mutationForVariant\\": t_mutationForVariant};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationForVariant_dog = {
@@ -29539,6 +29670,7 @@ module MyQuery' = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. \\"mutationForVariant\\": t_mutationForVariant};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
@@ -30139,6 +30271,7 @@ module MyQuery' = {
       \\"int\\": int,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -30147,6 +30280,7 @@ module MyQuery' = {
     \\"int\\": StringOfInt.t,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -30439,6 +30573,7 @@ module MyQuery' = {
       \\"nullableColor\\": Js.Nullable.t(Js.Json.t),
     };
     type t = {. \\"customFields\\": t_customFields};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
@@ -30449,6 +30584,7 @@ module MyQuery' = {
     \\"nullableColor\\": option(Color.t),
   };
   type t = {. \\"customFields\\": t_customFields};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -30591,9 +30727,11 @@ exports[`Objects defaultObjectValueOnScalar.re 1`] = `
 module MyQuery' = {
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {. \\"defaultObjectValueOnScalar\\": string};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
@@ -30806,6 +30944,7 @@ module RecordsQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -30815,6 +30954,7 @@ module RecordsQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -30978,6 +31118,7 @@ module ObjectsQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -30988,6 +31129,7 @@ module ObjectsQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -31444,6 +31586,7 @@ module MyQuery' = {
       \\"l3\\": t_l3,
       \\"l4\\": t_l4,
     };
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -31507,6 +31650,7 @@ module MyQuery' = {
     \\"l3\\": t_l3,
     \\"l4\\": t_l4,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let l4 = {
@@ -31746,6 +31890,7 @@ module MyQuery = {
 module MyQuery2' = {
   module Raw = {
     type t = {. \\"lists\\": Fragments.ListFragment.Raw.t};
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -31754,6 +31899,7 @@ module MyQuery2' = {
     )
     ++ Fragments.ListFragment.query;
   type t = {. \\"lists\\": Fragments.ListFragment.t};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -31871,6 +32017,7 @@ module MyQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -31881,6 +32028,7 @@ module MyQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -32457,6 +32605,7 @@ module MyQuery' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_value = {. \\"stringField\\": string};
@@ -32477,6 +32626,7 @@ module MyQuery' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -32865,6 +33015,7 @@ module MyQuery' = {
       \\"second\\": t_second,
       \\"let_\\": t_let,
     };
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {. \\"field\\": string};
@@ -32885,6 +33036,7 @@ module MyQuery' = {
     \\"second\\": t_second,
     \\"let_\\": t_let,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let let_ = {
@@ -33751,6 +33903,7 @@ module Normal' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [
@@ -33769,6 +33922,7 @@ module Normal' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -33897,6 +34051,7 @@ module ByConfig' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -33910,6 +34065,7 @@ module ByConfig' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -34037,6 +34193,7 @@ module ByDirective' = {
       \\"errors\\": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. \\"mutationWithError\\": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -34050,6 +34207,7 @@ module ByDirective' = {
     \\"errors\\": option(array(t_mutationWithError_errors)),
   };
   type t = {. \\"mutationWithError\\": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -34201,6 +34359,7 @@ module Normal' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -34215,6 +34374,7 @@ module Normal' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -34353,6 +34513,7 @@ module ByConfig' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -34366,6 +34527,7 @@ module ByConfig' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -34503,6 +34665,7 @@ module ByDirective' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -34516,6 +34679,7 @@ module ByDirective' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -34668,6 +34832,7 @@ module MyQuery' = {
       \\"name\\": Js.Nullable.t(string),
     };
     type t = {. \\"pokemon\\": Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -34676,6 +34841,7 @@ module MyQuery' = {
     \\"name\\": option(string),
   };
   type t = {. \\"pokemon\\": option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let pokemon = {
@@ -34992,9 +35158,11 @@ module MyQuery' = {
       \\"int\\": int,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {. \\"variousScalars\\": scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -35082,10 +35250,12 @@ module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -35273,6 +35443,7 @@ module ExternalFragmentQuery {
   module Untitled1' = {
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -35281,6 +35452,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {. \\"variousScalars\\": Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       value => {
         let variousScalars = {
@@ -35355,6 +35527,7 @@ module InlineFragmentQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -35366,6 +35539,7 @@ module InlineFragmentQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -35570,6 +35744,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -35585,6 +35760,7 @@ module UnionExternalFragmentQuery {
       | \`Dog(DogFragment.t)
     ];
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       value => {
         let dogOrHuman = {
@@ -35878,6 +36054,7 @@ module MyQuery' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -35894,6 +36071,7 @@ module MyQuery' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -36744,6 +36922,7 @@ module MyQuery' = {
     };
     type t_simpleSubscription;
     type t = {. \\"simpleSubscription\\": t_simpleSubscription};
+    type t_variables = Js.Json.t;
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_simpleSubscription_Dog = {. \\"name\\": string};
@@ -36754,6 +36933,7 @@ module MyQuery' = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {. \\"simpleSubscription\\": t_simpleSubscription};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let simpleSubscription = {
@@ -36909,6 +37089,7 @@ module MyQuery' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -36925,6 +37106,7 @@ module MyQuery' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -37136,6 +37318,7 @@ module MyQuery2' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -37156,6 +37339,7 @@ module MyQuery2' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -37367,6 +37551,7 @@ module MyQuery3' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -37387,6 +37572,7 @@ module MyQuery3' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -37598,6 +37784,7 @@ module MyQuery4' = {
       \\"id\\": string,
     };
     type t = {. \\"variousScalars\\": t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
@@ -37618,6 +37805,7 @@ module MyQuery4' = {
     \\"id\\": string,
   };
   type t = {. \\"variousScalars\\": t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -37853,6 +38041,7 @@ module MyQuery' = {
       \\"inner\\": Js.Nullable.t(t_first_inner),
     };
     type t = {. \\"first\\": t_first};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {
@@ -37871,6 +38060,7 @@ module MyQuery' = {
     \\"inner\\": option(t_first_inner),
   };
   type t = {. \\"first\\": t_first};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let first = {
@@ -38051,6 +38241,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -38065,6 +38256,7 @@ module MyQuery' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -38203,6 +38395,7 @@ module MyQueryNoError' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -38217,6 +38410,7 @@ module MyQueryNoError' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -38372,6 +38566,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -38384,6 +38579,7 @@ module MyQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {. \\"dogOrHuman\\": t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let dogOrHuman = {
@@ -38534,6 +38730,7 @@ module MyQuery' = {
     type t_mutationForVariant_dogOrHuman;
     type t_mutationForVariant;
     type t = {. \\"mutationForVariant\\": t_mutationForVariant};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationForVariant_dog = {
@@ -38561,6 +38758,7 @@ module MyQuery' = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. \\"mutationForVariant\\": t_mutationForVariant};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
@@ -39205,6 +39403,7 @@ module MyQuery' = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -39212,6 +39411,7 @@ module MyQuery' = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -39547,6 +39747,7 @@ module MyQuery' = {
       nullableColor: Js.Nullable.t(Js.Json.t),
     };
     type t = {customFields: t_customFields};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_customFields = {
@@ -39556,6 +39757,7 @@ module MyQuery' = {
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -39699,9 +39901,11 @@ exports[`Records defaultObjectValueOnScalar.re 1`] = `
 module MyQuery' = {
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\";
   type t = {defaultObjectValueOnScalar: string};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -39958,6 +40162,7 @@ module RecordsQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -39967,6 +40172,7 @@ module RecordsQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -40130,6 +40336,7 @@ module ObjectsQuery' = {
       \\"nonNullableOfNonNullable\\": array(string),
     };
     type t = {. \\"lists\\": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -40140,6 +40347,7 @@ module ObjectsQuery' = {
     \\"nonNullableOfNonNullable\\": array(string),
   };
   type t = {. \\"lists\\": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -40589,6 +40797,7 @@ module MyQuery' = {
       l3: t_l3,
       l4: t_l4,
     };
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -40648,6 +40857,7 @@ module MyQuery' = {
     l3: t_l3,
     l4: t_l4,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -40908,6 +41118,7 @@ module MyQuery = {
 module MyQuery2' = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -40916,6 +41127,7 @@ module MyQuery2' = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -41035,6 +41247,7 @@ module MyQuery' = {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_lists = {
@@ -41044,6 +41257,7 @@ module MyQuery' = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -41663,6 +41877,7 @@ module MyQuery' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_value = {stringField: string};
@@ -41681,6 +41896,7 @@ module MyQuery' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -42093,6 +42309,7 @@ module MyQuery' = {
       second: t_second,
       let_: t_let,
     };
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {field: string};
@@ -42112,6 +42329,7 @@ module MyQuery' = {
     second: t_second,
     let_: t_let,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43067,6 +43285,7 @@ module Normal' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [
@@ -43083,6 +43302,7 @@ module Normal' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43231,6 +43451,7 @@ module ByConfig' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -43242,6 +43463,7 @@ module ByConfig' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43389,6 +43611,7 @@ module ByDirective' = {
       errors: Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {mutationWithError: t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield @ppxOmitFutureValue \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationWithError_errors_field = [ | \`FIRST | \`SECOND | \`THIRD];
@@ -43400,6 +43623,7 @@ module ByDirective' = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43571,6 +43795,7 @@ module Normal' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -43584,6 +43809,7 @@ module Normal' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43729,6 +43955,7 @@ module ByConfig' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -43741,6 +43968,7 @@ module ByConfig' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -43885,6 +44113,7 @@ module ByDirective' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman @ppxOmitFutureValue {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -43897,6 +44126,7 @@ module ByDirective' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -44057,6 +44287,7 @@ module MyQuery' = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_pokemon = {
@@ -44064,6 +44295,7 @@ module MyQuery' = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -44414,9 +44646,11 @@ module MyQuery' = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t = {variousScalars: scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -44510,10 +44744,12 @@ module OneFieldQuery' = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {nullableString: option(string)};
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -44707,6 +44943,7 @@ module ExternalFragmentQuery {
   module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -44715,6 +44952,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -44791,6 +45029,7 @@ module InlineFragmentQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -44802,6 +45041,7 @@ module InlineFragmentQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -45008,6 +45248,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -45023,6 +45264,7 @@ module UnionExternalFragmentQuery {
       | \`Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -45346,6 +45588,7 @@ module MyQuery' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -45361,6 +45604,7 @@ module MyQuery' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -46278,6 +46522,7 @@ module MyQuery' = {
     };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
+    type t_variables = Js.Json.t;
   };
   let query = \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_simpleSubscription_Dog = {name: string};
@@ -46288,6 +46533,7 @@ module MyQuery' = {
     | \`Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -46452,6 +46698,7 @@ module MyQuery' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\";
   type t_variousScalars = {
@@ -46467,6 +46714,7 @@ module MyQuery' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -46676,6 +46924,7 @@ module MyQuery2' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -46695,6 +46944,7 @@ module MyQuery2' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -46904,6 +47154,7 @@ module MyQuery3' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let { graphql } = require(\\\\\\"gatsby\\\\\\")\\";
@@ -46923,6 +47174,7 @@ module MyQuery3' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -47132,6 +47384,7 @@ module MyQuery4' = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   \\"let graphql = require(\\\\\\"gatsby\\\\\\")\\";
@@ -47151,6 +47404,7 @@ module MyQuery4' = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -47382,6 +47636,7 @@ module MyQuery' = {
       inner: Js.Nullable.t(t_first_inner),
     };
     type t = {first: t_first};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_first_inner_inner = {
@@ -47397,6 +47652,7 @@ module MyQuery' = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -47586,6 +47842,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -47599,6 +47856,7 @@ module MyQuery' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -47744,6 +48002,7 @@ module MyQueryNoError' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -47757,6 +48016,7 @@ module MyQueryNoError' = {
     | \`Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -47920,6 +48180,7 @@ module MyQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_dogOrHuman_Dog = {
@@ -47931,6 +48192,7 @@ module MyQuery' = {
     | \`Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -48083,6 +48345,7 @@ module MyQuery' = {
     type t_mutationForVariant_dogOrHuman;
     type t_mutationForVariant;
     type t = {mutationForVariant: t_mutationForVariant};
+    type t_variables = Js.Json.t;
   };
   let query = \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\";
   type t_mutationForVariant_dog = {
@@ -48108,6 +48371,7 @@ module MyQuery' = {
     | \`DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {

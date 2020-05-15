@@ -61,6 +61,7 @@ type input_object_field =
     });
 
 type arg_type_def =
+  | NoVariables
   | InputObject({
       name: option(string),
       fields: list(input_object_field),
