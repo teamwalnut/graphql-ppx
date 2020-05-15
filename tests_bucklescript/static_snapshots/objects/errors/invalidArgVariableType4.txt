@@ -1,0 +1,10 @@
+We've found a bug for you!
+  operations/errors/invalidArgVariableType4.re 10:14-18
+  
+   8 ┆ invalidArgValues(
+   9 ┆     custom: $arg
+  10 ┆     obj: $arg2
+  11 ┆     stringRequired: ""
+  12 ┆ )
+  
+  Invalid argument. Expected "InputObject" but received "Int".

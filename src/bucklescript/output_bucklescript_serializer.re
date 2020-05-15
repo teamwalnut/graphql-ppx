@@ -548,7 +548,7 @@ and generate_object_encoder =
           Obj.magic(
             {
               %e
-              do_obj_constructor(false);
+              do_obj_constructor(is_object);
             },
           ): Js.Json.t,
           [%e

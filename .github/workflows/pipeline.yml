@@ -12,7 +12,6 @@ jobs:
         os: [ubuntu-latest]
 
     container:
-      # https://github.com/baransu/docker-esy
       image: cichocinski/docker-esy:alpine3.8
 
     steps:
@@ -46,13 +45,14 @@ jobs:
       #     CI: true
 
       - name: test-bucklescript
+        env:
+          NODE_NO_WARNINGS: 1
+          CI: true
         run: |
           esy release-static
           cd tests_bucklescript
           npm ci --no-optional
           npm run test
-        env:
-          CI: true
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master

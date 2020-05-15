@@ -19,8 +19,8 @@
     "mode": "records",
     "schema": "../graphql_schema.json",
     "custom-fields": {
-      "DateTime": "GraphqlHelpers.DateTime",
-      "Color": "GraphqlHelpers.Color"
+      "DateTime": "DateTime",
+      "Color": "Color"
     }
   }
 }

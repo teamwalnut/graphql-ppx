@@ -16,7 +16,6 @@ module MyQuery = [%graphql
           name
           barkVolume
         }
-
         ...on Human {
           name
         }

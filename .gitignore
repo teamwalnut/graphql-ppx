@@ -15,4 +15,6 @@ yarn-error.log
 npm-debug.log
 /lib
 /build/
-.vscode
+*.cmi
+*.cmj
+*.cmt
