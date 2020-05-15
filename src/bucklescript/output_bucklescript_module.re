@@ -479,8 +479,6 @@ let generate_default_operation =
               ],
             ]
             : [],
-          config.definition
-            ? [[%stri let definition = (parse, query, serialize)]] : [],
           Output_bucklescript_docstrings.get_module(),
         ]),
       ]);

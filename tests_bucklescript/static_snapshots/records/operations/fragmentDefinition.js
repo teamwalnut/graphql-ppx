@@ -253,12 +253,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -268,7 +262,6 @@ var MyQuery$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -277,7 +270,6 @@ var MyQuery = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2,
   self: MyQuery$prime
 };
@@ -300,12 +292,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -315,7 +301,6 @@ var MyQuery2$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -324,7 +309,6 @@ var MyQuery2 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3,
   self: MyQuery2$prime
 };

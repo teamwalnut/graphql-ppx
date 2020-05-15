@@ -130,7 +130,6 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         records: false,
         inline: false,
         legacy: false,
-        definition: true,
         future_added_value: Ppx_config.future_added_value(),
       };
       switch (Validations.run_validators(config, document)) {
@@ -224,7 +223,6 @@ let () =
       },
       records: false,
       legacy: true,
-      definition: true,
       template_tag: None,
       template_tag_location: None,
       template_tag_import: None,

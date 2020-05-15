@@ -31,12 +31,6 @@ function makeVariables(query, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_query_82: 0,
   _graphql_query_75: 0,
@@ -50,7 +44,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -61,7 +54,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

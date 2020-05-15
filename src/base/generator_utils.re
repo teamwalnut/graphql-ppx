@@ -25,7 +25,6 @@ type output_config = {
   records: bool,
   inline: bool,
   legacy: bool,
-  definition: bool,
   future_added_value: bool,
 };
 

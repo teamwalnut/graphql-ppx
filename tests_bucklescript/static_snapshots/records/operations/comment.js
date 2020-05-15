@@ -106,12 +106,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_100: 0,
   _graphql_arg_95: 0,
@@ -130,7 +124,6 @@ var MyQuery$prime = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -145,7 +138,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

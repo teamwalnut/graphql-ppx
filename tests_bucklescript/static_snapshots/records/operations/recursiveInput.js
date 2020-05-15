@@ -59,12 +59,6 @@ function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_90: 0,
   _graphql_arg_85: 0,
@@ -81,7 +75,6 @@ var MyQuery$prime = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -94,7 +87,6 @@ var MyQuery = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

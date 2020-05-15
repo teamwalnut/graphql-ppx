@@ -81,12 +81,6 @@ function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, no
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_ListsInput_47: 0,
   graphql_module: 0
@@ -101,7 +95,6 @@ var MyQuery$prime = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -114,7 +107,6 @@ var MyQuery = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

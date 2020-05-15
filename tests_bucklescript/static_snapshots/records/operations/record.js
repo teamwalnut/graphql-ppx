@@ -29,12 +29,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -44,7 +38,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -53,7 +46,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -84,12 +76,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -99,7 +85,6 @@ var OneFieldQuery$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -108,7 +93,6 @@ var OneFieldQuery = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: OneFieldQuery$prime
 };
@@ -177,12 +161,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -192,7 +170,6 @@ var Untitled1$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -201,7 +178,6 @@ var Untitled1 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3,
   self: Untitled1$prime
 };
@@ -263,12 +239,6 @@ function serialize$4(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$4,
-  query$4,
-  serialize$4
-];
-
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -278,7 +248,6 @@ var InlineFragmentQuery$prime = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -287,7 +256,6 @@ var InlineFragmentQuery = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4,
   self: InlineFragmentQuery$prime
 };
@@ -365,12 +333,6 @@ function serialize$6(value) {
         };
 }
 
-var definition$4 = /* tuple */[
-  parse$6,
-  query$6,
-  serialize$6
-];
-
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -380,7 +342,6 @@ var Untitled1$prime$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
@@ -389,7 +350,6 @@ var Untitled1$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6,
   self: Untitled1$prime$1
 };

@@ -19,12 +19,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_filter_92: 0,
   _graphql_arg_140: 0,
@@ -36,7 +30,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -45,7 +38,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

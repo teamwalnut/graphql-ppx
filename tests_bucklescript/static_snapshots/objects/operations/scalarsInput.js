@@ -65,12 +65,6 @@ function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt,
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_VariousScalarsInput_47: 0,
   graphql_module: 0
@@ -85,7 +79,6 @@ var MyQuery$prime = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -98,7 +91,6 @@ var MyQuery = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };

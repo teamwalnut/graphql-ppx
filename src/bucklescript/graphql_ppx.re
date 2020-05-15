@@ -54,7 +54,6 @@ let fmt_lex_err = err =>
   );
 
 let global_records = () => Ppx_config.records();
-let global_definition = () => Ppx_config.definition();
 let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
@@ -239,7 +238,6 @@ let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
 let extract_future_added_value_from_config =
   extract_bool_from_config("future_added_value");
-let extract_definition_from_config = extract_bool_from_config("definition");
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
 
@@ -248,7 +246,6 @@ type query_config = {
   records: option(bool),
   objects: option(bool),
   inline: option(bool),
-  definition: option(bool),
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
@@ -262,7 +259,6 @@ let get_query_config = fields => {
     records: extract_records_from_config(fields),
     objects: extract_objects_from_config(fields),
     inline: extract_inline_from_config(fields),
-    definition: extract_definition_from_config(fields),
     template_tag: extract_template_tag_from_config(fields),
     template_tag_import: extract_template_tag_import_from_config(fields),
     template_tag_location: extract_template_tag_location_from_config(fields),
@@ -275,7 +271,6 @@ let empty_query_config = {
   records: None,
   objects: None,
   inline: None,
-  definition: None,
   tagged_template: None,
   template_tag: None,
   template_tag_location: None,
@@ -393,11 +388,6 @@ let rewrite_query =
           switch (query_config.future_added_value) {
           | Some(value) => value
           | None => Ppx_config.future_added_value()
-          },
-        definition:
-          switch (query_config.definition) {
-          | Some(value) => value
-          | None => global_definition()
           },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
@@ -689,14 +679,6 @@ let args = [
         ),
     ),
     "Legacy mode (make, makeWithVariables, and objects by default)",
-  ),
-  (
-    "-no-definition",
-    Arg.Unit(
-      () =>
-        Ppx_config.update_config(current => {...current, definition: false}),
-    ),
-    "Legacy mode (make and makeWithVariables)",
   ),
   (
     "-template-tag",

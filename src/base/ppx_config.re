@@ -12,7 +12,6 @@ type config = {
   raise_error_with_loc: 'a. (Source_pos.ast_location, string) => 'a,
   records: bool,
   legacy: bool,
-  definition: bool,
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
@@ -40,7 +39,6 @@ let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 
 let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
-let definition = () => (config_ref^ |> Option.unsafe_unwrap).definition;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
 let template_tag_import = () =>

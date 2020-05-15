@@ -63,7 +63,6 @@ let defaultConfig =
     template_tag: None,
     template_tag_location: None,
     template_tag_import: None,
-    definition: true,
     custom_fields: Hashtbl.create(0),
     future_added_value: true,
   };
@@ -168,10 +167,6 @@ let read_config = () => {
              ),
            )
          }
-       });
-    ppxConfig
-    |> JsonHelper.mapBool("definition", definition => {
-         Ppx_config.update_config(current => {...current, definition})
        });
     ppxConfig
     |> JsonHelper.mapString("template-tag", template_tag => {
