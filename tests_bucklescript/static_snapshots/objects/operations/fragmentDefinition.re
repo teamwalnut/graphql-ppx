@@ -302,6 +302,7 @@ module MyQuery' = {
       "l3": t_l3,
       "l4": t_l4,
     };
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -365,6 +366,7 @@ module MyQuery' = {
     "l3": t_l3,
     "l4": t_l4,
   };
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let l4 = {
@@ -604,6 +606,7 @@ module MyQuery = {
 module MyQuery2' = {
   module Raw = {
     type t = {. "lists": Fragments.ListFragment.Raw.t};
+    type t_variables = Js.Json.t;
   };
   let query =
     (
@@ -612,6 +615,7 @@ module MyQuery2' = {
     )
     ++ Fragments.ListFragment.query;
   type t = {. "lists": Fragments.ListFragment.t};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {

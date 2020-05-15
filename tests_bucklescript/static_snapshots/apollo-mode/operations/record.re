@@ -35,9 +35,11 @@ module MyQuery' = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nvariousScalars  {\n__typename  \nstring  \nint  \n}\n\n}\n";
   type t = {variousScalars: scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -142,6 +144,7 @@ module OneFieldQuery' = {
       nullableString: Js.Nullable.t(string),
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nvariousScalars  {\n__typename  \nnullableString  \n}\n\n}\n";
   type t_variousScalars = {
@@ -149,6 +152,7 @@ module OneFieldQuery' = {
     nullableString: option(string),
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -360,6 +364,7 @@ module ExternalFragmentQuery {
   module Untitled1' = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -368,6 +373,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -444,6 +450,7 @@ module InlineFragmentQuery' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -456,6 +463,7 @@ module InlineFragmentQuery' = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -680,6 +688,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -695,6 +704,7 @@ module UnionExternalFragmentQuery {
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {

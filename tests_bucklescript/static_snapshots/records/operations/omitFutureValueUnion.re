@@ -29,6 +29,7 @@ module Normal' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -42,6 +43,7 @@ module Normal' = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -187,6 +189,7 @@ module ByConfig' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -199,6 +202,7 @@ module ByConfig' = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -343,6 +347,7 @@ module ByDirective' = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman @ppxOmitFutureValue {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -355,6 +360,7 @@ module ByDirective' = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
