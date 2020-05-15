@@ -156,19 +156,11 @@ var Another = {
   self: Another$prime
 };
 
-var Fragments$prime = {
-  ListFragment$prime: ListFragment$prime,
-  ListFragment: ListFragment,
-  Another$prime: Another$prime,
-  Another: Another
-};
-
 var Fragments = {
   ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
   Another$prime: Another$prime,
-  Another: Another,
-  self: Fragments$prime
+  Another: Another
 };
 
 var Raw$2 = { };
@@ -327,7 +319,6 @@ var MyQuery2 = {
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
-exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;

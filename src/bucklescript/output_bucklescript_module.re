@@ -10,6 +10,12 @@ open Ast_helper;
 open Extract_type_definitions;
 open Output_bucklescript_utils;
 
+type operation_type = Graphql_ast.operation_type;
+
+type definition =
+  | Fragment
+  | Operation(operation_type);
+
 module StringSet = Set.Make(String);
 module VariableFinderImpl = {
   type t = ref(StringSet.t);
@@ -311,15 +317,22 @@ let wrap_module = (name: string, contents) => {
   };
 };
 
-let wrap_query_module = (name: string, contents) => {
-  [
-    wrap_module(name ++ "'", contents),
-    Ast_helper.(
-      wrap_module(
-        name,
-        [
-          Str.include_(
-            Incl.mk(
+let wrap_query_module = (definition, name: string, contents, config) => {
+  let inner_result = [
+    Str.include_(
+      Incl.mk(
+        Mod.ident({
+          txt:
+            Longident.Lident(Generator_utils.capitalize_ascii(name ++ "'")),
+          loc: Location.none,
+        }),
+      ),
+    ),
+    Str.modtype(
+      Mtd.mk(
+        ~typ=
+          Mty.mk(
+            Pmty_typeof(
               Mod.ident({
                 txt:
                   Longident.Lident(
@@ -329,26 +342,49 @@ let wrap_query_module = (name: string, contents) => {
               }),
             ),
           ),
-          Str.modtype(
-            Mtd.mk(
-              ~typ=
-                Mty.mk(
-                  Pmty_typeof(
-                    Mod.ident({
-                      txt:
-                        Longident.Lident(
-                          Generator_utils.capitalize_ascii(name ++ "'"),
-                        ),
-                      loc: Location.none,
-                    }),
-                  ),
-                ),
-              {txt: "query_type", loc: Location.none},
-            ),
-          ),
-          [%stri
-            let self: module query_type = [%e
-              Exp.pack(
+        {txt: "query_type", loc: Location.none},
+      ),
+    ),
+    [%stri
+      let self: module query_type = [%e
+        Exp.pack(
+          Mod.ident({
+            txt:
+              Longident.Lident(
+                Generator_utils.capitalize_ascii(name ++ "'"),
+              ),
+            loc: Location.none,
+          }),
+        )
+      ]
+    ],
+  ];
+
+  let funct =
+    switch (config.extend) {
+    | Some(funct) => Some(funct)
+    | None =>
+      switch (definition) {
+      | Fragment => Ppx_config.extend_fragment()
+      | Operation(Query) => Ppx_config.extend_query()
+      | Operation(Mutation) => Ppx_config.extend_mutation()
+      | Operation(Subscription) => Ppx_config.extend_subscription()
+      }
+    };
+
+  let inner_result =
+    switch (funct) {
+    | Some(funct) =>
+      List.append(
+        inner_result,
+        [
+          Str.include_(
+            Incl.mk(
+              Mod.apply(
+                Mod.ident({
+                  txt: Longident.Lident(funct),
+                  loc: Location.none,
+                }),
                 Mod.ident({
                   txt:
                     Longident.Lident(
@@ -356,12 +392,17 @@ let wrap_query_module = (name: string, contents) => {
                     ),
                   loc: Location.none,
                 }),
-              )
-            ]
-          ],
+              ),
+            ),
+          ),
         ],
       )
-    ),
+    | None => inner_result
+    };
+
+  [
+    wrap_module(name ++ "'", contents),
+    Ast_helper.(wrap_module(name, inner_result)),
   ];
 };
 
@@ -489,7 +530,7 @@ let generate_default_operation =
     | {item: {o_name: Some({item: name})}} => Some(name)
     | _ => None
     };
-  (name, contents);
+  (Operation(operation.item.o_type), name, contents);
 };
 
 let generate_fragment_module =
@@ -610,10 +651,10 @@ let generate_fragment_module =
       );
     };
 
-  (Some(Generator_utils.capitalize_ascii(name)), contents);
+  (Fragment, Some(Generator_utils.capitalize_ascii(name)), contents);
 };
 
-let generate_operation = config =>
+let generate_definition = config =>
   fun
   | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
@@ -631,39 +672,49 @@ let generate_modules = (config, module_name, operations) => {
   switch (operations) {
   | [] => []
   | [operation] =>
-    switch (generate_operation(config, operation)) {
-    | (Some(name), contents) =>
+    switch (generate_definition(config, operation)) {
+    | (definition, Some(name), contents) =>
       config.inline
         ? [contents]
         : [
           wrap_query_module(
+            definition,
             switch (module_name) {
             | Some(name) => name
             | None => name
             },
             contents,
+            config,
           ),
         ]
-    | (None, contents) =>
+    | (definition, None, contents) =>
       switch (module_name) {
-      | Some(name) => [wrap_query_module(name, contents)]
+      | Some(name) => [
+          wrap_query_module(definition, name, contents, config),
+        ]
       | None => [contents]
       }
     }
   | operations =>
     let contents =
       operations
-      |> List.map(generate_operation(config))
-      |> List.mapi((i, (name, contents)) =>
+      |> List.map(generate_definition(config))
+      |> List.mapi((i, (definition, name, contents)) =>
            switch (name) {
-           | Some(name) => wrap_query_module(name, contents)
+           | Some(name) =>
+             wrap_query_module(definition, name, contents, config)
            | None =>
-             wrap_query_module("Untitled" ++ string_of_int(i), contents)
+             wrap_query_module(
+               definition,
+               "Untitled" ++ string_of_int(i),
+               contents,
+               config,
+             )
            }
          );
     switch (module_name) {
     | Some(module_name) => [
-        wrap_query_module(module_name, List.concat(contents)),
+        [wrap_module(module_name, List.concat(contents))],
       ]
     | None => contents
     };

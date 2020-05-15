@@ -1608,6 +1608,227 @@ module ObjectsQuery = {
 "
 `;
 
+exports[`Apollo extensions.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module type GraphQLQuery = {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t;
+  type t_variables;
+
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+};
+
+module ExtendQuery = (M: GraphQLQuery) => {
+  let use = () => ();
+};
+module Bla' = {
+  module Raw = {
+    type t_lists = {
+      __typename: string,
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+    type t = {lists: t_lists};
+  };
+  let query = \\"query Bla  {\\\\nlists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_lists = {
+    __typename: string,
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  type t = {lists: t_lists};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_lists).__typename;
+                value;
+              },
+              nullableOfNullable: {
+                let value = (value: Raw.t_lists).nullableOfNullable;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (Js.toOption(value)) {
+                         | Some(value) => Some(value)
+                         | None => None
+                         }
+                       ),
+                  )
+                | None => None
+                };
+              },
+              nullableOfNonNullable: {
+                let value = (value: Raw.t_lists).nullableOfNonNullable;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value |> Js.Array.map(value => value))
+                | None => None
+                };
+              },
+              nonNullableOfNullable: {
+                let value = (value: Raw.t_lists).nonNullableOfNullable;
+                value
+                |> Js.Array.map(value =>
+                     switch (Js.toOption(value)) {
+                     | Some(value) => Some(value)
+                     | None => None
+                     }
+                   );
+              },
+              nonNullableOfNonNullable: {
+                let value = (value: Raw.t_lists).nonNullableOfNonNullable;
+                value |> Js.Array.map(value => value);
+              },
+            }: t_lists
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          (
+            {
+              let nonNullableOfNonNullable = {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+                value |> Js.Array.map(value => value);
+              }
+              and nonNullableOfNullable = {
+                let value = (value: t_lists).nonNullableOfNullable;
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) => Js.Nullable.return(value)
+                     | None => Js.Nullable.null
+                     }
+                   );
+              }
+              and nullableOfNonNullable = {
+                let value = (value: t_lists).nullableOfNonNullable;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(value |> Js.Array.map(value => value))
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableOfNullable = {
+                let value = (value: t_lists).nullableOfNullable;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_lists).__typename;
+                value;
+              };
+              {
+                __typename,
+                nullableOfNullable,
+                nullableOfNonNullable,
+                nonNullableOfNullable,
+                nonNullableOfNonNullable,
+              };
+            }: Raw.t_lists
+          );
+        };
+        {lists: lists};
+      }: Raw.t
+    );
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module Bla = {
+  include Bla';
+  module type query_type = (module type of Bla');
+  let self: module query_type = (module Bla');
+  include ExtendQuery(Bla');
+};
+"
+`;
+
 exports[`Apollo fragmentDefinition.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -1677,7 +1898,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -1918,11 +2139,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -6347,7 +6563,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -6538,11 +6754,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -6679,7 +6890,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -6889,11 +7100,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -11113,6 +11319,8 @@ exports.ObjectsQuery = ObjectsQuery;
 "
 `;
 
+exports[`Compilation (Objects) extensions.re 1`] = `""`;
+
 exports[`Compilation (Objects) fragmentDefinition.re 1`] = `
 "// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
 'use strict';
@@ -11272,19 +11480,11 @@ var Another = {
   self: Another$prime
 };
 
-var Fragments$prime = {
-  ListFragment$prime: ListFragment$prime,
-  ListFragment: ListFragment,
-  Another$prime: Another$prime,
-  Another: Another
-};
-
 var Fragments = {
   ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
   Another$prime: Another$prime,
-  Another: Another,
-  self: Fragments$prime
+  Another: Another
 };
 
 var Raw$2 = { };
@@ -11443,7 +11643,6 @@ var MyQuery2 = {
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
-exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
@@ -13367,19 +13566,11 @@ var Untitled1 = {
   self: Untitled1$prime
 };
 
-var ExternalFragmentQuery$prime = {
-  Fragment$prime: Fragment$prime,
-  Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1
-};
-
 var ExternalFragmentQuery = {
   Fragment$prime: Fragment$prime,
   Fragment: Fragment,
   Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1,
-  self: ExternalFragmentQuery$prime
+  Untitled1: Untitled1
 };
 
 var Raw$4 = { };
@@ -13547,30 +13738,20 @@ var Untitled1$1 = {
   self: Untitled1$prime$1
 };
 
-var UnionExternalFragmentQuery$prime = {
+var UnionExternalFragmentQuery = {
   DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
   Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
-  DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
-  Untitled1: Untitled1$1,
-  self: UnionExternalFragmentQuery$prime
-};
-
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
-exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
-exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -15963,6 +16144,8 @@ exports.ObjectsQuery = ObjectsQuery;
 "
 `;
 
+exports[`Compilation (Records) extensions.re 1`] = `""`;
+
 exports[`Compilation (Records) fragmentDefinition.re 1`] = `
 "// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
 'use strict';
@@ -16121,19 +16304,11 @@ var Another = {
   self: Another$prime
 };
 
-var Fragments$prime = {
-  ListFragment$prime: ListFragment$prime,
-  ListFragment: ListFragment,
-  Another$prime: Another$prime,
-  Another: Another
-};
-
 var Fragments = {
   ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
   Another$prime: Another$prime,
-  Another: Another,
-  self: Fragments$prime
+  Another: Another
 };
 
 var Raw$2 = { };
@@ -16280,7 +16455,6 @@ var MyQuery2 = {
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
-exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
@@ -18202,19 +18376,11 @@ var Untitled1 = {
   self: Untitled1$prime
 };
 
-var ExternalFragmentQuery$prime = {
-  Fragment$prime: Fragment$prime,
-  Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1
-};
-
 var ExternalFragmentQuery = {
   Fragment$prime: Fragment$prime,
   Fragment: Fragment,
   Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1,
-  self: ExternalFragmentQuery$prime
+  Untitled1: Untitled1
 };
 
 var Raw$4 = { };
@@ -18374,30 +18540,20 @@ var Untitled1$1 = {
   self: Untitled1$prime$1
 };
 
-var UnionExternalFragmentQuery$prime = {
+var UnionExternalFragmentQuery = {
   DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
   Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
-  DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
-  Untitled1: Untitled1$1,
-  self: UnionExternalFragmentQuery$prime
-};
-
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
-exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
-exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -21899,6 +22055,218 @@ module ObjectsQuery = {
 "
 `;
 
+exports[`Legacy extensions.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module type GraphQLQuery = {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t;
+  type t_variables;
+
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+};
+
+module ExtendQuery = (M: GraphQLQuery) => {
+  let use = () => ();
+};
+module Bla' = {
+  module Raw = {
+    type t_lists = {
+      .
+      \\"nullableOfNullable\\": Js.Nullable.t(array(Js.Nullable.t(string))),
+      \\"nullableOfNonNullable\\": Js.Nullable.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Nullable.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
+    type t = {. \\"lists\\": t_lists};
+  };
+  let query = \\"query Bla  {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_lists = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"nullableOfNonNullable\\": option(array(string)),
+    \\"nonNullableOfNullable\\": array(option(string)),
+    \\"nonNullableOfNonNullable\\": array(string),
+  };
+  type t = {. \\"lists\\": t_lists};
+  let parse: Raw.t => t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        };
+        {
+          \\"nullableOfNullable\\": nullableOfNullable,
+          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+        };
+      };
+      {\\"lists\\": lists};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {
+          \\"nullableOfNullable\\": nullableOfNullable,
+          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+        };
+      };
+      {\\"lists\\": lists};
+    };
+  let make = () => {
+    \\"query\\": query,
+    \\"variables\\": Js.Json.null,
+    \\"parse\\": parse,
+  };
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module Bla = {
+  include Bla';
+  module type query_type = (module type of Bla');
+  let self: module query_type = (module Bla');
+  include ExtendQuery(Bla');
+};
+"
+`;
+
 exports[`Legacy fragmentDefinition.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -21968,7 +22336,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -22191,11 +22559,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -26087,7 +26450,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -26270,11 +26633,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -26406,7 +26764,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -26606,11 +26964,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -31223,6 +31576,213 @@ module ObjectsQuery = {
 "
 `;
 
+exports[`Objects extensions.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module type GraphQLQuery = {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t;
+  type t_variables;
+
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+};
+
+module ExtendQuery = (M: GraphQLQuery) => {
+  let use = () => ();
+};
+module Bla' = {
+  module Raw = {
+    type t_lists = {
+      .
+      \\"nullableOfNullable\\": Js.Nullable.t(array(Js.Nullable.t(string))),
+      \\"nullableOfNonNullable\\": Js.Nullable.t(array(string)),
+      \\"nonNullableOfNullable\\": array(Js.Nullable.t(string)),
+      \\"nonNullableOfNonNullable\\": array(string),
+    };
+    type t = {. \\"lists\\": t_lists};
+  };
+  let query = \\"query Bla  {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_lists = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"nullableOfNonNullable\\": option(array(string)),
+    \\"nonNullableOfNullable\\": array(option(string)),
+    \\"nonNullableOfNonNullable\\": array(string),
+  };
+  type t = {. \\"lists\\": t_lists};
+  let parse: Raw.t => t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        };
+        {
+          \\"nullableOfNullable\\": nullableOfNullable,
+          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+        };
+      };
+      {\\"lists\\": lists};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {
+          \\"nullableOfNullable\\": nullableOfNullable,
+          \\"nullableOfNonNullable\\": nullableOfNonNullable,
+          \\"nonNullableOfNullable\\": nonNullableOfNullable,
+          \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
+        };
+      };
+      {\\"lists\\": lists};
+    };
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module Bla = {
+  include Bla';
+  module type query_type = (module type of Bla');
+  let self: module query_type = (module Bla');
+  include ExtendQuery(Bla');
+};
+"
+`;
+
 exports[`Objects fragmentDefinition.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -31292,7 +31852,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -31515,11 +32075,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -35256,7 +35811,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -35434,11 +35989,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -35565,7 +36115,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -35760,11 +36310,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -40390,6 +40935,216 @@ module ObjectsQuery = {
 "
 `;
 
+exports[`Records extensions.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module type GraphQLQuery = {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t;
+  type t_variables;
+
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+};
+
+module ExtendQuery = (M: GraphQLQuery) => {
+  let use = () => ();
+};
+module Bla' = {
+  module Raw = {
+    type t_lists = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+    type t = {lists: t_lists};
+  };
+  let query = \\"query Bla  {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\";
+  type t_lists = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  type t = {lists: t_lists};
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+          (
+            {
+              nullableOfNullable: {
+                let value = (value: Raw.t_lists).nullableOfNullable;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (Js.toOption(value)) {
+                         | Some(value) => Some(value)
+                         | None => None
+                         }
+                       ),
+                  )
+                | None => None
+                };
+              },
+              nullableOfNonNullable: {
+                let value = (value: Raw.t_lists).nullableOfNonNullable;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value |> Js.Array.map(value => value))
+                | None => None
+                };
+              },
+              nonNullableOfNullable: {
+                let value = (value: Raw.t_lists).nonNullableOfNullable;
+                value
+                |> Js.Array.map(value =>
+                     switch (Js.toOption(value)) {
+                     | Some(value) => Some(value)
+                     | None => None
+                     }
+                   );
+              },
+              nonNullableOfNonNullable: {
+                let value = (value: Raw.t_lists).nonNullableOfNonNullable;
+                value |> Js.Array.map(value => value);
+              },
+            }: t_lists
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          (
+            {
+              let nonNullableOfNonNullable = {
+                let value = (value: t_lists).nonNullableOfNonNullable;
+                value |> Js.Array.map(value => value);
+              }
+              and nonNullableOfNullable = {
+                let value = (value: t_lists).nonNullableOfNullable;
+                value
+                |> Js.Array.map(value =>
+                     switch (value) {
+                     | Some(value) => Js.Nullable.return(value)
+                     | None => Js.Nullable.null
+                     }
+                   );
+              }
+              and nullableOfNonNullable = {
+                let value = (value: t_lists).nullableOfNonNullable;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(value |> Js.Array.map(value => value))
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableOfNullable = {
+                let value = (value: t_lists).nullableOfNullable;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableOfNullable,
+                nullableOfNonNullable,
+                nonNullableOfNullable,
+                nonNullableOfNonNullable,
+              };
+            }: Raw.t_lists
+          );
+        };
+        {lists: lists};
+      }: Raw.t
+    );
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- GraphQL PPX Module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  // This is the stringified representation of your query, which gets sent to the server.
+  let query: string;
+
+  // This is the main type of the result you will get back.
+  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  type t;
+
+  // This function turns your raw result from the server into the reason/ocaml representation of that result.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let parse: Raw.t => t;
+
+  // This function will prepare your data for sending it back to the server.
+  // Depending on your graphql client library, this process should happen automatically for you.
+  let serialize: t => Raw.t;
+
+  // The definition tuple is primarily used to interact with client libraries.
+  // The types are equivalent to: (parse, query, serialize).
+  // Your client library will use these values to provide the properly parsed / serialized data for you.
+  let definition: (
+    Raw.t => t,
+    string,
+    t => Raw.t
+  );
+
+  // This is the representation of your raw result coming from the server.
+  // It should not be necessary to access the types inside for normal use cases.
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module Bla = {
+  include Bla';
+  module type query_type = (module type of Bla');
+  let self: module query_type = (module Bla');
+  include ExtendQuery(Bla');
+};
+"
+`;
+
 exports[`Records fragmentDefinition.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -40459,7 +41214,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -40676,11 +41431,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -44705,7 +45455,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -44886,11 +45636,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -45018,7 +45763,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -45218,11 +45963,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
