@@ -79,7 +79,6 @@ module MyQuery' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -174,7 +173,6 @@ module OneFieldQuery' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -357,7 +355,6 @@ module ExternalFragmentQuery {
       "variables": Js.Json.null,
       "parse": parse,
     };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -495,7 +492,6 @@ module InlineFragmentQuery' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -696,7 +692,6 @@ module UnionExternalFragmentQuery {
       "variables": Js.Json.null,
       "parse": parse,
     };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

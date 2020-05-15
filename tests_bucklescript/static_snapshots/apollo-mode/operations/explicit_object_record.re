@@ -151,7 +151,6 @@ module RecordsQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -332,7 +331,6 @@ module ObjectsQuery' = {
       };
       {"lists": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -204,7 +204,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -444,7 +443,6 @@ module MyQuery2' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -684,7 +682,6 @@ module MyQuery3' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -924,7 +921,6 @@ module MyQuery4' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

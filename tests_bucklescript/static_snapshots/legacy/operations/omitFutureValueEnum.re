@@ -120,7 +120,6 @@ module Normal' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -266,7 +265,6 @@ module ByConfig' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -412,7 +410,6 @@ module ByDirective' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

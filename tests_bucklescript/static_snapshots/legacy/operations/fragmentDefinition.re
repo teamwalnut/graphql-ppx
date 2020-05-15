@@ -564,7 +564,6 @@ module MyQuery' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -644,7 +643,6 @@ module MyQuery2' = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -157,7 +157,6 @@ module Normal' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -340,7 +339,6 @@ module ByConfig' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -523,7 +521,6 @@ module ByDirective' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

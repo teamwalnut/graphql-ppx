@@ -219,7 +219,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:

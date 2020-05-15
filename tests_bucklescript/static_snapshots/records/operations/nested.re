@@ -288,7 +288,6 @@ module MyQuery' = {
         {first, second, let_};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

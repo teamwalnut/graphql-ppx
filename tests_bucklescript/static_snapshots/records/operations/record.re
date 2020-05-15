@@ -79,7 +79,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -175,7 +174,6 @@ module OneFieldQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -356,7 +354,6 @@ module ExternalFragmentQuery {
           {variousScalars: variousScalars};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -490,7 +487,6 @@ module InlineFragmentQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -691,7 +687,6 @@ module UnionExternalFragmentQuery {
           {dogOrHuman: dogOrHuman};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

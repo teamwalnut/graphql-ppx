@@ -136,7 +136,6 @@ module MyQuery' = {
         nonNullableOfNonNullable,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_219;
     /**Argument **arg** on field **listsInput** has the following graphql type:

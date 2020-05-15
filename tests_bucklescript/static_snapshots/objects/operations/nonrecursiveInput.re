@@ -214,7 +214,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -498,7 +497,6 @@ module MyQuery2' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;

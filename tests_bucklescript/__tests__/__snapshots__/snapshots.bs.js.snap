@@ -50,7 +50,6 @@ module MyQuery' = {
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_query_82;
     /**Variable **$query** has the following graphql type:
@@ -337,7 +336,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -524,7 +522,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -690,7 +687,6 @@ module MyQuery' = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_opt_119;
     /**Variable **$opt** has the following graphql type:
@@ -925,7 +921,6 @@ module MyQuery' = {
         {customFields: customFields};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1020,7 +1015,6 @@ module MyQuery' = {
         {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -1149,7 +1143,6 @@ module MyQuery' = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -1385,7 +1378,6 @@ module RecordsQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1566,7 +1558,6 @@ module ObjectsQuery' = {
       };
       {\\"lists\\": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2259,7 +2250,6 @@ module MyQuery' = {
         {l1, l2, l3, l4};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2337,7 +2327,6 @@ module MyQuery2' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2564,7 +2553,6 @@ module MyQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2754,7 +2742,6 @@ module MyQuery' = {
         nonNullableOfNonNullable,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_219;
     /**Argument **arg** on field **listsInput** has the following graphql type:
@@ -2963,7 +2950,6 @@ module MyQuery' = {
     nonNullableOfNullable,
     nonNullableOfNonNullable,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -3261,7 +3247,6 @@ module MyQuery' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3362,7 +3347,6 @@ module MyQuery' = {
     inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3460,7 +3444,6 @@ module MyQuery' = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3930,7 +3913,6 @@ module MyQuery' = {
         {first, second, let_};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4203,7 +4185,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -4519,7 +4500,6 @@ module MyQuery2' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_240;
     /**Variable **$arg** has the following graphql type:
@@ -4788,7 +4768,6 @@ module Normal' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4971,7 +4950,6 @@ module ByConfig' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5154,7 +5132,6 @@ module ByDirective' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5355,7 +5332,6 @@ module Normal' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5532,7 +5508,6 @@ module ByConfig' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5709,7 +5684,6 @@ module ByDirective' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5859,7 +5833,6 @@ module MyQuery' = {
         {pokemon: pokemon};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -6049,7 +6022,6 @@ module MyQuery' = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -6219,7 +6191,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6329,7 +6300,6 @@ module OneFieldQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6520,7 +6490,6 @@ module ExternalFragmentQuery {
           {variousScalars: variousScalars};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -6663,7 +6632,6 @@ module InlineFragmentQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6874,7 +6842,6 @@ module UnionExternalFragmentQuery {
           {dogOrHuman: dogOrHuman};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -7049,7 +7016,6 @@ module MyQuery' = {
     inner,
     enum,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:
@@ -7338,7 +7304,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -7543,7 +7508,6 @@ module MyQuery' = {
         id,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
@@ -7776,7 +7740,6 @@ module MyQuery' = {
     nullableID,
     id,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_93;
     /**Variable **$arg** has the following graphql type:
@@ -8050,7 +8013,6 @@ module MyQuery' = {
     inp => {var: (a => a)((inp: t_variables).var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8246,7 +8208,6 @@ module MyQuery' = {
         {simpleSubscription: simpleSubscription};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8504,7 +8465,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8744,7 +8704,6 @@ module MyQuery2' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8984,7 +8943,6 @@ module MyQuery3' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9224,7 +9182,6 @@ module MyQuery4' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9431,7 +9388,6 @@ module MyQuery' = {
         {first: first};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9632,7 +9588,6 @@ module MyQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9811,7 +9766,6 @@ module MyQueryNoError' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9970,7 +9924,6 @@ module MyQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10274,7 +10227,6 @@ module MyQuery' = {
         {mutationForVariant: mutationForVariant};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10358,12 +10310,6 @@ function makeVariables(query, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10375,7 +10321,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10386,7 +10331,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10505,12 +10449,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_NonrecursiveInput_49: 0,
   graphql_module: 0
@@ -10527,7 +10465,6 @@ var MyQuery$prime = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10542,7 +10479,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10613,12 +10549,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query,
-  serialize$2
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10628,7 +10558,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10637,7 +10566,6 @@ var MyQuery = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10701,12 +10629,6 @@ function makeVariables(opt, req, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10718,7 +10640,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10729,7 +10650,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10844,12 +10764,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query,
-  serialize$2
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10859,7 +10773,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10868,7 +10781,6 @@ var MyQuery = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10902,12 +10814,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10917,7 +10823,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10926,7 +10831,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -10973,12 +10877,6 @@ function makeVariables(arg, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_SampleField_47: 0,
   graphql_module: 0
@@ -10991,7 +10889,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11002,7 +10899,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -11091,12 +10987,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11106,7 +10996,6 @@ var RecordsQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11115,7 +11004,6 @@ var RecordsQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: RecordsQuery$prime
 };
@@ -11196,12 +11084,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -11211,7 +11093,6 @@ var ObjectsQuery$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -11220,7 +11101,6 @@ var ObjectsQuery = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ObjectsQuery$prime
 };
@@ -11502,12 +11382,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -11517,7 +11391,6 @@ var MyQuery$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -11526,7 +11399,6 @@ var MyQuery = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2,
   self: MyQuery$prime
 };
@@ -11549,12 +11421,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -11564,7 +11430,6 @@ var MyQuery2$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -11573,7 +11438,6 @@ var MyQuery2 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3,
   self: MyQuery2$prime
 };
@@ -11676,12 +11540,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11691,7 +11549,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11700,7 +11557,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -11783,12 +11639,6 @@ function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfN
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11800,7 +11650,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11811,7 +11660,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -11906,12 +11754,6 @@ function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, no
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_ListsInput_47: 0,
   graphql_module: 0
@@ -11926,7 +11768,6 @@ var MyQuery$prime = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11939,7 +11780,6 @@ var MyQuery = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12028,12 +11868,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12043,7 +11877,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12052,7 +11885,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12096,12 +11928,6 @@ function makeVariables(required, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12113,7 +11939,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12124,7 +11949,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12168,12 +11992,6 @@ function makeVariables(required, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12185,7 +12003,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12196,7 +12013,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12348,12 +12164,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12363,7 +12173,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12372,7 +12181,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12491,12 +12299,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_NonrecursiveInput_49: 0,
   graphql_module: 0
@@ -12513,7 +12315,6 @@ var MyQuery$prime = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12528,7 +12329,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -12642,12 +12442,6 @@ function makeInputObjectEmbeddedInput$1(field, param) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   _graphql_NonrecursiveInput_169: 0,
   _graphql_NonrecursiveInput_196: 0,
@@ -12665,7 +12459,6 @@ var MyQuery2$prime = {
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -12680,7 +12473,6 @@ var MyQuery2 = {
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQuery2$prime
 };
@@ -12761,12 +12553,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12776,7 +12562,6 @@ var Normal$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12785,7 +12570,6 @@ var Normal = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: Normal$prime
 };
@@ -12847,12 +12631,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -12862,7 +12640,6 @@ var ByConfig$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -12871,7 +12648,6 @@ var ByConfig = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ByConfig$prime
 };
@@ -12933,12 +12709,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -12948,7 +12718,6 @@ var ByDirective$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -12957,7 +12726,6 @@ var ByDirective = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: ByDirective$prime
 };
@@ -13046,12 +12814,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13061,7 +12823,6 @@ var Normal$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13070,7 +12831,6 @@ var Normal = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: Normal$prime
 };
@@ -13135,12 +12895,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -13150,7 +12904,6 @@ var ByConfig$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -13159,7 +12912,6 @@ var ByConfig = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ByConfig$prime
 };
@@ -13224,12 +12976,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -13239,7 +12985,6 @@ var ByDirective$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -13248,7 +12993,6 @@ var ByDirective = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: ByDirective$prime
 };
@@ -13312,12 +13056,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13327,7 +13065,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13336,7 +13073,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -13412,12 +13148,6 @@ function makeVariables(id, name, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13429,7 +13159,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13440,7 +13169,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -13484,12 +13212,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13499,7 +13221,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13508,7 +13229,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -13539,12 +13259,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -13554,7 +13268,6 @@ var OneFieldQuery$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -13563,7 +13276,6 @@ var OneFieldQuery = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: OneFieldQuery$prime
 };
@@ -13634,12 +13346,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -13649,7 +13355,6 @@ var Untitled1$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -13658,7 +13363,6 @@ var Untitled1 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3,
   self: Untitled1$prime
 };
@@ -13727,12 +13431,6 @@ function serialize$4(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$4,
-  query$4,
-  serialize$4
-];
-
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -13742,7 +13440,6 @@ var InlineFragmentQuery$prime = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -13751,7 +13448,6 @@ var InlineFragmentQuery = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4,
   self: InlineFragmentQuery$prime
 };
@@ -13830,12 +13526,6 @@ function serialize$6(value) {
         };
 }
 
-var definition$4 = /* tuple */[
-  parse$6,
-  query$6,
-  serialize$6
-];
-
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -13845,7 +13535,6 @@ var Untitled1$prime$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
@@ -13854,7 +13543,6 @@ var Untitled1$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6,
   self: Untitled1$prime$1
 };
@@ -13950,12 +13638,6 @@ function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_RecursiveInput_47: 0,
   graphql_module: 0
@@ -13970,7 +13652,6 @@ var MyQuery$prime = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13983,7 +13664,6 @@ var MyQuery = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14069,12 +13749,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14084,7 +13758,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14093,7 +13766,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14160,12 +13832,6 @@ function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14177,7 +13843,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14188,7 +13853,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14267,12 +13931,6 @@ function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt,
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_VariousScalarsInput_47: 0,
   graphql_module: 0
@@ -14287,7 +13945,6 @@ var MyQuery$prime = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14300,7 +13957,6 @@ var MyQuery = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14382,12 +14038,6 @@ function makeVariables($$var, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14399,7 +14049,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14410,7 +14059,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14488,12 +14136,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14503,7 +14145,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14512,7 +14153,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14598,12 +14238,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14613,7 +14247,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14622,7 +14255,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -14715,12 +14347,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -14730,7 +14356,6 @@ var MyQuery2$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -14739,7 +14364,6 @@ var MyQuery2 = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQuery2$prime
 };
@@ -14832,12 +14456,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -14847,7 +14465,6 @@ var MyQuery3$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -14856,7 +14473,6 @@ var MyQuery3 = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: MyQuery3$prime
 };
@@ -14949,12 +14565,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -14964,7 +14574,6 @@ var MyQuery4$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -14973,7 +14582,6 @@ var MyQuery4 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$3,
   self: MyQuery4$prime
 };
@@ -15070,12 +14678,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15085,7 +14687,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15094,7 +14695,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15178,12 +14778,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15193,7 +14787,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15202,7 +14795,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15275,12 +14867,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -15290,7 +14876,6 @@ var MyQueryNoError$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -15299,7 +14884,6 @@ var MyQueryNoError = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQueryNoError$prime
 };
@@ -15366,12 +14950,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15381,7 +14959,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15390,7 +14967,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15517,12 +15093,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15532,7 +15102,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15541,7 +15110,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15586,12 +15154,6 @@ function makeVariables(query, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_query_82: 0,
   _graphql_query_75: 0,
@@ -15605,7 +15167,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15616,7 +15177,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15736,12 +15296,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_100: 0,
   _graphql_arg_95: 0,
@@ -15760,7 +15314,6 @@ var MyQuery$prime = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15775,7 +15328,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15843,12 +15395,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query,
-  serialize$2
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15858,7 +15404,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15867,7 +15412,6 @@ var MyQuery = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -15930,12 +15474,6 @@ function makeVariables(opt, req, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_opt_119: 0,
   _graphql_argOptional_106: 0,
@@ -15951,7 +15489,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15962,7 +15499,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -16072,12 +15608,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query,
-  serialize$2
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16087,7 +15617,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16096,7 +15625,6 @@ var MyQuery = {
   query: query,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -16131,12 +15659,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_filter_92: 0,
   _graphql_arg_140: 0,
@@ -16148,7 +15670,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16157,7 +15678,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -16205,12 +15725,6 @@ function makeVariables(arg, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_82: 0,
   _graphql_arg_77: 0,
@@ -16225,7 +15739,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16236,7 +15749,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -16325,12 +15837,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16340,7 +15846,6 @@ var RecordsQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16349,7 +15854,6 @@ var RecordsQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: RecordsQuery$prime
 };
@@ -16430,12 +15934,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -16445,7 +15943,6 @@ var ObjectsQuery$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -16454,7 +15951,6 @@ var ObjectsQuery = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ObjectsQuery$prime
 };
@@ -16723,12 +16219,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -16738,7 +16228,6 @@ var MyQuery$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -16747,7 +16236,6 @@ var MyQuery = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2,
   self: MyQuery$prime
 };
@@ -16770,12 +16258,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -16785,7 +16267,6 @@ var MyQuery2$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -16794,7 +16275,6 @@ var MyQuery2 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3,
   self: MyQuery2$prime
 };
@@ -16894,12 +16374,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16909,7 +16383,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16918,7 +16391,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17002,12 +16474,6 @@ function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfN
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_219: 0,
   graphql_module: 0
@@ -17020,7 +16486,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17031,7 +16496,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17127,12 +16591,6 @@ function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, no
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_82: 0,
   _graphql_arg_77: 0,
@@ -17149,7 +16607,6 @@ var MyQuery$prime = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17162,7 +16619,6 @@ var MyQuery = {
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17254,12 +16710,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17269,7 +16719,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17278,7 +16727,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17323,12 +16771,6 @@ function makeVariables(required, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17340,7 +16782,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17351,7 +16792,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17395,12 +16835,6 @@ function makeVariables(required, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17412,7 +16846,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17423,7 +16856,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17577,12 +17009,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17592,7 +17018,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17601,7 +17026,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17721,12 +17145,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_100: 0,
   _graphql_arg_95: 0,
@@ -17745,7 +17163,6 @@ var MyQuery$prime = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17760,7 +17177,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -17872,12 +17288,6 @@ function makeInputObjectEmbeddedInput$1(field, param) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   _graphql_arg_240: 0,
   _graphql_arg_235: 0,
@@ -17897,7 +17307,6 @@ var MyQuery2$prime = {
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -17912,7 +17321,6 @@ var MyQuery2 = {
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQuery2$prime
 };
@@ -17992,12 +17400,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18007,7 +17409,6 @@ var Normal$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18016,7 +17417,6 @@ var Normal = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: Normal$prime
 };
@@ -18077,12 +17477,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -18092,7 +17486,6 @@ var ByConfig$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -18101,7 +17494,6 @@ var ByConfig = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ByConfig$prime
 };
@@ -18162,12 +17554,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -18177,7 +17563,6 @@ var ByDirective$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -18186,7 +17571,6 @@ var ByDirective = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: ByDirective$prime
 };
@@ -18273,12 +17657,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18288,7 +17666,6 @@ var Normal$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18297,7 +17674,6 @@ var Normal = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: Normal$prime
 };
@@ -18360,12 +17736,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -18375,7 +17745,6 @@ var ByConfig$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -18384,7 +17753,6 @@ var ByConfig = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: ByConfig$prime
 };
@@ -18447,12 +17815,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -18462,7 +17824,6 @@ var ByDirective$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -18471,7 +17832,6 @@ var ByDirective = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: ByDirective$prime
 };
@@ -18532,12 +17892,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_name_52: 0,
   graphql_module: 0
@@ -18548,7 +17902,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18557,7 +17910,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -18630,12 +17982,6 @@ function makeVariables(id, name, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_name_100: 0,
   _graphql_name_94: 0,
@@ -18651,7 +17997,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18662,7 +18007,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -18705,12 +18049,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18720,7 +18058,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18729,7 +18066,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -18760,12 +18096,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -18775,7 +18105,6 @@ var OneFieldQuery$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -18784,7 +18113,6 @@ var OneFieldQuery = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: OneFieldQuery$prime
 };
@@ -18853,12 +18181,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -18868,7 +18190,6 @@ var Untitled1$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -18877,7 +18198,6 @@ var Untitled1 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$3,
   self: Untitled1$prime
 };
@@ -18939,12 +18259,6 @@ function serialize$4(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$4,
-  query$4,
-  serialize$4
-];
-
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -18954,7 +18268,6 @@ var InlineFragmentQuery$prime = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -18963,7 +18276,6 @@ var InlineFragmentQuery = {
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$4,
   self: InlineFragmentQuery$prime
 };
@@ -19041,12 +18353,6 @@ function serialize$6(value) {
         };
 }
 
-var definition$4 = /* tuple */[
-  parse$6,
-  query$6,
-  serialize$6
-];
-
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -19056,7 +18362,6 @@ var Untitled1$prime$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
@@ -19065,7 +18370,6 @@ var Untitled1$1 = {
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
-  definition: definition$4,
   Z__INTERNAL: Z__INTERNAL$6,
   self: Untitled1$prime$1
 };
@@ -19161,12 +18465,6 @@ function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_90: 0,
   _graphql_arg_85: 0,
@@ -19183,7 +18481,6 @@ var MyQuery$prime = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19196,7 +18493,6 @@ var MyQuery = {
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19273,12 +18569,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -19288,7 +18578,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19297,7 +18586,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19365,12 +18653,6 @@ function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_292: 0,
   graphql_module: 0
@@ -19383,7 +18665,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19394,7 +18675,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19474,12 +18754,6 @@ function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt,
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_93: 0,
   _graphql_arg_88: 0,
@@ -19496,7 +18770,6 @@ var MyQuery$prime = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19509,7 +18782,6 @@ var MyQuery = {
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19585,12 +18857,6 @@ function makeVariables($$var, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -19602,7 +18868,6 @@ var MyQuery$prime = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19613,7 +18878,6 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19691,12 +18955,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -19706,7 +18964,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19715,7 +18972,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19792,12 +19048,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -19807,7 +19057,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19816,7 +19065,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -19900,12 +19148,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -19915,7 +19157,6 @@ var MyQuery2$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -19924,7 +19165,6 @@ var MyQuery2 = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQuery2$prime
 };
@@ -20008,12 +19248,6 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -20023,7 +19257,6 @@ var MyQuery3$prime = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -20032,7 +19265,6 @@ var MyQuery3 = {
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2,
   self: MyQuery3$prime
 };
@@ -20116,12 +19348,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -20131,7 +19357,6 @@ var MyQuery4$prime = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -20140,7 +19365,6 @@ var MyQuery4 = {
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$3,
   self: MyQuery4$prime
 };
@@ -20227,12 +19451,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -20242,7 +19460,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -20251,7 +19468,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -20333,12 +19549,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -20348,7 +19558,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -20357,7 +19566,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -20428,12 +19636,6 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -20443,7 +19645,6 @@ var MyQueryNoError$prime = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -20452,7 +19653,6 @@ var MyQueryNoError = {
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1,
   self: MyQueryNoError$prime
 };
@@ -20512,12 +19712,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -20527,7 +19721,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -20536,7 +19729,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -20659,12 +19851,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -20674,7 +19860,6 @@ var MyQuery$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -20683,7 +19868,6 @@ var MyQuery = {
   query: query,
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL,
   self: MyQuery$prime
 };
@@ -21293,7 +20477,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21571,7 +20754,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -21717,7 +20899,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21877,7 +21058,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22074,7 +21254,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22171,7 +21350,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22291,7 +21469,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_SampleField_47;
@@ -22499,7 +21676,6 @@ module RecordsQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22673,7 +21849,6 @@ module ObjectsQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23291,7 +22466,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23371,7 +22545,6 @@ module MyQuery2' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23589,7 +22762,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23803,7 +22975,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24007,7 +23178,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_ListsInput_47;
@@ -24227,7 +23397,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24335,7 +23504,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24443,7 +23611,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24771,7 +23938,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25049,7 +24215,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -25343,7 +24508,6 @@ module MyQuery2' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;
@@ -25543,7 +24707,6 @@ module Normal' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25689,7 +24852,6 @@ module ByConfig' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25835,7 +24997,6 @@ module ByDirective' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26015,7 +25176,6 @@ module Normal' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26171,7 +25331,6 @@ module ByConfig' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26327,7 +25486,6 @@ module ByDirective' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26472,7 +25630,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26657,7 +25814,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26790,7 +25946,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26885,7 +26040,6 @@ module OneFieldQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -27068,7 +26222,6 @@ module ExternalFragmentQuery {
       \\"variables\\": Js.Json.null,
       \\"parse\\": parse,
     };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -27206,7 +26359,6 @@ module InlineFragmentQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -27407,7 +26559,6 @@ module UnionExternalFragmentQuery {
       \\"variables\\": Js.Json.null,
       \\"parse\\": parse,
     };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -27588,7 +26739,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_RecursiveInput_47;
@@ -27852,7 +27002,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28093,7 +27242,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28314,7 +27462,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_VariousScalarsInput_47;
@@ -28531,7 +27678,6 @@ module MyQuery' = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28700,7 +27846,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28955,7 +28100,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29192,7 +28336,6 @@ module MyQuery2' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29429,7 +28572,6 @@ module MyQuery3' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29666,7 +28808,6 @@ module MyQuery4' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29873,7 +29014,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30053,7 +29193,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30211,7 +29350,6 @@ module MyQueryNoError' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30362,7 +29500,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30622,7 +29759,6 @@ module MyQuery' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30720,7 +29856,6 @@ module MyQuery' = {
     inp => {\\"query\\": (a => a)(inp##query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({\\"query\\": query}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30988,7 +30123,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -31129,7 +30263,6 @@ module MyQuery' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31279,7 +30412,6 @@ module MyQuery' = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({\\"opt\\": opt, \\"req\\": req}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31471,7 +30603,6 @@ module MyQuery' = {
       };
       {\\"customFields\\": customFields};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31563,7 +30694,6 @@ module MyQuery' = {
       };
       {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31673,7 +30803,6 @@ module MyQuery' = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({\\"arg\\": arg}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_SampleField_47;
@@ -31876,7 +31005,6 @@ module RecordsQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32045,7 +31173,6 @@ module ObjectsQuery' = {
       };
       {\\"lists\\": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32658,7 +31785,6 @@ module MyQuery' = {
       };
       {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32733,7 +31859,6 @@ module MyQuery2' = {
       };
       {\\"lists\\": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32946,7 +32071,6 @@ module MyQuery' = {
       };
       {\\"lists\\": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33135,7 +32259,6 @@ module MyQuery' = {
         \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33329,7 +32452,6 @@ module MyQuery' = {
     \\"nonNullableOfNullable\\": nonNullableOfNullable,
     \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_ListsInput_47;
@@ -33544,7 +32666,6 @@ module MyQuery' = {
       };
       {\\"mutationWithError\\": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33642,7 +32763,6 @@ module MyQuery' = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33740,7 +32860,6 @@ module MyQuery' = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34063,7 +33182,6 @@ module MyQuery' = {
       };
       {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34331,7 +33449,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -34615,7 +33732,6 @@ module MyQuery2' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;
@@ -34810,7 +33926,6 @@ module Normal' = {
       };
       {\\"mutationWithError\\": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34951,7 +34066,6 @@ module ByConfig' = {
       };
       {\\"mutationWithError\\": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35092,7 +34206,6 @@ module ByDirective' = {
       };
       {\\"mutationWithError\\": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35267,7 +34380,6 @@ module Normal' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35418,7 +34530,6 @@ module ByConfig' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35569,7 +34680,6 @@ module ByDirective' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35709,7 +34819,6 @@ module MyQuery' = {
       };
       {\\"pokemon\\": pokemon};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35884,7 +34993,6 @@ module MyQuery' = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({\\"id\\": id, \\"name\\": name}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36012,7 +35120,6 @@ module MyQuery' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36102,7 +35209,6 @@ module OneFieldQuery' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36280,7 +35386,6 @@ module ExternalFragmentQuery {
         };
         {\\"variousScalars\\": variousScalars};
       };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -36413,7 +35518,6 @@ module InlineFragmentQuery' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36609,7 +35713,6 @@ module UnionExternalFragmentQuery {
         };
         {\\"dogOrHuman\\": dogOrHuman};
       };
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -36780,7 +35883,6 @@ module MyQuery' = {
     \\"inner\\": inner,
     \\"enum\\": enum,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_RecursiveInput_47;
@@ -37039,7 +36141,6 @@ module MyQuery' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37243,7 +36344,6 @@ module MyQuery' = {
         \\"id\\": id,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37454,7 +36554,6 @@ module MyQuery' = {
     \\"nullableID\\": nullableID,
     \\"id\\": id,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_VariousScalarsInput_47;
@@ -37661,7 +36760,6 @@ module MyQuery' = {
     inp => {\\"var\\": (a => a)(inp##var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({\\"var\\": var}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37825,7 +36923,6 @@ module MyQuery' = {
       };
       {\\"simpleSubscription\\": simpleSubscription};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38075,7 +37172,6 @@ module MyQuery' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38307,7 +37403,6 @@ module MyQuery2' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38539,7 +37634,6 @@ module MyQuery3' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38771,7 +37865,6 @@ module MyQuery4' = {
       };
       {\\"variousScalars\\": variousScalars};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38973,7 +38066,6 @@ module MyQuery' = {
       };
       {\\"first\\": first};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39148,7 +38240,6 @@ module MyQuery' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39301,7 +38392,6 @@ module MyQueryNoError' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39447,7 +38537,6 @@ module MyQuery' = {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39702,7 +38791,6 @@ module MyQuery' = {
       };
       {\\"mutationForVariant\\": mutationForVariant};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39803,7 +38891,6 @@ module MyQuery' = {
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_query_82;
     /**Variable **$query** has the following graphql type:
@@ -40090,7 +39177,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -40267,7 +39353,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40423,7 +39508,6 @@ module MyQuery' = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_opt_119;
     /**Variable **$opt** has the following graphql type:
@@ -40642,7 +39726,6 @@ module MyQuery' = {
         {customFields: customFields};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40737,7 +39820,6 @@ module MyQuery' = {
         {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -40866,7 +39948,6 @@ module MyQuery' = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -41091,7 +40172,6 @@ module RecordsQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41260,7 +40340,6 @@ module ObjectsQuery' = {
       };
       {\\"lists\\": lists};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41883,7 +40962,6 @@ module MyQuery' = {
         {l1, l2, l3, l4};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41961,7 +41039,6 @@ module MyQuery2' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42177,7 +41254,6 @@ module MyQuery' = {
         {lists: lists};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42367,7 +41443,6 @@ module MyQuery' = {
         nonNullableOfNonNullable,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_219;
     /**Argument **arg** on field **listsInput** has the following graphql type:
@@ -42576,7 +41651,6 @@ module MyQuery' = {
     nonNullableOfNullable,
     nonNullableOfNonNullable,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -42834,7 +41908,6 @@ module MyQuery' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42935,7 +42008,6 @@ module MyQuery' = {
     inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43033,7 +42105,6 @@ module MyQuery' = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43375,7 +42446,6 @@ module MyQuery' = {
         {first, second, let_};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43648,7 +42718,6 @@ module MyQuery' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -43964,7 +43033,6 @@ module MyQuery2' = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_240;
     /**Variable **$arg** has the following graphql type:
@@ -44209,7 +43277,6 @@ module Normal' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44368,7 +43435,6 @@ module ByConfig' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44527,7 +43593,6 @@ module ByDirective' = {
         {mutationWithError: mutationWithError};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44708,7 +43773,6 @@ module Normal' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44865,7 +43929,6 @@ module ByConfig' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45022,7 +44085,6 @@ module ByDirective' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45162,7 +44224,6 @@ module MyQuery' = {
         {pokemon: pokemon};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -45342,7 +44403,6 @@ module MyQuery' = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -45503,7 +44563,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45599,7 +44658,6 @@ module OneFieldQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45780,7 +44838,6 @@ module ExternalFragmentQuery {
           {variousScalars: variousScalars};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -45914,7 +44971,6 @@ module InlineFragmentQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46115,7 +45171,6 @@ module UnionExternalFragmentQuery {
           {dogOrHuman: dogOrHuman};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -46290,7 +45345,6 @@ module MyQuery' = {
     inner,
     enum,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:
@@ -46568,7 +45622,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46773,7 +45826,6 @@ module MyQuery' = {
         id,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
@@ -47006,7 +46058,6 @@ module MyQuery' = {
     nullableID,
     id,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_93;
     /**Variable **$arg** has the following graphql type:
@@ -47260,7 +46311,6 @@ module MyQuery' = {
     inp => {var: (a => a)((inp: t_variables).var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47432,7 +46482,6 @@ module MyQuery' = {
         {simpleSubscription: simpleSubscription};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47679,7 +46728,6 @@ module MyQuery' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47908,7 +46956,6 @@ module MyQuery2' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48137,7 +47184,6 @@ module MyQuery3' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48366,7 +47412,6 @@ module MyQuery4' = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48573,7 +47618,6 @@ module MyQuery' = {
         {first: first};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48754,7 +47798,6 @@ module MyQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48913,7 +47956,6 @@ module MyQueryNoError' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -49063,7 +48105,6 @@ module MyQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -49333,7 +48374,6 @@ module MyQuery' = {
         {mutationForVariant: mutationForVariant};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -140,7 +140,6 @@ module MyQuery' = {
     "nonNullableOfNullable": nonNullableOfNullable,
     "nonNullableOfNonNullable": nonNullableOfNonNullable,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_ListsInput_47;

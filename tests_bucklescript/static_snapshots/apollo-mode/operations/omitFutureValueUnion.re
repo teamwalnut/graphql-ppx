@@ -147,7 +147,6 @@ module Normal' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -324,7 +323,6 @@ module ByConfig' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -501,7 +499,6 @@ module ByDirective' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

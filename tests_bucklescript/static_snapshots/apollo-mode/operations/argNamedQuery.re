@@ -47,7 +47,6 @@ module MyQuery' = {
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_query_82;
     /**Variable **$query** has the following graphql type:

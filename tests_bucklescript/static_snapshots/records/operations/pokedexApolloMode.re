@@ -86,7 +86,6 @@ module MyQuery' = {
         {pokemon: pokemon};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:

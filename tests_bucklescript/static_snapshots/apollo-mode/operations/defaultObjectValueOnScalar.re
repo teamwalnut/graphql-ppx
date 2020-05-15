@@ -41,7 +41,6 @@ module MyQuery' = {
         {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:

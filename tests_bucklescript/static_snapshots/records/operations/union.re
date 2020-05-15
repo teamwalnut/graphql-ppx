@@ -127,7 +127,6 @@ module MyQuery' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -286,7 +285,6 @@ module MyQueryNoError' = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

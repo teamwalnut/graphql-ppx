@@ -112,7 +112,6 @@ module MyQuery' = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_opt_119;
     /**Variable **$opt** has the following graphql type:

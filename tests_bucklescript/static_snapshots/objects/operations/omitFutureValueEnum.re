@@ -115,7 +115,6 @@ module Normal' = {
       };
       {"mutationWithError": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -256,7 +255,6 @@ module ByConfig' = {
       };
       {"mutationWithError": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -397,7 +395,6 @@ module ByDirective' = {
       };
       {"mutationWithError": mutationWithError};
     };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

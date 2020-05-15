@@ -142,7 +142,6 @@ module MyQuery' = {
         {simpleSubscription: simpleSubscription};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

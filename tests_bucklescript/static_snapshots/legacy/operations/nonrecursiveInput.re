@@ -224,7 +224,6 @@ module MyQuery' = {
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -518,7 +517,6 @@ module MyQuery2' = {
     "variables": serializeVariables(variables),
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;
