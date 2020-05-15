@@ -1677,7 +1677,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -1918,11 +1918,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -6347,7 +6342,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -6538,11 +6533,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -6679,7 +6669,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -6889,11 +6879,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -11272,19 +11257,11 @@ var Another = {
   self: Another$prime
 };
 
-var Fragments$prime = {
-  ListFragment$prime: ListFragment$prime,
-  ListFragment: ListFragment,
-  Another$prime: Another$prime,
-  Another: Another
-};
-
 var Fragments = {
   ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
   Another$prime: Another$prime,
-  Another: Another,
-  self: Fragments$prime
+  Another: Another
 };
 
 var Raw$2 = { };
@@ -11443,7 +11420,6 @@ var MyQuery2 = {
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
-exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
@@ -13367,19 +13343,11 @@ var Untitled1 = {
   self: Untitled1$prime
 };
 
-var ExternalFragmentQuery$prime = {
-  Fragment$prime: Fragment$prime,
-  Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1
-};
-
 var ExternalFragmentQuery = {
   Fragment$prime: Fragment$prime,
   Fragment: Fragment,
   Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1,
-  self: ExternalFragmentQuery$prime
+  Untitled1: Untitled1
 };
 
 var Raw$4 = { };
@@ -13547,30 +13515,20 @@ var Untitled1$1 = {
   self: Untitled1$prime$1
 };
 
-var UnionExternalFragmentQuery$prime = {
+var UnionExternalFragmentQuery = {
   DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
   Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
-  DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
-  Untitled1: Untitled1$1,
-  self: UnionExternalFragmentQuery$prime
-};
-
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
-exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
-exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -16121,19 +16079,11 @@ var Another = {
   self: Another$prime
 };
 
-var Fragments$prime = {
-  ListFragment$prime: ListFragment$prime,
-  ListFragment: ListFragment,
-  Another$prime: Another$prime,
-  Another: Another
-};
-
 var Fragments = {
   ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
   Another$prime: Another$prime,
-  Another: Another,
-  self: Fragments$prime
+  Another: Another
 };
 
 var Raw$2 = { };
@@ -16280,7 +16230,6 @@ var MyQuery2 = {
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
-exports.Fragments$prime = Fragments$prime;
 exports.Fragments = Fragments;
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
@@ -18202,19 +18151,11 @@ var Untitled1 = {
   self: Untitled1$prime
 };
 
-var ExternalFragmentQuery$prime = {
-  Fragment$prime: Fragment$prime,
-  Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1
-};
-
 var ExternalFragmentQuery = {
   Fragment$prime: Fragment$prime,
   Fragment: Fragment,
   Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1,
-  self: ExternalFragmentQuery$prime
+  Untitled1: Untitled1
 };
 
 var Raw$4 = { };
@@ -18374,30 +18315,20 @@ var Untitled1$1 = {
   self: Untitled1$prime$1
 };
 
-var UnionExternalFragmentQuery$prime = {
+var UnionExternalFragmentQuery = {
   DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
   Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
-  DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
-  Untitled1: Untitled1$1,
-  self: UnionExternalFragmentQuery$prime
-};
-
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
-exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
-exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */
 "
@@ -21968,7 +21899,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -22191,11 +22122,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -26087,7 +26013,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -26270,11 +26196,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -26406,7 +26327,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -26606,11 +26527,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -31292,7 +31208,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -31515,11 +31431,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -35256,7 +35167,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -35434,11 +35345,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -35565,7 +35471,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -35760,11 +35666,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;
@@ -40459,7 +40360,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
     module Raw = {
@@ -40676,11 +40577,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {
@@ -44705,7 +44601,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -44886,11 +44782,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -45018,7 +44909,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -45218,11 +45109,6 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
 "
 `;

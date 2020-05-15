@@ -182,19 +182,11 @@ var Untitled1 = {
   self: Untitled1$prime
 };
 
-var ExternalFragmentQuery$prime = {
-  Fragment$prime: Fragment$prime,
-  Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1
-};
-
 var ExternalFragmentQuery = {
   Fragment$prime: Fragment$prime,
   Fragment: Fragment,
   Untitled1$prime: Untitled1$prime,
-  Untitled1: Untitled1,
-  self: ExternalFragmentQuery$prime
+  Untitled1: Untitled1
 };
 
 var Raw$4 = { };
@@ -354,29 +346,19 @@ var Untitled1$1 = {
   self: Untitled1$prime$1
 };
 
-var UnionExternalFragmentQuery$prime = {
+var UnionExternalFragmentQuery = {
   DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
   Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
-  DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
-  Untitled1: Untitled1$1,
-  self: UnionExternalFragmentQuery$prime
-};
-
 exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
-exports.ExternalFragmentQuery$prime = ExternalFragmentQuery$prime;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
-exports.UnionExternalFragmentQuery$prime = UnionExternalFragmentQuery$prime;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */

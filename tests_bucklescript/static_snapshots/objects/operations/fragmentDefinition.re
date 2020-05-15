@@ -66,7 +66,7 @@ module GraphQL_PPX = {
     | ((_, _, _), (_, _, _)) => json2
     };
 };
-module Fragments' = {
+module Fragments = {
   module ListFragment' = {
     let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
@@ -289,11 +289,6 @@ module Fragments {
     module type query_type = (module type of Another');
     let self: module query_type = (module Another');
   };
-};
-module Fragments = {
-  include Fragments';
-  module type query_type = (module type of Fragments');
-  let self: module query_type = (module Fragments');
 };
 module MyQuery' = {
   module Raw = {

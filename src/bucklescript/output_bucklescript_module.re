@@ -663,7 +663,7 @@ let generate_modules = (config, module_name, operations) => {
          );
     switch (module_name) {
     | Some(module_name) => [
-        wrap_query_module(module_name, List.concat(contents)),
+        [wrap_module(module_name, List.concat(contents))],
       ]
     | None => contents
     };

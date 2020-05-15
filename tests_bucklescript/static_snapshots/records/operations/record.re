@@ -221,7 +221,7 @@ module OneFieldQuery = {
   module type query_type = (module type of OneFieldQuery');
   let self: module query_type = (module OneFieldQuery');
 };
-module ExternalFragmentQuery' = {
+module ExternalFragmentQuery = {
   module Fragment' = {
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
@@ -402,11 +402,6 @@ module ExternalFragmentQuery {
     let self: module query_type = (module Untitled1');
   };
 };
-module ExternalFragmentQuery = {
-  include ExternalFragmentQuery';
-  module type query_type = (module type of ExternalFragmentQuery');
-  let self: module query_type = (module ExternalFragmentQuery');
-};
 module InlineFragmentQuery' = {
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -534,7 +529,7 @@ module InlineFragmentQuery = {
   module type query_type = (module type of InlineFragmentQuery');
   let self: module query_type = (module InlineFragmentQuery');
 };
-module UnionExternalFragmentQuery' = {
+module UnionExternalFragmentQuery = {
   module DogFragment' = {
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
@@ -734,9 +729,4 @@ module UnionExternalFragmentQuery {
     module type query_type = (module type of Untitled1');
     let self: module query_type = (module Untitled1');
   };
-};
-module UnionExternalFragmentQuery = {
-  include UnionExternalFragmentQuery';
-  module type query_type = (module type of UnionExternalFragmentQuery');
-  let self: module query_type = (module UnionExternalFragmentQuery');
 };
