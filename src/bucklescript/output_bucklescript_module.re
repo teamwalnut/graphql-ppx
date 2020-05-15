@@ -346,7 +346,6 @@ let wrap_query_module = (name: string, contents) => {
               {txt: "query_type", loc: Location.none},
             ),
           ),
-          // Sig.modtyp
           [%stri
             let self: module query_type = [%e
               Exp.pack(
