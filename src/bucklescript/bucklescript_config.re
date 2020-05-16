@@ -65,6 +65,10 @@ let defaultConfig =
     template_tag_import: None,
     custom_fields: Hashtbl.create(0),
     future_added_value: true,
+    extend_query: None,
+    extend_mutation: None,
+    extend_subscription: None,
+    extend_fragment: None,
   };
 
 module JsonHelper = {
@@ -168,6 +172,35 @@ let read_config = () => {
            )
          }
        });
+
+    ppxConfig
+    |> JsonHelper.mapString("extend-query", extend_query => {
+         Ppx_config.update_config(current =>
+           {...current, extend_query: Some(extend_query)}
+         )
+       });
+
+    ppxConfig
+    |> JsonHelper.mapString("extend-mutation", extend_mutation => {
+         Ppx_config.update_config(current =>
+           {...current, extend_mutation: Some(extend_mutation)}
+         )
+       });
+
+    ppxConfig
+    |> JsonHelper.mapString("extend-subscription", extend_subscription => {
+         Ppx_config.update_config(current =>
+           {...current, extend_subscription: Some(extend_subscription)}
+         )
+       });
+
+    ppxConfig
+    |> JsonHelper.mapString("extend-fragment", extend_fragment => {
+         Ppx_config.update_config(current =>
+           {...current, extend_fragment: Some(extend_fragment)}
+         )
+       });
+
     ppxConfig
     |> JsonHelper.mapString("template-tag", template_tag => {
          Ppx_config.update_config(current =>

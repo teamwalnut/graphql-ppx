@@ -131,6 +131,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         inline: false,
         legacy: false,
         future_added_value: Ppx_config.future_added_value(),
+        extend: None,
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -228,6 +229,10 @@ let () =
       template_tag_import: None,
       custom_fields: Hashtbl.create(0),
       future_added_value: true,
+      extend_query: None,
+      extend_mutation: None,
+      extend_subscription: None,
+      extend_fragment: None,
     })
   );
 
