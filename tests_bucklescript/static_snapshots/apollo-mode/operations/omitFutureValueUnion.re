@@ -193,8 +193,8 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type QueryType = (module type of Normal');
-  let self: module QueryType = (module Normal');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -371,8 +371,8 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type QueryType = (module type of ByConfig');
-  let self: module QueryType = (module ByConfig');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -549,6 +549,6 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type QueryType = (module type of ByDirective');
-  let self: module QueryType = (module ByDirective');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module ByDirective');
 };

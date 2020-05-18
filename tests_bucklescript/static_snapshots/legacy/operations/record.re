@@ -125,8 +125,8 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type QueryType = (module type of MyQuery');
-  let self: module QueryType = (module MyQuery');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -221,8 +221,8 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  module type QueryType = (module type of OneFieldQuery');
-  let self: module QueryType = (module OneFieldQuery');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -324,8 +324,8 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    module type QueryType = (module type of Fragment');
-    let self: module QueryType = (module Fragment');
+    module type Type = GraphQL_PPX.Fragment;
+    let self: module Type = (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -405,8 +405,8 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type QueryType = (module type of Untitled1');
-    let self: module QueryType = (module Untitled1');
+    module type Type = GraphQL_PPX.Query;
+    let self: module Type = (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -539,8 +539,8 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  module type QueryType = (module type of InlineFragmentQuery');
-  let self: module QueryType = (module InlineFragmentQuery');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -634,8 +634,8 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    module type QueryType = (module type of DogFragment');
-    let self: module QueryType = (module DogFragment');
+    module type Type = GraphQL_PPX.Fragment;
+    let self: module Type = (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -741,7 +741,7 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    module type QueryType = (module type of Untitled1');
-    let self: module QueryType = (module Untitled1');
+    module type Type = GraphQL_PPX.Query;
+    let self: module Type = (module Untitled1');
   };
 };

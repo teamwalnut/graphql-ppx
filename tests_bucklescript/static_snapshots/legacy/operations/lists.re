@@ -188,6 +188,6 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type QueryType = (module type of MyQuery');
-  let self: module QueryType = (module MyQuery');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module MyQuery');
 };

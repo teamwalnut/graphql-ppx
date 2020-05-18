@@ -199,7 +199,7 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  module type query_type = (module type of Bla');
-  let self: module query_type = (module Bla');
+  module type Type = GraphQL_PPX.Query;
+  let self: module Type = (module Bla');
   include ExtendQuery(Bla');
 };

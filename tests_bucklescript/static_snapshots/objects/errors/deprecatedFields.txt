@@ -2,3 +2,8 @@ File "operations/errors/deprecatedFields.re", line 7, characters 6-21:
 7 |       deprecatedField
           ^^^^^^^^^^^^^^^
 Alert deprecated: Field "deprecatedField" has been deprecated. Reason: Use something else instead
+
+  We've found a bug for you!
+  (No file name)
+  
+  Unbound module type GraphQL_PPX.Query
