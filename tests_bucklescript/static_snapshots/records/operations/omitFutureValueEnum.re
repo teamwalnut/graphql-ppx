@@ -179,8 +179,7 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  module type QueryType = (module type of Normal');
-  let self: module QueryType = (module Normal');
+  let self: module GraphQL_PPX.Mutation = (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -339,8 +338,7 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  module type QueryType = (module type of ByConfig');
-  let self: module QueryType = (module ByConfig');
+  let self: module GraphQL_PPX.Mutation = (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -499,6 +497,5 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  module type QueryType = (module type of ByDirective');
-  let self: module QueryType = (module ByDirective');
+  let self: module GraphQL_PPX.Mutation = (module ByDirective');
 };

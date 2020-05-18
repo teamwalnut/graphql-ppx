@@ -191,8 +191,7 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  module type QueryType = (module type of RecordsQuery');
-  let self: module QueryType = (module RecordsQuery');
+  let self: module GraphQL_PPX.Query = (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -366,6 +365,5 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  module type QueryType = (module type of ObjectsQuery');
-  let self: module QueryType = (module ObjectsQuery');
+  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
 };

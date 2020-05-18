@@ -42,13 +42,20 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL,
-  self: MyQuery$prime
+  self: self
 };
 
 var Raw$1 = { };
@@ -89,13 +96,20 @@ var OneFieldQuery$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var self$1 = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1
+};
+
 var OneFieldQuery = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1,
-  self: OneFieldQuery$prime
+  self: self$1
 };
 
 var query$2 = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
@@ -176,13 +190,20 @@ var Untitled1$prime = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var self$2 = {
+  query: query$3,
+  Raw: Raw$3,
+  parse: parse$3,
+  serialize: serialize$3
+};
+
 var Untitled1 = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
   Z__INTERNAL: Z__INTERNAL$3,
-  self: Untitled1$prime
+  self: self$2
 };
 
 var ExternalFragmentQuery = {
@@ -253,13 +274,20 @@ var InlineFragmentQuery$prime = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
+var self$3 = {
+  query: query$4,
+  Raw: Raw$4,
+  parse: parse$4,
+  serialize: serialize$4
+};
+
 var InlineFragmentQuery = {
   Raw: Raw$4,
   query: query$4,
   parse: parse$4,
   serialize: serialize$4,
   Z__INTERNAL: Z__INTERNAL$4,
-  self: InlineFragmentQuery$prime
+  self: self$3
 };
 
 var query$5 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
@@ -348,13 +376,20 @@ var Untitled1$prime$1 = {
   Z__INTERNAL: Z__INTERNAL$6
 };
 
+var self$4 = {
+  query: query$6,
+  Raw: Raw$6,
+  parse: parse$6,
+  serialize: serialize$6
+};
+
 var Untitled1$1 = {
   Raw: Raw$6,
   query: query$6,
   parse: parse$6,
   serialize: serialize$6,
   Z__INTERNAL: Z__INTERNAL$6,
-  self: Untitled1$prime$1
+  self: self$4
 };
 
 var UnionExternalFragmentQuery = {

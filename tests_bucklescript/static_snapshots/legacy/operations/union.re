@@ -172,8 +172,7 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type QueryType = (module type of MyQuery');
-  let self: module QueryType = (module MyQuery');
+  let self: module GraphQL_PPX.Query = (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -331,6 +330,5 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  module type QueryType = (module type of MyQueryNoError');
-  let self: module QueryType = (module MyQueryNoError');
+  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
 };

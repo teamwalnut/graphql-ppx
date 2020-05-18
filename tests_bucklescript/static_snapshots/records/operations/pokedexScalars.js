@@ -77,6 +77,13 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -85,7 +92,7 @@ var MyQuery = {
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   Z__INTERNAL: Z__INTERNAL,
-  self: MyQuery$prime
+  self: self
 };
 
 exports.MyQuery$prime = MyQuery$prime;

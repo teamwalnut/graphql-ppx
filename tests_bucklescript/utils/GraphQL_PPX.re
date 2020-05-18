@@ -64,7 +64,18 @@ module type Operation = {
   let serialize: t => Raw.t;
 };
 
-module type Query = {include Operation;};
+module type Query = {
+  let query: string;
+
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t;
+
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+};
 
 module type Mutation = {include Operation;};
 

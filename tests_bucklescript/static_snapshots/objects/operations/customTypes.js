@@ -113,13 +113,20 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse$2,
+  serialize: serialize$2
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL,
-  self: MyQuery$prime
+  self: self
 };
 
 exports.Color = Color;

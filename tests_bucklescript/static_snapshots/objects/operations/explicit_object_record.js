@@ -87,13 +87,20 @@ var RecordsQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var RecordsQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL,
-  self: RecordsQuery$prime
+  self: self
 };
 
 var Raw$1 = { };
@@ -184,13 +191,20 @@ var ObjectsQuery$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var self$1 = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1
+};
+
 var ObjectsQuery = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1,
-  self: ObjectsQuery$prime
+  self: self$1
 };
 
 exports.RecordsQuery$prime = RecordsQuery$prime;

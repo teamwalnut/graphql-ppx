@@ -2,7 +2,6 @@ open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
-
 open Ast_408;
 open Asttypes;
 open Parsetree;
@@ -328,25 +327,24 @@ let wrap_query_module = (definition, name: string, contents, config) => {
         }),
       ),
     ),
-    Str.modtype(
-      Mtd.mk(
-        ~typ=
-          Mty.mk(
-            Pmty_typeof(
-              Mod.ident({
-                txt:
-                  Longident.Lident(
-                    Generator_utils.capitalize_ascii(name ++ "'"),
-                  ),
-                loc: Location.none,
-              }),
-            ),
-          ),
-        {txt: "query_type", loc: Location.none},
-      ),
-    ),
     [%stri
-      let self: module query_type = [%e
+      let self: [%t
+        Typ.package(
+          {
+            loc: Location.none,
+            txt:
+              Longident.parse(
+                switch (definition) {
+                | Fragment => "GraphQL_PPX.Fragment"
+                | Operation(Query) => "GraphQL_PPX.Query"
+                | Operation(Mutation) => "GraphQL_PPX.Mutation"
+                | Operation(Subscription) => "GraphQL_PPX.Subscription"
+                },
+              ),
+          },
+          [],
+        )
+      ] = [%e
         Exp.pack(
           Mod.ident({
             txt:

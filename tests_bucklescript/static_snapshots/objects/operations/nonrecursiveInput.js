@@ -124,6 +124,13 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -136,7 +143,7 @@ var MyQuery = {
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
   Z__INTERNAL: Z__INTERNAL,
-  self: MyQuery$prime
+  self: self
 };
 
 var Raw$1 = { };
@@ -268,6 +275,13 @@ var MyQuery2$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var self$1 = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1
+};
+
 var MyQuery2 = {
   Raw: Raw$1,
   query: query$1,
@@ -280,7 +294,7 @@ var MyQuery2 = {
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
   Z__INTERNAL: Z__INTERNAL$1,
-  self: MyQuery2$prime
+  self: self$1
 };
 
 exports.MyQuery$prime = MyQuery$prime;

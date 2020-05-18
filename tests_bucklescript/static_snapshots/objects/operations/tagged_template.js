@@ -84,13 +84,20 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL,
-  self: MyQuery$prime
+  self: self
 };
 
 var Raw$1 = { };
@@ -193,13 +200,20 @@ var MyQuery2$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var self$1 = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1
+};
+
 var MyQuery2 = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1,
-  self: MyQuery2$prime
+  self: self$1
 };
 
 var Raw$2 = { };
@@ -302,13 +316,20 @@ var MyQuery3$prime = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var self$2 = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2
+};
+
 var MyQuery3 = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL$2,
-  self: MyQuery3$prime
+  self: self$2
 };
 
 var Raw$3 = { };
@@ -411,13 +432,20 @@ var MyQuery4$prime = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
+var self$3 = {
+  query: query$3,
+  Raw: Raw$3,
+  parse: parse$3,
+  serialize: serialize$3
+};
+
 var MyQuery4 = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
   serialize: serialize$3,
   Z__INTERNAL: Z__INTERNAL$3,
-  self: MyQuery4$prime
+  self: self$3
 };
 
 exports.MyQuery$prime = MyQuery$prime;

@@ -242,8 +242,7 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  module type QueryType = (module type of MyQuery');
-  let self: module QueryType = (module MyQuery');
+  let self: module GraphQL_PPX.Query = (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -475,8 +474,7 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  module type QueryType = (module type of MyQuery2');
-  let self: module QueryType = (module MyQuery2');
+  let self: module GraphQL_PPX.Query = (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -708,8 +706,7 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  module type QueryType = (module type of MyQuery3');
-  let self: module QueryType = (module MyQuery3');
+  let self: module GraphQL_PPX.Query = (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -941,6 +938,5 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  module type QueryType = (module type of MyQuery4');
-  let self: module QueryType = (module MyQuery4');
+  let self: module GraphQL_PPX.Query = (module MyQuery4');
 };

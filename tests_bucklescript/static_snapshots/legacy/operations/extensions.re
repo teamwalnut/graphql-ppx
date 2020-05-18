@@ -204,7 +204,6 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  module type query_type = (module type of Bla');
-  let self: module query_type = (module Bla');
+  let self: module GraphQL_PPX.Query = (module Bla');
   include ExtendQuery(Bla');
 };

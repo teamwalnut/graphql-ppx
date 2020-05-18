@@ -76,13 +76,20 @@ var Normal$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var self = {
+  query: query,
+  Raw: Raw,
+  parse: parse,
+  serialize: serialize
+};
+
 var Normal = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL,
-  self: Normal$prime
+  self: self
 };
 
 var Raw$1 = { };
@@ -153,13 +160,20 @@ var ByConfig$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var self$1 = {
+  query: query$1,
+  Raw: Raw$1,
+  parse: parse$1,
+  serialize: serialize$1
+};
+
 var ByConfig = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1,
-  self: ByConfig$prime
+  self: self$1
 };
 
 var Raw$2 = { };
@@ -230,13 +244,20 @@ var ByDirective$prime = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var self$2 = {
+  query: query$2,
+  Raw: Raw$2,
+  parse: parse$2,
+  serialize: serialize$2
+};
+
 var ByDirective = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL$2,
-  self: ByDirective$prime
+  self: self$2
 };
 
 exports.Normal$prime = Normal$prime;
