@@ -1,6 +1,6 @@
 {
   "name": "tests_bucklescript",
-  "sources": ["__tests__"],
+  "sources": ["__tests__", "utils"],
   "package-specs": {
     "module": "commonjs",
     "in-source": true

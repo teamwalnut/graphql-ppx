@@ -332,21 +332,26 @@ let wrap_query_module = (definition, name: string, contents, config) => {
       Mtd.mk(
         ~typ=
           Mty.mk(
-            Pmty_typeof(
-              Mod.ident({
-                txt:
-                  Longident.Lident(
-                    Generator_utils.capitalize_ascii(name ++ "'"),
-                  ),
-                loc: Location.none,
-              }),
-            ),
+            Pmty_ident({
+              txt:
+                Longident.Lident(
+                  switch (definition) {
+                  | Fragment => "GraphQL_PPX.Fragment"
+                  | Operation(Query) => "GraphQL_PPX.Query"
+                  | Operation(Mutation) => "GraphQL_PPX.Mutation"
+                  | Operation(Subscription) => "GraphQL_PPX.Subscription"
+                  },
+                ),
+              loc: Location.none,
+            }),
           ),
-        {txt: "query_type", loc: Location.none},
+        {txt: "Type", loc: Location.none},
       ),
     ),
     [%stri
-      let self: module query_type = [%e
+      let self: [%t
+        Typ.package({txt: Longident.Lident("Type"), loc: Location.none}, [])
+      ] = [%e
         Exp.pack(
           Mod.ident({
             txt:
