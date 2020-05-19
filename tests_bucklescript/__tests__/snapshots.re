@@ -147,7 +147,7 @@ let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) => {
       [|
         "-bs-suffix",
         "-I",
-        "./utils",
+        "./utilities",
         "-c",
         "-w",
         "-30",
@@ -166,7 +166,7 @@ let get_bsb_output = (~ppxOptions, ~fileName, ~pathIn: string) =>
     [|
       "-bs-suffix",
       "-I",
-      "./utils",
+      "./utilities",
       "-c",
       "-w",
       "-30",
@@ -226,9 +226,9 @@ let get_bsb_output_with_static_snapshot =
 };
 
 let compile_utils = () =>
-  readdirSync("utils")->Belt.Array.keep(Js.String.endsWith(".re"))
+  readdirSync("utilities")->Belt.Array.keep(Js.String.endsWith(".re"))
   |> Array.iter(fileName => {
-       get_bsb_output(~ppxOptions="", ~pathIn="utils", ~fileName)->ignore
+       get_bsb_output(~ppxOptions="", ~pathIn="utilities", ~fileName)->ignore
      });
 
 compile_utils();

@@ -398,7 +398,7 @@ module MyQuery = {
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQLPPX.deepMerge,
+                GraphQL_PPX.deepMerge,
                 Obj.magic(
                   {
                     let nullableOfNullable = {
@@ -438,7 +438,7 @@ module MyQuery = {
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQLPPX.deepMerge,
+                GraphQL_PPX.deepMerge,
                 Obj.magic(
                   {
                     let nullableOfNullable = {
@@ -481,7 +481,7 @@ module MyQuery = {
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQLPPX.deepMerge,
+                GraphQL_PPX.deepMerge,
                 Obj.magic(Js.Dict.empty): Js.Json.t,
                 [|
                   (
