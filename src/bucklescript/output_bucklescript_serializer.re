@@ -556,7 +556,7 @@ and generate_object_encoder =
     (
       Obj.magic(
         Js.Array.reduce(
-          GraphQL_PPX.deepMerge,
+          GraphQLPPX.deepMerge,
           Obj.magic(
             {
               %e
