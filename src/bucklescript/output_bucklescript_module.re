@@ -327,43 +327,20 @@ let wrap_query_module = (definition, name: string, contents, config) => {
         }),
       ),
     ),
-    Str.modtype(
-      Mtd.mk(
-        ~typ=
-          Mty.mk(
-            Pmty_typeof(
-              Mod.structure([
-                Str.include_(
-                  Incl.mk(
-                    Mod.ident({
-                      txt:
-                        Longident.Lident(
-                          Generator_utils.capitalize_ascii(name ++ "'"),
-                        ),
-                      loc: Location.none,
-                    }),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-        {txt: "QueryType", loc: Location.none},
-      ),
-    ),
     [%stri
       let self: [%t
         Typ.package(
           {
             loc: Location.none,
-            txt: Longident.Lident("QueryType"),
-            // Longident.parse(
-            //   switch (definition) {
-            //   | Fragment => "GraphQL_PPX.Fragment"
-            //   | Operation(Query) => "GraphQL_PPX.Query"
-            //   | Operation(Mutation) => "GraphQL_PPX.Mutation"
-            //   | Operation(Subscription) => "GraphQL_PPX.Subscription"
-            //   },
-            // ),
+            txt:
+              Longident.parse(
+                switch (definition) {
+                | Fragment => "GraphQL_PPX.Fragment"
+                | Operation(Query) => "GraphQL_PPX.Query"
+                | Operation(Mutation) => "GraphQL_PPX.Mutation"
+                | Operation(Subscription) => "GraphQL_PPX.Subscription"
+                },
+              ),
           },
           [],
         )
