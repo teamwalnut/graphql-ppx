@@ -179,7 +179,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Mutation = (module Normal');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -338,7 +344,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Mutation = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -497,5 +509,11 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Mutation = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };

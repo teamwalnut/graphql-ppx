@@ -250,7 +250,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -490,7 +496,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -730,7 +742,13 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  let self: module GraphQL_PPX.Query = (module MyQuery3');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery3'.t_variables and
+      type Raw.t_variables = MyQuery3'.Raw.t_variables and
+      type t = MyQuery3'.t and
+      type Raw.t = MyQuery3'.Raw.t =
+    (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -970,5 +988,11 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  let self: module GraphQL_PPX.Query = (module MyQuery4');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery4'.t_variables and
+      type Raw.t_variables = MyQuery4'.Raw.t_variables and
+      type t = MyQuery4'.t and
+      type Raw.t = MyQuery4'.Raw.t =
+    (module MyQuery4');
 };

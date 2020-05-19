@@ -197,7 +197,13 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  let self: module GraphQL_PPX.Query = (module RecordsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = RecordsQuery'.t_variables and
+      type Raw.t_variables = RecordsQuery'.Raw.t_variables and
+      type t = RecordsQuery'.t and
+      type Raw.t = RecordsQuery'.Raw.t =
+    (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -378,5 +384,11 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ObjectsQuery'.t_variables and
+      type Raw.t_variables = ObjectsQuery'.Raw.t_variables and
+      type t = ObjectsQuery'.t and
+      type Raw.t = ObjectsQuery'.Raw.t =
+    (module ObjectsQuery');
 };

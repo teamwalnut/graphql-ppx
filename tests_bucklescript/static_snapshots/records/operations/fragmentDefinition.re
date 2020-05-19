@@ -141,7 +141,10 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    let self: module GraphQL_PPX.Fragment = (module ListFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
+      (module ListFragment');
   };
   module Another' = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
@@ -229,7 +232,10 @@ module Fragments {
   };
   module Another = {
     include Another';
-    let self: module GraphQL_PPX.Fragment = (module Another');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Another'.t and type Raw.t = Another'.Raw.t =
+      (module Another');
   };
 };
 module MyQuery' = {
@@ -558,7 +564,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -636,5 +648,11 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };

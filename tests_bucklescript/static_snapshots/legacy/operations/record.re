@@ -125,7 +125,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -220,7 +226,13 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  let self: module GraphQL_PPX.Query = (module OneFieldQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = OneFieldQuery'.t_variables and
+      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
+      type t = OneFieldQuery'.t and
+      type Raw.t = OneFieldQuery'.Raw.t =
+    (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -322,7 +334,10 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    let self: module GraphQL_PPX.Fragment = (module Fragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
+      (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -402,7 +417,13 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -535,7 +556,13 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  let self: module GraphQL_PPX.Query = (module InlineFragmentQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = InlineFragmentQuery'.t_variables and
+      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
+      type t = InlineFragmentQuery'.t and
+      type Raw.t = InlineFragmentQuery'.Raw.t =
+    (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -629,7 +656,10 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    let self: module GraphQL_PPX.Fragment = (module DogFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
+      (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -735,6 +765,12 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };

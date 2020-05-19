@@ -108,7 +108,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -420,7 +426,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -566,7 +578,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -758,7 +776,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -965,7 +989,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -1076,7 +1106,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -1218,7 +1254,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -1423,7 +1465,13 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  let self: module GraphQL_PPX.Query = (module RecordsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = RecordsQuery'.t_variables and
+      type Raw.t_variables = RecordsQuery'.Raw.t_variables and
+      type t = RecordsQuery'.t and
+      type Raw.t = RecordsQuery'.Raw.t =
+    (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -1604,7 +1652,13 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ObjectsQuery'.t_variables and
+      type Raw.t_variables = ObjectsQuery'.Raw.t_variables and
+      type t = ObjectsQuery'.t and
+      type Raw.t = ObjectsQuery'.Raw.t =
+    (module ObjectsQuery');
 };
 "
 `;
@@ -1825,7 +1879,13 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  let self: module GraphQL_PPX.Query = (module Bla');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Bla'.t_variables and
+      type Raw.t_variables = Bla'.Raw.t_variables and
+      type t = Bla'.t and
+      type Raw.t = Bla'.Raw.t =
+    (module Bla');
   include ExtendQuery(Bla');
 };
 "
@@ -1985,7 +2045,10 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    let self: module GraphQL_PPX.Fragment = (module ListFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
+      (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -2087,7 +2150,10 @@ module Fragments {
   };
   module Another = {
     include Another';
-    let self: module GraphQL_PPX.Fragment = (module Another');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Another'.t and type Raw.t = Another'.Raw.t =
+      (module Another');
   };
 };
 module MyQuery' = {
@@ -2462,7 +2528,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -2540,7 +2612,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -2767,7 +2845,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -2967,7 +3051,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -3196,7 +3286,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -3460,7 +3556,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -3559,7 +3661,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -3655,7 +3763,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -4125,7 +4239,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -4437,7 +4557,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -4768,7 +4894,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -4979,7 +5111,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Mutation = (module Normal');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -5162,7 +5300,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Mutation = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -5345,7 +5489,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Mutation = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -5546,7 +5696,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Query = (module Normal');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -5723,7 +5879,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Query = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -5900,7 +6062,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Query = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -6057,7 +6225,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -6266,7 +6440,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -6408,7 +6588,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -6518,7 +6704,13 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  let self: module GraphQL_PPX.Query = (module OneFieldQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = OneFieldQuery'.t_variables and
+      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
+      type t = OneFieldQuery'.t and
+      type Raw.t = OneFieldQuery'.Raw.t =
+    (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -6630,7 +6822,10 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    let self: module GraphQL_PPX.Fragment = (module Fragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
+      (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -6708,7 +6903,13 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -6846,7 +7047,13 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  let self: module GraphQL_PPX.Query = (module InlineFragmentQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = InlineFragmentQuery'.t_variables and
+      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
+      type t = InlineFragmentQuery'.t and
+      type Raw.t = InlineFragmentQuery'.Raw.t =
+    (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -6950,7 +7157,10 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    let self: module GraphQL_PPX.Fragment = (module DogFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
+      (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -7056,7 +7266,13 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 "
@@ -7255,7 +7471,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -7513,7 +7735,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -7734,7 +7962,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -8000,7 +8234,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -8219,7 +8459,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -8415,7 +8661,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Subscription = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Subscription with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -8673,7 +8925,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -8913,7 +9171,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -9153,7 +9417,13 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  let self: module GraphQL_PPX.Query = (module MyQuery3');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery3'.t_variables and
+      type Raw.t_variables = MyQuery3'.Raw.t_variables and
+      type t = MyQuery3'.t and
+      type Raw.t = MyQuery3'.Raw.t =
+    (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -9393,7 +9663,13 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  let self: module GraphQL_PPX.Query = (module MyQuery4');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery4'.t_variables and
+      type Raw.t_variables = MyQuery4'.Raw.t_variables and
+      type t = MyQuery4'.t and
+      type Raw.t = MyQuery4'.Raw.t =
+    (module MyQuery4');
 };
 "
 `;
@@ -9600,7 +9876,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -9801,7 +10083,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -9980,7 +10268,13 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQueryNoError'.t_variables and
+      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
+      type t = MyQueryNoError'.t and
+      type Raw.t = MyQueryNoError'.Raw.t =
+    (module MyQueryNoError');
 };
 "
 `;
@@ -10139,7 +10433,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -10443,7 +10743,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -21491,7 +21797,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -21780,7 +22092,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -21913,7 +22231,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -22071,7 +22395,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -22268,7 +22598,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -22365,7 +22701,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -22492,7 +22834,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -22691,7 +23039,13 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  let self: module GraphQL_PPX.Query = (module RecordsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = RecordsQuery'.t_variables and
+      type Raw.t_variables = RecordsQuery'.Raw.t_variables and
+      type t = RecordsQuery'.t and
+      type Raw.t = RecordsQuery'.Raw.t =
+    (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -22865,7 +23219,13 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ObjectsQuery'.t_variables and
+      type Raw.t_variables = ObjectsQuery'.Raw.t_variables and
+      type t = ObjectsQuery'.t and
+      type Raw.t = ObjectsQuery'.Raw.t =
+    (module ObjectsQuery');
 };
 "
 `;
@@ -23077,7 +23437,13 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  let self: module GraphQL_PPX.Query = (module Bla');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Bla'.t_variables and
+      type Raw.t_variables = Bla'.Raw.t_variables and
+      type t = Bla'.t and
+      type Raw.t = Bla'.Raw.t =
+    (module Bla');
   include ExtendQuery(Bla');
 };
 "
@@ -23234,7 +23600,10 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    let self: module GraphQL_PPX.Fragment = (module ListFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
+      (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -23321,7 +23690,10 @@ module Fragments {
   };
   module Another = {
     include Another';
-    let self: module GraphQL_PPX.Fragment = (module Another');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Another'.t and type Raw.t = Another'.Raw.t =
+      (module Another');
   };
 };
 module MyQuery' = {
@@ -23639,7 +24011,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -23719,7 +24097,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -23937,7 +24321,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -24149,7 +24539,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -24361,7 +24757,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -24571,7 +24973,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -24677,7 +25085,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -24783,7 +25197,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -25111,7 +25531,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -25400,7 +25826,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -25705,7 +26137,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -25879,7 +26317,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Mutation = (module Normal');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -26025,7 +26469,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Mutation = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -26171,7 +26621,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Mutation = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -26351,7 +26807,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Query = (module Normal');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -26507,7 +26969,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Query = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -26663,7 +27131,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Query = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -26808,7 +27282,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -26991,7 +27471,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -27124,7 +27610,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -27219,7 +27711,13 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  let self: module GraphQL_PPX.Query = (module OneFieldQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = OneFieldQuery'.t_variables and
+      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
+      type t = OneFieldQuery'.t and
+      type Raw.t = OneFieldQuery'.Raw.t =
+    (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -27321,7 +27819,10 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    let self: module GraphQL_PPX.Fragment = (module Fragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
+      (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -27401,7 +27902,13 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -27534,7 +28041,13 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  let self: module GraphQL_PPX.Query = (module InlineFragmentQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = InlineFragmentQuery'.t_variables and
+      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
+      type t = InlineFragmentQuery'.t and
+      type Raw.t = InlineFragmentQuery'.Raw.t =
+    (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -27628,7 +28141,10 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    let self: module GraphQL_PPX.Fragment = (module DogFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
+      (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -27734,7 +28250,13 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 "
@@ -27917,7 +28439,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -28172,7 +28700,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -28411,7 +28945,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -28647,7 +29187,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -28845,7 +29391,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -29014,7 +29566,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Subscription = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Subscription with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -29269,7 +29827,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -29506,7 +30070,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -29743,7 +30313,13 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  let self: module GraphQL_PPX.Query = (module MyQuery3');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery3'.t_variables and
+      type Raw.t_variables = MyQuery3'.Raw.t_variables and
+      type t = MyQuery3'.t and
+      type Raw.t = MyQuery3'.Raw.t =
+    (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -29980,7 +30556,13 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  let self: module GraphQL_PPX.Query = (module MyQuery4');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery4'.t_variables and
+      type Raw.t_variables = MyQuery4'.Raw.t_variables and
+      type t = MyQuery4'.t and
+      type Raw.t = MyQuery4'.Raw.t =
+    (module MyQuery4');
 };
 "
 `;
@@ -30187,7 +30769,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -30367,7 +30955,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -30525,7 +31119,13 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQueryNoError'.t_variables and
+      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
+      type t = MyQueryNoError'.t and
+      type Raw.t = MyQueryNoError'.Raw.t =
+    (module MyQueryNoError');
 };
 "
 `;
@@ -30676,7 +31276,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -30936,7 +31542,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31032,7 +31644,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31311,7 +31929,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31439,7 +32063,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31587,7 +32217,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31779,7 +32415,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31871,7 +32513,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -31988,7 +32636,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -32182,7 +32836,13 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  let self: module GraphQL_PPX.Query = (module RecordsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = RecordsQuery'.t_variables and
+      type Raw.t_variables = RecordsQuery'.Raw.t_variables and
+      type t = RecordsQuery'.t and
+      type Raw.t = RecordsQuery'.Raw.t =
+    (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -32351,7 +33011,13 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ObjectsQuery'.t_variables and
+      type Raw.t_variables = ObjectsQuery'.Raw.t_variables and
+      type t = ObjectsQuery'.t and
+      type Raw.t = ObjectsQuery'.Raw.t =
+    (module ObjectsQuery');
 };
 "
 `;
@@ -32558,7 +33224,13 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  let self: module GraphQL_PPX.Query = (module Bla');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Bla'.t_variables and
+      type Raw.t_variables = Bla'.Raw.t_variables and
+      type t = Bla'.t and
+      type Raw.t = Bla'.Raw.t =
+    (module Bla');
   include ExtendQuery(Bla');
 };
 "
@@ -32715,7 +33387,10 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    let self: module GraphQL_PPX.Fragment = (module ListFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
+      (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -32802,7 +33477,10 @@ module Fragments {
   };
   module Another = {
     include Another';
-    let self: module GraphQL_PPX.Fragment = (module Another');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Another'.t and type Raw.t = Another'.Raw.t =
+      (module Another');
   };
 };
 module MyQuery' = {
@@ -33115,7 +33793,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -33190,7 +33874,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -33403,7 +34093,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -33590,7 +34286,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -33792,7 +34494,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -33997,7 +34705,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -34093,7 +34807,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -34189,7 +34909,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -34512,7 +35238,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -34791,7 +35523,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -35086,7 +35824,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -35255,7 +35999,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Mutation = (module Normal');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -35396,7 +36146,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Mutation = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -35537,7 +36293,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Mutation = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -35712,7 +36474,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Query = (module Normal');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -35863,7 +36631,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Query = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -36014,7 +36788,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Query = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -36154,7 +36934,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -36327,7 +37113,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -36455,7 +37247,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -36545,7 +37343,13 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  let self: module GraphQL_PPX.Query = (module OneFieldQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = OneFieldQuery'.t_variables and
+      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
+      type t = OneFieldQuery'.t and
+      type Raw.t = OneFieldQuery'.Raw.t =
+    (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -36647,7 +37451,10 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    let self: module GraphQL_PPX.Fragment = (module Fragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
+      (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -36722,7 +37529,13 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -36850,7 +37663,13 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  let self: module GraphQL_PPX.Query = (module InlineFragmentQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = InlineFragmentQuery'.t_variables and
+      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
+      type t = InlineFragmentQuery'.t and
+      type Raw.t = InlineFragmentQuery'.Raw.t =
+    (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -36944,7 +37763,10 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    let self: module GraphQL_PPX.Fragment = (module DogFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
+      (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -37045,7 +37867,13 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 "
@@ -37218,7 +38046,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -37468,7 +38302,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -37670,7 +38510,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -37896,7 +38742,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -38084,7 +38936,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -38248,7 +39106,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Subscription = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Subscription with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -38498,7 +39362,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -38730,7 +39600,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -38962,7 +39838,13 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  let self: module GraphQL_PPX.Query = (module MyQuery3');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery3'.t_variables and
+      type Raw.t_variables = MyQuery3'.Raw.t_variables and
+      type t = MyQuery3'.t and
+      type Raw.t = MyQuery3'.Raw.t =
+    (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -39194,7 +40076,13 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  let self: module GraphQL_PPX.Query = (module MyQuery4');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery4'.t_variables and
+      type Raw.t_variables = MyQuery4'.Raw.t_variables and
+      type t = MyQuery4'.t and
+      type Raw.t = MyQuery4'.Raw.t =
+    (module MyQuery4');
 };
 "
 `;
@@ -39396,7 +40284,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -39571,7 +40465,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -39724,7 +40624,13 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQueryNoError'.t_variables and
+      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
+      type t = MyQueryNoError'.t and
+      type Raw.t = MyQueryNoError'.Raw.t =
+    (module MyQueryNoError');
 };
 "
 `;
@@ -39870,7 +40776,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -40125,7 +41037,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -40238,7 +41156,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -40550,7 +41474,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -40686,7 +41616,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -40868,7 +41804,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -41059,7 +42001,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -41170,7 +42118,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -41312,7 +42266,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -41506,7 +42466,13 @@ module RecordsQuery {
 };
 module RecordsQuery = {
   include RecordsQuery';
-  let self: module GraphQL_PPX.Query = (module RecordsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = RecordsQuery'.t_variables and
+      type Raw.t_variables = RecordsQuery'.Raw.t_variables and
+      type t = RecordsQuery'.t and
+      type Raw.t = RecordsQuery'.Raw.t =
+    (module RecordsQuery');
 };
 module ObjectsQuery' = {
   module Raw = {
@@ -41675,7 +42641,13 @@ module ObjectsQuery {
 };
 module ObjectsQuery = {
   include ObjectsQuery';
-  let self: module GraphQL_PPX.Query = (module ObjectsQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ObjectsQuery'.t_variables and
+      type Raw.t_variables = ObjectsQuery'.Raw.t_variables and
+      type t = ObjectsQuery'.t and
+      type Raw.t = ObjectsQuery'.Raw.t =
+    (module ObjectsQuery');
 };
 "
 `;
@@ -41885,7 +42857,13 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  let self: module GraphQL_PPX.Query = (module Bla');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Bla'.t_variables and
+      type Raw.t_variables = Bla'.Raw.t_variables and
+      type t = Bla'.t and
+      type Raw.t = Bla'.Raw.t =
+    (module Bla');
   include ExtendQuery(Bla');
 };
 "
@@ -42035,7 +43013,10 @@ module Fragments {
   };
   module ListFragment = {
     include ListFragment';
-    let self: module GraphQL_PPX.Fragment = (module ListFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
+      (module ListFragment');
   };
   module Another' = {
     let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -42123,7 +43104,10 @@ module Fragments {
   };
   module Another = {
     include Another';
-    let self: module GraphQL_PPX.Fragment = (module Another');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Another'.t and type Raw.t = Another'.Raw.t =
+      (module Another');
   };
 };
 module MyQuery' = {
@@ -42452,7 +43436,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -42530,7 +43520,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -42746,7 +43742,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -42946,7 +43948,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -43175,7 +44183,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -43399,7 +44413,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -43498,7 +44518,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -43594,7 +44620,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -43936,7 +44968,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -44248,7 +45286,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -44579,7 +45623,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 "
 `;
@@ -44766,7 +45816,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Mutation = (module Normal');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -44925,7 +45981,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Mutation = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -45084,7 +46146,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Mutation = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -45265,7 +46333,13 @@ module Normal {
 };
 module Normal = {
   include Normal';
-  let self: module GraphQL_PPX.Query = (module Normal');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = Normal'.t_variables and
+      type Raw.t_variables = Normal'.Raw.t_variables and
+      type t = Normal'.t and
+      type Raw.t = Normal'.Raw.t =
+    (module Normal');
 };
 module ByConfig' = {
   module Raw = {
@@ -45422,7 +46496,13 @@ module ByConfig {
 };
 module ByConfig = {
   include ByConfig';
-  let self: module GraphQL_PPX.Query = (module ByConfig');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByConfig'.t_variables and
+      type Raw.t_variables = ByConfig'.Raw.t_variables and
+      type t = ByConfig'.t and
+      type Raw.t = ByConfig'.Raw.t =
+    (module ByConfig');
 };
 module ByDirective' = {
   module Raw = {
@@ -45579,7 +46659,13 @@ module ByDirective {
 };
 module ByDirective = {
   include ByDirective';
-  let self: module GraphQL_PPX.Query = (module ByDirective');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = ByDirective'.t_variables and
+      type Raw.t_variables = ByDirective'.Raw.t_variables and
+      type t = ByDirective'.t and
+      type Raw.t = ByDirective'.Raw.t =
+    (module ByDirective');
 };
 "
 `;
@@ -45726,7 +46812,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -45925,7 +47017,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -46058,7 +47156,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module OneFieldQuery' = {
   module Raw = {
@@ -46154,7 +47258,13 @@ module OneFieldQuery {
 };
 module OneFieldQuery = {
   include OneFieldQuery';
-  let self: module GraphQL_PPX.Query = (module OneFieldQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = OneFieldQuery'.t_variables and
+      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
+      type t = OneFieldQuery'.t and
+      type Raw.t = OneFieldQuery'.Raw.t =
+    (module OneFieldQuery');
 };
 module ExternalFragmentQuery = {
   module Fragment' = {
@@ -46256,7 +47366,10 @@ module ExternalFragmentQuery {
   };
   module Fragment = {
     include Fragment';
-    let self: module GraphQL_PPX.Fragment = (module Fragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
+      (module Fragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -46334,7 +47447,13 @@ module ExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 module InlineFragmentQuery' = {
@@ -46463,7 +47582,13 @@ module InlineFragmentQuery {
 };
 module InlineFragmentQuery = {
   include InlineFragmentQuery';
-  let self: module GraphQL_PPX.Query = (module InlineFragmentQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = InlineFragmentQuery'.t_variables and
+      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
+      type t = InlineFragmentQuery'.t and
+      type Raw.t = InlineFragmentQuery'.Raw.t =
+    (module InlineFragmentQuery');
 };
 module UnionExternalFragmentQuery = {
   module DogFragment' = {
@@ -46557,7 +47682,10 @@ module UnionExternalFragmentQuery {
   };
   module DogFragment = {
     include DogFragment';
-    let self: module GraphQL_PPX.Fragment = (module DogFragment');
+    let self:
+      module GraphQL_PPX.Fragment with
+        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
+      (module DogFragment');
   };
   module Untitled1' = {
     module Raw = {
@@ -46663,7 +47791,13 @@ module UnionExternalFragmentQuery {
   };
   module Untitled1 = {
     include Untitled1';
-    let self: module GraphQL_PPX.Query = (module Untitled1');
+    let self:
+      module GraphQL_PPX.Query with
+        type t_variables = Untitled1'.t_variables and
+        type Raw.t_variables = Untitled1'.Raw.t_variables and
+        type t = Untitled1'.t and
+        type Raw.t = Untitled1'.Raw.t =
+      (module Untitled1');
   };
 };
 "
@@ -46862,7 +47996,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -47109,7 +48249,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -47330,7 +48476,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -47596,7 +48748,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -47795,7 +48953,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -47967,7 +49131,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Subscription = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Subscription with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -48214,7 +49384,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQuery2' = {
   module Raw = {
@@ -48443,7 +49619,13 @@ module MyQuery2 {
 };
 module MyQuery2 = {
   include MyQuery2';
-  let self: module GraphQL_PPX.Query = (module MyQuery2');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery2'.t_variables and
+      type Raw.t_variables = MyQuery2'.Raw.t_variables and
+      type t = MyQuery2'.t and
+      type Raw.t = MyQuery2'.Raw.t =
+    (module MyQuery2');
 };
 module MyQuery3' = {
   module Raw = {
@@ -48672,7 +49854,13 @@ module MyQuery3 {
 };
 module MyQuery3 = {
   include MyQuery3';
-  let self: module GraphQL_PPX.Query = (module MyQuery3');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery3'.t_variables and
+      type Raw.t_variables = MyQuery3'.Raw.t_variables and
+      type t = MyQuery3'.t and
+      type Raw.t = MyQuery3'.Raw.t =
+    (module MyQuery3');
 };
 module MyQuery4' = {
   module Raw = {
@@ -48901,7 +50089,13 @@ module MyQuery4 {
 };
 module MyQuery4 = {
   include MyQuery4';
-  let self: module GraphQL_PPX.Query = (module MyQuery4');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery4'.t_variables and
+      type Raw.t_variables = MyQuery4'.Raw.t_variables and
+      type t = MyQuery4'.t and
+      type Raw.t = MyQuery4'.Raw.t =
+    (module MyQuery4');
 };
 "
 `;
@@ -49108,7 +50302,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -49289,7 +50489,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -49448,7 +50654,13 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQueryNoError'.t_variables and
+      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
+      type t = MyQueryNoError'.t and
+      type Raw.t = MyQueryNoError'.Raw.t =
+    (module MyQueryNoError');
 };
 "
 `;
@@ -49598,7 +50810,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;
@@ -49868,7 +51086,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Mutation = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Mutation with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 "
 `;

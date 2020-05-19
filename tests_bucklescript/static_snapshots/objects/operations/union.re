@@ -167,7 +167,13 @@ module MyQuery {
 };
 module MyQuery = {
   include MyQuery';
-  let self: module GraphQL_PPX.Query = (module MyQuery');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQuery'.t_variables and
+      type Raw.t_variables = MyQuery'.Raw.t_variables and
+      type t = MyQuery'.t and
+      type Raw.t = MyQuery'.Raw.t =
+    (module MyQuery');
 };
 module MyQueryNoError' = {
   module Raw = {
@@ -320,5 +326,11 @@ module MyQueryNoError {
 };
 module MyQueryNoError = {
   include MyQueryNoError';
-  let self: module GraphQL_PPX.Query = (module MyQueryNoError');
+  let self:
+    module GraphQL_PPX.Query with
+      type t_variables = MyQueryNoError'.t_variables and
+      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
+      type t = MyQueryNoError'.t and
+      type Raw.t = MyQueryNoError'.Raw.t =
+    (module MyQueryNoError');
 };

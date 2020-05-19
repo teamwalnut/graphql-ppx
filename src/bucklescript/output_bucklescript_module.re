@@ -317,14 +317,58 @@ let wrap_module = (name: string, contents) => {
 };
 
 let wrap_query_module = (definition, name: string, contents, config) => {
+  let module_name = Generator_utils.capitalize_ascii(name ++ "'");
+  let type_annotations = [
+    (
+      {txt: Longident.parse("t"), loc: Location.none},
+      Typ.constr(
+        {txt: Longident.parse(module_name ++ ".t"), loc: Location.none},
+        [],
+      ),
+    ),
+    (
+      {txt: Longident.parse("Raw.t"), loc: Location.none},
+      Typ.constr(
+        {txt: Longident.parse(module_name ++ ".Raw.t"), loc: Location.none},
+        [],
+      ),
+    ),
+  ];
+  let type_annotations =
+    switch (definition) {
+    | Fragment => type_annotations
+    | Operation(_) =>
+      List.append(
+        [
+          (
+            {txt: Longident.parse("t_variables"), loc: Location.none},
+            Typ.constr(
+              {
+                txt: Longident.parse(module_name ++ ".t_variables"),
+                loc: Location.none,
+              },
+              [],
+            ),
+          ),
+          (
+            {txt: Longident.parse("Raw.t_variables"), loc: Location.none},
+            Typ.constr(
+              {
+                txt: Longident.parse(module_name ++ ".Raw.t_variables"),
+                loc: Location.none,
+              },
+              [],
+            ),
+          ),
+        ],
+        type_annotations,
+      )
+    };
+
   let inner_result = [
     Str.include_(
       Incl.mk(
-        Mod.ident({
-          txt:
-            Longident.Lident(Generator_utils.capitalize_ascii(name ++ "'")),
-          loc: Location.none,
-        }),
+        Mod.ident({txt: Longident.Lident(module_name), loc: Location.none}),
       ),
     ),
     [%stri
@@ -342,7 +386,7 @@ let wrap_query_module = (definition, name: string, contents, config) => {
                 },
               ),
           },
-          [],
+          type_annotations,
         )
       ] = [%e
         Exp.pack(

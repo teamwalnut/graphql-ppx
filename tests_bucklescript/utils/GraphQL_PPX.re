@@ -59,6 +59,7 @@ module type Operation = {
     type t_variables;
   };
   type t;
+  type t_variables;
 
   let parse: Raw.t => t;
   let serialize: t => Raw.t;
@@ -72,6 +73,7 @@ module type Query = {
     type t_variables;
   };
   type t;
+  type t_variables;
 
   let parse: Raw.t => t;
   let serialize: t => Raw.t;
