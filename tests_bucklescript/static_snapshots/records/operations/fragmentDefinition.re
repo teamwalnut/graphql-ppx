@@ -17,7 +17,7 @@
   }
 ];
 module Fragments = {
-  module ListFragment' = {
+  module ListFragment = {
     let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {
@@ -139,14 +139,7 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module ListFragment = {
-    include ListFragment';
-    let self:
-      module GraphQL_PPX.Fragment with
-        type t = ListFragment'.t and type Raw.t = ListFragment'.Raw.t =
-      (module ListFragment');
-  };
-  module Another' = {
+  module Another = {
     let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
     module Raw = {
       type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -230,15 +223,8 @@ module Fragments {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Another = {
-    include Another';
-    let self:
-      module GraphQL_PPX.Fragment with
-        type t = Another'.t and type Raw.t = Another'.Raw.t =
-      (module Another');
-  };
 };
-module MyQuery' = {
+module MyQuery = {
   module Raw = {
     type t_l2;
     type t_l3;
@@ -562,17 +548,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery = {
-  include MyQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery'.t_variables and
-      type Raw.t_variables = MyQuery'.Raw.t_variables and
-      type t = MyQuery'.t and
-      type Raw.t = MyQuery'.Raw.t =
-    (module MyQuery');
-};
-module MyQuery2' = {
+module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
     type t_variables = Js.Json.t;
@@ -645,14 +621,4 @@ module MyQuery2 {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
-};
-module MyQuery2 = {
-  include MyQuery2';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery2'.t_variables and
-      type Raw.t_variables = MyQuery2'.Raw.t_variables and
-      type t = MyQuery2'.t and
-      type Raw.t = MyQuery2'.Raw.t =
-    (module MyQuery2');
 };

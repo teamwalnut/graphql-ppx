@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.simpleSubscription;
   var typename = value$1["__typename"];
@@ -68,30 +66,13 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */

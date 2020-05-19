@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n";
-
 function parse(value) {
   return {
           optionalInputArgs: value.optionalInputArgs
@@ -34,9 +32,9 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -44,24 +42,5 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  serializeVariables: serializeVariables,
-  makeVariables: makeVariables,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */

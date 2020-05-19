@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.variousScalars;
   return {
@@ -33,33 +31,15 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
 var Raw$1 = { };
-
-var query$1 = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
 
 function parse$1(value) {
   var value$1 = value.variousScalars;
@@ -87,31 +67,15 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var OneFieldQuery$prime = {
+var OneFieldQuery = {
   Raw: Raw$1,
-  query: query$1,
+  query: "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var self$1 = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1
-};
-
-var OneFieldQuery = {
-  Raw: Raw$1,
-  query: query$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: self$1
-};
-
-var query$2 = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
+var query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
 
 var Raw$2 = { };
 
@@ -138,8 +102,8 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var Fragment$prime = {
-  query: query$2,
+var Fragment = {
+  query: query,
   Raw: Raw$2,
   parse: parse$2,
   serialize: serialize$2,
@@ -147,19 +111,9 @@ var Fragment$prime = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var Fragment = {
-  query: query$2,
-  Raw: Raw$2,
-  parse: parse$2,
-  serialize: serialize$2,
-  name: name,
-  Z__INTERNAL: Z__INTERNAL$2,
-  self: Fragment$prime
-};
-
 var Raw$3 = { };
 
-var query$3 = "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\nfragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
+var query$1 = "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\nfragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
 
 function parse$3(value) {
   return {
@@ -179,40 +133,20 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var Untitled1$prime = {
+var Untitled1 = {
   Raw: Raw$3,
-  query: query$3,
+  query: query$1,
   parse: parse$3,
   serialize: serialize$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var self$2 = {
-  query: query$3,
-  Raw: Raw$3,
-  parse: parse$3,
-  serialize: serialize$3
-};
-
-var Untitled1 = {
-  Raw: Raw$3,
-  query: query$3,
-  parse: parse$3,
-  serialize: serialize$3,
-  Z__INTERNAL: Z__INTERNAL$3,
-  self: self$2
-};
-
 var ExternalFragmentQuery = {
-  Fragment$prime: Fragment$prime,
   Fragment: Fragment,
-  Untitled1$prime: Untitled1$prime,
   Untitled1: Untitled1
 };
 
 var Raw$4 = { };
-
-var query$4 = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
 
 function parse$4(value) {
   var value$1 = value.dogOrHuman;
@@ -256,31 +190,15 @@ var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
-var InlineFragmentQuery$prime = {
+var InlineFragmentQuery = {
   Raw: Raw$4,
-  query: query$4,
+  query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n",
   parse: parse$4,
   serialize: serialize$4,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var self$3 = {
-  query: query$4,
-  Raw: Raw$4,
-  parse: parse$4,
-  serialize: serialize$4
-};
-
-var InlineFragmentQuery = {
-  Raw: Raw$4,
-  query: query$4,
-  parse: parse$4,
-  serialize: serialize$4,
-  Z__INTERNAL: Z__INTERNAL$4,
-  self: self$3
-};
-
-var query$5 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
+var query$2 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
 
 var Raw$5 = { };
 
@@ -307,8 +225,8 @@ var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
-var DogFragment$prime = {
-  query: query$5,
+var DogFragment = {
+  query: query$2,
   Raw: Raw$5,
   parse: parse$5,
   serialize: serialize$5,
@@ -316,19 +234,9 @@ var DogFragment$prime = {
   Z__INTERNAL: Z__INTERNAL$5
 };
 
-var DogFragment = {
-  query: query$5,
-  Raw: Raw$5,
-  parse: parse$5,
-  serialize: serialize$5,
-  name: name$1,
-  Z__INTERNAL: Z__INTERNAL$5,
-  self: DogFragment$prime
-};
-
 var Raw$6 = { };
 
-var query$6 = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\nfragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
+var query$3 = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\nfragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
 
 function parse$6(value) {
   var value$1 = value.dogOrHuman;
@@ -357,43 +265,22 @@ var Z__INTERNAL$6 = {
   graphql_module: 0
 };
 
-var Untitled1$prime$1 = {
+var Untitled1$1 = {
   Raw: Raw$6,
-  query: query$6,
+  query: query$3,
   parse: parse$6,
   serialize: serialize$6,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
-var self$4 = {
-  query: query$6,
-  Raw: Raw$6,
-  parse: parse$6,
-  serialize: serialize$6
-};
-
-var Untitled1$1 = {
-  Raw: Raw$6,
-  query: query$6,
-  parse: parse$6,
-  serialize: serialize$6,
-  Z__INTERNAL: Z__INTERNAL$6,
-  self: self$4
-};
-
 var UnionExternalFragmentQuery = {
-  DogFragment$prime: DogFragment$prime,
   DogFragment: DogFragment,
-  Untitled1$prime: Untitled1$prime$1,
   Untitled1: Untitled1$1
 };
 
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
-exports.OneFieldQuery$prime = OneFieldQuery$prime;
 exports.OneFieldQuery = OneFieldQuery;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
-exports.InlineFragmentQuery$prime = InlineFragmentQuery$prime;
 exports.InlineFragmentQuery = InlineFragmentQuery;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;
 /* No side effect */

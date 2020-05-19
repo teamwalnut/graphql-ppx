@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n";
-
 function parse(value) {
   return {
           scalarsInput: value.scalarsInput
@@ -59,9 +57,9 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -69,24 +67,5 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  serializeVariables: serializeVariables,
-  makeVariables: makeVariables,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */

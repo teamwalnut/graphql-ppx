@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module MyQuery' = {
+module MyQuery = {
   module Raw = {
     type t = {. "nonrecursiveInput": string};
     type t_variables = {. "arg": t_variables_NonrecursiveInput}
@@ -269,17 +269,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery = {
-  include MyQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery'.t_variables and
-      type Raw.t_variables = MyQuery'.Raw.t_variables and
-      type t = MyQuery'.t and
-      type Raw.t = MyQuery'.Raw.t =
-    (module MyQuery');
-};
-module MyQuery2' = {
+module MyQuery2 = {
   module Raw = {
     type t = {
       .
@@ -569,14 +559,4 @@ module MyQuery2 {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
-};
-module MyQuery2 = {
-  include MyQuery2';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery2'.t_variables and
-      type Raw.t_variables = MyQuery2'.Raw.t_variables and
-      type t = MyQuery2'.t and
-      type Raw.t = MyQuery2'.Raw.t =
-    (module MyQuery2');
 };

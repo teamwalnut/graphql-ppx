@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module MyQuery' = {
+module MyQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -191,17 +191,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery = {
-  include MyQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery'.t_variables and
-      type Raw.t_variables = MyQuery'.Raw.t_variables and
-      type t = MyQuery'.t and
-      type Raw.t = MyQuery'.Raw.t =
-    (module MyQuery');
-};
-module MyQueryNoError' = {
+module MyQueryNoError = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -375,14 +365,4 @@ module MyQueryNoError {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
-};
-module MyQueryNoError = {
-  include MyQueryNoError';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQueryNoError'.t_variables and
-      type Raw.t_variables = MyQueryNoError'.Raw.t_variables and
-      type t = MyQueryNoError'.t and
-      type Raw.t = MyQueryNoError'.Raw.t =
-    (module MyQueryNoError');
 };

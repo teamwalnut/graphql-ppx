@@ -6,8 +6,6 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 var Raw = { };
 
-var query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           nonrecursiveInput: value.nonrecursiveInput
@@ -113,9 +111,9 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -127,31 +125,7 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  serializeVariables: serializeVariables,
-  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput,
-  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
-  makeVariables: makeVariables,
-  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
 var Raw$1 = { };
-
-var query$1 = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
 
 function parse$1(value) {
   return {
@@ -264,9 +238,9 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2$prime = {
+var MyQuery2 = {
   Raw: Raw$1,
-  query: query$1,
+  query: "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n",
   parse: parse$1,
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
@@ -278,30 +252,6 @@ var MyQuery2$prime = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var self$1 = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1
-};
-
-var MyQuery2 = {
-  Raw: Raw$1,
-  query: query$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  serializeVariables: serializeVariables$1,
-  serializeInputObjectNonrecursiveInput: serializeInputObjectNonrecursiveInput$1,
-  serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
-  makeVariables: makeVariables$1,
-  makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: self$1
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
-exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */

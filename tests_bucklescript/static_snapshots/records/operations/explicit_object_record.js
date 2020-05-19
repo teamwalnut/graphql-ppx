@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.lists;
   var value$2 = value$1.nullableOfNullable;
@@ -79,33 +77,15 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var RecordsQuery$prime = {
+var RecordsQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var RecordsQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
 var Raw$1 = { };
-
-var query$1 = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
 
 function parse$1(value) {
   var value$1 = value.lists;
@@ -183,32 +163,14 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ObjectsQuery$prime = {
+var ObjectsQuery = {
   Raw: Raw$1,
-  query: query$1,
+  query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var self$1 = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1
-};
-
-var ObjectsQuery = {
-  Raw: Raw$1,
-  query: query$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: self$1
-};
-
-exports.RecordsQuery$prime = RecordsQuery$prime;
 exports.RecordsQuery = RecordsQuery;
-exports.ObjectsQuery$prime = ObjectsQuery$prime;
 exports.ObjectsQuery = ObjectsQuery;
 /* No side effect */

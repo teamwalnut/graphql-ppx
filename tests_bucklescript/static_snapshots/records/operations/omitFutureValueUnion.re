@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module Normal' = {
+module Normal = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -171,17 +171,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module Normal = {
-  include Normal';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = Normal'.t_variables and
-      type Raw.t_variables = Normal'.Raw.t_variables and
-      type t = Normal'.t and
-      type Raw.t = Normal'.Raw.t =
-    (module Normal');
-};
-module ByConfig' = {
+module ByConfig = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -334,17 +324,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
-  include ByConfig';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = ByConfig'.t_variables and
-      type Raw.t_variables = ByConfig'.Raw.t_variables and
-      type t = ByConfig'.t and
-      type Raw.t = ByConfig'.Raw.t =
-    (module ByConfig');
-};
-module ByDirective' = {
+module ByDirective = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -496,14 +476,4 @@ module ByDirective {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
-};
-module ByDirective = {
-  include ByDirective';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = ByDirective'.t_variables and
-      type Raw.t_variables = ByDirective'.Raw.t_variables and
-      type t = ByDirective'.t and
-      type Raw.t = ByDirective'.Raw.t =
-    (module ByDirective');
 };

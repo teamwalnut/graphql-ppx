@@ -5,8 +5,6 @@ var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exception
 
 var Raw = { };
 
-var query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
@@ -68,33 +66,15 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Normal$prime = {
+var Normal = {
   Raw: Raw,
-  query: query,
+  query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var Normal = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
 var Raw$1 = { };
-
-var query$1 = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
 
 function parse$1(value) {
   var value$1 = value.mutationWithError;
@@ -152,33 +132,15 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var ByConfig$prime = {
+var ByConfig = {
   Raw: Raw$1,
-  query: query$1,
+  query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var self$1 = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1
-};
-
-var ByConfig = {
-  Raw: Raw$1,
-  query: query$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: self$1
-};
-
 var Raw$2 = { };
-
-var query$2 = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n";
 
 function parse$2(value) {
   var value$1 = value.mutationWithError;
@@ -236,34 +198,15 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var ByDirective$prime = {
+var ByDirective = {
   Raw: Raw$2,
-  query: query$2,
+  query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var self$2 = {
-  query: query$2,
-  Raw: Raw$2,
-  parse: parse$2,
-  serialize: serialize$2
-};
-
-var ByDirective = {
-  Raw: Raw$2,
-  query: query$2,
-  parse: parse$2,
-  serialize: serialize$2,
-  Z__INTERNAL: Z__INTERNAL$2,
-  self: self$2
-};
-
-exports.Normal$prime = Normal$prime;
 exports.Normal = Normal;
-exports.ByConfig$prime = ByConfig$prime;
 exports.ByConfig = ByConfig;
-exports.ByDirective$prime = ByDirective$prime;
 exports.ByDirective = ByDirective;
 /* No side effect */

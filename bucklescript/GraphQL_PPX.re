@@ -50,31 +50,3 @@ let rec deepMerge = (json1: Js.Json.t, json2: Js.Json.t) => {
   | ((_, _, _), (_, _, _)) => json2
   };
 };
-
-module type Operation = {
-  let query: string;
-
-  module Raw: {
-    type t;
-    type t_variables;
-  };
-  type t;
-
-  let parse: Raw.t => t;
-  let serialize: t => Raw.t;
-};
-
-module type Query = {include Operation;};
-
-module type Mutation = {include Operation;};
-
-module type Subscription = {include Operation;};
-
-module type Fragment = {
-  let query: string;
-  module Raw: {type t;};
-  type t;
-
-  let parse: Raw.t => t;
-  let serialize: t => Raw.t;
-};

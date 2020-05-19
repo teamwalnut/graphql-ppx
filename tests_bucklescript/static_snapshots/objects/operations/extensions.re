@@ -199,12 +199,5 @@ module GraphQL {
 };
 module Bla = {
   include Bla';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = Bla'.t_variables and
-      type Raw.t_variables = Bla'.Raw.t_variables and
-      type t = Bla'.t and
-      type Raw.t = Bla'.Raw.t =
-    (module Bla');
   include ExtendQuery(Bla');
 };

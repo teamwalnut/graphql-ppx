@@ -99,13 +99,6 @@ var Bla$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
 function use(param) {
   return /* () */0;
 }
@@ -116,7 +109,6 @@ var Bla = {
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL,
-  self: self,
   use: use
 };
 

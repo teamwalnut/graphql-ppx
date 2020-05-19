@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module MyQuery' = {
+module MyQuery = {
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -196,14 +196,4 @@ module MyQuery {
 ```*/
     let graphql_module: graphql_module = Obj.magic(0);
   };
-};
-module MyQuery = {
-  include MyQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery'.t_variables and
-      type Raw.t_variables = MyQuery'.Raw.t_variables and
-      type t = MyQuery'.t and
-      type Raw.t = MyQuery'.Raw.t =
-    (module MyQuery');
 };

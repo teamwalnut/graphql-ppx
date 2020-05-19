@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.variousScalars;
   var value$2 = value$1.nullableString;
@@ -67,28 +65,12 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   Z__INTERNAL: Z__INTERNAL
-};
-
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
 };
 
 var Raw$1 = { };
@@ -96,7 +78,7 @@ var Raw$1 = { };
 let { graphql } = require("gatsby")
 ;
 
-var query$1 = (graphql`
+var query = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -174,28 +156,12 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var MyQuery2$prime = {
+var MyQuery2 = {
   Raw: Raw$1,
-  query: query$1,
+  query: query,
   parse: parse$1,
   serialize: serialize$1,
   Z__INTERNAL: Z__INTERNAL$1
-};
-
-var self$1 = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1
-};
-
-var MyQuery2 = {
-  Raw: Raw$1,
-  query: query$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: self$1
 };
 
 var Raw$2 = { };
@@ -203,7 +169,7 @@ var Raw$2 = { };
 let { graphql } = require("gatsby")
 ;
 
-var query$2 = (graphql`
+var query$1 = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -281,28 +247,12 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery3$prime = {
+var MyQuery3 = {
   Raw: Raw$2,
-  query: query$2,
+  query: query$1,
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL$2
-};
-
-var self$2 = {
-  query: query$2,
-  Raw: Raw$2,
-  parse: parse$2,
-  serialize: serialize$2
-};
-
-var MyQuery3 = {
-  Raw: Raw$2,
-  query: query$2,
-  parse: parse$2,
-  serialize: serialize$2,
-  Z__INTERNAL: Z__INTERNAL$2,
-  self: self$2
 };
 
 var Raw$3 = { };
@@ -310,7 +260,7 @@ var Raw$3 = { };
 let graphql = require("gatsby")
 ;
 
-var query$3 = (graphql`
+var query$2 = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -388,36 +338,16 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery4$prime = {
+var MyQuery4 = {
   Raw: Raw$3,
-  query: query$3,
+  query: query$2,
   parse: parse$3,
   serialize: serialize$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var self$3 = {
-  query: query$3,
-  Raw: Raw$3,
-  parse: parse$3,
-  serialize: serialize$3
-};
-
-var MyQuery4 = {
-  Raw: Raw$3,
-  query: query$3,
-  parse: parse$3,
-  serialize: serialize$3,
-  Z__INTERNAL: Z__INTERNAL$3,
-  self: self$3
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
-exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
-exports.MyQuery3$prime = MyQuery3$prime;
 exports.MyQuery3 = MyQuery3;
-exports.MyQuery4$prime = MyQuery4$prime;
 exports.MyQuery4 = MyQuery4;
 /*  Not a pure module */

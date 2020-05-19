@@ -27,7 +27,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery' = {
+module MyQuery = {
   module Raw = {
     type t_variousScalars = {
       string,
@@ -123,17 +123,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery = {
-  include MyQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = MyQuery'.t_variables and
-      type Raw.t_variables = MyQuery'.Raw.t_variables and
-      type t = MyQuery'.t and
-      type Raw.t = MyQuery'.Raw.t =
-    (module MyQuery');
-};
-module OneFieldQuery' = {
+module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
@@ -225,18 +215,8 @@ module OneFieldQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
-  include OneFieldQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = OneFieldQuery'.t_variables and
-      type Raw.t_variables = OneFieldQuery'.Raw.t_variables and
-      type t = OneFieldQuery'.t and
-      type Raw.t = OneFieldQuery'.Raw.t =
-    (module OneFieldQuery');
-};
 module ExternalFragmentQuery = {
-  module Fragment' = {
+  module Fragment = {
     let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
       type t = {
@@ -333,14 +313,7 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Fragment = {
-    include Fragment';
-    let self:
-      module GraphQL_PPX.Fragment with
-        type t = Fragment'.t and type Raw.t = Fragment'.Raw.t =
-      (module Fragment');
-  };
-  module Untitled1' = {
+  module Untitled1 = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = Js.Json.t;
@@ -414,18 +387,8 @@ module ExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
-    include Untitled1';
-    let self:
-      module GraphQL_PPX.Query with
-        type t_variables = Untitled1'.t_variables and
-        type Raw.t_variables = Untitled1'.Raw.t_variables and
-        type t = Untitled1'.t and
-        type Raw.t = Untitled1'.Raw.t =
-      (module Untitled1');
-  };
 };
-module InlineFragmentQuery' = {
+module InlineFragmentQuery = {
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -549,18 +512,8 @@ module InlineFragmentQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module InlineFragmentQuery = {
-  include InlineFragmentQuery';
-  let self:
-    module GraphQL_PPX.Query with
-      type t_variables = InlineFragmentQuery'.t_variables and
-      type Raw.t_variables = InlineFragmentQuery'.Raw.t_variables and
-      type t = InlineFragmentQuery'.t and
-      type Raw.t = InlineFragmentQuery'.Raw.t =
-    (module InlineFragmentQuery');
-};
 module UnionExternalFragmentQuery = {
-  module DogFragment' = {
+  module DogFragment = {
     let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
@@ -649,14 +602,7 @@ module UnionExternalFragmentQuery {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module DogFragment = {
-    include DogFragment';
-    let self:
-      module GraphQL_PPX.Fragment with
-        type t = DogFragment'.t and type Raw.t = DogFragment'.Raw.t =
-      (module DogFragment');
-  };
-  module Untitled1' = {
+  module Untitled1 = {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -757,15 +703,5 @@ module UnionExternalFragmentQuery {
 ```*/
       let graphql_module: graphql_module = Obj.magic(0);
     };
-  };
-  module Untitled1 = {
-    include Untitled1';
-    let self:
-      module GraphQL_PPX.Query with
-        type t_variables = Untitled1'.t_variables and
-        type Raw.t_variables = Untitled1'.Raw.t_variables and
-        type t = Untitled1'.t and
-        type Raw.t = Untitled1'.Raw.t =
-      (module Untitled1');
   };
 };

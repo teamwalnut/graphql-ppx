@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           scalarsInput: value.scalarsInput
@@ -73,9 +71,9 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -85,26 +83,5 @@ var MyQuery$prime = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse,
-  serialize: serialize,
-  serializeVariables: serializeVariables,
-  serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
-  makeVariables: makeVariables,
-  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */

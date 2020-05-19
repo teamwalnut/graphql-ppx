@@ -52,7 +52,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var ListFragment$prime = {
+var ListFragment = {
   query: query,
   Raw: Raw,
   parse: parse,
@@ -60,18 +60,6 @@ var ListFragment$prime = {
   name: name,
   Z__INTERNAL: Z__INTERNAL
 };
-
-var ListFragment = {
-  query: query,
-  Raw: Raw,
-  parse: parse,
-  serialize: serialize,
-  name: name,
-  Z__INTERNAL: Z__INTERNAL,
-  self: ListFragment$prime
-};
-
-var query$1 = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
 
 var Raw$1 = { };
 
@@ -93,42 +81,28 @@ function serialize$1(value) {
         };
 }
 
-var name$1 = "Another";
-
 var Z__INTERNAL$1 = {
   graphql: 0,
   graphql_module: 0
 };
 
-var Another$prime = {
-  query: query$1,
+var Another = {
+  query: "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n",
   Raw: Raw$1,
   parse: parse$1,
   serialize: serialize$1,
-  name: name$1,
+  name: "Another",
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Another = {
-  query: query$1,
-  Raw: Raw$1,
-  parse: parse$1,
-  serialize: serialize$1,
-  name: name$1,
-  Z__INTERNAL: Z__INTERNAL$1,
-  self: Another$prime
-};
-
 var Fragments = {
-  ListFragment$prime: ListFragment$prime,
   ListFragment: ListFragment,
-  Another$prime: Another$prime,
   Another: Another
 };
 
 var Raw$2 = { };
 
-var query$2 = "query   {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+var query$1 = "query   {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$2(value) {
   var value$1 = value.l4;
@@ -225,33 +199,17 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw$2,
-  query: query$2,
+  query: query$1,
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var self = {
-  query: query$2,
-  Raw: Raw$2,
-  parse: parse$2,
-  serialize: serialize$2
-};
-
-var MyQuery = {
-  Raw: Raw$2,
-  query: query$2,
-  parse: parse$2,
-  serialize: serialize$2,
-  Z__INTERNAL: Z__INTERNAL$2,
-  self: self
-};
-
 var Raw$3 = { };
 
-var query$3 = "query   {\nlists  {\n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+var query$2 = "query   {\nlists  {\n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$3(value) {
   var value$1 = value.lists;
@@ -271,33 +229,15 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var MyQuery2$prime = {
+var MyQuery2 = {
   Raw: Raw$3,
-  query: query$3,
+  query: query$2,
   parse: parse$3,
   serialize: serialize$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var self$1 = {
-  query: query$3,
-  Raw: Raw$3,
-  parse: parse$3,
-  serialize: serialize$3
-};
-
-var MyQuery2 = {
-  Raw: Raw$3,
-  query: query$3,
-  parse: parse$3,
-  serialize: serialize$3,
-  Z__INTERNAL: Z__INTERNAL$3,
-  self: self$1
-};
-
 exports.Fragments = Fragments;
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
-exports.MyQuery2$prime = MyQuery2$prime;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */

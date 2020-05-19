@@ -59,8 +59,6 @@ var DateTime = {
 
 var Raw = { };
 
-var query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
-
 function parse$2(value) {
   var value$1 = value.customFields;
   var value$2 = value$1.nullableColor;
@@ -105,32 +103,15 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var MyQuery$prime = {
+var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
   Z__INTERNAL: Z__INTERNAL
 };
 
-var self = {
-  query: query,
-  Raw: Raw,
-  parse: parse$2,
-  serialize: serialize$2
-};
-
-var MyQuery = {
-  Raw: Raw,
-  query: query,
-  parse: parse$2,
-  serialize: serialize$2,
-  Z__INTERNAL: Z__INTERNAL,
-  self: self
-};
-
 exports.Color = Color;
 exports.DateTime = DateTime;
-exports.MyQuery$prime = MyQuery$prime;
 exports.MyQuery = MyQuery;
 /* No side effect */
