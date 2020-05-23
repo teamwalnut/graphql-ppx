@@ -335,18 +335,15 @@ let wrap_query_module = (definition, name: string, contents, config) => {
     let inner_result = [
       Str.include_(
         Incl.mk(
-          Mod.ident({
-            txt: Longident.Lident(module_name),
-            loc: Location.none,
-          }),
+          Mod.ident({txt: Longident.parse(module_name), loc: Location.none}),
         ),
       ),
       Str.include_(
         Incl.mk(
           Mod.apply(
-            Mod.ident({txt: Longident.Lident(funct), loc: Location.none}),
+            Mod.ident({txt: Longident.parse(funct), loc: Location.none}),
             Mod.ident({
-              txt: Longident.Lident(module_name),
+              txt: Longident.parse(module_name),
               loc: Location.none,
             }),
           ),

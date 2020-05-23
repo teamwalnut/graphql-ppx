@@ -11,8 +11,10 @@ module type GraphQLQuery = {
   let serialize: t => Raw.t;
 };
 
-module ExtendQuery = (M: GraphQLQuery) => {
-  let use = () => ();
+module Parent = {
+  module ExtendQuery = (M: GraphQLQuery) => {
+    let use = () => ();
+  };
 };
 
 [%graphql
@@ -26,5 +28,5 @@ module ExtendQuery = (M: GraphQLQuery) => {
       }
     }
   |};
-  {extend: "ExtendQuery"}
+  {extend: "Parent.ExtendQuery"}
 ];
