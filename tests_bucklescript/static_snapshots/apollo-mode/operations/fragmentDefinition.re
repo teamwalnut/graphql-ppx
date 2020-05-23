@@ -16,6 +16,9 @@
     cookies: [],
   }
 ];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
 module Fragments = {
   module ListFragment = {
     let query = "fragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";

@@ -1,3 +1,10 @@
+module GraphQL_PPX = {
+  // mock
+  let deepMerge = (json1, _) => {
+    json1
+  };
+};
+
 // TODO: we're flattening module when there is only one fragment. This seems misleading
 module Fragments = [%graphql
   {|

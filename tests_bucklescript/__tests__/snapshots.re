@@ -145,7 +145,6 @@ let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) => {
     execSyncWithErr(
       "./node_modules/.bin/bsc",
       [|
-        "-bs-suffix",
         "-I",
         "./utilities",
         "-c",
@@ -164,7 +163,6 @@ let get_bsb_output = (~ppxOptions, ~fileName, ~pathIn: string) =>
   execSyncWithErr(
     "./node_modules/.bin/bsc",
     [|
-      "-bs-suffix",
       "-I",
       "./utilities",
       "-c",
