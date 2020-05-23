@@ -29,6 +29,7 @@ module MyQuery = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -46,6 +47,7 @@ module MyQuery = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -147,7 +149,6 @@ module MyQuery = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -203,6 +204,7 @@ module MyQueryNoError = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -220,6 +222,7 @@ module MyQueryNoError = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -321,7 +324,6 @@ module MyQueryNoError = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

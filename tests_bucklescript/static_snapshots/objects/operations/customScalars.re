@@ -96,7 +96,6 @@ module MyQuery = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({"opt": opt, "req": req}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

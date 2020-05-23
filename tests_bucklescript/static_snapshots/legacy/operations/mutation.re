@@ -31,6 +31,7 @@ module MyQuery = {
       "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. "mutationWithError": t_mutationWithError};
+    type t_variables = Js.Json.t;
   };
   let query = "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n";
   type t_mutationWithError_value = {. "stringField": string};
@@ -51,6 +52,7 @@ module MyQuery = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -156,7 +158,6 @@ module MyQuery = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

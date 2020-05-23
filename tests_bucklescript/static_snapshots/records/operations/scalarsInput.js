@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           scalarsInput: value.scalarsInput
@@ -66,12 +64,6 @@ function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt,
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_93: 0,
   _graphql_arg_88: 0,
@@ -81,14 +73,13 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: VariousScalarsInput!)  {\nscalarsInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
   makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

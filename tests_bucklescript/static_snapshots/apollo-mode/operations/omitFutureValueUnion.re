@@ -29,6 +29,7 @@ module Normal = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -46,6 +47,7 @@ module Normal = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -147,7 +149,6 @@ module Normal = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -203,6 +204,7 @@ module ByConfig = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -219,6 +221,7 @@ module ByConfig = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -319,7 +322,6 @@ module ByConfig = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -375,6 +377,7 @@ module ByDirective = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman @ppxOmitFutureValue {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -391,6 +394,7 @@ module ByDirective = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -491,7 +495,6 @@ module ByDirective = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

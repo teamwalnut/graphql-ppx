@@ -5,8 +5,6 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 var Raw = { };
 
-var query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           recursiveInput: value.recursiveInput
@@ -59,12 +57,6 @@ function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_RecursiveInput_47: 0,
   graphql_module: 0
@@ -72,14 +64,13 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

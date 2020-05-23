@@ -34,9 +34,11 @@ module MyQuery = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
   type t = {variousScalars: scalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -79,7 +81,6 @@ module MyQuery = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -126,10 +127,12 @@ module OneFieldQuery = {
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variousScalars = {nullableString: option(string)};
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -170,7 +173,6 @@ module OneFieldQuery = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -314,6 +316,7 @@ module ExternalFragmentQuery {
   module Untitled1 = {
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -322,6 +325,7 @@ module ExternalFragmentQuery {
       )
       ++ Fragment.query;
     type t = {variousScalars: Fragment.t};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -341,7 +345,6 @@ module ExternalFragmentQuery {
           {variousScalars: variousScalars};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -394,6 +397,7 @@ module InlineFragmentQuery = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -405,6 +409,7 @@ module InlineFragmentQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -465,7 +470,6 @@ module InlineFragmentQuery = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -602,6 +606,7 @@ module UnionExternalFragmentQuery {
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = Js.Json.t;
     };
     let query =
       (
@@ -617,6 +622,7 @@ module UnionExternalFragmentQuery {
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = Js.Json.t;
     let parse: Raw.t => t =
       (value) => (
         {
@@ -656,7 +662,6 @@ module UnionExternalFragmentQuery {
           {dogOrHuman: dogOrHuman};
         }: Raw.t
       );
-    let definition = (parse, query, serialize);
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

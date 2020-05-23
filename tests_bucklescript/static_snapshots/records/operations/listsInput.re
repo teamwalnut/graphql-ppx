@@ -143,7 +143,6 @@ module MyQuery = {
     nonNullableOfNullable,
     nonNullableOfNonNullable,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:

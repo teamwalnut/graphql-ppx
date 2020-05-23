@@ -151,7 +151,6 @@ module MyQuery = {
         id,
       }: t_variables,
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:

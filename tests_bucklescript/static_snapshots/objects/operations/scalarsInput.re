@@ -157,7 +157,6 @@ module MyQuery = {
     "nullableID": nullableID,
     "id": id,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_VariousScalarsInput_47;

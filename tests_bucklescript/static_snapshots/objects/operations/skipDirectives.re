@@ -136,7 +136,6 @@ module MyQuery = {
     inp => {"var": (a => a)(inp##var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({"var": var}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

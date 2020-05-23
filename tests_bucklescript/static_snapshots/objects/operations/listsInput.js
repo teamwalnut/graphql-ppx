@@ -5,8 +5,6 @@ var $$Array = require("bs-platform/lib/js/array.js");
 
 var Raw = { };
 
-var query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           listsInput: value.listsInput
@@ -81,12 +79,6 @@ function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, no
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_ListsInput_47: 0,
   graphql_module: 0
@@ -94,14 +86,13 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
   makeInputObjectListsInput: makeInputObjectListsInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

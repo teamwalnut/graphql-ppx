@@ -6,8 +6,6 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 var Raw = { };
 
-var query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           nonrecursiveInput: value.nonrecursiveInput
@@ -105,12 +103,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_NonrecursiveInput_49: 0,
   graphql_module: 0
@@ -118,7 +110,7 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -127,13 +119,10 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
-
-var query$1 = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
 
 function parse$1(value) {
   var value$1 = value.more;
@@ -240,12 +229,6 @@ function makeInputObjectEmbeddedInput$1(field, param) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   _graphql_NonrecursiveInput_169: 0,
   _graphql_NonrecursiveInput_196: 0,
@@ -254,7 +237,7 @@ var Z__INTERNAL$1 = {
 
 var MyQuery2 = {
   Raw: Raw$1,
-  query: query$1,
+  query: "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n",
   parse: parse$1,
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
@@ -263,7 +246,6 @@ var MyQuery2 = {
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 

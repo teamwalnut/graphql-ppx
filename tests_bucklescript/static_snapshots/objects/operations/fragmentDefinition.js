@@ -2,38 +2,8 @@
 'use strict';
 
 
-function deepMerge(json1, json2) {
-  var match_000 = json1 === null;
-  var match_001 = Array.isArray(json1);
-  var match_002 = typeof json1 === "object";
-  var match_000$1 = json2 === null;
-  var match_001$1 = Array.isArray(json2);
-  var match_002$1 = typeof json2 === "object";
-  if (match_001) {
-    if (match_001$1) {
-      return json1.map((function (el1, idx) {
-                    var el2 = json2[idx];
-                    if (typeof el2 === "object") {
-                      return deepMerge(el1, el2);
-                    } else {
-                      return el2;
-                    }
-                  }));
-    } else {
-      return json2;
-    }
-  } else if (match_000 || !(match_002 && !(match_000$1 || match_001$1 || !match_002$1))) {
-    return json2;
-  } else {
-    var obj1 = Object.assign({ }, json1);
-    Object.keys(json2).forEach((function (key) {
-            var existingVal = obj1[key];
-            var newVal = json2[key];
-            obj1[key] = typeof existingVal !== "object" ? newVal : deepMerge(existingVal, newVal);
-            return /* () */0;
-          }));
-    return obj1;
-  }
+function deepMerge(json1, param) {
+  return json1;
 }
 
 var GraphQL_PPX = {
@@ -232,12 +202,6 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query$1,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -247,7 +211,6 @@ var MyQuery = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -269,12 +232,6 @@ function serialize$3(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$3,
-  query$2,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -284,7 +241,6 @@ var MyQuery2 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

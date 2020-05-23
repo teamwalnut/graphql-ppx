@@ -6,8 +6,6 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 var Raw = { };
 
-var query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-
 function parse(value) {
   return {
           nonrecursiveInput: value.nonrecursiveInput
@@ -106,12 +104,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_100: 0,
   _graphql_arg_95: 0,
@@ -121,7 +113,7 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -130,7 +122,6 @@ var MyQuery = {
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

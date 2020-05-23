@@ -56,7 +56,6 @@ module MyQuery = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({"arg": arg}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_SampleField_47;

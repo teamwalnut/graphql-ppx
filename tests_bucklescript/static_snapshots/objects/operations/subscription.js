@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.simpleSubscription;
   var typename = value$1["__typename"];
@@ -64,22 +62,15 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

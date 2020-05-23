@@ -5,8 +5,6 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 var Raw = { };
 
-var query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.customScalarField;
   var value$2 = value$1.nonNullable;
@@ -48,24 +46,17 @@ function makeVariables(opt, req, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\nnullable  \nnonNullable  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

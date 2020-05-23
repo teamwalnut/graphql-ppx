@@ -111,7 +111,6 @@ module MyQuery = {
     "inner": inner,
     "enum": enum,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_RecursiveInput_47;

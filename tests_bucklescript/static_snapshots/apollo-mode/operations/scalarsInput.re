@@ -161,7 +161,6 @@ module MyQuery = {
     nullableID,
     id,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_93;
     /**Variable **$arg** has the following graphql type:

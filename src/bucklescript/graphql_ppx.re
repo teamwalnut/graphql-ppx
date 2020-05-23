@@ -54,7 +54,6 @@ let fmt_lex_err = err =>
   );
 
 let global_records = () => Ppx_config.records();
-let global_definition = () => Ppx_config.definition();
 let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
@@ -233,13 +232,13 @@ let extract_template_tag_location_from_config =
   extract_string_from_config("templateTagLocation");
 let extract_template_tag_import_from_config =
   extract_string_from_config("templateTagImport");
+let extract_extend_from_config = extract_string_from_config("extend");
 
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
 let extract_future_added_value_from_config =
   extract_bool_from_config("future_added_value");
-let extract_definition_from_config = extract_bool_from_config("definition");
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
 
@@ -248,12 +247,12 @@ type query_config = {
   records: option(bool),
   objects: option(bool),
   inline: option(bool),
-  definition: option(bool),
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
   tagged_template: option(bool),
   future_added_value: option(bool),
+  extend: option(string),
 };
 
 let get_query_config = fields => {
@@ -262,12 +261,12 @@ let get_query_config = fields => {
     records: extract_records_from_config(fields),
     objects: extract_objects_from_config(fields),
     inline: extract_inline_from_config(fields),
-    definition: extract_definition_from_config(fields),
     template_tag: extract_template_tag_from_config(fields),
     template_tag_import: extract_template_tag_import_from_config(fields),
     template_tag_location: extract_template_tag_location_from_config(fields),
     tagged_template: extract_tagged_template_config(fields),
     future_added_value: extract_future_added_value_from_config(fields),
+    extend: extract_extend_from_config(fields),
   };
 };
 let empty_query_config = {
@@ -275,12 +274,12 @@ let empty_query_config = {
   records: None,
   objects: None,
   inline: None,
-  definition: None,
   tagged_template: None,
   template_tag: None,
   template_tag_location: None,
   template_tag_import: None,
   future_added_value: None,
+  extend: None,
 };
 
 let get_with_default = (value, default_value) => {
@@ -394,15 +393,11 @@ let rewrite_query =
           | Some(value) => value
           | None => Ppx_config.future_added_value()
           },
-        definition:
-          switch (query_config.definition) {
-          | Some(value) => value
-          | None => global_definition()
-          },
         legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema,
         template_tag,
+        extend: query_config.extend,
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -691,14 +686,6 @@ let args = [
     "Legacy mode (make, makeWithVariables, and objects by default)",
   ),
   (
-    "-no-definition",
-    Arg.Unit(
-      () =>
-        Ppx_config.update_config(current => {...current, definition: false}),
-    ),
-    "Legacy mode (make and makeWithVariables)",
-  ),
-  (
     "-template-tag",
     Arg.String(
       template_tag =>
@@ -727,6 +714,46 @@ let args = [
         ),
     ),
     "the import location for the template tag (default is \"default\"",
+  ),
+  (
+    "-extend-query",
+    Arg.String(
+      extend_query =>
+        Ppx_config.update_config(current =>
+          {...current, extend_query: Some(extend_query)}
+        ),
+    ),
+    "extend queries with the following functor",
+  ),
+  (
+    "-extend-mutation",
+    Arg.String(
+      extend_mutation =>
+        Ppx_config.update_config(current =>
+          {...current, extend_mutation: Some(extend_mutation)}
+        ),
+    ),
+    "extend mutations with the following functor",
+  ),
+  (
+    "-extend-subscription",
+    Arg.String(
+      extend_subscription =>
+        Ppx_config.update_config(current =>
+          {...current, extend_subscription: Some(extend_subscription)}
+        ),
+    ),
+    "extend subscriptions with the following functor",
+  ),
+  (
+    "-extend-fragment",
+    Arg.String(
+      extend_fragment =>
+        Ppx_config.update_config(current =>
+          {...current, extend_fragment: Some(extend_fragment)}
+        ),
+    ),
+    "extend fragments with the following functor",
   ),
 ];
 

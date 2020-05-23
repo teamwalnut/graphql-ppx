@@ -5,8 +5,6 @@ var $$Array = require("bs-platform/lib/js/array.js");
 
 var Raw = { };
 
-var query = "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n";
-
 function parse(value) {
   return {
           listsInput: value.listsInput
@@ -70,12 +68,6 @@ function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfN
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_arg_219: 0,
   graphql_module: 0
@@ -83,12 +75,11 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

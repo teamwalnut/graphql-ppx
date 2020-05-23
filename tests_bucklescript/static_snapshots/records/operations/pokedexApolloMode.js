@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.pokemon;
   var tmp;
@@ -43,12 +41,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_name_52: 0,
   graphql_module: 0
@@ -56,10 +48,9 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

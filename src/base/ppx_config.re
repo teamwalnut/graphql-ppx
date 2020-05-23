@@ -12,12 +12,15 @@ type config = {
   raise_error_with_loc: 'a. (Source_pos.ast_location, string) => 'a,
   records: bool,
   legacy: bool,
-  definition: bool,
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
   custom_fields: Hashtbl.t(string, string),
   future_added_value: bool,
+  extend_query: option(string),
+  extend_mutation: option(string),
+  extend_subscription: option(string),
+  extend_fragment: option(string),
 };
 
 let config_ref = ref(None);
@@ -40,7 +43,6 @@ let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 
 let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
-let definition = () => (config_ref^ |> Option.unsafe_unwrap).definition;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
 let template_tag_import = () =>
@@ -55,6 +57,14 @@ let root_directory = () =>
   (config_ref^ |> Option.unsafe_unwrap).root_directory;
 
 let schema_file = () => (config_ref^ |> Option.unsafe_unwrap).schema_file;
+
+let extend_query = () => (config_ref^ |> Option.unsafe_unwrap).extend_query;
+let extend_mutation = () =>
+  (config_ref^ |> Option.unsafe_unwrap).extend_mutation;
+let extend_subscription = () =>
+  (config_ref^ |> Option.unsafe_unwrap).extend_subscription;
+let extend_fragment = () =>
+  (config_ref^ |> Option.unsafe_unwrap).extend_fragment;
 
 let raise_error_with_loc = (loc, message) =>
   (config_ref^ |> Option.unsafe_unwrap).raise_error_with_loc(loc, message);

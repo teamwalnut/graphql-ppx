@@ -47,7 +47,6 @@ module MyQuery = {
     inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

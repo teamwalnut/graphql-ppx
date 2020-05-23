@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
-
 function parse(value) {
   return {
           argNamedQuery: value.argNamedQuery
@@ -30,24 +28,17 @@ function makeVariables(query, param) {
             });
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

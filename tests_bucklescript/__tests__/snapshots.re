@@ -145,6 +145,8 @@ let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) => {
     execSyncWithErr(
       "./node_modules/.bin/bsc",
       [|
+        "-I",
+        "./utilities",
         "-c",
         "-w",
         "-30",
@@ -161,6 +163,8 @@ let get_bsb_output = (~ppxOptions, ~fileName, ~pathIn: string) =>
   execSyncWithErr(
     "./node_modules/.bin/bsc",
     [|
+      "-I",
+      "./utilities",
       "-c",
       "-w",
       "-30",
@@ -219,7 +223,15 @@ let get_bsb_output_with_static_snapshot =
   (output, err);
 };
 
-describe("Compilation (Objects)", () =>
+let compile_utils = () =>
+  readdirSync("utilities")->Belt.Array.keep(Js.String.endsWith(".re"))
+  |> Array.iter(fileName => {
+       get_bsb_output(~ppxOptions="", ~pathIn="utilities", ~fileName)->ignore
+     });
+
+compile_utils();
+
+describe("Compilation (Objects)", () => {
   tests
   |> Array.iter(t => {
        let (output, err) =
@@ -236,9 +248,9 @@ describe("Compilation (Objects)", () =>
          expect(removeKnownError(err)) |> toBe("")
        );
      })
-);
+});
 
-describe("Compilation (Records)", () =>
+describe("Compilation (Records)", () => {
   tests
   |> Array.iter(t => {
        let (output, err) =
@@ -255,7 +267,7 @@ describe("Compilation (Records)", () =>
          expect(removeKnownError(err)) |> toBe("")
        });
      })
-);
+});
 
 let tests =
   readdirSync("operations/errors")

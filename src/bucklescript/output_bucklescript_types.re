@@ -669,6 +669,13 @@ let rec generate_arg_type = (raw, loc as originalLoc) => {
     );
 };
 
+let generate_empty_input_object = () => {
+  Ast_helper.Type.mk(
+    ~manifest=base_type_name("Js.Json.t"),
+    {loc: Location.none, txt: generate_type_name(~prefix="t_variables", [])},
+  );
+};
+
 let generate_record_input_object = (raw, input_obj_name, fields) => {
   Ast_helper.Type.mk(
     ~kind=
@@ -762,26 +769,34 @@ let generate_arg_types = (raw, config, variable_defs) => {
   // Add to internal module
   if (!raw) {
     input_objects
-    |> List.iter((InputObject({name, fields})) => {
-         switch (name) {
-         | None =>
-           fields
-           |> List.iter(field => {
-                Output_bucklescript_docstrings.for_input_constraint(
-                  config,
-                  field,
-                )
-              })
-         | Some(_) => ()
-         }
-       });
+    |> List.iter(
+         fun
+         | NoVariables => ()
+         | InputObject({name, fields}) => {
+             switch (name) {
+             | None =>
+               fields
+               |> List.iter(field => {
+                    Output_bucklescript_docstrings.for_input_constraint(
+                      config,
+                      field,
+                    )
+                  })
+             | Some(_) => ()
+             };
+           },
+       );
   };
 
   [
     input_objects
-    |> List.map((InputObject({name, fields})) => {
-         generate_input_object(raw, config, name, fields)
-       })
+    |> List.map(
+         fun
+         | NoVariables => generate_empty_input_object()
+         | InputObject({name, fields}) => {
+             generate_input_object(raw, config, name, fields);
+           },
+       )
     |> Ast_helper.Str.type_(Recursive),
   ];
 };

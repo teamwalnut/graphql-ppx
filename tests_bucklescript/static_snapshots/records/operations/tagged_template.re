@@ -31,6 +31,7 @@ module MyQuery = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variousScalars = {
@@ -46,6 +47,7 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -193,7 +195,6 @@ module MyQuery = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -251,6 +252,7 @@ module MyQuery2 = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   "let { graphql } = require(\"gatsby\")";
@@ -270,6 +272,7 @@ module MyQuery2 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -417,7 +420,6 @@ module MyQuery2 = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -475,6 +477,7 @@ module MyQuery3 = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   "let { graphql } = require(\"gatsby\")";
@@ -494,6 +497,7 @@ module MyQuery3 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -641,7 +645,6 @@ module MyQuery3 = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -699,6 +702,7 @@ module MyQuery4 = {
       id: string,
     };
     type t = {variousScalars: t_variousScalars};
+    type t_variables = Js.Json.t;
   };
   %raw
   "let graphql = require(\"gatsby\")";
@@ -718,6 +722,7 @@ module MyQuery4 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -865,7 +870,6 @@ module MyQuery4 = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

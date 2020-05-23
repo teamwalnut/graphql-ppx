@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n";
-
 function parse(value) {
   return {
           defaultObjectValueOnScalar: value.defaultObjectValueOnScalar
@@ -19,12 +17,6 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   _graphql_filter_92: 0,
   _graphql_arg_140: 0,
@@ -33,10 +25,9 @@ var Z__INTERNAL = {
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.variousScalars;
   var value$2 = value$1.id;
@@ -72,22 +70,15 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

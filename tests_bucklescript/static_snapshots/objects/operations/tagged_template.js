@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.variousScalars;
   var value$2 = value$1.id;
@@ -72,22 +70,15 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -96,7 +87,7 @@ var Raw$1 = { };
 let { graphql } = require("gatsby")
 ;
 
-var query$1 = (graphql`
+var query = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -179,22 +170,15 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
 var MyQuery2 = {
   Raw: Raw$1,
-  query: query$1,
+  query: query,
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -203,7 +187,7 @@ var Raw$2 = { };
 let { graphql } = require("gatsby")
 ;
 
-var query$2 = (graphql`
+var query$1 = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -286,22 +270,15 @@ function serialize$2(value) {
         };
 }
 
-var definition$2 = /* tuple */[
-  parse$2,
-  query$2,
-  serialize$2
-];
-
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
 var MyQuery3 = {
   Raw: Raw$2,
-  query: query$2,
+  query: query$1,
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -310,7 +287,7 @@ var Raw$3 = { };
 let graphql = require("gatsby")
 ;
 
-var query$3 = (graphql`
+var query$2 = (graphql`
   query   {
     variousScalars  {
       nullableString
@@ -393,22 +370,15 @@ function serialize$3(value) {
         };
 }
 
-var definition$3 = /* tuple */[
-  parse$3,
-  query$3,
-  serialize$3
-];
-
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
 var MyQuery4 = {
   Raw: Raw$3,
-  query: query$3,
+  query: query$2,
   parse: parse$3,
   serialize: serialize$3,
-  definition: definition$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

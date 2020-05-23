@@ -115,7 +115,6 @@ module MyQuery = {
     inner,
     enum,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:

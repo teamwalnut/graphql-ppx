@@ -26,6 +26,7 @@ module MyQuery = {
       "nonNullableOfNonNullable": array(string),
     };
     type t = {. "lists": t_lists};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_lists = {
@@ -36,6 +37,7 @@ module MyQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -142,7 +144,6 @@ module MyQuery = {
     "variables": Js.Json.null,
     "parse": parse,
   };
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

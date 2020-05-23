@@ -4,8 +4,6 @@
 
 var Raw = { };
 
-var query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
-
 function parse(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1["__typename"];
@@ -68,28 +66,19 @@ function serialize(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse,
-  query,
-  serialize
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = { };
-
-var query$1 = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
 
 function parse$1(value) {
   var value$1 = value.dogOrHuman;
@@ -153,22 +142,15 @@ function serialize$1(value) {
         };
 }
 
-var definition$1 = /* tuple */[
-  parse$1,
-  query$1,
-  serialize$1
-];
-
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
 var MyQueryNoError = {
   Raw: Raw$1,
-  query: query$1,
+  query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
-  definition: definition$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 

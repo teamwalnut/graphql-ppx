@@ -19,9 +19,11 @@
 module MyQuery = {
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n";
   type t = {defaultObjectValueOnScalar: string};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -41,7 +43,6 @@ module MyQuery = {
         {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:

@@ -59,8 +59,6 @@ var DateTime = {
 
 var Raw = { };
 
-var query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
-
 function parse$2(value) {
   var value$1 = value.customFields;
   var value$2 = value$1.futureTime;
@@ -96,22 +94,15 @@ function serialize$2(value) {
         };
 }
 
-var definition = /* tuple */[
-  parse$2,
-  query,
-  serialize$2
-];
-
 var Z__INTERNAL = {
   graphql_module: 0
 };
 
 var MyQuery = {
   Raw: Raw,
-  query: query,
+  query: "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
-  definition: definition,
   Z__INTERNAL: Z__INTERNAL
 };
 

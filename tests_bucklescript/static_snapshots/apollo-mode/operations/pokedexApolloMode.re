@@ -24,6 +24,7 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
+    type t_variables = Js.Json.t;
   };
   let query = "query   {\npokemon(name: \"Pikachu\")  {\n__typename  \nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
@@ -32,6 +33,7 @@ module MyQuery = {
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  type t_variables = Js.Json.t;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -96,7 +98,6 @@ module MyQuery = {
         {pokemon: pokemon};
       }: Raw.t
     );
-  let definition = (parse, query, serialize);
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:

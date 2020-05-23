@@ -146,14 +146,20 @@ let is_recursive = input_objects => {
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [] => None
+  | [NoVariables] => None
   | arg_type_defs =>
     Some(
       Ast_helper.(
         Str.value(
           is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) => {
+          |> List.filter_map(
+               fun
+               | InputObject({name, fields, loc}) =>
+                 Some((name, fields, loc))
+               | NoVariables => None,
+             )
+          |> List.map(((name, fields, loc)) => {
                let type_name =
                  switch (name) {
                  | None => "t_variables"
@@ -204,14 +210,20 @@ let generate_serialize_variables =
 let generate_variable_constructors =
     (config, arg_type_defs: list(arg_type_def)) => {
   switch (arg_type_defs) {
-  | [] => None
+  | [NoVariables] => None
   | _ =>
     Some(
       Ast_helper.(
         Str.value(
           Nonrecursive,
           arg_type_defs
-          |> List.map((InputObject({name, fields, loc})) => {
+          |> List.filter_map(
+               fun
+               | InputObject({name, fields, loc}) =>
+                 Some((name, fields, loc))
+               | NoVariables => None,
+             )
+          |> List.map(((name, fields, loc)) => {
                let rec make_labeled_fun = body =>
                  fun
                  | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
