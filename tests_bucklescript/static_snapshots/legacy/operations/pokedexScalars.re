@@ -126,7 +126,7 @@ module MyQuery = {
   }
   and makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({"id": id, "name": name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let makeWithVariables = variables => {
     "query": query,
     "variables": serializeVariables(variables),

@@ -124,7 +124,7 @@ module Normal = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -273,7 +273,7 @@ module ByConfig = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -422,7 +422,7 @@ module ByDirective = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

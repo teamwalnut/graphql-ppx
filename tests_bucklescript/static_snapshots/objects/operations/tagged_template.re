@@ -199,7 +199,7 @@ module MyQuery = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -429,7 +429,7 @@ module MyQuery2 = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -659,7 +659,7 @@ module MyQuery3 = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -889,7 +889,7 @@ module MyQuery4 = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

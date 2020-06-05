@@ -44,7 +44,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:

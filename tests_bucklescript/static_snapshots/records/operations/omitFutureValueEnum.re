@@ -136,7 +136,7 @@ module Normal = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -293,7 +293,7 @@ module ByConfig = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -450,7 +450,7 @@ module ByDirective = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

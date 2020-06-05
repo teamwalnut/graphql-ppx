@@ -60,7 +60,9 @@ function makeVariables(id, name, param) {
             });
 }
 
-var makeDefaultVariables = makeVariables(undefined, undefined, undefined);
+function makeDefaultVariables(param) {
+  return makeVariables(undefined, undefined, undefined);
+}
 
 var Z__INTERNAL = {
   graphql_module: 0
@@ -78,4 +80,4 @@ var MyQuery = {
 };
 
 exports.MyQuery = MyQuery;
-/* makeDefaultVariables Not a pure module */
+/* No side effect */

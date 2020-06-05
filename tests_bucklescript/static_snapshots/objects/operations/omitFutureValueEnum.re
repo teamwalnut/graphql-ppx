@@ -118,7 +118,7 @@ module Normal = {
       {"mutationWithError": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -257,7 +257,7 @@ module ByConfig = {
       {"mutationWithError": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -396,7 +396,7 @@ module ByDirective = {
       {"mutationWithError": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

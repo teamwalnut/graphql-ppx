@@ -77,7 +77,7 @@ module MyQuery = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -170,7 +170,7 @@ module OneFieldQuery = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -346,7 +346,7 @@ module ExternalFragmentQuery {
         {"variousScalars": variousScalars};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     let make = () => {
       "query": query,
       "variables": Js.Json.null,
@@ -477,7 +477,7 @@ module InlineFragmentQuery = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -671,7 +671,7 @@ module UnionExternalFragmentQuery {
         {"dogOrHuman": dogOrHuman};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     let make = () => {
       "query": query,
       "variables": Js.Json.null,

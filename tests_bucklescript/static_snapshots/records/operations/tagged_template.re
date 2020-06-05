@@ -196,7 +196,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -423,7 +423,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -650,7 +650,7 @@ module MyQuery3 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -877,7 +877,7 @@ module MyQuery4 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -90,6 +90,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -100,7 +104,7 @@ var Bla$prime = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -114,7 +118,7 @@ var Bla = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,
   use: use
 };

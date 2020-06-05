@@ -44,6 +44,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   _graphql_name_52: 0,
   graphql_module: 0
@@ -55,7 +59,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 

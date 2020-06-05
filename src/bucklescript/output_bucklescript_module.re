@@ -466,7 +466,7 @@ let generate_default_operation =
           | Some(c) => [c]
           },
           has_required_variables
-            ? [] : [[%stri let makeDefaultVariables = makeVariables()]],
+            ? [] : [[%stri let makeDefaultVariables = () => makeVariables()]],
           config.legacy && variable_constructors != None
             ? [legacy_make_with_variables] : [],
           config.legacy && variable_constructors == None

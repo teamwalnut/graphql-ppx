@@ -56,10 +56,12 @@ function makeVariables(id, name, param) {
             });
 }
 
-var makeDefaultVariables = serializeVariables({
-      id: undefined,
-      name: undefined
-    });
+function makeDefaultVariables(param) {
+  return serializeVariables({
+              id: undefined,
+              name: undefined
+            });
+}
 
 var Z__INTERNAL = {
   _graphql_name_100: 0,
@@ -81,4 +83,4 @@ var MyQuery = {
 };
 
 exports.MyQuery = MyQuery;
-/* makeDefaultVariables Not a pure module */
+/* No side effect */

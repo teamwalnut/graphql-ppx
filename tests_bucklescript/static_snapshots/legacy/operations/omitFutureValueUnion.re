@@ -124,7 +124,7 @@ module Normal = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -278,7 +278,7 @@ module ByConfig = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -432,7 +432,7 @@ module ByDirective = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

@@ -272,7 +272,7 @@ module MyQuery = {
       {"first": first, "second": second, "let_": let_};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

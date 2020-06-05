@@ -89,7 +89,7 @@ module MyQuery = {
       {"pokemon": pokemon};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

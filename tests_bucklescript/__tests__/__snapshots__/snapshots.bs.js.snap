@@ -515,7 +515,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -908,7 +908,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1001,7 +1001,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -1358,7 +1358,7 @@ module RecordsQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1537,7 +1537,7 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1758,7 +1758,7 @@ module Bla' = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2391,7 +2391,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2467,7 +2467,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2692,7 +2692,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3375,7 +3375,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4030,7 +4030,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4874,7 +4874,7 @@ module Normal = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5055,7 +5055,7 @@ module ByConfig = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5236,7 +5236,7 @@ module ByDirective = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5435,7 +5435,7 @@ module Normal = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5610,7 +5610,7 @@ module ByConfig = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5785,7 +5785,7 @@ module ByDirective = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5933,7 +5933,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -6118,7 +6118,7 @@ module MyQuery = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -6286,7 +6286,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6394,7 +6394,7 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6578,7 +6578,7 @@ module ExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -6714,7 +6714,7 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6918,7 +6918,7 @@ module UnionExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -7369,7 +7369,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8257,7 +8257,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8513,7 +8513,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8751,7 +8751,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8989,7 +8989,7 @@ module MyQuery3 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9227,7 +9227,7 @@ module MyQuery4 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9432,7 +9432,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9631,7 +9631,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9808,7 +9808,7 @@ module MyQueryNoError = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9965,7 +9965,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10267,7 +10267,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10536,6 +10536,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10546,7 +10550,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10730,6 +10734,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10740,7 +10748,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10774,6 +10782,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10784,7 +10796,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -10925,6 +10937,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -10935,7 +10951,7 @@ var RecordsQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11015,6 +11031,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -11025,7 +11045,7 @@ var ObjectsQuery = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -11131,6 +11151,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11141,7 +11165,7 @@ var Bla$prime = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11155,7 +11179,7 @@ var Bla = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,
   use: use
 };
@@ -11373,6 +11397,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -11383,7 +11411,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -11409,6 +11437,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -11419,7 +11451,7 @@ var MyQuery2 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -11518,6 +11550,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11528,7 +11564,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -11782,6 +11818,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -11792,7 +11832,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12043,6 +12083,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12053,7 +12097,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12352,6 +12396,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12362,7 +12410,7 @@ var Normal = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12425,6 +12473,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -12435,7 +12487,7 @@ var ByConfig = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -12498,6 +12550,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -12508,7 +12564,7 @@ var ByDirective = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -12595,6 +12651,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12605,7 +12665,7 @@ var Normal = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12671,6 +12731,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -12681,7 +12745,7 @@ var ByConfig = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -12747,6 +12811,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -12757,7 +12825,7 @@ var ByDirective = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -12819,6 +12887,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12829,7 +12901,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -12901,7 +12973,9 @@ function makeVariables(id, name, param) {
             });
 }
 
-var makeDefaultVariables = makeVariables(undefined, undefined, undefined);
+function makeDefaultVariables(param) {
+  return makeVariables(undefined, undefined, undefined);
+}
 
 var Z__INTERNAL = {
   graphql_module: 0
@@ -12919,7 +12993,7 @@ var MyQuery = {
 };
 
 exports.MyQuery = MyQuery;
-/* makeDefaultVariables Not a pure module */
+/* No side effect */
 "
 `;
 
@@ -12958,6 +13032,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -12968,7 +13046,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13000,6 +13078,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -13010,7 +13092,7 @@ var OneFieldQuery = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -13074,6 +13156,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -13084,7 +13170,7 @@ var Untitled1 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -13144,6 +13230,10 @@ function makeVariables$3(param) {
   
 }
 
+function makeDefaultVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -13154,7 +13244,7 @@ var InlineFragmentQuery = {
   parse: parse$4,
   serialize: serialize$4,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -13226,6 +13316,10 @@ function makeVariables$4(param) {
   
 }
 
+function makeDefaultVariables$4(param) {
+  
+}
+
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -13236,7 +13330,7 @@ var Untitled1$1 = {
   parse: parse$6,
   serialize: serialize$6,
   makeVariables: makeVariables$4,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$4,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
@@ -13408,6 +13502,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13418,7 +13516,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13745,6 +13843,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13755,7 +13857,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13841,6 +13943,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -13851,7 +13957,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -13947,6 +14053,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -13957,7 +14067,7 @@ var MyQuery2 = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -14053,6 +14163,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -14063,7 +14177,7 @@ var MyQuery3 = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -14159,6 +14273,10 @@ function makeVariables$3(param) {
   
 }
 
+function makeDefaultVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -14169,7 +14287,7 @@ var MyQuery4 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -14263,6 +14381,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14273,7 +14395,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14357,6 +14479,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14367,7 +14493,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14441,6 +14567,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -14451,7 +14581,7 @@ var MyQueryNoError = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -14517,6 +14647,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14527,7 +14661,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14654,6 +14788,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14664,7 +14802,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -14899,6 +15037,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -14909,7 +15051,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15091,6 +15233,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15101,7 +15247,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15136,6 +15282,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   _graphql_filter_92: 0,
   _graphql_arg_140: 0,
@@ -15148,7 +15298,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15292,6 +15442,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15302,7 +15456,7 @@ var RecordsQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15382,6 +15536,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -15392,7 +15550,7 @@ var ObjectsQuery = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -15495,6 +15653,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15505,7 +15667,7 @@ var Bla$prime = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -15519,7 +15681,7 @@ var Bla = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,
   use: use
 };
@@ -15724,6 +15886,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -15734,7 +15900,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -15760,6 +15926,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -15770,7 +15940,7 @@ var MyQuery2 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -15866,6 +16036,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -15876,7 +16050,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16138,6 +16312,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16148,7 +16326,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16402,6 +16580,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16412,7 +16594,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16713,6 +16895,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16723,7 +16909,7 @@ var Normal = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -16785,6 +16971,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -16795,7 +16985,7 @@ var ByConfig = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -16857,6 +17047,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -16867,7 +17061,7 @@ var ByDirective = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -16952,6 +17146,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -16962,7 +17160,7 @@ var Normal = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17026,6 +17224,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -17036,7 +17238,7 @@ var ByConfig = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -17100,6 +17302,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -17110,7 +17316,7 @@ var ByDirective = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -17168,6 +17374,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   _graphql_name_52: 0,
   graphql_module: 0
@@ -17179,7 +17389,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17247,10 +17457,12 @@ function makeVariables(id, name, param) {
             });
 }
 
-var makeDefaultVariables = serializeVariables({
-      id: undefined,
-      name: undefined
-    });
+function makeDefaultVariables(param) {
+  return serializeVariables({
+              id: undefined,
+              name: undefined
+            });
+}
 
 var Z__INTERNAL = {
   _graphql_name_100: 0,
@@ -17272,7 +17484,7 @@ var MyQuery = {
 };
 
 exports.MyQuery = MyQuery;
-/* makeDefaultVariables Not a pure module */
+/* No side effect */
 "
 `;
 
@@ -17310,6 +17522,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17320,7 +17536,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -17352,6 +17568,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -17362,7 +17582,7 @@ var OneFieldQuery = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -17424,6 +17644,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -17434,7 +17658,7 @@ var Untitled1 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -17487,6 +17711,10 @@ function makeVariables$3(param) {
   
 }
 
+function makeDefaultVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -17497,7 +17725,7 @@ var InlineFragmentQuery = {
   parse: parse$4,
   serialize: serialize$4,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -17568,6 +17796,10 @@ function makeVariables$4(param) {
   
 }
 
+function makeDefaultVariables$4(param) {
+  
+}
+
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -17578,7 +17810,7 @@ var Untitled1$1 = {
   parse: parse$6,
   serialize: serialize$6,
   makeVariables: makeVariables$4,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$4,
   Z__INTERNAL: Z__INTERNAL$6
 };
 
@@ -17743,6 +17975,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -17753,7 +17989,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18079,6 +18315,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18089,7 +18329,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18166,6 +18406,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18176,7 +18420,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18263,6 +18507,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -18273,7 +18521,7 @@ var MyQuery2 = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -18360,6 +18608,10 @@ function makeVariables$2(param) {
   
 }
 
+function makeDefaultVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -18370,7 +18622,7 @@ var MyQuery3 = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -18457,6 +18709,10 @@ function makeVariables$3(param) {
   
 }
 
+function makeDefaultVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -18467,7 +18723,7 @@ var MyQuery4 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -18549,6 +18805,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18559,7 +18819,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18641,6 +18901,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18651,7 +18915,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18723,6 +18987,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -18733,7 +19001,7 @@ var MyQueryNoError = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -18792,6 +19060,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18802,7 +19074,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -18925,6 +19197,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -18935,7 +19211,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -19953,7 +20229,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -20302,7 +20578,7 @@ module MyQuery = {
       {\\"customFields\\": customFields};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -20397,7 +20673,7 @@ module MyQuery = {
       {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -20717,7 +20993,7 @@ module RecordsQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -20889,7 +21165,7 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -21101,7 +21377,7 @@ module Bla' = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -21659,7 +21935,7 @@ module MyQuery = {
       {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -21737,7 +22013,7 @@ module MyQuery2 = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -21953,7 +22229,7 @@ module MyQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -22577,7 +22853,7 @@ module MyQuery = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -23107,7 +23383,7 @@ module MyQuery = {
       {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -23865,7 +24141,7 @@ module Normal = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24009,7 +24285,7 @@ module ByConfig = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24153,7 +24429,7 @@ module ByDirective = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24331,7 +24607,7 @@ module Normal = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24485,7 +24761,7 @@ module ByConfig = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24639,7 +24915,7 @@ module ByDirective = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24782,7 +25058,7 @@ module MyQuery = {
       {\\"pokemon\\": pokemon};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -24962,7 +25238,7 @@ module MyQuery = {
   }
   and makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({\\"id\\": id, \\"name\\": name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let makeWithVariables = variables => {
     \\"query\\": query,
     \\"variables\\": serializeVariables(variables),
@@ -25093,7 +25369,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -25186,7 +25462,7 @@ module OneFieldQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -25362,7 +25638,7 @@ module ExternalFragmentQuery {
         {\\"variousScalars\\": variousScalars};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     let make = () => {
       \\"query\\": query,
       \\"variables\\": Js.Json.null,
@@ -25493,7 +25769,7 @@ module InlineFragmentQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -25687,7 +25963,7 @@ module UnionExternalFragmentQuery {
         {\\"dogOrHuman\\": dogOrHuman};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     let make = () => {
       \\"query\\": query,
       \\"variables\\": Js.Json.null,
@@ -26119,7 +26395,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -26947,7 +27223,7 @@ module MyQuery = {
       {\\"simpleSubscription\\": simpleSubscription};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -27200,7 +27476,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -27435,7 +27711,7 @@ module MyQuery2 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -27670,7 +27946,7 @@ module MyQuery3 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -27905,7 +28181,7 @@ module MyQuery4 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -28110,7 +28386,7 @@ module MyQuery = {
       {\\"first\\": first};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -28288,7 +28564,7 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -28444,7 +28720,7 @@ module MyQueryNoError = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -28593,7 +28869,7 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -28851,7 +29127,7 @@ module MyQuery = {
       {\\"mutationForVariant\\": mutationForVariant};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     \\"query\\": query,
     \\"variables\\": Js.Json.null,
@@ -29349,7 +29625,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29683,7 +29959,7 @@ module MyQuery = {
       {\\"customFields\\": customFields};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29773,7 +30049,7 @@ module MyQuery = {
       {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30078,7 +30354,7 @@ module RecordsQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30245,7 +30521,7 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30452,7 +30728,7 @@ module Bla' = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31005,7 +31281,7 @@ module MyQuery = {
       {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31078,7 +31354,7 @@ module MyQuery2 = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31289,7 +31565,7 @@ module MyQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31873,7 +32149,7 @@ module MyQuery = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32378,7 +32654,7 @@ module MyQuery = {
       {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33111,7 +33387,7 @@ module Normal = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33250,7 +33526,7 @@ module ByConfig = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33389,7 +33665,7 @@ module ByDirective = {
       {\\"mutationWithError\\": mutationWithError};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33562,7 +33838,7 @@ module Normal = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33711,7 +33987,7 @@ module ByConfig = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33860,7 +34136,7 @@ module ByDirective = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33998,7 +34274,7 @@ module MyQuery = {
       {\\"pokemon\\": pokemon};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34168,7 +34444,7 @@ module MyQuery = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({\\"id\\": id, \\"name\\": name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34294,7 +34570,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34382,7 +34658,7 @@ module OneFieldQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34553,7 +34829,7 @@ module ExternalFragmentQuery {
         {\\"variousScalars\\": variousScalars};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -34679,7 +34955,7 @@ module InlineFragmentQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34868,7 +35144,7 @@ module UnionExternalFragmentQuery {
         {\\"dogOrHuman\\": dogOrHuman};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -35285,7 +35561,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36051,7 +36327,7 @@ module MyQuery = {
       {\\"simpleSubscription\\": simpleSubscription};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36299,7 +36575,7 @@ module MyQuery = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36529,7 +36805,7 @@ module MyQuery2 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36759,7 +37035,7 @@ module MyQuery3 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36989,7 +37265,7 @@ module MyQuery4 = {
       {\\"variousScalars\\": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37189,7 +37465,7 @@ module MyQuery = {
       {\\"first\\": first};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37362,7 +37638,7 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37513,7 +37789,7 @@ module MyQueryNoError = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37657,7 +37933,7 @@ module MyQuery = {
       {\\"dogOrHuman\\": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37910,7 +38186,7 @@ module MyQuery = {
       {\\"mutationForVariant\\": mutationForVariant};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38461,7 +38737,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38828,7 +39104,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38921,7 +39197,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -39267,7 +39543,7 @@ module RecordsQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39434,7 +39710,7 @@ module ObjectsQuery = {
       {\\"lists\\": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39644,7 +39920,7 @@ module Bla' = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40207,7 +40483,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40283,7 +40559,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40497,7 +40773,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41140,7 +41416,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41667,7 +41943,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42487,7 +42763,7 @@ module Normal = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42644,7 +42920,7 @@ module ByConfig = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42801,7 +43077,7 @@ module ByDirective = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42980,7 +43256,7 @@ module Normal = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43135,7 +43411,7 @@ module ByConfig = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43290,7 +43566,7 @@ module ByDirective = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43428,7 +43704,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -43603,7 +43879,7 @@ module MyQuery = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -43762,7 +44038,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43856,7 +44132,7 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44030,7 +44306,7 @@ module ExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -44157,7 +44433,7 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44351,7 +44627,7 @@ module UnionExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -44791,7 +45067,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45635,7 +45911,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45880,7 +46156,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46107,7 +46383,7 @@ module MyQuery2 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46334,7 +46610,7 @@ module MyQuery3 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46561,7 +46837,7 @@ module MyQuery4 = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46766,7 +47042,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46945,7 +47221,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47102,7 +47378,7 @@ module MyQueryNoError = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47250,7 +47526,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47518,7 +47794,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

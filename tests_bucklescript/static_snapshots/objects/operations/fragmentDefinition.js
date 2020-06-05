@@ -203,6 +203,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -213,7 +217,7 @@ var MyQuery = {
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -239,6 +243,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -249,7 +257,7 @@ var MyQuery2 = {
   parse: parse$3,
   serialize: serialize$3,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

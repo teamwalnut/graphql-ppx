@@ -41,7 +41,7 @@ module MyQuery = {
       {"defaultObjectValueOnScalar": defaultObjectValueOnScalar};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -21,6 +21,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   _graphql_filter_92: 0,
   _graphql_arg_140: 0,
@@ -33,7 +37,7 @@ var MyQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 

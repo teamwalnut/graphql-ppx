@@ -500,7 +500,7 @@ module MyQuery = {
       {"l1": l1, "l2": l2, "l3": l3, "l4": l4};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -573,7 +573,7 @@ module MyQuery2 = {
       {"lists": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

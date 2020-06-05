@@ -143,7 +143,7 @@ module RecordsQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -315,7 +315,7 @@ module ObjectsQuery = {
       {"lists": lists};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

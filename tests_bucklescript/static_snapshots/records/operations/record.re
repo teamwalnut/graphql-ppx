@@ -82,7 +82,7 @@ module MyQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -176,7 +176,7 @@ module OneFieldQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -350,7 +350,7 @@ module ExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -477,7 +477,7 @@ module InlineFragmentQuery = {
       }: Raw.t
     );
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -671,7 +671,7 @@ module UnionExternalFragmentQuery {
         }: Raw.t
       );
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

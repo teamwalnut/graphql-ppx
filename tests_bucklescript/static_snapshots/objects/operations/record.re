@@ -77,7 +77,7 @@ module MyQuery = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -165,7 +165,7 @@ module OneFieldQuery = {
       {"variousScalars": variousScalars};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -336,7 +336,7 @@ module ExternalFragmentQuery {
         {"variousScalars": variousScalars};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -462,7 +462,7 @@ module InlineFragmentQuery = {
       {"dogOrHuman": dogOrHuman};
     };
   let makeVariables = () => ();
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -651,7 +651,7 @@ module UnionExternalFragmentQuery {
         {"dogOrHuman": dogOrHuman};
       };
     let makeVariables = () => ();
-    let makeDefaultVariables = makeVariables();
+    let makeDefaultVariables = () => makeVariables();
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

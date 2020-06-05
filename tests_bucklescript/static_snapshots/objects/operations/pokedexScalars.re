@@ -121,7 +121,7 @@ module MyQuery = {
     };
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({"id": id, "name": name}: t_variables);
-  let makeDefaultVariables = makeVariables();
+  let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

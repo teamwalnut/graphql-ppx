@@ -75,6 +75,10 @@ function makeVariables(param) {
   
 }
 
+function makeDefaultVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -85,7 +89,7 @@ var RecordsQuery = {
   parse: parse,
   serialize: serialize,
   makeVariables: makeVariables,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -165,6 +169,10 @@ function makeVariables$1(param) {
   
 }
 
+function makeDefaultVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -175,7 +183,7 @@ var ObjectsQuery = {
   parse: parse$1,
   serialize: serialize$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: undefined,
+  makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
