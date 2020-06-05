@@ -81,3 +81,5 @@ let extract_args:
   list(arg_type_def);
 
 let get_inner_type: extracted_type => option(extracted_type);
+
+let has_required_variables: list(arg_type_def) => bool;

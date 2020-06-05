@@ -10,10 +10,11 @@ open Extract_type_definitions;
 open Output_bucklescript_utils;
 
 type operation_type = Graphql_ast.operation_type;
+type operation_options = {has_required_variables: bool};
 
 type definition =
   | Fragment
-  | Operation(operation_type);
+  | Operation(operation_type, operation_options);
 
 module StringSet = Set.Make(String);
 module VariableFinderImpl = {
@@ -324,9 +325,15 @@ let wrap_query_module = (definition, name: string, contents, config) => {
     | None =>
       switch (definition) {
       | Fragment => Ppx_config.extend_fragment()
-      | Operation(Query) => Ppx_config.extend_query()
-      | Operation(Mutation) => Ppx_config.extend_mutation()
-      | Operation(Subscription) => Ppx_config.extend_subscription()
+      | Operation(Query, {has_required_variables: false}) =>
+        Ppx_config.extend_query_no_required_variables()
+      | Operation(Query, _) => Ppx_config.extend_query()
+      | Operation(Mutation, {has_required_variables: false}) =>
+        Ppx_config.extend_mutation_no_required_variables()
+      | Operation(Mutation, _) => Ppx_config.extend_mutation()
+      | Operation(Subscription, {has_required_variables: false}) =>
+        Ppx_config.extend_subscription_no_required_variables()
+      | Operation(Subscription, _) => Ppx_config.extend_subscription()
       }
     };
 
@@ -406,6 +413,7 @@ let generate_default_operation =
       config,
       extracted_args,
     );
+  let has_required_variables = has_required_variables(extracted_args);
 
   let contents =
     if (has_error) {
@@ -445,9 +453,11 @@ let generate_default_operation =
           | Some(f) => [f]
           },
           switch (variable_constructors) {
-          | None => []
+          | None => [[%stri let makeVariables = () => unit]]
           | Some(c) => [c]
           },
+          has_required_variables
+            ? [] : [[%stri let makeDefaultVariables = makeVariables()]],
           config.legacy && variable_constructors != None
             ? [legacy_make_with_variables] : [],
           config.legacy && variable_constructors == None
@@ -471,7 +481,14 @@ let generate_default_operation =
     | {item: {o_name: Some({item: name})}} => Some(name)
     | _ => None
     };
-  (Operation(operation.item.o_type), name, contents);
+  (
+    Operation(
+      operation.item.o_type,
+      {has_required_variables: has_required_variables},
+    ),
+    name,
+    contents,
+  );
 };
 
 let generate_fragment_module =

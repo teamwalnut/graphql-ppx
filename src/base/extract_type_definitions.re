@@ -75,6 +75,26 @@ type arg_type_def =
       is_recursive: bool,
     });
 
+let has_required_variables = (arg_types: list(arg_type_def)) => {
+  List.fold_left(
+    has_required =>
+      fun
+      | NoVariables => has_required
+      | InputObject({name: Some(_)}) => has_required
+      | InputObject({name: None, fields}) =>
+        List.fold_left(
+          has_required =>
+            fun
+            | InputField({type_: Nullable(_)}) => has_required
+            | InputField({type_: _}) => true,
+          has_required,
+          fields,
+        ),
+    false,
+    arg_types,
+  );
+};
+
 let generate_type_name = (~prefix="t") =>
   fun
   | [] => prefix

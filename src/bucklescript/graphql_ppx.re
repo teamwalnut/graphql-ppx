@@ -726,6 +726,20 @@ let args = [
     "extend queries with the following functor",
   ),
   (
+    "-extend-query-no-required-variables",
+    Arg.String(
+      extend_query_no_required_variables =>
+        Ppx_config.update_config(current =>
+          {
+            ...current,
+            extend_query_no_required_variables:
+              Some(extend_query_no_required_variables),
+          }
+        ),
+    ),
+    "extend queries having no required variables with the following functor",
+  ),
+  (
     "-extend-mutation",
     Arg.String(
       extend_mutation =>
@@ -736,6 +750,20 @@ let args = [
     "extend mutations with the following functor",
   ),
   (
+    "-extend-mutation-no-required-variables",
+    Arg.String(
+      extend_mutation_no_required_variables =>
+        Ppx_config.update_config(current =>
+          {
+            ...current,
+            extend_mutation_no_required_variables:
+              Some(extend_mutation_no_required_variables),
+          }
+        ),
+    ),
+    "extend mutations having no required variables with the following functor",
+  ),
+  (
     "-extend-subscription",
     Arg.String(
       extend_subscription =>
@@ -744,6 +772,20 @@ let args = [
         ),
     ),
     "extend subscriptions with the following functor",
+  ),
+  (
+    "-extend-subscription-no-required-variables",
+    Arg.String(
+      extend_subscription_no_required_variables =>
+        Ppx_config.update_config(current =>
+          {
+            ...current,
+            extend_subscription_no_required_variables:
+              Some(extend_subscription_no_required_variables),
+          }
+        ),
+    ),
+    "extend subscriptions having no required variables with the following functor",
   ),
   (
     "-extend-fragment",

@@ -230,8 +230,11 @@ let () =
       custom_fields: Hashtbl.create(0),
       future_added_value: true,
       extend_query: None,
+      extend_query_no_required_variables: None,
       extend_mutation: None,
+      extend_mutation_no_required_variables: None,
       extend_subscription: None,
+      extend_subscription_no_required_variables: None,
       extend_fragment: None,
     })
   );

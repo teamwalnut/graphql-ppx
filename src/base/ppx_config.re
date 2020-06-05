@@ -18,8 +18,11 @@ type config = {
   custom_fields: Hashtbl.t(string, string),
   future_added_value: bool,
   extend_query: option(string),
+  extend_query_no_required_variables: option(string),
   extend_mutation: option(string),
+  extend_mutation_no_required_variables: option(string),
   extend_subscription: option(string),
+  extend_subscription_no_required_variables: option(string),
   extend_fragment: option(string),
 };
 
@@ -59,10 +62,18 @@ let root_directory = () =>
 let schema_file = () => (config_ref^ |> Option.unsafe_unwrap).schema_file;
 
 let extend_query = () => (config_ref^ |> Option.unsafe_unwrap).extend_query;
+let extend_query_no_required_variables = () =>
+  (config_ref^ |> Option.unsafe_unwrap).extend_query_no_required_variables;
 let extend_mutation = () =>
   (config_ref^ |> Option.unsafe_unwrap).extend_mutation;
+let extend_mutation_no_required_variables = () =>
+  (config_ref^ |> Option.unsafe_unwrap).extend_mutation_no_required_variables;
+
 let extend_subscription = () =>
   (config_ref^ |> Option.unsafe_unwrap).extend_subscription;
+let extend_subscription_no_required_variables = () =>
+  (config_ref^ |> Option.unsafe_unwrap).
+    extend_subscription_no_required_variables;
 let extend_fragment = () =>
   (config_ref^ |> Option.unsafe_unwrap).extend_fragment;
 
