@@ -55,6 +55,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -64,6 +68,8 @@ var MyQuery = {
   query: "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

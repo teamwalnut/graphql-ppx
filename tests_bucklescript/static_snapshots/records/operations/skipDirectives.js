@@ -13,12 +13,12 @@ function parse(value) {
   var value$6 = value$4.string;
   return {
           v1: {
-            nullableString: (value$2 == null) ? undefined : value$2,
-            string: (value$3 == null) ? undefined : value$3
+            nullableString: !(value$2 == null) ? value$2 : undefined,
+            string: !(value$3 == null) ? value$3 : undefined
           },
           v2: {
-            nullableString: (value$5 == null) ? undefined : value$5,
-            string: (value$6 == null) ? undefined : value$6
+            nullableString: !(value$5 == null) ? value$5 : undefined,
+            string: !(value$6 == null) ? value$6 : undefined
           }
         };
 }

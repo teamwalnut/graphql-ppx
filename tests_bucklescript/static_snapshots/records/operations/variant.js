@@ -9,25 +9,25 @@ var Raw = { };
 
 function parse(value) {
   var value$1 = value.mutationForVariant;
-  var match = Js_json.decodeObject(value$1);
+  var value$2 = Js_json.decodeObject(value$1);
   var tmp;
-  if (match !== undefined) {
-    var value$2 = Caml_option.valFromOption(match);
-    var temp = value$2["baseType"];
-    var match$1 = Js_json.decodeNull(temp);
-    if (match$1 !== undefined) {
-      var temp$1 = value$2["baseTypeList"];
-      var match$2 = Js_json.decodeNull(temp$1);
-      if (match$2 !== undefined) {
-        var temp$2 = value$2["dog"];
-        var match$3 = Js_json.decodeNull(temp$2);
-        if (match$3 !== undefined) {
-          var temp$3 = value$2["human"];
-          var match$4 = Js_json.decodeNull(temp$3);
-          if (match$4 !== undefined) {
-            var temp$4 = value$2["dogOrHuman"];
-            var match$5 = Js_json.decodeNull(temp$4);
-            if (match$5 !== undefined) {
+  if (value$2 !== undefined) {
+    var value$3 = Caml_option.valFromOption(value$2);
+    var temp = value$3["baseType"];
+    var match = Js_json.decodeNull(temp);
+    if (match !== undefined) {
+      var temp$1 = value$3["baseTypeList"];
+      var match$1 = Js_json.decodeNull(temp$1);
+      if (match$1 !== undefined) {
+        var temp$2 = value$3["dog"];
+        var match$2 = Js_json.decodeNull(temp$2);
+        if (match$2 !== undefined) {
+          var temp$3 = value$3["human"];
+          var match$3 = Js_json.decodeNull(temp$3);
+          if (match$3 !== undefined) {
+            var temp$4 = value$3["dogOrHuman"];
+            var match$4 = Js_json.decodeNull(temp$4);
+            if (match$4 !== undefined) {
               tmp = Js_exn.raiseError("graphql_ppx: All fields on variant selection set on type VariantTestResult were null");
             } else {
               var typename = temp$4["__typename"];
@@ -107,6 +107,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -116,6 +120,8 @@ var MyQuery = {
   query: "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

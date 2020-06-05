@@ -19,11 +19,11 @@
 module MyQuery = {
   module Raw = {
     type t = {. "defaultObjectValueOnScalar": string};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n";
   type t = {. "defaultObjectValueOnScalar": string};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let defaultObjectValueOnScalar = {
@@ -40,6 +40,8 @@ module MyQuery = {
       };
       {"defaultObjectValueOnScalar": defaultObjectValueOnScalar};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

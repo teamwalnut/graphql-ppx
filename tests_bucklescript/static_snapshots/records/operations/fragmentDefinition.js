@@ -18,16 +18,15 @@ function parse(value) {
   var value$1 = value.nullableOfNullable;
   var value$2 = value.nullableOfNonNullable;
   return {
-          nullableOfNullable: (value$1 == null) ? undefined : value$1.map((function (value) {
-                    if (value == null) {
-                      return ;
-                    } else {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
                       return value;
                     }
-                  })),
-          nullableOfNonNullable: (value$2 == null) ? undefined : value$2.map((function (value) {
+                    
+                  })) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map((function (value) {
                     return value;
-                  }))
+                  })) : undefined
         };
 }
 
@@ -71,9 +70,9 @@ var Raw$1 = { };
 function parse$1(value) {
   var value$1 = value.nullableOfNonNullable;
   return {
-          nullableOfNonNullable: (value$1 == null) ? undefined : value$1.map((function (value) {
+          nullableOfNonNullable: !(value$1 == null) ? value$1.map((function (value) {
                     return value;
-                  }))
+                  })) : undefined
         };
 }
 
@@ -123,24 +122,22 @@ function parse$2(value) {
             frag2: parse(value$1)
           },
           l3: {
-            nullableOfNullable: (value$3 == null) ? undefined : value$3.map((function (value) {
-                      if (value == null) {
-                        return ;
-                      } else {
+            nullableOfNullable: !(value$3 == null) ? value$3.map((function (value) {
+                      if (!(value == null)) {
                         return value;
                       }
-                    })),
+                      
+                    })) : undefined,
             frag1: parse(value$2),
             frag2: parse(value$2)
           },
           l4: {
-            nullableOfNullable: (value$5 == null) ? undefined : value$5.map((function (value) {
-                      if (value == null) {
-                        return ;
-                      } else {
+            nullableOfNullable: !(value$5 == null) ? value$5.map((function (value) {
+                      if (!(value == null)) {
                         return value;
                       }
-                    })),
+                      
+                    })) : undefined,
             listFragment: parse(value$4)
           }
         };
@@ -189,6 +186,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -198,6 +199,8 @@ var MyQuery = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -219,6 +222,10 @@ function serialize$3(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -228,6 +235,8 @@ var MyQuery2 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

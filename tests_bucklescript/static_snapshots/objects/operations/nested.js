@@ -14,9 +14,9 @@ function parse(value) {
   } else {
     var value$3 = value$2.inner;
     inner = {
-      inner: (value$3 == null) ? undefined : ({
+      inner: !(value$3 == null) ? ({
             field: value$3.field
-          })
+          }) : undefined
     };
   }
   var let_ = {
@@ -55,9 +55,9 @@ function parse(value) {
   } else {
     var value$11 = value$10.inner;
     inner$2 = {
-      inner: (value$11 == null) ? undefined : ({
+      inner: !(value$11 == null) ? ({
             field: value$11.field
-          })
+          }) : undefined
     };
   }
   var first = {
@@ -94,12 +94,11 @@ function serialize(value) {
     var value$6 = Caml_option.valFromOption(value$5).inner;
     var tmp;
     if (value$6 !== undefined) {
-      var value$7 = value$6;
-      var value$8 = value$7.f2;
-      var value$9 = value$7.f1;
+      var value$7 = value$6.f2;
+      var value$8 = value$6.f1;
       tmp = {
-        f1: value$9,
-        f2: value$8
+        f1: value$8,
+        f2: value$7
       };
     } else {
       tmp = null;
@@ -113,14 +112,14 @@ function serialize(value) {
   var second = {
     inner: inner$1
   };
-  var value$10 = value.first;
-  var value$11 = value$10.inner;
+  var value$9 = value.first;
+  var value$10 = value$9.inner;
   var inner$2;
-  if (value$11 !== undefined) {
-    var value$12 = Caml_option.valFromOption(value$11).inner;
+  if (value$10 !== undefined) {
+    var value$11 = Caml_option.valFromOption(value$10).inner;
     inner$2 = {
-      inner: value$12 !== undefined ? ({
-            field: Caml_option.valFromOption(value$12).field
+      inner: value$11 !== undefined ? ({
+            field: Caml_option.valFromOption(value$11).field
           }) : null
     };
   } else {
@@ -136,6 +135,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -145,6 +148,8 @@ var MyQuery = {
   query: "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

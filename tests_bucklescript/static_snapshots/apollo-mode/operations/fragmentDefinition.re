@@ -262,7 +262,7 @@ module MyQuery = {
       l3: t_l3,
       l4: t_l4,
     };
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query =
     (
@@ -325,7 +325,7 @@ module MyQuery = {
     l3: t_l3,
     l4: t_l4,
   };
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -579,6 +579,8 @@ module MyQuery = {
         {l1, l2, l3, l4};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -624,7 +626,7 @@ module MyQuery {
 module MyQuery2 = {
   module Raw = {
     type t = {lists: Fragments.ListFragment.Raw.t};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query =
     (
@@ -633,7 +635,7 @@ module MyQuery2 = {
     )
     ++ Fragments.ListFragment.query;
   type t = {lists: Fragments.ListFragment.t};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -653,6 +655,8 @@ module MyQuery2 = {
         {lists: lists};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

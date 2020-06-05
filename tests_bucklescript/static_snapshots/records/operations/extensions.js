@@ -4,7 +4,7 @@
 
 function ExtendQuery(M) {
   var use = function (param) {
-    return /* () */0;
+    
   };
   return {
           use: use
@@ -27,22 +27,20 @@ function parse(value) {
   var value$5 = value$1.nonNullableOfNonNullable;
   return {
           lists: {
-            nullableOfNullable: (value$2 == null) ? undefined : value$2.map((function (value) {
-                      if (value == null) {
-                        return ;
-                      } else {
+            nullableOfNullable: !(value$2 == null) ? value$2.map((function (value) {
+                      if (!(value == null)) {
                         return value;
                       }
-                    })),
-            nullableOfNonNullable: (value$3 == null) ? undefined : value$3.map((function (value) {
+                      
+                    })) : undefined,
+            nullableOfNonNullable: !(value$3 == null) ? value$3.map((function (value) {
                       return value;
-                    })),
+                    })) : undefined,
             nonNullableOfNullable: value$4.map((function (value) {
-                    if (value == null) {
-                      return ;
-                    } else {
+                    if (!(value == null)) {
                       return value;
                     }
+                    
                   })),
             nonNullableOfNonNullable: value$5.map((function (value) {
                     return value;
@@ -88,6 +86,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -97,11 +99,13 @@ var Bla$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
 function use(param) {
-  return /* () */0;
+  
 }
 
 var Bla = {
@@ -109,6 +113,8 @@ var Bla = {
   query: query,
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL,
   use: use
 };

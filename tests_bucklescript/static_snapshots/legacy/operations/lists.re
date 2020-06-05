@@ -26,7 +26,7 @@ module MyQuery = {
       "nonNullableOfNonNullable": array(string),
     };
     type t = {. "lists": t_lists};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_lists = {
@@ -37,7 +37,7 @@ module MyQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let lists = {
@@ -139,6 +139,8 @@ module MyQuery = {
       };
       {"lists": lists};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

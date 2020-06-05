@@ -28,7 +28,7 @@ module MyQuery = {
     };
     type t_simpleSubscription;
     type t = {simpleSubscription: t_simpleSubscription};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\n__typename  \nname  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_simpleSubscription_Dog = {
@@ -45,7 +45,7 @@ module MyQuery = {
     | `Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -144,6 +144,8 @@ module MyQuery = {
         {simpleSubscription: simpleSubscription};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

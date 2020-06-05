@@ -453,7 +453,7 @@ let generate_default_operation =
           | Some(f) => [f]
           },
           switch (variable_constructors) {
-          | None => [[%stri let makeVariables = () => unit]]
+          | None => [[%stri let makeVariables = () => ()]]
           | Some(c) => [c]
           },
           has_required_variables

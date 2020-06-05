@@ -9,7 +9,7 @@ function parse(value) {
   var value$1 = value.customScalarField;
   var value$2 = value$1.nonNullable;
   var value$3 = value$1.nullable;
-  var nullable = (value$3 == null) ? undefined : Caml_option.some(value$3);
+  var nullable = !(value$3 == null) ? Caml_option.some(value$3) : undefined;
   return {
           customScalarField: {
             nullable: nullable,

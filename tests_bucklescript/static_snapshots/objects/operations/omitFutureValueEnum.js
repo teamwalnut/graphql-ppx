@@ -8,7 +8,7 @@ var Raw = { };
 function parse(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
-  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
+  var errors = !(value$2 == null) ? value$2.map((function (value) {
             var value$1 = value.field;
             var field;
             switch (value$1) {
@@ -32,7 +32,7 @@ function parse(value) {
                     message: value$2,
                     field: field
                   };
-          }));
+          })) : undefined;
   return {
           mutationWithError: {
             errors: errors
@@ -63,6 +63,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -72,6 +76,8 @@ var Normal = {
   query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -80,7 +86,7 @@ var Raw$1 = { };
 function parse$1(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
-  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
+  var errors = !(value$2 == null) ? value$2.map((function (value) {
             var value$1 = value.field;
             var field;
             switch (value$1) {
@@ -101,7 +107,7 @@ function parse$1(value) {
                     message: value$2,
                     field: field
                   };
-          }));
+          })) : undefined;
   return {
           mutationWithError: {
             errors: errors
@@ -130,6 +136,10 @@ function serialize$1(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -139,6 +149,8 @@ var ByConfig = {
   query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -147,7 +159,7 @@ var Raw$2 = { };
 function parse$2(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
-  var errors = (value$2 == null) ? undefined : value$2.map((function (value) {
+  var errors = !(value$2 == null) ? value$2.map((function (value) {
             var value$1 = value.field;
             var field;
             switch (value$1) {
@@ -168,7 +180,7 @@ function parse$2(value) {
                     message: value$2,
                     field: field
                   };
-          }));
+          })) : undefined;
   return {
           mutationWithError: {
             errors: errors
@@ -197,6 +209,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -206,6 +222,8 @@ var ByDirective = {
   query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$2
 };
 

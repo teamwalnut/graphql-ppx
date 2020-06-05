@@ -16,17 +16,16 @@ var Raw = { };
 
 function parse(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = (value$1 == null) ? undefined : value$1.map((function (value) {
+  var nullableOfNonNullable = !(value$1 == null) ? value$1.map((function (value) {
             return value;
-          }));
+          })) : undefined;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = (value$2 == null) ? undefined : value$2.map((function (value) {
-            if (value == null) {
-              return ;
-            } else {
+  var nullableOfNullable = !(value$2 == null) ? value$2.map((function (value) {
+            if (!(value == null)) {
               return value;
             }
-          }));
+            
+          })) : undefined;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -73,9 +72,9 @@ var Raw$1 = { };
 function parse$1(value) {
   var value$1 = value.nullableOfNonNullable;
   return {
-          nullableOfNonNullable: (value$1 == null) ? undefined : value$1.map((function (value) {
+          nullableOfNonNullable: !(value$1 == null) ? value$1.map((function (value) {
                     return value;
-                  }))
+                  })) : undefined
         };
 }
 
@@ -115,13 +114,12 @@ function parse$2(value) {
   var value$1 = value.l4;
   var listFragment = parse(value$1);
   var value$2 = value$1["nullableOfNullable"];
-  var nullableOfNullable = (value$2 == null) ? undefined : value$2.map((function (value) {
-            if (value == null) {
-              return ;
-            } else {
+  var nullableOfNullable = !(value$2 == null) ? value$2.map((function (value) {
+            if (!(value == null)) {
               return value;
             }
-          }));
+            
+          })) : undefined;
   var l4 = {
     nullableOfNullable: nullableOfNullable,
     listFragment: listFragment
@@ -130,13 +128,12 @@ function parse$2(value) {
   var frag2 = parse(value$3);
   var frag1 = parse(value$3);
   var value$4 = value$3["nullableOfNullable"];
-  var nullableOfNullable$1 = (value$4 == null) ? undefined : value$4.map((function (value) {
-            if (value == null) {
-              return ;
-            } else {
+  var nullableOfNullable$1 = !(value$4 == null) ? value$4.map((function (value) {
+            if (!(value == null)) {
               return value;
             }
-          }));
+            
+          })) : undefined;
   var l3 = {
     nullableOfNullable: nullableOfNullable$1,
     frag1: frag1,
@@ -202,6 +199,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -211,6 +212,8 @@ var MyQuery = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -232,6 +235,10 @@ function serialize$3(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -241,6 +248,8 @@ var MyQuery2 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

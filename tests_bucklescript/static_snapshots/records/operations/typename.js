@@ -14,10 +14,10 @@ function parse(value) {
     var value$3 = value$2.inner;
     tmp = {
       __typename: value$2.__typename,
-      inner: (value$3 == null) ? undefined : ({
+      inner: !(value$3 == null) ? ({
             __typename: value$3.__typename,
             field: value$3.field
-          })
+          }) : undefined
     };
   }
   return {
@@ -33,36 +33,38 @@ function serialize(value) {
   var value$2 = value$1.inner;
   var inner;
   if (value$2 !== undefined) {
-    var value$3 = value$2;
-    var value$4 = value$3.inner;
+    var value$3 = value$2.inner;
     var inner$1;
-    if (value$4 !== undefined) {
-      var value$5 = value$4;
-      var value$6 = value$5.field;
-      var value$7 = value$5.__typename;
+    if (value$3 !== undefined) {
+      var value$4 = value$3.field;
+      var value$5 = value$3.__typename;
       inner$1 = {
-        __typename: value$7,
-        field: value$6
+        __typename: value$5,
+        field: value$4
       };
     } else {
       inner$1 = null;
     }
-    var value$8 = value$3.__typename;
+    var value$6 = value$2.__typename;
     inner = {
-      __typename: value$8,
+      __typename: value$6,
       inner: inner$1
     };
   } else {
     inner = null;
   }
-  var value$9 = value$1.__typename;
+  var value$7 = value$1.__typename;
   var first = {
-    __typename: value$9,
+    __typename: value$7,
     inner: inner
   };
   return {
           first: first
         };
+}
+
+function makeVariables(param) {
+  
 }
 
 var Z__INTERNAL = {
@@ -74,6 +76,8 @@ var MyQuery = {
   query: "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

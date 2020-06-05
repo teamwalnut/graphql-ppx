@@ -13,9 +13,9 @@ function parse(value) {
   } else {
     var value$3 = value$2.inner;
     tmp = {
-      inner: (value$3 == null) ? undefined : ({
+      inner: !(value$3 == null) ? ({
             field: value$3.field
-          })
+          }) : undefined
     };
   }
   var value$4 = value.second;
@@ -26,10 +26,10 @@ function parse(value) {
   } else {
     var value$6 = value$5.inner;
     tmp$1 = {
-      inner: (value$6 == null) ? undefined : ({
+      inner: !(value$6 == null) ? ({
             f1: value$6.f1,
             f2: value$6.f2
-          })
+          }) : undefined
     };
   }
   var value$7 = value.let_;
@@ -40,9 +40,9 @@ function parse(value) {
   } else {
     var value$9 = value$8.inner;
     tmp$2 = {
-      inner: (value$9 == null) ? undefined : ({
+      inner: !(value$9 == null) ? ({
             field: value$9.field
-          })
+          }) : undefined
     };
   }
   return {
@@ -89,12 +89,11 @@ function serialize(value) {
     var value$7 = value$6.inner;
     var inner$3;
     if (value$7 !== undefined) {
-      var value$8 = value$7;
-      var value$9 = value$8.f2;
-      var value$10 = value$8.f1;
+      var value$8 = value$7.f2;
+      var value$9 = value$7.f1;
       inner$3 = {
-        f1: value$10,
-        f2: value$9
+        f1: value$9,
+        f2: value$8
       };
     } else {
       inner$3 = null;
@@ -108,16 +107,16 @@ function serialize(value) {
   var second = {
     inner: inner$2
   };
-  var value$11 = value.first;
-  var value$12 = value$11.inner;
+  var value$10 = value.first;
+  var value$11 = value$10.inner;
   var inner$4;
-  if (value$12 !== undefined) {
-    var value$13 = value$12.inner;
+  if (value$11 !== undefined) {
+    var value$12 = value$11.inner;
     var inner$5;
-    if (value$13 !== undefined) {
-      var value$14 = value$13.field;
+    if (value$12 !== undefined) {
+      var value$13 = value$12.field;
       inner$5 = {
-        field: value$14
+        field: value$13
       };
     } else {
       inner$5 = null;
@@ -138,6 +137,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -147,6 +150,8 @@ var MyQuery = {
   query: "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

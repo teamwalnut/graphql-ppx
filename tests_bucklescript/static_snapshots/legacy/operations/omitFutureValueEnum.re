@@ -29,7 +29,7 @@ module Normal = {
       "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. "mutationWithError": t_mutationWithError};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [
@@ -48,7 +48,7 @@ module Normal = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -117,6 +117,8 @@ module Normal = {
       };
       {"mutationWithError": mutationWithError};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -177,7 +179,7 @@ module ByConfig = {
       "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. "mutationWithError": t_mutationWithError};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
@@ -191,7 +193,7 @@ module ByConfig = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -259,6 +261,8 @@ module ByConfig = {
       };
       {"mutationWithError": mutationWithError};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -319,7 +323,7 @@ module ByDirective = {
       "errors": Js.Nullable.t(array(t_mutationWithError_errors)),
     };
     type t = {. "mutationWithError": t_mutationWithError};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
@@ -333,7 +337,7 @@ module ByDirective = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let mutationWithError = {
@@ -401,6 +405,8 @@ module ByDirective = {
       };
       {"mutationWithError": mutationWithError};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

@@ -66,6 +66,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -75,6 +79,8 @@ var MyQuery = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -142,6 +148,10 @@ function serialize$1(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -151,6 +161,8 @@ var MyQueryNoError = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$1
 };
 

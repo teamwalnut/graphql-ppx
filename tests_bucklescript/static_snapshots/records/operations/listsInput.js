@@ -20,42 +20,28 @@ function serialize(value) {
 
 function serializeInputObjectListsInput(inp) {
   var a = inp.nullableOfNullable;
-  var tmp;
-  if (a !== undefined) {
-    var a$1 = a;
-    tmp = $$Array.map((function (b) {
-            if (b !== undefined) {
-              return b;
-            }
-            
-          }), a$1);
-  } else {
-    tmp = undefined;
-  }
-  var a$2 = inp.nullableOfNonNullable;
-  var tmp$1;
-  if (a$2 !== undefined) {
-    var a$3 = a$2;
-    tmp$1 = $$Array.map((function (b) {
-            return b;
-          }), a$3);
-  } else {
-    tmp$1 = undefined;
-  }
-  var a$4 = inp.nonNullableOfNullable;
-  var a$5 = inp.nonNullableOfNonNullable;
+  var a$1 = inp.nullableOfNonNullable;
+  var a$2 = inp.nonNullableOfNullable;
+  var a$3 = inp.nonNullableOfNonNullable;
   return {
-          nullableOfNullable: tmp,
-          nullableOfNonNullable: tmp$1,
+          nullableOfNullable: a !== undefined ? $$Array.map((function (b) {
+                    if (b !== undefined) {
+                      return b;
+                    }
+                    
+                  }), a) : undefined,
+          nullableOfNonNullable: a$1 !== undefined ? $$Array.map((function (b) {
+                    return b;
+                  }), a$1) : undefined,
           nonNullableOfNullable: $$Array.map((function (b) {
                   if (b !== undefined) {
                     return b;
                   }
                   
-                }), a$4),
+                }), a$2),
           nonNullableOfNonNullable: $$Array.map((function (b) {
                   return b;
-                }), a$5)
+                }), a$3)
         };
 }
 

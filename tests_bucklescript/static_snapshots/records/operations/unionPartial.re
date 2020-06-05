@@ -25,7 +25,7 @@ module MyQuery = {
     };
     type t_dogOrHuman;
     type t = {dogOrHuman: t_dogOrHuman};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
@@ -37,7 +37,7 @@ module MyQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -98,6 +98,8 @@ module MyQuery = {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

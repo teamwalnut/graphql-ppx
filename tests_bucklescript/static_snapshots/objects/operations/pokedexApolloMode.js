@@ -12,7 +12,7 @@ function parse(value) {
     tmp = undefined;
   } else {
     var value$2 = value$1.name;
-    var name = (value$2 == null) ? undefined : value$2;
+    var name = !(value$2 == null) ? value$2 : undefined;
     var value$3 = value$1.id;
     tmp = {
       id: value$3,
@@ -44,6 +44,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -53,6 +57,8 @@ var MyQuery = {
   query: "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

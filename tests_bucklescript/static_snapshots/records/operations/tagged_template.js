@@ -13,15 +13,15 @@ function parse(value) {
   var value$6 = value$1.nullableID;
   return {
           variousScalars: {
-            nullableString: (value$2 == null) ? undefined : value$2,
+            nullableString: !(value$2 == null) ? value$2 : undefined,
             string: value$1.string,
-            nullableInt: (value$3 == null) ? undefined : value$3,
+            nullableInt: !(value$3 == null) ? value$3 : undefined,
             int: value$1.int,
-            nullableFloat: (value$4 == null) ? undefined : value$4,
+            nullableFloat: !(value$4 == null) ? value$4 : undefined,
             float: value$1.float,
-            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
             boolean: value$1.boolean,
-            nullableID: (value$6 == null) ? undefined : value$6,
+            nullableID: !(value$6 == null) ? value$6 : undefined,
             id: value$1.id
           }
         };
@@ -61,6 +61,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -70,6 +74,8 @@ var MyQuery = {
   query: "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -104,15 +110,15 @@ function parse$1(value) {
   var value$6 = value$1.nullableID;
   return {
           variousScalars: {
-            nullableString: (value$2 == null) ? undefined : value$2,
+            nullableString: !(value$2 == null) ? value$2 : undefined,
             string: value$1.string,
-            nullableInt: (value$3 == null) ? undefined : value$3,
+            nullableInt: !(value$3 == null) ? value$3 : undefined,
             int: value$1.int,
-            nullableFloat: (value$4 == null) ? undefined : value$4,
+            nullableFloat: !(value$4 == null) ? value$4 : undefined,
             float: value$1.float,
-            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
             boolean: value$1.boolean,
-            nullableID: (value$6 == null) ? undefined : value$6,
+            nullableID: !(value$6 == null) ? value$6 : undefined,
             id: value$1.id
           }
         };
@@ -152,6 +158,10 @@ function serialize$1(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -161,6 +171,8 @@ var MyQuery2 = {
   query: query,
   parse: parse$1,
   serialize: serialize$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -195,15 +207,15 @@ function parse$2(value) {
   var value$6 = value$1.nullableID;
   return {
           variousScalars: {
-            nullableString: (value$2 == null) ? undefined : value$2,
+            nullableString: !(value$2 == null) ? value$2 : undefined,
             string: value$1.string,
-            nullableInt: (value$3 == null) ? undefined : value$3,
+            nullableInt: !(value$3 == null) ? value$3 : undefined,
             int: value$1.int,
-            nullableFloat: (value$4 == null) ? undefined : value$4,
+            nullableFloat: !(value$4 == null) ? value$4 : undefined,
             float: value$1.float,
-            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
             boolean: value$1.boolean,
-            nullableID: (value$6 == null) ? undefined : value$6,
+            nullableID: !(value$6 == null) ? value$6 : undefined,
             id: value$1.id
           }
         };
@@ -243,6 +255,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$2 = {
   graphql_module: 0
 };
@@ -252,6 +268,8 @@ var MyQuery3 = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -286,15 +304,15 @@ function parse$3(value) {
   var value$6 = value$1.nullableID;
   return {
           variousScalars: {
-            nullableString: (value$2 == null) ? undefined : value$2,
+            nullableString: !(value$2 == null) ? value$2 : undefined,
             string: value$1.string,
-            nullableInt: (value$3 == null) ? undefined : value$3,
+            nullableInt: !(value$3 == null) ? value$3 : undefined,
             int: value$1.int,
-            nullableFloat: (value$4 == null) ? undefined : value$4,
+            nullableFloat: !(value$4 == null) ? value$4 : undefined,
             float: value$1.float,
-            nullableBoolean: (value$5 == null) ? undefined : value$5,
+            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
             boolean: value$1.boolean,
-            nullableID: (value$6 == null) ? undefined : value$6,
+            nullableID: !(value$6 == null) ? value$6 : undefined,
             id: value$1.id
           }
         };
@@ -334,6 +352,10 @@ function serialize$3(value) {
         };
 }
 
+function makeVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -343,6 +365,8 @@ var MyQuery4 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  makeVariables: makeVariables$3,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$3
 };
 

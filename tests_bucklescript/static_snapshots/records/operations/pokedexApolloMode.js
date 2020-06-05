@@ -13,7 +13,7 @@ function parse(value) {
     var value$2 = value$1.name;
     tmp = {
       id: value$1.id,
-      name: (value$2 == null) ? undefined : value$2
+      name: !(value$2 == null) ? value$2 : undefined
     };
   }
   return {
@@ -25,12 +25,11 @@ function serialize(value) {
   var value$1 = value.pokemon;
   var pokemon;
   if (value$1 !== undefined) {
-    var value$2 = value$1;
-    var value$3 = value$2.name;
-    var name = value$3 !== undefined ? value$3 : null;
-    var value$4 = value$2.id;
+    var value$2 = value$1.name;
+    var name = value$2 !== undefined ? value$2 : null;
+    var value$3 = value$1.id;
     pokemon = {
-      id: value$4,
+      id: value$3,
       name: name
     };
   } else {
@@ -39,6 +38,10 @@ function serialize(value) {
   return {
           pokemon: pokemon
         };
+}
+
+function makeVariables(param) {
+  
 }
 
 var Z__INTERNAL = {
@@ -51,6 +54,8 @@ var MyQuery = {
   query: "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

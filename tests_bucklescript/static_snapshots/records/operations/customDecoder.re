@@ -33,7 +33,7 @@ module MyQuery = {
       int,
     };
     type t = {variousScalars: t_variousScalars};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
   type t_variousScalars = {
@@ -41,7 +41,7 @@ module MyQuery = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -84,6 +84,8 @@ module MyQuery = {
         {variousScalars: variousScalars};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -12,7 +12,7 @@ function parse(value) {
     tmp = undefined;
   } else {
     var value$2 = value$1.name;
-    var name = (value$2 == null) ? undefined : value$2;
+    var name = !(value$2 == null) ? value$2 : undefined;
     var value$3 = value$1.id;
     tmp = {
       id: value$3,
@@ -60,6 +60,8 @@ function makeVariables(id, name, param) {
             });
 }
 
+var makeDefaultVariables = makeVariables(undefined, undefined, undefined);
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -71,8 +73,9 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
+  makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;
-/* No side effect */
+/* makeDefaultVariables Not a pure module */

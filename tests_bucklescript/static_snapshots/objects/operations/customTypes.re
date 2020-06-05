@@ -58,7 +58,7 @@ module MyQuery = {
       "nullableColor": Js.Nullable.t(Js.Json.t),
     };
     type t = {. "customFields": t_customFields};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
   type t_customFields = {
@@ -69,7 +69,7 @@ module MyQuery = {
     "nullableColor": option(Color.t),
   };
   type t = {. "customFields": t_customFields};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let customFields = {
@@ -140,6 +140,8 @@ module MyQuery = {
       };
       {"customFields": customFields};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

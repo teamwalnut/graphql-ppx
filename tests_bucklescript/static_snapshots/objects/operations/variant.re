@@ -43,7 +43,7 @@ module MyQuery = {
     type t_mutationForVariant_dogOrHuman;
     type t_mutationForVariant;
     type t = {. "mutationForVariant": t_mutationForVariant};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n";
   type t_mutationForVariant_dog = {
@@ -71,7 +71,7 @@ module MyQuery = {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {. "mutationForVariant": t_mutationForVariant};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let mutationForVariant = {
@@ -203,6 +203,8 @@ module MyQuery = {
       };
       {"mutationForVariant": mutationForVariant};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

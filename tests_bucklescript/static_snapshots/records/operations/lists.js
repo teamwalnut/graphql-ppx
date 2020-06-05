@@ -12,22 +12,20 @@ function parse(value) {
   var value$5 = value$1.nonNullableOfNonNullable;
   return {
           lists: {
-            nullableOfNullable: (value$2 == null) ? undefined : value$2.map((function (value) {
-                      if (value == null) {
-                        return ;
-                      } else {
+            nullableOfNullable: !(value$2 == null) ? value$2.map((function (value) {
+                      if (!(value == null)) {
                         return value;
                       }
-                    })),
-            nullableOfNonNullable: (value$3 == null) ? undefined : value$3.map((function (value) {
+                      
+                    })) : undefined,
+            nullableOfNonNullable: !(value$3 == null) ? value$3.map((function (value) {
                       return value;
-                    })),
+                    })) : undefined,
             nonNullableOfNullable: value$4.map((function (value) {
-                    if (value == null) {
-                      return ;
-                    } else {
+                    if (!(value == null)) {
                       return value;
                     }
+                    
                   })),
             nonNullableOfNonNullable: value$5.map((function (value) {
                     return value;
@@ -73,6 +71,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -82,6 +84,8 @@ var MyQuery = {
   query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

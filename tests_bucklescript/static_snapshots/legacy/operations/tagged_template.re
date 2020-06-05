@@ -32,7 +32,7 @@ module MyQuery = {
       "id": string,
     };
     type t = {. "variousScalars": t_variousScalars};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variousScalars = {
@@ -49,7 +49,7 @@ module MyQuery = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -198,6 +198,8 @@ module MyQuery = {
       };
       {"variousScalars": variousScalars};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -261,7 +263,7 @@ module MyQuery2 = {
       "id": string,
     };
     type t = {. "variousScalars": t_variousScalars};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   %raw
   "let { graphql } = require(\"gatsby\")";
@@ -282,7 +284,7 @@ module MyQuery2 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -431,6 +433,8 @@ module MyQuery2 = {
       };
       {"variousScalars": variousScalars};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -494,7 +498,7 @@ module MyQuery3 = {
       "id": string,
     };
     type t = {. "variousScalars": t_variousScalars};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   %raw
   "let { graphql } = require(\"gatsby\")";
@@ -515,7 +519,7 @@ module MyQuery3 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -664,6 +668,8 @@ module MyQuery3 = {
       };
       {"variousScalars": variousScalars};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,
@@ -727,7 +733,7 @@ module MyQuery4 = {
       "id": string,
     };
     type t = {. "variousScalars": t_variousScalars};
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   %raw
   "let graphql = require(\"gatsby\")";
@@ -748,7 +754,7 @@ module MyQuery4 = {
     "id": string,
   };
   type t = {. "variousScalars": t_variousScalars};
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     value => {
       let variousScalars = {
@@ -897,6 +903,8 @@ module MyQuery4 = {
       };
       {"variousScalars": variousScalars};
     };
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   let make = () => {
     "query": query,
     "variables": Js.Json.null,

@@ -27,6 +27,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -36,6 +40,8 @@ var MyQuery = {
   query: "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -46,7 +52,7 @@ function parse$1(value) {
   var value$2 = value$1.nullableString;
   return {
           variousScalars: {
-            nullableString: (value$2 == null) ? undefined : value$2
+            nullableString: !(value$2 == null) ? value$2 : undefined
           }
         };
 }
@@ -63,6 +69,10 @@ function serialize$1(value) {
         };
 }
 
+function makeVariables$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql_module: 0
 };
@@ -72,6 +82,8 @@ var OneFieldQuery = {
   query: "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -129,6 +141,10 @@ function serialize$3(value) {
         };
 }
 
+function makeVariables$2(param) {
+  
+}
+
 var Z__INTERNAL$3 = {
   graphql_module: 0
 };
@@ -138,6 +154,8 @@ var Untitled1 = {
   query: query$1,
   parse: parse$3,
   serialize: serialize$3,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
@@ -186,6 +204,10 @@ function serialize$4(value) {
         };
 }
 
+function makeVariables$3(param) {
+  
+}
+
 var Z__INTERNAL$4 = {
   graphql_module: 0
 };
@@ -195,6 +217,8 @@ var InlineFragmentQuery = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n",
   parse: parse$4,
   serialize: serialize$4,
+  makeVariables: makeVariables$3,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$4
 };
 
@@ -261,6 +285,10 @@ function serialize$6(value) {
         };
 }
 
+function makeVariables$4(param) {
+  
+}
+
 var Z__INTERNAL$6 = {
   graphql_module: 0
 };
@@ -270,6 +298,8 @@ var Untitled1$1 = {
   query: query$3,
   parse: parse$6,
   serialize: serialize$6,
+  makeVariables: makeVariables$4,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL$6
 };
 

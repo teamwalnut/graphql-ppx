@@ -6,19 +6,18 @@ var Caml_option = require("bs-platform/lib/js/caml_option.js");
 
 function parse(json) {
   var match = Js_json.decodeString(json);
-  if (match !== undefined) {
-    switch (match) {
-      case "blue" :
-          return /* Blue */2;
-      case "green" :
-          return /* Green */1;
-      case "red" :
-          return /* Red */0;
-      default:
-        return /* Red */0;
-    }
-  } else {
+  if (match === undefined) {
     return /* Red */0;
+  }
+  switch (match) {
+    case "blue" :
+        return /* Blue */2;
+    case "green" :
+        return /* Green */1;
+    case "red" :
+        return /* Red */0;
+    default:
+      return /* Red */0;
   }
 }
 
@@ -40,9 +39,9 @@ var Color = {
 };
 
 function parse$1(json) {
-  var match = Js_json.decodeString(json);
-  if (match !== undefined) {
-    return new Date(match);
+  var str = Js_json.decodeString(json);
+  if (str !== undefined) {
+    return new Date(str);
   } else {
     return new Date();
   }
@@ -67,8 +66,8 @@ function parse$2(value) {
           customFields: {
             currentTime: parse$1(value$1.currentTime),
             favoriteColor: parse(value$1.favoriteColor),
-            futureTime: (value$2 == null) ? undefined : Caml_option.some(parse$1(value$2)),
-            nullableColor: (value$3 == null) ? undefined : parse(value$3)
+            futureTime: !(value$2 == null) ? Caml_option.some(parse$1(value$2)) : undefined,
+            nullableColor: !(value$3 == null) ? parse(value$3) : undefined
           }
         };
 }
@@ -94,6 +93,10 @@ function serialize$2(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -103,6 +106,8 @@ var MyQuery = {
   query: "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 

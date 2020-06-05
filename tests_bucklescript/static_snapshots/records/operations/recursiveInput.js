@@ -21,19 +21,14 @@ function serializeInputObjectRecursiveInput(inp) {
   var a = inp.otherField;
   var a$1 = inp.inner;
   var a$2 = inp.enum;
-  var tmp;
-  if (a$2 !== undefined) {
-    var a$3 = a$2;
-    tmp = a$3 !== 225952583 ? (
-        a$3 >= 382368628 ? "SECOND" : "FIRST"
-      ) : "THIRD";
-  } else {
-    tmp = undefined;
-  }
   return {
           otherField: a !== undefined ? a : undefined,
           inner: a$1 !== undefined ? serializeInputObjectRecursiveInput(a$1) : undefined,
-          enum: tmp
+          enum: a$2 !== undefined ? (
+              a$2 !== 225952583 ? (
+                  a$2 >= 382368628 ? "SECOND" : "FIRST"
+                ) : "THIRD"
+            ) : undefined
         };
 }
 

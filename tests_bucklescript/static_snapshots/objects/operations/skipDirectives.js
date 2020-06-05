@@ -7,18 +7,18 @@ var Raw = { };
 function parse(value) {
   var value$1 = value.v2;
   var value$2 = value$1.string;
-  var string = (value$2 == null) ? undefined : value$2;
+  var string = !(value$2 == null) ? value$2 : undefined;
   var value$3 = value$1.nullableString;
-  var nullableString = (value$3 == null) ? undefined : value$3;
+  var nullableString = !(value$3 == null) ? value$3 : undefined;
   var v2 = {
     nullableString: nullableString,
     string: string
   };
   var value$4 = value.v1;
   var value$5 = value$4.string;
-  var string$1 = (value$5 == null) ? undefined : value$5;
+  var string$1 = !(value$5 == null) ? value$5 : undefined;
   var value$6 = value$4.nullableString;
-  var nullableString$1 = (value$6 == null) ? undefined : value$6;
+  var nullableString$1 = !(value$6 == null) ? value$6 : undefined;
   var v1 = {
     nullableString: nullableString$1,
     string: string$1

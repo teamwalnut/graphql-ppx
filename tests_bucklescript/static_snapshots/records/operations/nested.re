@@ -39,7 +39,7 @@ module MyQuery = {
       second: t_second,
       let_: t_let,
     };
-    type t_variables = Js.Json.t;
+    type t_variables = unit;
   };
   let query = "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
   type t_first_inner_inner = {field: string};
@@ -59,7 +59,7 @@ module MyQuery = {
     second: t_second,
     let_: t_let,
   };
-  type t_variables = Js.Json.t;
+  type t_variables = unit;
   let parse: Raw.t => t =
     (value) => (
       {
@@ -290,6 +290,8 @@ module MyQuery = {
         {first, second, let_};
       }: Raw.t
     );
+  let makeVariables = () => ();
+  let makeDefaultVariables = makeVariables();
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

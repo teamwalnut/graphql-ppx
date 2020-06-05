@@ -28,50 +28,31 @@ function serializeInputObjectEmbeddedInput(inp) {
 
 function serializeInputObjectNonrecursiveInput(inp) {
   var a = inp.nullableArray;
-  var tmp;
-  if (a !== undefined) {
-    var a$1 = a;
-    tmp = $$Array.map((function (b) {
-            if (b !== undefined) {
-              return b;
-            }
-            
-          }), a$1);
-  } else {
-    tmp = undefined;
-  }
-  var a$2 = inp.field;
-  var a$3 = inp.enum;
-  var tmp$1;
-  if (a$3 !== undefined) {
-    var a$4 = a$3;
-    tmp$1 = a$4 !== 225952583 ? (
-        a$4 >= 382368628 ? "SECOND" : "FIRST"
-      ) : "THIRD";
-  } else {
-    tmp$1 = undefined;
-  }
-  var a$5 = inp.embeddedInput;
-  var tmp$2;
-  if (a$5 !== undefined) {
-    var a$6 = a$5;
-    tmp$2 = $$Array.map((function (b) {
-            if (b !== undefined) {
-              return serializeInputObjectEmbeddedInput(b);
-            }
-            
-          }), a$6);
-  } else {
-    tmp$2 = undefined;
-  }
-  var a$7 = inp.custom;
+  var a$1 = inp.field;
+  var a$2 = inp.enum;
+  var a$3 = inp.embeddedInput;
+  var a$4 = inp.custom;
   return {
           nonNullableField: inp.nonNullableField,
-          nullableArray: tmp,
-          field: a$2 !== undefined ? a$2 : undefined,
-          enum: tmp$1,
-          embeddedInput: tmp$2,
-          custom: a$7 !== undefined ? Caml_option.valFromOption(a$7) : undefined
+          nullableArray: a !== undefined ? $$Array.map((function (b) {
+                    if (b !== undefined) {
+                      return b;
+                    }
+                    
+                  }), a) : undefined,
+          field: a$1 !== undefined ? a$1 : undefined,
+          enum: a$2 !== undefined ? (
+              a$2 !== 225952583 ? (
+                  a$2 >= 382368628 ? "SECOND" : "FIRST"
+                ) : "THIRD"
+            ) : undefined,
+          embeddedInput: a$3 !== undefined ? $$Array.map((function (b) {
+                    if (b !== undefined) {
+                      return serializeInputObjectEmbeddedInput(b);
+                    }
+                    
+                  }), a$3) : undefined,
+          custom: a$4 !== undefined ? Caml_option.valFromOption(a$4) : undefined
         };
 }
 

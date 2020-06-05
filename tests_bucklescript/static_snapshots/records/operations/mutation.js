@@ -10,10 +10,10 @@ function parse(value) {
   var value$3 = value$1.errors;
   return {
           mutationWithError: {
-            value: (value$2 == null) ? undefined : ({
+            value: !(value$2 == null) ? ({
                   stringField: value$2.stringField
-                }),
-            errors: (value$3 == null) ? undefined : value$3.map((function (value) {
+                }) : undefined,
+            errors: !(value$3 == null) ? value$3.map((function (value) {
                       var value$1 = value.field;
                       var tmp;
                       switch (value$1) {
@@ -36,7 +36,7 @@ function parse(value) {
                               field: tmp,
                               message: value.message
                             };
-                    }))
+                    })) : undefined
           }
         };
 }
@@ -76,6 +76,10 @@ function serialize(value) {
         };
 }
 
+function makeVariables(param) {
+  
+}
+
 var Z__INTERNAL = {
   graphql_module: 0
 };
@@ -85,6 +89,8 @@ var MyQuery = {
   query: "mutation   {\nmutationWithError  {\nvalue  {\nstringField  \n}\n\nerrors  {\nfield  \nmessage  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  makeVariables: makeVariables,
+  makeDefaultVariables: undefined,
   Z__INTERNAL: Z__INTERNAL
 };
 
