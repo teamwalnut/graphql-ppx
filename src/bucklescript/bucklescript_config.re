@@ -184,6 +184,16 @@ let read_config = () => {
        });
 
     ppxConfig
+    |> JsonHelper.mapString("extend-query-no-required-variables", extend_query => {
+         Ppx_config.update_config(current =>
+           {
+             ...current,
+             extend_query_no_required_variables: Some(extend_query),
+           }
+         )
+       });
+
+    ppxConfig
     |> JsonHelper.mapString("extend-mutation", extend_mutation => {
          Ppx_config.update_config(current =>
            {...current, extend_mutation: Some(extend_mutation)}
@@ -191,9 +201,32 @@ let read_config = () => {
        });
 
     ppxConfig
+    |> JsonHelper.mapString(
+         "extend-mutation-no-required-variables", extend_mutation => {
+         Ppx_config.update_config(current =>
+           {
+             ...current,
+             extend_mutation_no_required_variables: Some(extend_mutation),
+           }
+         )
+       });
+
+    ppxConfig
     |> JsonHelper.mapString("extend-subscription", extend_subscription => {
          Ppx_config.update_config(current =>
            {...current, extend_subscription: Some(extend_subscription)}
+         )
+       });
+
+    ppxConfig
+    |> JsonHelper.mapString(
+         "extend-subscription-no-required-variables", extend_subscription => {
+         Ppx_config.update_config(current =>
+           {
+             ...current,
+             extend_subscription_no_required_variables:
+               Some(extend_subscription),
+           }
          )
        });
 

@@ -326,13 +326,22 @@ let wrap_query_module = (definition, name: string, contents, config) => {
       switch (definition) {
       | Fragment => Ppx_config.extend_fragment()
       | Operation(Query, {has_required_variables: false}) =>
-        Ppx_config.extend_query_no_required_variables()
+        switch (Ppx_config.extend_query_no_required_variables()) {
+        | Some(extension) => Some(extension)
+        | None => Ppx_config.extend_query()
+        }
       | Operation(Query, _) => Ppx_config.extend_query()
       | Operation(Mutation, {has_required_variables: false}) =>
-        Ppx_config.extend_mutation_no_required_variables()
+        switch (Ppx_config.extend_mutation_no_required_variables()) {
+        | Some(extension) => Some(extension)
+        | None => Ppx_config.extend_mutation()
+        }
       | Operation(Mutation, _) => Ppx_config.extend_mutation()
       | Operation(Subscription, {has_required_variables: false}) =>
-        Ppx_config.extend_subscription_no_required_variables()
+        switch (Ppx_config.extend_subscription_no_required_variables()) {
+        | Some(extension) => Some(extension)
+        | None => Ppx_config.extend_subscription()
+        }
       | Operation(Subscription, _) => Ppx_config.extend_subscription()
       }
     };
