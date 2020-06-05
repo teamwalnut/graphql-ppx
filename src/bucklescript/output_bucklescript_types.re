@@ -671,7 +671,7 @@ let rec generate_arg_type = (raw, loc as originalLoc) => {
 
 let generate_empty_input_object = () => {
   Ast_helper.Type.mk(
-    ~manifest=base_type_name("Js.Json.t"),
+    ~manifest=base_type_name("unit"),
     {loc: Location.none, txt: generate_type_name(~prefix="t_variables", [])},
   );
 };
