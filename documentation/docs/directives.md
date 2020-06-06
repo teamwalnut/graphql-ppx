@@ -7,11 +7,11 @@ operations or fragments.
 
 ## `arguments`
 
-See [Fragments](fragment.md)
+See [Fragment](fragment.md)
 
 ## `argumentDefinitions`
 
-See [Fragments](fragment.md)
+See [Fragment](fragment.md)
 
 ## `ppxAs`
 

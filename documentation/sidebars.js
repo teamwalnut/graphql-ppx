@@ -12,6 +12,7 @@ module.exports = {
       "graphql-extension-point",
       "definition",
       "operation",
+      "fragment",
       "custom-fields",
       "directives",
       "configuration",
