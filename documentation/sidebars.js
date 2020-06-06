@@ -9,18 +9,12 @@ module.exports = {
       "getting-started",
     ],
     Usage: [
-      "data-structures",
-      "queries",
-      "mutations",
-      "fragments",
-      "serialization",
+      "graphql-extension-point",
+      "definition",
+      "operation",
+      "custom-fields",
     ],
-    "API Reference": ["query", "mutation", "fragment"],
     Guides: ["extending-graphql-ppx", "using-with-apollo", "using-with-gatsby"],
-    Advanced: [
-      "parse-and-serialize",
-      "using-custom-records",
-      "not-supported-yet",
-    ],
+    Advanced: ["not-supported-yet"],
   },
 };

@@ -7,7 +7,7 @@ title: Introduction
 This documentation is a work in progress. Any feedback is welcome!
 :::
 
-GraphQL ppx provides simple GraphQL primitives to the ReasonML and OCaml
+`graphql-ppx` provides simple GraphQL primitives to the ReasonML and OCaml
 programming language[^1]. If you are using GraphQL with ReasonML, you are
 probably using this preprocessor extension.
 

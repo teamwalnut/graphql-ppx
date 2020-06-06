@@ -152,6 +152,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -327,6 +329,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -384,7 +388,7 @@ module ByDirective = {
     type t_variables = unit;
   };
   /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman @ppxOmitFutureValue {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     __typename: string,
     name: string,
@@ -502,6 +506,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

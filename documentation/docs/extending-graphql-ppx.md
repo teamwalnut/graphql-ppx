@@ -1,5 +1,5 @@
 ---
-title: Extending Graphql-ppx
+title: Extending graphql-ppx
 ---
 
 Graphql-ppx has a way to extend the basic build in functionality of the modules
@@ -133,10 +133,13 @@ possible by using the BuckleScript configuration file (`bsconfig.json`):
 ```json
 {
   "graphql": {
-    "extendQuery": "ExtendQuery",
-    "extendMutation": "ExtendMutation",
-    "extendSubscription": "ExtendSubscription",
-    "extendFragment": "ExtendFragment"
+    "extend-query": "ExtendQuery",
+    "extend-query-no-required-variables": "ExtendQueryNoRequiredVars",
+    "extend-mutation": "ExtendMutation",
+    "extend-mutation-no-required-variables": "ExtendMutationNoRequiredVars",
+    "extend-subscription": "ExtendSubscription",
+    "extend-subscription-no-required-variables": "ExtendSubscriptionNoRequiredVars",
+    "extend-fragment": "ExtendFragment"
   }
 }
 ```

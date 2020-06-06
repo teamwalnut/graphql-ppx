@@ -500,6 +500,10 @@ let generate_default_operation =
               ],
             ]
             : [],
+          [
+            [%stri external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity"],
+          ],
+          [[%stri external toJSON: Raw.t => Js.Json.t = "%identity"]],
           Output_bucklescript_docstrings.get_module(),
         ]),
       ]);
@@ -655,6 +659,12 @@ let generate_fragment_module =
                 ]
               ],
             ],
+            [
+              [%stri
+                external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity"
+              ],
+            ],
+            [[%stri external toJSON: Raw.t => Js.Json.t = "%identity"]],
             Output_bucklescript_docstrings.get_module(),
           ],
         ]),

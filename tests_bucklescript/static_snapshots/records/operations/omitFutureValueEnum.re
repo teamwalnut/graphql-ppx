@@ -137,6 +137,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -293,6 +295,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -348,7 +352,7 @@ module ByDirective = {
     type t_variables = unit;
   };
   /**The GraphQL query string*/
-  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n";
+  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
   type t_mutationWithError_errors = {
     message: string,
@@ -449,6 +453,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
+  external toJSON: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
