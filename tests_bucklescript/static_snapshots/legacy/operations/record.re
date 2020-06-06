@@ -84,6 +84,8 @@ module MyQuery = {
     "variables": Js.Json.null,
     "parse": parse,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -177,6 +179,8 @@ module OneFieldQuery = {
     "variables": Js.Json.null,
     "parse": parse,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -263,6 +267,8 @@ module ExternalFragmentQuery = {
       {"string": string, "int": int};
     };
     let name = "Fragment";
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -357,6 +363,8 @@ module ExternalFragmentQuery {
       "variables": Js.Json.null,
       "parse": parse,
     };
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -488,6 +496,8 @@ module InlineFragmentQuery = {
     "variables": Js.Json.null,
     "parse": parse,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -574,6 +584,8 @@ module UnionExternalFragmentQuery = {
       {"name": name, "barkVolume": barkVolume};
     };
     let name = "DogFragment";
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -686,6 +698,8 @@ module UnionExternalFragmentQuery {
       "variables": Js.Json.null,
       "parse": parse,
     };
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

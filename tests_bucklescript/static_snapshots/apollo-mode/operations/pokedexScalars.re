@@ -131,6 +131,8 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:

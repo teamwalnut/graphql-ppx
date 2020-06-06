@@ -51,8 +51,8 @@ module MyQuery = {
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_query_82;
     /**Variable **$query** has the following graphql type:
@@ -334,8 +334,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -521,8 +521,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -683,8 +683,8 @@ module MyQuery = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_opt_119;
     /**Variable **$opt** has the following graphql type:
@@ -917,8 +917,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1012,8 +1012,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -1137,8 +1137,8 @@ module MyQuery = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -1373,8 +1373,8 @@ module RecordsQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1554,8 +1554,8 @@ module ObjectsQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1777,8 +1777,8 @@ module Bla' = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -1934,8 +1934,8 @@ module ListFragment = {
     }: Raw.t
   );
   let name = \\"ListFragment\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -2039,8 +2039,8 @@ module Another = {
     }: Raw.t
   );
   let name = \\"Another\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -2162,8 +2162,8 @@ module FragmentWithArgs = {
     }: Raw.t
   );
   let name = \\"FragmentWithArgs\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -2564,8 +2564,8 @@ module MyQuery = {
   let makeVariables = (~arg1=?, ()) =>
     serializeVariables({arg1: arg1}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2639,8 +2639,8 @@ module MyQuery2 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -2866,8 +2866,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3052,8 +3052,8 @@ module MyQuery = {
         nonNullableOfNonNullable,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_219;
     /**Argument **arg** on field **listsInput** has the following graphql type:
@@ -3257,8 +3257,8 @@ module MyQuery = {
     nonNullableOfNullable,
     nonNullableOfNonNullable,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -3553,8 +3553,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3650,8 +3650,8 @@ module MyQuery = {
     inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -3744,8 +3744,8 @@ module MyQuery = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4211,8 +4211,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -4480,8 +4480,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -4792,8 +4792,8 @@ module MyQuery2 = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_240;
     /**Variable **$arg** has the following graphql type:
@@ -5059,8 +5059,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5240,8 +5240,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5421,8 +5421,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5622,8 +5622,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5799,8 +5799,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -5976,8 +5976,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6126,8 +6126,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -6313,8 +6313,8 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -6483,8 +6483,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6593,8 +6593,8 @@ module OneFieldQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -6691,8 +6691,8 @@ module ExternalFragmentQuery = {
       }: Raw.t
     );
     let name = \\"Fragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -6785,8 +6785,8 @@ module ExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -6923,8 +6923,8 @@ module InlineFragmentQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -7021,8 +7021,8 @@ module UnionExternalFragmentQuery = {
       }: Raw.t
     );
     let name = \\"DogFragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -7133,8 +7133,8 @@ module UnionExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -7299,8 +7299,8 @@ module MyQuery = {
     inner,
     enum,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:
@@ -7588,8 +7588,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -7789,8 +7789,8 @@ module MyQuery = {
         id,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
@@ -8018,8 +8018,8 @@ module MyQuery = {
     nullableID,
     id,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_93;
     /**Variable **$arg** has the following graphql type:
@@ -8288,8 +8288,8 @@ module MyQuery = {
     inp => {var: (a => a)((inp: t_variables).var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8483,8 +8483,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8741,8 +8741,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -8981,8 +8981,8 @@ module MyQuery2 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9221,8 +9221,8 @@ module MyQuery3 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9461,8 +9461,8 @@ module MyQuery4 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9668,8 +9668,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -9869,8 +9869,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10048,8 +10048,8 @@ module MyQueryNoError = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10207,8 +10207,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -10511,8 +10511,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -20215,8 +20215,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -20489,8 +20489,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -20635,8 +20635,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -20791,8 +20791,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -20988,8 +20988,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21085,8 +21085,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21201,8 +21201,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_SampleField_47;
@@ -21409,8 +21409,8 @@ module RecordsQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21583,8 +21583,8 @@ module ObjectsQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21797,8 +21797,8 @@ module Bla' = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -21949,8 +21949,8 @@ module ListFragment = {
     };
   };
   let name = \\"ListFragment\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -22037,8 +22037,8 @@ module Another = {
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
   let name = \\"Another\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -22146,8 +22146,8 @@ module FragmentWithArgs = {
     {\\"listWithArg\\": listWithArg};
   };
   let name = \\"FragmentWithArgs\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -22502,8 +22502,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22579,8 +22579,8 @@ module MyQuery2 = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -22797,8 +22797,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23007,8 +23007,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23207,8 +23207,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_ListsInput_47;
@@ -23427,8 +23427,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23531,8 +23531,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23635,8 +23635,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -23963,8 +23963,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24237,8 +24237,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -24527,8 +24527,8 @@ module MyQuery2 = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;
@@ -24727,8 +24727,8 @@ module Normal = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -24873,8 +24873,8 @@ module ByConfig = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25019,8 +25019,8 @@ module ByDirective = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25199,8 +25199,8 @@ module Normal = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25355,8 +25355,8 @@ module ByConfig = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25511,8 +25511,8 @@ module ByDirective = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25656,8 +25656,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25838,8 +25838,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -25971,8 +25971,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26066,8 +26066,8 @@ module OneFieldQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26154,8 +26154,8 @@ module ExternalFragmentQuery = {
       {\\"string\\": string, \\"int\\": int};
     };
     let name = \\"Fragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -26250,8 +26250,8 @@ module ExternalFragmentQuery {
       \\"variables\\": Js.Json.null,
       \\"parse\\": parse,
     };
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -26383,8 +26383,8 @@ module InlineFragmentQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -26471,8 +26471,8 @@ module UnionExternalFragmentQuery = {
       {\\"name\\": name, \\"barkVolume\\": barkVolume};
     };
     let name = \\"DogFragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -26585,8 +26585,8 @@ module UnionExternalFragmentQuery {
       \\"variables\\": Js.Json.null,
       \\"parse\\": parse,
     };
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -26757,8 +26757,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_RecursiveInput_47;
@@ -27021,8 +27021,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -27258,8 +27258,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -27475,8 +27475,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_VariousScalarsInput_47;
@@ -27688,8 +27688,8 @@ module MyQuery = {
     \\"variables\\": serializeVariables(variables),
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -27857,8 +27857,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28112,8 +28112,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28349,8 +28349,8 @@ module MyQuery2 = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28586,8 +28586,8 @@ module MyQuery3 = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -28823,8 +28823,8 @@ module MyQuery4 = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29030,8 +29030,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29210,8 +29210,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29368,8 +29368,8 @@ module MyQueryNoError = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29519,8 +29519,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29774,8 +29774,8 @@ module MyQuery = {
     \\"variables\\": Js.Json.null,
     \\"parse\\": parse,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -29868,8 +29868,8 @@ module MyQuery = {
     inp => {\\"query\\": (a => a)(inp##query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({\\"query\\": query}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30132,8 +30132,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -30273,8 +30273,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30419,8 +30419,8 @@ module MyQuery = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({\\"opt\\": opt, \\"req\\": req}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30611,8 +30611,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30703,8 +30703,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -30809,8 +30809,8 @@ module MyQuery = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({\\"arg\\": arg}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_SampleField_47;
@@ -31012,8 +31012,8 @@ module RecordsQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31181,8 +31181,8 @@ module ObjectsQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31390,8 +31390,8 @@ module Bla' = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -31542,8 +31542,8 @@ module ListFragment = {
     };
   };
   let name = \\"ListFragment\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -31630,8 +31630,8 @@ module Another = {
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
   let name = \\"Another\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -31739,8 +31739,8 @@ module FragmentWithArgs = {
     {\\"listWithArg\\": listWithArg};
   };
   let name = \\"FragmentWithArgs\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -32085,8 +32085,8 @@ module MyQuery = {
   let makeVariables = (~arg1=?, ()) =>
     serializeVariables({\\"arg1\\": arg1}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32157,8 +32157,8 @@ module MyQuery2 = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32370,8 +32370,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32555,8 +32555,8 @@ module MyQuery = {
         \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -32745,8 +32745,8 @@ module MyQuery = {
     \\"nonNullableOfNullable\\": nonNullableOfNullable,
     \\"nonNullableOfNonNullable\\": nonNullableOfNonNullable,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_ListsInput_47;
@@ -32960,8 +32960,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33054,8 +33054,8 @@ module MyQuery = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33148,8 +33148,8 @@ module MyQuery = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33471,8 +33471,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -33735,8 +33735,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -34015,8 +34015,8 @@ module MyQuery2 = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     \\"field\\": field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;
@@ -34210,8 +34210,8 @@ module Normal = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34351,8 +34351,8 @@ module ByConfig = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34492,8 +34492,8 @@ module ByDirective = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34667,8 +34667,8 @@ module Normal = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34818,8 +34818,8 @@ module ByConfig = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -34969,8 +34969,8 @@ module ByDirective = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35109,8 +35109,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35281,8 +35281,8 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({\\"id\\": id, \\"name\\": name}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35409,8 +35409,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35499,8 +35499,8 @@ module OneFieldQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35587,8 +35587,8 @@ module ExternalFragmentQuery = {
       {\\"string\\": string, \\"int\\": int};
     };
     let name = \\"Fragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -35678,8 +35678,8 @@ module ExternalFragmentQuery {
     };
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -35806,8 +35806,8 @@ module InlineFragmentQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -35894,8 +35894,8 @@ module UnionExternalFragmentQuery = {
       {\\"name\\": name, \\"barkVolume\\": barkVolume};
     };
     let name = \\"DogFragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -36003,8 +36003,8 @@ module UnionExternalFragmentQuery {
     };
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -36165,8 +36165,8 @@ module MyQuery = {
     \\"inner\\": inner,
     \\"enum\\": enum,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_RecursiveInput_47;
@@ -36424,8 +36424,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36624,8 +36624,8 @@ module MyQuery = {
         \\"id\\": id,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -36831,8 +36831,8 @@ module MyQuery = {
     \\"nullableID\\": nullableID,
     \\"id\\": id,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_VariousScalarsInput_47;
@@ -37034,8 +37034,8 @@ module MyQuery = {
     inp => {\\"var\\": (a => a)(inp##var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({\\"var\\": var}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37198,8 +37198,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37448,8 +37448,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37680,8 +37680,8 @@ module MyQuery2 = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -37912,8 +37912,8 @@ module MyQuery3 = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38144,8 +38144,8 @@ module MyQuery4 = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38346,8 +38346,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38521,8 +38521,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38674,8 +38674,8 @@ module MyQueryNoError = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -38820,8 +38820,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39070,8 +39070,8 @@ module MyQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39167,8 +39167,8 @@ module MyQuery = {
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()) =>
     serializeVariables({query: query}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_query_82;
     /**Variable **$query** has the following graphql type:
@@ -39450,8 +39450,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -39627,8 +39627,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -39779,8 +39779,8 @@ module MyQuery = {
     };
   let makeVariables = (~opt=?, ~req, ()) =>
     serializeVariables({opt, req}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_opt_119;
     /**Variable **$opt** has the following graphql type:
@@ -39997,8 +39997,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40092,8 +40092,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_filter_92;
     /**Argument **filter** on field **defaultObjectValueOnScalar** has the following graphql type:
@@ -40217,8 +40217,8 @@ module MyQuery = {
     };
   let makeVariables = (~arg, ()) =>
     serializeVariables({arg: arg}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -40442,8 +40442,8 @@ module RecordsQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40611,8 +40611,8 @@ module ObjectsQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40823,8 +40823,8 @@ module Bla' = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -40970,8 +40970,8 @@ module ListFragment = {
     }: Raw.t
   );
   let name = \\"ListFragment\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -41061,8 +41061,8 @@ module Another = {
     }: Raw.t
   );
   let name = \\"Another\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -41170,8 +41170,8 @@ module FragmentWithArgs = {
     }: Raw.t
   );
   let name = \\"FragmentWithArgs\\";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -41526,8 +41526,8 @@ module MyQuery = {
   let makeVariables = (~arg1=?, ()) =>
     serializeVariables({arg1: arg1}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41601,8 +41601,8 @@ module MyQuery2 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -41817,8 +41817,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42003,8 +42003,8 @@ module MyQuery = {
         nonNullableOfNonNullable,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_219;
     /**Argument **arg** on field **listsInput** has the following graphql type:
@@ -42208,8 +42208,8 @@ module MyQuery = {
     nonNullableOfNullable,
     nonNullableOfNonNullable,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_82;
     /**Variable **$arg** has the following graphql type:
@@ -42465,8 +42465,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42562,8 +42562,8 @@ module MyQuery = {
     inp => {required: (a => a)((inp: t_variables).required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({required: required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42656,8 +42656,8 @@ module MyQuery = {
     inp => {\\"required\\": (a => a)(inp##required)};
   let makeVariables = (~required, ()) =>
     serializeVariables({\\"required\\": required}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -42995,8 +42995,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43264,8 +43264,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -43576,8 +43576,8 @@ module MyQuery2 = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_240;
     /**Variable **$arg** has the following graphql type:
@@ -43820,8 +43820,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -43978,8 +43978,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44136,8 +44136,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44317,8 +44317,8 @@ module Normal = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44474,8 +44474,8 @@ module ByConfig = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44631,8 +44631,8 @@ module ByDirective = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -44771,8 +44771,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:
@@ -44948,8 +44948,8 @@ module MyQuery = {
   let makeVariables = (~id=?, ~name=?, ()) =>
     serializeVariables({id, name}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_name_100;
     /**Variable **$name** has the following graphql type:
@@ -45109,8 +45109,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45205,8 +45205,8 @@ module OneFieldQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45293,8 +45293,8 @@ module ExternalFragmentQuery = {
       }: Raw.t
     );
     let name = \\"Fragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -45387,8 +45387,8 @@ module ExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -45516,8 +45516,8 @@ module InlineFragmentQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -45604,8 +45604,8 @@ module UnionExternalFragmentQuery = {
       }: Raw.t
     );
     let name = \\"DogFragment\\";
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -45716,8 +45716,8 @@ module UnionExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-    external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+    external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+    external toJson: Raw.t => Js.Json.t = \\"%identity\\";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -45882,8 +45882,8 @@ module MyQuery = {
     inner,
     enum,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:
@@ -46160,8 +46160,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -46361,8 +46361,8 @@ module MyQuery = {
         id,
       }: t_variables,
     );
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
@@ -46590,8 +46590,8 @@ module MyQuery = {
     nullableID,
     id,
   };
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_93;
     /**Variable **$arg** has the following graphql type:
@@ -46840,8 +46840,8 @@ module MyQuery = {
     inp => {var: (a => a)((inp: t_variables).var)};
   let makeVariables = (~var, ()) =>
     serializeVariables({var: var}: t_variables);
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47011,8 +47011,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47258,8 +47258,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47487,8 +47487,8 @@ module MyQuery2 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47716,8 +47716,8 @@ module MyQuery3 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -47945,8 +47945,8 @@ module MyQuery4 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48152,8 +48152,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48333,8 +48333,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48492,8 +48492,8 @@ module MyQueryNoError = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48642,8 +48642,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -48912,8 +48912,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = \\"%identity\\";
-  external toJSON: Raw.t => Js.Json.t = \\"%identity\\";
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

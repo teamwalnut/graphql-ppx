@@ -156,6 +156,8 @@ module RecordsQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -335,6 +337,8 @@ module ObjectsQuery = {
   };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

@@ -215,6 +215,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_49;
@@ -493,6 +495,8 @@ module MyQuery2 = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     "field": field,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec _graphql_NonrecursiveInput_169;

@@ -93,6 +93,8 @@ module MyQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -201,6 +203,8 @@ module OneFieldQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -297,6 +301,8 @@ module ExternalFragmentQuery = {
       }: Raw.t
     );
     let name = "Fragment";
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -389,6 +395,8 @@ module ExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -525,6 +533,8 @@ module InlineFragmentQuery = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -621,6 +631,8 @@ module UnionExternalFragmentQuery = {
       }: Raw.t
     );
     let name = "DogFragment";
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql;
@@ -731,6 +743,8 @@ module UnionExternalFragmentQuery {
     );
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+    external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

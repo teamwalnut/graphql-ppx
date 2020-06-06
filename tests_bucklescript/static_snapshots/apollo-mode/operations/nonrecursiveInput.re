@@ -220,6 +220,8 @@ module MyQuery = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_100;
     /**Variable **$arg** has the following graphql type:
@@ -530,6 +532,8 @@ module MyQuery2 = {
   and makeInputObjectEmbeddedInput = (~field=?, ()): t_variables_EmbeddedInput => {
     field: field,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_240;
     /**Variable **$arg** has the following graphql type:

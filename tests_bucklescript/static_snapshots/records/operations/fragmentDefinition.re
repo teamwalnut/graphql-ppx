@@ -94,8 +94,8 @@ module ListFragment = {
     }: Raw.t
   );
   let name = "ListFragment";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
-  external toJSON: Raw.t => Js.Json.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -185,8 +185,8 @@ module Another = {
     }: Raw.t
   );
   let name = "Another";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
-  external toJSON: Raw.t => Js.Json.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -294,8 +294,8 @@ module FragmentWithArgs = {
     }: Raw.t
   );
   let name = "FragmentWithArgs";
-  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
-  external toJSON: Raw.t => Js.Json.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -650,8 +650,8 @@ module MyQuery = {
   let makeVariables = (~arg1=?, ()) =>
     serializeVariables({arg1: arg1}: t_variables);
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
-  external toJSON: Raw.t => Js.Json.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -725,8 +725,8 @@ module MyQuery2 = {
   );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJSON: Js.Json.t => Raw.t = "%identity";
-  external toJSON: Raw.t => Js.Json.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

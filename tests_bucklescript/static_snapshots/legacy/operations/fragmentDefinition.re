@@ -99,6 +99,8 @@ module ListFragment = {
     };
   };
   let name = "ListFragment";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -185,6 +187,8 @@ module Another = {
     {"nullableOfNonNullable": nullableOfNonNullable};
   };
   let name = "Another";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -292,6 +296,8 @@ module FragmentWithArgs = {
     {"listWithArg": listWithArg};
   };
   let name = "FragmentWithArgs";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql;
@@ -646,6 +652,8 @@ module MyQuery = {
     "variables": serializeVariables(variables),
     "parse": parse,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -721,6 +729,8 @@ module MyQuery2 = {
     "variables": Js.Json.null,
     "parse": parse,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;

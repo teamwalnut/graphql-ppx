@@ -116,6 +116,8 @@ module MyQuery = {
     inner,
     enum,
   };
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_90;
     /**Variable **$arg** has the following graphql type:
