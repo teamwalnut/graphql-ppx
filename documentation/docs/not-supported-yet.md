@@ -2,8 +2,8 @@
 title: Not supported yet
 ---
 
-GraphQL ppx targets to support 100% of the GraphQL spec. And we would like to be
-compatible with every GraphQL client. However we are not there yet. These are
+`graphql-ppx` targets to support 100% of the GraphQL spec. And we would like to
+be compatible with every GraphQL client. However we are not there yet. These are
 some of the things that are not supported yet, but we would like to support in
 the future:
 

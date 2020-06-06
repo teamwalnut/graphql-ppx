@@ -84,7 +84,7 @@ using a version control system, you don't need to check it in.
 
 ## Typical use
 
-GraphQL PPX is a utility to work with the GraphQL protocol in ReasonML.
+`graphql-ppx` is a utility to work with the GraphQL protocol in ReasonML.
 Typically this PPX is being used in combination with a GraphQL client. Popular
 clients include [Reason Apollo Hooks](https://github.com/Astrocoders/reason-apollo-hooks/commits/master)
 or [Reason URQL](https://github.com/FormidableLabs/reason-urql). They also
@@ -301,7 +301,7 @@ they have nothing to do with the relay client (we just re-use this convention).
 
 Note that you cannot rename variables in the `@arguments` directive so the name
 of the variable and the name of the key must be the same. This is because
-GraphQL PPX does not manipulate variable names and just makes use of the fact
+`graphql-ppx` does not manipulate variable names and just makes use of the fact
 that fragments can use variables declared in the query.
 
 There is a compile error raised if you define variables that are unused. If you
@@ -310,7 +310,7 @@ with an underscore.
 
 #### `bsAs`
 
-An ecape hatch for when you don't want GraphQL PPX to create a record type, you
+An ecape hatch for when you don't want `graphql-ppx` to create a record type, you
 can supply one yourself. This also makes reusability possible. We recommend
 fragments however in most cases as they are easier to work, are safer and don't
 require defining separate types.
@@ -539,7 +539,7 @@ By default `graphql_ppx` uses `graphql_schema.json` file from your root director
 
 # Query specific configuration
 
-If you want to use multiple schemas in your project it can be provided as a secondary config argument in your graphql ppx definition.
+If you want to use multiple schemas in your project it can be provided as a secondary config argument in your `graphql-ppx` definition.
 
 ```reason
 module MyQuery = [%graphql

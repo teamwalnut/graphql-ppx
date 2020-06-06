@@ -5,7 +5,7 @@
  * With these transforms we can slightly change the GraphQL operation or
  * fragment compared to what the user supplies. This is helpful for instance
  * to add fields that clients will add implicitly, or to preprocess the document
- * to conform to some of the conventions of GraphQL PPX.
+ * to conform to some of the conventions of graphql-ppx.
  */
 type t = (Schema.t, Graphql_ast.document) => Graphql_ast.document;
 

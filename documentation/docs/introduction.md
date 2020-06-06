@@ -15,9 +15,9 @@ Most probably the best way to get started is by following the documentation of
 the [GraphQL client](clients.md) you are going to be using.
 
 This documentation is for people who want to dive deeper into the functionality
-of GraphQL ppx.
+of `graphql-ppx`.
 
 [^1]:
-  While the GraphQL ppx works on both ReasonML and OCaml the examples in this
+  While the `graphql-ppx` works on both ReasonML and OCaml the examples in this
   documentation will be in ReasonML. If you are an OCaml user and interested to
   contribute OCaml examples, this would be great. You can write a pull-request.

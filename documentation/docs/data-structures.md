@@ -2,7 +2,7 @@
 title: Data Structures
 ---
 
-GraphQL ppx converts GraphQL data and arguments from "pure" JSON data to
+`graphql-ppx` converts GraphQL data and arguments from "pure" JSON data to
 idiomatic ReasonML data structures:
 
 - GraphQL objects are converted into records

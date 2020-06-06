@@ -55,7 +55,7 @@ function Home() {
                   Language level GraphQL primitives
                 </h2>
                 <p className="padding-horiz--md">
-                  GraphQL ppx offers language level GraphQL primitives within
+                  graphql-ppx offers language level GraphQL primitives within
                   ReasonML using a compiler preprocessor extension. This means
                   you have a simple syntax to define queries, mutations and
                   fragments in your ReasonML project.
@@ -66,7 +66,7 @@ function Home() {
                   Building block for GraphQL clients
                 </h2>
                 <p className="padding-horiz--md">
-                  GraphQL ppx automatically generates types, and parse/serialize
+                  graphql-ppx automatically generates types, and parse/serialize
                   functions for converting GraphQL data and arguments to
                   idiomatic ReasonML data structures. This provides a building
                   block for GraphQL clients in the ReasonML ecosystem.
@@ -75,7 +75,7 @@ function Home() {
               <section className="col">
                 <h2 className={styles.featureHeading}>100% type safe!</h2>
                 <p className="padding-horiz--md">
-                  With GraphQL ppx your project is completely type safe. Types
+                  With graphql-ppx your project is completely type safe. Types
                   are generated from the GraphQL schema of your backend. This
                   means that no runtime errors occur when working with server
                   data. And if a schema change breaks your app, your app simply

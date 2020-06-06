@@ -4,7 +4,7 @@ title: Installation
 
 ## Schema
 
-GraphQL ppx needs your graphql schema to be available in the form of a
+`graphql-ppx` needs your graphql schema to be available in the form of a
 `graphql_schema.json` file.
 
 The easiest way to add this to your project is using an
@@ -19,9 +19,9 @@ With `ENDPOINT_URL` being the URL of your GraphQL endpoint.
 
 ## Cache
 
-GraphQL ppx will generate a `.graphql_ppx_cache` folder alongside your JSON
+`graphql-ppx` will generate a `.graphql_ppx_cache` folder alongside your JSON
 schema to optimize parsing performance. If you're using a version control
 system, you don't need to check it in.
 
 The next pages will provide further installation instructions whether you are
-using GraphQL ppx with Bucklescript or using Reason Native.
+using `graphql-ppx` with Bucklescript or using Reason Native.
