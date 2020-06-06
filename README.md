@@ -128,7 +128,7 @@ Make your first query:
 |}];
 ```
 
-Go to `https://graphql-ppx/docs/getting-started`
+[Open getting started in the docs](https://beta.graphql-ppx/docs/getting-started)
 
 ## Roadmap
 
@@ -138,7 +138,7 @@ See our [development board](https://github.com/reasonml-community/graphql_ppx/pr
 
 We'd love your help improving `graphql-ppx`!
 
-Take a look at our [Contributing Guide](https://graphql-ppx.com/docs/contributing) to get started.
+Take a look at our [Contributing Guide](https://beta.graphql-ppx.com/docs/contributing) to get started.
 
 ## License
 
