@@ -15,14 +15,27 @@ See [Fragments](fragment.md)
 
 ## `ppxAs`
 
-## `ppxDecoder`
+## `ppxCustom`
+
+## `ppxDecoder` (deprecated)
+
+This was the old name for `ppxCustom`
 
 ## `ppxField`
 
-## `ppxObject`
+## `ppxObject` (deprecated)
+
+Convert a specific field to an object instead of a record.
 
 ## `ppxOmitFutureValue`
 
 ## `ppxRecord` (deprecated)
 
+Convert a specific field to a record when graphql-ppx is generating objects
+instead of record.
+
 ## `ppxVariant`
+
+## skip
+
+## include

@@ -454,7 +454,9 @@ and unify_field = (error_marker, config, field_span, ty) => {
     has_directive(~prepend=true, "OmitFutureValue", ast_field.fd_directives)
     || !config.future_added_value;
   let has_decoder =
-    has_directive(~prepend=true, "Decoder", ast_field.fd_directives);
+    has_directive(~prepend=true, "Decoder", ast_field.fd_directives)
+    || has_directive(~prepend=true, "Custom", ast_field.fd_directives);
+
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
   let has_skip =
@@ -505,7 +507,16 @@ and unify_field = (error_marker, config, field_span, ty) => {
     | None => []
     | Some({item}) => item
     };
-  switch (ast_field.fd_directives |> find_directive(~prepend=true, "Decoder")) {
+  switch (
+    switch (
+      ast_field.fd_directives |> find_directive(~prepend=true, "Decoder"),
+      ast_field.fd_directives |> find_directive(~prepend=true, "Custom"),
+    ) {
+    | (_, Some(decoder)) => Some(decoder)
+    | (Some(decoder), _) => Some(decoder)
+    | (None, None) => None
+    }
+  ) {
   | None =>
     Fr_named_field({name: key, loc_key, loc, type_: parser_expr, arguments})
   | Some({item: {d_arguments, _}, span}) =>
@@ -806,7 +817,16 @@ let rec unify_document_schema = (config, document) => {
         open Result;
 
         let with_decoder =
-          switch (fg_directives |> find_directive(~prepend=true, "Decoder")) {
+          switch (
+            switch (
+              fg_directives |> find_directive(~prepend=true, "Decoder"),
+              fg_directives |> find_directive(~prepend=true, "Custom"),
+            ) {
+            | (_, Some(decoder)) => Some(decoder)
+            | (Some(decoder), _) => Some(decoder)
+            | (None, None) => None
+            }
+          ) {
           | None => Ok(None)
           | Some({item: {d_arguments, _}, span}) =>
             switch (find_argument("fn", d_arguments)) {

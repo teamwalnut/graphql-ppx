@@ -11,5 +11,5 @@ idiomatic ReasonML data structures:
   with exhaustiveness checking
 - Floats, ints, strings, booleans, id are converted into their corresponding
   native Reason/OCaml types
-- Custom scalars are `Js.Json.t` and can be parsed using the `@ppxDecoder`
+- Custom scalars are `Js.Json.t` and can be parsed using the `@ppxCustom`
   directive

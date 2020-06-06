@@ -13,8 +13,16 @@ module.exports = {
       "definition",
       "operation",
       "custom-fields",
+      "directives",
+      "configuration",
     ],
     Guides: ["extending-graphql-ppx", "using-with-apollo", "using-with-gatsby"],
-    Advanced: ["not-supported-yet"],
+    Advanced: [
+      "future-added-values",
+      "modeling-expected-errors",
+      "troubleshooting",
+      "not-supported-yet",
+      "contributing",
+    ],
   },
 };
