@@ -543,7 +543,7 @@ let generate_fragment_module =
 
   let rec make_labeled_fun = body =>
     fun
-    | [] => [%expr ((value: Raw.t) => [%e body])]
+    | [] => body
     | [(name, type_, span, type_span), ...tl] => {
         let loc = config.map_loc(span) |> conv_loc;
         let type_loc = config.map_loc(type_span) |> conv_loc;
@@ -588,9 +588,11 @@ let generate_fragment_module =
     } else {
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-      let parse = [%stri
-        let parse = [%e make_labeled_fun(parse_fn, required_variables)]
-      ];
+      let verify_parse =
+        make_labeled_fun(
+          [%expr (value: Raw.t) => parse(value)],
+          required_variables,
+        );
       // Add to internal module
       Output_bucklescript_docstrings.for_fragment(config, fragment);
       List.concat(
@@ -603,7 +605,8 @@ let generate_fragment_module =
             [[%stri let query = [%e printed_query]]],
             [wrap_module("Raw", raw_types)],
             types,
-            [parse],
+            [[%stri let parse = (value: Raw.t) => [%e parse_fn]]],
+            [[%stri let verifyArgsAndParse = [%e verify_parse]]],
             [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
             [
               [%stri

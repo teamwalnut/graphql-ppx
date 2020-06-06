@@ -126,6 +126,7 @@ type Lists {
   nullableOfNonNullable: [String!]
   nonNullableOfNullable: [String]!
   nonNullableOfNonNullable: [String!]!
+  listWithArg(arg1: String): [String]
 }
 
 input VariousScalarsInput {

@@ -153,7 +153,10 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
 
 let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
   let ident =
-    Ast_helper.Exp.ident({loc, txt: Longident.parse(name ++ ".parse")});
+    Ast_helper.Exp.ident({
+      loc,
+      txt: Longident.parse(name ++ ".verifyArgsAndParse"),
+    });
   let variable_defs = get_variable_definitions(definition);
   let labeled_args =
     variable_defs

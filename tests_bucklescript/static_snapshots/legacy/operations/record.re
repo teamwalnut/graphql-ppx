@@ -245,6 +245,7 @@ module ExternalFragmentQuery = {
       };
       {string, int};
     };
+    let verifyArgsAndParse = (value: Raw.t) => parse(value);
     let serialize: t => Raw.t =
       value => {
         let int = {
@@ -333,7 +334,7 @@ module ExternalFragmentQuery {
       value => {
         let variousScalars = {
           let value = value##variousScalars;
-          Fragment.parse(value);
+          Fragment.verifyArgsAndParse(value);
         };
         {"variousScalars": variousScalars};
       };
@@ -552,6 +553,7 @@ module UnionExternalFragmentQuery = {
       };
       {name, barkVolume};
     };
+    let verifyArgsAndParse = (value: Raw.t) => parse(value);
     let serialize: t => Raw.t =
       value => {
         let barkVolume = {
@@ -648,7 +650,7 @@ module UnionExternalFragmentQuery {
               `Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.parse(value);
+                  DogFragment.verifyArgsAndParse(value);
                 },
               )
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)

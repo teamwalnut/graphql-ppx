@@ -109,6 +109,8 @@ function parse$2(value) {
         };
 }
 
+var verifyArgsAndParse = parse$2;
+
 function serialize$2(value) {
   var value$1 = value.int;
   var value$2 = value.string;
@@ -129,6 +131,7 @@ var Fragment = {
   query: query,
   Raw: Raw$2,
   parse: parse$2,
+  verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
   name: name,
   Z__INTERNAL: Z__INTERNAL$2
@@ -261,6 +264,8 @@ function parse$5(value) {
         };
 }
 
+var verifyArgsAndParse$1 = parse$5;
+
 function serialize$5(value) {
   var value$1 = value.barkVolume;
   var value$2 = value.name;
@@ -281,6 +286,7 @@ var DogFragment = {
   query: query$2,
   Raw: Raw$5,
   parse: parse$5,
+  verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
   name: name$1,
   Z__INTERNAL: Z__INTERNAL$5
