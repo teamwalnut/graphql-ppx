@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/reasonml-community/graphql_ppx/actions">
-    <img src="https://github.com/reasonml-community/graphql_ppx/workflows/CI/badge.svg" alt="Build Status" />
+    <img src="https://github.com/reasonml-community/graphql_ppx/workflows/graphql_ppx%20pipeline/badge.svg" alt="Build Status" />
   </a>
   <a href="https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg">
     <img src="https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg" alt="npm version" />
