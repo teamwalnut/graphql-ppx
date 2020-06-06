@@ -28,6 +28,7 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
   };
+  /**The GraphQL query string*/
   let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
     id: string,
@@ -38,62 +39,62 @@ module MyQuery = {
     id: option(string),
     name: option(string),
   };
-  let parse: Raw.t => t =
-    (value) => (
-      {
-        pokemon: {
-          let value = (value: Raw.t).pokemon;
-          switch (Js.toOption(value)) {
-          | Some(value) =>
-            Some(
-              {
-                id: {
-                  let value = (value: Raw.t_pokemon).id;
-                  value;
-                },
-                name: {
-                  let value = (value: Raw.t_pokemon).name;
-                  switch (Js.toOption(value)) {
-                  | Some(value) => Some(value)
-                  | None => None
-                  };
-                },
-              }: t_pokemon,
-            )
-          | None => None
-          };
-        },
-      }: t
-    );
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let pokemon = {
-          let value = (value: t).pokemon;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              {
-                let name = {
-                  let value = (value: t_pokemon).name;
-                  switch (value) {
-                  | Some(value) => Js.Nullable.return(value)
-                  | None => Js.Nullable.null
-                  };
-                }
-                and id = {
-                  let value = (value: t_pokemon).id;
-                  value;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      pokemon: {
+        let value = (value: Raw.t).pokemon;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            {
+              id: {
+                let value = (value: Raw.t_pokemon).id;
+                value;
+              },
+              name: {
+                let value = (value: Raw.t_pokemon).name;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
                 };
-                {id, name};
-              }: Raw.t_pokemon,
-            )
-          | None => Js.Nullable.null
-          };
+              },
+            }: t_pokemon,
+          )
+        | None => None
         };
-        {pokemon: pokemon};
-      }: Raw.t
-    );
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let pokemon = {
+        let value = (value: t).pokemon;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            {
+              let name = {
+                let value = (value: t_pokemon).name;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and id = {
+                let value = (value: t_pokemon).id;
+                value;
+              };
+              {id, name};
+            }: Raw.t_pokemon,
+          )
+        | None => Js.Nullable.null
+        };
+      };
+      {pokemon: pokemon};
+    }: Raw.t
+  );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       id:
@@ -158,32 +159,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/

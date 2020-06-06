@@ -31,6 +31,7 @@ module MyQuery = {
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
+  /**The GraphQL query string*/
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -43,25 +44,25 @@ module MyQuery = {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  let parse: Raw.t => t =
-    (value) => (
-      {
-        nonrecursiveInput: {
-          let value = (value: Raw.t).nonrecursiveInput;
-          value;
-        },
-      }: t
-    );
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nonrecursiveInput = {
-          let value = (value: t).nonrecursiveInput;
-          value;
-        };
-        {nonrecursiveInput: nonrecursiveInput};
-      }: Raw.t
-    );
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      nonrecursiveInput: {
+        let value = (value: Raw.t).nonrecursiveInput;
+        value;
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nonrecursiveInput = {
+        let value = (value: t).nonrecursiveInput;
+        value;
+      };
+      {nonrecursiveInput: nonrecursiveInput};
+    }: Raw.t
+  );
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
@@ -270,32 +271,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/
@@ -323,6 +323,7 @@ module MyQuery2 = {
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
+  /**The GraphQL query string*/
   let query = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
   type t = {
     scalarsInput: string,
@@ -341,33 +342,33 @@ module MyQuery2 = {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  let parse: Raw.t => t =
-    (value) => (
-      {
-        scalarsInput: {
-          let value = (value: Raw.t).scalarsInput;
-          value;
-        },
-        more: {
-          let value = (value: Raw.t).more;
-          value;
-        },
-      }: t
-    );
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let more = {
-          let value = (value: t).more;
-          value;
-        }
-        and scalarsInput = {
-          let value = (value: t).scalarsInput;
-          value;
-        };
-        {scalarsInput, more};
-      }: Raw.t
-    );
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      scalarsInput: {
+        let value = (value: Raw.t).scalarsInput;
+        value;
+      },
+      more: {
+        let value = (value: Raw.t).more;
+        value;
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let more = {
+        let value = (value: t).more;
+        value;
+      }
+      and scalarsInput = {
+        let value = (value: t).scalarsInput;
+        value;
+      };
+      {scalarsInput, more};
+    }: Raw.t
+  );
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
@@ -597,32 +598,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery2 {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/

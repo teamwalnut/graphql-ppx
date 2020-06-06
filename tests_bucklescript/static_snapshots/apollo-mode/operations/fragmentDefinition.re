@@ -20,6 +20,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  /**The GraphQL query string*/
   let query = "fragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
@@ -35,70 +36,73 @@ module ListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
-  let parse = (value: Raw.t): t => {
-    __typename: {
-      let value = (value: Raw.t).__typename;
-      value;
-    },
-    nullableOfNullable: {
-      let value = (value: Raw.t).nullableOfNullable;
-      switch (Js.toOption(value)) {
-      | Some(value) =>
-        Some(
-          value
-          |> Js.Array.map(value =>
-               switch (Js.toOption(value)) {
-               | Some(value) => Some(value)
-               | None => None
-               }
-             ),
-        )
-      | None => None
-      };
-    },
-    nullableOfNonNullable: {
-      let value = (value: Raw.t).nullableOfNonNullable;
-      switch (Js.toOption(value)) {
-      | Some(value) => Some(value |> Js.Array.map(value => value))
-      | None => None
-      };
-    },
-  };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableOfNullable = {
-          let value = (value: t).nullableOfNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-          value;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
         };
-        {__typename, nullableOfNullable, nullableOfNonNullable};
-      }: Raw.t
-    );
+      },
+      nullableOfNonNullable: {
+        let value = (value: Raw.t).nullableOfNonNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      },
+    }: t
+  );
+  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(value |> Js.Array.map(value => value))
+        | None => Js.Nullable.null
+        };
+      }
+      and nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
+        };
+      }
+      and __typename = {
+        let value = (value: t).__typename;
+        value;
+      };
+      {__typename, nullableOfNullable, nullableOfNonNullable};
+    }: Raw.t
+  );
   let name = "ListFragment";
   module Z__INTERNAL = {
     type root = t;
@@ -121,32 +125,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module GraphQL {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/
@@ -154,6 +157,7 @@ module GraphQL {
   };
 };
 module Another = {
+  /**The GraphQL query string*/
   let query = "fragment Another on Lists   {\n__typename  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
@@ -167,38 +171,41 @@ module Another = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
-  let parse = (value: Raw.t): t => {
-    __typename: {
-      let value = (value: Raw.t).__typename;
-      value;
-    },
-    nullableOfNonNullable: {
-      let value = (value: Raw.t).nullableOfNonNullable;
-      switch (Js.toOption(value)) {
-      | Some(value) => Some(value |> Js.Array.map(value => value))
-      | None => None
-      };
-    },
-  };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-          value;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      nullableOfNonNullable: {
+        let value = (value: Raw.t).nullableOfNonNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
         };
-        {__typename, nullableOfNonNullable};
-      }: Raw.t
-    );
+      },
+    }: t
+  );
+  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(value |> Js.Array.map(value => value))
+        | None => Js.Nullable.null
+        };
+      }
+      and __typename = {
+        let value = (value: t).__typename;
+        value;
+      };
+      {__typename, nullableOfNonNullable};
+    }: Raw.t
+  );
   let name = "Another";
   module Z__INTERNAL = {
     type root = t;
@@ -221,32 +228,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module GraphQL {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/
@@ -254,6 +260,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  /**The GraphQL query string*/
   let query = "fragment FragmentWithArgs on Lists   {\n__typename  \nlistWithArg(arg1: $arg1)  \n}\n";
   module Raw = {
     type t = {
@@ -267,56 +274,59 @@ module FragmentWithArgs = {
     listWithArg: option(array(option(string))),
   };
   type nonrec t_Lists = t;
-  let parse = (value: Raw.t): t => {
-    __typename: {
-      let value = (value: Raw.t).__typename;
-      value;
-    },
-    listWithArg: {
-      let value = (value: Raw.t).listWithArg;
-      switch (Js.toOption(value)) {
-      | Some(value) =>
-        Some(
-          value
-          |> Js.Array.map(value =>
-               switch (Js.toOption(value)) {
-               | Some(value) => Some(value)
-               | None => None
-               }
-             ),
-        )
-      | None => None
-      };
-    },
-  };
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      listWithArg: {
+        let value = (value: Raw.t).listWithArg;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+    }: t
+  );
   let verifyArgsAndParse = (~arg1 as _arg1: [ | `String], value: Raw.t) =>
     parse(value);
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let listWithArg = {
-          let value = (value: t).listWithArg;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
-        }
-        and __typename = {
-          let value = (value: t).__typename;
-          value;
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let listWithArg = {
+        let value = (value: t).listWithArg;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
         };
-        {__typename, listWithArg};
-      }: Raw.t
-    );
+      }
+      and __typename = {
+        let value = (value: t).__typename;
+        value;
+      };
+      {__typename, listWithArg};
+    }: Raw.t
+  );
   let name = "FragmentWithArgs";
   module Z__INTERNAL = {
     type root = t;
@@ -339,32 +349,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module GraphQL {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/
@@ -385,6 +394,7 @@ module MyQuery = {
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
+  /**The GraphQL query string*/
   let query =
     (
       (
@@ -457,257 +467,251 @@ module MyQuery = {
     l5: FragmentWithArgs.t,
   };
   type t_variables = {arg1: option(string)};
-  let parse: Raw.t => t =
-    (value) => (
-      {
-        l1: {
-          let value = (value: Raw.t).l1;
-          ListFragment.verifyArgsAndParse(value);
-        },
-        l2: {
-          let value = (value: Raw.t).l2;
-          (
-            {
-              __typename: {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
-                  );
-                value;
-              },
-              frag1: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-                ListFragment.verifyArgsAndParse(value);
-              },
-              frag2: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-                ListFragment.verifyArgsAndParse(value);
-              },
-            }: t_l2
-          );
-        },
-        l3: {
-          let value = (value: Raw.t).l3;
-          (
-            {
-              __typename: {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
-                  );
-                value;
-              },
-              nullableOfNullable: {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(
-                      Obj.magic(value),
-                      "nullableOfNullable",
-                    ),
-                  );
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
-                  )
-                | None => None
-                };
-              },
-              frag1: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-                ListFragment.verifyArgsAndParse(value);
-              },
-              frag2: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-                ListFragment.verifyArgsAndParse(value);
-              },
-            }: t_l3
-          );
-        },
-        l4: {
-          let value = (value: Raw.t).l4;
-          (
-            {
-              __typename: {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
-                  );
-                value;
-              },
-              nullableOfNullable: {
-                let value =
-                  Obj.magic(
-                    Js.Dict.unsafeGet(
-                      Obj.magic(value),
-                      "nullableOfNullable",
-                    ),
-                  );
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
-                  )
-                | None => None
-                };
-              },
-              listFragment: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-                ListFragment.verifyArgsAndParse(value);
-              },
-            }: t_l4
-          );
-        },
-        l5: {
-          let value = (value: Raw.t).l5;
-          FragmentWithArgs.verifyArgsAndParse(~arg1=`String, value);
-        },
-      }: t
-    );
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let l5 = {
-          let value = (value: t).l5;
-          FragmentWithArgs.serialize(value);
-        }
-        and l4 = {
-          let value = (value: t).l4;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      l1: {
+        let value = (value: Raw.t).l1;
+        ListFragment.verifyArgsAndParse(value);
+      },
+      l2: {
+        let value = (value: Raw.t).l2;
+        (
+          {
+            __typename: {
+              let value =
                 Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l4).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    }
-                    and __typename = {
-                      let value = (value: t_l4).__typename;
-                      value;
-                    };
-                    {
-                      "__typename": __typename,
-                      "nullableOfNullable": nullableOfNullable,
-                    };
-                  },
-                ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(
-                      ListFragment.serialize((value: t_l4).listFragment),
-                    ): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l4
-          );
-        }
-        and l3 = {
-          let value = (value: t).l3;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+                  Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                );
+              value;
+            },
+            frag1: {
+              let value: ListFragment.Raw.t = Obj.magic(value);
+              ListFragment.verifyArgsAndParse(value);
+            },
+            frag2: {
+              let value: ListFragment.Raw.t = Obj.magic(value);
+              ListFragment.verifyArgsAndParse(value);
+            },
+          }: t_l2
+        );
+      },
+      l3: {
+        let value = (value: Raw.t).l3;
+        (
+          {
+            __typename: {
+              let value =
                 Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l3).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    }
-                    and __typename = {
-                      let value = (value: t_l3).__typename;
-                      value;
-                    };
-                    {
-                      "__typename": __typename,
-                      "nullableOfNullable": nullableOfNullable,
-                    };
-                  },
-                ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l3
-          );
-        }
-        and l2 = {
-          let value = (value: t).l2;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+                  Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                );
+              value;
+            },
+            nullableOfNullable: {
+              let value =
                 Obj.magic(
-                  {
-                    let __typename = {
-                      let value = (value: t_l2).__typename;
-                      value;
+                  Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+                );
+              switch (Js.toOption(value)) {
+              | Some(value) =>
+                Some(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (Js.toOption(value)) {
+                       | Some(value) => Some(value)
+                       | None => None
+                       }
+                     ),
+                )
+              | None => None
+              };
+            },
+            frag1: {
+              let value: ListFragment.Raw.t = Obj.magic(value);
+              ListFragment.verifyArgsAndParse(value);
+            },
+            frag2: {
+              let value: ListFragment.Raw.t = Obj.magic(value);
+              ListFragment.verifyArgsAndParse(value);
+            },
+          }: t_l3
+        );
+      },
+      l4: {
+        let value = (value: Raw.t).l4;
+        (
+          {
+            __typename: {
+              let value =
+                Obj.magic(
+                  Js.Dict.unsafeGet(Obj.magic(value), "__typename"),
+                );
+              value;
+            },
+            nullableOfNullable: {
+              let value =
+                Obj.magic(
+                  Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"),
+                );
+              switch (Js.toOption(value)) {
+              | Some(value) =>
+                Some(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (Js.toOption(value)) {
+                       | Some(value) => Some(value)
+                       | None => None
+                       }
+                     ),
+                )
+              | None => None
+              };
+            },
+            listFragment: {
+              let value: ListFragment.Raw.t = Obj.magic(value);
+              ListFragment.verifyArgsAndParse(value);
+            },
+          }: t_l4
+        );
+      },
+      l5: {
+        let value = (value: Raw.t).l5;
+        FragmentWithArgs.verifyArgsAndParse(~arg1=`String, value);
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let l5 = {
+        let value = (value: t).l5;
+        FragmentWithArgs.serialize(value);
+      }
+      and l4 = {
+        let value = (value: t).l4;
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  let nullableOfNullable = {
+                    let value = (value: t_l4).nullableOfNullable;
+                    switch (value) {
+                    | Some(value) =>
+                      Js.Nullable.return(
+                        value
+                        |> Js.Array.map(value =>
+                             switch (value) {
+                             | Some(value) => Js.Nullable.return(value)
+                             | None => Js.Nullable.null
+                             }
+                           ),
+                      )
+                    | None => Js.Nullable.null
                     };
-                    {"__typename": __typename};
-                  },
-                ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l2
-          );
-        }
-        and l1 = {
-          let value = (value: t).l1;
-          ListFragment.serialize(value);
-        };
-        {l1, l2, l3, l4, l5};
-      }: Raw.t
-    );
+                  }
+                  and __typename = {
+                    let value = (value: t_l4).__typename;
+                    value;
+                  };
+                  {
+                    "__typename": __typename,
+                    "nullableOfNullable": nullableOfNullable,
+                  };
+                },
+              ): Js.Json.t,
+              [|
+                (
+                  Obj.magic(
+                    ListFragment.serialize((value: t_l4).listFragment),
+                  ): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l4
+        );
+      }
+      and l3 = {
+        let value = (value: t).l3;
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  let nullableOfNullable = {
+                    let value = (value: t_l3).nullableOfNullable;
+                    switch (value) {
+                    | Some(value) =>
+                      Js.Nullable.return(
+                        value
+                        |> Js.Array.map(value =>
+                             switch (value) {
+                             | Some(value) => Js.Nullable.return(value)
+                             | None => Js.Nullable.null
+                             }
+                           ),
+                      )
+                    | None => Js.Nullable.null
+                    };
+                  }
+                  and __typename = {
+                    let value = (value: t_l3).__typename;
+                    value;
+                  };
+                  {
+                    "__typename": __typename,
+                    "nullableOfNullable": nullableOfNullable,
+                  };
+                },
+              ): Js.Json.t,
+              [|
+                (
+                  Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
+                ),
+                (
+                  Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l3
+        );
+      }
+      and l2 = {
+        let value = (value: t).l2;
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  let __typename = {
+                    let value = (value: t_l2).__typename;
+                    value;
+                  };
+                  {"__typename": __typename};
+                },
+              ): Js.Json.t,
+              [|
+                (
+                  Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
+                ),
+                (
+                  Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
+                ),
+              |],
+            ),
+          ): Raw.t_l2
+        );
+      }
+      and l1 = {
+        let value = (value: t).l1;
+        ListFragment.serialize(value);
+      };
+      {l1, l2, l3, l4, l5};
+    }: Raw.t
+  );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg1:
@@ -734,32 +738,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module GraphQL {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/
@@ -771,30 +774,31 @@ module MyQuery2 = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
   };
+  /**The GraphQL query string*/
   let query =
     (("query   {\nlists  {\n..." ++ ListFragment.name) ++ "   \n}\n\n}\n")
     ++ ListFragment.query;
   type t = {lists: ListFragment.t};
   type t_variables = unit;
-  let parse: Raw.t => t =
-    (value) => (
-      {
-        lists: {
-          let value = (value: Raw.t).lists;
-          ListFragment.verifyArgsAndParse(value);
-        },
-      }: t
-    );
-  let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          ListFragment.serialize(value);
-        };
-        {lists: lists};
-      }: Raw.t
-    );
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      lists: {
+        let value = (value: Raw.t).lists;
+        ListFragment.verifyArgsAndParse(value);
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let lists = {
+        let value = (value: t).lists;
+        ListFragment.serialize(value);
+      };
+      {lists: lists};
+    }: Raw.t
+  );
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   module Z__INTERNAL = {
@@ -807,32 +811,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery2 {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/

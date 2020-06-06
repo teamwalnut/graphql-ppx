@@ -32,6 +32,7 @@ module MyQuery = {
     type t = {. "simpleSubscription": t_simpleSubscription};
     type t_variables = unit;
   };
+  /**The GraphQL query string*/
   let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_simpleSubscription_Dog = {. "name": string};
   type t_simpleSubscription_Human = {. "name": string};
@@ -42,76 +43,76 @@ module MyQuery = {
   ];
   type t = {. "simpleSubscription": t_simpleSubscription};
   type t_variables = unit;
-  let parse: Raw.t => t =
-    value => {
-      let simpleSubscription = {
-        let value = value##simpleSubscription;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-        (
-          switch (typename) {
-          | "Dog" =>
-            `Dog(
-              {
-                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                let name = {
-                  let value = value##name;
-                  value;
-                };
-                {"name": name};
-              },
-            )
-          | "Human" =>
-            `Human(
-              {
-                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
-                let name = {
-                  let value = value##name;
-                  value;
-                };
-                {"name": name};
-              },
-            )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_simpleSubscription
-        );
-      };
-      {"simpleSubscription": simpleSubscription};
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let simpleSubscription = {
+      let value = value##simpleSubscription;
+      let typename: string =
+        Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+      (
+        switch (typename) {
+        | "Dog" =>
+          `Dog(
+            {
+              let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+              let name = {
+                let value = value##name;
+                value;
+              };
+              {"name": name};
+            },
+          )
+        | "Human" =>
+          `Human(
+            {
+              let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+              let name = {
+                let value = value##name;
+                value;
+              };
+              {"name": name};
+            },
+          )
+        | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+        }: t_simpleSubscription
+      );
     };
-  let serialize: t => Raw.t =
-    value => {
-      let simpleSubscription = {
-        let value = value##simpleSubscription;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = value##name;
-                  value;
-                };
-                {"__typename": "Dog", "name": name};
-              },
-            ): Raw.t_simpleSubscription
-          )
-        | `Human(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = value##name;
-                  value;
-                };
-                {"__typename": "Human", "name": name};
-              },
-            ): Raw.t_simpleSubscription
-          )
-        | `FutureAddedValue(value) => (
-            Obj.magic(value): Raw.t_simpleSubscription
-          )
-        };
+    {"simpleSubscription": simpleSubscription};
+  };
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => {
+    let simpleSubscription = {
+      let value = value##simpleSubscription;
+      switch (value) {
+      | `Dog(value) => (
+          Obj.magic(
+            {
+              let name = {
+                let value = value##name;
+                value;
+              };
+              {"__typename": "Dog", "name": name};
+            },
+          ): Raw.t_simpleSubscription
+        )
+      | `Human(value) => (
+          Obj.magic(
+            {
+              let name = {
+                let value = value##name;
+                value;
+              };
+              {"__typename": "Human", "name": name};
+            },
+          ): Raw.t_simpleSubscription
+        )
+      | `FutureAddedValue(value) => (
+          Obj.magic(value): Raw.t_simpleSubscription
+        )
       };
-      {"simpleSubscription": simpleSubscription};
     };
+    {"simpleSubscription": simpleSubscription};
+  };
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -129,32 +130,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/

@@ -35,6 +35,7 @@ module MyQuery = {
     };
     type t_variables = {. "var": bool};
   };
+  /**The GraphQL query string*/
   let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
   type t_v1 = {
     .
@@ -52,86 +53,86 @@ module MyQuery = {
     "v2": t_v2,
   };
   type t_variables = {. "var": bool};
-  let parse: Raw.t => t =
-    value => {
-      let v2 = {
-        let value = value##v2;
-        let string = {
-          let value = value##string;
-          switch (Js.toOption(value)) {
-          | Some(value) => Some(value)
-          | None => None
-          };
-        }
-        and nullableString = {
-          let value = value##nullableString;
-          switch (Js.toOption(value)) {
-          | Some(value) => Some(value)
-          | None => None
-          };
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let v2 = {
+      let value = value##v2;
+      let string = {
+        let value = value##string;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value)
+        | None => None
         };
-        {"nullableString": nullableString, "string": string};
       }
-      and v1 = {
-        let value = value##v1;
-        let string = {
-          let value = value##string;
-          switch (Js.toOption(value)) {
-          | Some(value) => Some(value)
-          | None => None
-          };
-        }
-        and nullableString = {
-          let value = value##nullableString;
-          switch (Js.toOption(value)) {
-          | Some(value) => Some(value)
-          | None => None
-          };
+      and nullableString = {
+        let value = value##nullableString;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value)
+        | None => None
         };
-        {"nullableString": nullableString, "string": string};
       };
-      {"v1": v1, "v2": v2};
-    };
-  let serialize: t => Raw.t =
-    value => {
-      let v2 = {
-        let value = value##v2;
-        let string = {
-          let value = value##string;
-          switch (value) {
-          | Some(value) => Js.Nullable.return(value)
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableString = {
-          let value = value##nullableString;
-          switch (value) {
-          | Some(value) => Js.Nullable.return(value)
-          | None => Js.Nullable.null
-          };
+      {"nullableString": nullableString, "string": string};
+    }
+    and v1 = {
+      let value = value##v1;
+      let string = {
+        let value = value##string;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value)
+        | None => None
         };
-        {"nullableString": nullableString, "string": string};
       }
-      and v1 = {
-        let value = value##v1;
-        let string = {
-          let value = value##string;
-          switch (value) {
-          | Some(value) => Js.Nullable.return(value)
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableString = {
-          let value = value##nullableString;
-          switch (value) {
-          | Some(value) => Js.Nullable.return(value)
-          | None => Js.Nullable.null
-          };
+      and nullableString = {
+        let value = value##nullableString;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value)
+        | None => None
         };
-        {"nullableString": nullableString, "string": string};
       };
-      {"v1": v1, "v2": v2};
+      {"nullableString": nullableString, "string": string};
     };
+    {"v1": v1, "v2": v2};
+  };
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => {
+    let v2 = {
+      let value = value##v2;
+      let string = {
+        let value = value##string;
+        switch (value) {
+        | Some(value) => Js.Nullable.return(value)
+        | None => Js.Nullable.null
+        };
+      }
+      and nullableString = {
+        let value = value##nullableString;
+        switch (value) {
+        | Some(value) => Js.Nullable.return(value)
+        | None => Js.Nullable.null
+        };
+      };
+      {"nullableString": nullableString, "string": string};
+    }
+    and v1 = {
+      let value = value##v1;
+      let string = {
+        let value = value##string;
+        switch (value) {
+        | Some(value) => Js.Nullable.return(value)
+        | None => Js.Nullable.null
+        };
+      }
+      and nullableString = {
+        let value = value##nullableString;
+        switch (value) {
+        | Some(value) => Js.Nullable.return(value)
+        | None => Js.Nullable.null
+        };
+      };
+      {"nullableString": nullableString, "string": string};
+    };
+    {"v1": v1, "v2": v2};
+  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {"var": (a => a)(inp##var)};
   let makeVariables = (~var, ()) =>
@@ -146,32 +147,31 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module MyQuery {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  The GraphQL query string
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```*/

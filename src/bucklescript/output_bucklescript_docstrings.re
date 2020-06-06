@@ -6,11 +6,33 @@ open Migrate_parsetree;
 open Ast_408;
 open Ast_helper;
 
+let query_docstring = {|The GraphQL query string|};
+let parse_docstring = {|Parse the JSON GraphQL data to ReasonML data types|};
+
+let serialize_docstring = {|Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data |};
+
 let str_items: ref(list(Parsetree.structure_item)) = ref([]);
 let str_module_information: ref(list(Parsetree.structure_item)) = ref([]);
 
 let reset = () => {
   str_items := [];
+};
+
+let make_let = (value, expr, docstring) => {
+  Ast_helper.Str.value(
+    Nonrecursive,
+    [
+      Vb.mk(
+        ~attrs=[
+          Docstrings.docs_attr(
+            Docstrings.docstring(docstring, Location.none),
+          ),
+        ],
+        Ast_helper.Pat.var(Location.mkloc(value, Location.none)),
+        expr,
+      ),
+    ],
+  );
 };
 
 let generate_text_struct = (name, loc, text) => [
@@ -285,36 +307,38 @@ The following is simply an overview of the most important variables and types th
 
 ```
 module %s {
-  // This is the stringified representation of your query, which gets sent to the server.
+  /**
+  %s
+  */
   let query: string;
 
-  // This is the main type of the result you will get back.
-  // You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
   type t;
 
-  // This function turns your raw result from the server into the reason/ocaml representation of that result.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  %s
+  */
   let parse: Raw.t => t;
 
-  // This function will prepare your data for sending it back to the server.
-  // Depending on your graphql client library, this process should happen automatically for you.
+  /**
+  %s
+  */
   let serialize: t => Raw.t;
 
-  // The definition tuple is primarily used to interact with client libraries.
-  // The types are equivalent to: (parse, query, serialize).
-  // Your client library will use these values to provide the properly parsed / serialized data for you.
-  let definition: (
-    Raw.t => t,
-    string,
-    t => Raw.t
-  );
-
-  // This is the representation of your raw result coming from the server.
-  // It should not be necessary to access the types inside for normal use cases.
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
   module Raw: { type t; };
 }
 ```|},
         module_name,
+        query_docstring,
+        parse_docstring,
+        serialize_docstring,
       ),
     );
 };

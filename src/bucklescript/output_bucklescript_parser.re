@@ -346,6 +346,7 @@ and generate_object_decoder =
         Exp.let_(Nonrecursive, bindings, record);
       };
   };
+
   let do_obj_constructor = () =>
     [@metaloc loc]
     {

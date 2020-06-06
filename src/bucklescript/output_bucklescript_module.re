@@ -452,11 +452,31 @@ let generate_default_operation =
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
           },
-          [[%stri let query = [%e printed_query]]],
+          [
+            Output_bucklescript_docstrings.(
+              make_let("query", printed_query, query_docstring)
+            ),
+          ],
           types,
           arg_types,
-          [[%stri let parse: Raw.t => t = value => [%e parse_fn]]],
-          [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
+          [
+            Output_bucklescript_docstrings.(
+              make_let(
+                "parse",
+                [%expr (value: Raw.t) => ([%e parse_fn]: t)],
+                parse_docstring,
+              )
+            ),
+          ],
+          [
+            Output_bucklescript_docstrings.(
+              make_let(
+                "serialize",
+                [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
+                serialize_docstring,
+              )
+            ),
+          ],
           switch (serialize_variable_functions) {
           | None => []
           | Some(f) => [f]
@@ -602,12 +622,32 @@ let generate_fragment_module =
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []
             },
-            [[%stri let query = [%e printed_query]]],
+            [
+              Output_bucklescript_docstrings.(
+                make_let("query", printed_query, query_docstring)
+              ),
+            ],
             [wrap_module("Raw", raw_types)],
             types,
-            [[%stri let parse = (value: Raw.t) => [%e parse_fn]]],
+            [
+              Output_bucklescript_docstrings.(
+                make_let(
+                  "parse",
+                  [%expr (value: Raw.t) => ([%e parse_fn]: t)],
+                  parse_docstring,
+                )
+              ),
+            ],
             [[%stri let verifyArgsAndParse = [%e verify_parse]]],
-            [[%stri let serialize: t => Raw.t = value => [%e serialize_fn]]],
+            [
+              Output_bucklescript_docstrings.(
+                make_let(
+                  "serialize",
+                  [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
+                  serialize_docstring,
+                )
+              ),
+            ],
             [
               [%stri
                 let name = [%e
