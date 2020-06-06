@@ -1,4 +1,4 @@
-## ⚠️🚧️⚠️🚧⚠️ This is README for the upcoming 1.0 release. It's available via "@baransu/graphql_ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql_ppx/blob/master/README.md) ⚠️🚧️⚠️🚧⚠️
+> ⚠️🚧️⚠️🚧⚠️ This is README for the upcoming 1.0 release. It's available via "@baransu/graphql_ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql_ppx/blob/master/README.md) ⚠️🚧️⚠️🚧⚠️
 
 <p align="center">
     <img width="300" src="https://beta.graphql-ppx.com/img/logo.svg" alt="Logo">
