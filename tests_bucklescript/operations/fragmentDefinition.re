@@ -31,8 +31,8 @@ module GraphQL_PPX = {
     }
 
     l2: lists {
-      ...ListFragment @bsField(name: "frag1")
-      ...ListFragment @bsField(name: "frag2")
+      ...ListFragment @ppxField(name: "frag1")
+      ...ListFragment @ppxField(name: "frag2")
     }
 
     l3: lists {

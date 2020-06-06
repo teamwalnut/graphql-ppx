@@ -75,14 +75,22 @@ let print_directive = d =>
 
 let is_internal_directive = d =>
   switch (d.item.d_name.item) {
+  | "bsOmitFutureValue"
+  | "ppxOmitFutureValue"
   | "bsVariant"
+  | "ppxVariant"
   | "bsRecord"
+  | "ppxRecord"
   | "bsObject"
+  | "ppxObject"
+  | "bsDecoder"
   | "ppxDecoder"
+  | "bsAs"
   | "ppxAs"
   | "argumentDefinitions"
   | "arguments"
-  | "bsField" => true
+  | "bsField"
+  | "ppxField" => true
   | _ => false
   };
 

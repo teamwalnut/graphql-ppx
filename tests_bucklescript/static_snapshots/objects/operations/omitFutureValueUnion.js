@@ -243,7 +243,7 @@ var Z__INTERNAL$2 = {
 
 var ByDirective = {
   Raw: Raw$2,
-  query: "query   {\ndogOrHuman @ppxOmitFutureValue {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
+  query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,

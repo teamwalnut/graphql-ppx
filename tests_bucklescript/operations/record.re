@@ -12,7 +12,7 @@ type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = [%graphql
   {|
   {
-    variousScalars @bsRecord @ppxAs(type: "scalars") {
+    variousScalars @ppxRecord @ppxAs(type: "scalars") {
       string
       int
     }

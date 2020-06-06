@@ -228,7 +228,7 @@ var Z__INTERNAL$2 = {
 
 var ByDirective = {
   Raw: Raw$2,
-  query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield @ppxOmitFutureValue \n}\n\n}\n\n}\n",
+  query: "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
   makeVariables: makeVariables$2,

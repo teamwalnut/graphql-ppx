@@ -13,16 +13,18 @@ let make_error = (error_marker, map_loc, span, message) => {
   Res_error(map_loc(span), message);
 };
 
-let has_directive = (name, directives) =>
+let has_directive = (~prepend=false, name, directives) =>
   List.exists(
-    ({item: {d_name: {item, _}, _}, _}) => item == name,
+    ({item: {d_name: {item, _}, _}, _}) =>
+      prepend ? item == "bs" ++ name || item == "ppx" ++ name : item == name,
     directives,
   );
 
-let find_directive = (name, directives) =>
+let find_directive = (~prepend=false, name, directives) =>
   switch (
     List.find(
-      ({item: {d_name: {item, _}, _}, _}) => item == name,
+      ({item: {d_name: {item, _}, _}, _}) =>
+        prepend ? item == "bs" ++ name || item == "ppx" ++ name : item == name,
       directives,
     )
   ) {
@@ -66,7 +68,7 @@ let find_fragment_arguments =
 };
 
 let get_ppx_as = directives => {
-  switch (directives |> find_directive("ppxAs")) {
+  switch (directives |> find_directive(~prepend=true, "As")) {
   | None => None
   | Some({item: {d_arguments, _}, _}) =>
     switch (find_argument("type", d_arguments)) {
@@ -303,7 +305,7 @@ and unify_union =
           | Some(ty) => ty
           };
 
-        let is_record = has_directive("bsRecord", if_directives);
+        let is_record = has_directive(~prepend=true, "Record", if_directives);
 
         let result_decoder =
           unify_selection_set(
@@ -444,12 +446,15 @@ and unify_field = (error_marker, config, field_span, ty) => {
   let key = some_or(ast_field.fd_alias, ast_field.fd_name);
   let key_span = key.span;
   let key = key.item;
-  let is_variant = has_directive("bsVariant", ast_field.fd_directives);
-  let is_record = has_directive("bsRecord", ast_field.fd_directives);
+  let is_variant =
+    has_directive(~prepend=true, "Variant", ast_field.fd_directives);
+  let is_record =
+    has_directive(~prepend=true, "Record", ast_field.fd_directives);
   let omit_future_value =
-    has_directive("ppxOmitFutureValue", ast_field.fd_directives)
+    has_directive(~prepend=true, "OmitFutureValue", ast_field.fd_directives)
     || !config.future_added_value;
-  let has_decoder = has_directive("ppxDecoder", ast_field.fd_directives);
+  let has_decoder =
+    has_directive(~prepend=true, "Decoder", ast_field.fd_directives);
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
   let has_skip =
@@ -500,7 +505,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
     | None => []
     | Some({item}) => item
     };
-  switch (ast_field.fd_directives |> find_directive("ppxDecoder")) {
+  switch (ast_field.fd_directives |> find_directive(~prepend=true, "Decoder")) {
   | None =>
     Fr_named_field({name: key, loc_key, loc, type_: parser_expr, arguments})
   | Some({item: {d_arguments, _}, span}) =>
@@ -581,7 +586,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
   | Field(field_span) => unify_field(error_marker, config, field_span, ty)
   | FragmentSpread({item: {fs_directives, fs_name}, span}) =>
     let arguments = find_fragment_arguments(fs_directives);
-    switch (find_directive("bsField", fs_directives)) {
+    switch (find_directive(~prepend=true, "Field", fs_directives)) {
     | None =>
       let key =
         fs_name.item
@@ -605,7 +610,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
         raise_error(
           config.map_loc,
           span,
-          "bsField must be given 'name' argument",
+          "ppxField must be given 'name' argument",
         )
       | Some((_, {item: Iv_string(key), span})) =>
         Fr_fragment_spread(
@@ -659,7 +664,7 @@ and unify_selection_set =
         error_marker,
         config.map_loc,
         span,
-        "@bsRecord can not be used with fragment spreads, place @bsRecord on the fragment definition instead",
+        "@ppxRecord can not be used with fragment spreads, place @ppxRecord on the fragment definition instead",
       );
     } else {
       Res_solo_fragment_spread(
@@ -801,7 +806,7 @@ let rec unify_document_schema = (config, document) => {
         open Result;
 
         let with_decoder =
-          switch (fg_directives |> find_directive("bsDecoder")) {
+          switch (fg_directives |> find_directive(~prepend=true, "Decoder")) {
           | None => Ok(None)
           | Some({item: {d_arguments, _}, span}) =>
             switch (find_argument("fn", d_arguments)) {
@@ -811,7 +816,7 @@ let rec unify_document_schema = (config, document) => {
                   error_marker,
                   config.map_loc,
                   span,
-                  "bsDecoder must be given 'fn' argument",
+                  "ppxDecoder must be given 'fn' argument",
                 ),
               )
             | Some((_, {item: Iv_string(fn_name), span})) =>
@@ -837,7 +842,7 @@ let rec unify_document_schema = (config, document) => {
             }
           };
 
-        let is_record = has_directive("bsRecord", fg_directives);
+        let is_record = has_directive(~prepend=true, "Record", fg_directives);
 
         let argumentDefinitions =
           getFragmentArgumentDefinitions(fg_directives);
