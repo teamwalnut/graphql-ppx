@@ -32,11 +32,11 @@
 
 ## Features
 
-- Language level GraphQL primitives.
+- Language level GraphQL primitives
 
--️ Building block for GraphQL clients.
+- Building block for GraphQL clients
 
-- 100% type safe.
+- 100% type safe
 
 ## Installation
 
