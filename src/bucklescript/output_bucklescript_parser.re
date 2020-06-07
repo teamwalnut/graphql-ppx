@@ -224,7 +224,7 @@ and generate_object_decoder =
     (
       config,
       loc,
-      name,
+      _name,
       fields,
       path,
       definition,
@@ -247,7 +247,7 @@ and generate_object_decoder =
 
     let get_value =
       fun
-      | Fr_named_field({name as key, type_ as inner}) =>
+      | Fr_named_field({name: key, type_: inner}) =>
         [@metaloc conv_loc(loc)]
         {
           let%expr value =
@@ -281,7 +281,7 @@ and generate_object_decoder =
           generate_parser(config, [key, ...path], definition, inner);
         }
 
-      | Fr_fragment_spread(key, loc, name, _, arguments) =>
+      | Fr_fragment_spread(_key, loc, name, _, arguments) =>
         [@metaloc conv_loc(loc)]
         {
           let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
@@ -429,7 +429,7 @@ and generate_poly_variant_selection_set_decoder =
   );
 }
 and generate_poly_variant_interface_decoder =
-    (config, loc, name, base, fragments, path, definition) => {
+    (config, loc, _name, base, fragments, path, definition) => {
   let map_fallback_case = ((type_name, inner)) => {
     open Ast_helper;
     let name_pattern = Pat.any();
@@ -443,7 +443,7 @@ and generate_poly_variant_interface_decoder =
     |> Exp.case(name_pattern);
   };
 
-  let map_case = ((type_name, inner)) => {
+  let map_case = ((type_name, _inner)) => {
     open Ast_helper;
     let name_pattern = const_str_pat(type_name);
 
@@ -485,49 +485,47 @@ and generate_poly_variant_union_decoder =
     (
       config,
       loc,
-      name,
+      _name,
       fragments,
-      exhaustive_flag,
+      _exhaustive_flag,
       omit_future_value,
       path,
       definition,
     ) => {
   let fragment_cases =
-    Ast_helper.(
-      fragments
-      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
-           Ast_helper.(
-             Exp.case(
-               const_str_pat(type_name),
-               Exp.variant(
-                 type_name,
-                 Some(
-                   {
-                     let%expr value: [%t
-                       switch (inner) {
-                       | Res_solo_fragment_spread(_, name, _) =>
-                         base_type_name(name ++ ".Raw.t")
-                       | _ =>
-                         base_type_name(
-                           "Raw." ++ generate_type_name([type_name, ...path]),
-                         )
-                       }
-                     ] =
-                       Obj.magic(value);
-                     %e
-                     generate_parser(
-                       config,
-                       [type_name, ...path],
-                       definition,
-                       inner,
-                     );
-                   },
-                 ),
+    fragments
+    |> List.map((({item: type_name}: Result_structure.name, inner)) => {
+         Ast_helper.(
+           Exp.case(
+             const_str_pat(type_name),
+             Exp.variant(
+               type_name,
+               Some(
+                 {
+                   let%expr value: [%t
+                     switch (inner) {
+                     | Res_solo_fragment_spread(_, name, _) =>
+                       base_type_name(name ++ ".Raw.t")
+                     | _ =>
+                       base_type_name(
+                         "Raw." ++ generate_type_name([type_name, ...path]),
+                       )
+                     }
+                   ] =
+                     Obj.magic(value);
+                   %e
+                   generate_parser(
+                     config,
+                     [type_name, ...path],
+                     definition,
+                     inner,
+                   );
+                 },
                ),
-             )
+             ),
            )
-         })
-    );
+         )
+       });
   let fallback_case =
     omit_future_value
       ? Ast_helper.(

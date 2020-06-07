@@ -1,5 +1,7 @@
 (library
  (name graphql_ppx_bucklescript)
  (libraries reason ocaml-migrate-parsetree graphql_ppx.base)
+ (flags
+  (:standard -w -9))
  (preprocess
   (pps ppx_tools_versioned.metaquot_408)))

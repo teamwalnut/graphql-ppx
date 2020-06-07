@@ -33,7 +33,7 @@ let print_input_object = ({iom_input_fields, iom_name}: input_object_meta) => {
   (
     iom_input_fields
     |> List.fold_left(
-         (p, {am_name} as input_field: Schema.argument_meta) =>
+         (p, input_field: Schema.argument_meta) =>
            p ++ "\n  " ++ print_input_field(input_field),
          iom_name ++ " {",
        )

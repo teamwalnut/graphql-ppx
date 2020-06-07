@@ -271,7 +271,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> filter_map(
            fun
-           | Fr_named_field({name as field, loc, type_ as inner}) => {
+           | Fr_named_field({name as field, loc, type_: inner}) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
@@ -307,7 +307,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
       fields
       |> List.map(
            fun
-           | Fr_named_field({name as field, loc}) => {
+           | Fr_named_field({name: field, loc}) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -350,7 +350,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
     )
   };
 }
-and generate_object_decoder = (config, loc, name, fields) =>
+and generate_object_decoder = (config, loc, _name, fields) =>
   [@metaloc loc]
   (
     switch%expr (value) {
@@ -362,7 +362,7 @@ and generate_object_decoder = (config, loc, name, fields) =>
             Pat.any(),
             List.map(
               fun
-              | Fr_named_field({name as key, type_ as inner}) =>
+              | Fr_named_field({name as key, type_: inner}) =>
                 Cf.method(
                   {txt: key, loc: Location.none},
                   Public,

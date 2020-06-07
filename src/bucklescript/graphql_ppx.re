@@ -329,7 +329,6 @@ let get_template_tag = query_config => {
 let rewrite_query =
     (~query_config: query_config, ~loc, ~delim, ~query, ~module_name, ()) => {
   open Ast_408;
-  open Ast_helper;
 
   let lexer = Graphql_lexer.make(query);
   let delimLength =
@@ -414,18 +413,11 @@ let rewrite_query =
         warnings
         |> List.iter(((loc, message)) => {
              let loc = conv_loc(loc);
-             let loc_as_ghost = {...loc, loc_ghost: true};
-             Location.print_alert(
+             Location.print_warning(
                loc,
                Location.formatter_for_warnings^,
-               {
-                 kind: "deprecated",
-                 message,
-                 def: loc_as_ghost,
-                 use: loc_as_ghost,
-               },
+               Warnings.Preprocessor(message),
              );
-             ();
            });
         Result_decoder.unify_document_schema(config, document)
         |> Output_bucklescript_module.generate_modules(config, module_name);

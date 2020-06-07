@@ -114,7 +114,7 @@ let rec extract = (~variant=false, ~path, ~raw) =>
   | Res_object(loc, _name, fields, type_name) as result_structure
   | Res_record(loc, _name, fields, type_name) as result_structure =>
     switch (result_structure, type_name, raw) {
-    | (_, Some(type_name), false) => create_children(path, raw, fields)
+    | (_, Some(_type_name), false) => create_children(path, raw, fields)
     | (Res_record(_, _, _, _), _, false) =>
       create_object(path, raw, fields, true, loc, variant)
     | (_, _, _) => create_object(path, raw, fields, false, loc, variant)
@@ -162,7 +162,7 @@ let rec extract = (~variant=false, ~path, ~raw) =>
         omit_future_value,
       }),
     ]
-and fragment_names = f => f |> List.map(((name, _)) => name)
+and _fragment_names = f => f |> List.map(((name, _)) => name)
 and extract_fragments = (fragments, path, raw) => {
   fragments
   |> List.fold_left(
@@ -213,7 +213,7 @@ and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
   ];
 };
 
-let raise_inconsistent_schema = (type_name, loc) =>
+let _raise_inconsistent_schema = (type_name, loc) =>
   raise_error_with_loc(
     loc,
     "Inconsistent schema, type named " ++ type_name ++ " cannot be found",

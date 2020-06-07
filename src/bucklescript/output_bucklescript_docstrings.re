@@ -90,7 +90,7 @@ let for_field_arguments =
                            | Operation({
                                item: {
                                  o_variable_definitions:
-                                   Some({item as variable_definitions}),
+                                   Some({item: variable_definitions}),
                                },
                              }) =>
                              switch (
@@ -108,8 +108,8 @@ let for_field_arguments =
                              ) {
                              | None => p
                              | Some((
-                                 s_var_name,
-                                 {vd_type: {item as s_type}},
+                                 _s_var_name,
+                                 {vd_type: {item: s_type}},
                                )) =>
                                let loc = config.map_loc(type_.span);
                                let safe_name =
@@ -174,7 +174,7 @@ let for_field_arguments =
   };
 };
 
-let for_root_identifier = (config: Generator_utils.output_config, loc) => {
+let for_root_identifier = (_config: Generator_utils.output_config, loc) => {
   str_items :=
     List.append(
       str_items^,
