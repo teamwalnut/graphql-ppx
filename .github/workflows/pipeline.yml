@@ -30,7 +30,7 @@ jobs:
 
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Try to restore dependencies cache
         id: deps-cache-macos
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
