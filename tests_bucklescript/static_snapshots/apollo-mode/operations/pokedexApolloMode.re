@@ -103,6 +103,7 @@ module MyQuery = {
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_name_52;
     /**Argument **name** on field **pokemon** has the following graphql type:

@@ -87,3 +87,7 @@ let result = Query.use(~variables, ())
 If you rather create the variables yourself, you can construct the `t_variables`
 record. Because most libraries expect `Raw.t_variables`, you can serialize the
 record using this function.
+
+### `variablesToJson`
+
+This will convert `Raw.t_variables` to `Js.Json.t` (zero cost binding).

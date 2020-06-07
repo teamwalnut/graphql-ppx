@@ -86,6 +86,7 @@ module MyQuery = {
   };
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -181,6 +182,7 @@ module OneFieldQuery = {
   };
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -365,6 +367,7 @@ module ExternalFragmentQuery {
     };
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;
@@ -498,6 +501,7 @@ module InlineFragmentQuery = {
   };
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type root = t;
     type nonrec graphql_module;
@@ -700,6 +704,7 @@ module UnionExternalFragmentQuery {
     };
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
     module Z__INTERNAL = {
       type root = t;
       type nonrec graphql_module;

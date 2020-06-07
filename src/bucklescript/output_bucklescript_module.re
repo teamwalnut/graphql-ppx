@@ -497,6 +497,12 @@ let generate_default_operation =
             [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
           ],
           [[%stri external toJson: Raw.t => Js.Json.t = "%identity"]],
+          [
+            [%stri
+              external variablesToJson: Raw.t_variables => Js.Json.t =
+                "%identity"
+            ],
+          ],
           Output_bucklescript_docstrings.get_module(),
         ]),
       ]);

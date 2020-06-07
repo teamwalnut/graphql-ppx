@@ -221,6 +221,6 @@ operation, or is the data of a fragment.
 Because `Js.Json.t` is a generic type this function is unsafe. It will only work
 properly for a specific shape of `Js.Json.t` (response of the query).
 
-#### `toJson`
+### `toJson`
 
 This is a zero cost function that will convert `Raw.t` to `Js.Json.t`.

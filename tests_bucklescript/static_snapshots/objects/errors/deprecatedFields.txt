@@ -1,4 +1,4 @@
 File "operations/errors/deprecatedFields.re", line 7, characters 6-21:
 7 |       deprecatedField
           ^^^^^^^^^^^^^^^
-Alert deprecated: Field "deprecatedField" has been deprecated. Reason: Use something else instead
+Warning 22: Field "deprecatedField" has been deprecated. Reason: Use something else instead

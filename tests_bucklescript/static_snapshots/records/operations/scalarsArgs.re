@@ -154,6 +154,7 @@ module MyQuery = {
     );
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
     type nonrec _graphql_arg_292;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
