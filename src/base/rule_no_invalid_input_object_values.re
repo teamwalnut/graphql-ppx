@@ -15,7 +15,7 @@ module Visitor: Traversal_utils.VisitorSig = {
     | None => ()
     | Some({item, _}) =>
       List.iter(
-        ((name, {vd_type: {item as type_}})) =>
+        ((name, {vd_type: {item: type_}})) =>
           Hashtbl.add(
             self.variable_types,
             name.item,
@@ -51,7 +51,7 @@ module Visitor: Traversal_utils.VisitorSig = {
       |> List.iter(({Schema.am_arg_type, am_name}) => {
            let value_field =
              value
-             |> List.find_opt(((name, value)) => {name.item == am_name});
+             |> List.find_opt(((name, _value)) => {name.item == am_name});
 
            switch (value_field) {
            | Some(value_field) =>

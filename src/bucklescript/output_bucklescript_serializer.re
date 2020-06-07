@@ -1,13 +1,11 @@
 open Migrate_parsetree;
 open Graphql_ppx_base;
-open Graphql_ast;
 open Source_pos;
 open Schema;
 
 open Ast_408;
 open Asttypes;
 
-open Type_utils;
 open Generator_utils;
 open Output_bucklescript_utils;
 open Extract_type_definitions;
@@ -143,6 +141,19 @@ let is_recursive = input_objects => {
   List.length(input_objects) > 1;
 };
 
+let filter_map = f => {
+  let rec aux = accu =>
+    fun
+    | [] => List.rev(accu)
+    | [x, ...l] =>
+      switch (f(x)) {
+      | None => aux(accu, l)
+      | Some(v) => aux([v, ...accu], l)
+      };
+
+  aux([]);
+};
+
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
@@ -153,7 +164,7 @@ let generate_serialize_variables =
         Str.value(
           is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
           arg_type_defs
-          |> List.filter_map(
+          |> filter_map(
                fun
                | InputObject({name, fields, loc}) =>
                  Some((name, fields, loc))
@@ -217,7 +228,7 @@ let generate_variable_constructors =
         Str.value(
           Nonrecursive,
           arg_type_defs
-          |> List.filter_map(
+          |> filter_map(
                fun
                | InputObject({name, fields, loc}) =>
                  Some((name, fields, loc))
@@ -297,17 +308,15 @@ let generate_variable_constructors =
                    );
                  if (config.legacy && name == None) {
                    let make_body =
-                     Ast_helper.(
-                       make_labeled_fun(
-                         [%expr
-                           {
-                             "query": query,
-                             "variables": serializeVariables([%e body]),
-                             "parse": parse,
-                           }
-                         ],
-                         fields,
-                       )
+                     make_labeled_fun(
+                       [%expr
+                         {
+                           "query": query,
+                           "variables": serializeVariables([%e body]),
+                           "parse": parse,
+                         }
+                       ],
+                       fields,
                      );
 
                    [
@@ -425,7 +434,7 @@ and generate_object_encoder =
     (
       config,
       loc,
-      name,
+      _name,
       fields,
       path,
       definition,
@@ -437,7 +446,7 @@ and generate_object_encoder =
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
       fields
-      |> List.filter_map(
+      |> filter_map(
            fun
            | Fr_fragment_spread(_, _, _, _, _) => None
            | Fr_named_field({name, type_}) => Some((name, type_)),
@@ -473,7 +482,7 @@ and generate_object_encoder =
               };
 
             fields
-            |> List.map(((key, inner)) => {
+            |> List.map(((key, _inner)) => {
                  let key_value = {
                    Location.txt: Longident.parse(to_valid_ident(key)),
                    loc,
@@ -569,7 +578,7 @@ and generate_object_encoder =
                  acc =>
                    fun
                    | Fr_named_field(_) => acc
-                   | Fr_fragment_spread(key, loc, name, _, arguments) => [
+                   | Fr_fragment_spread(key, _loc, name, _, _arguments) => [
                        [%expr
                          (
                            Obj.magic(
@@ -619,10 +628,10 @@ and generate_object_encoder =
 and generate_poly_variant_union_encoder =
     (
       config,
-      loc,
-      name,
+      _loc,
+      _name,
       fragments,
-      exhaustive,
+      _exhaustive,
       omit_future_value,
       path,
       definition,
@@ -686,15 +695,15 @@ and generate_poly_variant_union_encoder =
   [%e typename_matcher];
 }
 and generate_poly_variant_selection_set_encoder =
-    (config, loc, name, fields, path, definition) => [%expr
+    (_config, _loc, _name, _fields, _path, _definition) => [%expr
   Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
-    (config, loc, name, base, fragments, path, definition) => [%expr
+    (_config, _loc, _name, _base, _fragments, _path, _definition) => [%expr
   Obj.magic(Js.Json.null)
 ]
 and generate_solo_fragment_spread_encorder =
-    (config, loc, name, arguments, definition) => [%expr
+    (_config, _loc, name, _arguments, _definition) => [%expr
   [%e ident_from_string(name ++ ".serialize")](
     [%e ident_from_string("value")],
   )

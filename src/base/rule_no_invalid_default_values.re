@@ -18,7 +18,7 @@ module Visitor: Traversal_utils.VisitorSig = {
     | None => ()
     | Some({item, _}) =>
       List.iter(
-        ((name, {vd_type: {item as type_}})) =>
+        ((name, {vd_type: {item: type_}})) =>
           Hashtbl.add(
             self.variable_types,
             name.item,
@@ -33,7 +33,7 @@ module Visitor: Traversal_utils.VisitorSig = {
       (
         self,
         ctx,
-        (name: spanning(string), arg_type: option(Schema.type_ref), value),
+        (name: spanning(string), arg_type: option(Schema.type_ref), _value),
       ) => {
     self.arg_type =
       arg_type
@@ -84,7 +84,7 @@ module Visitor: Traversal_utils.VisitorSig = {
       )
     | (Some((_, T(_))), None)
     | (Some((_, List(_))), None) => ()
-    | (Some((arg_name, arg_type)), Some((v_name, value_type))) =>
+    | (Some((arg_name, arg_type)), Some((_v_name, value_type))) =>
       check_apply(ctx, arg_type, value_type, arg_name, name)
     };
   };
@@ -120,7 +120,7 @@ module Visitor: Traversal_utils.VisitorSig = {
     | Some((_, NonNull(T(EmptyList))))
     | Some((_, T(EmptyList)))
     | None => ()
-    | Some((name, arg_type)) =>
+    | Some((_name, arg_type)) =>
       Traversal_utils.Context.push_error(
         ctx,
         value.span,

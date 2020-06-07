@@ -151,18 +151,11 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         warnings
         |> List.iter(((loc, message)) => {
              let loc = conv_loc(loc);
-             let loc_as_ghost = {...loc, loc_ghost: true};
-             Location.print_alert(
+             Location.print_warning(
                loc,
                Location.formatter_for_warnings^,
-               {
-                 kind: "deprecated",
-                 message,
-                 def: loc_as_ghost,
-                 use: loc_as_ghost,
-               },
+               Warnings.Preprocessor(message),
              );
-             ();
            });
         let parts = Result_decoder.unify_document_schema(config, document);
         Output_native_module.generate_modules(config, parts);

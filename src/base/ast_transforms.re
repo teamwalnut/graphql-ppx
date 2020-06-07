@@ -26,7 +26,7 @@ let rec safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
     |> Option.flat_map(Schema.lookup_type(schema))
   );
 }
-and unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
+and _unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
   safe_get_field_type(schema, ty, name) |> Option.unsafe_unwrap;
 };
 
@@ -97,9 +97,9 @@ let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) =
     | (_, [Graphql_ast.FragmentSpread(_)]) => false
     // do not inject `__typename` in interfaces and unions, the printer does that
     // already behind the scenes
-    | (Schema.Interface(_), selection_set) => false
-    | (Schema.Union(_), selection_set) => false
-    | (Schema.Object({om_name}), selection_set) =>
+    | (Schema.Interface(_), _selection_set) => false
+    | (Schema.Union(_), _selection_set) => false
+    | (Schema.Object({om_name}), _selection_set) =>
       // do not inject __typename in top-level types
       Schema.(
         switch (schema) {
@@ -124,7 +124,7 @@ let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) =
           }
         }
       )
-    | (_, selection_set) => false
+    | (_, _selection_set) => false
     };
   let selection_set =
     traverse_selection_set(
@@ -169,7 +169,7 @@ let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) =
   };
 };
 
-let rec do_remove_typename_from_union = (parent, schema, ty, selection_set) => {
+let rec do_remove_typename_from_union = (_parent, schema, ty, selection_set) => {
   let selection_set =
     switch (ty) {
     | Schema.Interface(_)
@@ -200,7 +200,7 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
     definitions
     |> List.map(def => {
          switch (def) {
-         | Operation({item as op, span}) as parent =>
+         | Operation({item: op, span}) as parent =>
            let ty_name =
              switch (op.o_type) {
              | Query => schema.meta.sm_query_type
@@ -230,7 +230,7 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
              })
            };
 
-         | Fragment({item as f, span}) as parent =>
+         | Fragment({item: f, span}) as parent =>
            let ty_name = f.fg_type_condition.item;
            let ty = Schema.lookup_type(schema, ty_name);
            switch (ty) {

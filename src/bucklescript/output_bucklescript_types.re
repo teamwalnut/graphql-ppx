@@ -37,8 +37,8 @@ let base_type = (~inner=[], ~loc=?, name) => {
 // generate the type definition, including nullables, arrays etc.
 let rec generate_type = (~atLoc=?, config, path, raw) =>
   fun
-  | Res_string(loc) => base_type(~loc=?atLoc, "string")
-  | Res_nullable(loc, inner) =>
+  | Res_string(_loc) => base_type(~loc=?atLoc, "string")
+  | Res_nullable(_loc, inner) =>
     if (raw) {
       base_type(
         ~inner=[generate_type(config, path, raw, inner)],
@@ -51,34 +51,34 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
         "option",
       );
     }
-  | Res_array(loc, inner) =>
+  | Res_array(_loc, inner) =>
     base_type(
       ~loc=?atLoc,
       ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
-  | Res_custom_decoder(loc, module_name, inner) =>
+  | Res_custom_decoder(_loc, module_name, inner) =>
     if (raw) {
       generate_type(config, path, raw, inner);
     } else {
       base_type(~loc=?atLoc, module_name ++ ".t");
     }
-  | Res_id(loc) => base_type(~loc=?atLoc, "string")
-  | Res_int(loc) => {
+  | Res_id(_loc) => base_type(~loc=?atLoc, "string")
+  | Res_int(_loc) => {
       base_type(~loc=?atLoc, "int");
     }
-  | Res_float(loc) => base_type(~loc=?atLoc, "float")
-  | Res_boolean(loc) => base_type(~loc=?atLoc, "bool")
-  | Res_raw_scalar(loc) => base_type(~loc=?atLoc, "Js.Json.t")
-  | Res_object(loc, name, _fields, type_name)
-  | Res_record(loc, name, _fields, type_name) =>
+  | Res_float(_loc) => base_type(~loc=?atLoc, "float")
+  | Res_boolean(_loc) => base_type(~loc=?atLoc, "bool")
+  | Res_raw_scalar(_loc) => base_type(~loc=?atLoc, "Js.Json.t")
+  | Res_object(_loc, _name, _fields, type_name)
+  | Res_record(_loc, _name, _fields, type_name) =>
     switch (type_name, raw) {
     | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
     | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
-  | Res_poly_variant_selection_set(loc, name, _)
-  | Res_poly_variant_union(loc, name, _, _, _)
-  | Res_poly_variant_interface(loc, name, _, _) => {
+  | Res_poly_variant_selection_set(_loc, _name, _)
+  | Res_poly_variant_union(_loc, _name, _, _, _)
+  | Res_poly_variant_interface(_loc, _name, _, _) => {
       base_type(~loc=?atLoc, generate_type_name(path));
     }
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
@@ -89,10 +89,10 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(loc, enum_meta, _) =>
+  | Res_poly_enum(_loc, _enum_meta, _) =>
     base_type(~loc=?atLoc, generate_type_name(path));
 
-let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
+let wrap_type_declaration = (~manifest=?, inner, _loc, path) => {
   Ast_helper.Type.mk(
     ~kind=inner,
     ~manifest?,
@@ -100,7 +100,7 @@ let wrap_type_declaration = (~manifest=?, inner, loc, path) => {
   );
 };
 
-let generate_opaque = (path, loc) => {
+let generate_opaque = (path, _loc) => {
   Ast_helper.Type.mk({loc: Location.none, txt: generate_type_name(path)});
 };
 
@@ -150,7 +150,7 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_, loc, loc_key, arguments}) => {
+           | Field({path: [name, ...path], type_, loc_key, arguments}) => {
                // Add field to internal module
                if (!raw) {
                  Output_bucklescript_docstrings.for_field_arguments(
@@ -347,49 +347,47 @@ let generate_variant_interface = (config, fields, base, path, loc, raw) =>
     );
   };
 
-let generate_enum = (config, fields, path, loc, raw, omit_future_value) =>
+let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
   wrap_type_declaration(
     Ptype_abstract,
     ~manifest=
       if (raw) {
         base_type("string");
       } else {
-        Graphql_ppx_base__.Schema.(
-          [@metaloc conv_loc(loc)]
-          Ast_helper.(
-            Typ.variant(
-              List.append(
-                omit_future_value
-                  ? []
-                  : [
-                    {
-                      prf_desc:
-                        Rtag(
-                          {txt: "FutureAddedValue", loc: conv_loc(loc)},
-                          false,
-                          [base_type("string")],
-                        ),
-                      prf_loc: conv_loc(loc),
-                      prf_attributes: [],
-                    },
-                  ],
-                fields
-                |> List.map(field =>
-                     {
-                       prf_desc:
-                         Rtag(
-                           {txt: to_valid_ident(field), loc: conv_loc(loc)},
-                           true,
-                           [],
-                         ),
-                       prf_loc: conv_loc(loc),
-                       prf_attributes: [],
-                     }
-                   ),
-              ),
-              Closed,
-              None,
-            )
+        [@metaloc conv_loc(loc)]
+        Ast_helper.(
+          Typ.variant(
+            List.append(
+              omit_future_value
+                ? []
+                : [
+                  {
+                    prf_desc:
+                      Rtag(
+                        {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                        false,
+                        [base_type("string")],
+                      ),
+                    prf_loc: conv_loc(loc),
+                    prf_attributes: [],
+                  },
+                ],
+              fields
+              |> List.map(field =>
+                   {
+                     prf_desc:
+                       Rtag(
+                         {txt: to_valid_ident(field), loc: conv_loc(loc)},
+                         true,
+                         [],
+                       ),
+                     prf_loc: conv_loc(loc),
+                     prf_attributes: [],
+                   }
+                 ),
+            ),
+            Closed,
+            None,
           )
         );
       },
@@ -581,7 +579,7 @@ let generate_types =
   };
 };
 
-let rec generate_arg_type = (raw, loc as originalLoc) => {
+let rec generate_arg_type = (raw, originalLoc) => {
   let loc = raw ? None : Some(conv_loc(originalLoc));
   fun
   | Type(Scalar({sm_name: "ID"}))
@@ -683,7 +681,7 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
         fields
         |> List.map(
              fun
-             | InputField({name, type_, loc, loc_type}) => {
+             | InputField({name, type_, loc}) => {
                  Ast_helper.Type.field(
                    {Location.txt: name, loc: Location.none},
                    generate_arg_type(

@@ -112,7 +112,7 @@ let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
           // %raw functionality to properly do template literals. So in current
           // state it is not possible to make it compatible with Apollo.
           // | FragmentQueryRef(f) => acc ++ "${" ++ f ++ ".query" ++ "}",
-          | FragmentQueryRef(f) => acc,
+          | FragmentQueryRef(_f) => acc,
         "",
         parts,
       )
@@ -274,28 +274,24 @@ let make_printed_query = (config, document) => {
         |> emit_json,
       )
     | Ppx_config.String =>
-      Ast_408.(
-        Ast_helper.(
-          switch (config.template_tag) {
-          | (None, _, _) => (None, emit_printed_query(source))
-          | (Some(template_tag), location, import) =>
-            // the only way to emit a template literal for now, using the bs.raw
-            // extension
-            (
-              switch (pre_template_tag(~location?, ~import?, template_tag)) {
-              | Some(contents) => Some(wrap_structure_raw(contents))
-              | None => None
-              },
-              wrap_raw(
-                wrap_template_tag(
-                  template_tag,
-                  pretty_print(emit_printed_template_query(source)),
-                ),
-              ),
-            )
-          }
+      switch (config.template_tag) {
+      | (None, _, _) => (None, emit_printed_query(source))
+      | (Some(template_tag), location, import) =>
+        // the only way to emit a template literal for now, using the bs.raw
+        // extension
+        (
+          switch (pre_template_tag(~location?, ~import?, template_tag)) {
+          | Some(contents) => Some(wrap_structure_raw(contents))
+          | None => None
+          },
+          wrap_raw(
+            wrap_template_tag(
+              template_tag,
+              pretty_print(emit_printed_template_query(source)),
+            ),
+          ),
         )
-      )
+      }
     };
 
   reprinted;
@@ -366,10 +362,7 @@ let wrap_query_module = (definition, name: string, contents, config) => {
         ),
       ),
     ];
-    [
-      wrap_module(module_name, contents),
-      Ast_helper.(wrap_module(name, inner_result)),
-    ];
+    [wrap_module(module_name, contents), wrap_module(name, inner_result)];
   | None => [wrap_module(name, contents)]
   };
 };
