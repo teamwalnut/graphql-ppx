@@ -6,8 +6,6 @@ open Type_utils;
 open Generator_utils;
 open Result_structure;
 
-exception Unimplemented(string);
-
 let make_error = (error_marker, map_loc, span, message) => {
   let () = error_marker.has_error = true;
   Res_error(map_loc(span), message);
@@ -144,7 +142,7 @@ let rec unify_type =
       | Not_found => Res_raw_scalar(config.map_loc(span))
       | other => raise(other)
       }
-    | Some(Scalar({sm_name})) => Res_raw_scalar(config.map_loc(span))
+    | Some(Scalar(_)) => Res_raw_scalar(config.map_loc(span))
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,

@@ -2,6 +2,8 @@
  (name graphql_ppx_base)
  (public_name graphql_ppx.base)
  (libraries unix result yojson)
+ (flags
+  (:standard -w -9))
  (preprocess
   (pps ppx_tools_versioned.metaquot_408)))
 
