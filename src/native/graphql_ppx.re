@@ -151,9 +151,10 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         warnings
         |> List.iter(((loc, message)) => {
              let loc = conv_loc(loc);
-             Location.report_error(
+             Location.print_warning(
+               loc,
                Location.formatter_for_warnings^,
-               Location.error(~loc, message),
+               Warnings.Preprocessor(message),
              );
            });
         let parts = Result_decoder.unify_document_schema(config, document);
