@@ -1,8 +1,8 @@
 opam-version: "2.0"
 maintainer: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
 authors: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
-homepage: "https://github.com/reasonml-community/graphql_ppx"
-bug-reports: "https://github.com/reasonml-community/graphql_ppx/issues"
+homepage: "https://github.com/reasonml-community/graphql-ppx"
+bug-reports: "https://github.com/reasonml-community/graphql-ppx/issues"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
