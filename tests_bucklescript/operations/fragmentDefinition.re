@@ -23,6 +23,18 @@ module GraphQL_PPX = {
 |}
 ];
 
+module InlineFragment = {
+  [%graphql
+    {|
+    fragment InlineListFragment on Lists {
+      nullableOfNullable
+      nullableOfNonNullable
+    }
+  |};
+    {inline: true}
+  ];
+};
+
 [%graphql
   {|
   query MyQuery($arg1: String) {
@@ -43,7 +55,7 @@ module GraphQL_PPX = {
 
     l4: lists {
       nullableOfNullable
-      ...ListFragment
+      ...InlineFragment
     }
 
     l5: lists {

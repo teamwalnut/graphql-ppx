@@ -157,15 +157,75 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var query$2 = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+
 var Raw$3 = { };
 
-var query$2 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...ListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
-
 function parse$3(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = !(value$1 == null) ? value$1.map((function (value) {
+            return value;
+          })) : undefined;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = !(value$2 == null) ? value$2.map((function (value) {
+            if (!(value == null)) {
+              return value;
+            }
+            
+          })) : undefined;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+var verifyArgsAndParse$3 = parse$3;
+
+function serialize$3(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
+            return value;
+          })) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+var name$2 = "InlineListFragment";
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var InlineFragment = {
+  query: query$2,
+  Raw: Raw$3,
+  parse: parse$3,
+  verifyArgsAndParse: verifyArgsAndParse$3,
+  serialize: serialize$3,
+  name: name$2,
+  Z__INTERNAL: Z__INTERNAL$3
+};
+
+var Raw$4 = { };
+
+var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\nfragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+
+function parse$4(value) {
   var value$1 = value.l5;
   var l5 = parse$2(value$1);
   var value$2 = value.l4;
-  var listFragment = parse(value$2);
+  var inlineFragment = parse$3(value$2);
   var value$3 = value$2["nullableOfNullable"];
   var nullableOfNullable = !(value$3 == null) ? value$3.map((function (value) {
             if (!(value == null)) {
@@ -175,7 +235,7 @@ function parse$3(value) {
           })) : undefined;
   var l4 = {
     nullableOfNullable: nullableOfNullable,
-    listFragment: listFragment
+    inlineFragment: inlineFragment
   };
   var value$4 = value.l3;
   var frag2 = parse(value$4);
@@ -210,12 +270,12 @@ function parse$3(value) {
         };
 }
 
-function serialize$3(value) {
+function serialize$4(value) {
   var value$1 = value.l5;
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
-  var l4 = [serialize(value$2.listFragment)].reduce(deepMerge, {
+  var l4 = [serialize$3(value$2.inlineFragment)].reduce(deepMerge, {
         nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
                   if (value !== undefined) {
                     return value;
@@ -273,33 +333,33 @@ function makeDefaultVariables(param) {
   return makeVariables(undefined, undefined);
 }
 
-var Z__INTERNAL$3 = {
+var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
 var MyQuery = {
-  Raw: Raw$3,
-  query: query$2,
-  parse: parse$3,
-  serialize: serialize$3,
+  Raw: Raw$4,
+  query: query$3,
+  parse: parse$4,
+  serialize: serialize$4,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL$3
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
-var Raw$4 = { };
+var Raw$5 = { };
 
-var query$3 = "query   {\nlists  {\n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+var query$4 = "query   {\nlists  {\n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
-function parse$4(value) {
+function parse$5(value) {
   var value$1 = value.lists;
   return {
           lists: parse(value$1)
         };
 }
 
-function serialize$4(value) {
+function serialize$5(value) {
   var value$1 = value.lists;
   return {
           lists: serialize(value$1)
@@ -314,24 +374,25 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL$4 = {
+var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
 var MyQuery2 = {
-  Raw: Raw$4,
-  query: query$3,
-  parse: parse$4,
-  serialize: serialize$4,
+  Raw: Raw$5,
+  query: query$4,
+  parse: parse$5,
+  serialize: serialize$5,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL$4
+  Z__INTERNAL: Z__INTERNAL$5
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
+exports.InlineFragment = InlineFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
