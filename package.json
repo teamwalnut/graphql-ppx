@@ -1,5 +1,5 @@
 {
-  "name": "@baransu/graphql_ppx_re",
+  "name": "@baransu/graphql-ppx",
   "version": "1.0.0-beta.10",
   "description": "graphql-ppx rewriter for Bucklescript/ReasonML",
   "repository": "https://github.com/reasonml-community/graphql_ppx",
