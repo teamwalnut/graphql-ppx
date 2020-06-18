@@ -8,6 +8,6 @@ some of the things that are not supported yet, but we would like to support in
 the future:
 
 - Overlapping interface selections
-  [#92](https://github.com/reasonml-community/graphql_ppx/issues/92)
+  [#92](https://github.com/reasonml-community/graphql-ppx/issues/92)
 - Explicit null in arguments
-  [#26](https://github.com/reasonml-community/graphql_ppx/issues/26)
+  [#26](https://github.com/reasonml-community/graphql-ppx/issues/26)

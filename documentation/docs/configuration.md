@@ -36,25 +36,25 @@ project.
 
 ### -apollo-mode
 
-By default `graphql_ppx` adds `__typename` only to fields on which we need those
+By default `graphql-ppx` adds `__typename` only to fields on which we need those
 informations (Unions and Interfaces). If you want to add `__typename` on every
 object in a query you can specify it by using `-apollo-mode` in `ppx-flags`.
 It's usefull in case of using `apollo-client` because of it's cache.
 
 ```json
 "ppx-flags": [
-  ["@baransu/graphql_ppx_re/ppx", "-apollo-mode",]
+  ["@reasonml-community/graphql-ppx/ppx", "-apollo-mode",]
 ],
 ```
 
 ### -schema
 
-By default `graphql_ppx` uses `graphql_schema.json` file from your root
+By default `graphql-ppx` uses `graphql_schema.json` file from your root
 directory. You can override it by providing `-schema` argument in `ppx-flags` to
 overriding it.
 
 ```json
 "ppx-flags": [
-  ["@baransu/graphql_ppx_re/ppx", "-schema ../graphql_schema.json"]
+  ["@baransu/graphql-ppx/ppx", "-schema ../graphql_schema.json"]
 ],
 ```

@@ -28,7 +28,7 @@ function parse(value) {
             var temp$4 = value$3["dogOrHuman"];
             var match$4 = Js_json.decodeNull(temp$4);
             if (match$4 !== undefined) {
-              tmp = Js_exn.raiseError("graphql_ppx: All fields on variant selection set on type VariantTestResult were null");
+              tmp = Js_exn.raiseError("graphql-ppx: All fields on variant selection set on type VariantTestResult were null");
             } else {
               var typename = temp$4["__typename"];
               var tmp$1;
@@ -93,7 +93,7 @@ function parse(value) {
       ];
     }
   } else {
-    tmp = Js_exn.raiseError("graphql_ppx: Expected type VariantTestResult to be an object");
+    tmp = Js_exn.raiseError("graphql-ppx: Expected type VariantTestResult to be an object");
   }
   return {
           mutationForVariant: tmp

@@ -75,7 +75,7 @@ module MyQuery = {
         switch (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
         | None =>
           Js.Exn.raiseError(
-            "graphql_ppx: "
+            "graphql-ppx: "
             ++ "Expected type "
             ++ "VariantTestResult"
             ++ " to be an object",
@@ -195,7 +195,7 @@ module MyQuery = {
                     );
                   | Some(_) =>
                     Js.Exn.raiseError(
-                      "graphql_ppx: "
+                      "graphql-ppx: "
                       ++ "All fields on variant selection set on type "
                       ++ "VariantTestResult"
                       ++ " were null",

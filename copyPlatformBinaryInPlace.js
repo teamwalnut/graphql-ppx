@@ -13,20 +13,20 @@ if (platform === "win32") {
   platform = "win";
 }
 
-copyBinary("bin/graphql_ppx-" + platform + "-" + arch + ".exe", "ppx");
+copyBinary("bin/graphql-ppx-" + platform + "-" + arch + ".exe", "ppx");
 
 function copyBinary(filename, destFilename) {
   var supported = fs.existsSync(filename);
 
   if (!supported) {
-    console.error("graphql_ppx does not support this platform :(");
+    console.error("graphql-ppx does not support this platform :(");
     console.error("");
     console.error(
-      "graphql_ppx comes prepacked as built binaries to avoid large"
+      "graphql-ppx comes prepacked as built binaries to avoid large"
     );
     console.error("dependencies at build-time.");
     console.error("");
-    console.error("If you want graphql_ppx to support this platform natively,");
+    console.error("If you want graphql-ppx to support this platform natively,");
     console.error(
       "please open an issue at our repository, linked above. Please"
     );
@@ -40,7 +40,7 @@ function copyBinary(filename, destFilename) {
 
   if (process.env.IS_GRAPHQL_PPX_CI) {
     console.log(
-      "graphql_ppx: IS_GRAPHQL_PPX_CI has been set, skipping moving binary in place"
+      "graphql-ppx: IS_GRAPHQL_PPX_CI has been set, skipping moving binary in place"
     );
     process.exit(0);
   }

@@ -5,13 +5,13 @@ title: Installation on Bucklescript
 First, add it to you dependencies using `npm` or `yarn`:
 
 ```sh
-yarn add @baransu/graphql_ppx_re@next --dev
+yarn add @reasonml-community/graphql-ppx@next --dev
 # or
-npm install @baransu/graphql_ppx_re@next  --saveDev
+npm install @reasonml-community/graphql-ppx@next  --saveDev
 ```
 
 Second, add it to `ppx-flags` in your `bsconfig.json`:
 
 ```json
-"ppx-flags": ["@baransu/graphql_ppx_re/ppx"]
+"ppx-flags": ["@reasonml-community/graphql-ppx/ppx"]
 ```

@@ -25,7 +25,7 @@ nodes {
 
 This is because we allow querying union fields only in certain cases. GraphQL
 provides the `__typename` field but it's not present in GraphQL introspection
-query thus `graphql_ppx` doesn't know that this field exists. To fix your query
+query thus `graphql-ppx` doesn't know that this field exists. To fix your query
 simply remove `__typename`. It's added behinds a scene as an implementation
 detail and serves us as a way to decide which case to select when parsing your
 query result.

@@ -85,7 +85,7 @@ let get_variable_definitions = (definition: Graphql_ast.definition) => {
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
-    Js.Exn.raiseError("graphql_ppx: " ++ [%e message]);
+    Js.Exn.raiseError("graphql-ppx: " ++ [%e message]);
   } else {
     %expr
     Js.Exn.raiseError("Unexpected GraphQL query response");

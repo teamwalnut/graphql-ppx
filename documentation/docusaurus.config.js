@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: "/",
   favicon: "img/favicon.png",
   organizationName: "reasonml-community", // Usually your GitHub org/user name.
-  projectName: "graphql_ppx", // Usually your repo name.
+  projectName: "graphql-ppx", // Usually your repo name.
   themeConfig: {
     hideOnScroll: true,
     prism: {
@@ -22,7 +22,7 @@ module.exports = {
       links: [
         { to: "docs/introduction", label: "Docs", position: "left" },
         {
-          href: "https://github.com/reasonml-community/graphql_ppx",
+          href: "https://github.com/reasonml-community/graphql-ppx",
           label: "GitHub",
           position: "right",
         },

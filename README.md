@@ -1,4 +1,4 @@
-> This is README for the upcoming 1.0 release. It's available via "@baransu/graphql_ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql_ppx/blob/master/README.md)
+> This is README for the upcoming 1.0 release. It's available via "@reasonml-community/graphql-ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql-ppx/blob/master/README.md)
 
 <p align="center">
     <img width="200" src="https://beta.graphql-ppx.com/img/logo.svg" alt="Logo">
@@ -7,11 +7,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/reasonml-community/graphql_ppx/actions">
-    <img src="https://github.com/reasonml-community/graphql_ppx/workflows/graphql_ppx%20pipeline/badge.svg" alt="Build Status" />
+  <a href="https://github.com/reasonml-community/graphql-ppx/actions">
+    <img src="https://github.com/reasonml-community/graphql-ppx/workflows/graphql-ppx-pipeline/badge.svg" alt="Build Status" />
   </a>
-  <a href="https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg">
-    <img src="https://badge.fury.io/js/%40baransu%2Fgraphql_ppx_re.svg" alt="npm version" />
+  <a href="https://badge.fury.io/js/%40reasonml-community%2Fgraphql-ppx.svg">
+    <img src="https://badge.fury.io/js/%40reasonml-community%2Fgraphql-ppx.svg" alt="npm version" />
   </a>
 </p>
 
@@ -69,16 +69,16 @@ using `graphql-ppx` with Bucklescript or using Reason Native.
 First, add it to you dependencies using `npm` or `yarn`:
 
 ```sh
-yarn add @baransu/graphql_ppx_re@next --dev
+yarn add @reasonml-community/graphql-ppx@next --dev
 # or
-npm install @baransu/graphql_ppx_re@next  --saveDev
+npm install @reasonml-community/graphql-ppx@next  --saveDev
 ```
 
 Second, add it to `ppx-flags` and `bs-dependencies` in your `bsconfig.json`:
 
 ```json
-"ppx-flags": ["@baransu/graphql_ppx_re/ppx"],
-"bs-dependencies": ["@baransu/graphql_ppx_re"]
+"ppx-flags": ["@reasonml-community/graphql-ppx/ppx"],
+"bs-dependencies": ["@reasonml-community/graphql-ppx"]
 ```
 
 ### Native
@@ -99,10 +99,10 @@ You need to provide the following dependency in your `esy.json` file
 ```json
 {
   "dependencies": {
-    "graphql_ppx": "*"
+    "graphql-ppx": "*"
   },
   "resolutions": {
-    "graphql_ppx": "reasonml-community/graphql_ppx:esy.json#<use latest stable commit from master>"
+    "graphql-ppx": "reasonml-community/graphql-ppx:esy.json#<use latest stable commit from master>"
   }
 }
 ```
@@ -132,7 +132,7 @@ Make your first query:
 
 ## Roadmap
 
-See our [development board](https://github.com/reasonml-community/graphql_ppx/projects/1) for a list of selected features and issues.
+See our [development board](https://github.com/reasonml-community/graphql-ppx/projects/1) for a list of selected features and issues.
 
 ## Contributing
 
@@ -146,7 +146,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Acknowledgements
 
-Thanks to everyone who [contributed](https://github.com/reasonml-community/graphql_ppx/graphs/contributors) to `graphql-ppx`!
+Thanks to everyone who [contributed](https://github.com/reasonml-community/graphql-ppx/graphs/contributors) to `graphql-ppx`!
 
 This project builds upon [mhallin/graphql_ppx](https://github.com/mhallin/graphql_ppx). It wouldn't be possible without
 great work of [mhallin/graphql_ppx contributors](https://github.com/mhallin/graphql_ppx/graphs/contributors).

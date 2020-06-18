@@ -15,7 +15,7 @@ let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 let make_error_raiser = message =>
   if (Ppx_config.verbose_error_handling()) {
     %expr
-    raise(Failure("graphql_ppx: " ++ [%e message]));
+    raise(Failure("graphql-ppx: " ++ [%e message]));
   } else {
     %expr
     raise(Failure("Unexpected GraphQL query response"));
