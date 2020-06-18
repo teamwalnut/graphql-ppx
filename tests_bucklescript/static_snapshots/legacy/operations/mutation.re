@@ -154,6 +154,7 @@ module MyQuery = {
     };
     {"mutationWithError": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

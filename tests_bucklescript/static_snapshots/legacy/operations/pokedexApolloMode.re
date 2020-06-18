@@ -89,6 +89,7 @@ module MyQuery = {
     };
     {"pokemon": pokemon};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

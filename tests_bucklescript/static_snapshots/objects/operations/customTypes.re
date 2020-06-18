@@ -141,6 +141,7 @@ module MyQuery = {
     };
     {"customFields": customFields};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

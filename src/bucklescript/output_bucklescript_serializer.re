@@ -157,7 +157,7 @@ let filter_map = f => {
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => None
+  | [NoVariables] => Some([%stri let serializeVariables = () => ()])
   | arg_type_defs =>
     Some(
       Ast_helper.(

@@ -124,6 +124,7 @@ module Normal = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -281,6 +282,7 @@ module ByConfig = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -438,6 +440,7 @@ module ByDirective = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

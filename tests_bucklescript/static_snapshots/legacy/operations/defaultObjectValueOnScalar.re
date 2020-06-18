@@ -41,6 +41,7 @@ module MyQuery = {
     };
     {"defaultObjectValueOnScalar": defaultObjectValueOnScalar};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

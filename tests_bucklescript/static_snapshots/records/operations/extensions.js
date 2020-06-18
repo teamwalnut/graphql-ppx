@@ -86,6 +86,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -103,6 +107,7 @@ var Bla$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -117,6 +122,7 @@ var Bla = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,

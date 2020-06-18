@@ -71,6 +71,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -88,6 +92,7 @@ var RecordsQuery = {
   query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -165,6 +170,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -182,6 +191,7 @@ var ObjectsQuery = {
   query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1

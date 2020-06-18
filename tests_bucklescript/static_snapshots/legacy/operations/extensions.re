@@ -158,6 +158,7 @@ module Bla' = {
     };
     {"lists": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

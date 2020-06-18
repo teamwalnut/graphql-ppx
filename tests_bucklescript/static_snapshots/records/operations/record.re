@@ -82,6 +82,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -179,6 +180,7 @@ module OneFieldQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -362,6 +364,7 @@ module ExternalFragmentQuery {
         {variousScalars: variousScalars};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -492,6 +495,7 @@ module InlineFragmentQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -693,6 +697,7 @@ module UnionExternalFragmentQuery {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

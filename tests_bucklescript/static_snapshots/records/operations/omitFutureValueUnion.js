@@ -67,6 +67,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -84,6 +88,7 @@ var Normal = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -145,6 +150,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -162,6 +171,7 @@ var ByConfig = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -223,6 +233,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -240,6 +254,7 @@ var ByDirective = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2

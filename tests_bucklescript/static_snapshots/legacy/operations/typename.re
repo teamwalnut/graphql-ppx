@@ -151,6 +151,7 @@ module MyQuery = {
     };
     {"first": first};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

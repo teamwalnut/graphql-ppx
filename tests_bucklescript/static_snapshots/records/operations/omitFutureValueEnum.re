@@ -135,6 +135,7 @@ module Normal = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -294,6 +295,7 @@ module ByConfig = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -453,6 +455,7 @@ module ByDirective = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

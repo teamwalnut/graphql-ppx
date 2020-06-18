@@ -71,6 +71,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -88,6 +92,7 @@ var MyQuery = {
   query: "query   {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL

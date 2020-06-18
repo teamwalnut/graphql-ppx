@@ -199,6 +199,7 @@ module MyQuery = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

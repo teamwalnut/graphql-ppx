@@ -521,6 +521,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -919,6 +920,7 @@ module MyQuery = {
       {customFields: customFields};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -1015,6 +1017,7 @@ module MyQuery = {
       {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -1378,6 +1381,7 @@ module RecordsQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -1560,6 +1564,7 @@ module ObjectsQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -1784,6 +1789,7 @@ module Bla' = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -2791,6 +2797,7 @@ module MyQuery2 = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -3019,6 +3026,7 @@ module MyQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -3709,6 +3717,7 @@ module MyQuery = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -4370,6 +4379,7 @@ module MyQuery = {
       {first, second, let_};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -5221,6 +5231,7 @@ module Normal = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -5403,6 +5414,7 @@ module ByConfig = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -5585,6 +5597,7 @@ module ByDirective = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -5787,6 +5800,7 @@ module Normal = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -5965,6 +5979,7 @@ module ByConfig = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -6143,6 +6158,7 @@ module ByDirective = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -6294,6 +6310,7 @@ module MyQuery = {
       {pokemon: pokemon};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -6653,6 +6670,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -6764,6 +6782,7 @@ module OneFieldQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -6957,6 +6976,7 @@ module ExternalFragmentQuery {
         {variousScalars: variousScalars};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -7096,6 +7116,7 @@ module InlineFragmentQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -7307,6 +7328,7 @@ module UnionExternalFragmentQuery {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -7764,6 +7786,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -8663,6 +8686,7 @@ module MyQuery = {
       {simpleSubscription: simpleSubscription};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -8922,6 +8946,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -9163,6 +9188,7 @@ module MyQuery2 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -9404,6 +9430,7 @@ module MyQuery3 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -9645,6 +9672,7 @@ module MyQuery4 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -9853,6 +9881,7 @@ module MyQuery = {
       {first: first};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -10055,6 +10084,7 @@ module MyQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -10235,6 +10265,7 @@ module MyQueryNoError = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -10395,6 +10426,7 @@ module MyQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -10700,6 +10732,7 @@ module MyQuery = {
       {mutationForVariant: mutationForVariant};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -10968,6 +11001,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -10985,6 +11022,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -11166,6 +11204,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -11183,6 +11225,7 @@ var MyQuery = {
   query: \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -11214,6 +11257,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -11231,6 +11278,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -11369,6 +11417,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -11386,6 +11438,7 @@ var RecordsQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -11463,6 +11516,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -11480,6 +11537,7 @@ var ObjectsQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -11583,6 +11641,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -11600,6 +11662,7 @@ var Bla$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -11614,6 +11677,7 @@ var Bla = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,
@@ -11996,6 +12060,10 @@ function serialize$5(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -12013,6 +12081,7 @@ var MyQuery2 = {
   query: query$4,
   parse: parse$5,
   serialize: serialize$5,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$5
@@ -12112,6 +12181,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -12129,6 +12202,7 @@ var MyQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -12380,6 +12454,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -12397,6 +12475,7 @@ var MyQuery = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -12645,6 +12724,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -12662,6 +12745,7 @@ var MyQuery = {
   query: \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -12958,6 +13042,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -12975,6 +13063,7 @@ var Normal = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -13035,6 +13124,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -13052,6 +13145,7 @@ var ByConfig = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -13112,6 +13206,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -13129,6 +13227,7 @@ var ByDirective = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -13213,6 +13312,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -13230,6 +13333,7 @@ var Normal = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -13293,6 +13397,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -13310,6 +13418,7 @@ var ByConfig = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -13373,6 +13482,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -13390,6 +13503,7 @@ var ByDirective = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -13449,6 +13563,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -13466,6 +13584,7 @@ var MyQuery = {
   query: \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -13594,6 +13713,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -13611,6 +13734,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -13640,6 +13764,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -13657,6 +13785,7 @@ var OneFieldQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -13721,6 +13850,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -13738,6 +13871,7 @@ var Untitled1 = {
   query: query$1,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$3
@@ -13795,6 +13929,10 @@ function serialize$4(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -13812,6 +13950,7 @@ var InlineFragmentQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$4,
   serialize: serialize$4,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$4
@@ -13884,6 +14023,10 @@ function serialize$6(value) {
         };
 }
 
+function serializeVariables$4(param) {
+  
+}
+
 function makeVariables$4(param) {
   
 }
@@ -13901,6 +14044,7 @@ var Untitled1$1 = {
   query: query$3,
   parse: parse$6,
   serialize: serialize$6,
+  serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
   makeDefaultVariables: makeDefaultVariables$4,
   Z__INTERNAL: Z__INTERNAL$6
@@ -14070,6 +14214,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -14087,6 +14235,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -14411,6 +14560,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -14428,6 +14581,7 @@ var MyQuery = {
   query: \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -14511,6 +14665,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -14528,6 +14686,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -14621,6 +14780,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -14638,6 +14801,7 @@ var MyQuery2 = {
   query: query,
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -14731,6 +14895,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -14748,6 +14916,7 @@ var MyQuery3 = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -14841,6 +15010,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -14858,6 +15031,7 @@ var MyQuery4 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$3
@@ -14949,6 +15123,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -14966,6 +15144,7 @@ var MyQuery = {
   query: \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15047,6 +15226,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15064,6 +15247,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15135,6 +15319,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -15152,6 +15340,7 @@ var MyQueryNoError = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -15215,6 +15404,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15232,6 +15425,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15356,6 +15550,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15373,6 +15571,7 @@ var MyQuery = {
   query: \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15605,6 +15804,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15622,6 +15825,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15801,6 +16005,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15818,6 +16026,7 @@ var MyQuery = {
   query: \\"query   {\\\\ncustomFields  {\\\\ncurrentTime  \\\\nfavoriteColor  \\\\nfutureTime  \\\\nnullableColor  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -15850,6 +16059,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -15869,6 +16082,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\\\\"value\\\\\\"}}, arg: {field: \\\\\\"otherValue\\\\\\"})  \\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -16010,6 +16224,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -16027,6 +16245,7 @@ var RecordsQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -16104,6 +16323,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -16121,6 +16344,7 @@ var ObjectsQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -16221,6 +16445,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -16238,6 +16466,7 @@ var Bla$prime = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -16252,6 +16481,7 @@ var Bla = {
   query: query,
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL,
@@ -16620,6 +16850,10 @@ function serialize$5(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -16637,6 +16871,7 @@ var MyQuery2 = {
   query: query$4,
   parse: parse$5,
   serialize: serialize$5,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$5
@@ -16733,6 +16968,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -16750,6 +16989,7 @@ var MyQuery = {
   query: \\"query   {\\\\nlists  {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\nnonNullableOfNullable  \\\\nnonNullableOfNonNullable  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -17009,6 +17249,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -17026,6 +17270,7 @@ var MyQuery = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nvalue  {\\\\nstringField  \\\\n}\\\\n\\\\nerrors  {\\\\nfield  \\\\nmessage  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -17277,6 +17522,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -17294,6 +17543,7 @@ var MyQuery = {
   query: \\"query   {\\\\nfirst: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nsecond: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nf1: field  \\\\nf2: field  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\nlet: nestedObject  {\\\\ninner  {\\\\ninner  {\\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -17592,6 +17842,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -17609,6 +17863,7 @@ var Normal = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -17668,6 +17923,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -17685,6 +17944,7 @@ var ByConfig = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -17744,6 +18004,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -17761,6 +18025,7 @@ var ByDirective = {
   query: \\"mutation   {\\\\nmutationWithError  {\\\\nerrors  {\\\\nmessage  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -17843,6 +18108,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -17860,6 +18129,7 @@ var Normal = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -17921,6 +18191,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -17938,6 +18212,7 @@ var ByConfig = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -17999,6 +18274,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -18016,6 +18295,7 @@ var ByDirective = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -18071,6 +18351,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -18089,6 +18373,7 @@ var MyQuery = {
   query: \\"query   {\\\\npokemon(name: \\\\\\"Pikachu\\\\\\")  {\\\\nid  \\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -18219,6 +18504,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -18236,6 +18525,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nstring  \\\\nint  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -18265,6 +18555,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -18282,6 +18576,7 @@ var OneFieldQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -18344,6 +18639,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -18361,6 +18660,7 @@ var Untitled1 = {
   query: query$1,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$3
@@ -18411,6 +18711,10 @@ function serialize$4(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -18428,6 +18732,7 @@ var InlineFragmentQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$4,
   serialize: serialize$4,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$4
@@ -18499,6 +18804,10 @@ function serialize$6(value) {
         };
 }
 
+function serializeVariables$4(param) {
+  
+}
+
 function makeVariables$4(param) {
   
 }
@@ -18516,6 +18825,7 @@ var Untitled1$1 = {
   query: query$3,
   parse: parse$6,
   serialize: serialize$6,
+  serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
   makeDefaultVariables: makeDefaultVariables$4,
   Z__INTERNAL: Z__INTERNAL$6
@@ -18678,6 +18988,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -18695,6 +19009,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19018,6 +19333,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19035,6 +19354,7 @@ var MyQuery = {
   query: \\"subscription   {\\\\nsimpleSubscription  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19109,6 +19429,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19126,6 +19450,7 @@ var MyQuery = {
   query: \\"query   {\\\\nvariousScalars  {\\\\nnullableString  \\\\nstring  \\\\nnullableInt  \\\\nint  \\\\nnullableFloat  \\\\nfloat  \\\\nnullableBoolean  \\\\nboolean  \\\\nnullableID  \\\\nid  \\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19210,6 +19535,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -19227,6 +19556,7 @@ var MyQuery2 = {
   query: query,
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -19311,6 +19641,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -19328,6 +19662,7 @@ var MyQuery3 = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -19412,6 +19747,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -19429,6 +19768,7 @@ var MyQuery4 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$3
@@ -19508,6 +19848,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19525,6 +19869,7 @@ var MyQuery = {
   query: \\"query   {\\\\nfirst: nestedObject  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\ninner  {\\\\n__typename  \\\\nfield  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19604,6 +19949,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19621,6 +19970,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19690,6 +20040,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -19707,6 +20061,7 @@ var MyQueryNoError = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -19763,6 +20118,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19780,6 +20139,7 @@ var MyQuery = {
   query: \\"query   {\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -19900,6 +20260,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -19917,6 +20281,7 @@ var MyQuery = {
   query: \\"mutation   {\\\\nmutationForVariant  {\\\\nbaseType  \\\\nbaseTypeList  \\\\ndog  {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\nhuman  {\\\\nname  \\\\n}\\\\n\\\\ndogOrHuman  {\\\\n__typename\\\\n...on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\\\n...on Human   {\\\\nname  \\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\\\n}\\\\n\\",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -20942,6 +21307,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -21297,6 +21663,7 @@ module MyQuery = {
     };
     {\\"customFields\\": customFields};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -21395,6 +21762,7 @@ module MyQuery = {
     };
     {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -21721,6 +22089,7 @@ module RecordsQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -21896,6 +22265,7 @@ module ObjectsQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -22111,6 +22481,7 @@ module Bla' = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -23033,6 +23404,7 @@ module MyQuery2 = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -23252,6 +23624,7 @@ module MyQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -23885,6 +24258,7 @@ module MyQuery = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -24424,6 +24798,7 @@ module MyQuery = {
     };
     {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25191,6 +25566,7 @@ module Normal = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25338,6 +25714,7 @@ module ByConfig = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25485,6 +25862,7 @@ module ByDirective = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25666,6 +26044,7 @@ module Normal = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25823,6 +26202,7 @@ module ByConfig = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -25980,6 +26360,7 @@ module ByDirective = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -26126,6 +26507,7 @@ module MyQuery = {
     };
     {\\"pokemon\\": pokemon};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -26443,6 +26825,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -26539,6 +26922,7 @@ module OneFieldQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -26724,6 +27108,7 @@ module ExternalFragmentQuery {
       };
       {\\"variousScalars\\": variousScalars};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     let make = () => {
@@ -26858,6 +27243,7 @@ module InlineFragmentQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -27061,6 +27447,7 @@ module UnionExternalFragmentQuery {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     let make = () => {
@@ -27499,6 +27886,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -28339,6 +28727,7 @@ module MyQuery = {
     };
     {\\"simpleSubscription\\": simpleSubscription};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -28595,6 +28984,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -28833,6 +29223,7 @@ module MyQuery2 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -29071,6 +29462,7 @@ module MyQuery3 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -29309,6 +29701,7 @@ module MyQuery4 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -29517,6 +29910,7 @@ module MyQuery = {
     };
     {\\"first\\": first};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -29698,6 +30092,7 @@ module MyQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -29857,6 +30252,7 @@ module MyQueryNoError = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -30009,6 +30405,7 @@ module MyQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -30265,6 +30662,7 @@ module MyQuery = {
     };
     {\\"mutationForVariant\\": mutationForVariant};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -30772,6 +31170,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -31112,6 +31511,7 @@ module MyQuery = {
     };
     {\\"customFields\\": customFields};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -31205,6 +31605,7 @@ module MyQuery = {
     };
     {\\"defaultObjectValueOnScalar\\": defaultObjectValueOnScalar};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -31516,6 +31917,7 @@ module RecordsQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -31686,6 +32088,7 @@ module ObjectsQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -31896,6 +32299,7 @@ module Bla' = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -32803,6 +33207,7 @@ module MyQuery2 = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -33017,6 +33422,7 @@ module MyQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -33610,6 +34016,7 @@ module MyQuery = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -34124,6 +34531,7 @@ module MyQuery = {
     };
     {\\"first\\": first, \\"second\\": second, \\"let_\\": let_};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -34866,6 +35274,7 @@ module Normal = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35008,6 +35417,7 @@ module ByConfig = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35150,6 +35560,7 @@ module ByDirective = {
     };
     {\\"mutationWithError\\": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35326,6 +35737,7 @@ module Normal = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35478,6 +35890,7 @@ module ByConfig = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35630,6 +36043,7 @@ module ByDirective = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -35771,6 +36185,7 @@ module MyQuery = {
     };
     {\\"pokemon\\": pokemon};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -36073,6 +36488,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -36164,6 +36580,7 @@ module OneFieldQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -36344,6 +36761,7 @@ module ExternalFragmentQuery {
       };
       {\\"variousScalars\\": variousScalars};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -36473,6 +36891,7 @@ module InlineFragmentQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -36671,6 +37090,7 @@ module UnionExternalFragmentQuery {
       };
       {\\"dogOrHuman\\": dogOrHuman};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -37094,6 +37514,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -37872,6 +38293,7 @@ module MyQuery = {
     };
     {\\"simpleSubscription\\": simpleSubscription};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -38123,6 +38545,7 @@ module MyQuery = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -38356,6 +38779,7 @@ module MyQuery2 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -38589,6 +39013,7 @@ module MyQuery3 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -38822,6 +39247,7 @@ module MyQuery4 = {
     };
     {\\"variousScalars\\": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -39025,6 +39451,7 @@ module MyQuery = {
     };
     {\\"first\\": first};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -39201,6 +39628,7 @@ module MyQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -39355,6 +39783,7 @@ module MyQueryNoError = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -39502,6 +39931,7 @@ module MyQuery = {
     };
     {\\"dogOrHuman\\": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -39753,6 +40183,7 @@ module MyQuery = {
     };
     {\\"mutationForVariant\\": mutationForVariant};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -40313,6 +40744,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -40685,6 +41117,7 @@ module MyQuery = {
       {customFields: customFields};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -40781,6 +41214,7 @@ module MyQuery = {
       {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -41133,6 +41567,7 @@ module RecordsQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -41303,6 +41738,7 @@ module ObjectsQuery = {
     };
     {\\"lists\\": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -41516,6 +41952,7 @@ module Bla' = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -42429,6 +42866,7 @@ module MyQuery2 = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -42646,6 +43084,7 @@ module MyQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -43297,6 +43736,7 @@ module MyQuery = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -43830,6 +44270,7 @@ module MyQuery = {
       {first, second, let_};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -44658,6 +45099,7 @@ module Normal = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -44817,6 +45259,7 @@ module ByConfig = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -44976,6 +45419,7 @@ module ByDirective = {
       {mutationWithError: mutationWithError};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -45158,6 +45602,7 @@ module Normal = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -45316,6 +45761,7 @@ module ByConfig = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -45474,6 +45920,7 @@ module ByDirective = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -45615,6 +46062,7 @@ module MyQuery = {
       {pokemon: pokemon};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -45955,6 +46403,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -46052,6 +46501,7 @@ module OneFieldQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -46235,6 +46685,7 @@ module ExternalFragmentQuery {
         {variousScalars: variousScalars};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -46365,6 +46816,7 @@ module InlineFragmentQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -46566,6 +47018,7 @@ module UnionExternalFragmentQuery {
         {dogOrHuman: dogOrHuman};
       }: Raw.t
     );
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -47012,6 +47465,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -47867,6 +48321,7 @@ module MyQuery = {
       {simpleSubscription: simpleSubscription};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -48115,6 +48570,7 @@ module MyQuery = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -48345,6 +48801,7 @@ module MyQuery2 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -48575,6 +49032,7 @@ module MyQuery3 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -48805,6 +49263,7 @@ module MyQuery4 = {
       {variousScalars: variousScalars};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -49013,6 +49472,7 @@ module MyQuery = {
       {first: first};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -49195,6 +49655,7 @@ module MyQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -49355,6 +49816,7 @@ module MyQueryNoError = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -49506,6 +49968,7 @@ module MyQuery = {
       {dogOrHuman: dogOrHuman};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
@@ -49777,6 +50240,7 @@ module MyQuery = {
       {mutationForVariant: mutationForVariant};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";

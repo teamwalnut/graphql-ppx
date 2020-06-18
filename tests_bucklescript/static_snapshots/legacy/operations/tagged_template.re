@@ -199,6 +199,7 @@ module MyQuery = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -437,6 +438,7 @@ module MyQuery2 = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -675,6 +677,7 @@ module MyQuery3 = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -913,6 +916,7 @@ module MyQuery4 = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

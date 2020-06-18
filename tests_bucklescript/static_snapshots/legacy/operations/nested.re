@@ -272,6 +272,7 @@ module MyQuery = {
     };
     {"first": first, "second": second, "let_": let_};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

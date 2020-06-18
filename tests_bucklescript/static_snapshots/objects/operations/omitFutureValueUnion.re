@@ -124,6 +124,7 @@ module Normal = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -276,6 +277,7 @@ module ByConfig = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -428,6 +430,7 @@ module ByDirective = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

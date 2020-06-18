@@ -143,6 +143,7 @@ module RecordsQuery = {
       {lists: lists};
     }: Raw.t
   );
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -318,6 +319,7 @@ module ObjectsQuery = {
     };
     {"lists": lists};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

@@ -118,6 +118,7 @@ module Normal = {
     };
     {"mutationWithError": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -265,6 +266,7 @@ module ByConfig = {
     };
     {"mutationWithError": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -412,6 +414,7 @@ module ByDirective = {
     };
     {"mutationWithError": mutationWithError};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

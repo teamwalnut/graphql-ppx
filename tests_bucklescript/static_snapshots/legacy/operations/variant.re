@@ -199,6 +199,7 @@ module MyQuery = {
     };
     {"mutationForVariant": mutationForVariant};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

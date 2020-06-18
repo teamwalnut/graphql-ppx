@@ -366,6 +366,10 @@ function serialize$5(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -383,6 +387,7 @@ var MyQuery2 = {
   query: query$4,
   parse: parse$5,
   serialize: serialize$5,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$5

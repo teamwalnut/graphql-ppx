@@ -68,6 +68,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -85,6 +89,7 @@ var MyQuery = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -156,6 +161,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -173,6 +182,7 @@ var MyQueryNoError = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1

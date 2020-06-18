@@ -61,6 +61,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -78,6 +82,7 @@ var MyQuery = {
   query: "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -162,6 +167,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -179,6 +188,7 @@ var MyQuery2 = {
   query: query,
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -263,6 +273,10 @@ function serialize$2(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -280,6 +294,7 @@ var MyQuery3 = {
   query: query$1,
   parse: parse$2,
   serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$2
@@ -364,6 +379,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -381,6 +400,7 @@ var MyQuery4 = {
   query: query$2,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$3

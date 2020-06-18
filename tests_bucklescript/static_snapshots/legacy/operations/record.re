@@ -77,6 +77,7 @@ module MyQuery = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -173,6 +174,7 @@ module OneFieldQuery = {
     };
     {"variousScalars": variousScalars};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -358,6 +360,7 @@ module ExternalFragmentQuery {
       };
       {"variousScalars": variousScalars};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     let make = () => {
@@ -492,6 +495,7 @@ module InlineFragmentQuery = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {
@@ -695,6 +699,7 @@ module UnionExternalFragmentQuery {
       };
       {"dogOrHuman": dogOrHuman};
     };
+    let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     let make = () => {

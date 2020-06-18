@@ -113,6 +113,7 @@ module MyQuery = {
     };
     {"simpleSubscription": simpleSubscription};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

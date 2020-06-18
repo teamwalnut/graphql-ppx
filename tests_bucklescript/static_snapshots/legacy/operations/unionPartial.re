@@ -95,6 +95,7 @@ module MyQuery = {
     };
     {"dogOrHuman": dogOrHuman};
   };
+  let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   let make = () => {

@@ -27,6 +27,10 @@ function serialize(value) {
         };
 }
 
+function serializeVariables(param) {
+  
+}
+
 function makeVariables(param) {
   
 }
@@ -44,6 +48,7 @@ var MyQuery = {
   query: "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n",
   parse: parse,
   serialize: serialize,
+  serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
   Z__INTERNAL: Z__INTERNAL
@@ -73,6 +78,10 @@ function serialize$1(value) {
         };
 }
 
+function serializeVariables$1(param) {
+  
+}
+
 function makeVariables$1(param) {
   
 }
@@ -90,6 +99,7 @@ var OneFieldQuery = {
   query: "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n",
   parse: parse$1,
   serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
   Z__INTERNAL: Z__INTERNAL$1
@@ -152,6 +162,10 @@ function serialize$3(value) {
         };
 }
 
+function serializeVariables$2(param) {
+  
+}
+
 function makeVariables$2(param) {
   
 }
@@ -169,6 +183,7 @@ var Untitled1 = {
   query: query$1,
   parse: parse$3,
   serialize: serialize$3,
+  serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
   Z__INTERNAL: Z__INTERNAL$3
@@ -219,6 +234,10 @@ function serialize$4(value) {
         };
 }
 
+function serializeVariables$3(param) {
+  
+}
+
 function makeVariables$3(param) {
   
 }
@@ -236,6 +255,7 @@ var InlineFragmentQuery = {
   query: "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n",
   parse: parse$4,
   serialize: serialize$4,
+  serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
   Z__INTERNAL: Z__INTERNAL$4
@@ -307,6 +327,10 @@ function serialize$6(value) {
         };
 }
 
+function serializeVariables$4(param) {
+  
+}
+
 function makeVariables$4(param) {
   
 }
@@ -324,6 +348,7 @@ var Untitled1$1 = {
   query: query$3,
   parse: parse$6,
   serialize: serialize$6,
+  serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
   makeDefaultVariables: makeDefaultVariables$4,
   Z__INTERNAL: Z__INTERNAL$6
