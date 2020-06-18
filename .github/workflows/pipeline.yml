@@ -119,7 +119,7 @@ jobs:
           path: _build/default/src/bucklescript_bin/bin.exe
 
   publish:
-    needs: test_and_build
+    needs: [test_and_build, test_and_build_linux]
     name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
