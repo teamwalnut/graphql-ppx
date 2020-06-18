@@ -1,4 +1,4 @@
-(lang dune 1.6)
+(lang dune 1.11)
 
 (name "graphql_ppx")
 

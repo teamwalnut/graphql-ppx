@@ -1,5 +1,5 @@
 {
-  "name": "graphql-ppx",
+  "name": "graphql_ppx",
   "description": "Used for native Reason/OCaml using latest version of OCaml",
   "scripts": {
     "format": "dune build @fmt --auto-promote --root .",
