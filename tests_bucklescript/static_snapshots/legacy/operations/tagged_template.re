@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -252,6 +253,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -489,6 +491,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -726,6 +729,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       .

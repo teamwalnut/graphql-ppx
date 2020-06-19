@@ -17,6 +17,7 @@
   }
 ];
 module Normal = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -198,6 +199,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -377,6 +379,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,

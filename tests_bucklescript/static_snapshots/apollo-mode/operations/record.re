@@ -28,6 +28,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -139,6 +140,7 @@ module MyQuery {
   };
 };
 module OneFieldQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -252,6 +254,7 @@ module OneFieldQuery {
 };
 module ExternalFragmentQuery = {
   module Fragment = {
+    [@ocaml.warning "-32"];
     /**The GraphQL query string*/
     let query = "fragment Fragment on VariousScalars   {\n__typename  \nstring  \nint  \n}\n";
     module Raw = {
@@ -365,6 +368,7 @@ module ExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning "-32"];
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
@@ -446,6 +450,7 @@ module ExternalFragmentQuery {
   };
 };
 module InlineFragmentQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -586,6 +591,7 @@ module InlineFragmentQuery {
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
+    [@ocaml.warning "-32"];
     /**The GraphQL query string*/
     let query = "fragment DogFragment on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n";
     module Raw = {
@@ -691,6 +697,7 @@ module UnionExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning "-32"];
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};

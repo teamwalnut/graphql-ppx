@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),

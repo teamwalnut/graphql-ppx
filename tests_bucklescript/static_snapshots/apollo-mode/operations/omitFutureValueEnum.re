@@ -17,6 +17,7 @@
   }
 ];
 module Normal = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -206,6 +207,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -389,6 +391,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {

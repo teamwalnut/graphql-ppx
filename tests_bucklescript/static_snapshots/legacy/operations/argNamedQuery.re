@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t = {. "argNamedQuery": int};
     type t_variables = {. "query": int};

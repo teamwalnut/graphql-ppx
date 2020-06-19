@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t = {. "recursiveInput": string};
     type t_variables = {. "arg": t_variables_RecursiveInput}

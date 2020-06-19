@@ -49,6 +49,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_customFields = {
       .

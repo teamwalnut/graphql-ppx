@@ -35,6 +35,7 @@ module Parent = {
   };
 };
 module Bla' = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_lists = {
       __typename: string,

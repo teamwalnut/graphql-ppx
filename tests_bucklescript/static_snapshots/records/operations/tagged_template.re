@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -244,6 +245,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -473,6 +475,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -702,6 +705,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),

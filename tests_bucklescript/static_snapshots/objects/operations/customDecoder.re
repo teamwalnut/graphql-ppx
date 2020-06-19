@@ -27,6 +27,7 @@ module IntOfString = {
   type t = int;
 };
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_variousScalars = {
       .

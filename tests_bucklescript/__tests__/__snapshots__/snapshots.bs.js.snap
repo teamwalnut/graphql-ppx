@@ -20,6 +20,7 @@ exports[`Apollo argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -132,6 +133,7 @@ exports[`Apollo comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -453,6 +455,7 @@ module IntOfString = {
   type t = int;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -591,6 +594,7 @@ exports[`Apollo customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customScalarField = {
       __typename: string,
@@ -814,6 +818,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customFields = {
       __typename: string,
@@ -990,6 +995,7 @@ exports[`Apollo defaultObjectValueOnScalar.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
     type t_variables = unit;
@@ -1103,6 +1109,7 @@ exports[`Apollo enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {enumInput: string};
     type t_variables = {arg: string};
@@ -1244,6 +1251,7 @@ exports[`Apollo explicit_object_record.re 1`] = `
   }
 ];
 module RecordsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       __typename: string,
@@ -1429,6 +1437,7 @@ module RecordsQuery {
   };
 };
 module ObjectsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -1652,6 +1661,7 @@ module Parent = {
   };
 };
 module Bla' = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       __typename: string,
@@ -1866,6 +1876,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -2005,6 +2016,7 @@ module GraphQL {
   };
 };
 module Another = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -2110,6 +2122,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment FragmentWithArgs on Lists   {\\\\n__typename  \\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
@@ -2234,6 +2247,7 @@ module GraphQL {
 };
 
 module InlineFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -2373,6 +2387,7 @@ module GraphQL {
   };
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -2768,6 +2783,7 @@ module GraphQL {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
@@ -2889,6 +2905,7 @@ exports[`Apollo lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       __typename: string,
@@ -3096,6 +3113,7 @@ exports[`Apollo listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {
@@ -3295,6 +3313,7 @@ exports[`Apollo listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {arg: t_variables_ListsInput}
@@ -3523,6 +3542,7 @@ exports[`Apollo mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_value = {
       __typename: string,
@@ -3787,6 +3807,7 @@ exports[`Apollo mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {optionalInputArgs: string};
     type t_variables = {required: string};
@@ -3885,6 +3906,7 @@ exports[`Apollo mutationWithArgsAndNoRecords.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -3984,6 +4006,7 @@ type record = {
   f2: string,
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -4449,6 +4472,7 @@ exports[`Apollo nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -4738,6 +4762,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {
       scalarsInput: string,
@@ -5090,6 +5115,7 @@ exports[`Apollo omitFutureValueEnum.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -5279,6 +5305,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -5462,6 +5489,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -5667,6 +5695,7 @@ exports[`Apollo omitFutureValueUnion.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -5848,6 +5877,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -6027,6 +6057,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -6228,6 +6259,7 @@ exports[`Apollo pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       __typename: string,
@@ -6387,6 +6419,7 @@ exports[`Apollo pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       __typename: string,
@@ -6607,6 +6640,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -6718,6 +6752,7 @@ module MyQuery {
   };
 };
 module OneFieldQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -6831,6 +6866,7 @@ module OneFieldQuery {
 };
 module ExternalFragmentQuery = {
   module Fragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -6944,6 +6980,7 @@ module ExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
@@ -7025,6 +7062,7 @@ module ExternalFragmentQuery {
   };
 };
 module InlineFragmentQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -7165,6 +7203,7 @@ module InlineFragmentQuery {
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -7270,6 +7309,7 @@ module UnionExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -7399,6 +7439,7 @@ exports[`Apollo recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {recursiveInput: string};
     type t_variables = {arg: t_variables_RecursiveInput}
@@ -7596,6 +7637,7 @@ exports[`Apollo scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -7856,6 +7898,7 @@ exports[`Apollo scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {
@@ -8076,6 +8119,7 @@ exports[`Apollo scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -8341,6 +8385,7 @@ exports[`Apollo skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_v1 = {
       __typename: string,
@@ -8559,6 +8604,7 @@ exports[`Apollo subscription.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_simpleSubscription_Dog = {
       __typename: string,
@@ -8756,6 +8802,7 @@ exports[`Apollo tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -8994,6 +9041,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -9234,6 +9282,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -9474,6 +9523,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -9736,6 +9786,7 @@ exports[`Apollo typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -9945,6 +9996,7 @@ exports[`Apollo union.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -10126,6 +10178,7 @@ module MyQuery {
   };
 };
 module MyQueryNoError = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -10329,6 +10382,7 @@ exports[`Apollo unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -10490,6 +10544,7 @@ exports[`Apollo variant.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationForVariant_dog = {
       __typename: string,
@@ -20830,6 +20885,7 @@ exports[`Legacy argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
     type t_variables = {. \\"query\\": int};
@@ -20935,6 +20991,7 @@ exports[`Legacy comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -21233,6 +21290,7 @@ module IntOfString = {
   type t = int;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -21358,6 +21416,7 @@ exports[`Legacy customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customScalarField = {
       .
@@ -21547,6 +21606,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customFields = {
       .
@@ -21714,6 +21774,7 @@ exports[`Legacy defaultObjectValueOnScalar.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
     type t_variables = unit;
@@ -21813,6 +21874,7 @@ exports[`Legacy enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"enumInput\\": string};
     type t_variables = {. \\"arg\\": string};
@@ -21939,6 +22001,7 @@ exports[`Legacy explicit_object_record.re 1`] = `
   }
 ];
 module RecordsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -22118,6 +22181,7 @@ module RecordsQuery {
   };
 };
 module ObjectsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -22334,6 +22398,7 @@ module Parent = {
   };
 };
 module Bla' = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -22539,6 +22604,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -22673,6 +22739,7 @@ module GraphQL {
   };
 };
 module Another = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -22761,6 +22828,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
@@ -22871,6 +22939,7 @@ module GraphQL {
 };
 
 module InlineFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -23005,6 +23074,7 @@ module GraphQL {
   };
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -23354,6 +23424,7 @@ module GraphQL {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"lists\\": ListFragment.Raw.t};
     type t_variables = unit;
@@ -23477,6 +23548,7 @@ exports[`Legacy lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -23675,6 +23747,7 @@ exports[`Legacy listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {
@@ -23886,6 +23959,7 @@ exports[`Legacy listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_ListsInput}
@@ -24097,6 +24171,7 @@ exports[`Legacy mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_value = {. \\"stringField\\": string};
     type t_mutationWithError_errors_field = string;
@@ -24309,6 +24384,7 @@ exports[`Legacy mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -24414,6 +24490,7 @@ exports[`Legacy mutationWithArgsAndNoRecords.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -24523,6 +24600,7 @@ type record = {
   f2: string,
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
     type t_first_inner = {. \\"inner\\": Js.Nullable.t(t_first_inner_inner)};
@@ -24849,6 +24927,7 @@ exports[`Legacy nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -25115,6 +25194,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {
       .
@@ -25441,6 +25521,7 @@ exports[`Legacy omitFutureValueEnum.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -25595,6 +25676,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -25743,6 +25825,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -25913,6 +25996,7 @@ exports[`Legacy omitFutureValueUnion.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -26073,6 +26157,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -26231,6 +26316,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -26411,6 +26497,7 @@ exports[`Legacy pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       .
@@ -26558,6 +26645,7 @@ exports[`Legacy pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       .
@@ -26752,6 +26840,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -26854,6 +26943,7 @@ module MyQuery {
   };
 };
 module OneFieldQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
@@ -26952,6 +27042,7 @@ module OneFieldQuery {
 };
 module ExternalFragmentQuery = {
   module Fragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -27055,6 +27146,7 @@ module ExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
       type t_variables = unit;
@@ -27138,6 +27230,7 @@ module ExternalFragmentQuery {
   };
 };
 module InlineFragmentQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -27273,6 +27366,7 @@ module InlineFragmentQuery {
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -27368,6 +27462,7 @@ module UnionExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
@@ -27499,6 +27594,7 @@ exports[`Legacy recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
@@ -27680,6 +27776,7 @@ exports[`Legacy scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -27937,6 +28034,7 @@ exports[`Legacy scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {
@@ -28175,6 +28273,7 @@ exports[`Legacy scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
@@ -28410,6 +28509,7 @@ exports[`Legacy skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_v1 = {
       .
@@ -28607,6 +28707,7 @@ exports[`Legacy subscription.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_simpleSubscription_Dog = {
       .
@@ -28778,6 +28879,7 @@ exports[`Legacy tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -29013,6 +29115,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -29250,6 +29353,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -29487,6 +29591,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -29746,6 +29851,7 @@ exports[`Legacy typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -29955,6 +30061,7 @@ exports[`Legacy union.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -30115,6 +30222,7 @@ module MyQuery {
   };
 };
 module MyQueryNoError = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -30297,6 +30405,7 @@ exports[`Legacy unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -30450,6 +30559,7 @@ exports[`Legacy variant.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationForVariant_dog = {
       .
@@ -30707,6 +30817,7 @@ exports[`Objects argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"argNamedQuery\\": int};
     type t_variables = {. \\"query\\": int};
@@ -30802,6 +30913,7 @@ exports[`Objects comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -31090,6 +31202,7 @@ module IntOfString = {
   type t = int;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -31210,6 +31323,7 @@ exports[`Objects customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customScalarField = {
       .
@@ -31389,6 +31503,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customFields = {
       .
@@ -31551,6 +31666,7 @@ exports[`Objects defaultObjectValueOnScalar.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"defaultObjectValueOnScalar\\": string};
     type t_variables = unit;
@@ -31645,6 +31761,7 @@ exports[`Objects enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"enumInput\\": string};
     type t_variables = {. \\"arg\\": string};
@@ -31761,6 +31878,7 @@ exports[`Objects explicit_object_record.re 1`] = `
   }
 ];
 module RecordsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -31935,6 +32053,7 @@ module RecordsQuery {
   };
 };
 module ObjectsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -32146,6 +32265,7 @@ module Parent = {
   };
 };
 module Bla' = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -32346,6 +32466,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -32480,6 +32601,7 @@ module GraphQL {
   };
 };
 module Another = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -32568,6 +32690,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
@@ -32678,6 +32801,7 @@ module GraphQL {
 };
 
 module InlineFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -32812,6 +32936,7 @@ module GraphQL {
   };
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -33151,6 +33276,7 @@ module GraphQL {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"lists\\": ListFragment.Raw.t};
     type t_variables = unit;
@@ -33269,6 +33395,7 @@ exports[`Objects lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -33462,6 +33589,7 @@ exports[`Objects listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {
@@ -33648,6 +33776,7 @@ exports[`Objects listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"listsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_ListsInput}
@@ -33849,6 +33978,7 @@ exports[`Objects mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_value = {. \\"stringField\\": string};
     type t_mutationWithError_errors_field = string;
@@ -34056,6 +34186,7 @@ exports[`Objects mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -34151,6 +34282,7 @@ exports[`Objects mutationWithArgsAndNoRecords.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -34250,6 +34382,7 @@ type record = {
   f2: string,
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {. \\"field\\": string};
     type t_first_inner = {. \\"inner\\": Js.Nullable.t(t_first_inner_inner)};
@@ -34571,6 +34704,7 @@ exports[`Objects nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"nonrecursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_NonrecursiveInput}
@@ -34827,6 +34961,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {
       .
@@ -35143,6 +35278,7 @@ exports[`Objects omitFutureValueEnum.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -35292,6 +35428,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -35435,6 +35572,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -35600,6 +35738,7 @@ exports[`Objects omitFutureValueUnion.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -35755,6 +35894,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -35908,6 +36048,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -36083,6 +36224,7 @@ exports[`Objects pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       .
@@ -36225,6 +36367,7 @@ exports[`Objects pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       .
@@ -36409,6 +36552,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -36506,6 +36650,7 @@ module MyQuery {
   };
 };
 module OneFieldQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {. \\"nullableString\\": Js.Nullable.t(string)};
     type t = {. \\"variousScalars\\": t_variousScalars};
@@ -36599,6 +36744,7 @@ module OneFieldQuery {
 };
 module ExternalFragmentQuery = {
   module Fragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -36702,6 +36848,7 @@ module ExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t = {. \\"variousScalars\\": Fragment.Raw.t};
       type t_variables = unit;
@@ -36780,6 +36927,7 @@ module ExternalFragmentQuery {
   };
 };
 module InlineFragmentQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -36910,6 +37058,7 @@ module InlineFragmentQuery {
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -37005,6 +37154,7 @@ module UnionExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t_dogOrHuman;
       type t = {. \\"dogOrHuman\\": t_dogOrHuman};
@@ -37131,6 +37281,7 @@ exports[`Objects recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"recursiveInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_RecursiveInput}
@@ -37302,6 +37453,7 @@ exports[`Objects scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -37554,6 +37706,7 @@ exports[`Objects scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {
@@ -37755,6 +37908,7 @@ exports[`Objects scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"scalarsInput\\": string};
     type t_variables = {. \\"arg\\": t_variables_VariousScalarsInput}
@@ -37980,6 +38134,7 @@ exports[`Objects skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_v1 = {
       .
@@ -38167,6 +38322,7 @@ exports[`Objects subscription.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_simpleSubscription_Dog = {
       .
@@ -38333,6 +38489,7 @@ exports[`Objects tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -38563,6 +38720,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -38795,6 +38953,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -39027,6 +39186,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       .
@@ -39281,6 +39441,7 @@ exports[`Objects typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {
       .
@@ -39485,6 +39646,7 @@ exports[`Objects union.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -39640,6 +39802,7 @@ module MyQuery {
   };
 };
 module MyQueryNoError = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -39817,6 +39980,7 @@ exports[`Objects unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       .
@@ -39965,6 +40129,7 @@ exports[`Objects variant.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationForVariant_dog = {
       .
@@ -40217,6 +40382,7 @@ exports[`Records argNamedQuery.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -40329,6 +40495,7 @@ exports[`Records comment.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -40650,6 +40817,7 @@ module IntOfString = {
   type t = int;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       string,
@@ -40778,6 +40946,7 @@ exports[`Records customScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),
@@ -40991,6 +41160,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_customFields = {
       currentTime: Js.Json.t,
@@ -41151,6 +41321,7 @@ exports[`Records defaultObjectValueOnScalar.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {defaultObjectValueOnScalar: string};
     type t_variables = unit;
@@ -41264,6 +41435,7 @@ exports[`Records enumInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {enumInput: string};
     type t_variables = {arg: string};
@@ -41405,6 +41577,7 @@ exports[`Records explicit_object_record.re 1`] = `
   }
 ];
 module RecordsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -41579,6 +41752,7 @@ module RecordsQuery {
   };
 };
 module ObjectsQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       .
@@ -41790,6 +41964,7 @@ module Parent = {
   };
 };
 module Bla' = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -41993,6 +42168,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -42122,6 +42298,7 @@ module GraphQL {
   };
 };
 module Another = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -42213,6 +42390,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
@@ -42323,6 +42501,7 @@ module GraphQL {
 };
 
 module InlineFragment = {
+  [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
@@ -42452,6 +42631,7 @@ module GraphQL {
   };
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -42801,6 +42981,7 @@ module GraphQL {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
@@ -42922,6 +43103,7 @@ exports[`Records lists.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -43118,6 +43300,7 @@ exports[`Records listsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {
@@ -43317,6 +43500,7 @@ exports[`Records listsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {listsInput: string};
     type t_variables = {arg: t_variables_ListsInput}
@@ -43545,6 +43729,7 @@ exports[`Records mutation.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_value = {stringField: string};
     type t_mutationWithError_errors_field = string;
@@ -43770,6 +43955,7 @@ exports[`Records mutationWithArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {optionalInputArgs: string};
     type t_variables = {required: string};
@@ -43868,6 +44054,7 @@ exports[`Records mutationWithArgsAndNoRecords.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {. \\"optionalInputArgs\\": string};
     type t_variables = {. \\"required\\": string};
@@ -43967,6 +44154,7 @@ type record = {
   f2: string,
 };
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {field: string};
     type t_first_inner = {inner: Js.Nullable.t(t_first_inner_inner)};
@@ -44304,6 +44492,7 @@ exports[`Records nonrecursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {nonrecursiveInput: string};
     type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -44593,6 +44782,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {
       scalarsInput: string,
@@ -44945,6 +45135,7 @@ exports[`Records omitFutureValueEnum.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -45111,6 +45302,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -45271,6 +45463,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -45453,6 +45646,7 @@ exports[`Records omitFutureValueUnion.re 1`] = `
   }
 ];
 module Normal = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -45614,6 +45808,7 @@ module Normal {
   };
 };
 module ByConfig = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -45773,6 +45968,7 @@ module ByConfig {
   };
 };
 module ByDirective = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -45954,6 +46150,7 @@ exports[`Records pokedexApolloMode.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       id: string,
@@ -46103,6 +46300,7 @@ exports[`Records pokedexScalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_pokemon = {
       id: string,
@@ -46313,6 +46511,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       string,
@@ -46415,6 +46614,7 @@ module MyQuery {
   };
 };
 module OneFieldQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
@@ -46514,6 +46714,7 @@ module OneFieldQuery {
 };
 module ExternalFragmentQuery = {
   module Fragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
@@ -46617,6 +46818,7 @@ module ExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
@@ -46698,6 +46900,7 @@ module ExternalFragmentQuery {
   };
 };
 module InlineFragmentQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -46829,6 +47032,7 @@ module InlineFragmentQuery {
 };
 module UnionExternalFragmentQuery = {
   module DogFragment = {
+    [@ocaml.warning \\"-32\\"];
     /**The GraphQL query string*/
     let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
@@ -46924,6 +47128,7 @@ module UnionExternalFragmentQuery {
     };
   };
   module Untitled1 = {
+    [@ocaml.warning \\"-32\\"];
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -47053,6 +47258,7 @@ exports[`Records recursiveInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {recursiveInput: string};
     type t_variables = {arg: t_variables_RecursiveInput}
@@ -47250,6 +47456,7 @@ exports[`Records scalars.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -47499,6 +47706,7 @@ exports[`Records scalarsArgs.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {
@@ -47719,6 +47927,7 @@ exports[`Records scalarsInput.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t = {scalarsInput: string};
     type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -47984,6 +48193,7 @@ exports[`Records skipDirectives.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_v1 = {
       nullableString: Js.Nullable.t(string),
@@ -48182,6 +48392,7 @@ exports[`Records subscription.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_simpleSubscription_Dog = {
       __typename: string,
@@ -48355,6 +48566,7 @@ exports[`Records tagged_template.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -48582,6 +48794,7 @@ module MyQuery {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -48811,6 +49024,7 @@ module MyQuery2 {
   };
 };
 module MyQuery3 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -49040,6 +49254,7 @@ module MyQuery3 {
   };
 };
 module MyQuery4 = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_variousScalars = {
       nullableString: Js.Nullable.t(string),
@@ -49291,6 +49506,7 @@ exports[`Records typename.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -49500,6 +49716,7 @@ exports[`Records union.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -49661,6 +49878,7 @@ module MyQuery {
   };
 };
 module MyQueryNoError = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -49844,6 +50062,7 @@ exports[`Records unionPartial.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -49996,6 +50215,7 @@ exports[`Records variant.re 1`] = `
   }
 ];
 module MyQuery = {
+  [@ocaml.warning \\"-32\\"];
   module Raw = {
     type t_mutationForVariant_dog = {
       __typename: string,

@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),

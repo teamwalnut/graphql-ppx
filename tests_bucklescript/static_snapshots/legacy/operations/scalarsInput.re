@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t = {. "scalarsInput": string};
     type t_variables = {. "arg": t_variables_VariousScalarsInput}

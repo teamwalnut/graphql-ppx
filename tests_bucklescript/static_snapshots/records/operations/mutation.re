@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_mutationWithError_value = {stringField: string};
     type t_mutationWithError_errors_field = string;

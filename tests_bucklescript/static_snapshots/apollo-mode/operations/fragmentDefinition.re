@@ -20,6 +20,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment = {
+  [@ocaml.warning "-32"];
   /**The GraphQL query string*/
   let query = "fragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
@@ -159,6 +160,7 @@ module GraphQL {
   };
 };
 module Another = {
+  [@ocaml.warning "-32"];
   /**The GraphQL query string*/
   let query = "fragment Another on Lists   {\n__typename  \nnullableOfNonNullable  \n}\n";
   module Raw = {
@@ -264,6 +266,7 @@ module GraphQL {
   };
 };
 module FragmentWithArgs = {
+  [@ocaml.warning "-32"];
   /**The GraphQL query string*/
   let query = "fragment FragmentWithArgs on Lists   {\n__typename  \nlistWithArg(arg1: $arg1)  \n}\n";
   module Raw = {
@@ -388,6 +391,7 @@ module GraphQL {
 };
 
 module InlineFragment = {
+  [@ocaml.warning "-32"];
   /**The GraphQL query string*/
   let query = "fragment InlineListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
@@ -527,6 +531,7 @@ module GraphQL {
   };
 };
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -922,6 +927,7 @@ module GraphQL {
   };
 };
 module MyQuery2 = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;

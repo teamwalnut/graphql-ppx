@@ -21,6 +21,7 @@ type record = {
   f2: string,
 };
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_first_inner_inner = {. "field": string};
     type t_first_inner = {. "inner": Js.Nullable.t(t_first_inner_inner)};

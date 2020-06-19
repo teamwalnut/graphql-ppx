@@ -420,6 +420,7 @@ let generate_default_operation =
 
       List.concat([
         List.concat([
+          [[%stri [@ocaml.warning "-32"]]],
           [wrap_module("Raw", List.append(raw_types, raw_arg_types))],
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
@@ -601,6 +602,7 @@ let generate_fragment_module =
       List.concat(
         List.concat([
           [
+            [[%stri [@ocaml.warning "-32"]]],
             switch (pre_printed_query) {
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []

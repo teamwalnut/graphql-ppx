@@ -17,6 +17,7 @@
   }
 ];
 module MyQuery = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -198,6 +199,7 @@ module MyQuery {
   };
 };
 module MyQueryNoError = {
+  [@ocaml.warning "-32"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
