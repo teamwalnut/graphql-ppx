@@ -128,7 +128,7 @@ Make your first query:
 |}];
 ```
 
-[Open getting started in the docs](https://beta.graphql-ppx/docs/getting-started)
+[Open getting started in the docs](https://beta.graphql-ppx.com/docs/getting-started)
 
 ## Roadmap
 
