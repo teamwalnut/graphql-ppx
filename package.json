@@ -12,10 +12,13 @@
   "scripts": {
     "postinstall": "node ./copyPlatformBinaryInPlace.js"
   },
+  "devDependencies": {
+    "bs-platform": "^7.3.2"
+  },
+  "peerDependencies": {
+    "bs-platform": "^7.3.2"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "bs-platform": "^7.3.2"
   }
 }
