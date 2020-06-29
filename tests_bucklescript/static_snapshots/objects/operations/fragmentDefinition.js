@@ -53,7 +53,9 @@ function serialize(value) {
         };
 }
 
-var name = "ListFragment";
+function verifyName(param) {
+  
+}
 
 var Z__INTERNAL = {
   graphql: 0,
@@ -66,7 +68,7 @@ var ListFragment = {
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
-  name: name,
+  verifyName: verifyName,
   Z__INTERNAL: Z__INTERNAL
 };
 
@@ -92,6 +94,10 @@ function serialize$1(value) {
         };
 }
 
+function verifyName$1(param) {
+  
+}
+
 var Z__INTERNAL$1 = {
   graphql: 0,
   graphql_module: 0
@@ -103,7 +109,7 @@ var Another = {
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
-  name: "Another",
+  verifyName: verifyName$1,
   Z__INTERNAL: Z__INTERNAL$1
 };
 
@@ -140,7 +146,9 @@ function serialize$2(value) {
         };
 }
 
-var name$1 = "FragmentWithArgs";
+function verifyName$2(param) {
+  
+}
 
 var Z__INTERNAL$2 = {
   graphql: 0,
@@ -153,7 +161,7 @@ var FragmentWithArgs = {
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
-  name: name$1,
+  verifyName: verifyName$2,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -200,7 +208,9 @@ function serialize$3(value) {
         };
 }
 
-var name$2 = "InlineListFragment";
+function verifyName$3(param) {
+  
+}
 
 var Z__INTERNAL$3 = {
   graphql: 0,
@@ -213,13 +223,13 @@ var InlineFragment = {
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
-  name: name$2,
+  verifyName: verifyName$3,
   Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = { };
 
-var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\nfragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\nfragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$4(value) {
   var value$1 = value.l5;

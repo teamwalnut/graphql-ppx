@@ -99,7 +99,9 @@ module ListFragment = {
       "nullableOfNonNullable": nullableOfNonNullable,
     };
   };
-  let name = "ListFragment";
+  let verifyName =
+    fun
+    | `ListFragment => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -188,7 +190,9 @@ module Another = {
     };
     {"nullableOfNonNullable": nullableOfNonNullable};
   };
-  let name = "Another";
+  let verifyName =
+    fun
+    | `Another => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -298,7 +302,9 @@ module FragmentWithArgs = {
     };
     {"listWithArg": listWithArg};
   };
-  let name = "FragmentWithArgs";
+  let verifyName =
+    fun
+    | `FragmentWithArgs => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -434,7 +440,9 @@ module InlineFragment = {
       "nullableOfNonNullable": nullableOfNonNullable,
     };
   };
-  let name = "InlineListFragment";
+  let verifyName =
+    fun
+    | `InlineListFragment => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -509,49 +517,7 @@ module MyQuery = {
   let query =
     (
       (
-        (
-          (
-            (
-              (
-                (
-                  (
-                    (
-                      (
-                        (
-                          (
-                            (
-                              (
-                                (
-                                  (
-                                    "query MyQuery($arg1: String)  {\nl1: lists  {\n..."
-                                    ++ ListFragment.name
-                                  )
-                                  ++ "   \n}\n\nl2: lists  {\n..."
-                                )
-                                ++ ListFragment.name
-                              )
-                              ++ "   \n..."
-                            )
-                            ++ ListFragment.name
-                          )
-                          ++ "   \n}\n\nl3: lists  {\nnullableOfNullable  \n..."
-                        )
-                        ++ ListFragment.name
-                      )
-                      ++ "   \n..."
-                    )
-                    ++ ListFragment.name
-                  )
-                  ++ "   \n}\n\nl4: lists  {\nnullableOfNullable  \n..."
-                )
-                ++ InlineFragment.name
-              )
-              ++ "   \n}\n\nl5: lists  {\n..."
-            )
-            ++ FragmentWithArgs.name
-          )
-          ++ "   \n}\n\n}\n"
-        )
+        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
         ++ FragmentWithArgs.query
       )
       ++ InlineFragment.query
@@ -837,8 +803,7 @@ module MyQuery2 = {
   };
   /**The GraphQL query string*/
   let query =
-    (("query   {\nlists  {\n..." ++ ListFragment.name) ++ "   \n}\n\n}\n")
-    ++ ListFragment.query;
+    "query   {\nlists  {\n...ListFragment   \n}\n\n}\n" ++ ListFragment.query;
   type t = {. "lists": ListFragment.t};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/

@@ -263,7 +263,9 @@ module ExternalFragmentQuery = {
       };
       {"string": string, "int": int};
     };
-    let name = "Fragment";
+    let verifyName =
+      fun
+      | `Fragment => ();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
@@ -331,10 +333,7 @@ module ExternalFragmentQuery {
     };
     /**The GraphQL query string*/
     let query =
-      (
-        ("query   {\nvariousScalars  {\n..." ++ Fragment.name)
-        ++ "   \n}\n\n}\n"
-      )
+      "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\n"
       ++ Fragment.query;
     type t = {. "variousScalars": Fragment.t};
     type t_variables = unit;
@@ -577,7 +576,9 @@ module UnionExternalFragmentQuery = {
       };
       {"name": name, "barkVolume": barkVolume};
     };
-    let name = "DogFragment";
+    let verifyName =
+      fun
+      | `DogFragment => ();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
@@ -638,13 +639,7 @@ module UnionExternalFragmentQuery {
     };
     /**The GraphQL query string*/
     let query =
-      (
-        (
-          "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n..."
-          ++ DogFragment.name
-        )
-        ++ "   \n}\n\n}\n\n}\n"
-      )
+      "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\n"
       ++ DogFragment.query;
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)

@@ -130,7 +130,9 @@ function serialize$2(value) {
         };
 }
 
-var name = "Fragment";
+function verifyName(param) {
+  
+}
 
 var Z__INTERNAL$2 = {
   graphql: 0,
@@ -143,7 +145,7 @@ var Fragment = {
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
-  name: name,
+  verifyName: verifyName,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -295,7 +297,9 @@ function serialize$5(value) {
         };
 }
 
-var name$1 = "DogFragment";
+function verifyName$1(param) {
+  
+}
 
 var Z__INTERNAL$5 = {
   graphql: 0,
@@ -308,7 +312,7 @@ var DogFragment = {
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
-  name: name$1,
+  verifyName: verifyName$1,
   Z__INTERNAL: Z__INTERNAL$5
 };
 

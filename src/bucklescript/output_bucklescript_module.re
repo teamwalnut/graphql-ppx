@@ -36,15 +36,6 @@ let find_variables = (config, document) => {
   VariableFinderImpl.from_self(VariableFinder.visit_document(ctx, document));
 };
 
-let join = (part1, part2) => {
-  Ast_helper.(
-    Exp.apply(
-      Exp.ident({Location.txt: Longident.parse("^"), loc: Location.none}),
-      [(Nolabel, part1), (Nolabel, part2)],
-    )
-  );
-};
-
 let pretty_print = (query: string): string => {
   let indent = ref(1);
 
@@ -89,76 +80,109 @@ let compress_parts = (parts: array(Graphql_printer.t)) => {
   );
 };
 
-let emit_printed_template_query = (parts: array(Graphql_printer.t)) => {
-  switch (parts) {
-  | [|String(s)|] => s
-  | [||] => ""
-  | parts =>
-    Graphql_printer.(
-      Array.fold_left(
-        acc =>
-          fun
-          | String(s) => acc ++ s
-          | FragmentNameRef(f) => {
-              let name =
-                switch (String.split_on_char('.', f) |> List.rev) {
-                | [name, ..._] => name
-                | [] => assert(false)
-                };
-              acc ++ name;
-            }
-          // This is the code to make the template tag compatible with Apollo
-          // we can expose this as an option later. (we need to wait for new
-          // %raw functionality to properly do template literals. So in current
-          // state it is not possible to make it compatible with Apollo.
-          // | FragmentQueryRef(f) => acc ++ "${" ++ f ++ ".query" ++ "}",
-          | FragmentQueryRef(_f) => acc,
-        "",
-        parts,
-      )
-    )
-  };
+let make_fragment_name = f => {
+  Exp.ident({
+    Location.txt: Longident.parse(f ++ ".name"),
+    loc: Location.none,
+  });
 };
 
-let emit_printed_query = parts => {
-  open Ast_408;
+let make_fragment_name_from_module_name = f => {
+  f |> String.split_on_char('.') |> List.rev |> List.hd;
+};
+
+let make_fragment_query = f => {
+  Exp.ident({
+    Location.txt: Longident.parse(f ++ ".query"),
+    loc: Location.none,
+  });
+};
+
+let emit_printed_template_query = (parts: array(Graphql_printer.t), config) => {
+  open Graphql_printer;
+
+  let fragment_query_refs =
+    switch (config.fragment_in_query) {
+    | Include =>
+      parts
+      |> Array.fold_left(
+           acc =>
+             fun
+             | String(_) => acc
+             | FragmentNameRef(_) => acc
+             | FragmentQueryRef(f) => [f, ...acc],
+           [],
+         )
+      |> List.rev
+    | Exclude => []
+    };
+
+  let query =
+    Array.fold_left(
+      acc =>
+        fun
+        | String(s) => acc ++ s
+        | FragmentNameRef(f) => {
+            acc ++ f;
+          }
+        | FragmentQueryRef(_) => acc,
+      "",
+      parts,
+    );
+  let fragment_names =
+    fragment_query_refs
+    |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
+  let fragments = fragment_names |> List.map(name => {"${" ++ name ++ "}\n"});
+
+  [query, ...fragments] |> List.fold_left((acc, el) => acc ++ el, "");
+};
+
+let emit_printed_query = (parts, config) => {
+  open Graphql_printer;
   let make_string = s => {
     Exp.constant(Parsetree.Pconst_string(s, None));
   };
-  let make_fragment_name = f => {
-    Exp.ident({
-      Location.txt: Longident.parse(f ++ ".name"),
-      loc: Location.none,
-    });
+  let join = (part1, part2) => {
+    Ast_helper.(
+      Exp.apply(
+        Exp.ident({Location.txt: Longident.parse("^"), loc: Location.none}),
+        [(Nolabel, part1), (Nolabel, part2)],
+      )
+    );
   };
-  let make_fragment_query = f => {
-    Exp.ident({
-      Location.txt: Longident.parse(f ++ ".query"),
-      loc: Location.none,
-    });
-  };
-  open Graphql_printer;
-  let generate_expr = (acc, part) =>
-    switch (acc, part) {
-    | (None, String(s)) => Some(make_string(s))
-    | (Some(acc), String(s)) => Some(join(acc, make_string(s)))
-    | (None, FragmentNameRef(f)) => Some(make_fragment_name(f))
-    | (Some(acc), FragmentNameRef(f)) =>
-      Some(join(acc, make_fragment_name(f)))
-    | (None, FragmentQueryRef(f)) => Some(make_fragment_query(f))
-    | (Some(acc), FragmentQueryRef(f)) =>
-      Some(join(acc, make_fragment_query(f)))
+
+  let query =
+    Array.fold_left(
+      acc =>
+        fun
+        | String(s) => acc ++ s
+        | FragmentNameRef(f) => acc ++ f
+        | FragmentQueryRef(_) => acc,
+      "",
+      parts,
+    );
+
+  let fragment_query_refs =
+    switch (config.fragment_in_query) {
+    | Include =>
+      parts
+      |> Array.fold_left(
+           acc =>
+             fun
+             | String(_) => acc
+             | FragmentNameRef(_) => acc
+             | FragmentQueryRef(f) => [make_fragment_query(f), ...acc],
+           [],
+         )
+      |> List.rev
+    | Exclude => []
     };
 
-  let result = parts |> Array.fold_left(generate_expr, None);
-
-  switch (result) {
-  | None => make_string("")
-  | Some(e) => e
-  };
+  fragment_query_refs
+  |> List.fold_left((acc, el) => join(acc, el), make_string(query));
 };
 
-let rec emit_json =
+let rec emit_json = config =>
   Ast_408.(
     fun
     | `Assoc(vs) => {
@@ -169,7 +193,7 @@ let rec emit_json =
               |> List.map(((key, value)) =>
                    Exp.tuple([
                      Exp.constant(Pconst_string(key, None)),
-                     emit_json(value),
+                     emit_json(config, value),
                    ])
                  ),
             )
@@ -178,7 +202,7 @@ let rec emit_json =
         Js.Json.object_(Js.Dict.fromArray([%e pairs]));
       }
     | `List(ls) => {
-        let values = Ast_helper.Exp.array(List.map(emit_json, ls));
+        let values = Ast_helper.Exp.array(List.map(emit_json(config), ls));
         %expr
         Js.Json.array([%e values]);
       }
@@ -196,7 +220,7 @@ let rec emit_json =
         )
       ]
     | `StringExpr(parts) => [%expr
-        Js.Json.string([%e emit_printed_query(parts)])
+        Js.Json.string([%e emit_printed_query(parts, config)])
       ]
   );
 
@@ -251,26 +275,77 @@ let make_printed_query = (config, document) => {
     | Ppx_config.Apollo_AST => (
         None,
         Ast_serializer_apollo.serialize_document(source, document)
-        |> emit_json,
+        |> emit_json(config),
       )
     | Ppx_config.String =>
       switch (config.template_tag) {
       | (template_tag, location, import)
           when template_tag != None || location != None =>
+        open Graphql_printer;
         // the only way to emit a template literal for now, using the bs.raw
         // extension
+        let fragments =
+          source
+          |> Array.fold_left(
+               acc =>
+                 fun
+                 | String(_) => acc
+                 | FragmentNameRef(_) => acc
+                 | FragmentQueryRef(f) => [f, ...acc],
+               [],
+             )
+          |> List.rev;
+
+        let template_tag =
+          wrap_template_tag(
+            ~template_tag?,
+            ~location?,
+            ~import?,
+            pretty_print(emit_printed_template_query(source, config)),
+          );
+
         (
           None,
-          wrap_raw(
-            wrap_template_tag(
-              ~template_tag?,
-              ~location?,
-              ~import?,
-              pretty_print(emit_printed_template_query(source)),
-            ),
-          ),
-        )
-      | (_, _, _) => (None, emit_printed_query(source))
+          switch (fragments) {
+          | [] => wrap_raw(template_tag)
+          | fragments =>
+            let fragment_names =
+              fragments
+              |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
+
+            let frag_fun =
+              "("
+              ++ (
+                List.tl(fragment_names)
+                |> List.fold_left(
+                     (acc, el) => acc ++ ", " ++ el,
+                     List.hd(fragment_names),
+                   )
+              )
+              ++ ") => ";
+
+            // |> List.fold_left(
+            //      (acc, el) => {
+            //        Ast_helper.(
+            //          Exp.fun_(
+            //            Nolabel,
+            //            None,
+            //            Pat.var({txt: el, loc: Location.none}),
+            //            acc,
+            //          )
+            //        )
+            //      },
+            //      template_tag,
+            //    );
+
+            Exp.apply(
+              wrap_raw(frag_fun ++ template_tag),
+              fragments |> List.map(f => (Nolabel, make_fragment_query(f))),
+            );
+          },
+        );
+
+      | (_, _, _) => (None, emit_printed_query(source, config))
       }
     };
 
@@ -633,10 +708,27 @@ let generate_fragment_module =
                 )
               ),
             ],
+            // [
+            //   [%stri
+            //     let name = [%e
+            //       Ast_helper.Exp.constant(Pconst_string(name, None))
+            //     ]
+            //   ],
+            // ],
             [
               [%stri
-                let name = [%e
-                  Ast_helper.Exp.constant(Pconst_string(name, None))
+                let verifyName = [%e
+                  Ast_helper.(
+                    Exp.function_([
+                      Exp.case(
+                        Pat.variant(name, None),
+                        Exp.construct(
+                          {txt: Longident.Lident("()"), loc: Location.none},
+                          None,
+                        ),
+                      ),
+                    ])
+                  )
                 ]
               ],
             ],
