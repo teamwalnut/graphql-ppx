@@ -324,20 +324,6 @@ let make_printed_query = (config, document) => {
               )
               ++ ") => ";
 
-            // |> List.fold_left(
-            //      (acc, el) => {
-            //        Ast_helper.(
-            //          Exp.fun_(
-            //            Nolabel,
-            //            None,
-            //            Pat.var({txt: el, loc: Location.none}),
-            //            acc,
-            //          )
-            //        )
-            //      },
-            //      template_tag,
-            //    );
-
             Exp.apply(
               wrap_raw(frag_fun ++ template_tag),
               fragments |> List.map(f => (Nolabel, make_fragment_query(f))),
