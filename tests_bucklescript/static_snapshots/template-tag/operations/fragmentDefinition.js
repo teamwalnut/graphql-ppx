@@ -279,6 +279,7 @@ function parse$4(value) {
   var value$2 = value.l3;
   var value$3 = value$2["nullableOfNullable"];
   var value$4 = value.l4;
+  var value$5 = value$4["nullableOfNullable"];
   return {
           l1: parse(value.l1),
           l2: {
