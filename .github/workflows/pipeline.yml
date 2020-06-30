@@ -35,9 +35,9 @@ jobs:
         id: deps-cache
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}--${{ hashFiles('**/index.json') }}
+          key: ${{ matrix.os }}---${{ hashFiles('**/index.json') }}
           restore-keys: |
-            ${{ matrix.os }}-
+            ${{ matrix.os }}---
 
       - name: build
         run: esy b
