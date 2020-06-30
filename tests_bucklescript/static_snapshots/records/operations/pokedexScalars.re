@@ -126,13 +126,13 @@ module MyQuery = {
   external toJson: Raw.t => Js.Json.t = "%identity";
   external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
-    type nonrec _graphql_name_100;
+    type nonrec _graphql_pokemon_name_100;
     /**Variable **$name** has the following graphql type:
 
 ```
 String
 ```*/
-    let _graphql_name_100: _graphql_name_100 = Obj.magic(0);
+    let _graphql_pokemon_name_100: _graphql_pokemon_name_100 = Obj.magic(0);
     type nonrec _graphql_name_94;
     /**Argument **name** on field **pokemon** has the following graphql type:
 
@@ -140,13 +140,13 @@ String
 String
 ```*/
     let _graphql_name_94: _graphql_name_94 = Obj.magic(0);
-    type nonrec _graphql_id_111;
+    type nonrec _graphql_pokemon_id_111;
     /**Variable **$id** has the following graphql type:
 
 ```
 String
 ```*/
-    let _graphql_id_111: _graphql_id_111 = Obj.magic(0);
+    let _graphql_pokemon_id_111: _graphql_pokemon_id_111 = Obj.magic(0);
     type nonrec _graphql_id_107;
     /**Argument **id** on field **pokemon** has the following graphql type:
 
