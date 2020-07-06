@@ -35,7 +35,9 @@ function parse(value) {
         };
 }
 
-var verifyArgsAndParse = parse;
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
 
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -92,7 +94,9 @@ function parse$1(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$1;
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
 
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -143,7 +147,7 @@ function parse$2(value) {
         };
 }
 
-function verifyArgsAndParse$2(_arg1, value) {
+function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
   return parse$2(value);
 }
 
@@ -205,7 +209,9 @@ function parse$3(value) {
         };
 }
 
-var verifyArgsAndParse$3 = parse$3;
+function verifyArgsAndParse$3(_InlineListFragment, value) {
+  return parse$3(value);
+}
 
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -235,7 +241,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var InlineFragment = {
+var InlineListFragment = {
   query: query$3,
   Raw: Raw$3,
   parse: parse$3,
@@ -263,7 +269,7 @@ var query$4 = ((frag_0, frag_1, frag_2) => require("gql")`
     }
     l4: lists  {
       nullableOfNullable
-      ...InlineFragment
+      ...InlineListFragment
     }
     l5: lists  {
       ...FragmentWithArgs
@@ -303,7 +309,7 @@ function parse$4(value) {
                       }
                       
                     })) : undefined,
-            inlineFragment: parse$3(value$4)
+            inlineListFragment: parse$3(value$4)
           },
           l5: parse$2(value.l5)
         };
@@ -314,7 +320,7 @@ function serialize$4(value) {
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
-  var l4 = [serialize$3(value$2.inlineFragment)].reduce(deepMerge, {
+  var l4 = [serialize$3(value$2.inlineListFragment)].reduce(deepMerge, {
         nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
                   if (value !== undefined) {
                     return value;
@@ -445,7 +451,7 @@ exports.GraphQL_PPX = GraphQL_PPX;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
-exports.InlineFragment = InlineFragment;
+exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* query Not a pure module */

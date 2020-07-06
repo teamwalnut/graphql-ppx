@@ -119,7 +119,9 @@ function parse$2(value) {
         };
 }
 
-var verifyArgsAndParse = parse$2;
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$2(value);
+}
 
 function serialize$2(value) {
   var value$1 = value.int;
@@ -286,7 +288,9 @@ function parse$5(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$5;
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$5(value);
+}
 
 function serialize$5(value) {
   var value$1 = value.barkVolume;

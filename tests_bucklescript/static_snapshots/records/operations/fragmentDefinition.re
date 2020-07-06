@@ -19,6 +19,7 @@
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning "-32"];
   /**The GraphQL query string*/
@@ -63,7 +64,10 @@ module ListFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -151,6 +155,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning "-32"];
   /**The GraphQL query string*/
@@ -173,7 +178,10 @@ module Another = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -245,6 +253,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning "-32"];
   /**The GraphQL query string*/
@@ -276,7 +285,13 @@ module FragmentWithArgs = {
       },
     }: t
   );
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | `String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | `String],
+        ~fragmentName as _FragmentWithArgs: [ | `FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
@@ -358,7 +373,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning "-32"];
   /**The GraphQL query string*/
   let query = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
@@ -402,7 +417,13 @@ module InlineFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | `InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -490,6 +511,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -509,10 +531,10 @@ module MyQuery = {
   let query =
     (
       (
-        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
+        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
         ++ FragmentWithArgs.query
       )
-      ++ InlineFragment.query
+      ++ InlineListFragment.query
     )
     ++ ListFragment.query;
   type t_l2 = {
@@ -526,7 +548,7 @@ module MyQuery = {
   };
   type t_l4 = {
     nullableOfNullable: option(array(option(string))),
-    inlineFragment: InlineFragment.t_Lists,
+    inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
     l1: ListFragment.t,
@@ -541,7 +563,8 @@ module MyQuery = {
     {
       l1: {
         let value = (value: Raw.t).l1;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
       },
       l2: {
         let value = (value: Raw.t).l2;
@@ -549,11 +572,19 @@ module MyQuery = {
           {
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
           }: t_l2
         );
@@ -583,11 +614,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
           }: t_l3
         );
@@ -615,16 +654,25 @@ module MyQuery = {
               | None => None
               };
             },
-            inlineFragment: {
-              let value: InlineFragment.Raw.t = Obj.magic(value);
-              InlineFragment.verifyArgsAndParse(value);
+            inlineListFragment: {
+              let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+              InlineListFragment.verifyArgsAndParse(
+                ~fragmentName=`InlineListFragment,
+                value,
+              );
             },
           }: t_l4
         );
       },
       l5: {
         let value = (value: Raw.t).l5;
-        FragmentWithArgs.verifyArgsAndParse(~arg1=`String, value);
+
+        FragmentWithArgs.verifyArgsAndParse(
+          ~arg1=`String,
+          ~fragmentName=`FragmentWithArgs,
+          value,
+        );
       },
     }: t
   );
@@ -665,7 +713,9 @@ module MyQuery = {
               [|
                 (
                   Obj.magic(
-                    InlineFragment.serialize((value: t_l4).inlineFragment),
+                    InlineListFragment.serialize(
+                      (value: t_l4).inlineListFragment,
+                    ),
                   ): Js.Json.t
                 ),
               |],
@@ -798,6 +848,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -814,7 +865,8 @@ module MyQuery2 = {
     {
       lists: {
         let value = (value: Raw.t).lists;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
       },
     }: t
   );

@@ -26,6 +26,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {

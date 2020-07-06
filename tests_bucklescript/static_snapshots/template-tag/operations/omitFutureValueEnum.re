@@ -16,6 +16,7 @@
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -185,6 +186,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -348,6 +350,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning "-32"];
   module Raw = {

@@ -27,6 +27,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -130,6 +131,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -259,7 +261,10 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -353,7 +358,8 @@ module ExternalFragmentQuery {
       {
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
-          Fragment.verifyArgsAndParse(value);
+
+          Fragment.verifyArgsAndParse(~fragmentName=`Fragment, value);
         },
       }: t
     );
@@ -415,6 +421,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -576,7 +583,10 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -675,7 +685,11 @@ module UnionExternalFragmentQuery {
               `Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.verifyArgsAndParse(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=`DogFragment,
+                    value,
+                  );
                 },
               )
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)

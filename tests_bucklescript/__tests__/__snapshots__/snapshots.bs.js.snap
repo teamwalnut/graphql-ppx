@@ -19,6 +19,7 @@ exports[`Apollo argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -132,6 +133,7 @@ exports[`Apollo comment.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -454,6 +456,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -593,6 +596,7 @@ exports[`Apollo customScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -817,6 +821,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -994,6 +999,7 @@ exports[`Apollo defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1108,6 +1114,7 @@ exports[`Apollo enumInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1250,6 +1257,7 @@ exports[`Apollo explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
+
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1436,6 +1444,7 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1660,6 +1669,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1875,6 +1885,7 @@ exports[`Apollo fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -1925,7 +1936,10 @@ module ListFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -2017,6 +2031,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -2049,7 +2064,10 @@ module Another = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -2125,6 +2143,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -2166,7 +2185,13 @@ module FragmentWithArgs = {
       },
     }: t
   );
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | \`String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | \`String],
+        ~fragmentName as _FragmentWithArgs: [ | \`FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
@@ -2252,7 +2277,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -2302,7 +2327,13 @@ module InlineFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -2394,6 +2425,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2413,10 +2445,10 @@ module MyQuery = {
   let query =
     (
       (
-        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n__typename  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
+        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n__typename  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\n__typename  \\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
         ++ FragmentWithArgs.query
       )
-      ++ InlineFragment.query
+      ++ InlineListFragment.query
     )
     ++ ListFragment.query;
   type t_l2 = {
@@ -2433,7 +2465,7 @@ module MyQuery = {
   type t_l4 = {
     __typename: string,
     nullableOfNullable: option(array(option(string))),
-    inlineFragment: InlineFragment.t_Lists,
+    inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
     l1: ListFragment.t,
@@ -2448,7 +2480,8 @@ module MyQuery = {
     {
       l1: {
         let value = (value: Raw.t).l1;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
       l2: {
         let value = (value: Raw.t).l2;
@@ -2463,11 +2496,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l2
         );
@@ -2504,11 +2545,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l3
         );
@@ -2543,16 +2592,25 @@ module MyQuery = {
               | None => None
               };
             },
-            inlineFragment: {
-              let value: InlineFragment.Raw.t = Obj.magic(value);
-              InlineFragment.verifyArgsAndParse(value);
+            inlineListFragment: {
+              let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+              InlineListFragment.verifyArgsAndParse(
+                ~fragmentName=\`InlineListFragment,
+                value,
+              );
             },
           }: t_l4
         );
       },
       l5: {
         let value = (value: Raw.t).l5;
-        FragmentWithArgs.verifyArgsAndParse(~arg1=\`String, value);
+
+        FragmentWithArgs.verifyArgsAndParse(
+          ~arg1=\`String,
+          ~fragmentName=\`FragmentWithArgs,
+          value,
+        );
       },
     }: t
   );
@@ -2600,7 +2658,9 @@ module MyQuery = {
               [|
                 (
                   Obj.magic(
-                    InlineFragment.serialize((value: t_l4).inlineFragment),
+                    InlineListFragment.serialize(
+                      (value: t_l4).inlineListFragment,
+                    ),
                   ): Js.Json.t
                 ),
               |],
@@ -2748,6 +2808,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2764,7 +2825,8 @@ module MyQuery2 = {
     {
       lists: {
         let value = (value: Raw.t).lists;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
     }: t
   );
@@ -2869,6 +2931,7 @@ exports[`Apollo lists.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3077,6 +3140,7 @@ exports[`Apollo listsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3277,6 +3341,7 @@ exports[`Apollo listsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3506,6 +3571,7 @@ exports[`Apollo mutation.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3771,6 +3837,7 @@ exports[`Apollo mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3870,6 +3937,7 @@ exports[`Apollo mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3970,6 +4038,7 @@ type record = {
   f1: string,
   f2: string,
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4436,6 +4505,7 @@ exports[`Apollo nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4726,6 +4796,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5079,6 +5150,7 @@ exports[`Apollo omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5269,6 +5341,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5453,6 +5526,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5659,6 +5733,7 @@ exports[`Apollo omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5841,6 +5916,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6021,6 +6097,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6223,6 +6300,7 @@ exports[`Apollo pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6383,6 +6461,7 @@ exports[`Apollo pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6604,6 +6683,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6716,6 +6796,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6865,7 +6946,10 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -6963,7 +7047,8 @@ module ExternalFragmentQuery {
       {
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
-          Fragment.verifyArgsAndParse(value);
+
+          Fragment.verifyArgsAndParse(~fragmentName=\`Fragment, value);
         },
       }: t
     );
@@ -7025,6 +7110,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7201,7 +7287,10 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -7304,7 +7393,11 @@ module UnionExternalFragmentQuery {
               \`Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.verifyArgsAndParse(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=\`DogFragment,
+                    value,
+                  );
                 },
               )
             | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -7398,6 +7491,7 @@ exports[`Apollo recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7596,6 +7690,7 @@ exports[`Apollo scalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7857,6 +7952,7 @@ exports[`Apollo scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8078,6 +8174,7 @@ exports[`Apollo scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8344,6 +8441,7 @@ exports[`Apollo skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8563,6 +8661,7 @@ exports[`Apollo subscription.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8761,6 +8860,7 @@ exports[`Apollo tagged_template.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9000,6 +9100,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9241,6 +9342,7 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9482,6 +9584,7 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9745,6 +9848,7 @@ exports[`Apollo typename.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9955,6 +10059,7 @@ exports[`Apollo union.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10137,6 +10242,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10341,6 +10447,7 @@ exports[`Apollo unionPartial.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10503,6 +10610,7 @@ exports[`Apollo variant.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -11735,7 +11843,9 @@ function parse(value) {
         };
 }
 
-var verifyArgsAndParse = parse;
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
 
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -11786,7 +11896,9 @@ function parse$1(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$1;
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
 
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -11832,7 +11944,7 @@ function parse$2(value) {
         };
 }
 
-function verifyArgsAndParse$2(_arg1, value) {
+function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
   return parse$2(value);
 }
 
@@ -11890,7 +12002,9 @@ function parse$3(value) {
         };
 }
 
-var verifyArgsAndParse$3 = parse$3;
+function verifyArgsAndParse$3(_InlineListFragment, value) {
+  return parse$3(value);
+}
 
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -11920,7 +12034,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var InlineFragment = {
+var InlineListFragment = {
   query: query$2,
   Raw: Raw$3,
   parse: parse$3,
@@ -11932,13 +12046,13 @@ var InlineFragment = {
 
 var Raw$4 = { };
 
-var query$3 = \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\nfragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\nfragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$3 = \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\nfragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\nfragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$4(value) {
   var value$1 = value.l5;
   var l5 = parse$2(value$1);
   var value$2 = value.l4;
-  var inlineFragment = parse$3(value$2);
+  var inlineListFragment = parse$3(value$2);
   var value$3 = value$2[\\"nullableOfNullable\\"];
   var nullableOfNullable = !(value$3 == null) ? value$3.map((function (value) {
             if (!(value == null)) {
@@ -11948,7 +12062,7 @@ function parse$4(value) {
           })) : undefined;
   var l4 = {
     nullableOfNullable: nullableOfNullable,
-    inlineFragment: inlineFragment
+    inlineListFragment: inlineListFragment
   };
   var value$4 = value.l3;
   var frag2 = parse(value$4);
@@ -11988,7 +12102,7 @@ function serialize$4(value) {
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
-  var l4 = [serialize$3(value$2.inlineFragment)].reduce(deepMerge, {
+  var l4 = [serialize$3(value$2.inlineListFragment)].reduce(deepMerge, {
         nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
                   if (value !== undefined) {
                     return value;
@@ -12110,7 +12224,7 @@ exports.GraphQL_PPX = GraphQL_PPX;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
-exports.InlineFragment = InlineFragment;
+exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
@@ -13823,7 +13937,9 @@ function parse$2(value) {
         };
 }
 
-var verifyArgsAndParse = parse$2;
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$2(value);
+}
 
 function serialize$2(value) {
   var value$1 = value.int;
@@ -13990,7 +14106,9 @@ function parse$5(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$5;
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$5(value);
+}
 
 function serialize$5(value) {
   var value$1 = value.barkVolume;
@@ -16542,7 +16660,9 @@ function parse(value) {
         };
 }
 
-var verifyArgsAndParse = parse;
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
 
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -16593,7 +16713,9 @@ function parse$1(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$1;
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
 
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -16640,7 +16762,7 @@ function parse$2(value) {
         };
 }
 
-function verifyArgsAndParse$2(_arg1, value) {
+function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
   return parse$2(value);
 }
 
@@ -16697,7 +16819,9 @@ function parse$3(value) {
         };
 }
 
-var verifyArgsAndParse$3 = parse$3;
+function verifyArgsAndParse$3(_InlineListFragment, value) {
+  return parse$3(value);
+}
 
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -16727,7 +16851,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var InlineFragment = {
+var InlineListFragment = {
   query: query$2,
   Raw: Raw$3,
   parse: parse$3,
@@ -16739,7 +16863,7 @@ var InlineFragment = {
 
 var Raw$4 = { };
 
-var query$3 = \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\nfragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\nfragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
+var query$3 = \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\nfragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\nfragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$4(value) {
   var value$1 = value.l2;
@@ -16770,7 +16894,7 @@ function parse$4(value) {
                       }
                       
                     })) : undefined,
-            inlineFragment: parse$3(value$4)
+            inlineListFragment: parse$3(value$4)
           },
           l5: parse$2(value.l5)
         };
@@ -16781,7 +16905,7 @@ function serialize$4(value) {
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
-  var l4 = [serialize$3(value$2.inlineFragment)].reduce(deepMerge, {
+  var l4 = [serialize$3(value$2.inlineListFragment)].reduce(deepMerge, {
         nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
                   if (value !== undefined) {
                     return value;
@@ -16905,7 +17029,7 @@ exports.GraphQL_PPX = GraphQL_PPX;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
-exports.InlineFragment = InlineFragment;
+exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */
@@ -18617,7 +18741,9 @@ function parse$2(value) {
         };
 }
 
-var verifyArgsAndParse = parse$2;
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$2(value);
+}
 
 function serialize$2(value) {
   var value$1 = value.int;
@@ -18775,7 +18901,9 @@ function parse$5(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$5;
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$5(value);
+}
 
 function serialize$5(value) {
   var value$1 = value.barkVolume;
@@ -21346,7 +21474,9 @@ function parse(value) {
         };
 }
 
-var verifyArgsAndParse = parse;
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
 
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -21403,7 +21533,9 @@ function parse$1(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$1;
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
 
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -21454,7 +21586,7 @@ function parse$2(value) {
         };
 }
 
-function verifyArgsAndParse$2(_arg1, value) {
+function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
   return parse$2(value);
 }
 
@@ -21516,7 +21648,9 @@ function parse$3(value) {
         };
 }
 
-var verifyArgsAndParse$3 = parse$3;
+function verifyArgsAndParse$3(_InlineListFragment, value) {
+  return parse$3(value);
+}
 
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -21546,7 +21680,7 @@ var Z__INTERNAL$3 = {
   graphql_module: 0
 };
 
-var InlineFragment = {
+var InlineListFragment = {
   query: query$3,
   Raw: Raw$3,
   parse: parse$3,
@@ -21574,7 +21708,7 @@ var query$4 = ((frag_0, frag_1, frag_2) => require(\\"gql\\")\`
     }
     l4: lists  {
       nullableOfNullable
-      ...InlineFragment
+      ...InlineListFragment
     }
     l5: lists  {
       ...FragmentWithArgs
@@ -21614,7 +21748,7 @@ function parse$4(value) {
                       }
                       
                     })) : undefined,
-            inlineFragment: parse$3(value$4)
+            inlineListFragment: parse$3(value$4)
           },
           l5: parse$2(value.l5)
         };
@@ -21625,7 +21759,7 @@ function serialize$4(value) {
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
-  var l4 = [serialize$3(value$2.inlineFragment)].reduce(deepMerge, {
+  var l4 = [serialize$3(value$2.inlineListFragment)].reduce(deepMerge, {
         nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
                   if (value !== undefined) {
                     return value;
@@ -21756,7 +21890,7 @@ exports.GraphQL_PPX = GraphQL_PPX;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
-exports.InlineFragment = InlineFragment;
+exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* query Not a pure module */
@@ -23675,7 +23809,9 @@ function parse$2(value) {
         };
 }
 
-var verifyArgsAndParse = parse$2;
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$2(value);
+}
 
 function serialize$2(value) {
   var value$1 = value.int;
@@ -23857,7 +23993,9 @@ function parse$5(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$5;
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$5(value);
+}
 
 function serialize$5(value) {
   var value$1 = value.barkVolume;
@@ -25624,6 +25762,26 @@ exports[`Errors (Objects) deprecatedFields.re 1`] = `
 Warning 22: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
 `;
 
+exports[`Errors (Objects) fragmentWithWrongName.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentWithWrongName.re 15:5-18:5
+  
+  13 ┆ {|
+  14 ┆ query MyQuery {
+  15 ┆   lists {
+  16 ┆     ...WrongFragmentName
+  17 ┆ 
+  18 ┆   }
+  19 ┆ }
+  20 ┆ |}
+  
+  This has type:
+    [1;31m[> \`WrongFragmentName ][0m
+  But somewhere wanted:
+    [1;33m[ \`ListFragment ][0m
+  The second variant type does not allow tag(s) \`WrongFragmentName"
+`;
+
 exports[`Errors (Objects) invalidArgVariableType1.re 1`] = `
 "We've found a bug for you!
   operations/errors/invalidArgVariableType1.re 9:25-28
@@ -25836,6 +25994,13 @@ exports[`Errors (Objects) missingFragment.re 1`] = `
   Unknown type \\"UnknownFragment\\""
 `;
 
+exports[`Errors (Objects) wrongArguments.re 1`] = `
+"We've found a bug for you!
+  (No file name)
+  
+  [1;33mThis call is missing an argument[0m of type (~arg1: [ \`String ])"
+`;
+
 exports[`Errors (Records) InvalidObjectValues2.re 1`] = `
 "We've found a bug for you!
   operations/errors/InvalidObjectValues2.re 8:13-18
@@ -25893,6 +26058,26 @@ exports[`Errors (Records) deprecatedFields.re 1`] = `
 7 |       deprecatedField
           ^^^^^^^^^^^^^^^
 Warning 22: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
+`;
+
+exports[`Errors (Records) fragmentWithWrongName.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentWithWrongName.re 15:5-18:5
+  
+  13 ┆ {|
+  14 ┆ query MyQuery {
+  15 ┆   lists {
+  16 ┆     ...WrongFragmentName
+  17 ┆ 
+  18 ┆   }
+  19 ┆ }
+  20 ┆ |}
+  
+  This has type:
+    [1;31m[> \`WrongFragmentName ][0m
+  But somewhere wanted:
+    [1;33m[ \`ListFragment ][0m
+  The second variant type does not allow tag(s) \`WrongFragmentName"
 `;
 
 exports[`Errors (Records) invalidArgVariableType1.re 1`] = `
@@ -26107,6 +26292,19 @@ exports[`Errors (Records) missingFragment.re 1`] = `
   Unknown type \\"UnknownFragment\\""
 `;
 
+exports[`Errors (Records) wrongArguments.re 1`] = `
+"We've found a bug for you!
+  operations/errors/wrongArguments.re 14:7-25
+  
+  12 ┆   lists {
+  13 ┆     nonNullableOfNullable
+  14 ┆     ...FragmentWithArgs
+  15 ┆   }
+  16 ┆ }
+  
+  [1;33mThis call is missing an argument[0m of type (~arg1: [ \`String ])"
+`;
+
 exports[`Legacy argNamedQuery.re 1`] = `
 "[@ocaml.ppx.context
   {
@@ -26126,6 +26324,7 @@ exports[`Legacy argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -26232,6 +26431,7 @@ exports[`Legacy comment.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -26531,6 +26731,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -26657,6 +26858,7 @@ exports[`Legacy customScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -26847,6 +27049,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27015,6 +27218,7 @@ exports[`Legacy defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27115,6 +27319,7 @@ exports[`Legacy enumInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27242,6 +27447,7 @@ exports[`Legacy explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
+
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27422,6 +27628,7 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27639,6 +27846,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27845,6 +28053,7 @@ exports[`Legacy fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -27893,7 +28102,10 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -27982,6 +28194,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -28003,7 +28216,10 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -28073,6 +28289,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -28106,7 +28323,13 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | \`String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | \`String],
+        ~fragmentName as _FragmentWithArgs: [ | \`FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
@@ -28186,7 +28409,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -28234,7 +28457,13 @@ module InlineFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -28323,6 +28552,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28343,10 +28573,10 @@ module MyQuery = {
   let query =
     (
       (
-        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
+        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
         ++ FragmentWithArgs.query
       )
-      ++ InlineFragment.query
+      ++ InlineListFragment.query
     )
     ++ ListFragment.query;
   type t_l2 = {
@@ -28363,7 +28593,7 @@ module MyQuery = {
   type t_l4 = {
     .
     \\"nullableOfNullable\\": option(array(option(string))),
-    \\"inlineFragment\\": InlineFragment.t_Lists,
+    \\"inlineListFragment\\": InlineListFragment.t_Lists,
   };
   type t = {
     .
@@ -28378,13 +28608,22 @@ module MyQuery = {
   let parse = (value: Raw.t): t => {
     let l5 = {
       let value = value##l5;
-      FragmentWithArgs.verifyArgsAndParse(~arg1=\`String, value);
+
+      FragmentWithArgs.verifyArgsAndParse(
+        ~arg1=\`String,
+        ~fragmentName=\`FragmentWithArgs,
+        value,
+      );
     }
     and l4 = {
       let value = value##l4;
-      let inlineFragment = {
-        let value: InlineFragment.Raw.t = Obj.magic(value);
-        InlineFragment.verifyArgsAndParse(value);
+      let inlineListFragment = {
+        let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+        InlineListFragment.verifyArgsAndParse(
+          ~fragmentName=\`InlineListFragment,
+          value,
+        );
       }
       and nullableOfNullable = {
         let value =
@@ -28407,18 +28646,20 @@ module MyQuery = {
       };
       {
         \\"nullableOfNullable\\": nullableOfNullable,
-        \\"inlineFragment\\": inlineFragment,
+        \\"inlineListFragment\\": inlineListFragment,
       };
     }
     and l3 = {
       let value = value##l3;
       let frag2 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and frag1 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and nullableOfNullable = {
         let value =
@@ -28449,17 +28690,20 @@ module MyQuery = {
       let value = value##l2;
       let frag2 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and frag1 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       };
       {\\"frag1\\": frag1, \\"frag2\\": frag2};
     }
     and l1 = {
       let value = value##l1;
-      ListFragment.verifyArgsAndParse(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
     };
     {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4, \\"l5\\": l5};
   };
@@ -28498,7 +28742,9 @@ module MyQuery = {
             ): Js.Json.t,
             [|
               (
-                Obj.magic(InlineFragment.serialize(value##inlineFragment)): Js.Json.t
+                Obj.magic(
+                  InlineListFragment.serialize(value##inlineListFragment),
+                ): Js.Json.t
               ),
             |],
           ),
@@ -28631,6 +28877,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28646,7 +28893,8 @@ module MyQuery2 = {
   let parse = (value: Raw.t): t => {
     let lists = {
       let value = value##lists;
-      ListFragment.verifyArgsAndParse(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
     };
     {\\"lists\\": lists};
   };
@@ -28754,6 +29002,7 @@ exports[`Legacy lists.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28953,6 +29202,7 @@ exports[`Legacy listsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29165,6 +29415,7 @@ exports[`Legacy listsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29377,6 +29628,7 @@ exports[`Legacy mutation.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29590,6 +29842,7 @@ exports[`Legacy mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29696,6 +29949,7 @@ exports[`Legacy mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29806,6 +30060,7 @@ type record = {
   f1: string,
   f2: string,
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30133,6 +30388,7 @@ exports[`Legacy nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30400,6 +30656,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30727,6 +30984,7 @@ exports[`Legacy omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30882,6 +31140,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31031,6 +31290,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31202,6 +31462,7 @@ exports[`Legacy omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31363,6 +31624,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31522,6 +31784,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31703,6 +31966,7 @@ exports[`Legacy pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31851,6 +32115,7 @@ exports[`Legacy pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32046,6 +32311,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32149,6 +32415,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32279,7 +32546,10 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => {
       let int = {
@@ -32370,7 +32640,8 @@ module ExternalFragmentQuery {
     let parse = (value: Raw.t): t => {
       let variousScalars = {
         let value = value##variousScalars;
-        Fragment.verifyArgsAndParse(value);
+
+        Fragment.verifyArgsAndParse(~fragmentName=\`Fragment, value);
       };
       {\\"variousScalars\\": variousScalars};
     };
@@ -32435,6 +32706,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32602,7 +32874,10 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => {
       let barkVolume = {
@@ -32698,7 +32973,11 @@ module UnionExternalFragmentQuery {
             \`Dog(
               {
                 let value: DogFragment.Raw.t = Obj.magic(value);
-                DogFragment.verifyArgsAndParse(value);
+
+                DogFragment.verifyArgsAndParse(
+                  ~fragmentName=\`DogFragment,
+                  value,
+                );
               },
             )
           | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -32795,6 +33074,7 @@ exports[`Legacy recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32977,6 +33257,7 @@ exports[`Legacy scalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33235,6 +33516,7 @@ exports[`Legacy scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33474,6 +33756,7 @@ exports[`Legacy scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33710,6 +33993,7 @@ exports[`Legacy skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33908,6 +34192,7 @@ exports[`Legacy subscription.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34080,6 +34365,7 @@ exports[`Legacy tagged_template.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34316,6 +34602,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34554,6 +34841,7 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34792,6 +35080,7 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35052,6 +35341,7 @@ exports[`Legacy typename.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35262,6 +35552,7 @@ exports[`Legacy union.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35423,6 +35714,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35606,6 +35898,7 @@ exports[`Legacy unionPartial.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35760,6 +36053,7 @@ exports[`Legacy variant.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36018,6 +36312,7 @@ exports[`Objects argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36114,6 +36409,7 @@ exports[`Objects comment.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36403,6 +36699,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36524,6 +36821,7 @@ exports[`Objects customScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36704,6 +37002,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36867,6 +37166,7 @@ exports[`Objects defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36962,6 +37262,7 @@ exports[`Objects enumInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37079,6 +37380,7 @@ exports[`Objects explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
+
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37254,6 +37556,7 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37466,6 +37769,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37667,6 +37971,7 @@ exports[`Objects fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -37715,7 +38020,10 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -37804,6 +38112,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -37825,7 +38134,10 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -37895,6 +38207,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -37928,7 +38241,13 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | \`String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | \`String],
+        ~fragmentName as _FragmentWithArgs: [ | \`FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
@@ -38008,7 +38327,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -38056,7 +38375,13 @@ module InlineFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => {
     let nullableOfNonNullable = {
@@ -38145,6 +38470,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38165,10 +38491,10 @@ module MyQuery = {
   let query =
     (
       (
-        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
+        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
         ++ FragmentWithArgs.query
       )
-      ++ InlineFragment.query
+      ++ InlineListFragment.query
     )
     ++ ListFragment.query;
   type t_l2 = {
@@ -38185,7 +38511,7 @@ module MyQuery = {
   type t_l4 = {
     .
     \\"nullableOfNullable\\": option(array(option(string))),
-    \\"inlineFragment\\": InlineFragment.t_Lists,
+    \\"inlineListFragment\\": InlineListFragment.t_Lists,
   };
   type t = {
     .
@@ -38200,13 +38526,22 @@ module MyQuery = {
   let parse = (value: Raw.t): t => {
     let l5 = {
       let value = value##l5;
-      FragmentWithArgs.verifyArgsAndParse(~arg1=\`String, value);
+
+      FragmentWithArgs.verifyArgsAndParse(
+        ~arg1=\`String,
+        ~fragmentName=\`FragmentWithArgs,
+        value,
+      );
     }
     and l4 = {
       let value = value##l4;
-      let inlineFragment = {
-        let value: InlineFragment.Raw.t = Obj.magic(value);
-        InlineFragment.verifyArgsAndParse(value);
+      let inlineListFragment = {
+        let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+        InlineListFragment.verifyArgsAndParse(
+          ~fragmentName=\`InlineListFragment,
+          value,
+        );
       }
       and nullableOfNullable = {
         let value =
@@ -38229,18 +38564,20 @@ module MyQuery = {
       };
       {
         \\"nullableOfNullable\\": nullableOfNullable,
-        \\"inlineFragment\\": inlineFragment,
+        \\"inlineListFragment\\": inlineListFragment,
       };
     }
     and l3 = {
       let value = value##l3;
       let frag2 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and frag1 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and nullableOfNullable = {
         let value =
@@ -38271,17 +38608,20 @@ module MyQuery = {
       let value = value##l2;
       let frag2 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       }
       and frag1 = {
         let value: ListFragment.Raw.t = Obj.magic(value);
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       };
       {\\"frag1\\": frag1, \\"frag2\\": frag2};
     }
     and l1 = {
       let value = value##l1;
-      ListFragment.verifyArgsAndParse(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
     };
     {\\"l1\\": l1, \\"l2\\": l2, \\"l3\\": l3, \\"l4\\": l4, \\"l5\\": l5};
   };
@@ -38320,7 +38660,9 @@ module MyQuery = {
             ): Js.Json.t,
             [|
               (
-                Obj.magic(InlineFragment.serialize(value##inlineFragment)): Js.Json.t
+                Obj.magic(
+                  InlineListFragment.serialize(value##inlineListFragment),
+                ): Js.Json.t
               ),
             |],
           ),
@@ -38443,6 +38785,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38458,7 +38801,8 @@ module MyQuery2 = {
   let parse = (value: Raw.t): t => {
     let lists = {
       let value = value##lists;
-      ListFragment.verifyArgsAndParse(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
     };
     {\\"lists\\": lists};
   };
@@ -38561,6 +38905,7 @@ exports[`Objects lists.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38755,6 +39100,7 @@ exports[`Objects listsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38942,6 +39288,7 @@ exports[`Objects listsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39144,6 +39491,7 @@ exports[`Objects mutation.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39352,6 +39700,7 @@ exports[`Objects mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39448,6 +39797,7 @@ exports[`Objects mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39548,6 +39898,7 @@ type record = {
   f1: string,
   f2: string,
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39870,6 +40221,7 @@ exports[`Objects nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40127,6 +40479,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40444,6 +40797,7 @@ exports[`Objects omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40594,6 +40948,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40738,6 +41093,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40904,6 +41260,7 @@ exports[`Objects omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41060,6 +41417,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41214,6 +41572,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41390,6 +41749,7 @@ exports[`Objects pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41533,6 +41893,7 @@ exports[`Objects pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41718,6 +42079,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41816,6 +42178,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41941,7 +42304,10 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => {
       let int = {
@@ -42032,7 +42398,8 @@ module ExternalFragmentQuery {
     let parse = (value: Raw.t): t => {
       let variousScalars = {
         let value = value##variousScalars;
-        Fragment.verifyArgsAndParse(value);
+
+        Fragment.verifyArgsAndParse(~fragmentName=\`Fragment, value);
       };
       {\\"variousScalars\\": variousScalars};
     };
@@ -42092,6 +42459,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42254,7 +42622,10 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => {
       let barkVolume = {
@@ -42350,7 +42721,11 @@ module UnionExternalFragmentQuery {
             \`Dog(
               {
                 let value: DogFragment.Raw.t = Obj.magic(value);
-                DogFragment.verifyArgsAndParse(value);
+
+                DogFragment.verifyArgsAndParse(
+                  ~fragmentName=\`DogFragment,
+                  value,
+                );
               },
             )
           | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -42442,6 +42817,7 @@ exports[`Objects recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42614,6 +42990,7 @@ exports[`Objects scalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42867,6 +43244,7 @@ exports[`Objects scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43069,6 +43447,7 @@ exports[`Objects scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43295,6 +43674,7 @@ exports[`Objects skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43483,6 +43863,7 @@ exports[`Objects subscription.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43650,6 +44031,7 @@ exports[`Objects tagged_template.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43881,6 +44263,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44114,6 +44497,7 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44347,6 +44731,7 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44602,6 +44987,7 @@ exports[`Objects typename.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44807,6 +45193,7 @@ exports[`Objects union.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44963,6 +45350,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45141,6 +45529,7 @@ exports[`Objects unionPartial.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45290,6 +45679,7 @@ exports[`Objects variant.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45543,6 +45933,7 @@ exports[`Records argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45656,6 +46047,7 @@ exports[`Records comment.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45978,6 +46370,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46107,6 +46500,7 @@ exports[`Records customScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46321,6 +46715,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46482,6 +46877,7 @@ exports[`Records defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46596,6 +46992,7 @@ exports[`Records enumInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46738,6 +47135,7 @@ exports[`Records explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
+
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46913,6 +47311,7 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47125,6 +47524,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47329,6 +47729,7 @@ exports[`Records fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -47373,7 +47774,10 @@ module ListFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -47461,6 +47865,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -47483,7 +47888,10 @@ module Another = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -47555,6 +47963,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -47586,7 +47995,13 @@ module FragmentWithArgs = {
       },
     }: t
   );
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | \`String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | \`String],
+        ~fragmentName as _FragmentWithArgs: [ | \`FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
@@ -47668,7 +48083,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
@@ -47712,7 +48127,13 @@ module InlineFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -47800,6 +48221,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47819,10 +48241,10 @@ module MyQuery = {
   let query =
     (
       (
-        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
+        \\"query MyQuery($arg1: String)  {\\\\nl1: lists  {\\\\n...ListFragment   \\\\n}\\\\n\\\\nl2: lists  {\\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl3: lists  {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n...ListFragment   \\\\n}\\\\n\\\\nl4: lists  {\\\\nnullableOfNullable  \\\\n...InlineListFragment   \\\\n}\\\\n\\\\nl5: lists  {\\\\n...FragmentWithArgs   \\\\n}\\\\n\\\\n}\\\\n\\"
         ++ FragmentWithArgs.query
       )
-      ++ InlineFragment.query
+      ++ InlineListFragment.query
     )
     ++ ListFragment.query;
   type t_l2 = {
@@ -47836,7 +48258,7 @@ module MyQuery = {
   };
   type t_l4 = {
     nullableOfNullable: option(array(option(string))),
-    inlineFragment: InlineFragment.t_Lists,
+    inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
     l1: ListFragment.t,
@@ -47851,7 +48273,8 @@ module MyQuery = {
     {
       l1: {
         let value = (value: Raw.t).l1;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
       l2: {
         let value = (value: Raw.t).l2;
@@ -47859,11 +48282,19 @@ module MyQuery = {
           {
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l2
         );
@@ -47893,11 +48324,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l3
         );
@@ -47925,16 +48364,25 @@ module MyQuery = {
               | None => None
               };
             },
-            inlineFragment: {
-              let value: InlineFragment.Raw.t = Obj.magic(value);
-              InlineFragment.verifyArgsAndParse(value);
+            inlineListFragment: {
+              let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+              InlineListFragment.verifyArgsAndParse(
+                ~fragmentName=\`InlineListFragment,
+                value,
+              );
             },
           }: t_l4
         );
       },
       l5: {
         let value = (value: Raw.t).l5;
-        FragmentWithArgs.verifyArgsAndParse(~arg1=\`String, value);
+
+        FragmentWithArgs.verifyArgsAndParse(
+          ~arg1=\`String,
+          ~fragmentName=\`FragmentWithArgs,
+          value,
+        );
       },
     }: t
   );
@@ -47975,7 +48423,9 @@ module MyQuery = {
               [|
                 (
                   Obj.magic(
-                    InlineFragment.serialize((value: t_l4).inlineFragment),
+                    InlineListFragment.serialize(
+                      (value: t_l4).inlineListFragment,
+                    ),
                   ): Js.Json.t
                 ),
               |],
@@ -48108,6 +48558,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48124,7 +48575,8 @@ module MyQuery2 = {
     {
       lists: {
         let value = (value: Raw.t).lists;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
     }: t
   );
@@ -48229,6 +48681,7 @@ exports[`Records lists.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48426,6 +48879,7 @@ exports[`Records listsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48626,6 +49080,7 @@ exports[`Records listsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48855,6 +49310,7 @@ exports[`Records mutation.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49081,6 +49537,7 @@ exports[`Records mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49180,6 +49637,7 @@ exports[`Records mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49280,6 +49738,7 @@ type record = {
   f1: string,
   f2: string,
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49618,6 +50077,7 @@ exports[`Records nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49908,6 +50368,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50261,6 +50722,7 @@ exports[`Records omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50428,6 +50890,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50589,6 +51052,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50772,6 +51236,7 @@ exports[`Records omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50934,6 +51399,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51094,6 +51560,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51276,6 +51743,7 @@ exports[`Records pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51426,6 +51894,7 @@ exports[`Records pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51637,6 +52106,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51740,6 +52210,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51869,7 +52340,10 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -51963,7 +52437,8 @@ module ExternalFragmentQuery {
       {
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
-          Fragment.verifyArgsAndParse(value);
+
+          Fragment.verifyArgsAndParse(~fragmentName=\`Fragment, value);
         },
       }: t
     );
@@ -52025,6 +52500,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52186,7 +52662,10 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -52285,7 +52764,11 @@ module UnionExternalFragmentQuery {
               \`Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.verifyArgsAndParse(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=\`DogFragment,
+                    value,
+                  );
                 },
               )
             | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -52379,6 +52862,7 @@ exports[`Records recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52577,6 +53061,7 @@ exports[`Records scalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52827,6 +53312,7 @@ exports[`Records scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53048,6 +53534,7 @@ exports[`Records scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53314,6 +53801,7 @@ exports[`Records skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53513,6 +54001,7 @@ exports[`Records subscription.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53687,6 +54176,7 @@ exports[`Records tagged_template.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53915,6 +54405,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54145,6 +54636,7 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54375,6 +54867,7 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54627,6 +55120,7 @@ exports[`Records typename.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54837,6 +55331,7 @@ exports[`Records union.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54999,6 +55494,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55183,6 +55679,7 @@ exports[`Records unionPartial.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55336,6 +55833,7 @@ exports[`Records variant.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55609,6 +56107,7 @@ exports[`Template argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55724,6 +56223,7 @@ exports[`Template comment.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56048,6 +56548,7 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56179,6 +56680,7 @@ exports[`Template customScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56395,6 +56897,7 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56558,6 +57061,7 @@ exports[`Template defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56674,6 +57178,7 @@ exports[`Template enumInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56818,6 +57323,7 @@ exports[`Template explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
+
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56995,6 +57501,7 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57209,6 +57716,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57415,6 +57923,7 @@ exports[`Template fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
+
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -57461,7 +57970,10 @@ module ListFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -57549,6 +58061,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module Another = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -57573,7 +58086,10 @@ module Another = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -57645,6 +58161,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
@@ -57678,7 +58195,13 @@ module FragmentWithArgs = {
       },
     }: t
   );
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | \`String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | \`String],
+        ~fragmentName as _FragmentWithArgs: [ | \`FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
@@ -57760,7 +58283,7 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
   /**The GraphQL query string*/
   let query = [%raw
@@ -57806,7 +58329,13 @@ module InlineFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -57894,6 +58423,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57912,10 +58442,10 @@ module MyQuery = {
   /**The GraphQL query string*/
   let query =
     [%raw
-      \\"(frag_0, frag_1, frag_2) => require(\\\\\\"gql\\\\\\")\`\\\\n  query MyQuery($arg1: String)  {\\\\n    l1: lists  {\\\\n      ...ListFragment\\\\n    }\\\\n    l2: lists  {\\\\n      ...ListFragment\\\\n      ...ListFragment\\\\n    }\\\\n    l3: lists  {\\\\n      nullableOfNullable\\\\n      ...ListFragment\\\\n      ...ListFragment\\\\n    }\\\\n    l4: lists  {\\\\n      nullableOfNullable\\\\n      ...InlineFragment\\\\n    }\\\\n    l5: lists  {\\\\n      ...FragmentWithArgs\\\\n    }\\\\n  }\\\\n\${frag_0}\\\\n\${frag_1}\\\\n\${frag_2}\\\\n\`\\"
+      \\"(frag_0, frag_1, frag_2) => require(\\\\\\"gql\\\\\\")\`\\\\n  query MyQuery($arg1: String)  {\\\\n    l1: lists  {\\\\n      ...ListFragment\\\\n    }\\\\n    l2: lists  {\\\\n      ...ListFragment\\\\n      ...ListFragment\\\\n    }\\\\n    l3: lists  {\\\\n      nullableOfNullable\\\\n      ...ListFragment\\\\n      ...ListFragment\\\\n    }\\\\n    l4: lists  {\\\\n      nullableOfNullable\\\\n      ...InlineListFragment\\\\n    }\\\\n    l5: lists  {\\\\n      ...FragmentWithArgs\\\\n    }\\\\n  }\\\\n\${frag_0}\\\\n\${frag_1}\\\\n\${frag_2}\\\\n\`\\"
     ](
       FragmentWithArgs.query,
-      InlineFragment.query,
+      InlineListFragment.query,
       ListFragment.query,
     );
   type t_l2 = {
@@ -57929,7 +58459,7 @@ module MyQuery = {
   };
   type t_l4 = {
     nullableOfNullable: option(array(option(string))),
-    inlineFragment: InlineFragment.t_Lists,
+    inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
     l1: ListFragment.t,
@@ -57944,7 +58474,8 @@ module MyQuery = {
     {
       l1: {
         let value = (value: Raw.t).l1;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
       l2: {
         let value = (value: Raw.t).l2;
@@ -57952,11 +58483,19 @@ module MyQuery = {
           {
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l2
         );
@@ -57986,11 +58525,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=\`ListFragment,
+                value,
+              );
             },
           }: t_l3
         );
@@ -58018,16 +58565,25 @@ module MyQuery = {
               | None => None
               };
             },
-            inlineFragment: {
-              let value: InlineFragment.Raw.t = Obj.magic(value);
-              InlineFragment.verifyArgsAndParse(value);
+            inlineListFragment: {
+              let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+              InlineListFragment.verifyArgsAndParse(
+                ~fragmentName=\`InlineListFragment,
+                value,
+              );
             },
           }: t_l4
         );
       },
       l5: {
         let value = (value: Raw.t).l5;
-        FragmentWithArgs.verifyArgsAndParse(~arg1=\`String, value);
+
+        FragmentWithArgs.verifyArgsAndParse(
+          ~arg1=\`String,
+          ~fragmentName=\`FragmentWithArgs,
+          value,
+        );
       },
     }: t
   );
@@ -58068,7 +58624,9 @@ module MyQuery = {
               [|
                 (
                   Obj.magic(
-                    InlineFragment.serialize((value: t_l4).inlineFragment),
+                    InlineListFragment.serialize(
+                      (value: t_l4).inlineListFragment,
+                    ),
                   ): Js.Json.t
                 ),
               |],
@@ -58201,6 +58759,7 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58221,7 +58780,8 @@ module MyQuery2 = {
     {
       lists: {
         let value = (value: Raw.t).lists;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
       },
     }: t
   );
@@ -58326,6 +58886,7 @@ exports[`Template lists.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58525,6 +59086,7 @@ exports[`Template listsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58727,6 +59289,7 @@ exports[`Template listsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58958,6 +59521,7 @@ exports[`Template mutation.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59186,6 +59750,7 @@ exports[`Template mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59287,6 +59852,7 @@ exports[`Template mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59389,6 +59955,7 @@ type record = {
   f1: string,
   f2: string,
 };
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59729,6 +60296,7 @@ exports[`Template nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60021,6 +60589,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60376,6 +60945,7 @@ exports[`Template omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60545,6 +61115,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60708,6 +61279,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60893,6 +61465,7 @@ exports[`Template omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
+
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61057,6 +61630,7 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61219,6 +61793,7 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61403,6 +61978,7 @@ exports[`Template pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61555,6 +62131,7 @@ exports[`Template pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61768,6 +62345,7 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61873,6 +62451,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62006,7 +62585,10 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -62103,7 +62685,8 @@ module ExternalFragmentQuery {
       {
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
-          Fragment.verifyArgsAndParse(value);
+
+          Fragment.verifyArgsAndParse(~fragmentName=\`Fragment, value);
         },
       }: t
     );
@@ -62165,6 +62748,7 @@ module ExternalFragmentQuery {
     };
   };
 };
+
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62330,7 +62914,10 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -62432,7 +63019,11 @@ module UnionExternalFragmentQuery {
               \`Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.verifyArgsAndParse(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=\`DogFragment,
+                    value,
+                  );
                 },
               )
             | _ => \`FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -62526,6 +63117,7 @@ exports[`Template recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62726,6 +63318,7 @@ exports[`Template scalars.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62978,6 +63571,7 @@ exports[`Template scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63201,6 +63795,7 @@ exports[`Template scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63469,6 +64064,7 @@ exports[`Template skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63670,6 +64266,7 @@ exports[`Template subscription.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63846,6 +64443,7 @@ exports[`Template tagged_template.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64076,6 +64674,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64306,6 +64905,7 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64536,6 +65136,7 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64788,6 +65389,7 @@ exports[`Template typename.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65000,6 +65602,7 @@ exports[`Template union.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65164,6 +65767,7 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
+
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65350,6 +65954,7 @@ exports[`Template unionPartial.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65505,6 +66110,7 @@ exports[`Template variant.re 1`] = `
     cookies: [],
   }
 ];
+
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {

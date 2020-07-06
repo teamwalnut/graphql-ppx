@@ -34,6 +34,7 @@ module Parent = {
     let use = () => ();
   };
 };
+
 module Bla' = {
   [@ocaml.warning "-32"];
   module Raw = {

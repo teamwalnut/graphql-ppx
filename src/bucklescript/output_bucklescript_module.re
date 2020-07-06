@@ -80,17 +80,6 @@ let compress_parts = (parts: array(Graphql_printer.t)) => {
   );
 };
 
-let make_fragment_name = f => {
-  Exp.ident({
-    Location.txt: Longident.parse(f ++ ".name"),
-    loc: Location.none,
-  });
-};
-
-let make_fragment_name_from_module_name = f => {
-  f |> String.split_on_char('.') |> List.rev |> List.hd;
-};
-
 let make_fragment_query = f => {
   Exp.ident({
     Location.txt: Longident.parse(f ++ ".query"),
@@ -338,23 +327,23 @@ let make_printed_query = (config, document) => {
   reprinted;
 };
 
-let wrap_module = (name: string, contents) => {
+let wrap_module = (~loc, name: string, contents) => {
   {
     pstr_desc:
       Pstr_module({
         pmb_name: {
           txt: Generator_utils.capitalize_ascii(name),
-          loc: Location.none,
+          loc,
         },
         pmb_expr: Mod.structure(contents),
         pmb_attributes: [],
-        pmb_loc: Location.none,
+        pmb_loc: loc,
       }),
-    pstr_loc: Location.none,
+    pstr_loc: loc,
   };
 };
 
-let wrap_query_module = (definition, name: string, contents, config) => {
+let wrap_query_module = (~loc, definition, name: string, contents, config) => {
   let module_name = Generator_utils.capitalize_ascii(name ++ "'");
   let funct =
     switch (config.extend) {
@@ -387,24 +376,22 @@ let wrap_query_module = (definition, name: string, contents, config) => {
   | Some(funct) =>
     let inner_result = [
       Str.include_(
-        Incl.mk(
-          Mod.ident({txt: Longident.parse(module_name), loc: Location.none}),
-        ),
+        Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
       ),
       Str.include_(
         Incl.mk(
           Mod.apply(
-            Mod.ident({txt: Longident.parse(funct), loc: Location.none}),
-            Mod.ident({
-              txt: Longident.parse(module_name),
-              loc: Location.none,
-            }),
+            Mod.ident({txt: Longident.parse(funct), loc}),
+            Mod.ident({txt: Longident.parse(module_name), loc}),
           ),
         ),
       ),
     ];
-    [wrap_module(module_name, contents), wrap_module(name, inner_result)];
-  | None => [wrap_module(name, contents)]
+    [
+      wrap_module(~loc, module_name, contents),
+      wrap_module(~loc, name, inner_result),
+    ];
+  | None => [wrap_module(~loc, name, contents)]
   };
 };
 
@@ -482,7 +469,13 @@ let generate_default_operation =
       List.concat([
         List.concat([
           [[%stri [@ocaml.warning "-32"]]],
-          [wrap_module("Raw", List.append(raw_types, raw_arg_types))],
+          [
+            wrap_module(
+              ~loc=Location.none,
+              "Raw",
+              List.append(raw_types, raw_arg_types),
+            ),
+          ],
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -562,6 +555,7 @@ let generate_default_operation =
     ),
     name,
     contents,
+    operation.span |> config.map_loc |> conv_loc,
   );
 };
 
@@ -655,7 +649,25 @@ let generate_fragment_module =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
       let verify_parse =
         make_labeled_fun(
-          [%expr (value: Raw.t) => parse(value)],
+          Exp.fun_(
+            Labelled("fragmentName"),
+            None,
+            Pat.constraint_(
+              Pat.var({txt: "_" ++ name, loc: Location.none}),
+              Typ.variant(
+                [
+                  {
+                    prf_desc: Rtag({txt: name, loc: Location.none}, true, []),
+                    prf_loc: Location.none,
+                    prf_attributes: [],
+                  },
+                ],
+                Closed,
+                None,
+              ),
+            ),
+            [%expr (value: Raw.t) => parse(value)],
+          ),
           required_variables,
         );
       // Add to internal module
@@ -673,7 +685,7 @@ let generate_fragment_module =
                 make_let("query", printed_query, query_docstring)
               ),
             ],
-            [wrap_module("Raw", raw_types)],
+            [wrap_module(~loc=Location.none, "Raw", raw_types)],
             types,
             [
               Output_bucklescript_docstrings.(
@@ -694,13 +706,6 @@ let generate_fragment_module =
                 )
               ),
             ],
-            // [
-            //   [%stri
-            //     let name = [%e
-            //       Ast_helper.Exp.constant(Pconst_string(name, None))
-            //     ]
-            //   ],
-            // ],
             [
               [%stri
                 let verifyName = [%e
@@ -730,7 +735,12 @@ let generate_fragment_module =
       );
     };
 
-  (Fragment, Some(Generator_utils.capitalize_ascii(name)), contents);
+  (
+    Fragment,
+    Some(Generator_utils.capitalize_ascii(name)),
+    contents,
+    fragment.span |> config.map_loc |> conv_loc,
+  );
 };
 
 let generate_definition = config =>
@@ -752,11 +762,12 @@ let generate_modules = (config, module_name, operations) => {
   | [] => []
   | [operation] =>
     switch (generate_definition(config, operation)) {
-    | (definition, Some(name), contents) =>
+    | (definition, Some(name), contents, loc) =>
       config.inline
         ? [contents]
         : [
           wrap_query_module(
+            ~loc,
             definition,
             switch (module_name) {
             | Some(name) => name
@@ -766,10 +777,10 @@ let generate_modules = (config, module_name, operations) => {
             config,
           ),
         ]
-    | (definition, None, contents) =>
+    | (definition, None, contents, loc) =>
       switch (module_name) {
       | Some(name) => [
-          wrap_query_module(definition, name, contents, config),
+          wrap_query_module(~loc, definition, name, contents, config),
         ]
       | None => [contents]
       }
@@ -778,12 +789,13 @@ let generate_modules = (config, module_name, operations) => {
     let contents =
       operations
       |> List.map(generate_definition(config))
-      |> List.mapi((i, (definition, name, contents)) =>
+      |> List.mapi((i, (definition, name, contents, loc)) =>
            switch (name) {
            | Some(name) =>
-             wrap_query_module(definition, name, contents, config)
+             wrap_query_module(~loc, definition, name, contents, config)
            | None =>
              wrap_query_module(
+               ~loc,
                definition,
                "Untitled" ++ string_of_int(i),
                contents,
@@ -793,7 +805,9 @@ let generate_modules = (config, module_name, operations) => {
          );
     switch (module_name) {
     | Some(module_name) => [
-        [wrap_module(module_name, List.concat(contents))],
+        [
+          wrap_module(~loc=Location.none, module_name, List.concat(contents)),
+        ],
       ]
     | None => contents
     };
