@@ -223,8 +223,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
       type t = {
         .
@@ -238,6 +236,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -540,8 +540,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
         .
@@ -555,6 +553,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {

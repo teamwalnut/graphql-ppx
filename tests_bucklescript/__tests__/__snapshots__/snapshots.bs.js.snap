@@ -1888,8 +1888,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       __typename: string,
@@ -1904,6 +1902,8 @@ module ListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -2033,8 +2033,6 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       __typename: string,
@@ -2047,6 +2045,8 @@ module Another = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -2144,8 +2144,6 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment FragmentWithArgs on Lists   {\\\\n__typename  \\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       __typename: string,
@@ -2158,6 +2156,8 @@ module FragmentWithArgs = {
     listWithArg: option(array(option(string))),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment FragmentWithArgs on Lists   {\\\\n__typename  \\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -2276,8 +2276,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment InlineListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       __typename: string,
@@ -2292,6 +2290,8 @@ module InlineListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment InlineListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -2852,6 +2852,308 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Apollo fragmentInFragment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t = {
+      __typename: string,
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    __typename: string,
+    nullableOfNullable: option(array(option(string))),
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\n}\\\\n\\";
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      __typename: {
+        let value = (value: Raw.t).__typename;
+        value;
+      },
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
+        };
+      }
+      and __typename = {
+        let value = (value: t).__typename;
+        value;
+      };
+      {__typename, nullableOfNullable};
+    }: Raw.t
+  );
+  let verifyName =
+    fun
+    | \`ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+
+module Another = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    __typename: string,
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query =
+    \\"fragment Another on Lists   {\\\\n__typename  \\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\"
+    ++ ListFragment.query;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      __typename: {
+        let value =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \\"__typename\\"));
+        value;
+      },
+      nullableOfNullable: {
+        let value =
+          Obj.magic(
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
+          );
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+      listFragment: {
+        let value: ListFragment.Raw.t = Obj.magic(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    Obj.magic(
+      Js.Array.reduce(
+        GraphQL_PPX.deepMerge,
+        Obj.magic(
+          {
+            let nullableOfNullable = {
+              let value = (value: t).nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (value) {
+                       | Some(value) => Js.Nullable.return(value)
+                       | None => Js.Nullable.null
+                       }
+                     ),
+                )
+              | None => Js.Nullable.null
+              };
+            }
+            and __typename = {
+              let value = (value: t).__typename;
+              value;
+            };
+            {
+              \\"__typename\\": __typename,
+              \\"nullableOfNullable\\": nullableOfNullable,
+            };
+          },
+        ): Js.Json.t,
+        [|
+          (
+            Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
+          ),
+        |],
+      ),
+    ): Raw.t
+  );
+  let verifyName =
+    fun
+    | \`Another => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
   /**
   The GraphQL query string
   */
@@ -6909,8 +7211,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         __typename: string,
@@ -6925,6 +7225,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment Fragment on VariousScalars   {\\\\n__typename  \\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -7249,8 +7551,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         __typename: string,
@@ -7265,6 +7565,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment DogFragment on Dog   {\\\\n__typename  \\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -11815,9 +12117,9 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
-
 var Raw = { };
+
+var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -11870,8 +12172,8 @@ var Z__INTERNAL = {
 };
 
 var ListFragment = {
-  query: query,
   Raw: Raw,
+  query: query,
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
@@ -11913,8 +12215,8 @@ var Z__INTERNAL$1 = {
 };
 
 var Another = {
-  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
   Raw: Raw$1,
+  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
@@ -11922,9 +12224,9 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query$1 = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
-
 var Raw$2 = { };
+
+var query$1 = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
@@ -11965,8 +12267,8 @@ var Z__INTERNAL$2 = {
 };
 
 var FragmentWithArgs = {
-  query: query$1,
   Raw: Raw$2,
+  query: query$1,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
@@ -11974,9 +12276,9 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var query$2 = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
-
 var Raw$3 = { };
+
+var query$2 = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$3(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -12029,8 +12331,8 @@ var Z__INTERNAL$3 = {
 };
 
 var InlineListFragment = {
-  query: query$2,
   Raw: Raw$3,
+  query: query$2,
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
@@ -12221,6 +12523,125 @@ exports.FragmentWithArgs = FragmentWithArgs;
 exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Objects) fragmentInFragment.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var GraphQL_PPX = require(\\"../utilities/graphQL_PPX.js\\");
+
+var Raw = { };
+
+var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.nullableOfNullable;
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined
+        };
+}
+
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
+function serialize(value) {
+  var value$1 = value.nullableOfNullable;
+  return {
+          nullableOfNullable: value$1 !== undefined ? value$1.map((function (value) {
+                    if (value !== undefined) {
+                      return value;
+                    } else {
+                      return null;
+                    }
+                  })) : null
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var ListFragment = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"fragment Another on Lists   {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var listFragment = parse(value);
+  var value$1 = value[\\"nullableOfNullable\\"];
+  var nullableOfNullable = !(value$1 == null) ? value$1.map((function (value) {
+            if (!(value == null)) {
+              return value;
+            }
+            
+          })) : undefined;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          listFragment: listFragment
+        };
+}
+
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
+
+function serialize$1(value) {
+  var value$1 = value.nullableOfNullable;
+  return [serialize(value.listFragment)].reduce(GraphQL_PPX.deepMerge, {
+              nullableOfNullable: value$1 !== undefined ? value$1.map((function (value) {
+                        if (value !== undefined) {
+                          return value;
+                        } else {
+                          return null;
+                        }
+                      })) : null
+            });
+}
+
+function verifyName$1(param) {
+  
+}
+
+var Z__INTERNAL$1 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var Another = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  verifyArgsAndParse: verifyArgsAndParse$1,
+  serialize: serialize$1,
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$1
+};
+
+exports.ListFragment = ListFragment;
+exports.Another = Another;
 /* No side effect */
 "
 `;
@@ -13918,9 +14339,9 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
-
 var Raw$2 = { };
+
+var query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   var value$1 = value.int;
@@ -13954,8 +14375,8 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query,
   Raw: Raw$2,
+  query: query,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
@@ -14087,9 +14508,9 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var query$2 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
-
 var Raw$5 = { };
+
+var query$2 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
 
 function parse$5(value) {
   var value$1 = value.barkVolume;
@@ -14123,8 +14544,8 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$2,
   Raw: Raw$5,
+  query: query$2,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
@@ -16634,9 +17055,9 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
-
 var Raw = { };
+
+var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse(value) {
   var value$1 = value.nullableOfNullable;
@@ -16687,8 +17108,8 @@ var Z__INTERNAL = {
 };
 
 var ListFragment = {
-  query: query,
   Raw: Raw,
+  query: query,
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
@@ -16731,8 +17152,8 @@ var Z__INTERNAL$1 = {
 };
 
 var Another = {
-  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
   Raw: Raw$1,
+  query: \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\",
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
@@ -16740,9 +17161,9 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query$1 = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
-
 var Raw$2 = { };
+
+var query$1 = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
@@ -16784,8 +17205,8 @@ var Z__INTERNAL$2 = {
 };
 
 var FragmentWithArgs = {
-  query: query$1,
   Raw: Raw$2,
+  query: query$1,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
@@ -16793,9 +17214,9 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var query$2 = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
-
 var Raw$3 = { };
+
+var query$2 = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
 
 function parse$3(value) {
   var value$1 = value.nullableOfNullable;
@@ -16846,8 +17267,8 @@ var Z__INTERNAL$3 = {
 };
 
 var InlineListFragment = {
-  query: query$2,
   Raw: Raw$3,
+  query: query$2,
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
@@ -17026,6 +17447,124 @@ exports.FragmentWithArgs = FragmentWithArgs;
 exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
+/* No side effect */
+"
+`;
+
+exports[`Compilation (Records) fragmentInFragment.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var GraphQL_PPX = require(\\"../utilities/graphQL_PPX.js\\");
+
+var Raw = { };
+
+var query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+
+function parse(value) {
+  var value$1 = value.nullableOfNullable;
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined
+        };
+}
+
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
+function serialize(value) {
+  var value$1 = value.nullableOfNullable;
+  var nullableOfNullable = value$1 !== undefined ? value$1.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          nullableOfNullable: nullableOfNullable
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var ListFragment = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL
+};
+
+var Raw$1 = { };
+
+var query$1 = \\"fragment Another on Lists   {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\nfragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+
+function parse$1(value) {
+  var value$1 = value[\\"nullableOfNullable\\"];
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined,
+          listFragment: parse(value)
+        };
+}
+
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
+
+function serialize$1(value) {
+  var value$1 = value.nullableOfNullable;
+  return [serialize(value.listFragment)].reduce(GraphQL_PPX.deepMerge, {
+              nullableOfNullable: value$1 !== undefined ? value$1.map((function (value) {
+                        if (value !== undefined) {
+                          return value;
+                        } else {
+                          return null;
+                        }
+                      })) : null
+            });
+}
+
+function verifyName$1(param) {
+  
+}
+
+var Z__INTERNAL$1 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var Another = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  verifyArgsAndParse: verifyArgsAndParse$1,
+  serialize: serialize$1,
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$1
+};
+
+exports.ListFragment = ListFragment;
+exports.Another = Another;
 /* No side effect */
 "
 `;
@@ -18724,9 +19263,9 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
-
 var Raw$2 = { };
+
+var query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
 
 function parse$2(value) {
   return {
@@ -18758,8 +19297,8 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query,
   Raw: Raw$2,
+  query: query,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
@@ -18884,9 +19423,9 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var query$2 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
-
 var Raw$5 = { };
+
+var query$2 = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
 
 function parse$5(value) {
   return {
@@ -18918,8 +19457,8 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$2,
   Raw: Raw$5,
+  query: query$2,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
@@ -21443,14 +21982,14 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
+var Raw = { };
+
 var query = (require(\\"gql\\")\`
   fragment ListFragment on Lists   {
     nullableOfNullable
     nullableOfNonNullable
   }
 \`);
-
-var Raw = { };
 
 function parse(value) {
   var value$1 = value.nullableOfNullable;
@@ -21501,8 +22040,8 @@ var Z__INTERNAL = {
 };
 
 var ListFragment = {
-  query: query,
   Raw: Raw,
+  query: query,
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
@@ -21510,13 +22049,13 @@ var ListFragment = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var Raw$1 = { };
+
 var query$1 = (require(\\"gql\\")\`
   fragment Another on Lists   {
     nullableOfNonNullable
   }
 \`);
-
-var Raw$1 = { };
 
 function parse$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -21551,8 +22090,8 @@ var Z__INTERNAL$1 = {
 };
 
 var Another = {
-  query: query$1,
   Raw: Raw$1,
+  query: query$1,
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
@@ -21560,13 +22099,13 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var Raw$2 = { };
+
 var query$2 = (require(\\"gql\\")\`
   fragment FragmentWithArgs on Lists   {
     listWithArg(arg1: $arg1)
   }
 \`);
-
-var Raw$2 = { };
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
@@ -21608,8 +22147,8 @@ var Z__INTERNAL$2 = {
 };
 
 var FragmentWithArgs = {
-  query: query$2,
   Raw: Raw$2,
+  query: query$2,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
@@ -21617,14 +22156,14 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var Raw$3 = { };
+
 var query$3 = (require(\\"gql\\")\`
   fragment InlineListFragment on Lists   {
     nullableOfNullable
     nullableOfNonNullable
   }
 \`);
-
-var Raw$3 = { };
 
 function parse$3(value) {
   var value$1 = value.nullableOfNullable;
@@ -21675,8 +22214,8 @@ var Z__INTERNAL$3 = {
 };
 
 var InlineListFragment = {
-  query: query$3,
   Raw: Raw$3,
+  query: query$3,
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
@@ -21887,6 +22426,134 @@ exports.FragmentWithArgs = FragmentWithArgs;
 exports.InlineListFragment = InlineListFragment;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
+/* query Not a pure module */
+"
+`;
+
+exports[`Compilation (Template) fragmentInFragment.re 1`] = `
+"// Generated by BUCKLESCRIPT, PLEASE EDIT WITH CARE
+'use strict';
+
+var GraphQL_PPX = require(\\"../utilities/graphQL_PPX.js\\");
+
+var Raw = { };
+
+var query = (require(\\"gql\\")\`
+  fragment ListFragment on Lists   {
+    nullableOfNullable
+  }
+\`);
+
+function parse(value) {
+  var value$1 = value.nullableOfNullable;
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined
+        };
+}
+
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
+function serialize(value) {
+  var value$1 = value.nullableOfNullable;
+  var nullableOfNullable = value$1 !== undefined ? value$1.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          nullableOfNullable: nullableOfNullable
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var ListFragment = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL
+};
+
+var Raw$1 = { };
+
+var query$1 = ((frag_0) => require(\\"gql\\")\`
+  fragment Another on Lists   {
+    nullableOfNullable
+    ...ListFragment
+  }
+\${frag_0}
+\`)(query);
+
+function parse$1(value) {
+  var value$1 = value[\\"nullableOfNullable\\"];
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined,
+          listFragment: parse(value)
+        };
+}
+
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
+
+function serialize$1(value) {
+  var value$1 = value.nullableOfNullable;
+  return [serialize(value.listFragment)].reduce(GraphQL_PPX.deepMerge, {
+              nullableOfNullable: value$1 !== undefined ? value$1.map((function (value) {
+                        if (value !== undefined) {
+                          return value;
+                        } else {
+                          return null;
+                        }
+                      })) : null
+            });
+}
+
+function verifyName$1(param) {
+  
+}
+
+var Z__INTERNAL$1 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var Another = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  verifyArgsAndParse: verifyArgsAndParse$1,
+  serialize: serialize$1,
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$1
+};
+
+exports.ListFragment = ListFragment;
+exports.Another = Another;
 /* query Not a pure module */
 "
 `;
@@ -23787,14 +24454,14 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var Raw$2 = { };
+
 var query$2 = (require(\\"gql\\")\`
   fragment Fragment on VariousScalars   {
     string
     int
   }
 \`);
-
-var Raw$2 = { };
 
 function parse$2(value) {
   return {
@@ -23826,8 +24493,8 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query$2,
   Raw: Raw$2,
+  query: query$2,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
@@ -23971,14 +24638,14 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
+var Raw$5 = { };
+
 var query$5 = (require(\\"gql\\")\`
   fragment DogFragment on Dog   {
     name
     barkVolume
   }
 \`);
-
-var Raw$5 = { };
 
 function parse$5(value) {
   return {
@@ -24010,8 +24677,8 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$5,
   Raw: Raw$5,
+  query: query$5,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
@@ -25776,6 +26443,24 @@ exports[`Errors (Objects) fragmentSpreadMissing.re 1`] = `
   - Did you include the file's directory in bsconfig.json?"
 `;
 
+exports[`Errors (Objects) fragmentSpreadMissingInFragment.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentSpreadMissingInFragment.re 5:5-22
+  
+  3 │   fragment ListFragment on Lists {
+  4 │     nullableOfNullable
+  5 │     ...MissingFragment
+  6 │   }
+  7 │ |}
+  
+  [1;33mThe module or file MissingFragment can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run \`bsb\` instead of \`bsb -make-world\`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?"
+`;
+
 exports[`Errors (Objects) fragmentWithWrongName.re 1`] = `
 "We've found a bug for you!
   operations/errors/fragmentWithWrongName.re 15:5-18:5
@@ -26085,6 +26770,24 @@ exports[`Errors (Records) fragmentSpreadMissing.re 1`] = `
   6 ┆   }
   7 ┆ }
   8 ┆ |}
+  
+  [1;33mThe module or file MissingFragment can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run \`bsb\` instead of \`bsb -make-world\`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?"
+`;
+
+exports[`Errors (Records) fragmentSpreadMissingInFragment.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentSpreadMissingInFragment.re 5:5-22
+  
+  3 │   fragment ListFragment on Lists {
+  4 │     nullableOfNullable
+  5 │     ...MissingFragment
+  6 │   }
+  7 │ |}
   
   [1;33mThe module or file MissingFragment can't be found.[0m
   - If it's a third-party dependency:
@@ -28090,8 +28793,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -28106,6 +28807,8 @@ module ListFragment = {
     \\"nullableOfNonNullable\\": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -28230,14 +28933,14 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {. \\"nullableOfNonNullable\\": option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -28324,8 +29027,6 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -28335,6 +29036,8 @@ module FragmentWithArgs = {
   };
   type t = {. \\"listWithArg\\": option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let listWithArg = {
@@ -28442,8 +29145,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -28458,6 +29159,8 @@ module InlineListFragment = {
     \\"nullableOfNonNullable\\": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -28957,6 +29660,281 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Legacy fragmentInFragment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t = {
+      .
+      \\"nullableOfNullable\\": Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {. \\"nullableOfNullable\\": option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let nullableOfNullable = {
+      let value = value##nullableOfNullable;
+      switch (Js.toOption(value)) {
+      | Some(value) =>
+        Some(
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             ),
+        )
+      | None => None
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable};
+  };
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => {
+    let nullableOfNullable = {
+      let value = value##nullableOfNullable;
+      switch (value) {
+      | Some(value) =>
+        Js.Nullable.return(
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             ),
+        )
+      | None => Js.Nullable.null
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable};
+  };
+  let verifyName =
+    fun
+    | \`ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+
+module Another = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"listFragment\\": ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query =
+    \\"fragment Another on Lists   {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\"
+    ++ ListFragment.query;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let listFragment = {
+      let value: ListFragment.Raw.t = Obj.magic(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
+    }
+    and nullableOfNullable = {
+      let value =
+        Obj.magic(
+          Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
+        );
+      switch (Js.toOption(value)) {
+      | Some(value) =>
+        Some(
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             ),
+        )
+      | None => None
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable, \\"listFragment\\": listFragment};
+  };
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    Obj.magic(
+      Js.Array.reduce(
+        GraphQL_PPX.deepMerge,
+        Obj.magic(
+          {
+            let nullableOfNullable = {
+              let value = value##nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (value) {
+                       | Some(value) => Js.Nullable.return(value)
+                       | None => Js.Nullable.null
+                       }
+                     ),
+                )
+              | None => Js.Nullable.null
+              };
+            };
+            {\\"nullableOfNullable\\": nullableOfNullable};
+          },
+        ): Js.Json.t,
+        [|
+          (
+            Obj.magic(ListFragment.serialize(value##listFragment)): Js.Json.t
+          ),
+        |],
+      ),
+    ): Raw.t
+  );
+  let verifyName =
+    fun
+    | \`Another => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
   /**
   The GraphQL query string
   */
@@ -32547,8 +33525,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         .
@@ -32562,6 +33538,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -32874,8 +33852,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         .
@@ -32889,6 +33865,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -38002,8 +38980,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -38018,6 +38994,8 @@ module ListFragment = {
     \\"nullableOfNonNullable\\": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -38142,14 +39120,14 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {. \\"nullableOfNonNullable\\": Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {. \\"nullableOfNonNullable\\": option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -38236,8 +39214,6 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -38247,6 +39223,8 @@ module FragmentWithArgs = {
   };
   type t = {. \\"listWithArg\\": option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let listWithArg = {
@@ -38354,8 +39332,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       .
@@ -38370,6 +39346,8 @@ module InlineListFragment = {
     \\"nullableOfNonNullable\\": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -38854,6 +39832,281 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Objects fragmentInFragment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t = {
+      .
+      \\"nullableOfNullable\\": Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {. \\"nullableOfNullable\\": option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let nullableOfNullable = {
+      let value = value##nullableOfNullable;
+      switch (Js.toOption(value)) {
+      | Some(value) =>
+        Some(
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             ),
+        )
+      | None => None
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable};
+  };
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => {
+    let nullableOfNullable = {
+      let value = value##nullableOfNullable;
+      switch (value) {
+      | Some(value) =>
+        Js.Nullable.return(
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             ),
+        )
+      | None => Js.Nullable.null
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable};
+  };
+  let verifyName =
+    fun
+    | \`ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+
+module Another = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    .
+    \\"nullableOfNullable\\": option(array(option(string))),
+    \\"listFragment\\": ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query =
+    \\"fragment Another on Lists   {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\"
+    ++ ListFragment.query;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => {
+    let listFragment = {
+      let value: ListFragment.Raw.t = Obj.magic(value);
+
+      ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
+    }
+    and nullableOfNullable = {
+      let value =
+        Obj.magic(
+          Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
+        );
+      switch (Js.toOption(value)) {
+      | Some(value) =>
+        Some(
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             ),
+        )
+      | None => None
+      };
+    };
+    {\\"nullableOfNullable\\": nullableOfNullable, \\"listFragment\\": listFragment};
+  };
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    Obj.magic(
+      Js.Array.reduce(
+        GraphQL_PPX.deepMerge,
+        Obj.magic(
+          {
+            let nullableOfNullable = {
+              let value = value##nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (value) {
+                       | Some(value) => Js.Nullable.return(value)
+                       | None => Js.Nullable.null
+                       }
+                     ),
+                )
+              | None => Js.Nullable.null
+              };
+            };
+            {\\"nullableOfNullable\\": nullableOfNullable};
+          },
+        ): Js.Json.t,
+        [|
+          (
+            Obj.magic(ListFragment.serialize(value##listFragment)): Js.Json.t
+          ),
+        |],
+      ),
+    ): Raw.t
+  );
+  let verifyName =
+    fun
+    | \`Another => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
   /**
   The GraphQL query string
   */
@@ -42299,8 +43552,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         .
@@ -42314,6 +43565,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -42616,8 +43869,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         .
@@ -42631,6 +43882,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -47754,8 +49007,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -47768,6 +49019,8 @@ module ListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -47889,14 +49142,14 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {nullableOfNonNullable: option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment Another on Lists   {\\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -47986,14 +49239,14 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   module Raw = {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
     type nonrec t_Lists = t;
   };
   type t = {listWithArg: option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment FragmentWithArgs on Lists   {\\\\nlistWithArg(arg1: $arg1)  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -48104,8 +49357,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -48118,6 +49369,8 @@ module InlineListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment InlineListFragment on Lists   {\\\\nnullableOfNullable  \\\\nnullableOfNonNullable  \\\\n}\\\\n\\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -48624,6 +49877,283 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Records fragmentInFragment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = \\"fragment ListFragment on Lists   {\\\\nnullableOfNullable  \\\\n}\\\\n\\";
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
+        };
+      };
+      {nullableOfNullable: nullableOfNullable};
+    }: Raw.t
+  );
+  let verifyName =
+    fun
+    | \`ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+
+module Another = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query =
+    \\"fragment Another on Lists   {\\\\nnullableOfNullable  \\\\n...ListFragment   \\\\n}\\\\n\\"
+    ++ ListFragment.query;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      nullableOfNullable: {
+        let value =
+          Obj.magic(
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
+          );
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+      listFragment: {
+        let value: ListFragment.Raw.t = Obj.magic(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    Obj.magic(
+      Js.Array.reduce(
+        GraphQL_PPX.deepMerge,
+        Obj.magic(
+          {
+            let nullableOfNullable = {
+              let value = (value: t).nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (value) {
+                       | Some(value) => Js.Nullable.return(value)
+                       | None => Js.Nullable.null
+                       }
+                     ),
+                )
+              | None => Js.Nullable.null
+              };
+            };
+            {\\"nullableOfNullable\\": nullableOfNullable};
+          },
+        ): Js.Json.t,
+        [|
+          (
+            Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
+          ),
+        |],
+      ),
+    ): Raw.t
+  );
+  let verifyName =
+    fun
+    | \`Another => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
   /**
   The GraphQL query string
   */
@@ -52331,8 +53861,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         string,
@@ -52345,6 +53873,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment Fragment on VariousScalars   {\\\\nstring  \\\\nint  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -52652,8 +54182,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     module Raw = {
       type t = {
         name: string,
@@ -52666,6 +54194,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = \\"fragment DogFragment on Dog   {\\\\nname  \\\\nbarkVolume  \\\\n}\\\\n\\";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -57942,10 +59472,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = [%raw
-    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment ListFragment on Lists   {\\\\n    nullableOfNullable\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
-  ];
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -57958,6 +59484,10 @@ module ListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = [%raw
+    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment ListFragment on Lists   {\\\\n    nullableOfNullable\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -58079,16 +59609,16 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = [%raw
-    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment Another on Lists   {\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
-  ];
   module Raw = {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {nullableOfNonNullable: option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = [%raw
+    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment Another on Lists   {\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -58178,16 +59708,16 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = [%raw
-    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment FragmentWithArgs on Lists   {\\\\n    listWithArg(arg1: $arg1)\\\\n  }\\\\n\`\\"
-  ];
   module Raw = {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
     type nonrec t_Lists = t;
   };
   type t = {listWithArg: option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = [%raw
+    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment FragmentWithArgs on Lists   {\\\\n    listWithArg(arg1: $arg1)\\\\n  }\\\\n\`\\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -58298,10 +59828,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning \\"-32\\"];
-  /**The GraphQL query string*/
-  let query = [%raw
-    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment InlineListFragment on Lists   {\\\\n    nullableOfNullable\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
-  ];
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -58314,6 +59840,10 @@ module InlineListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = [%raw
+    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment InlineListFragment on Lists   {\\\\n    nullableOfNullable\\\\n    nullableOfNonNullable\\\\n  }\\\\n\`\\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -58823,6 +60353,288 @@ The following is simply an overview of the most important variables and types th
 
 \`\`\`
 module MyQuery2 {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+"
+`;
+
+exports[`Template fragmentInFragment.re 1`] = `
+"[@ocaml.ppx.context
+  {
+    tool_name: \\"migrate_driver\\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+
+module ListFragment = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = [%raw
+    \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment ListFragment on Lists   {\\\\n    nullableOfNullable\\\\n  }\\\\n\`\\"
+  ];
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
+        };
+      };
+      {nullableOfNullable: nullableOfNullable};
+    }: Raw.t
+  );
+  let verifyName =
+    fun
+    | \`ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+\`\`\`*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+
+module Another = {
+  [@ocaml.warning \\"-32\\"];
+  module Raw = {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query =
+    [%raw
+      \\"(frag_0) => require(\\\\\\"gql\\\\\\")\`\\\\n  fragment Another on Lists   {\\\\n    nullableOfNullable\\\\n    ...ListFragment\\\\n  }\\\\n\${frag_0}\\\\n\`\\"
+    ](
+      ListFragment.query,
+    );
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      nullableOfNullable: {
+        let value =
+          Obj.magic(
+            Js.Dict.unsafeGet(Obj.magic(value), \\"nullableOfNullable\\"),
+          );
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      },
+      listFragment: {
+        let value: ListFragment.Raw.t = Obj.magic(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=\`ListFragment, value);
+      },
+    }: t
+  );
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
+    parse(value);
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    Obj.magic(
+      Js.Array.reduce(
+        GraphQL_PPX.deepMerge,
+        Obj.magic(
+          {
+            let nullableOfNullable = {
+              let value = (value: t).nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                Js.Nullable.return(
+                  value
+                  |> Js.Array.map(value =>
+                       switch (value) {
+                       | Some(value) => Js.Nullable.return(value)
+                       | None => Js.Nullable.null
+                       }
+                     ),
+                )
+              | None => Js.Nullable.null
+              };
+            };
+            {\\"nullableOfNullable\\": nullableOfNullable};
+          },
+        ): Js.Json.t,
+        [|
+          (
+            Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
+          ),
+        |],
+      ),
+    ): Raw.t
+  );
+  let verifyName =
+    fun
+    | \`Another => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \\"%identity\\";
+  external toJson: Raw.t => Js.Json.t = \\"%identity\\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql;
+    /**\`\`\`
+Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg: [String]
+}
+\`\`\`*/
+    let graphql: graphql = Obj.magic(0);
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by \`graphql-ppx\`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+\`\`\`
+module GraphQL {
   /**
   The GraphQL query string
   */
@@ -62568,10 +64380,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = [%raw
-      \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment Fragment on VariousScalars   {\\\\n    string\\\\n    int\\\\n  }\\\\n\`\\"
-    ];
     module Raw = {
       type t = {
         string,
@@ -62584,6 +64392,10 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = [%raw
+      \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment Fragment on VariousScalars   {\\\\n    string\\\\n    int\\\\n  }\\\\n\`\\"
+    ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -62896,10 +64708,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning \\"-32\\"];
-    /**The GraphQL query string*/
-    let query = [%raw
-      \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment DogFragment on Dog   {\\\\n    name\\\\n    barkVolume\\\\n  }\\\\n\`\\"
-    ];
     module Raw = {
       type t = {
         name: string,
@@ -62912,6 +64720,10 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = [%raw
+      \\"require(\\\\\\"gql\\\\\\")\`\\\\n  fragment DogFragment on Dog   {\\\\n    name\\\\n    barkVolume\\\\n  }\\\\n\`\\"
+    ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {

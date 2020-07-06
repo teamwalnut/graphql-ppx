@@ -122,14 +122,14 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var Raw$2 = { };
+
 var query$2 = (require("gql")`
   fragment Fragment on VariousScalars   {
     string
     int
   }
 `);
-
-var Raw$2 = { };
 
 function parse$2(value) {
   return {
@@ -161,8 +161,8 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query$2,
   Raw: Raw$2,
+  query: query$2,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
@@ -306,14 +306,14 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
+var Raw$5 = { };
+
 var query$5 = (require("gql")`
   fragment DogFragment on Dog   {
     name
     barkVolume
   }
 `);
-
-var Raw$5 = { };
 
 function parse$5(value) {
   return {
@@ -345,8 +345,8 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$5,
   Raw: Raw$5,
+  query: query$5,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,

@@ -238,10 +238,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = [%raw
-      "require(\"gql\")`\n  fragment Fragment on VariousScalars   {\n    string\n    int\n  }\n`"
-    ];
     module Raw = {
       type t = {
         string,
@@ -254,6 +250,10 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = [%raw
+      "require(\"gql\")`\n  fragment Fragment on VariousScalars   {\n    string\n    int\n  }\n`"
+    ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -566,10 +566,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = [%raw
-      "require(\"gql\")`\n  fragment DogFragment on Dog   {\n    name\n    barkVolume\n  }\n`"
-    ];
     module Raw = {
       type t = {
         name: string,
@@ -582,6 +578,10 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = [%raw
+      "require(\"gql\")`\n  fragment DogFragment on Dog   {\n    name\n    barkVolume\n  }\n`"
+    ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {

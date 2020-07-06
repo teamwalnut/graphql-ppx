@@ -106,9 +106,9 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
-
 var Raw$2 = { };
+
+var query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
 
 function parse$2(value) {
   var value$1 = value.int;
@@ -142,8 +142,8 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query,
   Raw: Raw$2,
+  query: query,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
@@ -275,9 +275,9 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var query$2 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
-
 var Raw$5 = { };
+
+var query$2 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
 
 function parse$5(value) {
   var value$1 = value.barkVolume;
@@ -311,8 +311,8 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$2,
   Raw: Raw$5,
+  query: query$2,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,

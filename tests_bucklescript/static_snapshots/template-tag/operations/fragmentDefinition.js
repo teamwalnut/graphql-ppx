@@ -10,14 +10,14 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
+var Raw = { };
+
 var query = (require("gql")`
   fragment ListFragment on Lists   {
     nullableOfNullable
     nullableOfNonNullable
   }
 `);
-
-var Raw = { };
 
 function parse(value) {
   var value$1 = value.nullableOfNullable;
@@ -68,8 +68,8 @@ var Z__INTERNAL = {
 };
 
 var ListFragment = {
-  query: query,
   Raw: Raw,
+  query: query,
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
@@ -77,13 +77,13 @@ var ListFragment = {
   Z__INTERNAL: Z__INTERNAL
 };
 
+var Raw$1 = { };
+
 var query$1 = (require("gql")`
   fragment Another on Lists   {
     nullableOfNonNullable
   }
 `);
-
-var Raw$1 = { };
 
 function parse$1(value) {
   var value$1 = value.nullableOfNonNullable;
@@ -118,8 +118,8 @@ var Z__INTERNAL$1 = {
 };
 
 var Another = {
-  query: query$1,
   Raw: Raw$1,
+  query: query$1,
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
@@ -127,13 +127,13 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var Raw$2 = { };
+
 var query$2 = (require("gql")`
   fragment FragmentWithArgs on Lists   {
     listWithArg(arg1: $arg1)
   }
 `);
-
-var Raw$2 = { };
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
@@ -175,8 +175,8 @@ var Z__INTERNAL$2 = {
 };
 
 var FragmentWithArgs = {
-  query: query$2,
   Raw: Raw$2,
+  query: query$2,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
@@ -184,14 +184,14 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var Raw$3 = { };
+
 var query$3 = (require("gql")`
   fragment InlineListFragment on Lists   {
     nullableOfNullable
     nullableOfNonNullable
   }
 `);
-
-var Raw$3 = { };
 
 function parse$3(value) {
   var value$1 = value.nullableOfNullable;
@@ -242,8 +242,8 @@ var Z__INTERNAL$3 = {
 };
 
 var InlineListFragment = {
-  query: query$3,
   Raw: Raw$3,
+  query: query$3,
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,

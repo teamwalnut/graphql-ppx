@@ -676,6 +676,8 @@ let generate_fragment_module =
         List.concat([
           [
             [[%stri [@ocaml.warning "-32"]]],
+            [wrap_module(~loc=Location.none, "Raw", raw_types)],
+            types,
             switch (pre_printed_query) {
             | Some(pre_printed_query) => [pre_printed_query]
             | None => []
@@ -685,8 +687,6 @@ let generate_fragment_module =
                 make_let("query", printed_query, query_docstring)
               ),
             ],
-            [wrap_module(~loc=Location.none, "Raw", raw_types)],
-            types,
             [
               Output_bucklescript_docstrings.(
                 make_let(

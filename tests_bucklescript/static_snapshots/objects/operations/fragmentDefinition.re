@@ -22,8 +22,6 @@ module GraphQL_PPX = {
 
 module ListFragment = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
       .
@@ -38,6 +36,8 @@ module ListFragment = {
     "nullableOfNonNullable": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -162,14 +162,14 @@ module GraphQL {
 
 module Another = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {. "nullableOfNonNullable": Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {. "nullableOfNonNullable": option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {
@@ -256,8 +256,6 @@ module GraphQL {
 
 module FragmentWithArgs = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
   module Raw = {
     type t = {
       .
@@ -267,6 +265,8 @@ module FragmentWithArgs = {
   };
   type t = {. "listWithArg": option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let listWithArg = {
@@ -374,8 +374,6 @@ module GraphQL {
 
 module InlineListFragment = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
       .
@@ -390,6 +388,8 @@ module InlineListFragment = {
     "nullableOfNonNullable": option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let nullableOfNonNullable = {

@@ -10,9 +10,9 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
-
 var Raw = { };
+
+var query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse(value) {
   var value$1 = value.nullableOfNullable;
@@ -63,8 +63,8 @@ var Z__INTERNAL = {
 };
 
 var ListFragment = {
-  query: query,
   Raw: Raw,
+  query: query,
   parse: parse,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
@@ -107,8 +107,8 @@ var Z__INTERNAL$1 = {
 };
 
 var Another = {
-  query: "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n",
   Raw: Raw$1,
+  query: "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n",
   parse: parse$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$1,
@@ -116,9 +116,9 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query$1 = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
-
 var Raw$2 = { };
+
+var query$1 = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
@@ -160,8 +160,8 @@ var Z__INTERNAL$2 = {
 };
 
 var FragmentWithArgs = {
-  query: query$1,
   Raw: Raw$2,
+  query: query$1,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
   serialize: serialize$2,
@@ -169,9 +169,9 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var query$2 = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
-
 var Raw$3 = { };
+
+var query$2 = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$3(value) {
   var value$1 = value.nullableOfNullable;
@@ -222,8 +222,8 @@ var Z__INTERNAL$3 = {
 };
 
 var InlineListFragment = {
-  query: query$2,
   Raw: Raw$3,
+  query: query$2,
   parse: parse$3,
   verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
