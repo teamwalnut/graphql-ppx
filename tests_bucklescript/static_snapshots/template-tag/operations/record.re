@@ -27,7 +27,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -133,7 +132,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -429,7 +427,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning "-32"];
   module Raw = {

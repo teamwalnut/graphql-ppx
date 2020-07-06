@@ -19,7 +19,6 @@
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -164,7 +163,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -275,7 +273,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -555,7 +552,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -938,7 +934,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning "-32"];
   module Raw = {

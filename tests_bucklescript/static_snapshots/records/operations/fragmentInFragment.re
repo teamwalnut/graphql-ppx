@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -132,7 +131,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning "-32"];
   module Raw = {

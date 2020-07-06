@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -173,7 +172,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning "-32"];
   module Raw = {

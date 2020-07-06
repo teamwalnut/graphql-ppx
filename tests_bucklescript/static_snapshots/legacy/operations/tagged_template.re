@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -253,7 +252,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -492,7 +490,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning "-32"];
   module Raw = {
@@ -731,7 +728,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning "-32"];
   module Raw = {

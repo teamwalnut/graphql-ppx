@@ -19,7 +19,6 @@ exports[`Apollo argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -133,7 +132,6 @@ exports[`Apollo comment.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -456,7 +454,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -596,7 +593,6 @@ exports[`Apollo customScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -821,7 +817,6 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -999,7 +994,6 @@ exports[`Apollo defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1114,7 +1108,6 @@ exports[`Apollo enumInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1257,7 +1250,6 @@ exports[`Apollo explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1444,7 +1436,6 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1669,7 +1660,6 @@ module Parent = {
     let use = () => ();
   };
 };
-
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -1885,7 +1875,6 @@ exports[`Apollo fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2030,7 +2019,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2141,7 +2129,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2421,7 +2408,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2804,7 +2790,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -2905,7 +2890,6 @@ exports[`Apollo fragmentInFragment.re 1`] = `
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3033,7 +3017,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3229,7 +3212,6 @@ exports[`Apollo lists.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3438,7 +3420,6 @@ exports[`Apollo listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3639,7 +3620,6 @@ exports[`Apollo listsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -3869,7 +3849,6 @@ exports[`Apollo mutation.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4135,7 +4114,6 @@ exports[`Apollo mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4235,7 +4213,6 @@ exports[`Apollo mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4336,7 +4313,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -4803,7 +4779,6 @@ exports[`Apollo nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5094,7 +5069,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5448,7 +5422,6 @@ exports[`Apollo omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5639,7 +5612,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -5824,7 +5796,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6031,7 +6002,6 @@ exports[`Apollo omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6214,7 +6184,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6395,7 +6364,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6598,7 +6566,6 @@ exports[`Apollo pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6759,7 +6726,6 @@ exports[`Apollo pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -6981,7 +6947,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7094,7 +7059,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7407,7 +7371,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7787,7 +7750,6 @@ exports[`Apollo recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -7986,7 +7948,6 @@ exports[`Apollo scalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8248,7 +8209,6 @@ exports[`Apollo scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8470,7 +8430,6 @@ exports[`Apollo scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8737,7 +8696,6 @@ exports[`Apollo skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -8957,7 +8915,6 @@ exports[`Apollo subscription.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9156,7 +9113,6 @@ exports[`Apollo tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9396,7 +9352,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9638,7 +9593,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -9880,7 +9834,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10144,7 +10097,6 @@ exports[`Apollo typename.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10355,7 +10307,6 @@ exports[`Apollo union.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10538,7 +10489,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10743,7 +10693,6 @@ exports[`Apollo unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -10906,7 +10855,6 @@ exports[`Apollo variant.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27061,7 +27009,6 @@ exports[`Legacy argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27168,7 +27115,6 @@ exports[`Legacy comment.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27468,7 +27414,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27595,7 +27540,6 @@ exports[`Legacy customScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27786,7 +27730,6 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -27955,7 +27898,6 @@ exports[`Legacy defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28056,7 +27998,6 @@ exports[`Legacy enumInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28184,7 +28125,6 @@ exports[`Legacy explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28365,7 +28305,6 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28583,7 +28522,6 @@ module Parent = {
     let use = () => ();
   };
 };
-
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28790,7 +28728,6 @@ exports[`Legacy fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -28930,7 +28867,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29024,7 +28960,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29285,7 +29220,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29610,7 +29544,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29713,7 +29646,6 @@ exports[`Legacy fragmentInFragment.re 1`] = `
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -29827,7 +29759,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30010,7 +29941,6 @@ exports[`Legacy lists.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30210,7 +30140,6 @@ exports[`Legacy listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30423,7 +30352,6 @@ exports[`Legacy listsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30636,7 +30564,6 @@ exports[`Legacy mutation.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30850,7 +30777,6 @@ exports[`Legacy mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -30957,7 +30883,6 @@ exports[`Legacy mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31068,7 +30993,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31396,7 +31320,6 @@ exports[`Legacy nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31664,7 +31587,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -31992,7 +31914,6 @@ exports[`Legacy omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32148,7 +32069,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32298,7 +32218,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32470,7 +32389,6 @@ exports[`Legacy omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32632,7 +32550,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32792,7 +32709,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -32974,7 +32890,6 @@ exports[`Legacy pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33123,7 +33038,6 @@ exports[`Legacy pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33319,7 +33233,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33423,7 +33336,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -33713,7 +33625,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34080,7 +33991,6 @@ exports[`Legacy recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34263,7 +34173,6 @@ exports[`Legacy scalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34522,7 +34431,6 @@ exports[`Legacy scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34762,7 +34670,6 @@ exports[`Legacy scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -34999,7 +34906,6 @@ exports[`Legacy skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35198,7 +35104,6 @@ exports[`Legacy subscription.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35371,7 +35276,6 @@ exports[`Legacy tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35608,7 +35512,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -35847,7 +35750,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36086,7 +35988,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36347,7 +36248,6 @@ exports[`Legacy typename.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36558,7 +36458,6 @@ exports[`Legacy union.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36720,7 +36619,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -36904,7 +36802,6 @@ exports[`Legacy unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37059,7 +36956,6 @@ exports[`Legacy variant.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37318,7 +37214,6 @@ exports[`Objects argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37415,7 +37310,6 @@ exports[`Objects comment.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37705,7 +37599,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -37827,7 +37720,6 @@ exports[`Objects customScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38008,7 +37900,6 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38172,7 +38063,6 @@ exports[`Objects defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38268,7 +38158,6 @@ exports[`Objects enumInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38386,7 +38275,6 @@ exports[`Objects explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38562,7 +38450,6 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38775,7 +38662,6 @@ module Parent = {
     let use = () => ();
   };
 };
-
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -38977,7 +38863,6 @@ exports[`Objects fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39117,7 +39002,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39211,7 +39095,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39472,7 +39355,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39787,7 +39669,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39885,7 +39766,6 @@ exports[`Objects fragmentInFragment.re 1`] = `
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -39999,7 +39879,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40182,7 +40061,6 @@ exports[`Objects lists.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40377,7 +40255,6 @@ exports[`Objects listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40565,7 +40442,6 @@ exports[`Objects listsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40768,7 +40644,6 @@ exports[`Objects mutation.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -40977,7 +40852,6 @@ exports[`Objects mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41074,7 +40948,6 @@ exports[`Objects mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41175,7 +41048,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41498,7 +41370,6 @@ exports[`Objects nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -41756,7 +41627,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42074,7 +41944,6 @@ exports[`Objects omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42225,7 +42094,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42370,7 +42238,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42537,7 +42404,6 @@ exports[`Objects omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42694,7 +42560,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -42849,7 +42714,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43026,7 +42890,6 @@ exports[`Objects pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43170,7 +43033,6 @@ exports[`Objects pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43356,7 +43218,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43455,7 +43316,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -43735,7 +43595,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44092,7 +43951,6 @@ exports[`Objects recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44265,7 +44123,6 @@ exports[`Objects scalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44519,7 +44376,6 @@ exports[`Objects scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44722,7 +44578,6 @@ exports[`Objects scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -44949,7 +44804,6 @@ exports[`Objects skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45138,7 +44992,6 @@ exports[`Objects subscription.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45306,7 +45159,6 @@ exports[`Objects tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45538,7 +45390,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -45772,7 +45623,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46006,7 +45856,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46262,7 +46111,6 @@ exports[`Objects typename.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46468,7 +46316,6 @@ exports[`Objects union.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46625,7 +46472,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46804,7 +46650,6 @@ exports[`Objects unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -46954,7 +46799,6 @@ exports[`Objects variant.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47208,7 +47052,6 @@ exports[`Records argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47322,7 +47165,6 @@ exports[`Records comment.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47645,7 +47487,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47775,7 +47616,6 @@ exports[`Records customScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -47990,7 +47830,6 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48152,7 +47991,6 @@ exports[`Records defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48267,7 +48105,6 @@ exports[`Records enumInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48410,7 +48247,6 @@ exports[`Records explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48586,7 +48422,6 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -48799,7 +48634,6 @@ module Parent = {
     let use = () => ();
   };
 };
-
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49004,7 +48838,6 @@ exports[`Records fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49139,7 +48972,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49236,7 +49068,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49492,7 +49323,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49829,7 +49659,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -49930,7 +49759,6 @@ exports[`Records fragmentInFragment.re 1`] = `
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50046,7 +49874,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50229,7 +50056,6 @@ exports[`Records lists.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50427,7 +50253,6 @@ exports[`Records listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50628,7 +50453,6 @@ exports[`Records listsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -50858,7 +50682,6 @@ exports[`Records mutation.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51085,7 +50908,6 @@ exports[`Records mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51185,7 +51007,6 @@ exports[`Records mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51286,7 +51107,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51625,7 +51445,6 @@ exports[`Records nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -51916,7 +51735,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52270,7 +52088,6 @@ exports[`Records omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52438,7 +52255,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52600,7 +52416,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52784,7 +52599,6 @@ exports[`Records omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -52947,7 +52761,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53108,7 +52921,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53291,7 +53103,6 @@ exports[`Records pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53442,7 +53253,6 @@ exports[`Records pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53654,7 +53464,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -53758,7 +53567,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54047,7 +53855,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54408,7 +54215,6 @@ exports[`Records recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54607,7 +54413,6 @@ exports[`Records scalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -54858,7 +54663,6 @@ exports[`Records scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55080,7 +54884,6 @@ exports[`Records scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55347,7 +55150,6 @@ exports[`Records skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55547,7 +55349,6 @@ exports[`Records subscription.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55722,7 +55523,6 @@ exports[`Records tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -55951,7 +55751,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56182,7 +55981,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56413,7 +56211,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56666,7 +56463,6 @@ exports[`Records typename.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -56877,7 +56673,6 @@ exports[`Records union.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57040,7 +56835,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57225,7 +57019,6 @@ exports[`Records unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57379,7 +57172,6 @@ exports[`Records variant.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57653,7 +57445,6 @@ exports[`Template argNamedQuery.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -57769,7 +57560,6 @@ exports[`Template comment.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58094,7 +57884,6 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58226,7 +58015,6 @@ exports[`Template customScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58443,7 +58231,6 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58607,7 +58394,6 @@ exports[`Template defaultObjectValueOnScalar.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58724,7 +58510,6 @@ exports[`Template enumInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -58869,7 +58654,6 @@ exports[`Template explicit_object_record.re 1`] = `
     cookies: [],
   }
 ];
-
 module RecordsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59047,7 +58831,6 @@ module RecordsQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ObjectsQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59262,7 +59045,6 @@ module Parent = {
     let use = () => ();
   };
 };
-
 module Bla' = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59469,7 +59251,6 @@ exports[`Template fragmentDefinition.re 1`] = `
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59606,7 +59387,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59705,7 +59485,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module FragmentWithArgs = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -59965,7 +59744,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60301,7 +60079,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60406,7 +60183,6 @@ exports[`Template fragmentInFragment.re 1`] = `
     cookies: [],
   }
 ];
-
 module ListFragment = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60524,7 +60300,6 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module Another = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60710,7 +60485,6 @@ exports[`Template lists.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -60910,7 +60684,6 @@ exports[`Template listsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61113,7 +60886,6 @@ exports[`Template listsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61345,7 +61117,6 @@ exports[`Template mutation.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61574,7 +61345,6 @@ exports[`Template mutationWithArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61676,7 +61446,6 @@ exports[`Template mutationWithArgsAndNoRecords.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -61779,7 +61548,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62120,7 +61888,6 @@ exports[`Template nonrecursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62413,7 +62180,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62769,7 +62535,6 @@ exports[`Template omitFutureValueEnum.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -62939,7 +62704,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63103,7 +62867,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63289,7 +63052,6 @@ exports[`Template omitFutureValueUnion.re 1`] = `
     cookies: [],
   }
 ];
-
 module Normal = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63454,7 +63216,6 @@ module Normal {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByConfig = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63617,7 +63378,6 @@ module ByConfig {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module ByDirective = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63802,7 +63562,6 @@ exports[`Template pokedexApolloMode.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -63955,7 +63714,6 @@ exports[`Template pokedexScalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64169,7 +63927,6 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64275,7 +64032,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module OneFieldQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64571,7 +64327,6 @@ module ExternalFragmentQuery {
     };
   };
 };
-
 module InlineFragmentQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -64939,7 +64694,6 @@ exports[`Template recursiveInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65140,7 +64894,6 @@ exports[`Template scalars.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65393,7 +65146,6 @@ exports[`Template scalarsArgs.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65617,7 +65369,6 @@ exports[`Template scalarsInput.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -65886,7 +65637,6 @@ exports[`Template skipDirectives.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -66088,7 +65838,6 @@ exports[`Template subscription.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -66265,7 +66014,6 @@ exports[`Template tagged_template.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -66496,7 +66244,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery2 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -66727,7 +66474,6 @@ module MyQuery2 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery3 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -66958,7 +66704,6 @@ module MyQuery3 {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQuery4 = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -67211,7 +66956,6 @@ exports[`Template typename.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -67424,7 +67168,6 @@ exports[`Template union.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -67589,7 +67332,6 @@ module MyQuery {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-
 module MyQueryNoError = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -67776,7 +67518,6 @@ exports[`Template unionPartial.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {
@@ -67932,7 +67673,6 @@ exports[`Template variant.re 1`] = `
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning \\"-32\\"];
   module Raw = {

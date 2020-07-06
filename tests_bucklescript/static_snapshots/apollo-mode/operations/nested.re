@@ -20,7 +20,6 @@ type record = {
   f1: string,
   f2: string,
 };
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {

@@ -16,7 +16,6 @@
     cookies: [],
   }
 ];
-
 module MyQuery = {
   [@ocaml.warning "-32"];
   module Raw = {

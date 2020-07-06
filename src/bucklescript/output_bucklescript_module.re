@@ -327,7 +327,8 @@ let make_printed_query = (config, document) => {
   reprinted;
 };
 
-let wrap_module = (~loc, name: string, contents) => {
+let wrap_module = (~loc as _, name: string, contents) => {
+  let loc = Location.none;
   {
     pstr_desc:
       Pstr_module({
@@ -343,7 +344,9 @@ let wrap_module = (~loc, name: string, contents) => {
   };
 };
 
-let wrap_query_module = (~loc, definition, name: string, contents, config) => {
+let wrap_query_module =
+    (~loc as _, definition, name: string, contents, config) => {
+  let loc = Location.none;
   let module_name = Generator_utils.capitalize_ascii(name ++ "'");
   let funct =
     switch (config.extend) {
