@@ -83,7 +83,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     }
   | Res_solo_fragment_spread(loc, module_name, _arguments) =>
     if (raw) {
-      base_type(module_name ++ ".Raw.t");
+      base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t");
     } else {
       base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }

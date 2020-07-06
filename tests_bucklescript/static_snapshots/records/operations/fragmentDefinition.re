@@ -64,7 +64,6 @@ module ListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -178,7 +177,6 @@ module Another = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
     parse(value);
@@ -285,7 +283,6 @@ module FragmentWithArgs = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | `String],
@@ -417,7 +414,6 @@ module InlineListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | `InlineListFragment],

@@ -1936,7 +1936,6 @@ module ListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -2064,7 +2063,6 @@ module Another = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -2185,7 +2183,6 @@ module FragmentWithArgs = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -2327,7 +2324,6 @@ module InlineListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -6946,7 +6942,6 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -7287,7 +7282,6 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -25762,6 +25756,26 @@ exports[`Errors (Objects) deprecatedFields.re 1`] = `
 Warning 22: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
 `;
 
+exports[`Errors (Objects) fragmentSpreadMissing.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentSpreadMissing.re 4:5-6:5
+  
+  2 ┆ {|
+  3 ┆ query MyQuery {
+  4 ┆   lists {
+  5 ┆     ...MissingFragment
+  6 ┆   }
+  7 ┆ }
+  8 ┆ |}
+  
+  [1;33mThe module or file MissingFragment can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run \`bsb\` instead of \`bsb -make-world\`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?"
+`;
+
 exports[`Errors (Objects) fragmentWithWrongName.re 1`] = `
 "We've found a bug for you!
   operations/errors/fragmentWithWrongName.re 15:5-18:5
@@ -26058,6 +26072,26 @@ exports[`Errors (Records) deprecatedFields.re 1`] = `
 7 |       deprecatedField
           ^^^^^^^^^^^^^^^
 Warning 22: Field \\"deprecatedField\\" has been deprecated. Reason: Use something else instead"
+`;
+
+exports[`Errors (Records) fragmentSpreadMissing.re 1`] = `
+"We've found a bug for you!
+  operations/errors/fragmentSpreadMissing.re 4:5-6:5
+  
+  2 ┆ {|
+  3 ┆ query MyQuery {
+  4 ┆   lists {
+  5 ┆     ...MissingFragment
+  6 ┆   }
+  7 ┆ }
+  8 ┆ |}
+  
+  [1;33mThe module or file MissingFragment can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run \`bsb\` instead of \`bsb -make-world\`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?"
 `;
 
 exports[`Errors (Records) fragmentWithWrongName.re 1`] = `
@@ -28102,7 +28136,6 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -28216,7 +28249,6 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -28323,7 +28355,6 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -28457,7 +28488,6 @@ module InlineListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -32546,7 +32576,6 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -32874,7 +32903,6 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -38020,7 +38048,6 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -38134,7 +38161,6 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -38241,7 +38267,6 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -38375,7 +38400,6 @@ module InlineListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -42304,7 +42328,6 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -42622,7 +42645,6 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -47774,7 +47796,6 @@ module ListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -47888,7 +47909,6 @@ module Another = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -47995,7 +48015,6 @@ module FragmentWithArgs = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -48127,7 +48146,6 @@ module InlineListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -52340,7 +52358,6 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -52662,7 +52679,6 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -57970,7 +57986,6 @@ module ListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -58086,7 +58101,6 @@ module Another = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -58195,7 +58209,6 @@ module FragmentWithArgs = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -58329,7 +58342,6 @@ module InlineListFragment = {
       },
     }: t
   );
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -62585,7 +62597,6 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -62914,7 +62925,6 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
