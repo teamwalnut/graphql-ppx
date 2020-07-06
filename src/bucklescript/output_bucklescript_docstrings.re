@@ -89,6 +89,7 @@ let for_field_arguments =
                              }) => p
                            | Operation({
                                item: {
+                                 o_name: maybe_name,
                                  o_variable_definitions:
                                    Some({item: variable_definitions}),
                                },
@@ -114,6 +115,12 @@ let for_field_arguments =
                                let loc = config.map_loc(type_.span);
                                let safe_name =
                                  "_graphql_"
+                                 ++ (
+                                   switch (maybe_name) {
+                                   | Some({item: name}) => name ++ "_"
+                                   | _ => ""
+                                   }
+                                 )
                                  ++ var_name
                                  ++ "_"
                                  ++ (loc.loc_start.pos_cnum |> string_of_int);

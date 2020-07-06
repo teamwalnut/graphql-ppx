@@ -5,3 +5,14 @@ module MyQuery = [%graphql
   }
 |}
 ];
+
+module MultipleQueryWithSameVarName = [%graphql
+  {|
+  query Query1($query: Int!) {
+    argNamedQuery(query: $query)
+  }
+  query Query2($query: Int!) {
+    argNamedQuery(query: $query)
+  }
+|}
+];
