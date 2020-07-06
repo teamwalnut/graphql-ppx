@@ -155,7 +155,7 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
   open Ast_helper;
   let ident =
     Ast_helper.Exp.ident({
-      loc: loc |> conv_loc,
+      loc: loc |> Output_bucklescript_utils.conv_loc,
       txt: Longident.parse(name ++ ".verifyArgsAndParse"),
     });
   let variable_defs = get_variable_definitions(definition);
@@ -300,7 +300,12 @@ and generate_object_decoder =
       | Fr_fragment_spread(_key, loc, name, _, arguments) =>
         [@metaloc conv_loc(loc)]
         {
-          let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
+          let%expr value: [%t
+            base_type_name(
+              ~loc=Output_bucklescript_utils.conv_loc(loc),
+              name ++ ".Raw.t",
+            )
+          ] =
             Obj.magic(value);
           %e
           generate_fragment_parse_fun(

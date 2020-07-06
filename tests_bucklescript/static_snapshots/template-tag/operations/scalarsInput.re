@@ -35,11 +35,11 @@ module MyQuery = {
       id: string,
     };
   };
+  type t = {scalarsInput: string};
   /**The GraphQL query string*/
   let query = [%raw
     "require(\"gql\")`\n  query ($arg: VariousScalarsInput!)  {\n    scalarsInput(arg: $arg)\n  }\n`"
   ];
-  type t = {scalarsInput: string};
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),

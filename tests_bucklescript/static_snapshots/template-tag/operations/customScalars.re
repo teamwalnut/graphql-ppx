@@ -30,15 +30,15 @@ module MyQuery = {
       req: Js.Json.t,
     };
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  query ($opt: CustomScalar, $req: CustomScalar!)  {\n    customScalarField(argOptional: $opt, argRequired: $req)  {\n      nullable\n      nonNullable\n    }\n  }\n`"
-  ];
   type t_customScalarField = {
     nullable: option(Js.Json.t),
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  query ($opt: CustomScalar, $req: CustomScalar!)  {\n    customScalarField(argOptional: $opt, argRequired: $req)  {\n      nullable\n      nonNullable\n    }\n  }\n`"
+  ];
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,

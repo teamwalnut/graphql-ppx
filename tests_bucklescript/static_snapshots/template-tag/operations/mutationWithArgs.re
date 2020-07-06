@@ -23,11 +23,11 @@ module MyQuery = {
     type t = {optionalInputArgs: string};
     type t_variables = {required: string};
   };
+  type t = {optionalInputArgs: string};
   /**The GraphQL query string*/
   let query = [%raw
     "require(\"gql\")`\n  mutation MyMutation($required: String!)  {\n    optionalInputArgs(required: $required, anotherRequired: \"val\")\n  }\n`"
   ];
-  type t = {optionalInputArgs: string};
   type t_variables = {required: string};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

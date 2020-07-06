@@ -33,8 +33,6 @@ module Normal = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     __typename: string,
     name: string,
@@ -50,6 +48,8 @@ module Normal = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -216,8 +216,6 @@ module ByConfig = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     __typename: string,
     name: string,
@@ -232,6 +230,8 @@ module ByConfig = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -397,8 +397,6 @@ module ByDirective = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     __typename: string,
     name: string,
@@ -413,6 +411,8 @@ module ByDirective = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

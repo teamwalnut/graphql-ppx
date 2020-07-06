@@ -32,10 +32,6 @@ module MyQuery = {
     type t = {simpleSubscription: t_simpleSubscription};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  subscription   {\n    simpleSubscription  {\n      __typename\n      ...on Dog   {\n        name\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
-  ];
   type t_simpleSubscription_Dog = {name: string};
   type t_simpleSubscription_Human = {name: string};
   type t_simpleSubscription = [
@@ -44,6 +40,10 @@ module MyQuery = {
     | `Human(t_simpleSubscription_Human)
   ];
   type t = {simpleSubscription: t_simpleSubscription};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  subscription   {\n    simpleSubscription  {\n      __typename\n      ...on Dog   {\n        name\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

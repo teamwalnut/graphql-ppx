@@ -33,11 +33,11 @@ module MyQuery = {
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
+  type t = {nonrecursiveInput: string};
   /**The GraphQL query string*/
   let query = [%raw
     "require(\"gql\")`\n  query ($arg: NonrecursiveInput!)  {\n    nonrecursiveInput(arg: $arg)\n  }\n`"
   ];
-  type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -332,14 +332,14 @@ module MyQuery2 = {
     }
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\n    scalarsInput(arg: $arg)\n    more: scalarsInput(arg: $arg2)\n  }\n`"
-  ];
   type t = {
     scalarsInput: string,
     more: string,
   };
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\n    scalarsInput(arg: $arg)\n    more: scalarsInput(arg: $arg2)\n  }\n`"
+  ];
   type t_variables = {
     arg: t_variables_NonrecursiveInput,
     arg2: t_variables_NonrecursiveInput,

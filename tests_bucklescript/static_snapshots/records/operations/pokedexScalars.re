@@ -30,13 +30,13 @@ module MyQuery = {
       name: Js.Nullable.t(string),
     };
   };
-  /**The GraphQL query string*/
-  let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
     id: string,
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  /**The GraphQL query string*/
+  let query = "query pokemon($id: String, $name: String)  {\npokemon(name: $name, id: $id)  {\nid  \nname  \n}\n\n}\n";
   type t_variables = {
     id: option(string),
     name: option(string),

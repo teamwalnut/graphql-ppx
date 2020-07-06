@@ -38,8 +38,6 @@ module MyQuery = {
     type t = {mutationWithError: t_mutationWithError};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
   type t_mutationWithError_value = {
     __typename: string,
     stringField: string,
@@ -61,6 +59,8 @@ module MyQuery = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  /**The GraphQL query string*/
+  let query = "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

@@ -61,10 +61,6 @@ module MyQuery = {
     type t = {customFields: t_customFields};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  query   {\n    customFields  {\n      currentTime\n      favoriteColor\n      futureTime\n      nullableColor\n    }\n  }\n`"
-  ];
   type t_customFields = {
     currentTime: DateTime.t,
     favoriteColor: Color.t,
@@ -72,6 +68,10 @@ module MyQuery = {
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  query   {\n    customFields  {\n      currentTime\n      favoriteColor\n      futureTime\n      nullableColor\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

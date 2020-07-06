@@ -23,11 +23,11 @@ module MyQuery = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
   };
+  type t = {argNamedQuery: int};
   /**The GraphQL query string*/
   let query = [%raw
     "require(\"gql\")`\n  query ($query: Int!)  {\n    argNamedQuery(query: $query)\n  }\n`"
   ];
-  type t = {argNamedQuery: int};
   type t_variables = {query: int};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

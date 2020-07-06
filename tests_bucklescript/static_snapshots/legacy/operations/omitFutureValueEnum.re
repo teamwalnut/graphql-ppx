@@ -33,8 +33,6 @@ module Normal = {
     type t = {. "mutationWithError": t_mutationWithError};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [
     | `FutureAddedValue(string)
     | `FIRST
@@ -51,6 +49,8 @@ module Normal = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
+  /**The GraphQL query string*/
+  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
@@ -189,8 +189,6 @@ module ByConfig = {
     type t = {. "mutationWithError": t_mutationWithError};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
   type t_mutationWithError_errors = {
     .
@@ -202,6 +200,8 @@ module ByConfig = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
+  /**The GraphQL query string*/
+  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
@@ -339,8 +339,6 @@ module ByDirective = {
     type t = {. "mutationWithError": t_mutationWithError};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
   type t_mutationWithError_errors = {
     .
@@ -352,6 +350,8 @@ module ByDirective = {
     "errors": option(array(t_mutationWithError_errors)),
   };
   type t = {. "mutationWithError": t_mutationWithError};
+  /**The GraphQL query string*/
+  let query = "mutation   {\nmutationWithError  {\nerrors  {\nmessage  \nfield  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {

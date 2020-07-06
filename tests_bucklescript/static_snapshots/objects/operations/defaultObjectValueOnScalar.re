@@ -23,9 +23,9 @@ module MyQuery = {
     type t = {. "defaultObjectValueOnScalar": string};
     type t_variables = unit;
   };
+  type t = {. "defaultObjectValueOnScalar": string};
   /**The GraphQL query string*/
   let query = "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n";
-  type t = {. "defaultObjectValueOnScalar": string};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {

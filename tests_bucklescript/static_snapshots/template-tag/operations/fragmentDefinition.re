@@ -531,15 +531,6 @@ module MyQuery = {
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
-  /**The GraphQL query string*/
-  let query =
-    [%raw
-      "(frag_0, frag_1, frag_2) => require(\"gql\")`\n  query MyQuery($arg1: String)  {\n    l1: lists  {\n      ...ListFragment\n    }\n    l2: lists  {\n      ...ListFragment\n      ...ListFragment\n    }\n    l3: lists  {\n      nullableOfNullable\n      ...ListFragment\n      ...ListFragment\n    }\n    l4: lists  {\n      nullableOfNullable\n      ...InlineListFragment\n    }\n    l5: lists  {\n      ...FragmentWithArgs\n    }\n  }\n${frag_0}\n${frag_1}\n${frag_2}\n`"
-    ](
-      FragmentWithArgs.query,
-      InlineListFragment.query,
-      ListFragment.query,
-    );
   type t_l2 = {
     frag1: ListFragment.t_Lists,
     frag2: ListFragment.t_Lists,
@@ -560,6 +551,15 @@ module MyQuery = {
     l4: t_l4,
     l5: FragmentWithArgs.t,
   };
+  /**The GraphQL query string*/
+  let query =
+    [%raw
+      "(frag_0, frag_1, frag_2) => require(\"gql\")`\n  query MyQuery($arg1: String)  {\n    l1: lists  {\n      ...ListFragment\n    }\n    l2: lists  {\n      ...ListFragment\n      ...ListFragment\n    }\n    l3: lists  {\n      nullableOfNullable\n      ...ListFragment\n      ...ListFragment\n    }\n    l4: lists  {\n      nullableOfNullable\n      ...InlineListFragment\n    }\n    l5: lists  {\n      ...FragmentWithArgs\n    }\n  }\n${frag_0}\n${frag_1}\n${frag_2}\n`"
+    ](
+      FragmentWithArgs.query,
+      InlineListFragment.query,
+      ListFragment.query,
+    );
   type t_variables = {arg1: option(string)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -858,6 +858,7 @@ module MyQuery2 = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
   };
+  type t = {lists: ListFragment.t};
   /**The GraphQL query string*/
   let query =
     [%raw
@@ -865,7 +866,6 @@ module MyQuery2 = {
     ](
       ListFragment.query,
     );
-  type t = {lists: ListFragment.t};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

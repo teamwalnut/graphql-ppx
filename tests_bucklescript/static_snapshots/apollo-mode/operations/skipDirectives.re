@@ -36,8 +36,6 @@ module MyQuery = {
     };
     type t_variables = {var: bool};
   };
-  /**The GraphQL query string*/
-  let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\n__typename  \nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\n__typename  \nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
   type t_v1 = {
     __typename: string,
     nullableString: option(string),
@@ -52,6 +50,8 @@ module MyQuery = {
     v1: t_v1,
     v2: t_v2,
   };
+  /**The GraphQL query string*/
+  let query = "query ($var: Boolean!)  {\nv1: variousScalars  {\n__typename  \nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\n__typename  \nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n";
   type t_variables = {var: bool};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

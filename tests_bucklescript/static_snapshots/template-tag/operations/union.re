@@ -33,10 +33,6 @@ module MyQuery = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
-  ];
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -48,6 +44,10 @@ module MyQuery = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -198,10 +198,6 @@ module MyQueryNoError = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
-  ];
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -213,6 +209,10 @@ module MyQueryNoError = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

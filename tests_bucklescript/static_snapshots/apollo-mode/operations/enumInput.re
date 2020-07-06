@@ -23,9 +23,9 @@ module MyQuery = {
     type t = {enumInput: string};
     type t_variables = {arg: string};
   };
+  type t = {enumInput: string};
   /**The GraphQL query string*/
   let query = "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n";
-  type t = {enumInput: string};
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

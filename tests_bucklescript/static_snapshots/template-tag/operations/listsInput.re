@@ -29,11 +29,11 @@ module MyQuery = {
       nonNullableOfNonNullable: array(string),
     };
   };
+  type t = {listsInput: string};
   /**The GraphQL query string*/
   let query = [%raw
     "require(\"gql\")`\n  query ($arg: ListsInput!)  {\n    listsInput(arg: $arg)\n  }\n`"
   ];
-  type t = {listsInput: string};
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),

@@ -33,8 +33,6 @@ module Normal = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -46,6 +44,8 @@ module Normal = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -196,8 +196,6 @@ module ByConfig = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -208,6 +206,8 @@ module ByConfig = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -357,8 +357,6 @@ module ByDirective = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -369,6 +367,8 @@ module ByDirective = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

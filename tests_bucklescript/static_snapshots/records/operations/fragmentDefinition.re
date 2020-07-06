@@ -523,16 +523,6 @@ module MyQuery = {
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
-  /**The GraphQL query string*/
-  let query =
-    (
-      (
-        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
-        ++ FragmentWithArgs.query
-      )
-      ++ InlineListFragment.query
-    )
-    ++ ListFragment.query;
   type t_l2 = {
     frag1: ListFragment.t_Lists,
     frag2: ListFragment.t_Lists,
@@ -553,6 +543,16 @@ module MyQuery = {
     l4: t_l4,
     l5: FragmentWithArgs.t,
   };
+  /**The GraphQL query string*/
+  let query =
+    (
+      (
+        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
+        ++ FragmentWithArgs.query
+      )
+      ++ InlineListFragment.query
+    )
+    ++ ListFragment.query;
   type t_variables = {arg1: option(string)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -851,10 +851,10 @@ module MyQuery2 = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
   };
+  type t = {lists: ListFragment.t};
   /**The GraphQL query string*/
   let query =
     "query   {\nlists  {\n...ListFragment   \n}\n\n}\n" ++ ListFragment.query;
-  type t = {lists: ListFragment.t};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

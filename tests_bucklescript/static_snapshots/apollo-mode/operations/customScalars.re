@@ -31,14 +31,14 @@ module MyQuery = {
       req: Js.Json.t,
     };
   };
-  /**The GraphQL query string*/
-  let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\n__typename  \nnullable  \nnonNullable  \n}\n\n}\n";
   type t_customScalarField = {
     __typename: string,
     nullable: option(Js.Json.t),
     nonNullable: Js.Json.t,
   };
   type t = {customScalarField: t_customScalarField};
+  /**The GraphQL query string*/
+  let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\n__typename  \nnullable  \nnonNullable  \n}\n\n}\n";
   type t_variables = {
     opt: option(Js.Json.t),
     req: Js.Json.t,

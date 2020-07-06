@@ -476,6 +476,7 @@ let generate_default_operation =
               List.append(raw_types, raw_arg_types),
             ),
           ],
+          types,
           switch (pre_printed_query) {
           | Some(pre_printed_query) => [pre_printed_query]
           | None => []
@@ -485,7 +486,6 @@ let generate_default_operation =
               make_let("query", printed_query, query_docstring)
             ),
           ],
-          types,
           arg_types,
           [
             Output_bucklescript_docstrings.(

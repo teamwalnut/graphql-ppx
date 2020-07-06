@@ -43,10 +43,6 @@ module MyQuery = {
     type t = {mutationForVariant: t_mutationForVariant};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gql\")`\n  mutation   {\n    mutationForVariant  {\n      baseType\n      baseTypeList\n      dog  {\n        name\n        barkVolume\n      }\n      human  {\n        name\n      }\n      dogOrHuman  {\n        __typename\n        ...on Dog   {\n          name\n          barkVolume\n        }\n        ...on Human   {\n          name\n        }\n      }\n    }\n  }\n`"
-  ];
   type t_mutationForVariant_dog = {
     name: string,
     barkVolume: float,
@@ -70,6 +66,10 @@ module MyQuery = {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gql\")`\n  mutation   {\n    mutationForVariant  {\n      baseType\n      baseTypeList\n      dog  {\n        name\n        barkVolume\n      }\n      human  {\n        name\n      }\n      dogOrHuman  {\n        __typename\n        ...on Dog   {\n          name\n          barkVolume\n        }\n        ...on Human   {\n          name\n        }\n      }\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

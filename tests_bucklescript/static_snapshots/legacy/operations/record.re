@@ -39,9 +39,9 @@ module MyQuery = {
     type t = {. "variousScalars": t_variousScalars};
     type t_variables = unit;
   };
+  type t = {. "variousScalars": scalars};
   /**The GraphQL query string*/
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type t = {. "variousScalars": scalars};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
@@ -139,10 +139,10 @@ module OneFieldQuery = {
     type t = {. "variousScalars": t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variousScalars = {nullableString: option(string)};
   type t = {. "variousScalars": t_variousScalars};
+  /**The GraphQL query string*/
+  let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
@@ -345,11 +345,11 @@ module ExternalFragmentQuery {
       type t = {. "variousScalars": Fragment.Raw.t};
       type t_variables = unit;
     };
+    type t = {. "variousScalars": Fragment.t};
     /**The GraphQL query string*/
     let query =
       "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\n"
       ++ Fragment.query;
-    type t = {. "variousScalars": Fragment.t};
     type t_variables = unit;
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => {
@@ -435,8 +435,6 @@ module InlineFragmentQuery = {
     type t = {. "dogOrHuman": t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -446,6 +444,8 @@ module InlineFragmentQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {. "dogOrHuman": t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
@@ -665,15 +665,15 @@ module UnionExternalFragmentQuery {
       type t = {. "dogOrHuman": t_dogOrHuman};
       type t_variables = unit;
     };
-    /**The GraphQL query string*/
-    let query =
-      "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\n"
-      ++ DogFragment.query;
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
       | `Dog(DogFragment.t)
     ];
     type t = {. "dogOrHuman": t_dogOrHuman};
+    /**The GraphQL query string*/
+    let query =
+      "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\n"
+      ++ DogFragment.query;
     type t_variables = unit;
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => {

@@ -35,8 +35,6 @@ module MyQuery = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variousScalars = {
     nullableString: option(string),
     string,
@@ -50,6 +48,8 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = "query   {\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -264,10 +264,6 @@ module MyQuery2 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
-  ];
   type t_variousScalars = {
     nullableString: option(string),
     string,
@@ -281,6 +277,10 @@ module MyQuery2 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -495,10 +495,6 @@ module MyQuery3 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
-  ];
   type t_variousScalars = {
     nullableString: option(string),
     string,
@@ -512,6 +508,10 @@ module MyQuery3 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -726,10 +726,6 @@ module MyQuery4 = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = [%raw
-    "require(\"gatsby\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
-  ];
   type t_variousScalars = {
     nullableString: option(string),
     string,
@@ -743,6 +739,10 @@ module MyQuery4 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = [%raw
+    "require(\"gatsby\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

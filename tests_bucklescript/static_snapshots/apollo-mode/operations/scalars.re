@@ -36,8 +36,6 @@ module MyQuery = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nvariousScalars  {\n__typename  \nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variousScalars = {
     __typename: string,
     nullableString: option(string),
@@ -52,6 +50,8 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = "query   {\nvariousScalars  {\n__typename  \nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
