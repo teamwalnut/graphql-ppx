@@ -49,6 +49,7 @@ module ListFragment = {
     };
     {"nullableOfNullable": nullableOfNullable};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -173,6 +174,7 @@ module Another = {
     };
     {"nullableOfNullable": nullableOfNullable, "listFragment": listFragment};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
     parse(value);

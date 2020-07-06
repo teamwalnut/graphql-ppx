@@ -260,6 +260,7 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
       parse(value);
@@ -586,6 +587,7 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
       parse(value);

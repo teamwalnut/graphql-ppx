@@ -1925,6 +1925,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -2051,6 +2052,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -2170,6 +2172,7 @@ module FragmentWithArgs = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -2311,6 +2314,7 @@ module InlineListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -2931,6 +2935,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -3067,6 +3072,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -7208,6 +7214,7 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -7547,6 +7554,7 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -28776,6 +28784,7 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -28888,6 +28897,7 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -28993,6 +29003,7 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
+
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -29126,6 +29137,7 @@ module InlineListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
+
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -29679,6 +29691,7 @@ module ListFragment = {
     };
     {\\"nullableOfNullable\\": nullableOfNullable};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -29803,6 +29816,7 @@ module Another = {
     };
     {\\"nullableOfNullable\\": nullableOfNullable, \\"listFragment\\": listFragment};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -33466,6 +33480,7 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -33792,6 +33807,7 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -38911,6 +38927,7 @@ module ListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -39023,6 +39040,7 @@ module Another = {
     };
     {\\"nullableOfNonNullable\\": nullableOfNonNullable};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -39128,6 +39146,7 @@ module FragmentWithArgs = {
     };
     {\\"listWithArg\\": listWithArg};
   };
+
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -39261,6 +39280,7 @@ module InlineListFragment = {
       \\"nullableOfNonNullable\\": nullableOfNonNullable,
     };
   };
+
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -39799,6 +39819,7 @@ module ListFragment = {
     };
     {\\"nullableOfNullable\\": nullableOfNullable};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -39923,6 +39944,7 @@ module Another = {
     };
     {\\"nullableOfNullable\\": nullableOfNullable, \\"listFragment\\": listFragment};
   };
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -43441,6 +43463,7 @@ module ExternalFragmentQuery = {
         {string, int};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -43757,6 +43780,7 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -48882,6 +48906,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -48994,6 +49019,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -49099,6 +49125,7 @@ module FragmentWithArgs = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -49230,6 +49257,7 @@ module InlineListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -49792,6 +49820,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -49918,6 +49947,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -53696,6 +53726,7 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -54016,6 +54047,7 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);
@@ -59297,6 +59329,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -59411,6 +59444,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -59518,6 +59552,7 @@ module FragmentWithArgs = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | \`String],
@@ -59651,6 +59686,7 @@ module InlineListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | \`InlineListFragment],
@@ -60218,6 +60254,7 @@ module ListFragment = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | \`ListFragment], value: Raw.t) =>
     parse(value);
@@ -60347,6 +60384,7 @@ module Another = {
       },
     }: t
   );
+
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | \`Another], value: Raw.t) =>
     parse(value);
@@ -64165,6 +64203,7 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | \`Fragment], value: Raw.t) =>
       parse(value);
@@ -64492,6 +64531,7 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
+
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | \`DogFragment], value: Raw.t) =>
       parse(value);

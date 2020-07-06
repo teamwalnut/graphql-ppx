@@ -646,7 +646,7 @@ let generate_fragment_module =
 
   let contents =
     if (has_error) {
-      [[%stri let make = (_vars, value) => [%e parse_fn]]];
+      [[%stri let parse = (_vars, value) => [%e parse_fn]]];
     } else {
       let (pre_printed_query, printed_query) =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
@@ -699,6 +699,7 @@ let generate_fragment_module =
                 )
               ),
             ],
+            [@metaloc fragment.span |> config.map_loc |> conv_loc]
             [[%stri let verifyArgsAndParse = [%e verify_parse]]],
             [
               Output_bucklescript_docstrings.(
