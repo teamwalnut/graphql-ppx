@@ -73,9 +73,9 @@ function makeDefaultVariables(param) {
 }
 
 var Z__INTERNAL = {
-  _graphql_name_100: 0,
+  _graphql_pokemon_name_100: 0,
   _graphql_name_94: 0,
-  _graphql_id_111: 0,
+  _graphql_pokemon_id_111: 0,
   _graphql_id_107: 0,
   graphql_module: 0
 };
