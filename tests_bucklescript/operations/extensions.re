@@ -30,3 +30,17 @@ module Parent = {
   |};
   {extend: "Parent.ExtendQuery"}
 ];
+
+[%graphql
+  {|
+    query Bla2 {
+      lists {
+        nullableOfNullable
+        nullableOfNonNullable
+        nonNullableOfNullable
+        nonNullableOfNonNullable
+      }
+    }
+  |};
+  {extend: "Parent.ExtendQuery", inline: true}
+];

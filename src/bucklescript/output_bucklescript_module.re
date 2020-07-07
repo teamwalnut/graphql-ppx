@@ -344,10 +344,9 @@ let wrap_module = (~loc as _, name: string, contents) => {
   };
 };
 
-let wrap_query_module =
-    (~loc as _, definition, name: string, contents, config) => {
+let wrap_query_module = (~loc as _, definition, name, contents, config) => {
   let loc = Location.none;
-  let module_name = Generator_utils.capitalize_ascii(name ++ "'");
+  let module_name = "Inner";
   let funct =
     switch (config.extend) {
     | Some(funct) => Some(funct)
@@ -375,26 +374,28 @@ let wrap_query_module =
       }
     };
 
-  switch (funct) {
-  | Some(funct) =>
-    let inner_result = [
-      Str.include_(
-        Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
-      ),
-      Str.include_(
-        Incl.mk(
-          Mod.apply(
-            Mod.ident({txt: Longident.parse(funct), loc}),
-            Mod.ident({txt: Longident.parse(module_name), loc}),
+  let contents =
+    switch (funct) {
+    | Some(funct) => [
+        wrap_module(~loc, module_name, contents),
+        Str.include_(
+          Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
+        ),
+        Str.include_(
+          Incl.mk(
+            Mod.apply(
+              Mod.ident({txt: Longident.parse(funct), loc}),
+              Mod.ident({txt: Longident.parse(module_name), loc}),
+            ),
           ),
         ),
-      ),
-    ];
-    [
-      wrap_module(~loc, module_name, contents),
-      wrap_module(~loc, name, inner_result),
-    ];
-  | None => [wrap_module(~loc, name, contents)]
+      ]
+    | None => contents
+    };
+
+  switch (name) {
+  | Some(name) => [wrap_module(~loc, name, contents)]
+  | None => contents
   };
 };
 
@@ -767,28 +768,21 @@ let generate_modules = (config, module_name, operations) => {
   | [operation] =>
     switch (generate_definition(config, operation)) {
     | (definition, Some(name), contents, loc) =>
-      config.inline
-        ? [contents]
-        : [
-          wrap_query_module(
-            ~loc,
-            definition,
-            switch (module_name) {
-            | Some(name) => name
-            | None => name
-            },
-            contents,
-            config,
-          ),
-        ]
+      wrap_query_module(
+        ~loc,
+        definition,
+        switch (config.inline, module_name) {
+        | (true, _) => None
+        | (_, Some(name)) => Some(name)
+        | (_, None) => Some(name)
+        },
+        contents,
+        config,
+      )
     | (definition, None, contents, loc) =>
-      switch (module_name) {
-      | Some(name) => [
-          wrap_query_module(~loc, definition, name, contents, config),
-        ]
-      | None => [contents]
-      }
+      wrap_query_module(~loc, definition, module_name, contents, config)
     }
+
   | operations =>
     let contents =
       operations
@@ -796,22 +790,28 @@ let generate_modules = (config, module_name, operations) => {
       |> List.mapi((i, (definition, name, contents, loc)) =>
            switch (name) {
            | Some(name) =>
-             wrap_query_module(~loc, definition, name, contents, config)
+             wrap_query_module(
+               ~loc,
+               definition,
+               Some(name),
+               contents,
+               config,
+             )
+
            | None =>
              wrap_query_module(
                ~loc,
                definition,
-               "Untitled" ++ string_of_int(i),
+               Some("Untitled" ++ string_of_int(i)),
                contents,
                config,
              )
            }
-         );
+         )
+      |> List.concat;
     switch (module_name) {
     | Some(module_name) => [
-        [
-          wrap_module(~loc=Location.none, module_name, List.concat(contents)),
-        ],
+        wrap_module(~loc=Location.none, module_name, contents),
       ]
     | None => contents
     };
