@@ -29,8 +29,6 @@ module RecordsQuery = {
     type t = {lists: t_lists};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_lists = {
     __typename: string,
     nullableOfNullable: option(array(option(string))),
@@ -39,6 +37,8 @@ module RecordsQuery = {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
+  /**The GraphQL query string*/
+  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -216,8 +216,6 @@ module ObjectsQuery = {
     type t = {. "lists": t_lists};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_lists = {
     .
     "__typename": string,
@@ -227,6 +225,8 @@ module ObjectsQuery = {
     "nonNullableOfNonNullable": array(string),
   };
   type t = {. "lists": t_lists};
+  /**The GraphQL query string*/
+  let query = "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {

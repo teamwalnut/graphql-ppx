@@ -58,6 +58,7 @@ let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
 let global_template_tag_location = () => Ppx_config.template_tag_location();
+let global_fragment_in_query = () => Ppx_config.fragment_in_query();
 
 let fmt_parse_err = err =>
   Graphql_parser.(
@@ -234,6 +235,16 @@ let extract_template_tag_import_from_config =
   extract_string_from_config("templateTagImport");
 let extract_extend_from_config = extract_string_from_config("extend");
 
+let extract_fragment_in_query_from_config = config_fields => {
+  Ppx_config.(
+    switch (extract_string_from_config("fragmentInQuery", config_fields)) {
+    | Some("include") => Some(Include)
+    | Some("exclude") => Some(Exclude)
+    | _ => None
+    }
+  );
+};
+
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
@@ -253,6 +264,7 @@ type query_config = {
   tagged_template: option(bool),
   future_added_value: option(bool),
   extend: option(string),
+  fragment_in_query: option(Ppx_config.fragment_in_query),
 };
 
 let get_query_config = fields => {
@@ -267,8 +279,10 @@ let get_query_config = fields => {
     tagged_template: extract_tagged_template_config(fields),
     future_added_value: extract_future_added_value_from_config(fields),
     extend: extract_extend_from_config(fields),
+    fragment_in_query: extract_fragment_in_query_from_config(fields),
   };
 };
+
 let empty_query_config = {
   schema: None,
   records: None,
@@ -280,6 +294,7 @@ let empty_query_config = {
   template_tag_import: None,
   future_added_value: None,
   extend: None,
+  fragment_in_query: None,
 };
 
 let get_with_default = (value, default_value) => {
@@ -316,6 +331,11 @@ let get_template_tag = query_config => {
       )
     | (Some(tag), Some(location), None) => (
         Some(tag),
+        Some(location),
+        Some("default"),
+      )
+    | (None, Some(location), None) => (
+        None,
         Some(location),
         Some("default"),
       )
@@ -397,6 +417,11 @@ let rewrite_query =
         schema,
         template_tag,
         extend: query_config.extend,
+        fragment_in_query:
+          switch (query_config.fragment_in_query) {
+          | Some(value) => value
+          | None => global_fragment_in_query()
+          },
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -695,7 +720,7 @@ let args = [
           {...current, template_tag_import: Some(template_tag_import)}
         ),
     ),
-    "the import to use for the template tag (default is \"default\"",
+    "the import to use for the template tag (default is \"default\")",
   ),
   (
     "-template-tag-location",
@@ -705,7 +730,22 @@ let args = [
           {...current, template_tag_location: Some(template_tag_location)}
         ),
     ),
-    "the import location for the template tag (default is \"default\"",
+    "the import location for the template tag",
+  ),
+  (
+    "-fragment-in-query",
+    Arg.String(
+      fun
+      | "exclude" =>
+        Ppx_config.update_config(current =>
+          {...current, fragment_in_query: Exclude}
+        )
+      | _ =>
+        Ppx_config.update_config(current =>
+          {...current, fragment_in_query: Include}
+        ),
+    ),
+    "Include the full fragment in the query (either 'include' or 'exclude')",
   ),
   (
     "-extend-query",

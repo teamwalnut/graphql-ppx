@@ -61,8 +61,6 @@ module MyQuery = {
     type t = {. "customFields": t_customFields};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
   type t_customFields = {
     .
     "currentTime": DateTime.t,
@@ -71,6 +69,8 @@ module MyQuery = {
     "nullableColor": option(Color.t),
   };
   type t = {. "customFields": t_customFields};
+  /**The GraphQL query string*/
+  let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {

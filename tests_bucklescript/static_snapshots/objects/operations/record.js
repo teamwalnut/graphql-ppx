@@ -106,9 +106,9 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
-
 var Raw$2 = { };
+
+var query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
 
 function parse$2(value) {
   var value$1 = value.int;
@@ -119,7 +119,9 @@ function parse$2(value) {
         };
 }
 
-var verifyArgsAndParse = parse$2;
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$2(value);
+}
 
 function serialize$2(value) {
   var value$1 = value.int;
@@ -130,7 +132,9 @@ function serialize$2(value) {
         };
 }
 
-var name = "Fragment";
+function verifyName(param) {
+  
+}
 
 var Z__INTERNAL$2 = {
   graphql: 0,
@@ -138,12 +142,12 @@ var Z__INTERNAL$2 = {
 };
 
 var Fragment = {
-  query: query,
   Raw: Raw$2,
+  query: query,
   parse: parse$2,
   verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$2,
-  name: name,
+  verifyName: verifyName,
   Z__INTERNAL: Z__INTERNAL$2
 };
 
@@ -271,9 +275,9 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var query$2 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
-
 var Raw$5 = { };
+
+var query$2 = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
 
 function parse$5(value) {
   var value$1 = value.barkVolume;
@@ -284,7 +288,9 @@ function parse$5(value) {
         };
 }
 
-var verifyArgsAndParse$1 = parse$5;
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$5(value);
+}
 
 function serialize$5(value) {
   var value$1 = value.barkVolume;
@@ -295,7 +301,9 @@ function serialize$5(value) {
         };
 }
 
-var name$1 = "DogFragment";
+function verifyName$1(param) {
+  
+}
 
 var Z__INTERNAL$5 = {
   graphql: 0,
@@ -303,12 +311,12 @@ var Z__INTERNAL$5 = {
 };
 
 var DogFragment = {
-  query: query$2,
   Raw: Raw$5,
+  query: query$2,
   parse: parse$5,
   verifyArgsAndParse: verifyArgsAndParse$1,
   serialize: serialize$5,
-  name: name$1,
+  verifyName: verifyName$1,
   Z__INTERNAL: Z__INTERNAL$5
 };
 

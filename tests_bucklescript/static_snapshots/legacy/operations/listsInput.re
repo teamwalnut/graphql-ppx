@@ -29,9 +29,9 @@ module MyQuery = {
       "nonNullableOfNonNullable": array(string),
     };
   };
+  type t = {. "listsInput": string};
   /**The GraphQL query string*/
   let query = "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n";
-  type t = {. "listsInput": string};
   type t_variables = {. "arg": t_variables_ListsInput}
   and t_variables_ListsInput = {
     .

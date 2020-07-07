@@ -38,10 +38,8 @@ let extend_loc_from_start = (loc: Location.t, cnum) => {
   };
 };
 
-let base_type_name = name =>
-  Ast_helper.(
-    Typ.constr({txt: Longident.parse(name), loc: Location.none}, [])
-  );
+let base_type_name = (~loc=Location.none, name) =>
+  Ast_helper.(Typ.constr({txt: Longident.parse(name), loc}, []));
 let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
 let const_str_pat = s => Ast_helper.(Pat.constant(Pconst_string(s, None)));
 let ident_from_string = (~loc=Location.none, ident) =>

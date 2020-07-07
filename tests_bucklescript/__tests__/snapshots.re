@@ -140,6 +140,22 @@ describe("Apollo", () =>
      })
 );
 
+describe("Template", () =>
+  tests
+  |> Array.iter(t => {
+       test(t, () =>
+         expect(
+           run_ppx(
+             "operations/" ++ t,
+             "-template-tag-location gql",
+             "template-tag",
+           ),
+         )
+         |> toMatchSnapshot
+       )
+     })
+);
+
 let get_bsb_error = (~ppxOptions, ~fileName, ~pathIn: string) => {
   let (_output, err) =
     execSyncWithErr(
@@ -259,6 +275,25 @@ describe("Compilation (Records)", () => {
            ~fileName=t,
            ~pathIn="operations",
            ~pathOut="records/operations",
+         );
+       test(t, () =>
+         expect(output) |> toMatchSnapshot
+       );
+       test(t, () => {
+         expect(removeKnownError(err)) |> toBe("")
+       });
+     })
+});
+
+describe("Compilation (Template)", () => {
+  tests
+  |> Array.iter(t => {
+       let (output, err) =
+         get_bsb_output_with_static_snapshot(
+           ~ppxOptions="-template-tag-location gql",
+           ~fileName=t,
+           ~pathIn="operations",
+           ~pathOut="template-tag/operations",
          );
        test(t, () =>
          expect(output) |> toMatchSnapshot

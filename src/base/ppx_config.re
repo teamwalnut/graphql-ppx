@@ -2,6 +2,10 @@ type output_mode =
   | String
   | Apollo_AST;
 
+type fragment_in_query =
+  | Include
+  | Exclude
+
 type config = {
   verbose_logging: bool,
   output_mode,
@@ -24,6 +28,7 @@ type config = {
   extend_subscription: option(string),
   extend_subscription_no_required_variables: option(string),
   extend_fragment: option(string),
+  fragment_in_query: fragment_in_query
 };
 
 let config_ref = ref(None);
@@ -48,6 +53,8 @@ let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
+let fragment_in_query = () => (config_ref^ |> Option.unsafe_unwrap).fragment_in_query;
+
 let template_tag_import = () =>
   (config_ref^ |> Option.unsafe_unwrap).template_tag_import;
 let template_tag_location = () =>

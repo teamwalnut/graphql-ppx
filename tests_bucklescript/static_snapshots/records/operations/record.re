@@ -37,9 +37,9 @@ module MyQuery = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
+  type t = {variousScalars: scalars};
   /**The GraphQL query string*/
   let query = "query   {\nvariousScalars  {\nstring  \nint  \n}\n\n}\n";
-  type t = {variousScalars: scalars};
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -137,10 +137,10 @@ module OneFieldQuery = {
     type t = {variousScalars: t_variousScalars};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variousScalars = {nullableString: option(string)};
   type t = {variousScalars: t_variousScalars};
+  /**The GraphQL query string*/
+  let query = "query   {\nvariousScalars  {\nnullableString  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -232,8 +232,6 @@ module OneFieldQuery {
 module ExternalFragmentQuery = {
   module Fragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     module Raw = {
       type t = {
         string,
@@ -246,6 +244,8 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /**The GraphQL query string*/
+    let query = "fragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -259,7 +259,10 @@ module ExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -274,7 +277,9 @@ module ExternalFragmentQuery = {
         {string, int};
       }: Raw.t
     );
-    let name = "Fragment";
+    let verifyName =
+      fun
+      | `Fragment => ();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
@@ -340,21 +345,19 @@ module ExternalFragmentQuery {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
     };
+    type t = {variousScalars: Fragment.t};
     /**The GraphQL query string*/
     let query =
-      (
-        ("query   {\nvariousScalars  {\n..." ++ Fragment.name)
-        ++ "   \n}\n\n}\n"
-      )
+      "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\n"
       ++ Fragment.query;
-    type t = {variousScalars: Fragment.t};
     type t_variables = unit;
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
         variousScalars: {
           let value = (value: Raw.t).variousScalars;
-          Fragment.verifyArgsAndParse(value);
+
+          Fragment.verifyArgsAndParse(~fragmentName=`Fragment, value);
         },
       }: t
     );
@@ -428,8 +431,6 @@ module InlineFragmentQuery = {
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_dogOrHuman_Dog = {
     name: string,
     barkVolume: float,
@@ -439,6 +440,8 @@ module InlineFragmentQuery = {
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
+  /**The GraphQL query string*/
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -550,8 +553,6 @@ module InlineFragmentQuery {
 module UnionExternalFragmentQuery = {
   module DogFragment = {
     [@ocaml.warning "-32"];
-    /**The GraphQL query string*/
-    let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     module Raw = {
       type t = {
         name: string,
@@ -564,6 +565,8 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /**The GraphQL query string*/
+    let query = "fragment DogFragment on Dog   {\nname  \nbarkVolume  \n}\n";
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
       {
@@ -577,7 +580,10 @@ module UnionExternalFragmentQuery = {
         },
       }: t
     );
-    let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
+      parse(value);
     /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
     let serialize = (value: t): Raw.t => (
       {
@@ -592,7 +598,9 @@ module UnionExternalFragmentQuery = {
         {name, barkVolume};
       }: Raw.t
     );
-    let name = "DogFragment";
+    let verifyName =
+      fun
+      | `DogFragment => ();
     external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
     external toJson: Raw.t => Js.Json.t = "%identity";
     module Z__INTERNAL = {
@@ -651,21 +659,15 @@ module UnionExternalFragmentQuery {
       type t = {dogOrHuman: t_dogOrHuman};
       type t_variables = unit;
     };
-    /**The GraphQL query string*/
-    let query =
-      (
-        (
-          "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n..."
-          ++ DogFragment.name
-        )
-        ++ "   \n}\n\n}\n\n}\n"
-      )
-      ++ DogFragment.query;
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
+    /**The GraphQL query string*/
+    let query =
+      "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n}\n\n}\n"
+      ++ DogFragment.query;
     type t_variables = unit;
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
@@ -680,7 +682,11 @@ module UnionExternalFragmentQuery {
               `Dog(
                 {
                   let value: DogFragment.Raw.t = Obj.magic(value);
-                  DogFragment.verifyArgsAndParse(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=`DogFragment,
+                    value,
+                  );
                 },
               )
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)

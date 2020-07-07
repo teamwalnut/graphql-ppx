@@ -152,9 +152,10 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
 };
 
 let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
+  open Ast_helper;
   let ident =
     Ast_helper.Exp.ident({
-      loc,
+      loc: loc |> Output_bucklescript_utils.conv_loc,
       txt: Longident.parse(name ++ ".verifyArgsAndParse"),
     });
   let variable_defs = get_variable_definitions(definition);
@@ -166,8 +167,9 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
     |> List.map(((arg_name, type_, _span, type_span)) =>
          (
            Labelled(arg_name),
-           Ast_helper.Exp.variant(
-             ~loc=config.map_loc(type_span) |> conv_loc,
+           Exp.variant(
+             ~loc=
+               config.map_loc(type_span) |> Output_bucklescript_utils.conv_loc,
              type_,
              None,
            ),
@@ -175,9 +177,23 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
        );
 
   Ast_helper.Exp.apply(
-    ~loc,
+    ~loc=loc |> Output_bucklescript_utils.conv_loc,
     ident,
-    List.append(labeled_args, [(Nolabel, ident_from_string("value"))]),
+    List.append(
+      labeled_args,
+      [
+        (
+          Labelled("fragmentName"),
+          Exp.variant(
+            /// this is the location that happens in the error
+            ~loc=loc |> Output_bucklescript_utils.conv_loc,
+            name,
+            None,
+          ),
+        ),
+        (Nolabel, ident_from_string(~loc=loc |> conv_loc, "value")),
+      ],
+    ),
   );
 };
 
@@ -284,12 +300,17 @@ and generate_object_decoder =
       | Fr_fragment_spread(_key, loc, name, _, arguments) =>
         [@metaloc conv_loc(loc)]
         {
-          let%expr value: [%t base_type_name(name ++ ".Raw.t")] =
+          let%expr value: [%t
+            base_type_name(
+              ~loc=Output_bucklescript_utils.conv_loc(loc),
+              name ++ ".Raw.t",
+            )
+          ] =
             Obj.magic(value);
           %e
           generate_fragment_parse_fun(
             config,
-            conv_loc(loc),
+            loc,
             name,
             arguments,
             definition,
@@ -668,7 +689,7 @@ and generate_parser = (config, path: list(string), definition) =>
   | Res_solo_fragment_spread(loc, name, arguments) =>
     generate_solo_fragment_spread_decoder(
       config,
-      conv_loc(loc),
+      loc,
       name,
       arguments,
       definition,

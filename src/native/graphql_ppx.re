@@ -132,6 +132,7 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         legacy: false,
         future_added_value: Ppx_config.future_added_value(),
         extend: None,
+        fragment_in_query: Include
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -229,6 +230,7 @@ let () =
       extend_subscription: None,
       extend_subscription_no_required_variables: None,
       extend_fragment: None,
+      fragment_in_query: Include
     })
   );
 

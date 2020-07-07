@@ -42,8 +42,6 @@ module MyQuery = {
     type t = {mutationForVariant: t_mutationForVariant};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\n__typename  \nname  \nbarkVolume  \n}\n\nhuman  {\n__typename  \nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n\n}\n";
   type t_mutationForVariant_dog = {
     __typename: string,
     name: string,
@@ -75,6 +73,8 @@ module MyQuery = {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
+  /**The GraphQL query string*/
+  let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\n__typename  \nname  \nbarkVolume  \n}\n\nhuman  {\n__typename  \nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\n__typename  \nname  \nbarkVolume  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

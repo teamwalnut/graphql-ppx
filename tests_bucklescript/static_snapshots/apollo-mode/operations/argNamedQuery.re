@@ -22,9 +22,9 @@ module MyQuery = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
   };
+  type t = {argNamedQuery: int};
   /**The GraphQL query string*/
   let query = "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
-  type t = {argNamedQuery: int};
   type t_variables = {query: int};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
@@ -114,9 +114,9 @@ module MultipleQueryWithSameVarName = {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};
     };
+    type t = {argNamedQuery: int};
     /**The GraphQL query string*/
     let query = "query Query1($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
-    type t = {argNamedQuery: int};
     type t_variables = {query: int};
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (
@@ -212,9 +212,9 @@ module MultipleQueryWithSameVarName {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};
     };
+    type t = {argNamedQuery: int};
     /**The GraphQL query string*/
     let query = "query Query2($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n";
-    type t = {argNamedQuery: int};
     type t_variables = {query: int};
     /**Parse the JSON GraphQL data to ReasonML data types*/
     let parse = (value: Raw.t): t => (

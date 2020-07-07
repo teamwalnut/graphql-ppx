@@ -28,9 +28,9 @@ module MyQuery = {
       "enum": Js.Nullable.t(string),
     };
   };
+  type t = {. "recursiveInput": string};
   /**The GraphQL query string*/
   let query = "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n";
-  type t = {. "recursiveInput": string};
   type t_variables = {. "arg": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .

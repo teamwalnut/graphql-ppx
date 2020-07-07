@@ -23,7 +23,7 @@ module GraphQL_PPX = {
 |}
 ];
 
-module InlineFragment = {
+module InlineListFragment = {
   [%graphql
     {|
     fragment InlineListFragment on Lists {
@@ -55,7 +55,7 @@ module InlineFragment = {
 
     l4: lists {
       nullableOfNullable
-      ...InlineFragment
+      ...InlineListFragment
     }
 
     l5: lists {

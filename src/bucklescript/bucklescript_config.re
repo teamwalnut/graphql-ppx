@@ -72,6 +72,7 @@ let defaultConfig =
     extend_subscription: None,
     extend_subscription_no_required_variables: None,
     extend_fragment: None,
+    fragment_in_query: Include
   };
 
 module JsonHelper = {
@@ -171,6 +172,26 @@ let read_config = () => {
                "Error in graphql-ppx configuration: mode \""
                ++ other
                ++ "\" is not supported. Choose either records, objects or legacy.",
+             ),
+           )
+         }
+       });
+
+    ppxConfig
+    |> JsonHelper.mapString("fragment-in-query", mode => {
+         switch (mode) {
+         | "include" =>
+           Ppx_config.update_config(current =>
+             {...current, fragment_in_query: Include}
+           )
+         | "exclude" =>
+           Ppx_config.update_config(current => {...current, fragment_in_query: Exclude})
+         | other =>
+           raise(
+             Config_error(
+               "Error in graphql-ppx configuration: fragment-in-query\""
+               ++ other
+               ++ "\" is not supported. Choose either 'include' or 'exclude'.",
              ),
            )
          }

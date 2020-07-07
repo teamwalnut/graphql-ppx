@@ -44,8 +44,6 @@ module MyQuery = {
     };
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
   type t_first_inner_inner = {. "field": string};
   type t_first_inner = {. "inner": option(t_first_inner_inner)};
   type t_first = {. "inner": option(t_first_inner)};
@@ -64,6 +62,8 @@ module MyQuery = {
     "second": t_second,
     "let_": t_let,
   };
+  /**The GraphQL query string*/
+  let query = "query   {\nfirst: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\ninner  {\ninner  {\nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {

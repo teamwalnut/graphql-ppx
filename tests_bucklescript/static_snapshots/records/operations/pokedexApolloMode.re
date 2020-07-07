@@ -26,13 +26,13 @@ module MyQuery = {
     type t = {pokemon: Js.Nullable.t(t_pokemon)};
     type t_variables = unit;
   };
-  /**The GraphQL query string*/
-  let query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
   type t_pokemon = {
     id: string,
     name: option(string),
   };
   type t = {pokemon: option(t_pokemon)};
+  /**The GraphQL query string*/
+  let query = "query   {\npokemon(name: \"Pikachu\")  {\nid  \nname  \n}\n\n}\n";
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (

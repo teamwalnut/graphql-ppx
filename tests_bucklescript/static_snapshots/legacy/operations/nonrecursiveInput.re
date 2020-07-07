@@ -33,9 +33,9 @@ module MyQuery = {
     }
     and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
   };
+  type t = {. "nonrecursiveInput": string};
   /**The GraphQL query string*/
   let query = "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n";
-  type t = {. "nonrecursiveInput": string};
   type t_variables = {. "arg": t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     .
@@ -308,13 +308,13 @@ module MyQuery2 = {
     }
     and t_variables_EmbeddedInput = {. "field": Js.Nullable.t(string)};
   };
-  /**The GraphQL query string*/
-  let query = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
   type t = {
     .
     "scalarsInput": string,
     "more": string,
   };
+  /**The GraphQL query string*/
+  let query = "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n";
   type t_variables = {
     .
     "arg": t_variables_NonrecursiveInput,

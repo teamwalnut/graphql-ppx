@@ -21,8 +21,6 @@ module GraphQL_PPX = {
 };
 module ListFragment = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -35,6 +33,8 @@ module ListFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -63,7 +63,10 @@ module ListFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -94,7 +97,9 @@ module ListFragment = {
       {nullableOfNullable, nullableOfNonNullable};
     }: Raw.t
   );
-  let name = "ListFragment";
+  let verifyName =
+    fun
+    | `ListFragment => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -151,14 +156,14 @@ module GraphQL {
 };
 module Another = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
   };
   type t = {nullableOfNonNullable: option(array(string))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment Another on Lists   {\nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -171,7 +176,10 @@ module Another = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -186,7 +194,9 @@ module Another = {
       {nullableOfNonNullable: nullableOfNonNullable};
     }: Raw.t
   );
-  let name = "Another";
+  let verifyName =
+    fun
+    | `Another => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -243,14 +253,14 @@ module GraphQL {
 };
 module FragmentWithArgs = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
   module Raw = {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
     type nonrec t_Lists = t;
   };
   type t = {listWithArg: option(array(option(string)))};
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -272,7 +282,13 @@ module FragmentWithArgs = {
       },
     }: t
   );
-  let verifyArgsAndParse = (~arg1 as _arg1: [ | `String], value: Raw.t) =>
+
+  let verifyArgsAndParse =
+      (
+        ~arg1 as _arg1: [ | `String],
+        ~fragmentName as _FragmentWithArgs: [ | `FragmentWithArgs],
+        value: Raw.t,
+      ) =>
     parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
@@ -296,7 +312,9 @@ module FragmentWithArgs = {
       {listWithArg: listWithArg};
     }: Raw.t
   );
-  let name = "FragmentWithArgs";
+  let verifyName =
+    fun
+    | `FragmentWithArgs => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -352,10 +370,8 @@ module GraphQL {
   };
 };
 
-module InlineFragment = {
+module InlineListFragment = {
   [@ocaml.warning "-32"];
-  /**The GraphQL query string*/
-  let query = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -368,6 +384,8 @@ module InlineFragment = {
     nullableOfNonNullable: option(array(string)),
   };
   type nonrec t_Lists = t;
+  /**The GraphQL query string*/
+  let query = "fragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -396,7 +414,13 @@ module InlineFragment = {
       },
     }: t
   );
-  let verifyArgsAndParse = (value: Raw.t) => parse(value);
+
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | `InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
   /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
   let serialize = (value: t): Raw.t => (
     {
@@ -427,7 +451,9 @@ module InlineFragment = {
       {nullableOfNullable, nullableOfNonNullable};
     }: Raw.t
   );
-  let name = "InlineListFragment";
+  let verifyName =
+    fun
+    | `InlineListFragment => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";
   module Z__INTERNAL = {
@@ -497,58 +523,6 @@ module MyQuery = {
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
-  /**The GraphQL query string*/
-  let query =
-    (
-      (
-        (
-          (
-            (
-              (
-                (
-                  (
-                    (
-                      (
-                        (
-                          (
-                            (
-                              (
-                                (
-                                  (
-                                    "query MyQuery($arg1: String)  {\nl1: lists  {\n..."
-                                    ++ ListFragment.name
-                                  )
-                                  ++ "   \n}\n\nl2: lists  {\n..."
-                                )
-                                ++ ListFragment.name
-                              )
-                              ++ "   \n..."
-                            )
-                            ++ ListFragment.name
-                          )
-                          ++ "   \n}\n\nl3: lists  {\nnullableOfNullable  \n..."
-                        )
-                        ++ ListFragment.name
-                      )
-                      ++ "   \n..."
-                    )
-                    ++ ListFragment.name
-                  )
-                  ++ "   \n}\n\nl4: lists  {\nnullableOfNullable  \n..."
-                )
-                ++ InlineFragment.name
-              )
-              ++ "   \n}\n\nl5: lists  {\n..."
-            )
-            ++ FragmentWithArgs.name
-          )
-          ++ "   \n}\n\n}\n"
-        )
-        ++ FragmentWithArgs.query
-      )
-      ++ InlineFragment.query
-    )
-    ++ ListFragment.query;
   type t_l2 = {
     frag1: ListFragment.t_Lists,
     frag2: ListFragment.t_Lists,
@@ -560,7 +534,7 @@ module MyQuery = {
   };
   type t_l4 = {
     nullableOfNullable: option(array(option(string))),
-    inlineFragment: InlineFragment.t_Lists,
+    inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
     l1: ListFragment.t,
@@ -569,13 +543,24 @@ module MyQuery = {
     l4: t_l4,
     l5: FragmentWithArgs.t,
   };
+  /**The GraphQL query string*/
+  let query =
+    (
+      (
+        "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\n"
+        ++ FragmentWithArgs.query
+      )
+      ++ InlineListFragment.query
+    )
+    ++ ListFragment.query;
   type t_variables = {arg1: option(string)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
       l1: {
         let value = (value: Raw.t).l1;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
       },
       l2: {
         let value = (value: Raw.t).l2;
@@ -583,11 +568,19 @@ module MyQuery = {
           {
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
           }: t_l2
         );
@@ -617,11 +610,19 @@ module MyQuery = {
             },
             frag1: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
             frag2: {
               let value: ListFragment.Raw.t = Obj.magic(value);
-              ListFragment.verifyArgsAndParse(value);
+
+              ListFragment.verifyArgsAndParse(
+                ~fragmentName=`ListFragment,
+                value,
+              );
             },
           }: t_l3
         );
@@ -649,16 +650,25 @@ module MyQuery = {
               | None => None
               };
             },
-            inlineFragment: {
-              let value: InlineFragment.Raw.t = Obj.magic(value);
-              InlineFragment.verifyArgsAndParse(value);
+            inlineListFragment: {
+              let value: InlineListFragment.Raw.t = Obj.magic(value);
+
+              InlineListFragment.verifyArgsAndParse(
+                ~fragmentName=`InlineListFragment,
+                value,
+              );
             },
           }: t_l4
         );
       },
       l5: {
         let value = (value: Raw.t).l5;
-        FragmentWithArgs.verifyArgsAndParse(~arg1=`String, value);
+
+        FragmentWithArgs.verifyArgsAndParse(
+          ~arg1=`String,
+          ~fragmentName=`FragmentWithArgs,
+          value,
+        );
       },
     }: t
   );
@@ -699,7 +709,9 @@ module MyQuery = {
               [|
                 (
                   Obj.magic(
-                    InlineFragment.serialize((value: t_l4).inlineFragment),
+                    InlineListFragment.serialize(
+                      (value: t_l4).inlineListFragment,
+                    ),
                   ): Js.Json.t
                 ),
               |],
@@ -838,18 +850,18 @@ module MyQuery2 = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
   };
+  type t = {lists: ListFragment.t};
   /**The GraphQL query string*/
   let query =
-    (("query   {\nlists  {\n..." ++ ListFragment.name) ++ "   \n}\n\n}\n")
-    ++ ListFragment.query;
-  type t = {lists: ListFragment.t};
+    "query   {\nlists  {\n...ListFragment   \n}\n\n}\n" ++ ListFragment.query;
   type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
       lists: {
         let value = (value: Raw.t).lists;
-        ListFragment.verifyArgsAndParse(value);
+
+        ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
       },
     }: t
   );
