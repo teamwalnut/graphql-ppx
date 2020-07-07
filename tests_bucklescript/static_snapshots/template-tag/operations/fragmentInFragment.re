@@ -30,7 +30,7 @@ module ListFragment = {
   type t = {nullableOfNullable: option(array(option(string)))};
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  fragment ListFragment on Lists   {\n    nullableOfNullable\n  }\n`"
   ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -149,7 +149,7 @@ module Another = {
   };
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query =
+  let query: string =
     [%raw
       "(frag_0) => require(\"gql\")`\n  fragment Another on Lists   {\n    nullableOfNullable\n    ...ListFragment\n  }\n${frag_0}\n`"
     ](

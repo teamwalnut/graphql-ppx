@@ -44,7 +44,7 @@ module Normal = {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -207,7 +207,7 @@ module ByConfig = {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -369,7 +369,7 @@ module ByDirective = {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

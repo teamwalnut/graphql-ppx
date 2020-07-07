@@ -35,7 +35,7 @@ module MyQuery = {
   };
   type t = {customScalarField: t_customScalarField};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($opt: CustomScalar, $req: CustomScalar!)  {\n    customScalarField(argOptional: $opt, argRequired: $req)  {\n      nullable\n      nonNullable\n    }\n  }\n`"
   ];
   type t_variables = {

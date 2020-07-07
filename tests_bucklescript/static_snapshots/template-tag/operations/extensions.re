@@ -55,7 +55,7 @@ module Bla = {
     };
     type t = {lists: t_lists};
     /**The GraphQL query string*/
-    let query = [%raw
+    let query: string = [%raw
       "require(\"gql\")`\n  query Bla  {\n    lists  {\n      nullableOfNullable\n      nullableOfNonNullable\n      nonNullableOfNullable\n      nonNullableOfNonNullable\n    }\n  }\n`"
     ];
     type t_variables = unit;
@@ -235,7 +235,7 @@ module Inner = {
   };
   type t = {lists: t_lists};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query Bla2  {\n    lists  {\n      nullableOfNullable\n      nullableOfNonNullable\n      nonNullableOfNullable\n      nonNullableOfNonNullable\n    }\n  }\n`"
   ];
   type t_variables = unit;

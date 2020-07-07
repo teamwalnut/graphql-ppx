@@ -46,7 +46,7 @@ module MyQuery = {
     v2: t_v2,
   };
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($var: Boolean!)  {\n    v1: variousScalars  {\n      nullableString @skip(if: $var)\n      string @skip(if: $var)\n    }\n    v2: variousScalars  {\n      nullableString @include(if: $var)\n      string @include(if: $var)\n    }\n  }\n`"
   ];
   type t_variables = {var: bool};

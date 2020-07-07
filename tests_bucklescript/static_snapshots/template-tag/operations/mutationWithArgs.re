@@ -24,7 +24,7 @@ module MyQuery = {
   };
   type t = {optionalInputArgs: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation MyMutation($required: String!)  {\n    optionalInputArgs(required: $required, anotherRequired: \"val\")\n  }\n`"
   ];
   type t_variables = {required: string};

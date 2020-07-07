@@ -36,7 +36,7 @@ module MyQuery = {
   };
   type t = {lists: t_lists};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    lists  {\n      nullableOfNullable\n      nullableOfNonNullable\n      nonNullableOfNullable\n      nonNullableOfNonNullable\n    }\n  }\n`"
   ];
   type t_variables = unit;

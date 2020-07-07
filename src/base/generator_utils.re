@@ -22,12 +22,13 @@ type output_config = {
   schema: Schema.t,
   full_document: Graphql_ast.document,
   template_tag: (option(string), option(string), option(string)),
+  template_tag_return_type: option(string),
   records: bool,
   inline: bool,
   legacy: bool,
   future_added_value: bool,
   extend: option(string),
-  fragment_in_query: Ppx_config.fragment_in_query
+  fragment_in_query: Ppx_config.fragment_in_query,
 };
 
 let filter_map = (f, l) => {

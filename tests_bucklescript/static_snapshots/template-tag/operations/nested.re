@@ -60,7 +60,7 @@ module MyQuery = {
     let_: t_let,
   };
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    first: nestedObject  {\n      inner  {\n        inner  {\n          field\n        }\n      }\n    }\n    second: nestedObject  {\n      inner  {\n        inner  {\n          f1: field\n          f2: field\n        }\n      }\n    }\n    let: nestedObject  {\n      inner  {\n        inner  {\n          field\n        }\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

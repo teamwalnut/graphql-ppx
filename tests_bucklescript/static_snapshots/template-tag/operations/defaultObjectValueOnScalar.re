@@ -24,7 +24,7 @@ module MyQuery = {
   };
   type t = {defaultObjectValueOnScalar: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n  defaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})\n  }\n`"
   ];
   type t_variables = unit;

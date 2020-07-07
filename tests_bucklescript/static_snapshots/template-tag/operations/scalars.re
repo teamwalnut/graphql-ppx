@@ -48,7 +48,7 @@ module MyQuery = {
   };
   type t = {variousScalars: t_variousScalars};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
   ];
   type t_variables = unit;

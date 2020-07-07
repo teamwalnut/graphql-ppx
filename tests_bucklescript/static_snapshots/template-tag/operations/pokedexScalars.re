@@ -35,7 +35,7 @@ module MyQuery = {
   };
   type t = {pokemon: option(t_pokemon)};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query pokemon($id: String, $name: String)  {\n    pokemon(name: $name, id: $id)  {\n      id\n      name\n    }\n  }\n`"
   ];
   type t_variables = {

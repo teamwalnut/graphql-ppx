@@ -63,6 +63,7 @@ let defaultConfig =
     template_tag: None,
     template_tag_location: None,
     template_tag_import: None,
+    template_tag_return_type: None,
     custom_fields: Hashtbl.create(0),
     future_added_value: true,
     extend_query: None,
@@ -72,7 +73,7 @@ let defaultConfig =
     extend_subscription: None,
     extend_subscription_no_required_variables: None,
     extend_fragment: None,
-    fragment_in_query: Include
+    fragment_in_query: Include,
   };
 
 module JsonHelper = {
@@ -185,7 +186,9 @@ let read_config = () => {
              {...current, fragment_in_query: Include}
            )
          | "exclude" =>
-           Ppx_config.update_config(current => {...current, fragment_in_query: Exclude})
+           Ppx_config.update_config(current =>
+             {...current, fragment_in_query: Exclude}
+           )
          | other =>
            raise(
              Config_error(
@@ -264,18 +267,32 @@ let read_config = () => {
            {...current, template_tag: Some(template_tag)}
          )
        });
+
     ppxConfig
     |> JsonHelper.mapString("template-tag-import", template_tag_import => {
          Ppx_config.update_config(current =>
            {...current, template_tag_import: Some(template_tag_import)}
          )
        });
+
     ppxConfig
     |> JsonHelper.mapString("template-tag-location", template_tag_location => {
          Ppx_config.update_config(current =>
            {...current, template_tag_location: Some(template_tag_location)}
          )
        });
+
+    ppxConfig
+    |> JsonHelper.mapString(
+         "template-tag-return-type", template_tag_return_type => {
+         Ppx_config.update_config(current =>
+           {
+             ...current,
+             template_tag_return_type: Some(template_tag_return_type),
+           }
+         )
+       });
+
     ppxConfig |> read_custom_fields;
   };
 

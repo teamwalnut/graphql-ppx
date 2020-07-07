@@ -49,7 +49,7 @@ module MyQuery = {
   };
   type t = {mutationWithError: t_mutationWithError};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation   {\n    mutationWithError  {\n      value  {\n        stringField\n      }\n      errors  {\n        field\n        message\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

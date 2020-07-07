@@ -127,12 +127,13 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         /*  the only call site of schema, make it lazy! */
         schema: Lazy.force(Read_schema.get_schema(schema)),
         template_tag: (None, None, None),
+        template_tag_return_type: None,
         records: false,
         inline: false,
         legacy: false,
         future_added_value: Ppx_config.future_added_value(),
         extend: None,
-        fragment_in_query: Include
+        fragment_in_query: Include,
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
@@ -221,6 +222,7 @@ let () =
       template_tag: None,
       template_tag_location: None,
       template_tag_import: None,
+      template_tag_return_type: None,
       custom_fields: Hashtbl.create(0),
       future_added_value: true,
       extend_query: None,
@@ -230,7 +232,7 @@ let () =
       extend_subscription: None,
       extend_subscription_no_required_variables: None,
       extend_fragment: None,
-      fragment_in_query: Include
+      fragment_in_query: Include,
     })
   );
 

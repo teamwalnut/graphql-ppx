@@ -18,6 +18,30 @@ module MyQuery = [%graphql
   {templateTag: "graphql"}
 ];
 
+module MyTypes = {
+  type query;
+};
+
+module MyQuery1a = [%graphql
+  {|
+  {
+    variousScalars {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+|};
+  {templateTag: "graphql", templateTagReturnType: "MyTypes.query"}
+];
+
 module MyQuery1b = [%graphql
   {|
   {

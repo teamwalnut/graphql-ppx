@@ -45,7 +45,7 @@ module Normal = {
   };
   type t = {mutationWithError: t_mutationWithError};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation   {\n    mutationWithError  {\n      errors  {\n        message\n        field\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -209,7 +209,7 @@ module ByConfig = {
   };
   type t = {mutationWithError: t_mutationWithError};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation   {\n    mutationWithError  {\n      errors  {\n        message\n        field\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -372,7 +372,7 @@ module ByDirective = {
   };
   type t = {mutationWithError: t_mutationWithError};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation   {\n    mutationWithError  {\n      errors  {\n        message\n        field\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

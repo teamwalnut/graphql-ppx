@@ -34,7 +34,7 @@ module ListFragment = {
   };
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  fragment ListFragment on Lists   {\n    nullableOfNullable\n    nullableOfNonNullable\n  }\n`"
   ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -165,7 +165,7 @@ module Another = {
   type t = {nullableOfNonNullable: option(array(string))};
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  fragment Another on Lists   {\n    nullableOfNonNullable\n  }\n`"
   ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -264,7 +264,7 @@ module FragmentWithArgs = {
   type t = {listWithArg: option(array(option(string)))};
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  fragment FragmentWithArgs on Lists   {\n    listWithArg(arg1: $arg1)\n  }\n`"
   ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -391,7 +391,7 @@ module InlineListFragment = {
   };
   type nonrec t_Lists = t;
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  fragment InlineListFragment on Lists   {\n    nullableOfNullable\n    nullableOfNonNullable\n  }\n`"
   ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -552,7 +552,7 @@ module MyQuery = {
     l5: FragmentWithArgs.t,
   };
   /**The GraphQL query string*/
-  let query =
+  let query: string =
     [%raw
       "(frag_0, frag_1, frag_2) => require(\"gql\")`\n  query MyQuery($arg1: String)  {\n    l1: lists  {\n      ...ListFragment\n    }\n    l2: lists  {\n      ...ListFragment\n      ...ListFragment\n    }\n    l3: lists  {\n      nullableOfNullable\n      ...ListFragment\n      ...ListFragment\n    }\n    l4: lists  {\n      nullableOfNullable\n      ...InlineListFragment\n    }\n    l5: lists  {\n      ...FragmentWithArgs\n    }\n  }\n${frag_0}\n${frag_1}\n${frag_2}\n`"
     ](
@@ -859,7 +859,7 @@ module MyQuery2 = {
   };
   type t = {lists: ListFragment.t};
   /**The GraphQL query string*/
-  let query =
+  let query: string =
     [%raw
       "(frag_0) => require(\"gql\")`\n  query   {\n    lists  {\n      ...ListFragment\n    }\n  }\n${frag_0}\n`"
     ](

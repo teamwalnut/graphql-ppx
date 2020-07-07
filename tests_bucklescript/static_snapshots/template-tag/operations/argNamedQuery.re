@@ -24,7 +24,7 @@ module MyQuery = {
   };
   type t = {argNamedQuery: int};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($query: Int!)  {\n    argNamedQuery(query: $query)\n  }\n`"
   ];
   type t_variables = {query: int};
@@ -118,7 +118,7 @@ module MultipleQueryWithSameVarName = {
     };
     type t = {argNamedQuery: int};
     /**The GraphQL query string*/
-    let query = [%raw
+    let query: string = [%raw
       "require(\"gql\")`\n  query Query1($query: Int!)  {\n    argNamedQuery(query: $query)\n  }\n`"
     ];
     type t_variables = {query: int};
@@ -218,7 +218,7 @@ module MultipleQueryWithSameVarName {
     };
     type t = {argNamedQuery: int};
     /**The GraphQL query string*/
-    let query = [%raw
+    let query: string = [%raw
       "require(\"gql\")`\n  query Query2($query: Int!)  {\n    argNamedQuery(query: $query)\n  }\n`"
     ];
     type t_variables = {query: int};

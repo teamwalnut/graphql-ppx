@@ -29,7 +29,7 @@ module MyQuery = {
   };
   type t = {recursiveInput: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: RecursiveInput!)  {\n    recursiveInput(arg: $arg)\n  }\n`"
   ];
   type t_variables = {arg: t_variables_RecursiveInput}

@@ -58,6 +58,8 @@ let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
 let global_template_tag_location = () => Ppx_config.template_tag_location();
+let global_template_tag_return_type = () =>
+  Ppx_config.template_tag_return_type();
 let global_fragment_in_query = () => Ppx_config.fragment_in_query();
 
 let fmt_parse_err = err =>
@@ -239,6 +241,8 @@ let extract_template_tag_location_from_config =
   extract_string_from_config("templateTagLocation");
 let extract_template_tag_import_from_config =
   extract_string_from_config("templateTagImport");
+let extract_template_tag_return_type_from_config =
+  extract_string_from_config("templateTagReturnType");
 let extract_extend_from_config = extract_string_from_config("extend");
 
 let extract_fragment_in_query_from_config = config_fields => {
@@ -267,6 +271,7 @@ type query_config = {
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
+  template_tag_return_type: option(string),
   tagged_template: option(bool),
   future_added_value: option(bool),
   extend: option(string),
@@ -282,6 +287,8 @@ let get_query_config = fields => {
     template_tag: extract_template_tag_from_config(fields),
     template_tag_import: extract_template_tag_import_from_config(fields),
     template_tag_location: extract_template_tag_location_from_config(fields),
+    template_tag_return_type:
+      extract_template_tag_return_type_from_config(fields),
     tagged_template: extract_tagged_template_config(fields),
     future_added_value: extract_future_added_value_from_config(fields),
     extend: extract_extend_from_config(fields),
@@ -298,6 +305,7 @@ let empty_query_config = {
   template_tag: None,
   template_tag_location: None,
   template_tag_import: None,
+  template_tag_return_type: None,
   future_added_value: None,
   extend: None,
   fragment_in_query: None,
@@ -422,6 +430,11 @@ let rewrite_query =
         /*  the only call site of schema, make it lazy! */
         schema,
         template_tag,
+        template_tag_return_type:
+          get_with_default(
+            query_config.template_tag_return_type,
+            global_template_tag_return_type(),
+          ),
         extend: query_config.extend,
         fragment_in_query:
           switch (query_config.fragment_in_query) {
@@ -731,6 +744,19 @@ let args = [
       template_tag_location =>
         Ppx_config.update_config(current =>
           {...current, template_tag_location: Some(template_tag_location)}
+        ),
+    ),
+    "the import location for the template tag",
+  ),
+  (
+    "-template-tag-return-type",
+    Arg.String(
+      template_tag_return_type =>
+        Ppx_config.update_config(current =>
+          {
+            ...current,
+            template_tag_return_type: Some(template_tag_return_type),
+          }
         ),
     ),
     "the import location for the template tag",

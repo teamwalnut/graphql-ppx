@@ -4,7 +4,7 @@ type output_mode =
 
 type fragment_in_query =
   | Include
-  | Exclude
+  | Exclude;
 
 type config = {
   verbose_logging: bool,
@@ -19,6 +19,7 @@ type config = {
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
+  template_tag_return_type: option(string),
   custom_fields: Hashtbl.t(string, string),
   future_added_value: bool,
   extend_query: option(string),
@@ -28,7 +29,7 @@ type config = {
   extend_subscription: option(string),
   extend_subscription_no_required_variables: option(string),
   extend_fragment: option(string),
-  fragment_in_query: fragment_in_query
+  fragment_in_query,
 };
 
 let config_ref = ref(None);
@@ -53,12 +54,15 @@ let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
 let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
-let fragment_in_query = () => (config_ref^ |> Option.unsafe_unwrap).fragment_in_query;
+let fragment_in_query = () =>
+  (config_ref^ |> Option.unsafe_unwrap).fragment_in_query;
 
 let template_tag_import = () =>
   (config_ref^ |> Option.unsafe_unwrap).template_tag_import;
 let template_tag_location = () =>
   (config_ref^ |> Option.unsafe_unwrap).template_tag_location;
+let template_tag_return_type = () =>
+  (config_ref^ |> Option.unsafe_unwrap).template_tag_return_type;
 
 let verbose_error_handling = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_error_handling;

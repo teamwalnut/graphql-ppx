@@ -24,7 +24,7 @@ module MyQuery = {
   };
   type t = {enumInput: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: SampleField!)  {\n    enumInput(arg: $arg)\n  }\n`"
   ];
   type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};

@@ -39,7 +39,7 @@ module MyQuery = {
   };
   type t = {variousScalars: scalars};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    variousScalars  {\n      string\n      int\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -142,7 +142,7 @@ module OneFieldQuery = {
   type t_variousScalars = {nullableString: option(string)};
   type t = {variousScalars: t_variousScalars};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    variousScalars  {\n      nullableString\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -249,7 +249,7 @@ module ExternalFragmentQuery = {
     };
     type nonrec t_VariousScalars = t;
     /**The GraphQL query string*/
-    let query = [%raw
+    let query: string = [%raw
       "require(\"gql\")`\n  fragment Fragment on VariousScalars   {\n    string\n    int\n  }\n`"
     ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -353,7 +353,7 @@ module ExternalFragmentQuery {
     };
     type t = {variousScalars: Fragment.t};
     /**The GraphQL query string*/
-    let query =
+    let query: string =
       [%raw
         "(frag_0) => require(\"gql\")`\n  query   {\n    variousScalars  {\n      ...Fragment\n    }\n  }\n${frag_0}\n`"
       ](
@@ -450,7 +450,7 @@ module InlineFragmentQuery = {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
@@ -577,7 +577,7 @@ module UnionExternalFragmentQuery = {
     };
     type nonrec t_Dog = t;
     /**The GraphQL query string*/
-    let query = [%raw
+    let query: string = [%raw
       "require(\"gql\")`\n  fragment DogFragment on Dog   {\n    name\n    barkVolume\n  }\n`"
     ];
     /**Parse the JSON GraphQL data to ReasonML data types*/
@@ -678,7 +678,7 @@ module UnionExternalFragmentQuery {
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     /**The GraphQL query string*/
-    let query =
+    let query: string =
       [%raw
         "(frag_0) => require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        ...DogFragment\n      }\n    }\n  }\n${frag_0}\n`"
       ](

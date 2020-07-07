@@ -66,7 +66,7 @@ module MyQuery = {
   ];
   type t = {mutationForVariant: t_mutationForVariant};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  mutation   {\n    mutationForVariant  {\n      baseType\n      baseTypeList\n      dog  {\n        name\n        barkVolume\n      }\n      human  {\n        name\n      }\n      dogOrHuman  {\n        __typename\n        ...on Dog   {\n          name\n          barkVolume\n        }\n        ...on Human   {\n          name\n        }\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

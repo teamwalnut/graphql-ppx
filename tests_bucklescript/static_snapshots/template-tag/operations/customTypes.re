@@ -68,7 +68,7 @@ module MyQuery = {
   };
   type t = {customFields: t_customFields};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    customFields  {\n      currentTime\n      favoriteColor\n      futureTime\n      nullableColor\n    }\n  }\n`"
   ];
   type t_variables = unit;

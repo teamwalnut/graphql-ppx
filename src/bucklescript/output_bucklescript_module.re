@@ -241,6 +241,18 @@ let wrap_structure_raw = contents => {
   ));
 };
 
+let constraint_on_type = (exp, type_name) => {
+  Exp.constraint_(
+    exp,
+    base_type_name(
+      switch (type_name) {
+      | None => "string"
+      | Some(type_name) => type_name
+      },
+    ),
+  );
+};
+
 let wrap_raw = contents => {
   Exp.extension((
     {txt: "raw", loc: Location.none},
@@ -259,72 +271,67 @@ let wrap_raw = contents => {
 
 let make_printed_query = (config, document) => {
   let source = Graphql_printer.print_document(config.schema, document);
-  let reprinted =
-    switch (Ppx_config.output_mode()) {
-    | Ppx_config.Apollo_AST => (
-        None,
-        Ast_serializer_apollo.serialize_document(source, document)
-        |> emit_json(config),
-      )
-    | Ppx_config.String =>
-      switch (config.template_tag) {
-      | (template_tag, location, import)
-          when template_tag != None || location != None =>
-        open Graphql_printer;
-        // the only way to emit a template literal for now, using the bs.raw
-        // extension
-        let fragments =
-          source
-          |> Array.fold_left(
-               acc =>
-                 fun
-                 | String(_) => acc
-                 | FragmentNameRef(_) => acc
-                 | FragmentQueryRef(f) => [f, ...acc],
-               [],
-             )
-          |> List.rev;
+  switch (Ppx_config.output_mode()) {
+  | Ppx_config.Apollo_AST =>
+    Ast_serializer_apollo.serialize_document(source, document)
+    |> emit_json(config)
 
-        let template_tag =
-          wrap_template_tag(
-            ~template_tag?,
-            ~location?,
-            ~import?,
-            pretty_print(emit_printed_template_query(source, config)),
-          );
+  | Ppx_config.String =>
+    switch (config.template_tag) {
+    | (template_tag, location, import)
+        when template_tag != None || location != None =>
+      open Graphql_printer;
+      // the only way to emit a template literal for now, using the bs.raw
+      // extension
+      let fragments =
+        source
+        |> Array.fold_left(
+             acc =>
+               fun
+               | String(_) => acc
+               | FragmentNameRef(_) => acc
+               | FragmentQueryRef(f) => [f, ...acc],
+             [],
+           )
+        |> List.rev;
 
-        (
-          None,
-          switch (fragments) {
-          | [] => wrap_raw(template_tag)
-          | fragments =>
-            let fragment_names =
-              fragments
-              |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
-
-            let frag_fun =
-              "("
-              ++ (
-                List.tl(fragment_names)
-                |> List.fold_left(
-                     (acc, el) => acc ++ ", " ++ el,
-                     List.hd(fragment_names),
-                   )
-              )
-              ++ ") => ";
-
-            Exp.apply(
-              wrap_raw(frag_fun ++ template_tag),
-              fragments |> List.map(f => (Nolabel, make_fragment_query(f))),
-            );
-          },
+      let template_tag =
+        wrap_template_tag(
+          ~template_tag?,
+          ~location?,
+          ~import?,
+          pretty_print(emit_printed_template_query(source, config)),
         );
 
-      | (_, _, _) => (None, emit_printed_query(source, config))
-      }
-    };
+      constraint_on_type(
+        switch (fragments) {
+        | [] => wrap_raw(template_tag)
+        | fragments =>
+          let fragment_names =
+            fragments |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
 
-  reprinted;
+          let frag_fun =
+            "("
+            ++ (
+              List.tl(fragment_names)
+              |> List.fold_left(
+                   (acc, el) => acc ++ ", " ++ el,
+                   List.hd(fragment_names),
+                 )
+            )
+            ++ ") => ";
+
+          Exp.apply(
+            wrap_raw(frag_fun ++ template_tag),
+            fragments |> List.map(f => (Nolabel, make_fragment_query(f))),
+          );
+        },
+        config.template_tag_return_type,
+      );
+
+    | (_, _, _) => emit_printed_query(source, config)
+    }
+  };
 };
 
 let wrap_module = (~loc as _, name: string, contents) => {
@@ -459,7 +466,7 @@ let generate_default_operation =
           extracted_args,
         );
 
-      let (pre_printed_query, printed_query) =
+      let printed_query =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
       let legacy_make_with_variables = [%stri
@@ -481,10 +488,6 @@ let generate_default_operation =
             ),
           ],
           types,
-          switch (pre_printed_query) {
-          | Some(pre_printed_query) => [pre_printed_query]
-          | None => []
-          },
           [
             Output_bucklescript_docstrings.(
               make_let("query", printed_query, query_docstring)
@@ -649,7 +652,7 @@ let generate_fragment_module =
     if (has_error) {
       [[%stri let parse = (_vars, value) => [%e parse_fn]]];
     } else {
-      let (pre_printed_query, printed_query) =
+      let printed_query =
         make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
       let verify_parse =
         make_labeled_fun(
@@ -682,10 +685,6 @@ let generate_fragment_module =
             [[%stri [@ocaml.warning "-32"]]],
             [wrap_module(~loc=Location.none, "Raw", raw_types)],
             types,
-            switch (pre_printed_query) {
-            | Some(pre_printed_query) => [pre_printed_query]
-            | None => []
-            },
             [
               Output_bucklescript_docstrings.(
                 make_let("query", printed_query, query_docstring)

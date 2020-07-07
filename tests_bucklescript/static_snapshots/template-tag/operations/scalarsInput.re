@@ -36,7 +36,7 @@ module MyQuery = {
   };
   type t = {scalarsInput: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: VariousScalarsInput!)  {\n    scalarsInput(arg: $arg)\n  }\n`"
   ];
   type t_variables = {arg: t_variables_VariousScalarsInput}

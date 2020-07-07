@@ -30,7 +30,7 @@ module MyQuery = {
   };
   type t = {listsInput: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: ListsInput!)  {\n    listsInput(arg: $arg)\n  }\n`"
   ];
   type t_variables = {arg: t_variables_ListsInput}

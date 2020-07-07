@@ -34,7 +34,7 @@ module MyQuery = {
   };
   type t = {nonrecursiveInput: string};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: NonrecursiveInput!)  {\n    nonrecursiveInput(arg: $arg)\n  }\n`"
   ];
   type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -335,7 +335,7 @@ module MyQuery2 = {
     more: string,
   };
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\n    scalarsInput(arg: $arg)\n    more: scalarsInput(arg: $arg2)\n  }\n`"
   ];
   type t_variables = {

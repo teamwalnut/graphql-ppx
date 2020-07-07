@@ -40,7 +40,7 @@ module MyQuery = {
   ];
   type t = {simpleSubscription: t_simpleSubscription};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  subscription   {\n    simpleSubscription  {\n      __typename\n      ...on Dog   {\n        name\n      }\n      ...on Human   {\n        name\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;

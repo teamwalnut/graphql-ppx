@@ -38,7 +38,7 @@ module MyQuery = {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   /**The GraphQL query string*/
-  let query = [%raw
+  let query: string = [%raw
     "require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        name\n        barkVolume\n      }\n    }\n  }\n`"
   ];
   type t_variables = unit;
