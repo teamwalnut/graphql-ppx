@@ -16,6 +16,9 @@
     cookies: [],
   }
 ];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
 module ListFragment = {
   [@ocaml.warning "-32"];
   module Raw = {
