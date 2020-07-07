@@ -15,7 +15,27 @@ module MyQuery = [%graphql
     }
   }
 |};
-  {template_literal: graphql}
+  {templateTag: "graphql"}
+];
+
+module MyQuery1b = [%graphql
+  {|
+  {
+    variousScalars {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+|};
+  {templateTag: graphql}
 ];
 
 module MyQuery2 = [%graphql
@@ -36,7 +56,7 @@ module MyQuery2 = [%graphql
   }
 |};
   {
-    templateTag: graphql,
+    templateTag: "graphql",
     templateTagImport: "graphql",
     templateTagLocation: "gatsby",
   }

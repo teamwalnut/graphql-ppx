@@ -122,6 +122,10 @@ let extract_template_tag_from_config = config_fields => {
             switch (config_field) {
             | (
                 {txt: Longident.Lident("templateTag"), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+              )
+            | (
+                {txt: Longident.Lident("templateTag"), _},
                 {pexp_desc: Pexp_ident({txt: _}), _},
               ) =>
               true
@@ -135,6 +139,8 @@ let extract_template_tag_from_config = config_fields => {
     };
 
   switch (maybe_template_tag_field) {
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(template_tag, _))})) =>
+    Some(template_tag)
   | Some((_, {pexp_desc: Pexp_ident({txt: lident})})) =>
     Some(
       Longident.flatten(lident)
