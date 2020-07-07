@@ -169,7 +169,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN_JAAP }}
 
       - name: Publish Prerelease
-        if: success()
+        if: success() && github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')
         run: |
           npm version prerelease -preid $(git rev-parse --short HEAD) -no-git-tag-version
           npm publish --tag=dev
