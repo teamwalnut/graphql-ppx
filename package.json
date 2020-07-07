@@ -1,6 +1,6 @@
 {
   "name": "@reasonml-community/graphql-ppx",
-  "version": "1.0.0-beta.15",
+  "version": "1.0.0-beta.16",
   "description": "graphql-ppx rewriter for Bucklescript/ReasonML",
   "repository": "https://github.com/reasonml-community/graphql-ppx",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
