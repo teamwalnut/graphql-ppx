@@ -425,15 +425,13 @@ let rewrite_query =
       };
       switch (Validations.run_validators(config, document)) {
       | (Some(errs), _) =>
-        let errs =
-          errs
-          |> List.rev
-          |> List.map(((loc, msg)) => {
-               let loc = conv_loc(loc);
-               %stri
-               [%e make_error_expr(loc, msg)];
-             });
-        [errs];
+        errs
+        |> List.rev
+        |> List.map(((loc, msg)) => {
+             let loc = conv_loc(loc);
+             %stri
+             [%e make_error_expr(loc, msg)];
+           })
       | (None, warnings) =>
         warnings
         |> List.iter(((loc, message)) => {
@@ -444,6 +442,7 @@ let rewrite_query =
                Warnings.Preprocessor(message),
              );
            });
+
         Result_decoder.unify_document_schema(config, document)
         |> Output_bucklescript_module.generate_modules(config, module_name);
       };
@@ -548,7 +547,6 @@ let mapper = (_config, _cookies) => {
                              ~module_name,
                              (),
                            )
-                           |> List.concat
                            |> List.rev,
                            acc,
                          )
@@ -578,7 +576,6 @@ let mapper = (_config, _cookies) => {
                              ~module_name,
                              (),
                            )
-                           |> List.concat
                            |> List.rev,
                            acc,
                          )

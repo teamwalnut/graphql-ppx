@@ -102,7 +102,7 @@ var Z__INTERNAL = {
   graphql_module: 0
 };
 
-var Bla$prime = {
+var Inner = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -118,6 +118,7 @@ function use(param) {
 }
 
 var Bla = {
+  Inner: Inner,
   Raw: Raw,
   query: query,
   parse: parse,
@@ -129,7 +130,118 @@ var Bla = {
   use: use
 };
 
+var Raw$1 = { };
+
+var query$1 = "query Bla2  {\nlists  {\nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n";
+
+function parse$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nullableOfNullable;
+  var value$3 = value$1.nullableOfNonNullable;
+  var value$4 = value$1.nonNullableOfNullable;
+  var value$5 = value$1.nonNullableOfNonNullable;
+  return {
+          lists: {
+            nullableOfNullable: !(value$2 == null) ? value$2.map((function (value) {
+                      if (!(value == null)) {
+                        return value;
+                      }
+                      
+                    })) : undefined,
+            nullableOfNonNullable: !(value$3 == null) ? value$3.map((function (value) {
+                      return value;
+                    })) : undefined,
+            nonNullableOfNullable: value$4.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })),
+            nonNullableOfNonNullable: value$5.map((function (value) {
+                    return value;
+                  }))
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.lists;
+  var value$2 = value$1.nonNullableOfNonNullable;
+  var nonNullableOfNonNullable = value$2.map((function (value) {
+          return value;
+        }));
+  var value$3 = value$1.nonNullableOfNullable;
+  var nonNullableOfNullable = value$3.map((function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }));
+  var value$4 = value$1.nullableOfNonNullable;
+  var nullableOfNonNullable = value$4 !== undefined ? value$4.map((function (value) {
+            return value;
+          })) : null;
+  var value$5 = value$1.nullableOfNullable;
+  var nullableOfNullable = value$5 !== undefined ? value$5.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  var lists = {
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
+  return {
+          lists: lists
+        };
+}
+
+function serializeVariables$1(param) {
+  
+}
+
+function makeVariables$1(param) {
+  
+}
+
+function makeDefaultVariables$1(param) {
+  
+}
+
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
+var Inner$1 = {
+  Raw: Raw$1,
+  query: query$1,
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: makeDefaultVariables$1,
+  Z__INTERNAL: Z__INTERNAL$1
+};
+
+function use$1(param) {
+  
+}
+
 exports.Parent = Parent;
-exports.Bla$prime = Bla$prime;
 exports.Bla = Bla;
+exports.Inner = Inner$1;
+exports.Raw = Raw$1;
+exports.query = query$1;
+exports.parse = parse$1;
+exports.serialize = serialize$1;
+exports.serializeVariables = serializeVariables$1;
+exports.makeVariables = makeVariables$1;
+exports.makeDefaultVariables = makeDefaultVariables$1;
+exports.Z__INTERNAL = Z__INTERNAL$1;
+exports.use = use$1;
 /* No side effect */
