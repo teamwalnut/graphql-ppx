@@ -31,3 +31,20 @@ module MyQueryNoError = [%graphql
   }
 |}
 ];
+
+type named = {name: string};
+
+module NamedQuery = [%graphql
+  {|
+  {
+    dogOrHuman {
+      ...on Dog @ppxAs(type: "named") {
+        name
+      }
+      ...on Human @ppxAs(type: "named") {
+        name
+      }
+    }
+  }
+|}
+];

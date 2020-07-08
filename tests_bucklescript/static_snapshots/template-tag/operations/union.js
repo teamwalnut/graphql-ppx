@@ -214,6 +214,108 @@ var MyQueryNoError = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+var Raw$2 = { };
+
+var query$2 = (require("gql")`
+  query   {
+    dogOrHuman  {
+      __typename
+      ...on Dog   {
+        name
+      }
+      ...on Human   {
+        name
+      }
+    }
+  }
+`);
+
+function parse$2(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1["__typename"];
+  var tmp;
+  switch (typename) {
+    case "Dog" :
+        tmp = /* `Dog */[
+          3406428,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    case "Human" :
+        tmp = /* `Human */[
+          -1031617139,
+          {
+            name: value$1.name
+          }
+        ];
+        break;
+    default:
+      tmp = /* `FutureAddedValue */[
+        -31101740,
+        value$1
+      ];
+  }
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.dogOrHuman;
+  var variant = value$1[0];
+  var dogOrHuman;
+  if (variant !== -31101740) {
+    if (variant >= 3406428) {
+      var value$2 = value$1[1].name;
+      dogOrHuman = {
+        __typename: "Dog",
+        name: value$2
+      };
+    } else {
+      var value$3 = value$1[1].name;
+      dogOrHuman = {
+        __typename: "Human",
+        name: value$3
+      };
+    }
+  } else {
+    dogOrHuman = value$1[1];
+  }
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serializeVariables$2(param) {
+  
+}
+
+function makeVariables$2(param) {
+  
+}
+
+function makeDefaultVariables$2(param) {
+  
+}
+
+var Z__INTERNAL$2 = {
+  graphql_module: 0
+};
+
+var NamedQuery = {
+  Raw: Raw$2,
+  query: query$2,
+  parse: parse$2,
+  serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: makeDefaultVariables$2,
+  Z__INTERNAL: Z__INTERNAL$2
+};
+
 exports.MyQuery = MyQuery;
 exports.MyQueryNoError = MyQueryNoError;
+exports.NamedQuery = NamedQuery;
 /* query Not a pure module */
