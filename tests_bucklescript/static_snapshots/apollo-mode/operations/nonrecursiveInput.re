@@ -225,7 +225,7 @@ module MyQuery = {
   external toJson: Raw.t => Js.Json.t = "%identity";
   external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
-    type nonrec _graphql_arg_100;
+    type nonrec _graphql_arg_99;
     /**Variable **$arg** has the following graphql type:
 
 ```
@@ -238,8 +238,8 @@ NonrecursiveInput {
   custom: CustomScalar
 }!
 ```*/
-    let _graphql_arg_100: _graphql_arg_100 = Obj.magic(0);
-    type nonrec _graphql_arg_95;
+    let _graphql_arg_99: _graphql_arg_99 = Obj.magic(0);
+    type nonrec _graphql_arg_94;
     /**Argument **arg** on field **nonrecursiveInput** has the following graphql type:
 
 ```
@@ -252,9 +252,9 @@ NonrecursiveInput {
   custom: CustomScalar
 }!
 ```*/
-    let _graphql_arg_95: _graphql_arg_95 = Obj.magic(0);
+    let _graphql_arg_94: _graphql_arg_94 = Obj.magic(0);
     type root = t;
-    type nonrec _graphql_NonrecursiveInput_49;
+    type nonrec _graphql_NonrecursiveInput_48;
     /**```
 NonrecursiveInput {
   nonNullableField: String!
@@ -265,7 +265,7 @@ NonrecursiveInput {
   custom: CustomScalar
 }
 ```*/
-    let _graphql_NonrecursiveInput_49: _graphql_NonrecursiveInput_49 =
+    let _graphql_NonrecursiveInput_48: _graphql_NonrecursiveInput_48 =
       Obj.magic(0);
     type nonrec graphql_module;
     /****--- graphql-ppx module ---**
@@ -539,7 +539,7 @@ module MyQuery2 = {
   external toJson: Raw.t => Js.Json.t = "%identity";
   external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
   module Z__INTERNAL = {
-    type nonrec _graphql_arg_240;
+    type nonrec _graphql_arg_238;
     /**Variable **$arg** has the following graphql type:
 
 ```
@@ -552,8 +552,8 @@ NonrecursiveInput {
   custom: CustomScalar
 }!
 ```*/
-    let _graphql_arg_240: _graphql_arg_240 = Obj.magic(0);
-    type nonrec _graphql_arg_235;
+    let _graphql_arg_238: _graphql_arg_238 = Obj.magic(0);
+    type nonrec _graphql_arg_233;
     /**Argument **arg** on field **scalarsInput** has the following graphql type:
 
 ```
@@ -570,9 +570,9 @@ VariousScalarsInput {
   id: ID!
 }!
 ```*/
-    let _graphql_arg_235: _graphql_arg_235 = Obj.magic(0);
+    let _graphql_arg_233: _graphql_arg_233 = Obj.magic(0);
     type root = t;
-    type nonrec _graphql_NonrecursiveInput_169;
+    type nonrec _graphql_NonrecursiveInput_167;
     /**```
 NonrecursiveInput {
   nonNullableField: String!
@@ -583,9 +583,9 @@ NonrecursiveInput {
   custom: CustomScalar
 }
 ```*/
-    let _graphql_NonrecursiveInput_169: _graphql_NonrecursiveInput_169 =
+    let _graphql_NonrecursiveInput_167: _graphql_NonrecursiveInput_167 =
       Obj.magic(0);
-    type nonrec _graphql_NonrecursiveInput_196;
+    type nonrec _graphql_NonrecursiveInput_194;
     /**```
 NonrecursiveInput {
   nonNullableField: String!
@@ -596,7 +596,7 @@ NonrecursiveInput {
   custom: CustomScalar
 }
 ```*/
-    let _graphql_NonrecursiveInput_196: _graphql_NonrecursiveInput_196 =
+    let _graphql_NonrecursiveInput_194: _graphql_NonrecursiveInput_194 =
       Obj.magic(0);
     type nonrec graphql_module;
     /****--- graphql-ppx module ---**

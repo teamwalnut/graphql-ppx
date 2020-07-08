@@ -151,7 +151,7 @@ module Another = {
   /**The GraphQL query string*/
   let query: string =
     [%raw
-      "(frag_0) => require(\"gql\")`\n  fragment Another on Lists   {\n    nullableOfNullable\n    ...ListFragment\n  }\n${frag_0}\n`"
+      "(frag_0) => require(\"gql\")`\n  fragment Another on Lists   {\n    nullableOfNullable\n    ...ListFragment\n  }\n  ${frag_0}\n`"
     ](
       ListFragment.query,
     );

@@ -178,7 +178,7 @@ var query$3 = ((frag_0) => require("gql")`
       ...Fragment
     }
   }
-${frag_0}
+  ${frag_0}
 `)(query$2);
 
 function parse$3(value) {
@@ -365,7 +365,7 @@ var query$6 = ((frag_0) => require("gql")`
       }
     }
   }
-${frag_0}
+  ${frag_0}
 `)(query$5);
 
 function parse$6(value) {

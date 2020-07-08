@@ -6,7 +6,7 @@ var Raw = { };
 
 var query = (require("gql")`
   query   {
-  defaultObjectValueOnScalar(filter: {some: {json: "value"}}, arg: {field: "otherValue"})
+    defaultObjectValueOnScalar(filter: {some: {json: "value"}}, arg: {field: "otherValue"})
   }
 `);
 

@@ -38,24 +38,27 @@ let find_variables = (config, document) => {
 
 let pretty_print = (query: string): string => {
   let indent = ref(1);
-
   let str =
     query
     |> String.split_on_char('\n')
     |> List.map(l => String.trim(l))
     |> List.filter(l => l != "")
     |> List.map(line => {
-         if (String.contains(line, '}')) {
-           indent := indent^ - 1;
-         };
-         let line = String.make(indent^ * 2, ' ') ++ line;
-         if (String.contains(line, '{')) {
-           indent := indent^ + 1;
-         };
+         let prevIndent = indent^;
+         String.iter(
+           fun
+           | '{' => indent := indent^ + 1
+           | '}' => indent := indent^ - 1
+           | _ => (),
+           line,
+         );
+
+         let currIndent = prevIndent < indent^ ? prevIndent : indent^;
+         let currIndent = currIndent < 1 ? 1 : currIndent;
+         let line = String.make(currIndent * 2, ' ') ++ line;
          line;
        })
     |> String.concat("\n");
-
   str ++ "\n";
 };
 
@@ -309,7 +312,6 @@ let make_printed_query = (config, document) => {
         | fragments =>
           let fragment_names =
             fragments |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
-
           let frag_fun =
             "("
             ++ (
@@ -320,7 +322,6 @@ let make_printed_query = (config, document) => {
                  )
             )
             ++ ") => ";
-
           Exp.apply(
             wrap_raw(frag_fun ++ template_tag),
             fragments |> List.map(f => (Nolabel, make_fragment_query(f))),

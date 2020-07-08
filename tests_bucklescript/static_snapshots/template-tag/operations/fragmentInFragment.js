@@ -74,7 +74,7 @@ var query$1 = ((frag_0) => require("gql")`
     nullableOfNullable
     ...ListFragment
   }
-${frag_0}
+  ${frag_0}
 `)(query);
 
 function parse$1(value) {

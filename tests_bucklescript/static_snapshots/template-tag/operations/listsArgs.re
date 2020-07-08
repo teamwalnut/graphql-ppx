@@ -30,7 +30,7 @@ module MyQuery = {
   type t = {listsInput: string};
   /**The GraphQL query string*/
   let query: string = [%raw
-    "require(\"gql\")`\n  query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\n  listsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})\n  }\n`"
+    "require(\"gql\")`\n  query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\n    listsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})\n  }\n`"
   ];
   type t_variables = {
     nullableOfNullable: option(array(option(string))),

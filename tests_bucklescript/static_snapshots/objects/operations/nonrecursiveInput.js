@@ -85,7 +85,7 @@ function makeInputObjectEmbeddedInput(field, param) {
 }
 
 var Z__INTERNAL = {
-  _graphql_NonrecursiveInput_49: 0,
+  _graphql_NonrecursiveInput_48: 0,
   graphql_module: 0
 };
 
@@ -192,8 +192,8 @@ function makeInputObjectEmbeddedInput$1(field, param) {
 }
 
 var Z__INTERNAL$1 = {
-  _graphql_NonrecursiveInput_169: 0,
-  _graphql_NonrecursiveInput_196: 0,
+  _graphql_NonrecursiveInput_167: 0,
+  _graphql_NonrecursiveInput_194: 0,
   graphql_module: 0
 };
 

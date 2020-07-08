@@ -355,7 +355,7 @@ module ExternalFragmentQuery {
     /**The GraphQL query string*/
     let query: string =
       [%raw
-        "(frag_0) => require(\"gql\")`\n  query   {\n    variousScalars  {\n      ...Fragment\n    }\n  }\n${frag_0}\n`"
+        "(frag_0) => require(\"gql\")`\n  query   {\n    variousScalars  {\n      ...Fragment\n    }\n  }\n  ${frag_0}\n`"
       ](
         Fragment.query,
       );
@@ -680,7 +680,7 @@ module UnionExternalFragmentQuery {
     /**The GraphQL query string*/
     let query: string =
       [%raw
-        "(frag_0) => require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        ...DogFragment\n      }\n    }\n  }\n${frag_0}\n`"
+        "(frag_0) => require(\"gql\")`\n  query   {\n    dogOrHuman  {\n      __typename\n      ...on Dog   {\n        ...DogFragment\n      }\n    }\n  }\n  ${frag_0}\n`"
       ](
         DogFragment.query,
       );

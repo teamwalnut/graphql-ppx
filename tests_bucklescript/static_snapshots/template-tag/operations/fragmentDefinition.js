@@ -275,9 +275,9 @@ var query$4 = ((frag_0, frag_1, frag_2) => require("gql")`
       ...FragmentWithArgs
     }
   }
-${frag_0}
-${frag_1}
-${frag_2}
+  ${frag_0}
+  ${frag_1}
+  ${frag_2}
 `)(query$2, query$3, query);
 
 function parse$4(value) {
@@ -403,7 +403,7 @@ var query$5 = ((frag_0) => require("gql")`
       ...ListFragment
     }
   }
-${frag_0}
+  ${frag_0}
 `)(query);
 
 function parse$5(value) {
