@@ -304,12 +304,13 @@ and unify_union =
           };
 
         let is_record = has_directive(~prepend=true, "Record", if_directives);
+        let existing_record = get_ppx_as(if_directives);
 
         let result_decoder =
           unify_selection_set(
             error_marker,
             is_record,
-            None,
+            existing_record,
             config,
             if_selection_set.span,
             type_cond_ty,
