@@ -307,9 +307,10 @@ let make_printed_query = (config, document) => {
         );
 
       constraint_on_type(
-        switch (fragments) {
-        | [] => wrap_raw(template_tag)
-        | fragments =>
+        switch (config.fragment_in_query, fragments) {
+        | (Exclude, _)
+        | (_, []) => wrap_raw(template_tag)
+        | (Include, fragments) =>
           let fragment_names =
             fragments |> List.mapi((i, _frag) => "frag_" ++ string_of_int(i));
           let frag_fun =

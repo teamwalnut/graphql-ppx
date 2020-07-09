@@ -2,6 +2,14 @@
 'use strict';
 
 
+function deepMerge(json1, param) {
+  return json1;
+}
+
+var GraphQL_PPX = {
+  deepMerge: deepMerge
+};
+
 var Raw = { };
 
 var query = (require("gql")`
@@ -622,6 +630,177 @@ var MyQuery4 = {
   Z__INTERNAL: Z__INTERNAL$5
 };
 
+var Raw$6 = { };
+
+var query$6 = (require("gatsby")`
+  fragment ListFragment on Lists   {
+    nullableOfNullable
+    nullableOfNonNullable
+  }
+`);
+
+function parse$6(value) {
+  var value$1 = value.nullableOfNullable;
+  var value$2 = value.nullableOfNonNullable;
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  })) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map((function (value) {
+                    return value;
+                  })) : undefined
+        };
+}
+
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse$6(value);
+}
+
+function serialize$6(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
+            return value;
+          })) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
+            if (value !== undefined) {
+              return value;
+            } else {
+              return null;
+            }
+          })) : null;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL$6 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var ListFragment = {
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize$6,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$6
+};
+
+var Raw$7 = { };
+
+var query$7 = (require("gatsby")`
+  query MyQuery5  {
+    lists  {
+      ...ListFragment
+    }
+  }
+`);
+
+function parse$7(value) {
+  return {
+          lists: parse$6(value.lists)
+        };
+}
+
+function serialize$7(value) {
+  var value$1 = value.lists;
+  var lists = serialize$6(value$1);
+  return {
+          lists: lists
+        };
+}
+
+function serializeVariables$6(param) {
+  
+}
+
+function makeVariables$6(param) {
+  
+}
+
+function makeDefaultVariables$6(param) {
+  
+}
+
+var Z__INTERNAL$7 = {
+  graphql_module: 0
+};
+
+var MyQuery5 = {
+  Raw: Raw$7,
+  query: query$7,
+  parse: parse$7,
+  serialize: serialize$7,
+  serializeVariables: serializeVariables$6,
+  makeVariables: makeVariables$6,
+  makeDefaultVariables: makeDefaultVariables$6,
+  Z__INTERNAL: Z__INTERNAL$7
+};
+
+var Raw$8 = { };
+
+var query$8 = ((frag_0) => require("gatsby")`
+  query MyQuery6  {
+    lists  {
+      ...ListFragment
+    }
+  }
+  ${frag_0}
+`)(query$6);
+
+function parse$8(value) {
+  return {
+          lists: parse$6(value.lists)
+        };
+}
+
+function serialize$8(value) {
+  var value$1 = value.lists;
+  var lists = serialize$6(value$1);
+  return {
+          lists: lists
+        };
+}
+
+function serializeVariables$7(param) {
+  
+}
+
+function makeVariables$7(param) {
+  
+}
+
+function makeDefaultVariables$7(param) {
+  
+}
+
+var Z__INTERNAL$8 = {
+  graphql_module: 0
+};
+
+var MyQuery6 = {
+  Raw: Raw$8,
+  query: query$8,
+  parse: parse$8,
+  serialize: serialize$8,
+  serializeVariables: serializeVariables$7,
+  makeVariables: makeVariables$7,
+  makeDefaultVariables: makeDefaultVariables$7,
+  Z__INTERNAL: Z__INTERNAL$8
+};
+
+exports.GraphQL_PPX = GraphQL_PPX;
 exports.MyQuery = MyQuery;
 exports.MyTypes = MyTypes;
 exports.MyQuery1a = MyQuery1a;
@@ -629,4 +808,7 @@ exports.MyQuery1b = MyQuery1b;
 exports.MyQuery2 = MyQuery2;
 exports.MyQuery3 = MyQuery3;
 exports.MyQuery4 = MyQuery4;
+exports.ListFragment = ListFragment;
+exports.MyQuery5 = MyQuery5;
+exports.MyQuery6 = MyQuery6;
 /* query Not a pure module */

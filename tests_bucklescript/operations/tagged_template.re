@@ -1,3 +1,10 @@
+module GraphQL_PPX = {
+  // mock
+  let deepMerge = (json1, _) => {
+    json1;
+  };
+};
+
 module MyQuery = [%graphql
   {|
   {
@@ -124,4 +131,38 @@ module MyQuery4 = [%graphql
   }
 |};
   {templateTag: graphql, templateTagLocation: "gatsby"}
+];
+
+[%graphql
+  {|
+  fragment ListFragment on Lists {
+    nullableOfNullable
+    nullableOfNonNullable
+  }
+  query MyQuery5 {
+    lists {
+      ...ListFragment
+    }
+  }
+  |};
+  {
+    templateTag: graphql,
+    templateTagLocation: "gatsby",
+    fragmentInQuery: "exclude",
+  }
+];
+
+[%graphql
+  {|
+  query MyQuery6 {
+    lists {
+      ...ListFragment
+    }
+  }
+  |};
+  {
+    templateTag: graphql,
+    templateTagLocation: "gatsby",
+    fragmentInQuery: "include",
+  }
 ];
