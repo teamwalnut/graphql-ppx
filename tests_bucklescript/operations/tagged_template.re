@@ -166,3 +166,14 @@ module MyQuery4 = [%graphql
     fragmentInQuery: "include",
   }
 ];
+
+[%graphql
+  {|
+  query MyQuery7 {
+    lists {
+      ...ListFragment
+    }
+  }
+  |};
+  {templateTag: graphql, fragmentInQuery: "exclude"}
+];

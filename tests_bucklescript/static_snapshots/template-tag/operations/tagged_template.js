@@ -800,6 +800,57 @@ var MyQuery6 = {
   Z__INTERNAL: Z__INTERNAL$8
 };
 
+var Raw$9 = { };
+
+var query$9 = (require("gql")`
+  query MyQuery7  {
+    lists  {
+      ...ListFragment
+    }
+  }
+`);
+
+function parse$9(value) {
+  return {
+          lists: parse$6(value.lists)
+        };
+}
+
+function serialize$9(value) {
+  var value$1 = value.lists;
+  var lists = serialize$6(value$1);
+  return {
+          lists: lists
+        };
+}
+
+function serializeVariables$8(param) {
+  
+}
+
+function makeVariables$8(param) {
+  
+}
+
+function makeDefaultVariables$8(param) {
+  
+}
+
+var Z__INTERNAL$9 = {
+  graphql_module: 0
+};
+
+var MyQuery7 = {
+  Raw: Raw$9,
+  query: query$9,
+  parse: parse$9,
+  serialize: serialize$9,
+  serializeVariables: serializeVariables$8,
+  makeVariables: makeVariables$8,
+  makeDefaultVariables: makeDefaultVariables$8,
+  Z__INTERNAL: Z__INTERNAL$9
+};
+
 exports.GraphQL_PPX = GraphQL_PPX;
 exports.MyQuery = MyQuery;
 exports.MyTypes = MyTypes;
@@ -811,4 +862,5 @@ exports.MyQuery4 = MyQuery4;
 exports.ListFragment = ListFragment;
 exports.MyQuery5 = MyQuery5;
 exports.MyQuery6 = MyQuery6;
+exports.MyQuery7 = MyQuery7;
 /* query Not a pure module */
