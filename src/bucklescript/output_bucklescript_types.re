@@ -83,9 +83,7 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     }
   | Res_solo_fragment_spread(loc, module_name, _arguments, type_name) =>
     switch (type_name, raw) {
-    | (Some(type_name), false) =>
-      Format.eprintf("output types %s %s???@.", module_name, type_name);
-      base_type(~loc=conv_loc(loc), type_name);
+    | (Some(type_name), false) => base_type(~loc=conv_loc(loc), type_name)
     | (_, false) => base_type(~loc=conv_loc(loc), module_name ++ ".t")
     | (_, true) => base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t")
     }
