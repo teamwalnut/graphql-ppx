@@ -194,7 +194,7 @@ let rec generate_decoder = config =>
       base,
       fragments,
     )
-  | Res_solo_fragment_spread(loc, name, _arguments) =>
+  | Res_solo_fragment_spread(loc, name, _arguments, _existing_record) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error(loc, message) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>

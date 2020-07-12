@@ -151,7 +151,8 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
   [%e match_expr];
 };
 
-let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
+let generate_fragment_parse_fun =
+    (config, loc, name, arguments, definition, _existing_record) => {
   open Ast_helper;
   let ident =
     Ast_helper.Exp.ident({
@@ -198,8 +199,15 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
 };
 
 let generate_solo_fragment_spread_decoder =
-    (config, loc, name, arguments, definition) => {
-  generate_fragment_parse_fun(config, loc, name, arguments, definition);
+    (config, loc, name, arguments, definition, existing_record) => {
+  generate_fragment_parse_fun(
+    config,
+    loc,
+    name,
+    arguments,
+    definition,
+    existing_record,
+  );
 };
 
 let generate_error = (loc, message) => {
@@ -314,6 +322,7 @@ and generate_object_decoder =
             name,
             arguments,
             definition,
+            None,
           );
         };
 
@@ -525,7 +534,7 @@ and generate_poly_variant_union_decoder =
                  {
                    let%expr value: [%t
                      switch (inner) {
-                     | Res_solo_fragment_spread(_, name, _) =>
+                     | Res_solo_fragment_spread(_, name, _, _existing_record) =>
                        base_type_name(name ++ ".Raw.t")
                      | _ =>
                        base_type_name(
@@ -601,7 +610,11 @@ and generate_poly_variant_union_decoder =
   {
     let%expr typename: string =
       Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
+    (
+      Obj.magic([%e typename_matcher]): [%t
+        base_type_name(generate_type_name(path))
+      ]
+    );
   };
 }
 and generate_parser = (config, path: list(string), definition) =>
@@ -686,12 +699,13 @@ and generate_parser = (config, path: list(string), definition) =>
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
+  | Res_solo_fragment_spread(loc, name, arguments, existing_record) =>
     generate_solo_fragment_spread_decoder(
       config,
       loc,
       name,
       arguments,
       definition,
+      existing_record,
     )
   | Res_error(loc, message) => generate_error(loc, message);

@@ -81,11 +81,13 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
   | Res_poly_variant_interface(_loc, _name, _, _) => {
       base_type(~loc=?atLoc, generate_type_name(path));
     }
-  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
-    if (raw) {
-      base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t");
-    } else {
-      base_type(~loc=conv_loc(loc), module_name ++ ".t");
+  | Res_solo_fragment_spread(loc, module_name, _arguments, type_name) =>
+    switch (type_name, raw) {
+    | (Some(type_name), false) =>
+      Format.eprintf("output types %s %s???@.", module_name, type_name);
+      base_type(~loc=conv_loc(loc), type_name);
+    | (_, false) => base_type(~loc=conv_loc(loc), module_name ++ ".t")
+    | (_, true) => base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t")
     }
   | Res_error(loc, error) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))

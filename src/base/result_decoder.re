@@ -681,6 +681,7 @@ and unify_selection_set =
         config.map_loc(span),
         fs_name.item,
         arguments,
+        existing_record,
       );
     };
   | Some({item, _}) when as_record =>

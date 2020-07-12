@@ -36,7 +36,7 @@ and t =
       bool,
     )
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
-  | Res_solo_fragment_spread(loc, string, list(string))
+  | Res_solo_fragment_spread(loc, string, list(string), option(string))
   | Res_error(loc, string);
 
 type definition =

@@ -146,7 +146,7 @@ let rec extract = (~variant=false, ~path, ~raw) =>
       ...extract_fragments(fragments, path, raw),
     ]
   | Res_custom_decoder(_loc, _ident, inner) => extract(~path, ~raw, inner)
-  | Res_solo_fragment_spread(_loc, _name, _) => []
+  | Res_solo_fragment_spread(_) => []
   | Res_error(_loc, _message) => []
   | Res_id(_loc) => []
   | Res_string(_loc) => []

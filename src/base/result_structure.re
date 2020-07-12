@@ -36,7 +36,7 @@ and t =
       bool,
     )
   | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
-  | Res_solo_fragment_spread(loc, string, list(string))
+  | Res_solo_fragment_spread(loc, string, list(string), option(string))
   | Res_error(loc, string);
 
 type definition =
@@ -71,7 +71,7 @@ let res_loc =
   | Res_poly_variant_selection_set(loc, _, _)
   | Res_poly_variant_union(loc, _, _, _, _)
   | Res_poly_variant_interface(loc, _, _, _)
-  | Res_solo_fragment_spread(loc, _, _)
+  | Res_solo_fragment_spread(loc, _, _, _)
   | Res_error(loc, _) => loc;
 
 let can_be_absent_as_field =

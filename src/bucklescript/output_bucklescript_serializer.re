@@ -702,12 +702,21 @@ and generate_poly_variant_interface_encoder =
     (_config, _loc, _name, _base, _fragments, _path, _definition) => [%expr
   Obj.magic(Js.Json.null)
 ]
-and generate_solo_fragment_spread_encorder =
-    (_config, _loc, name, _arguments, _definition) => [%expr
-  [%e ident_from_string(name ++ ".serialize")](
-    [%e ident_from_string("value")],
-  )
-]
+and generate_solo_fragment_spread_encoder =
+    (_config, _loc, name, _arguments, _definition, existing_record) => {
+  let value_expr =
+    switch (existing_record) {
+    | Some(type_name) =>
+      %expr
+      Obj.magic(value: [%t base_type_name(type_name)])
+    | None =>
+      %expr
+      value
+    };
+
+  %expr
+  [%e ident_from_string(name ++ ".serialize")]([%e value_expr]);
+}
 
 and generate_error = (loc, message) => {
   let loc = Output_bucklescript_utils.conv_loc(loc);
@@ -799,12 +808,13 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
-    generate_solo_fragment_spread_encorder(
+  | Res_solo_fragment_spread(loc, name, arguments, existing_record) =>
+    generate_solo_fragment_spread_encoder(
       config,
       conv_loc(loc),
       name,
       arguments,
       definition,
+      existing_record,
     )
   | Res_error(loc, message) => generate_error(loc, message);
