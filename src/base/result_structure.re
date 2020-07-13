@@ -45,6 +45,7 @@ type definition =
       list((string, string, Source_pos.span, Source_pos.span)),
       bool,
       Source_pos.spanning(Graphql_ast.fragment),
+      option(string), // decodes to a custom type (ppxAs)
       t,
     )
   | Def_operation(

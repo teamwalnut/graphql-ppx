@@ -19,3 +19,10 @@ let get_or_else = default =>
   fun
   | None => default
   | Some(v) => v;
+
+let is_some =
+  fun
+  | Some(_) => true
+  | None => false;
+
+let is_none = x => !is_some(x);

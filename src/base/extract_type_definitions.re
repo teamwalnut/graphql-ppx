@@ -32,6 +32,7 @@ and type_def =
       variant_parent: bool,
       force_record: bool,
       path,
+      existing_type: option(string),
       fields: list(object_field),
     })
   | VariantSelection({
@@ -107,17 +108,21 @@ let generate_type_name = (~prefix="t") =>
 // function that generate types. It will output a nested list type descriptions
 // later this result can be flattened and converted to an ast of combined type
 // definitions
-let rec extract = (~variant=false, ~path, ~raw) =>
+let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
   fun
   | Res_nullable(_loc, inner) => extract(~path, ~raw, inner)
   | Res_array(_loc, inner) => extract(~path, ~raw, inner)
   | Res_object(loc, _name, fields, type_name) as result_structure
   | Res_record(loc, _name, fields, type_name) as result_structure =>
-    switch (result_structure, type_name, raw) {
-    | (_, Some(_type_name), false) => create_children(path, raw, fields)
-    | (Res_record(_, _, _, _), _, false) =>
-      create_object(path, raw, fields, true, loc, variant)
-    | (_, _, _) => create_object(path, raw, fields, false, loc, variant)
+    switch (result_structure, type_name, raw, fragment_def) {
+    | (_, Some(_type_name), false, false) =>
+      create_children(path, raw, fields)
+    | (_, Some(_type_name), false, true) =>
+      create_object(path, raw, fields, true, loc, variant, type_name)
+    | (Res_record(_, _, _, _), _, false, _) =>
+      create_object(path, raw, fields, true, loc, variant, None)
+    | (_, _, _, _) =>
+      create_object(path, raw, fields, false, loc, variant, None)
     }
   | Res_poly_variant_union(loc, _name, fragments, _, omit_future_value) => [
       VariantUnion({path, fields: fragments, loc, omit_future_value}),
@@ -185,13 +190,15 @@ and create_children = (path, raw, fields) => {
        [],
      );
 }
-and create_object = (path, raw, fields, force_record, loc, variant_parent) => {
+and create_object =
+    (path, raw, fields, force_record, loc, variant_parent, existing_type) => {
   [
     Object({
       variant_parent,
       loc,
       force_record,
       path,
+      existing_type,
       fields:
         fields
         |> List.map(
