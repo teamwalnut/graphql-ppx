@@ -51,15 +51,13 @@ module NamedQuery = [%graphql
 
 module NamedSpread = [%graphql
   {|
-  {
-    fragment DogFields on Dog {
-      name
-    }
+  fragment DogFields on Dog {
+    name
+  }
 
-    query dogOrHuman {
-      ...on Dog @ppxAs(type: "named") {
-        name
-      }
+  query dogOrHuman {
+    ...on Dog @ppxAs(type: "named") {
+      ...DogFields
     }
   }
 |}
