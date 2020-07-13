@@ -151,8 +151,7 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
   [%e match_expr];
 };
 
-let generate_fragment_parse_fun =
-    (config, loc, name, arguments, definition, _existing_record) => {
+let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
   open Ast_helper;
   let ident =
     Ast_helper.Exp.ident({
@@ -199,15 +198,8 @@ let generate_fragment_parse_fun =
 };
 
 let generate_solo_fragment_spread_decoder =
-    (config, loc, name, arguments, definition, existing_record) => {
-  generate_fragment_parse_fun(
-    config,
-    loc,
-    name,
-    arguments,
-    definition,
-    existing_record,
-  );
+    (config, loc, name, arguments, definition) => {
+  generate_fragment_parse_fun(config, loc, name, arguments, definition);
 };
 
 let generate_error = (loc, message) => {
@@ -322,7 +314,6 @@ and generate_object_decoder =
             name,
             arguments,
             definition,
-            None,
           );
         };
 
@@ -699,13 +690,12 @@ and generate_parser = (config, path: list(string), definition) =>
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments, existing_record) =>
+  | Res_solo_fragment_spread(loc, name, arguments, _existing_record) =>
     generate_solo_fragment_spread_decoder(
       config,
       loc,
       name,
       arguments,
       definition,
-      existing_record,
     )
   | Res_error(loc, message) => generate_error(loc, message);
