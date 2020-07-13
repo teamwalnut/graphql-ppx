@@ -151,7 +151,8 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
   [%e match_expr];
 };
 
-let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => {
+let generate_fragment_parse_fun =
+    (config, loc, name, arguments, definition, existing_record) => {
   open Ast_helper;
   let ident =
     Ast_helper.Exp.ident({
@@ -176,30 +177,45 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
          )
        );
 
-  Ast_helper.Exp.apply(
-    ~loc=loc |> Output_bucklescript_utils.conv_loc,
-    ident,
-    List.append(
-      labeled_args,
-      [
-        (
-          Labelled("fragmentName"),
-          Exp.variant(
-            /// this is the location that happens in the error
-            ~loc=loc |> Output_bucklescript_utils.conv_loc,
-            name,
-            None,
+  let applicationExpr =
+    Ast_helper.Exp.apply(
+      ~loc=loc |> Output_bucklescript_utils.conv_loc,
+      ident,
+      List.append(
+        labeled_args,
+        [
+          (
+            Labelled("fragmentName"),
+            Exp.variant(
+              /// this is the location that happens in the error
+              ~loc=loc |> Output_bucklescript_utils.conv_loc,
+              name,
+              None,
+            ),
           ),
-        ),
-        (Nolabel, ident_from_string(~loc=loc |> conv_loc, "value")),
-      ],
-    ),
-  );
+          (Nolabel, ident_from_string(~loc=loc |> conv_loc, "value")),
+        ],
+      ),
+    );
+
+  switch (existing_record) {
+  | Some(type_name) =>
+    %expr
+    (Obj.magic([%e applicationExpr]): [%t base_type_name(type_name)])
+  | None => applicationExpr
+  };
 };
 
 let generate_solo_fragment_spread_decoder =
-    (config, loc, name, arguments, definition) => {
-  generate_fragment_parse_fun(config, loc, name, arguments, definition);
+    (config, loc, name, arguments, definition, existing_record) => {
+  generate_fragment_parse_fun(
+    config,
+    loc,
+    name,
+    arguments,
+    definition,
+    existing_record,
+  );
 };
 
 let generate_error = (loc, message) => {
@@ -314,6 +330,7 @@ and generate_object_decoder =
             name,
             arguments,
             definition,
+            None,
           );
         };
 
@@ -601,11 +618,7 @@ and generate_poly_variant_union_decoder =
   {
     let%expr typename: string =
       Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-    (
-      Obj.magic([%e typename_matcher]): [%t
-        base_type_name(generate_type_name(path))
-      ]
-    );
+    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
   };
 }
 and generate_parser = (config, path: list(string), definition) =>
@@ -690,12 +703,13 @@ and generate_parser = (config, path: list(string), definition) =>
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments, _existing_record) =>
+  | Res_solo_fragment_spread(loc, name, arguments, existing_record) =>
     generate_solo_fragment_spread_decoder(
       config,
       loc,
       name,
       arguments,
       definition,
+      existing_record,
     )
   | Res_error(loc, message) => generate_error(loc, message);
