@@ -280,7 +280,7 @@ let generate_operation = config =>
   fun
   | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, _type_name, structure) =>
     generate_fragment_module(
       config,
       name,

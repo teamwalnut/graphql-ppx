@@ -277,7 +277,106 @@ var NamedQuery = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var Raw$3 = { };
+
+var query = "fragment DogFields on Dog   {\nname  \n}\n";
+
+function parse$3(value) {
+  var value$1 = value.name;
+  return {
+          name: value$1
+        };
+}
+
+function verifyArgsAndParse(_DogFields, value) {
+  return parse$3(value);
+}
+
+function serialize$3(value) {
+  return {
+          name: value.name
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var DogFields = {
+  Raw: Raw$3,
+  query: query,
+  parse: parse$3,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize$3,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$3
+};
+
+var Raw$4 = { };
+
+var query$1 = "query dogOrHuman  {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFields   \n}\n\n}\n\n}\nfragment DogFields on Dog   {\nname  \n}\n";
+
+function parse$4(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1["__typename"];
+  var tmp = typename === "Dog" ? /* `Dog */[
+      3406428,
+      parse$3(value$1)
+    ] : /* `FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.dogOrHuman;
+  return {
+          dogOrHuman: value$1[0] >= 3406428 ? serialize$3(value$1[1]) : value$1[1]
+        };
+}
+
+function serializeVariables$3(param) {
+  
+}
+
+function makeVariables$3(param) {
+  
+}
+
+function makeDefaultVariables$3(param) {
+  
+}
+
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
+var DogOrHuman = {
+  Raw: Raw$4,
+  query: query$1,
+  parse: parse$4,
+  serialize: serialize$4,
+  serializeVariables: serializeVariables$3,
+  makeVariables: makeVariables$3,
+  makeDefaultVariables: makeDefaultVariables$3,
+  Z__INTERNAL: Z__INTERNAL$4
+};
+
+var NamedSpread = {
+  DogFields: DogFields,
+  DogOrHuman: DogOrHuman
+};
+
 exports.MyQuery = MyQuery;
 exports.MyQueryNoError = MyQueryNoError;
 exports.NamedQuery = NamedQuery;
+exports.NamedSpread = NamedSpread;
 /* No side effect */
