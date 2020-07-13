@@ -56,8 +56,10 @@ module NamedSpread = [%graphql
   }
 
   query dogOrHuman {
-    ...on Dog @ppxAs(type: "named") {
-      ...DogFields
+    dogOrHuman {
+      ...on Dog @ppxAs(type: "named") {
+        ...DogFields
+      }
     }
   }
 |}
