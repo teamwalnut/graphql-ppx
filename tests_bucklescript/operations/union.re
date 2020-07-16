@@ -48,3 +48,19 @@ module NamedQuery = [%graphql
   }
 |}
 ];
+
+module NamedSpread = [%graphql
+  {|
+  fragment DogFields on Dog @ppxAs(type: "named") {
+    name
+  }
+
+  query dogOrHuman {
+    dogOrHuman {
+      ...on Dog {
+        ...DogFields
+      }
+    }
+  }
+|}
+];

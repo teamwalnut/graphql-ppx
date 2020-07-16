@@ -26,6 +26,7 @@ and type_def =
       variant_parent: bool,
       force_record: bool,
       path,
+      existing_type: option(string),
       fields: list(object_field),
     })
   | VariantSelection({
@@ -70,7 +71,13 @@ type arg_type_def =
     });
 
 let extract:
-  (~variant: bool=?, ~path: path, ~raw: bool, Result_structure.t) =>
+  (
+    ~fragment_def: bool=?,
+    ~variant: bool=?,
+    ~path: path,
+    ~raw: bool,
+    Result_structure.t
+  ) =>
   list(type_def);
 let generate_type_name: (~prefix: string=?, path) => string;
 let extract_args:

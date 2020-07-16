@@ -432,6 +432,7 @@ let generate_default_operation =
       res_structure,
       false,
       None,
+      None,
     );
   // Add to internal module
   Output_bucklescript_docstrings.for_operation(config, operation);
@@ -440,6 +441,7 @@ let generate_default_operation =
       config,
       res_structure,
       true,
+      None,
       None,
     );
   let arg_types =
@@ -569,7 +571,15 @@ let generate_default_operation =
 };
 
 let generate_fragment_module =
-    (config, name, required_variables, has_error, fragment, res_structure) => {
+    (
+      config,
+      name,
+      required_variables,
+      has_error,
+      fragment,
+      type_name,
+      res_structure,
+    ) => {
   Output_bucklescript_docstrings.reset();
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
@@ -591,6 +601,7 @@ let generate_fragment_module =
       config,
       res_structure,
       false,
+      type_name,
       Some((
         fragment.item.fg_type_condition.item,
         fragment.item.fg_name.span,
@@ -603,6 +614,7 @@ let generate_fragment_module =
       config,
       res_structure,
       true,
+      None,
       Some((
         fragment.item.fg_type_condition.item,
         fragment.item.fg_name.span,
@@ -679,6 +691,9 @@ let generate_fragment_module =
           ),
           required_variables,
         );
+
+      let type_name = base_type_name(Option.get_or_else("t", type_name));
+
       // Add to internal module
       Output_bucklescript_docstrings.for_fragment(config, fragment);
       List.concat(
@@ -696,7 +711,7 @@ let generate_fragment_module =
               Output_bucklescript_docstrings.(
                 make_let(
                   "parse",
-                  [%expr (value: Raw.t) => ([%e parse_fn]: t)],
+                  [%expr (value: Raw.t) => ([%e parse_fn]: [%t type_name])],
                   parse_docstring,
                 )
               ),
@@ -707,7 +722,9 @@ let generate_fragment_module =
               Output_bucklescript_docstrings.(
                 make_let(
                   "serialize",
-                  [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
+                  [%expr
+                    (value: [%t type_name]) => ([%e serialize_fn]: Raw.t)
+                  ],
                   serialize_docstring,
                 )
               ),
@@ -753,13 +770,14 @@ let generate_definition = config =>
   fun
   | Def_operation(vdefs, has_error, operation, structure) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Def_fragment(name, req_vars, has_error, fragment, structure) =>
+  | Def_fragment(name, req_vars, has_error, fragment, type_name, structure) =>
     generate_fragment_module(
       config,
       name,
       req_vars,
       has_error,
       fragment,
+      type_name,
       structure,
     );
 

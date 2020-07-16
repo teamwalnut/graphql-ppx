@@ -872,6 +872,7 @@ let rec unify_document_schema = (config, document) => {
             argumentDefinitions,
             true,
             fg,
+            None,
             make_error(
               error_marker,
               config.map_loc,
@@ -880,11 +881,12 @@ let rec unify_document_schema = (config, document) => {
             ),
           )
         | Some(ty) =>
+          let existing_record = get_ppx_as(fg_directives);
           let structure =
             unify_selection_set(
               error_marker,
               is_record,
-              None,
+              existing_record,
               config,
               span,
               ty,
@@ -896,13 +898,21 @@ let rec unify_document_schema = (config, document) => {
 
           switch (with_decoder) {
           | Error(err) =>
-            Def_fragment(fg_name.item, argumentDefinitions, true, fg, err)
+            Def_fragment(
+              fg_name.item,
+              argumentDefinitions,
+              true,
+              fg,
+              existing_record,
+              err,
+            )
           | Ok(decoder) =>
             Def_fragment(
               fg_name.item,
               argumentDefinitions,
               error_marker.has_error,
               fg,
+              existing_record,
               switch (decoder) {
               | Some(decoder) => decoder(structure)
               | None => structure

@@ -315,7 +315,125 @@ var NamedQuery = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var Raw$3 = { };
+
+var query$3 = (require("gql")`
+  fragment DogFields on Dog   {
+    name
+  }
+`);
+
+function parse$3(value) {
+  return {
+          name: value.name
+        };
+}
+
+function verifyArgsAndParse(_DogFields, value) {
+  return {
+          name: value.name
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.name;
+  return {
+          name: value$1
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var DogFields = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize$3,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$3
+};
+
+var Raw$4 = { };
+
+var query$4 = ((frag_0) => require("gql")`
+  query dogOrHuman  {
+    dogOrHuman  {
+      __typename
+      ...on Dog   {
+        ...DogFields
+      }
+    }
+  }
+  ${frag_0}
+`)(query$3);
+
+function parse$4(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1["__typename"];
+  var tmp = typename === "Dog" ? /* `Dog */[
+      3406428,
+      {
+        name: value$1.name
+      }
+    ] : /* `FutureAddedValue */[
+      -31101740,
+      value$1
+    ];
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.dogOrHuman;
+  var dogOrHuman = value$1[0] >= 3406428 ? serialize$3(value$1[1]) : value$1[1];
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serializeVariables$3(param) {
+  
+}
+
+function makeVariables$3(param) {
+  
+}
+
+function makeDefaultVariables$3(param) {
+  
+}
+
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
+var DogOrHuman = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  serializeVariables: serializeVariables$3,
+  makeVariables: makeVariables$3,
+  makeDefaultVariables: makeDefaultVariables$3,
+  Z__INTERNAL: Z__INTERNAL$4
+};
+
+var NamedSpread = {
+  DogFields: DogFields,
+  DogOrHuman: DogOrHuman
+};
+
 exports.MyQuery = MyQuery;
 exports.MyQueryNoError = MyQueryNoError;
 exports.NamedQuery = NamedQuery;
+exports.NamedSpread = NamedSpread;
 /* query Not a pure module */

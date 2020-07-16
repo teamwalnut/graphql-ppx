@@ -505,17 +505,35 @@ let generate_graphql_object =
       raw,
       loc,
       is_variant,
+      type_name,
     ) => {
-  config.records || force_record
-    ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
-    : generate_object_type(config, fields, obj_path, raw, loc, is_variant);
+  switch (type_name) {
+  | Some(type_name) =>
+    wrap_type_declaration(
+      ~manifest=base_type(type_name),
+      Ptype_abstract,
+      loc,
+      obj_path,
+    )
+
+  | None =>
+    config.records || force_record
+      ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
+      : generate_object_type(config, fields, obj_path, raw, loc, is_variant)
+  };
 };
 
 // generate all the types necessary types that we later refer to by name.
 let generate_types =
-    (config: Generator_utils.output_config, res, raw, fragment_name) => {
+    (
+      config: Generator_utils.output_config,
+      res,
+      raw,
+      type_name,
+      fragment_name,
+    ) => {
   let types =
-    extract(~path=[], ~raw, res)
+    extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
     |> List.map(
          fun
          | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>
@@ -527,6 +545,7 @@ let generate_types =
              raw,
              loc,
              variant_parent,
+             type_name,
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)
@@ -563,7 +582,10 @@ let generate_types =
                     raw
                       ? Location.mknoloc(Longident.Lident("t"))
                       : Location.mkloc(
-                          Longident.Lident("t"),
+                          switch (type_name) {
+                          | Some(type_name) => Longident.parse(type_name)
+                          | None => Longident.Lident("t")
+                          },
                           conv_loc(config.map_loc(fragment_name_loc)),
                         ),
                     [],
