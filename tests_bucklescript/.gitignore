@@ -7,5 +7,3 @@ node_modules
 /build/
 bs-ppx-css
 *.bs.js
-test*.re
-test*.ml
