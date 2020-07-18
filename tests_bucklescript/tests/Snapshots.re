@@ -142,7 +142,8 @@ let process_error = error => {
            next_line_contains_filename := false;
            ModifyPath;
          | (_, "Command line:") => Skip
-         | (_, "We've found a") =>
+         | (_, "We've found a")
+         | (_, "  We've found") =>
            next_line_contains_filename := true;
            Add;
          | _ => Add

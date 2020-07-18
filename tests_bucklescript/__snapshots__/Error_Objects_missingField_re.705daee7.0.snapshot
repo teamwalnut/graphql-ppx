@@ -5,6 +5,6 @@ File \"tests_bucklescript/operations/errors/missingField2.re\", line 13, charact
 Error: Unknown field 'thisTypeDoesNotExist' on type Query
 
   We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/missingField2.re
+  missingField2.re
   
   Error while running external preprocessor
