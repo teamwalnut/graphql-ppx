@@ -101,11 +101,11 @@ jobs:
       - name: build
         run: esy b
 
-      # - name: test-native
-      #   run: |
-      #     esy b dune runtest -f
-      #   env:
-      #     CI: true
+      - name: test-native
+        run: |
+          esy b dune runtest -f
+        env:
+          CI: true
 
       - name: test-bucklescript
         if: runner.os != 'Windows'
