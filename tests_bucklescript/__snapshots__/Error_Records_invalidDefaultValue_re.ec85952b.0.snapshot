@@ -1,6 +1,6 @@
 Error Records › invalidDefaultValue1.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidDefaultValue1.re 21:14-26
+  invalidDefaultValue1.re 21:14-26
   
   19 \226\148\134 query invalidDefaultValues {
   20 \226\148\134   invalidDefaultValues(

@@ -1,6 +1,6 @@
 Error Objects › fragmentSpreadMissingInFragment.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/fragmentSpreadMissingInFragment.re 5:5-22
+  fragmentSpreadMissingInFragment.re 5:5-22
   
   3 \226\148\130   fragment ListFragment on Lists {
   4 \226\148\130     nullableOfNullable

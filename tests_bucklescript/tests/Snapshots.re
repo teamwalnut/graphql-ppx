@@ -123,19 +123,47 @@ let run_ppx = (path, opts) => {
   (output, error);
 };
 
+type lineAction =
+  | Skip
+  | Add
+  | ModifyPath;
 let process_error = error => {
+  let next_line_contains_filename = ref(false);
+  let buf = Buffer.create(String.length(error));
+
   error
   |> String.trim
   |> String.split_on_char('\n')
-  |> List.filter(line => {
-       switch (String.sub(line, 0, 13)) {
-       // line starting with command line does not produce stable output
-       | "Command line:" => false
-       | _ => true
-       | exception (Invalid_argument(_)) => true
-       }
-     })
-  |> List.fold_left((acc, el) => acc == "" ? el : acc ++ "\n" ++ el, "");
+  |> List.iter(line => {
+       let action =
+         switch (next_line_contains_filename^, String.sub(line, 0, 13)) {
+         // line starting with command line does not produce stable output
+         | (true, _) =>
+           next_line_contains_filename := false;
+           ModifyPath;
+         | (_, "Command line:") => Skip
+         | (_, "We've found a") =>
+           next_line_contains_filename := true;
+           Add;
+         | _ => Add
+         | exception (Invalid_argument(_)) => Add
+         };
+       switch (action) {
+       | Add =>
+         Buffer.add_string(buf, line);
+         Buffer.add_char(buf, '\n');
+       | Skip => ()
+       | ModifyPath =>
+         let segments = String.split_on_char('/', line);
+         let first_segment = segments |> List.hd;
+         let last_segment =
+           List.length(segments) > 1 ? segments |> List.rev |> List.hd : "";
+         Buffer.add_string(buf, first_segment);
+         Buffer.add_string(buf, last_segment);
+         Buffer.add_char(buf, '\n');
+       };
+     });
+  String.trim(Buffer.contents(buf));
 };
 
 let bsb_path = "./node_modules/bs-platform/" ++ platform ++ "/bsc.exe";

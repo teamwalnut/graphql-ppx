@@ -1,6 +1,6 @@
 Error Objects › invalidArgVariableType2.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType2.re 8:25-28
+  invalidArgVariableType2.re 8:25-28
   
    6 \226\148\134 query invalidArgValues($arg: String) {
    7 \226\148\134   invalidArgValues(

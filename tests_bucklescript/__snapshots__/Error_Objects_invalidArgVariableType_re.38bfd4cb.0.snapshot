@@ -1,6 +1,6 @@
 Error Objects › invalidArgVariableType4.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType4.re 10:14-18
+  invalidArgVariableType4.re 10:14-18
   
    8 \226\148\134 invalidArgValues(
    9 \226\148\134     custom: $arg

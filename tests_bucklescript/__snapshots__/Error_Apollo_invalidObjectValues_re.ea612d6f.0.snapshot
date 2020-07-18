@@ -1,6 +1,6 @@
 Error Apollo › invalidObjectValues7.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidObjectValues7.re 20:36
+  invalidObjectValues7.re 20:36
   
   18 \226\148\134 query {
   19 \226\148\134     invalidObjectValuesLst(

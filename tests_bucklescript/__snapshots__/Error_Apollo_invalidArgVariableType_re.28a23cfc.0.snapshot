@@ -1,6 +1,6 @@
 Error Apollo › invalidArgVariableType1.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType1.re 9:25-28
+  invalidArgVariableType1.re 9:25-28
   
    7 \226\148\134 query invalidArgValues {
    8 \226\148\134   invalidArgValues(

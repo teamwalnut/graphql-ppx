@@ -1,6 +1,6 @@
 Error Objects › invalidObjectValues1.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidObjectValues1.re 19:37
+  invalidObjectValues1.re 19:37
   
   17 \226\148\134     otherField: \"\"
   18 \226\148\134     inner: {

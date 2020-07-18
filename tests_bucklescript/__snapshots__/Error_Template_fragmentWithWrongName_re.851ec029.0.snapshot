@@ -1,6 +1,6 @@
 Error Template › fragmentWithWrongName.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/fragmentWithWrongName.re 15:5-18:5
+  fragmentWithWrongName.re 15:5-18:5
   
   13 \226\148\134 {|
   14 \226\148\134 query MyQuery {

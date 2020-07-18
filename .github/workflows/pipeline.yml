@@ -52,7 +52,7 @@ jobs:
         env:
           CI: true
         run: |
-          npm ci --no-optional
+          npm ci --no-optional --ignore-scripts
           esy test
           esy release-static
 

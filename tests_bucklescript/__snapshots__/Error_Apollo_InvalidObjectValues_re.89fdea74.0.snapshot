@@ -1,6 +1,6 @@
 Error Apollo › InvalidObjectValues5.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/InvalidObjectValues5.re 20:23-24
+  InvalidObjectValues5.re 20:23-24
   
   18 \226\148\134             otherField: \"\"
   19 \226\148\134         }

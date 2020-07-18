@@ -1,6 +1,6 @@
 Error Template › invalidDefaultValue2.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidDefaultValue2.re 8:14-26
+  invalidDefaultValue2.re 8:14-26
   
    6 \226\148\134 query invalidDefaultValues {
    7 \226\148\134   invalidDefaultValues(

@@ -1,6 +1,6 @@
 Error Legacy › InvalidObjectValues3.re › output
 We've found a bug for you!
-  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/InvalidObjectValues3.re 9:35
+  InvalidObjectValues3.re 9:35
   
    7 \226\148\134 invalidObjectValues(
    8 \226\148\134     nonRec: {
