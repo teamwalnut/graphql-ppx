@@ -18,8 +18,6 @@
     "ocaml": "~4.9.0",
     "refmterr": "*",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#a83bd09",
-    "@reason-native/console": "*",
-    "@reason-native/pastel": "*",
     "@reason-native/rely": "*"
   },
 

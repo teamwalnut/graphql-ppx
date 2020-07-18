@@ -1,5 +1,5 @@
 {
-  "checksum": "12c709f5e46d6f62e8e96948a1c0b0da",
+  "checksum": "e91f2e4cc84a21c6335dc4d8ade40325",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "refmterr@3.3.2@d41d8cd9": {
@@ -52,8 +52,6 @@
       "devDependencies": [
         "refmterr@3.3.2@d41d8cd9", "ocaml@4.9.1000@d41d8cd9",
         "@reason-native/rely@3.2.1@d41d8cd9",
-        "@reason-native/pastel@0.3.0@d41d8cd9",
-        "@reason-native/console@0.1.0@d41d8cd9",
         "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#a83bd09@d41d8cd9",
         "@opam/alcotest@opam:1.2.1@bb1f8296"
       ]
