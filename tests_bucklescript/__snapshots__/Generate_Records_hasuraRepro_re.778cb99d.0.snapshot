@@ -106,10 +106,10 @@ module GraphQL {
 module Untitled1 = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = {hasuraRepro: string};
+    type t = {hasuraRepro: Dog.Raw.t};
     type t_variables = unit;
   };
-  type t = {hasuraRepro: string};
+  type t = {hasuraRepro: Dog.t};
   /**The GraphQL query string*/
   let query =
     \"query   {\\nhasuraRepro(orderBy: [{id: desc}])  {\\n...Dog   \\n}\\n\\n}\\n\"
@@ -120,7 +120,8 @@ module Untitled1 = {
     {
       hasuraRepro: {
         let value = (value: Raw.t).hasuraRepro;
-        value;
+
+        Dog.verifyArgsAndParse(~fragmentName=`Dog, value);
       },
     }: t
   );
@@ -129,7 +130,7 @@ module Untitled1 = {
     {
       let hasuraRepro = {
         let value = (value: t).hasuraRepro;
-        value;
+        Dog.serialize(value);
       };
       {hasuraRepro: hasuraRepro};
     }: Raw.t

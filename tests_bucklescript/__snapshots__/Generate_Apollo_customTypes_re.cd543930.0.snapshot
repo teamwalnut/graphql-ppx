@@ -64,9 +64,9 @@ module MyQuery = {
   };
   type t_customFields = {
     __typename: string,
-    currentTime: DateTime.t,
-    favoriteColor: Color.t,
-    futureTime: option(DateTime.t),
+    currentTime: Js.Json.t,
+    favoriteColor: Js.Json.t,
+    futureTime: option(Js.Json.t),
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
@@ -86,16 +86,16 @@ module MyQuery = {
             },
             currentTime: {
               let value = (value: Raw.t_customFields).currentTime;
-              DateTime.parse(value);
+              value;
             },
             favoriteColor: {
               let value = (value: Raw.t_customFields).favoriteColor;
-              Color.parse(value);
+              value;
             },
             futureTime: {
               let value = (value: Raw.t_customFields).futureTime;
               switch (Js.toOption(value)) {
-              | Some(value) => Some(DateTime.parse(value))
+              | Some(value) => Some(value)
               | None => None
               };
             },
@@ -128,17 +128,17 @@ module MyQuery = {
             and futureTime = {
               let value = (value: t_customFields).futureTime;
               switch (value) {
-              | Some(value) => Js.Nullable.return(DateTime.serialize(value))
+              | Some(value) => Js.Nullable.return(value)
               | None => Js.Nullable.null
               };
             }
             and favoriteColor = {
               let value = (value: t_customFields).favoriteColor;
-              Color.serialize(value);
+              value;
             }
             and currentTime = {
               let value = (value: t_customFields).currentTime;
-              DateTime.serialize(value);
+              value;
             }
             and __typename = {
               let value = (value: t_customFields).__typename;

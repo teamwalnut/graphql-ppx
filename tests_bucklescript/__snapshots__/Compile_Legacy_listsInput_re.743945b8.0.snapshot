@@ -4,7 +4,7 @@ Compile Legacy › listsInput.re › output
 
 var $$Array = require(\"bs-platform/lib/js/array.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($arg: ListsInput!)  {\\nlistsInput(arg: $arg)  \\n}\\n\";
 

@@ -3,7 +3,7 @@ Compile Legacy › scalarsInput.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($arg: VariousScalarsInput!)  {\\nscalarsInput(arg: $arg)  \\n}\\n\";
 

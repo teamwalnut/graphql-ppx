@@ -4,7 +4,7 @@ Compile Legacy › listsArgs.re › output
 
 var $$Array = require(\"bs-platform/lib/js/array.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\n}\\n\";
 

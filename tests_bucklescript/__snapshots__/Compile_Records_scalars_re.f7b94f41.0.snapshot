@@ -3,7 +3,7 @@ Compile Records › scalars.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.variousScalars;

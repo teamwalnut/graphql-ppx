@@ -3,7 +3,7 @@ Compile Objects › argNamedQuery.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   return {
@@ -43,7 +43,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 function parse$1(value) {
   return {
@@ -83,7 +83,7 @@ var Query1 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 function parse$2(value) {
   return {

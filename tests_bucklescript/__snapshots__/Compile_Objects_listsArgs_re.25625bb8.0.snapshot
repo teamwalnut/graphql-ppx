@@ -4,7 +4,7 @@ Compile Objects › listsArgs.re › output
 
 var $$Array = require(\"bs-platform/lib/js/array.js\");
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   return {

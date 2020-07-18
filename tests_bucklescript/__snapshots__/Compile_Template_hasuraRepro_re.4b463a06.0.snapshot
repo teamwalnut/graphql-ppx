@@ -3,7 +3,7 @@ Compile Template › hasuraRepro.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   fragment Dog on Dog   {
@@ -49,7 +49,7 @@ var Dog = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = ((frag_0) => require(\"gql\")`
   query   {
@@ -61,15 +61,19 @@ var query$1 = ((frag_0) => require(\"gql\")`
 `)(query);
 
 function parse$1(value) {
+  var value$1 = value.hasuraRepro;
   return {
-          hasuraRepro: value.hasuraRepro
+          hasuraRepro: {
+            name: value$1.name
+          }
         };
 }
 
 function serialize$1(value) {
   var value$1 = value.hasuraRepro;
+  var hasuraRepro = serialize(value$1);
   return {
-          hasuraRepro: value$1
+          hasuraRepro: hasuraRepro
         };
 }
 

@@ -64,9 +64,9 @@ module MyQuery = {
   };
   type t_customFields = {
     .
-    \"currentTime\": DateTime.t,
-    \"favoriteColor\": Color.t,
-    \"futureTime\": option(DateTime.t),
+    \"currentTime\": Js.Json.t,
+    \"favoriteColor\": Js.Json.t,
+    \"futureTime\": option(Js.Json.t),
     \"nullableColor\": option(Color.t),
   };
   type t = {. \"customFields\": t_customFields};
@@ -87,17 +87,17 @@ module MyQuery = {
       and futureTime = {
         let value = value##futureTime;
         switch (Js.toOption(value)) {
-        | Some(value) => Some(DateTime.parse(value))
+        | Some(value) => Some(value)
         | None => None
         };
       }
       and favoriteColor = {
         let value = value##favoriteColor;
-        Color.parse(value);
+        value;
       }
       and currentTime = {
         let value = value##currentTime;
-        DateTime.parse(value);
+        value;
       };
       {
         \"currentTime\": currentTime,
@@ -122,17 +122,17 @@ module MyQuery = {
       and futureTime = {
         let value = value##futureTime;
         switch (value) {
-        | Some(value) => Js.Nullable.return(DateTime.serialize(value))
+        | Some(value) => Js.Nullable.return(value)
         | None => Js.Nullable.null
         };
       }
       and favoriteColor = {
         let value = value##favoriteColor;
-        Color.serialize(value);
+        value;
       }
       and currentTime = {
         let value = value##currentTime;
-        DateTime.serialize(value);
+        value;
       };
       {
         \"currentTime\": currentTime,

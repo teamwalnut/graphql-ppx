@@ -3,7 +3,7 @@ Compile Template › record.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query   {
@@ -68,7 +68,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = (require(\"gql\")`
   query   {
@@ -127,7 +127,7 @@ var OneFieldQuery = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 var query$2 = (require(\"gql\")`
   fragment Fragment on VariousScalars   {
@@ -175,7 +175,7 @@ var Fragment = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var Raw$3 = { };
+var Raw$3 = {};
 
 var query$3 = ((frag_0) => require(\"gql\")`
   query   {
@@ -232,7 +232,7 @@ var ExternalFragmentQuery = {
   Untitled1: Untitled1
 };
 
-var Raw$4 = { };
+var Raw$4 = {};
 
 var query$4 = (require(\"gql\")`
   query   {
@@ -250,17 +250,17 @@ var query$4 = (require(\"gql\")`
 function parse$4(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1[\"__typename\"];
-  var tmp = typename === \"Dog\" ? /* `Dog */[
-      3406428,
-      {
-        __typename: value$1.__typename,
-        name: value$1.name,
-        barkVolume: value$1.barkVolume
-      }
-    ] : /* `FutureAddedValue */[
-      -31101740,
-      value$1
-    ];
+  var tmp = typename === \"Dog\" ? ({
+        HASH: /* Dog */3406428,
+        VAL: {
+          __typename: value$1.__typename,
+          name: value$1.name,
+          barkVolume: value$1.barkVolume
+        }
+      }) : ({
+        HASH: /* FutureAddedValue */-31101740,
+        VAL: value$1
+      });
   return {
           dogOrHuman: tmp
         };
@@ -269,8 +269,8 @@ function parse$4(value) {
 function serialize$4(value) {
   var value$1 = value.dogOrHuman;
   var dogOrHuman;
-  if (value$1[0] >= 3406428) {
-    var value$2 = value$1[1];
+  if (value$1.HASH >= 3406428) {
+    var value$2 = value$1.VAL;
     var value$3 = value$2.barkVolume;
     var value$4 = value$2.name;
     dogOrHuman = {
@@ -279,7 +279,7 @@ function serialize$4(value) {
       barkVolume: value$3
     };
   } else {
-    dogOrHuman = value$1[1];
+    dogOrHuman = value$1.VAL;
   }
   return {
           dogOrHuman: dogOrHuman
@@ -313,7 +313,7 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var Raw$5 = { };
+var Raw$5 = {};
 
 var query$5 = (require(\"gql\")`
   fragment DogFragment on Dog   {
@@ -365,7 +365,7 @@ var DogFragment = {
   Z__INTERNAL: Z__INTERNAL$5
 };
 
-var Raw$6 = { };
+var Raw$6 = {};
 
 var query$6 = ((frag_0) => require(\"gql\")`
   query   {
@@ -382,13 +382,13 @@ var query$6 = ((frag_0) => require(\"gql\")`
 function parse$6(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1[\"__typename\"];
-  var tmp = typename === \"Dog\" ? /* `Dog */[
-      3406428,
-      parse$5(value$1)
-    ] : /* `FutureAddedValue */[
-      -31101740,
-      value$1
-    ];
+  var tmp = typename === \"Dog\" ? ({
+        HASH: /* Dog */3406428,
+        VAL: parse$5(value$1)
+      }) : ({
+        HASH: /* FutureAddedValue */-31101740,
+        VAL: value$1
+      });
   return {
           dogOrHuman: tmp
         };
@@ -396,7 +396,7 @@ function parse$6(value) {
 
 function serialize$6(value) {
   var value$1 = value.dogOrHuman;
-  var dogOrHuman = value$1[0] >= 3406428 ? serialize$5(value$1[1]) : value$1[1];
+  var dogOrHuman = value$1.HASH >= 3406428 ? serialize$5(value$1.VAL) : value$1.VAL;
   return {
           dogOrHuman: dogOrHuman
         };

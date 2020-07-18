@@ -3,7 +3,7 @@ Compile Apollo › subscription.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.simpleSubscription;
@@ -11,28 +11,28 @@ function parse(value) {
   var tmp;
   switch (typename) {
     case \"Dog\" :
-        tmp = /* `Dog */[
-          3406428,
-          {
+        tmp = {
+          HASH: /* Dog */3406428,
+          VAL: {
             __typename: value$1.__typename,
             name: value$1.name
           }
-        ];
+        };
         break;
     case \"Human\" :
-        tmp = /* `Human */[
-          -1031617139,
-          {
+        tmp = {
+          HASH: /* Human */-1031617139,
+          VAL: {
             __typename: value$1.__typename,
             name: value$1.name
           }
-        ];
+        };
         break;
     default:
-      tmp = /* `FutureAddedValue */[
-        -31101740,
-        value$1
-      ];
+      tmp = {
+        HASH: /* FutureAddedValue */-31101740,
+        VAL: value$1
+      };
   }
   return {
           simpleSubscription: tmp
@@ -41,24 +41,24 @@ function parse(value) {
 
 function serialize(value) {
   var value$1 = value.simpleSubscription;
-  var variant = value$1[0];
+  var variant = value$1.HASH;
   var simpleSubscription;
   if (variant !== -31101740) {
     if (variant >= 3406428) {
-      var value$2 = value$1[1].name;
+      var value$2 = value$1.VAL.name;
       simpleSubscription = {
         __typename: \"Dog\",
         name: value$2
       };
     } else {
-      var value$3 = value$1[1].name;
+      var value$3 = value$1.VAL.name;
       simpleSubscription = {
         __typename: \"Human\",
         name: value$3
       };
     }
   } else {
-    simpleSubscription = value$1[1];
+    simpleSubscription = value$1.VAL;
   }
   return {
           simpleSubscription: simpleSubscription

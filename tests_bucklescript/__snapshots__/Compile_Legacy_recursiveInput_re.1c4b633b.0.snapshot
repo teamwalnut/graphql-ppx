@@ -4,7 +4,7 @@ Compile Legacy › recursiveInput.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($arg: RecursiveInput!)  {\\nrecursiveInput(arg: $arg)  \\n}\\n\";
 

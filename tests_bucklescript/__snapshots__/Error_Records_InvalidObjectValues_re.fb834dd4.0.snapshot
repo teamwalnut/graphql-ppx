@@ -1,7 +1,6 @@
 Error Records › InvalidObjectValues5.re › output
-
-  We've found a bug for you!
-  operations/errors/InvalidObjectValues5.re 20:23-24
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/InvalidObjectValues5.re 20:23-24
   
   18 \226\148\134             otherField: \"\"
   19 \226\148\134         }
@@ -10,5 +9,3 @@ Error Records › InvalidObjectValues5.re › output
   22 \226\148\134 )
   
   Invalid argument. Expected \"Enum\" but received \"EmptyList!\".
-  
-

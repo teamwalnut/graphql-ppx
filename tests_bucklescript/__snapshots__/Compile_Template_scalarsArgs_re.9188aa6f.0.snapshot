@@ -3,7 +3,7 @@ Compile Template › scalarsArgs.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {

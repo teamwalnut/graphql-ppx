@@ -4,7 +4,7 @@ Compile Objects › pokedexApolloMode.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.pokemon;

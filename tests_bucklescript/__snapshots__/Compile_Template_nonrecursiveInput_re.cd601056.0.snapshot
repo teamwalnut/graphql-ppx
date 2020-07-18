@@ -5,7 +5,7 @@ Compile Template › nonrecursiveInput.re › output
 var $$Array = require(\"bs-platform/lib/js/array.js\");
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query ($arg: NonrecursiveInput!)  {
@@ -113,7 +113,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = (require(\"gql\")`
   query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {

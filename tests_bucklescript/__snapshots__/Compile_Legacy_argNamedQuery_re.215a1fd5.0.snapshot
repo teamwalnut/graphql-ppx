@@ -3,7 +3,7 @@ Compile Legacy › argNamedQuery.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\";
 
@@ -65,7 +65,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = \"query Query1($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\";
 
@@ -127,7 +127,7 @@ var Query1 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 var query$2 = \"query Query2($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\";
 

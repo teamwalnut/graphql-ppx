@@ -26,7 +26,7 @@ var IntOfString = {
   serialize: serialize$1
 };
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\nvariousScalars  {\\nstring  \\nint  \\n}\\n\\n}\\n\";
 

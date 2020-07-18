@@ -1,7 +1,6 @@
 Error Template › invalidArgVariableType3.re › output
-
-  We've found a bug for you!
-  operations/errors/invalidArgVariableType3.re 9:17-21
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType3.re 9:17-21
   
    7 \226\148\134   invalidArgValues(
    8 \226\148\134       stringRequired: $arg
@@ -10,5 +9,3 @@ Error Template › invalidArgVariableType3.re › output
   11 \226\148\134 }
   
   Invalid argument. Expected \"String\" but received \"Int\".
-  
-

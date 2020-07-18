@@ -3,7 +3,7 @@ Compile Legacy › defaultObjectValueOnScalar.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\"value\\\"}}, arg: {field: \\\"otherValue\\\"})  \\n}\\n\";
 

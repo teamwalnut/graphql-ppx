@@ -4,7 +4,7 @@ Compile Legacy › nested.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
 

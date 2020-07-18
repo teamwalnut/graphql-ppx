@@ -3,7 +3,7 @@ Compile Legacy › scalars.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\nvariousScalars  {\\nnullableString  \\nstring  \\nnullableInt  \\nint  \\nnullableFloat  \\nfloat  \\nnullableBoolean  \\nboolean  \\nnullableID  \\nid  \\n}\\n\\n}\\n\";
 

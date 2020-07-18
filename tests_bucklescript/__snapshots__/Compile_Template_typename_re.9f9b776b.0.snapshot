@@ -3,7 +3,7 @@ Compile Template › typename.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query   {

@@ -13,10 +13,10 @@
     "postinstall": "node ./copyPlatformBinaryInPlace.js"
   },
   "devDependencies": {
-    "bs-platform": "^7.3.2"
+    "bs-platform": "^8.1.0"
   },
   "peerDependencies": {
-    "bs-platform": "^7.3.2"
+    "bs-platform": "^8.1.0"
   },
   "publishConfig": {
     "access": "public"

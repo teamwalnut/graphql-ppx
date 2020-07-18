@@ -4,7 +4,7 @@ Compile Legacy › customScalars.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\";
 

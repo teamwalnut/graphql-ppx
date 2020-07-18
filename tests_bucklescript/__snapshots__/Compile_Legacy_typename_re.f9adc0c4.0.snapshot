@@ -4,7 +4,7 @@ Compile Legacy › typename.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\nfirst: nestedObject  {\\n__typename  \\ninner  {\\n__typename  \\ninner  {\\n__typename  \\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
 

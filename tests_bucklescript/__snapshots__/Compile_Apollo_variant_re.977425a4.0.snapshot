@@ -6,7 +6,7 @@ var Js_exn = require(\"bs-platform/lib/js/js_exn.js\");
 var Js_json = require(\"bs-platform/lib/js/js_json.js\");
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.mutationForVariant;
@@ -35,67 +35,67 @@ function parse(value) {
               var tmp$1;
               switch (typename) {
                 case \"Dog\" :
-                    tmp$1 = /* `Dog */[
-                      3406428,
-                      {
+                    tmp$1 = {
+                      HASH: /* Dog */3406428,
+                      VAL: {
                         __typename: temp$4.__typename,
                         name: temp$4.name,
                         barkVolume: temp$4.barkVolume
                       }
-                    ];
+                    };
                     break;
                 case \"Human\" :
-                    tmp$1 = /* `Human */[
-                      -1031617139,
-                      {
+                    tmp$1 = {
+                      HASH: /* Human */-1031617139,
+                      VAL: {
                         __typename: temp$4.__typename,
                         name: temp$4.name
                       }
-                    ];
+                    };
                     break;
                 default:
-                  tmp$1 = /* `FutureAddedValue */[
-                    -31101740,
-                    temp$4
-                  ];
+                  tmp$1 = {
+                    HASH: /* FutureAddedValue */-31101740,
+                    VAL: temp$4
+                  };
               }
-              tmp = /* `DogOrHuman */[
-                974247566,
-                tmp$1
-              ];
+              tmp = {
+                HASH: /* DogOrHuman */974247566,
+                VAL: tmp$1
+              };
             }
           } else {
-            tmp = /* `Human */[
-              -1031617139,
-              {
+            tmp = {
+              HASH: /* Human */-1031617139,
+              VAL: {
                 __typename: temp$3.__typename,
                 name: temp$3.name
               }
-            ];
+            };
           }
         } else {
-          tmp = /* `Dog */[
-            3406428,
-            {
+          tmp = {
+            HASH: /* Dog */3406428,
+            VAL: {
               __typename: temp$2.__typename,
               name: temp$2.name,
               barkVolume: temp$2.barkVolume
             }
-          ];
+          };
         }
       } else {
-        tmp = /* `BaseTypeList */[
-          -259847799,
-          temp$1.map((function (value) {
-                  return value;
-                }))
-        ];
+        tmp = {
+          HASH: /* BaseTypeList */-259847799,
+          VAL: temp$1.map(function (value) {
+                return value;
+              })
+        };
       }
     } else {
-      tmp = /* `BaseType */[
-        -620191861,
-        temp
-      ];
+      tmp = {
+        HASH: /* BaseType */-620191861,
+        VAL: temp
+      };
     }
   } else {
     tmp = Js_exn.raiseError(\"graphql-ppx: Expected type VariantTestResult to be an object\");

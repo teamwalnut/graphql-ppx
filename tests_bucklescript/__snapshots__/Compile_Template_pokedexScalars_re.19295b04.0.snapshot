@@ -3,7 +3,7 @@ Compile Template › pokedexScalars.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query pokemon($id: String, $name: String)  {

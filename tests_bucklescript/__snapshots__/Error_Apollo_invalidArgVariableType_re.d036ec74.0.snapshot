@@ -1,7 +1,6 @@
 Error Apollo › invalidArgVariableType6.re › output
-
-  We've found a bug for you!
-  operations/errors/invalidArgVariableType6.re 8:15-18
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType6.re 8:15-18
   
    6 \226\148\134 query invalidArgValues($arg: String) {
    7 \226\148\134   invalidArgValues(
@@ -10,5 +9,3 @@ Error Apollo › invalidArgVariableType6.re › output
   10 \226\148\134   )
   
   Invalid argument. Expected \"[String]\" but received \"String\".
-  
-

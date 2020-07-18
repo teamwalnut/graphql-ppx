@@ -3,7 +3,7 @@ Compile Legacy › mutationWithArgs.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = \"mutation MyMutation($required: String!)  {\\noptionalInputArgs(required: $required, anotherRequired: \\\"val\\\")  \\n}\\n\";
 

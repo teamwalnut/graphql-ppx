@@ -1,7 +1,6 @@
 Error Apollo › invalidObjectValues6.re › output
-
-  We've found a bug for you!
-  operations/errors/invalidObjectValues6.re 20:27-37
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidObjectValues6.re 20:27-37
   
   18 \226\148\134 query {
   19 \226\148\134     invalidObjectValuesLst(
@@ -10,5 +9,3 @@ Error Apollo › invalidObjectValues6.re › output
   22 \226\148\134 }
   
   Invalid argument. Expected \"[InputObject]!\" but received \"InputObject!\".
-  
-

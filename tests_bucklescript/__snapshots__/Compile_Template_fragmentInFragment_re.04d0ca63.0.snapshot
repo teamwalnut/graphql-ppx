@@ -11,7 +11,7 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   fragment ListFragment on Lists   {
@@ -22,12 +22,12 @@ var query = (require(\"gql\")`
 function parse(value) {
   var value$1 = value.nullableOfNullable;
   return {
-          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  })) : undefined
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined
         };
 }
 
@@ -37,13 +37,13 @@ function verifyArgsAndParse(_ListFragment, value) {
 
 function serialize(value) {
   var value$1 = value.nullableOfNullable;
-  var nullableOfNullable = value$1 !== undefined ? value$1.map((function (value) {
-            if (value !== undefined) {
-              return value;
-            } else {
-              return null;
-            }
-          })) : null;
+  var nullableOfNullable = value$1 !== undefined ? value$1.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
   return {
           nullableOfNullable: nullableOfNullable
         };
@@ -68,7 +68,7 @@ var ListFragment = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = ((frag_0) => require(\"gql\")`
   fragment Another on Lists   {
@@ -81,12 +81,12 @@ var query$1 = ((frag_0) => require(\"gql\")`
 function parse$1(value) {
   var value$1 = value[\"nullableOfNullable\"];
   return {
-          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  })) : undefined,
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined,
           listFragment: parse(value)
         };
 }
@@ -98,13 +98,13 @@ function verifyArgsAndParse$1(_Another, value) {
 function serialize$1(value) {
   var value$1 = value.nullableOfNullable;
   return [serialize(value.listFragment)].reduce(deepMerge, {
-              nullableOfNullable: value$1 !== undefined ? value$1.map((function (value) {
-                        if (value !== undefined) {
-                          return value;
-                        } else {
-                          return null;
-                        }
-                      })) : null
+              nullableOfNullable: value$1 !== undefined ? value$1.map(function (value) {
+                      if (value !== undefined) {
+                        return value;
+                      } else {
+                        return null;
+                      }
+                    }) : null
             });
 }
 

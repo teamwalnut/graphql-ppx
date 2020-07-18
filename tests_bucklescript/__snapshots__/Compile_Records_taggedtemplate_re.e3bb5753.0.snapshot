@@ -11,7 +11,7 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var Raw = { };
+var Raw = {};
 
 var query = (graphql`
   query   {
@@ -114,9 +114,9 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var MyTypes = { };
+var MyTypes = {};
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = (graphql`
   query   {
@@ -219,7 +219,7 @@ var MyQuery1a = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 var query$2 = (graphql`
   query   {
@@ -322,7 +322,7 @@ var MyQuery1b = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var Raw$3 = { };
+var Raw$3 = {};
 
 var query$3 = (require(\"gatsby\").graphql`
   query   {
@@ -425,7 +425,7 @@ var MyQuery2 = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var Raw$4 = { };
+var Raw$4 = {};
 
 var query$4 = (require(\"gatsby\").graphql`
   query   {
@@ -528,7 +528,7 @@ var MyQuery3 = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var Raw$5 = { };
+var Raw$5 = {};
 
 var query$5 = (require(\"gatsby\")`
   query   {
@@ -631,7 +631,7 @@ var MyQuery4 = {
   Z__INTERNAL: Z__INTERNAL$5
 };
 
-var Raw$6 = { };
+var Raw$6 = {};
 
 var query$6 = (require(\"gatsby\")`
   fragment ListFragment on Lists   {
@@ -644,15 +644,15 @@ function parse$6(value) {
   var value$1 = value.nullableOfNullable;
   var value$2 = value.nullableOfNonNullable;
   return {
-          nullableOfNullable: !(value$1 == null) ? value$1.map((function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  })) : undefined,
-          nullableOfNonNullable: !(value$2 == null) ? value$2.map((function (value) {
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
                     return value;
-                  })) : undefined
+                  }
+                  
+                }) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map(function (value) {
+                  return value;
+                }) : undefined
         };
 }
 
@@ -662,17 +662,17 @@ function verifyArgsAndParse(_ListFragment, value) {
 
 function serialize$6(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
-            return value;
-          })) : null;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
-            if (value !== undefined) {
-              return value;
-            } else {
-              return null;
-            }
-          })) : null;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -698,7 +698,7 @@ var ListFragment = {
   Z__INTERNAL: Z__INTERNAL$6
 };
 
-var Raw$7 = { };
+var Raw$7 = {};
 
 var query$7 = (require(\"gatsby\")`
   query MyQuery5  {
@@ -749,7 +749,7 @@ var MyQuery5 = {
   Z__INTERNAL: Z__INTERNAL$7
 };
 
-var Raw$8 = { };
+var Raw$8 = {};
 
 var query$8 = ((frag_0) => require(\"gatsby\")`
   query MyQuery6  {
@@ -801,7 +801,7 @@ var MyQuery6 = {
   Z__INTERNAL: Z__INTERNAL$8
 };
 
-var Raw$9 = { };
+var Raw$9 = {};
 
 var query$9 = (graphql`
   query MyQuery7  {

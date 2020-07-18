@@ -3,7 +3,7 @@ Compile Objects › mutationWithArgsAndNoRecords.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   return {

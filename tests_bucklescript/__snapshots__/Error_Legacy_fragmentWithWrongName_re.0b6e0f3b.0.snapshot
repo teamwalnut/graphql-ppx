@@ -1,7 +1,6 @@
 Error Legacy › fragmentWithWrongName.re › output
-
-  We've found a bug for you!
-  operations/errors/fragmentWithWrongName.re 15:5-18:5
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/fragmentWithWrongName.re 15:5-18:5
   
   13 \226\148\134 {|
   14 \226\148\134 query MyQuery {
@@ -17,5 +16,3 @@ Error Legacy › fragmentWithWrongName.re › output
   But somewhere wanted:
     \027[1;33m[ `ListFragment ]\027[0m
   The second variant type does not allow tag(s) `WrongFragmentName
-  
-

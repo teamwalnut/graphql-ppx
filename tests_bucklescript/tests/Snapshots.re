@@ -1,39 +1,19 @@
 open TestFramework;
-
 let win = Sys.win32 || Sys.cygwin;
 
-// let channel_to_string = channel => {
-//   // let buf = Buffer.create(in_channel_length(channel));
-//   let buf = Buffer.create(1024);
-
-//   try(
-//     while (true) {
-//       let line = input_line(channel);
-//       Buffer.add_string(buf, line);
-//       Buffer.add_char(buf, '\n');
-//     }
-//   ) {
-//   | End_of_file => close_in(channel)
-//   };
-//   Buffer.contents(buf);
-// };
-
-// let channel_to_channel = (read_channel, write_channel) => {
-//   set_binary_mode_in(read_channel, true);
-//   set_binary_mode_out(write_channel, true);
-//   try(
-//     while (true) {
-//       let byte = input_binary_int(read_channel);
-//       output_binary_int(stdout, byte);
-//       output_binary_int(write_channel, byte);
-//     }
-//   ) {
-//   | End_of_file => close_out(write_channel)
-//   };
-// };
-
-let refmt_path = "./node_modules/bs-platform/darwin/refmt.exe";
-let ppx_path = "../_build/default/src/bucklescript_bin/bin.exe";
+let detect_platform = () => {
+  let ic = Unix.open_process_in("uname");
+  let uname = input_line(ic);
+  let () = close_in(ic);
+  switch (win, uname) {
+  | (true, _) => "win32"
+  | (_, "Darwin") => "darwin"
+  | _ => "linux"
+  };
+};
+let platform = detect_platform();
+let refmt_path = "./node_modules/bs-platform/" ++ platform ++ "/refmt.exe";
+let ppx_path = "./_build/default/src/bucklescript_bin/bin.exe";
 
 let rec really_read = (fd, ~buf, ~start=0, ~length=1024, ()) =>
   if (length <= 0) {
@@ -98,7 +78,7 @@ let run_ppx = (path, opts) => {
         Unix.create_process(
           ppx_path,
           Array.concat([
-            [|"", "-schema", "../graphql_schema.json"|],
+            [|"", "-schema", "graphql_schema.json"|],
             opts,
             output_opts,
           ]),
@@ -143,7 +123,22 @@ let run_ppx = (path, opts) => {
   (output, error);
 };
 
-let bsb_path = "./node_modules/bs-platform/darwin/bsc.exe";
+let process_error = error => {
+  error
+  |> String.trim
+  |> String.split_on_char('\n')
+  |> List.filter(line => {
+       switch (String.sub(line, 0, 13)) {
+       // line starting with command line does not produce stable output
+       | "Command line:" => false
+       | _ => true
+       | exception (Invalid_argument(_)) => true
+       }
+     })
+  |> List.fold_left((acc, el) => acc == "" ? el : acc ++ "\n" ++ el, "");
+};
+
+let bsb_path = "./node_modules/bs-platform/" ++ platform ++ "/bsc.exe";
 let run_bsb = (~ppxOptions, ~filename, ~pathIn) => {
   let (out_read, out_write) = Unix.pipe(~cloexec=true, ());
   let (err_read, err_write) =
@@ -162,12 +157,11 @@ let run_bsb = (~ppxOptions, ~filename, ~pathIn) => {
             "",
             "-I",
             "./utilities",
-            "-c",
             "-w",
             "-30",
             "-ppx",
             ppx_path
-            ++ " "
+            ++ " -schema=graphql_schema.json "
             ++ Array.fold_left(
                  (acc, ppxOption) => (acc == "" ? "" : " ") ++ ppxOption,
                  "",
@@ -194,13 +188,13 @@ let run_bsb = (~ppxOptions, ~filename, ~pathIn) => {
   really_read(out_read, ~buf=output_buf, ());
   really_read(err_read, ~buf=error_buf, ());
   let output = Buffer.contents(output_buf);
-  let error = Buffer.contents(error_buf);
+  let error = process_error(Buffer.contents(error_buf));
 
   (output, error);
 };
 
 let filenames =
-  Sys.readdir("operations")
+  Sys.readdir("tests_bucklescript/operations")
   |> Array.to_list
   |> List.filter(name => {
        switch (String.split_on_char('.', name) |> List.rev) {
@@ -210,7 +204,7 @@ let filenames =
      });
 
 let error_filenames =
-  Sys.readdir("operations/errors")
+  Sys.readdir("tests_bucklescript/operations/errors")
   |> Array.to_list
   |> List.filter(name => {
        switch (String.split_on_char('.', name) |> List.rev) {
@@ -269,7 +263,10 @@ ppxConfigs
             describe(filename, ({test, _}) => {
               test("output", ({expect, _}) => {
                 let (output, error) =
-                  run_ppx("operations/" ++ filename, options);
+                  run_ppx(
+                    "tests_bucklescript/operations/" ++ filename,
+                    options,
+                  );
                 expect.string(output).toMatchSnapshot();
                 expect.string(error).toEqual("");
               })
@@ -286,7 +283,7 @@ ppxConfigs
                   run_bsb(
                     ~ppxOptions=options,
                     ~filename,
-                    ~pathIn="operations",
+                    ~pathIn="tests_bucklescript/operations",
                   );
                 test("output", ({expect, _}) => {
                   expect.string(output).toMatchSnapshot();
@@ -306,7 +303,7 @@ ppxConfigs
                   run_bsb(
                     ~ppxOptions=options,
                     ~filename,
-                    ~pathIn="operations/errors",
+                    ~pathIn="tests_bucklescript/operations/errors",
                   );
                 test("output", ({expect, _}) => {
                   expect.string(error).toMatchSnapshot()

@@ -3,7 +3,7 @@ Compile Objects › unionPartial.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.dogOrHuman;
@@ -12,18 +12,18 @@ function parse(value) {
   if (typename === \"Dog\") {
     var value$2 = value$1.barkVolume;
     var value$3 = value$1.name;
-    tmp = /* `Dog */[
-      3406428,
-      {
+    tmp = {
+      HASH: /* Dog */3406428,
+      VAL: {
         name: value$3,
         barkVolume: value$2
       }
-    ];
+    };
   } else {
-    tmp = /* `FutureAddedValue */[
-      -31101740,
-      value$1
-    ];
+    tmp = {
+      HASH: /* FutureAddedValue */-31101740,
+      VAL: value$1
+    };
   }
   return {
           dogOrHuman: tmp
@@ -33,8 +33,8 @@ function parse(value) {
 function serialize(value) {
   var value$1 = value.dogOrHuman;
   var tmp;
-  if (value$1[0] >= 3406428) {
-    var value$2 = value$1[1];
+  if (value$1.HASH >= 3406428) {
+    var value$2 = value$1.VAL;
     var value$3 = value$2.barkVolume;
     var value$4 = value$2.name;
     tmp = {
@@ -43,7 +43,7 @@ function serialize(value) {
       barkVolume: value$3
     };
   } else {
-    tmp = value$1[1];
+    tmp = value$1.VAL;
   }
   return {
           dogOrHuman: tmp

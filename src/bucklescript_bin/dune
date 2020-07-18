@@ -1,4 +1,5 @@
 (executable
+ (package graphql_ppx)
  (name bin)
  (public_name graphql_ppx)
  (libraries graphql_ppx_bucklescript)

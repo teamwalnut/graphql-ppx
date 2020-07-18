@@ -1,7 +1,6 @@
 Error Records › invalidArgVariableType1.re › output
-
-  We've found a bug for you!
-  operations/errors/invalidArgVariableType1.re 9:25-28
+We've found a bug for you!
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/invalidArgVariableType1.re 9:25-28
   
    7 \226\148\134 query invalidArgValues {
    8 \226\148\134   invalidArgValues(
@@ -10,5 +9,3 @@ Error Records › invalidArgVariableType1.re › output
   11 \226\148\134 }
   
   Invalid argument. The variable \"$arg\" on argument \"stringRequired\" is missing.
-  
-

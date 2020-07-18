@@ -11,22 +11,22 @@ var GraphQL_PPX = {
   deepMerge: deepMerge
 };
 
-var Raw = { };
+var Raw = {};
 
 var query = \"fragment ListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 
 function parse(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = !(value$1 == null) ? value$1.map((function (value) {
-            return value;
-          })) : undefined;
+  var nullableOfNonNullable = !(value$1 == null) ? value$1.map(function (value) {
+          return value;
+        }) : undefined;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = !(value$2 == null) ? value$2.map((function (value) {
-            if (!(value == null)) {
-              return value;
-            }
-            
-          })) : undefined;
+  var nullableOfNullable = !(value$2 == null) ? value$2.map(function (value) {
+          if (!(value == null)) {
+            return value;
+          }
+          
+        }) : undefined;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -39,17 +39,17 @@ function verifyArgsAndParse(_ListFragment, value) {
 
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
-            return value;
-          })) : null;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
-            if (value !== undefined) {
-              return value;
-            } else {
-              return null;
-            }
-          })) : null;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -75,14 +75,14 @@ var ListFragment = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 function parse$1(value) {
   var value$1 = value.nullableOfNonNullable;
   return {
-          nullableOfNonNullable: !(value$1 == null) ? value$1.map((function (value) {
-                    return value;
-                  })) : undefined
+          nullableOfNonNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  return value;
+                }) : undefined
         };
 }
 
@@ -93,9 +93,9 @@ function verifyArgsAndParse$1(_Another, value) {
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
   return {
-          nullableOfNonNullable: value$1 !== undefined ? value$1.map((function (value) {
-                    return value;
-                  })) : null
+          nullableOfNonNullable: value$1 !== undefined ? value$1.map(function (value) {
+                  return value;
+                }) : null
         };
 }
 
@@ -118,19 +118,19 @@ var Another = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 var query$1 = \"fragment FragmentWithArgs on Lists   {\\nlistWithArg(arg1: $arg1)  \\n}\\n\";
 
 function parse$2(value) {
   var value$1 = value.listWithArg;
   return {
-          listWithArg: !(value$1 == null) ? value$1.map((function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  })) : undefined
+          listWithArg: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined
         };
 }
 
@@ -141,13 +141,13 @@ function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
 function serialize$2(value) {
   var value$1 = value.listWithArg;
   return {
-          listWithArg: value$1 !== undefined ? value$1.map((function (value) {
-                    if (value !== undefined) {
-                      return value;
-                    } else {
-                      return null;
-                    }
-                  })) : null
+          listWithArg: value$1 !== undefined ? value$1.map(function (value) {
+                  if (value !== undefined) {
+                    return value;
+                  } else {
+                    return null;
+                  }
+                }) : null
         };
 }
 
@@ -170,22 +170,22 @@ var FragmentWithArgs = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
-var Raw$3 = { };
+var Raw$3 = {};
 
 var query$2 = \"fragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 
 function parse$3(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = !(value$1 == null) ? value$1.map((function (value) {
-            return value;
-          })) : undefined;
+  var nullableOfNonNullable = !(value$1 == null) ? value$1.map(function (value) {
+          return value;
+        }) : undefined;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = !(value$2 == null) ? value$2.map((function (value) {
-            if (!(value == null)) {
-              return value;
-            }
-            
-          })) : undefined;
+  var nullableOfNullable = !(value$2 == null) ? value$2.map(function (value) {
+          if (!(value == null)) {
+            return value;
+          }
+          
+        }) : undefined;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -198,17 +198,17 @@ function verifyArgsAndParse$3(_InlineListFragment, value) {
 
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
-  var nullableOfNonNullable = value$1 !== undefined ? value$1.map((function (value) {
-            return value;
-          })) : null;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
   var value$2 = value.nullableOfNullable;
-  var nullableOfNullable = value$2 !== undefined ? value$2.map((function (value) {
-            if (value !== undefined) {
-              return value;
-            } else {
-              return null;
-            }
-          })) : null;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
   return {
           nullableOfNullable: nullableOfNullable,
           nullableOfNonNullable: nullableOfNonNullable
@@ -234,7 +234,7 @@ var InlineListFragment = {
   Z__INTERNAL: Z__INTERNAL$3
 };
 
-var Raw$4 = { };
+var Raw$4 = {};
 
 var query$3 = \"query MyQuery($arg1: String)  {\\nl1: lists  {\\n...ListFragment   \\n}\\n\\nl2: lists  {\\n...ListFragment   \\n...ListFragment   \\n}\\n\\nl3: lists  {\\nnullableOfNullable  \\n...ListFragment   \\n...ListFragment   \\n}\\n\\nl4: lists  {\\nnullableOfNullable  \\n...InlineListFragment   \\n}\\n\\nl5: lists  {\\n...FragmentWithArgs   \\n}\\n\\n}\\nfragment FragmentWithArgs on Lists   {\\nlistWithArg(arg1: $arg1)  \\n}\\nfragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\nfragment ListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 
@@ -244,12 +244,12 @@ function parse$4(value) {
   var value$2 = value.l4;
   var inlineListFragment = parse$3(value$2);
   var value$3 = value$2[\"nullableOfNullable\"];
-  var nullableOfNullable = !(value$3 == null) ? value$3.map((function (value) {
-            if (!(value == null)) {
-              return value;
-            }
-            
-          })) : undefined;
+  var nullableOfNullable = !(value$3 == null) ? value$3.map(function (value) {
+          if (!(value == null)) {
+            return value;
+          }
+          
+        }) : undefined;
   var l4 = {
     nullableOfNullable: nullableOfNullable,
     inlineListFragment: inlineListFragment
@@ -258,12 +258,12 @@ function parse$4(value) {
   var frag2 = parse(value$4);
   var frag1 = parse(value$4);
   var value$5 = value$4[\"nullableOfNullable\"];
-  var nullableOfNullable$1 = !(value$5 == null) ? value$5.map((function (value) {
-            if (!(value == null)) {
-              return value;
-            }
-            
-          })) : undefined;
+  var nullableOfNullable$1 = !(value$5 == null) ? value$5.map(function (value) {
+          if (!(value == null)) {
+            return value;
+          }
+          
+        }) : undefined;
   var l3 = {
     nullableOfNullable: nullableOfNullable$1,
     frag1: frag1,
@@ -293,13 +293,13 @@ function serialize$4(value) {
   var value$2 = value.l4;
   var value$3 = value$2.nullableOfNullable;
   var l4 = [serialize$3(value$2.inlineListFragment)].reduce(deepMerge, {
-        nullableOfNullable: value$3 !== undefined ? value$3.map((function (value) {
-                  if (value !== undefined) {
-                    return value;
-                  } else {
-                    return null;
-                  }
-                })) : null
+        nullableOfNullable: value$3 !== undefined ? value$3.map(function (value) {
+                if (value !== undefined) {
+                  return value;
+                } else {
+                  return null;
+                }
+              }) : null
       });
   var value$4 = value.l3;
   var value$5 = value$4.nullableOfNullable;
@@ -307,20 +307,20 @@ function serialize$4(value) {
       serialize(value$4.frag1),
       serialize(value$4.frag2)
     ].reduce(deepMerge, {
-        nullableOfNullable: value$5 !== undefined ? value$5.map((function (value) {
-                  if (value !== undefined) {
-                    return value;
-                  } else {
-                    return null;
-                  }
-                })) : null
+        nullableOfNullable: value$5 !== undefined ? value$5.map(function (value) {
+                if (value !== undefined) {
+                  return value;
+                } else {
+                  return null;
+                }
+              }) : null
       });
   var value$6 = value.l2;
   var l2 = [
       serialize(value$6.frag1),
       serialize(value$6.frag2)
     ].reduce(deepMerge, (function (prim) {
-          return { };
+          return {};
         }));
   var value$7 = value.l1;
   var l1 = serialize(value$7);
@@ -385,7 +385,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
-var Raw$5 = { };
+var Raw$5 = {};
 
 var query$4 = \"query   {\\nlists  {\\n...ListFragment   \\n}\\n\\n}\\nfragment ListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 

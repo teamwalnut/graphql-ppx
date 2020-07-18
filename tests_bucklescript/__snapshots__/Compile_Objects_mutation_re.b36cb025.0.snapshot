@@ -4,36 +4,36 @@ Compile Objects › mutation.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
-  var errors = !(value$2 == null) ? value$2.map((function (value) {
-            var value$1 = value.message;
-            var value$2 = value.field;
-            var field;
-            switch (value$2) {
-              case \"FIRST\" :
-                  field = /* FIRST */-24399856;
-                  break;
-              case \"SECOND\" :
-                  field = /* SECOND */382368628;
-                  break;
-              case \"THIRD\" :
-                  field = /* THIRD */225952583;
-                  break;
-              default:
-                field = /* `FutureAddedValue */[
-                  -31101740,
-                  value$2
-                ];
-            }
-            return {
-                    field: field,
-                    message: value$1
-                  };
-          })) : undefined;
+  var errors = !(value$2 == null) ? value$2.map(function (value) {
+          var value$1 = value.message;
+          var value$2 = value.field;
+          var field;
+          switch (value$2) {
+            case \"FIRST\" :
+                field = /* FIRST */-24399856;
+                break;
+            case \"SECOND\" :
+                field = /* SECOND */382368628;
+                break;
+            case \"THIRD\" :
+                field = /* THIRD */225952583;
+                break;
+            default:
+              field = {
+                HASH: /* FutureAddedValue */-31101740,
+                VAL: value$2
+              };
+          }
+          return {
+                  field: field,
+                  message: value$1
+                };
+        }) : undefined;
   var value$3 = value$1.value;
   var value$4 = !(value$3 == null) ? ({
         stringField: value$3.stringField
@@ -49,19 +49,19 @@ function parse(value) {
 function serialize(value) {
   var value$1 = value.mutationWithError;
   var value$2 = value$1.errors;
-  var errors = value$2 !== undefined ? value$2.map((function (value) {
-            var value$1 = value.message;
-            var value$2 = value.field;
-            var field = typeof value$2 === \"number\" ? (
-                value$2 !== 225952583 ? (
-                    value$2 >= 382368628 ? \"SECOND\" : \"FIRST\"
-                  ) : \"THIRD\"
-              ) : value$2[1];
-            return {
-                    field: field,
-                    message: value$1
-                  };
-          })) : null;
+  var errors = value$2 !== undefined ? value$2.map(function (value) {
+          var value$1 = value.message;
+          var value$2 = value.field;
+          var field = typeof value$2 === \"number\" ? (
+              value$2 !== 225952583 ? (
+                  value$2 >= 382368628 ? \"SECOND\" : \"FIRST\"
+                ) : \"THIRD\"
+            ) : value$2.VAL;
+          return {
+                  field: field,
+                  message: value$1
+                };
+        }) : null;
   var value$3 = value$1.value;
   var value$4 = value$3 !== undefined ? ({
         stringField: Caml_option.valFromOption(value$3).stringField

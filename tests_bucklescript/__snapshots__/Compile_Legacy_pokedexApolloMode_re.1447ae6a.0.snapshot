@@ -4,7 +4,7 @@ Compile Legacy › pokedexApolloMode.re › output
 
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 var query = \"query   {\\npokemon(name: \\\"Pikachu\\\")  {\\nid  \\nname  \\n}\\n\\n}\\n\";
 

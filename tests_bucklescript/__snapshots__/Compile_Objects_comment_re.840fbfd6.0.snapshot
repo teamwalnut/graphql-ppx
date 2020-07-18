@@ -5,7 +5,7 @@ Compile Objects › comment.re › output
 var $$Array = require(\"bs-platform/lib/js/array.js\");
 var Caml_option = require(\"bs-platform/lib/js/caml_option.js\");
 
-var Raw = { };
+var Raw = {};
 
 function parse(value) {
   return {

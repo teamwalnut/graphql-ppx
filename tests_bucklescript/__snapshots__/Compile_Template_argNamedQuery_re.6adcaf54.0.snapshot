@@ -3,7 +3,7 @@ Compile Template › argNamedQuery.re › output
 'use strict';
 
 
-var Raw = { };
+var Raw = {};
 
 var query = (require(\"gql\")`
   query ($query: Int!)  {
@@ -52,7 +52,7 @@ var MyQuery = {
   Z__INTERNAL: Z__INTERNAL
 };
 
-var Raw$1 = { };
+var Raw$1 = {};
 
 var query$1 = (require(\"gql\")`
   query Query1($query: Int!)  {
@@ -102,7 +102,7 @@ var Query1 = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-var Raw$2 = { };
+var Raw$2 = {};
 
 var query$2 = (require(\"gql\")`
   query Query2($query: Int!)  {

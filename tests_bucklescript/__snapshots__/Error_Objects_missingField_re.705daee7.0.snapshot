@@ -1,14 +1,10 @@
 Error Objects › missingField2.re › output
-File \"operations/errors/missingField2.re\", line 13, characters 8-28:
+File \"tests_bucklescript/operations/errors/missingField2.re\", line 13, characters 8-28:
 13 |     l1: thisTypeDoesNotExist {
              ^^^^^^^^^^^^^^^^^^^^
 Error: Unknown field 'thisTypeDoesNotExist' on type Query
 
   We've found a bug for you!
-  operations/errors/missingField2.re
+  /Users/Jaap/Documents/development/graphql-ppx/tests_bucklescript/operations/errors/missingField2.re
   
   Error while running external preprocessor
-Command line: ../_build/default/src/bucklescript_bin/bin.exe -objects '/var/folders/nn/nkqr2fl53p93lzfh2n6s17hh0000gn/T/camlppx3f76b3' '/var/folders/nn/nkqr2fl53p93lzfh2n6s17hh0000gn/T/camlppx6fdf4c'
-
-  
-
