@@ -1,9 +1,11 @@
 type scalars = {
+  __typename: string,
   string,
   int,
 };
 
 type dog = {
+  __typename: string,
   name: string,
   barkVolume: float,
 };
@@ -13,6 +15,7 @@ module MyQuery = [%graphql
   {|
   {
     variousScalars @ppxRecord @ppxAs(type: "scalars") {
+      __typename
       string
       int
     }
@@ -46,6 +49,7 @@ module InlineFragmentQuery = [%graphql
   {
     dogOrHuman {
       ...on Dog @bsRecord {
+        __typename
         name
         barkVolume
       }
@@ -56,6 +60,7 @@ module InlineFragmentQuery = [%graphql
 module UnionExternalFragmentQuery = [%graphql
   {|
   fragment DogFragment on Dog @bsRecord {
+    __typename
     name
     barkVolume
   }

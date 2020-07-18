@@ -1,0 +1,21 @@
+Error Records › fragmentWithWrongName.re › output
+
+  We've found a bug for you!
+  operations/errors/fragmentWithWrongName.re 15:5-18:5
+  
+  13 \226\148\134 {|
+  14 \226\148\134 query MyQuery {
+  15 \226\148\134   lists {
+  16 \226\148\134     ...WrongFragmentName
+  17 \226\148\134 
+  18 \226\148\134   }
+  19 \226\148\134 }
+  20 \226\148\134 |}
+  
+  This has type:
+    \027[1;31m[> `WrongFragmentName ]\027[0m
+  But somewhere wanted:
+    \027[1;33m[ `ListFragment ]\027[0m
+  The second variant type does not allow tag(s) `WrongFragmentName
+  
+

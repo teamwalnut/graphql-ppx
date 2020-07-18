@@ -1,0 +1,21 @@
+Error Template › fragmentSpreadMissing.re › output
+
+  We've found a bug for you!
+  operations/errors/fragmentSpreadMissing.re 4:5-6:5
+  
+  2 \226\148\134 {|
+  3 \226\148\134 query MyQuery {
+  4 \226\148\134   lists {
+  5 \226\148\134     ...MissingFragment
+  6 \226\148\134   }
+  7 \226\148\134 }
+  8 \226\148\134 |}
+  
+  \027[1;33mThe module or file MissingFragment can't be found.\027[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run `bsb` instead of `bsb -make-world`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?
+  
+

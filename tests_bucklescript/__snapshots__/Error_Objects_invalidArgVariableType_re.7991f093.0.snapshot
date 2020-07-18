@@ -1,0 +1,14 @@
+Error Objects › invalidArgVariableType2.re › output
+
+  We've found a bug for you!
+  operations/errors/invalidArgVariableType2.re 8:25-28
+  
+   6 \226\148\134 query invalidArgValues($arg: String) {
+   7 \226\148\134   invalidArgValues(
+   8 \226\148\134       stringRequired: $arg
+   9 \226\148\134   )
+  10 \226\148\134 }
+  
+  Invalid argument. Trying to apply the nullable variable \"$arg\" to the required argument \"stringRequired\".
+  
+

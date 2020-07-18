@@ -1,0 +1,14 @@
+Error Apollo › invalidDefaultValue2.re › output
+
+  We've found a bug for you!
+  operations/errors/invalidDefaultValue2.re 8:14-26
+  
+   6 \226\148\134 query invalidDefaultValues {
+   7 \226\148\134   invalidDefaultValues(
+   8 \226\148\134       int: {test: \"xxx\"}
+   9 \226\148\134   )
+  10 \226\148\134 }
+  
+  Invalid argument. Expected \"Int\" but received \"InputObject!\".
+  
+

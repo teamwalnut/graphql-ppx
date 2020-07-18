@@ -1,0 +1,26 @@
+{
+  "name": "graphql-ppx-tests",
+  "version": "0.1.0",
+  "esy": {
+    "build": "dune build -p #{self.name}",
+    "buildDev": "refmterr dune build --promote-install-files --root . --only-package #{self.name}"
+  },
+  "scripts": {
+    "test": "esy x RunTests.exe",
+    "format": "esy dune build @fmt --auto-promote"
+  },
+  "dependencies": {
+    "@opam/dune": "*",
+    "@opam/reason": ">=3.6.0",
+    "@reason-native/console": "*",
+    "@reason-native/pastel": "*",
+    "ocaml": "~4.8.0"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "@reason-native/rely": "*",
+    "refmterr": "*",
+    "ocaml": "~4.8.0",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam"
+  }
+}
