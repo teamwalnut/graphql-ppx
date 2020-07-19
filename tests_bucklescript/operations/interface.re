@@ -1,6 +1,5 @@
-/* TODO: fix */
-/* module QueryWithFragments = [%graphql
-     {|
+module QueryWithFragments = [%graphql
+  {|
       query {
        users {
          id
@@ -13,14 +12,14 @@
        }
      }
    |}
-   ];
+];
 
-   module QueryWithoutFragments = [%graphql
-     {|
+module QueryWithoutFragments = [%graphql
+  {|
       query {
        users {
          id
        }
      }
    |}
-   ]; */
+];
