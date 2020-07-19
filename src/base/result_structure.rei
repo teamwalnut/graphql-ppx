@@ -74,6 +74,7 @@ and t =
       name: string,
       base: (string, t),
       fragments: list((string, t)),
+      shared_fields: bool,
     })
   | Res_solo_fragment_spread({
       loc,

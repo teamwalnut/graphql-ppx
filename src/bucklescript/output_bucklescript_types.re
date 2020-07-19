@@ -120,7 +120,8 @@ let already_has__typename = fields =>
     fields,
   );
 
-let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
+let generate_record_type =
+    (~config, ~fields, ~obj_path, ~raw, ~loc, ~is_variant) => {
   let record_fields =
     fields
     |> List.fold_left(
@@ -317,7 +318,8 @@ let generate_variant_union =
     );
   };
 
-let generate_variant_interface = (config, fields, base, path, loc, raw) =>
+let generate_variant_interface =
+    (~config, ~fragments, ~base, ~path, ~loc, ~raw, ~shared_fields) =>
   if (raw) {
     generate_opaque(path, loc);
   } else {
@@ -332,18 +334,57 @@ let generate_variant_interface = (config, fields, base, path, loc, raw) =>
       prf_attributes: [],
     };
 
-    let fallback_case_ty = map_case_ty(base);
-    let fragment_case_tys = fields |> List.map(map_case_ty);
-
-    wrap_type_declaration(
-      Ptype_abstract,
-      ~manifest=
-        Ast_helper.(
-          Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
+    let fallback_case_ty = {
+      prf_desc:
+        Rtag(
+          {txt: "UnspecifiedFragment", loc: conv_loc(loc)},
+          false,
+          [base_type_name("string")],
         ),
-      loc,
-      path,
-    );
+      prf_loc: conv_loc(loc),
+      prf_attributes: [],
+    };
+
+    let fragment_case_tys = fragments |> List.map(map_case_ty);
+    let variant_type =
+      Ast_helper.(
+        Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
+      );
+
+    switch (shared_fields, base, fragments) {
+    | (false, _, []) =>
+      wrap_type_declaration(
+        ~manifest=base_type_name("Js.Json.t"),
+        Ptype_abstract,
+        loc,
+        path,
+      )
+    | (true, (name, res), []) =>
+      wrap_type_declaration(
+        ~manifest=generate_type(config, [name, ...path], raw, res),
+        Ptype_abstract,
+        loc,
+        path,
+      )
+
+    | (false, _, _fragments) =>
+      wrap_type_declaration(Ptype_abstract, ~manifest=variant_type, loc, path)
+    | (true, (_name, inner), _fragments) =>
+      wrap_type_declaration(
+        Ptype_record([
+          Ast_helper.Type.field(
+            {Location.txt: "shared", loc: Location.none},
+            generate_type(config, ["shared", ...path], raw, inner),
+          ),
+          Ast_helper.Type.field(
+            {Location.txt: "fragments", loc: Location.none},
+            variant_type,
+          ),
+        ]),
+        loc,
+        path,
+      )
+    };
   };
 
 let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
@@ -517,7 +558,14 @@ let generate_graphql_object =
 
   | None =>
     config.records || force_record
-      ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
+      ? generate_record_type(
+          ~config,
+          ~fields,
+          ~obj_path,
+          ~raw,
+          ~loc,
+          ~is_variant,
+        )
       : generate_object_type(config, fields, obj_path, raw, loc, is_variant)
   };
 };
@@ -557,8 +605,16 @@ let generate_types =
              loc,
              raw,
            )
-         | VariantInterface({loc, path, base, fields}) =>
-           generate_variant_interface(config, fields, base, path, loc, raw)
+         | VariantInterface({loc, path, base, fragments, shared_fields}) =>
+           generate_variant_interface(
+             ~config,
+             ~fragments,
+             ~base,
+             ~path,
+             ~loc,
+             ~raw,
+             ~shared_fields,
+           )
          | Enum({loc, path, fields, omit_future_value}) =>
            generate_enum(config, fields, path, loc, raw, omit_future_value),
        )

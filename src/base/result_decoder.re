@@ -259,6 +259,7 @@ and unify_interface =
       name: interface_meta.im_name,
       base: base_case,
       fragments: fragment_cases,
+      shared_fields: base_selection_set != [],
     });
   }
 and unify_union =

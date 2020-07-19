@@ -50,7 +50,8 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       base: (string, Result_structure.t),
-      fields: list((string, Result_structure.t)),
+      fragments: list((string, Result_structure.t)),
+      shared_fields: bool,
     })
   | Enum({
       loc: Source_pos.ast_location,
@@ -146,9 +147,13 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
            raw,
          ),
     ]
-  | Res_poly_variant_interface({loc, base, fragments}) => [
-      VariantInterface({path, fields: fragments, base, loc}),
-      ...extract_fragments(fragments, path, raw),
+  | Res_poly_variant_interface({loc, base, fragments, shared_fields}) => [
+      VariantInterface({path, fragments, base, loc, shared_fields}),
+      ...extract_fragments(
+           shared_fields ? [base, ...fragments] : fragments,
+           path,
+           raw,
+         ),
     ]
   | Res_custom_decoder({inner}) => extract(~path, ~raw, inner)
   | Res_solo_fragment_spread(_) => []

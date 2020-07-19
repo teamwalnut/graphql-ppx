@@ -44,7 +44,8 @@ and type_def =
       loc: Source_pos.ast_location,
       path,
       base: (string, Result_structure.t),
-      fields: list((string, Result_structure.t)),
+      fragments: list((string, Result_structure.t)),
+      shared_fields: bool,
     })
   | Enum({
       loc: Source_pos.ast_location,
