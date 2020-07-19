@@ -1,5 +1,3 @@
-(lang dune 1.11)
+(lang dune 2.0)
 
 (name "graphql_ppx")
-
-(using fmt 1.2)

@@ -2,7 +2,7 @@
 
 (library
  (name GraphQL_PPX_Tests)
- (public_name graphql-ppx-tests.lib)
+ (public_name graphql_ppx.tests.lib)
  ; the linkall flag ensures that all of our tests are compiled and the
  ; -g flag emits debugging information
  (ocamlopt_flags -linkall -g)
@@ -15,8 +15,8 @@
 (executable
  ; the for the library is automatically detected because of the name, but we
  ; need to explicitly specify the package here
- (package graphql-ppx-tests)
+ (package graphql_ppx)
  (name RunTests)
  (public_name RunTests.exe)
- (libraries graphql-ppx-tests.lib)
+ (libraries graphql_ppx.tests.lib)
  (modules RunTests))
