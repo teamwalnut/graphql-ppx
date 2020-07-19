@@ -5,29 +5,31 @@ type record = {
   nullableOfNonNullable: option(array(string)),
 };
 
-let concat = ({nullableOfNullable, nullableOfNonNullable}) => {
-  let x =
-    switch (nullableOfNullable) {
-    | None => [||]
-    | Some(arr) =>
-      arr
-      |> Array.map(v =>
-           switch (v) {
-           | None => [||]
-           | Some(s) => [|s|]
-           }
-         )
-      |> Array.to_list
-      |> Array.concat
-    };
+module Concat = {
+  let parse = ({nullableOfNullable, nullableOfNonNullable}) => {
+    let x =
+      switch (nullableOfNullable) {
+      | None => [||]
+      | Some(arr) =>
+        arr
+        |> Array.map(v =>
+             switch (v) {
+             | None => [||]
+             | Some(s) => [|s|]
+             }
+           )
+        |> Array.to_list
+        |> Array.concat
+      };
 
-  let y =
-    switch (nullableOfNonNullable) {
-    | None => [||]
-    | Some(a) => a
-    };
+    let y =
+      switch (nullableOfNonNullable) {
+      | None => [||]
+      | Some(a) => a
+      };
 
-  Array.append(x, y);
+    Array.append(x, y);
+  };
 };
 
 module Fragments = [%graphql
@@ -37,7 +39,7 @@ module Fragments = [%graphql
     nullableOfNonNullable
   }
 
-  fragment concatFragment on Lists @bsRecord @bsDecoder(fn: "concat") {
+  fragment concatFragment on Lists @bsRecord @bsDecoder(fn: "Concat") {
     nullableOfNullable
     nullableOfNonNullable
   }

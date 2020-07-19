@@ -1,0 +1,10 @@
+Error Legacy › missingField1.re › output
+File \"tests_bucklescript/operations/errors/missingField1.re\", line 6, characters 6-27:
+6 |       thisFieldDoesNotExist
+          ^^^^^^^^^^^^^^^^^^^^^
+Error: Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject
+
+  We've found a bug for you!
+  missingField1.re
+  
+  Error while running external preprocessor

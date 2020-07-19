@@ -1,0 +1,11 @@
+Error Records › invalidArgVariableType4.re › output
+We've found a bug for you!
+  invalidArgVariableType4.re 10:14-18
+  
+   8 \226\148\134 invalidArgValues(
+   9 \226\148\134     custom: $arg
+  10 \226\148\134     obj: $arg2
+  11 \226\148\134     stringRequired: \"\"
+  12 \226\148\134 )
+  
+  Invalid argument. Expected \"InputObject\" but received \"Int\".

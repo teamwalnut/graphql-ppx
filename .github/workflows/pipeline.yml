@@ -42,21 +42,19 @@ jobs:
       - name: build
         run: esy b
 
-      # - name: test-native
-      #   run: |
-      #     esy b dune runtest -f
-      #   env:
-      #     CI: true
+      - name: test-native
+        run: |
+          esy b dune runtest -f
+        env:
+          CI: true
 
       - name: test-bucklescript
         env:
-          NODE_NO_WARNINGS: 1
           CI: true
         run: |
+          npm ci --no-optional --ignore-scripts
+          esy test
           esy release-static
-          cd tests_bucklescript
-          npm ci --no-optional
-          npm run test
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
@@ -101,18 +99,17 @@ jobs:
       - name: build
         run: esy b
 
-      # - name: test-native
-      #   run: |
-      #     esy b dune runtest -f
-      #   env:
-      #     CI: true
+      - name: test-native
+        run: |
+          esy b dune runtest -f
+        env:
+          CI: true
 
       - name: test-bucklescript
         if: runner.os != 'Windows'
         run: |
-          cd tests_bucklescript
           npm ci --no-optional
-          npm run test
+          esy test
         env:
           CI: true
 

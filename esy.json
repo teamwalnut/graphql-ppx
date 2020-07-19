@@ -2,28 +2,28 @@
   "name": "graphql_ppx",
   "description": "Used for native Reason/OCaml using latest version of OCaml",
   "scripts": {
-    "format": "dune build @fmt --auto-promote --root .",
-    "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static"
+    "format": "esy dune build @fmt --auto-promote",
+    "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
+    "test": "./_build/install/default/bin/RunTests.exe"
   },
   "dependencies": {
     "@opam/dune": "*",
-    "@opam/result": "*",
-    "@opam/yojson": "*",
     "@opam/ocaml-migrate-parsetree": ">=1.6.0",
     "@opam/ppx_tools_versioned": "5.2.3",
     "@opam/reason": ">=3.6.0",
-    "@opam/menhir": "*"
+    "@opam/yojson": "*"
   },
   "devDependencies": {
-    "@opam/ocamlformat": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.8.0",
+    "ocaml": "~4.9.0",
     "refmterr": "*",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#a83bd09"
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#a83bd09",
+    "@reason-native/rely": "*"
   },
+
   "esy": {
-    "build": [["dune", "build", "-p", "#{self.name}"]],
-    "buildDev": [["refmterr", "dune", "build"]],
+    "build": "dune build -p #{self.name}",
+    "buildDev": "refmterr dune build --promote-install-files --root .",
     "buildsInSource": "_build"
   }
 }

@@ -1,0 +1,10 @@
+Error Records › missingField2.re › output
+File \"tests_bucklescript/operations/errors/missingField2.re\", line 13, characters 8-28:
+13 |     l1: thisTypeDoesNotExist {
+             ^^^^^^^^^^^^^^^^^^^^
+Error: Unknown field 'thisTypeDoesNotExist' on type Query
+
+  We've found a bug for you!
+  missingField2.re
+  
+  Error while running external preprocessor

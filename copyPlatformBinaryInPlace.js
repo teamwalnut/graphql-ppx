@@ -18,7 +18,7 @@ copyBinary("bin/graphql-ppx-" + platform + "-" + arch + ".exe", "ppx");
 function copyBinary(filename, destFilename) {
   var supported = fs.existsSync(filename);
 
-  if (!supported) {
+  if (!supported && !process.env.CI) {
     console.error("graphql-ppx does not support this platform :(");
     console.error("");
     console.error(
@@ -32,15 +32,12 @@ function copyBinary(filename, destFilename) {
     );
     console.error("specify that you are on the " + platform + " platform,");
     console.error("on the " + arch + " architecture.");
-
-    if (!process.env.IS_GRAPHQL_PPX_CI) {
-      process.exit(1);
-    }
+    process.exit(0);
   }
 
-  if (process.env.IS_GRAPHQL_PPX_CI) {
+  if (process.env.CI) {
     console.log(
-      "graphql-ppx: IS_GRAPHQL_PPX_CI has been set, skipping moving binary in place"
+      "graphql-ppx: CI has been set, skipping moving binary in place"
     );
     process.exit(0);
   }

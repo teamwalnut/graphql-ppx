@@ -685,7 +685,7 @@ let args = [
     "Omits the `FutureAddedValue variant for enums if set to false",
   ),
   (
-    "-o",
+    "-verbose-errors",
     Arg.Unit(
       () =>
         Ppx_config.update_config(current =>

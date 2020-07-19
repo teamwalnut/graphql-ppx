@@ -32,7 +32,10 @@ module MyQueryNoError = [%graphql
 |}
 ];
 
-type named = {name: string};
+type named = {
+  name: string,
+  __typename: string,
+};
 
 module NamedQuery = [%graphql
   {|
@@ -40,9 +43,11 @@ module NamedQuery = [%graphql
     dogOrHuman {
       ...on Dog @ppxAs(type: "named") {
         name
+        __typename
       }
       ...on Human @ppxAs(type: "named") {
         name
+        __typename
       }
     }
   }
@@ -53,6 +58,7 @@ module NamedSpread = [%graphql
   {|
   fragment DogFields on Dog @ppxAs(type: "named") {
     name
+    __typename
   }
 
   query dogOrHuman {

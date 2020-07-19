@@ -1,0 +1,5 @@
+Error Template › deprecatedFields.re › output
+File \"tests_bucklescript/operations/errors/deprecatedFields.re\", line 7, characters 6-21:
+7 |       deprecatedField
+          ^^^^^^^^^^^^^^^
+Warning 22: Field \"deprecatedField\" has been deprecated. Reason: Use something else instead

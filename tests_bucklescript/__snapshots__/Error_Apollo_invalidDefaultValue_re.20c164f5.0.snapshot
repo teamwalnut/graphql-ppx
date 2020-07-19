@@ -1,0 +1,11 @@
+Error Apollo › invalidDefaultValue4.re › output
+We've found a bug for you!
+  invalidDefaultValue4.re 8:17-26
+  
+   6 \226\148\134 query invalidDefaultValues {
+   7 \226\148\134   invalidDefaultValues(
+   8 \226\148\134       string: [\"1\", \"2\"]
+   9 \226\148\134   )
+  10 \226\148\134 }
+  
+  Invalid argument. Expected \"String\" but received \"List\".

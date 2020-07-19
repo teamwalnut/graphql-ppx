@@ -29,17 +29,30 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
 let construct_recursive_input_type = () =>
   test_json(
     MyQuery.make(
-      ~arg={as _; pub field = Some("test"); pub enum = Some(`SECOND)},
+      ~arg={
+        as _;
+        pub field = Some("test");
+        pub embeddedInput = Some([|Some({as _; pub field = Some("test")})|]);
+        pub enum = Some(`SECOND);
+        pub custom = Some(`Int(1));
+        pub nonNullableField = "Not null";
+        pub nullableArray = None
+      },
       (),
     )#
       variables,
     Yojson.Basic.from_string(
       {| {
-      "arg": {
-        "field": "test",
-        "enum": "SECOND"
-      }
-    } |},
+            "arg":
+            {
+              "nonNullableField":"Not null",
+              "nullableArray": null,
+              "field": "test",
+              "enum": "SECOND",
+              "embeddedInput": [ { "field": "test" } ],
+              "custom": 1
+            }
+          } |},
     ),
   );
 

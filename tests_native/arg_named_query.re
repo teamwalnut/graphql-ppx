@@ -2,7 +2,7 @@ open Test_shared;
 
 module My_query = [%graphql
   {|
-  query ($query: String!) {
+  query ($query: Int!) {
     argNamedQuery(query: $query)
   }
 |}
@@ -10,8 +10,8 @@ module My_query = [%graphql
 
 let serializes_variables = () =>
   test_json(
-    My_query.make(~query="a query", ())#variables,
-    Yojson.Basic.from_string({|{"query": "a query"}|}),
+    My_query.make(~query=2, ())#variables,
+    Yojson.Basic.from_string({|{"query": 2}|}),
   );
 
 let no_name_clash = () =>
@@ -19,7 +19,7 @@ let no_name_clash = () =>
     check(
       neg(string),
       "strings",
-      My_query.make(~query="a query", ())#query,
+      My_query.make(~query=1, ())#query,
       "a query",
     )
   );

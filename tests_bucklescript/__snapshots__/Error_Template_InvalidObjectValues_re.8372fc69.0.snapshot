@@ -1,0 +1,11 @@
+Error Template › InvalidObjectValues4.re › output
+We've found a bug for you!
+  InvalidObjectValues4.re 10:32-34
+  
+   8 \226\148\134 nonRec: {
+   9 \226\148\134     nonNullableField: \"!\"
+  10 \226\148\134     nullableArray: [2]
+  11 \226\148\134     field: \"\"
+  12 \226\148\134     enum: FIRST
+  
+  Invalid argument. Expected \"[String]\" but received \"[Int!]!\".

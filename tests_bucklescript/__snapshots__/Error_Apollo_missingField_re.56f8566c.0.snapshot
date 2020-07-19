@@ -1,0 +1,10 @@
+Error Apollo › missingField3.re › output
+File \"tests_bucklescript/operations/errors/missingField3.re\", line 15, characters 6-18:
+15 |       doesNotExist
+           ^^^^^^^^^^^^
+Error: Unknown field 'doesNotExist' on type Lists
+
+  We've found a bug for you!
+  missingField3.re
+  
+  Error while running external preprocessor
