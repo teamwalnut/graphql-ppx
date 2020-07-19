@@ -377,7 +377,7 @@ let generate_variant_interface =
             generate_type(config, ["shared", ...path], raw, inner),
           ),
           Ast_helper.Type.field(
-            {Location.txt: "fragments", loc: Location.none},
+            {Location.txt: "fragment", loc: Location.none},
             variant_type,
           ),
         ]),
