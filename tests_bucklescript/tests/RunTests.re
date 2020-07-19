@@ -1,1 +1,1 @@
-GraphQL_PPX_Tests.TestFramework.cli();
+Tests.TestFramework.cli();
