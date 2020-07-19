@@ -86,20 +86,21 @@ and t =
     });
 
 type definition =
-  | Def_fragment(
-      string,
-      list((string, string, Source_pos.span, Source_pos.span)),
-      bool,
-      Source_pos.spanning(Graphql_ast.fragment),
-      option(string), // decodes to a custom type (ppxAs)
-      t,
-    )
-  | Def_operation(
-      option(Source_pos.spanning(Graphql_ast.variable_definitions)),
-      bool,
-      Source_pos.spanning(Graphql_ast.operation),
-      t,
-    );
+  | Def_fragment({
+      name: string,
+      req_vars: list((string, string, Source_pos.span, Source_pos.span)),
+      has_error: bool,
+      fragment: Source_pos.spanning(Graphql_ast.fragment),
+      type_name: option(string), // decodes to a custom type (ppxAs)
+      inner: t,
+    })
+  | Def_operation({
+      variable_definitions:
+        option(Source_pos.spanning(Graphql_ast.variable_definitions)),
+      has_error: bool,
+      operation: Source_pos.spanning(Graphql_ast.operation),
+      inner: t,
+    });
 
 let res_loc: t => loc;
 let can_be_absent_as_field: t => bool;

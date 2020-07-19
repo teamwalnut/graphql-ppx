@@ -823,12 +823,12 @@ let rec unify_document_schema = (config, document) => {
   | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      Def_operation(
-        o_variable_definitions,
-        error_marker.has_error,
-        op,
-        structure,
-      ),
+      Def_operation({
+        variable_definitions: o_variable_definitions,
+        has_error: error_marker.has_error,
+        operation: op,
+        inner: structure,
+      }),
       ...unify_document_schema(config, rest),
     ];
   | [
@@ -895,19 +895,20 @@ let rec unify_document_schema = (config, document) => {
           getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
-          Def_fragment(
-            fg_name.item,
-            argumentDefinitions,
-            true,
-            fg,
-            None,
-            make_error(
-              error_marker,
-              config.map_loc,
-              fg_type_condition.span,
-              Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
-            ),
-          )
+          Def_fragment({
+            name: fg_name.item,
+            req_vars: argumentDefinitions,
+            has_error: true,
+            fragment: fg,
+            type_name: None,
+            inner:
+              make_error(
+                error_marker,
+                config.map_loc,
+                fg_type_condition.span,
+                Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
+              ),
+          })
         | Some(ty) =>
           let existing_record = get_ppx_as(fg_directives);
           let structure =
@@ -926,26 +927,27 @@ let rec unify_document_schema = (config, document) => {
 
           switch (with_decoder) {
           | Error(err) =>
-            Def_fragment(
-              fg_name.item,
-              argumentDefinitions,
-              true,
-              fg,
-              existing_record,
-              err,
-            )
+            Def_fragment({
+              name: fg_name.item,
+              req_vars: argumentDefinitions,
+              has_error: true,
+              fragment: fg,
+              type_name: existing_record,
+              inner: err,
+            })
           | Ok(decoder) =>
-            Def_fragment(
-              fg_name.item,
-              argumentDefinitions,
-              error_marker.has_error,
-              fg,
-              existing_record,
-              switch (decoder) {
-              | Some(decoder) => decoder(structure)
-              | None => structure
-              },
-            )
+            Def_fragment({
+              name: fg_name.item,
+              req_vars: argumentDefinitions,
+              has_error: error_marker.has_error,
+              fragment: fg,
+              type_name: existing_record,
+              inner:
+                switch (decoder) {
+                | Some(decoder) => decoder(structure)
+                | None => structure
+                },
+            })
           };
         };
       },
