@@ -110,21 +110,21 @@ let generate_type_name = (~prefix="t") =>
 // definitions
 let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
   fun
-  | Res_nullable(_loc, inner) => extract(~path, ~raw, inner)
-  | Res_array(_loc, inner) => extract(~path, ~raw, inner)
-  | Res_object(loc, _name, fields, type_name) as result_structure
-  | Res_record(loc, _name, fields, type_name) as result_structure =>
+  | Res_nullable({inner}) => extract(~path, ~raw, inner)
+  | Res_array({inner}) => extract(~path, ~raw, inner)
+  | Res_object({loc, fields, type_name}) as result_structure
+  | Res_record({loc, fields, type_name}) as result_structure =>
     switch (result_structure, type_name, raw, fragment_def) {
     | (_, Some(_type_name), false, false) =>
       create_children(path, raw, fields)
     | (_, Some(_type_name), false, true) =>
       create_object(path, raw, fields, true, loc, variant, type_name)
-    | (Res_record(_, _, _, _), _, false, _) =>
+    | (Res_record(_), _, false, _) =>
       create_object(path, raw, fields, true, loc, variant, None)
     | (_, _, _, _) =>
       create_object(path, raw, fields, false, loc, variant, None)
     }
-  | Res_poly_variant_union(loc, _name, fragments, _, omit_future_value) => [
+  | Res_poly_variant_union({loc, fragments, omit_future_value}) => [
       VariantUnion({path, fields: fragments, loc, omit_future_value}),
       ...extract_fragments(
            fragments
@@ -135,7 +135,7 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
            raw,
          ),
     ]
-  | Res_poly_variant_selection_set(loc, _name, fragments) => [
+  | Res_poly_variant_selection_set({loc, fragments}) => [
       VariantSelection({path, fields: fragments, loc}),
       ...extract_fragments(
            fragments
@@ -146,20 +146,20 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
            raw,
          ),
     ]
-  | Res_poly_variant_interface(loc, _name, base, fragments) => [
+  | Res_poly_variant_interface({loc, base, fragments}) => [
       VariantInterface({path, fields: fragments, base, loc}),
       ...extract_fragments(fragments, path, raw),
     ]
-  | Res_custom_decoder(_loc, _ident, inner) => extract(~path, ~raw, inner)
-  | Res_solo_fragment_spread(_loc, _name, _) => []
-  | Res_error(_loc, _message) => []
-  | Res_id(_loc) => []
-  | Res_string(_loc) => []
-  | Res_int(_loc) => []
-  | Res_float(_loc) => []
-  | Res_boolean(_loc) => []
+  | Res_custom_decoder({inner}) => extract(~path, ~raw, inner)
+  | Res_solo_fragment_spread(_) => []
+  | Res_error(_) => []
+  | Res_id(_) => []
+  | Res_string(_) => []
+  | Res_int(_) => []
+  | Res_float(_) => []
+  | Res_boolean(_) => []
   | Res_raw_scalar(_) => []
-  | Res_poly_enum(loc, enum_meta, omit_future_value) => [
+  | Res_poly_enum({loc, enum_meta, omit_future_value}) => [
       Enum({
         path,
         fields: enum_meta.em_values |> List.map(({evm_name, _}) => evm_name),

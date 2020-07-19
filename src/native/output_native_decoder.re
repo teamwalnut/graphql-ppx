@@ -158,27 +158,27 @@ let generate_error = (loc, message) => {
 
 let rec generate_decoder = config =>
   fun
-  | Res_nullable(loc, inner) =>
+  | Res_nullable({loc, inner}) =>
     generate_nullable_decoder(config, conv_loc(loc), inner)
-  | Res_array(loc, inner) =>
+  | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner)
-  | Res_id(loc) => id_decoder(conv_loc(loc))
-  | Res_string(loc) => string_decoder(conv_loc(loc))
-  | Res_int(loc) => int_decoder(conv_loc(loc))
-  | Res_float(loc) => float_decoder(conv_loc(loc))
-  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
-  | Res_raw_scalar(_loc) => [%expr value]
-  | Res_poly_enum(loc, enum_meta, _) =>
+  | Res_id({loc}) => id_decoder(conv_loc(loc))
+  | Res_string({loc}) => string_decoder(conv_loc(loc))
+  | Res_int({loc}) => int_decoder(conv_loc(loc))
+  | Res_float({loc}) => float_decoder(conv_loc(loc))
+  | Res_boolean({loc}) => boolean_decoder(conv_loc(loc))
+  | Res_raw_scalar(_) => [%expr value]
+  | Res_poly_enum({loc, enum_meta}) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
-  | Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
-  | Res_record(loc, name, fields, _) =>
+  | Res_record({loc, name, fields}) =>
     generate_record_decoder(config, conv_loc(loc), name, fields)
-  | Res_object(loc, name, fields, _) =>
+  | Res_object({loc, name, fields}) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set({loc, name, fragments: fields}) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_union(loc, name, fragments, exhaustive, _) =>
+  | Res_poly_variant_union({loc, name, fragments, exhaustive}) =>
     generate_poly_variant_union(
       config,
       conv_loc(loc),
@@ -186,7 +186,7 @@ let rec generate_decoder = config =>
       fragments,
       exhaustive,
     )
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
+  | Res_poly_variant_interface({loc, name, base, fragments}) =>
     generate_poly_variant_interface(
       config,
       conv_loc(loc),
@@ -194,9 +194,9 @@ let rec generate_decoder = config =>
       base,
       fragments,
     )
-  | Res_solo_fragment_spread(loc, name, _arguments) =>
+  | Res_solo_fragment_spread({loc, name}) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message)
+  | Res_error({loc, message}) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (

@@ -15,29 +15,69 @@ type field_result =
     })
   | Fr_fragment_spread(string, loc, string, option(string), list(string))
 and t =
-  | Res_nullable(loc, t)
-  | Res_array(loc, t)
-  | Res_id(loc)
-  | Res_string(loc)
-  | Res_int(loc)
-  | Res_float(loc)
-  | Res_boolean(loc)
-  | Res_raw_scalar(loc)
-  | Res_poly_enum(loc, Schema.enum_meta, bool)
-  | Res_custom_decoder(loc, string, t)
-  | Res_record(loc, string, list(field_result), option(string))
-  | Res_object(loc, string, list(field_result), option(string))
-  | Res_poly_variant_selection_set(loc, string, list((name, t)))
-  | Res_poly_variant_union(
+  | Res_nullable({
       loc,
-      string,
-      list((name, t)),
-      exhaustive_flag,
-      bool,
-    )
-  | Res_poly_variant_interface(loc, string, (string, t), list((string, t)))
-  | Res_solo_fragment_spread(loc, string, list(string))
-  | Res_error(loc, string);
+      inner: t,
+    })
+  | Res_array({
+      loc,
+      inner: t,
+    })
+  | Res_id({loc})
+  | Res_string({loc})
+  | Res_int({loc})
+  | Res_float({loc})
+  | Res_boolean({loc})
+  | Res_raw_scalar({loc})
+  | Res_poly_enum({
+      loc,
+      enum_meta: Schema.enum_meta,
+      omit_future_value: bool,
+    })
+  | Res_custom_decoder({
+      loc,
+      ident: string,
+      inner: t,
+    })
+  | Res_record({
+      loc,
+      name: string,
+      fields: list(field_result),
+      type_name: option(string),
+    })
+  | Res_object({
+      loc,
+      name: string,
+      fields: list(field_result),
+      type_name: option(string),
+    })
+  | Res_poly_variant_selection_set({
+      loc,
+      name: string,
+      fragments: list((name, t)),
+    })
+  | Res_poly_variant_union({
+      loc,
+      name: string,
+      fragments: list((name, t)),
+      exhaustive: exhaustive_flag,
+      omit_future_value: bool,
+    })
+  | Res_poly_variant_interface({
+      loc,
+      name: string,
+      base: (string, t),
+      fragments: list((string, t)),
+    })
+  | Res_solo_fragment_spread({
+      loc,
+      name: string,
+      arguments: list(string),
+    })
+  | Res_error({
+      loc,
+      message: string,
+    });
 
 type definition =
   | Def_fragment(
@@ -57,23 +97,23 @@ type definition =
 
 let res_loc =
   fun
-  | Res_nullable(loc, _)
-  | Res_array(loc, _)
-  | Res_id(loc)
-  | Res_string(loc)
-  | Res_int(loc)
-  | Res_float(loc)
-  | Res_boolean(loc)
-  | Res_raw_scalar(loc)
-  | Res_poly_enum(loc, _, _)
-  | Res_custom_decoder(loc, _, _)
-  | Res_record(loc, _, _, _)
-  | Res_object(loc, _, _, _)
-  | Res_poly_variant_selection_set(loc, _, _)
-  | Res_poly_variant_union(loc, _, _, _, _)
-  | Res_poly_variant_interface(loc, _, _, _)
-  | Res_solo_fragment_spread(loc, _, _)
-  | Res_error(loc, _) => loc;
+  | Res_nullable({loc})
+  | Res_array({loc})
+  | Res_id({loc})
+  | Res_string({loc})
+  | Res_int({loc})
+  | Res_float({loc})
+  | Res_boolean({loc})
+  | Res_raw_scalar({loc})
+  | Res_poly_enum({loc})
+  | Res_custom_decoder({loc})
+  | Res_record({loc})
+  | Res_object({loc})
+  | Res_poly_variant_selection_set({loc})
+  | Res_poly_variant_union({loc})
+  | Res_poly_variant_interface({loc})
+  | Res_solo_fragment_spread({loc})
+  | Res_error({loc}) => loc;
 
 let can_be_absent_as_field =
   fun

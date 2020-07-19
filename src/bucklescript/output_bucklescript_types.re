@@ -37,8 +37,8 @@ let base_type = (~inner=[], ~loc=?, name) => {
 // generate the type definition, including nullables, arrays etc.
 let rec generate_type = (~atLoc=?, config, path, raw) =>
   fun
-  | Res_string(_loc) => base_type(~loc=?atLoc, "string")
-  | Res_nullable(_loc, inner) =>
+  | Res_string(_) => base_type(~loc=?atLoc, "string")
+  | Res_nullable({inner}) =>
     if (raw) {
       base_type(
         ~inner=[generate_type(config, path, raw, inner)],
@@ -51,46 +51,45 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
         "option",
       );
     }
-  | Res_array(_loc, inner) =>
+  | Res_array({inner}) =>
     base_type(
       ~loc=?atLoc,
       ~inner=[generate_type(config, path, raw, inner)],
       "array",
     )
-  | Res_custom_decoder(_loc, module_name, inner) =>
+  | Res_custom_decoder({ident: module_name, inner}) =>
     if (raw) {
       generate_type(config, path, raw, inner);
     } else {
       base_type(~loc=?atLoc, module_name ++ ".t");
     }
-  | Res_id(_loc) => base_type(~loc=?atLoc, "string")
-  | Res_int(_loc) => {
+  | Res_id(_) => base_type(~loc=?atLoc, "string")
+  | Res_int(_) => {
       base_type(~loc=?atLoc, "int");
     }
-  | Res_float(_loc) => base_type(~loc=?atLoc, "float")
-  | Res_boolean(_loc) => base_type(~loc=?atLoc, "bool")
-  | Res_raw_scalar(_loc) => base_type(~loc=?atLoc, "Js.Json.t")
-  | Res_object(_loc, _name, _fields, type_name)
-  | Res_record(_loc, _name, _fields, type_name) =>
+  | Res_float(_) => base_type(~loc=?atLoc, "float")
+  | Res_boolean(_) => base_type(~loc=?atLoc, "bool")
+  | Res_raw_scalar(_) => base_type(~loc=?atLoc, "Js.Json.t")
+  | Res_object({type_name})
+  | Res_record({type_name}) =>
     switch (type_name, raw) {
     | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
     | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
-  | Res_poly_variant_selection_set(_loc, _name, _)
-  | Res_poly_variant_union(_loc, _name, _, _, _)
-  | Res_poly_variant_interface(_loc, _name, _, _) => {
+  | Res_poly_variant_selection_set(_)
+  | Res_poly_variant_union(_)
+  | Res_poly_variant_interface(_) => {
       base_type(~loc=?atLoc, generate_type_name(path));
     }
-  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
+  | Res_solo_fragment_spread({loc, name: module_name}) =>
     if (raw) {
       base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t");
     } else {
       base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }
-  | Res_error(loc, error) =>
+  | Res_error({loc, message: error}) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(_loc, _enum_meta, _) =>
-    base_type(~loc=?atLoc, generate_type_name(path));
+  | Res_poly_enum(_) => base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~manifest=?, inner, _loc, path) => {
   Ast_helper.Type.mk(

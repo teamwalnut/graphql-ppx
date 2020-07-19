@@ -525,7 +525,7 @@ and generate_poly_variant_union_decoder =
                  {
                    let%expr value: [%t
                      switch (inner) {
-                     | Res_solo_fragment_spread(_, name, _) =>
+                     | Res_solo_fragment_spread({name}) =>
                        base_type_name(name ++ ".Raw.t")
                      | _ =>
                        base_type_name(
@@ -606,19 +606,19 @@ and generate_poly_variant_union_decoder =
 }
 and generate_parser = (config, path: list(string), definition) =>
   fun
-  | Res_nullable(loc, inner) =>
+  | Res_nullable({loc, inner}) =>
     generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_array(loc, inner) =>
+  | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id(loc) => raw_value(conv_loc(loc))
-  | Res_string(loc) => raw_value(conv_loc(loc))
-  | Res_int(loc) => raw_value(conv_loc(loc))
-  | Res_float(loc) => raw_value(conv_loc(loc))
-  | Res_boolean(loc) => raw_value(conv_loc(loc))
-  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+  | Res_id({loc}) => raw_value(conv_loc(loc))
+  | Res_string({loc}) => raw_value(conv_loc(loc))
+  | Res_int({loc}) => raw_value(conv_loc(loc))
+  | Res_float({loc}) => raw_value(conv_loc(loc))
+  | Res_boolean({loc}) => raw_value(conv_loc(loc))
+  | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
+  | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_decoder(loc, enum_meta, omit_future_value)
-  | Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_decoder(
       config,
       conv_loc(loc),
@@ -627,7 +627,7 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_record(loc, name, fields, existing_record) =>
+  | Res_record({loc, name, fields, type_name: existing_record}) =>
     generate_object_decoder(
       config,
       loc,
@@ -638,7 +638,7 @@ and generate_parser = (config, path: list(string), definition) =>
       existing_record,
       true,
     )
-  | Res_object(loc, name, fields, existing_record) =>
+  | Res_object({loc, name, fields, type_name: existing_record}) =>
     generate_object_decoder(
       config,
       loc,
@@ -649,13 +649,13 @@ and generate_parser = (config, path: list(string), definition) =>
       existing_record,
       false,
     )
-  | Res_poly_variant_union(
+  | Res_poly_variant_union({
       loc,
       name,
       fragments,
       exhaustive,
       omit_future_value,
-    ) =>
+    }) =>
     generate_poly_variant_union_decoder(
       config,
       conv_loc(loc),
@@ -666,7 +666,7 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set({loc, name, fragments: fields}) =>
     generate_poly_variant_selection_set_decoder(
       config,
       conv_loc(loc),
@@ -676,7 +676,7 @@ and generate_parser = (config, path: list(string), definition) =>
       definition,
     )
 
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
+  | Res_poly_variant_interface({loc, name, base, fragments}) =>
     generate_poly_variant_interface_decoder(
       config,
       conv_loc(loc),
@@ -686,7 +686,7 @@ and generate_parser = (config, path: list(string), definition) =>
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
+  | Res_solo_fragment_spread({loc, name, arguments}) =>
     generate_solo_fragment_spread_decoder(
       config,
       loc,
@@ -694,4 +694,4 @@ and generate_parser = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(loc, message);
+  | Res_error({loc, message}) => generate_error(loc, message);
