@@ -8,5 +8,3 @@ yarn.lock linguist-generated
 
 *.re linguist-language=Reason
 *.rei linguist-language=Reason
-
-
