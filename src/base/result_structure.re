@@ -13,7 +13,13 @@ type field_result =
       type_: t,
       arguments: Graphql_ast.arguments,
     })
-  | Fr_fragment_spread(string, loc, string, option(string), list(string))
+  | Fr_fragment_spread({
+      key: string,
+      loc,
+      name: string,
+      type_name: option(string),
+      arguments: list(string),
+    })
 and t =
   | Res_nullable({
       loc,

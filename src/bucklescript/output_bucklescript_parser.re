@@ -297,7 +297,7 @@ and generate_object_decoder =
           generate_parser(config, [key, ...path], definition, inner);
         }
 
-      | Fr_fragment_spread(_key, loc, name, _, arguments) =>
+      | Fr_fragment_spread({loc, name, arguments}) =>
         [@metaloc conv_loc(loc)]
         {
           let%expr value: [%t
@@ -319,7 +319,7 @@ and generate_object_decoder =
 
     let get_record_contents =
       fun
-      | Fr_fragment_spread(key, _, _, _, _)
+      | Fr_fragment_spread({key})
       | Fr_named_field({name: key}) => (
           {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
           ident_from_string(to_valid_ident(key)),
@@ -327,7 +327,7 @@ and generate_object_decoder =
 
     let get_record_contents_inline =
       fun
-      | Fr_fragment_spread(key, _, _, _, _) as field
+      | Fr_fragment_spread({key}) as field
       | Fr_named_field({name: key}) as field => (
           {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
           get_value(field),
@@ -352,10 +352,7 @@ and generate_object_decoder =
           |> List.map(
                fun
                | Fr_named_field({name}) as field => (name, field)
-               | Fr_fragment_spread(key, _, _, _, _) as field => (
-                   key,
-                   field,
-                 ),
+               | Fr_fragment_spread({key}) as field => (key, field),
              )
           |> List.map(((key, field)) => {
                Vb.mk(

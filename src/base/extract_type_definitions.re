@@ -186,7 +186,7 @@ and create_children = (path, raw, fields) => {
          fun
          | Fr_named_field({name, type_}) =>
            List.append(extract(~path=[name, ...path], ~raw, type_), acc)
-         | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
+         | Fr_fragment_spread(_) => acc,
        [],
      );
 }
@@ -212,7 +212,7 @@ and create_object =
                    arguments,
                  });
                }
-             | Fr_fragment_spread(key, loc_key, name, type_name, _arguments) =>
+             | Fr_fragment_spread({key, loc: loc_key, name, type_name}) =>
                Fragment({module_name: name, key, loc_key, type_name}),
            ),
     }),

@@ -448,7 +448,7 @@ and generate_object_encoder =
       fields
       |> filter_map(
            fun
-           | Fr_fragment_spread(_, _, _, _, _) => None
+           | Fr_fragment_spread(_) => None
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
@@ -578,7 +578,7 @@ and generate_object_encoder =
                  acc =>
                    fun
                    | Fr_named_field(_) => acc
-                   | Fr_fragment_spread(key, _loc, name, _, _arguments) => [
+                   | Fr_fragment_spread({key, name}) => [
                        [%expr
                          (
                            Obj.magic(
