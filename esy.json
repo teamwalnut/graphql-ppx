@@ -22,7 +22,7 @@
   },
 
   "esy": {
-    "build": [["dune", "build", "-p", "#{self.name}"]],
+    "build": "dune build -p #{self.name}",
     "buildDev": "refmterr dune build --promote-install-files --root .",
     "buildsInSource": "_build"
   }

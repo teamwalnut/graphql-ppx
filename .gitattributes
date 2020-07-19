@@ -1,6 +1,6 @@
 # Hide generated files
 tests_bucklescript/**/*.bs.js linguist-generated
-tests_bucklescript/static_snapshots/**/* linguist-generated
+tests_bucklescript/__snapshots__/**/* linguist-generated
 
 *.re linguist-language=Reason
 *.rei linguist-language=Reason
