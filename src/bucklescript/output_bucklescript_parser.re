@@ -447,43 +447,46 @@ and generate_poly_variant_selection_set_decoder =
   );
 }
 and generate_poly_variant_interface_decoder =
-    (config, loc, _name, base, fragments, path, definition) => {
-  let map_fallback_case = ((type_name, inner)) => {
+    (config, loc, _name, fragments, path, definition) => {
+  let fallback_case = {
     open Ast_helper;
     let name_pattern = Pat.any();
 
-    Exp.variant(
-      type_name,
-      Some(
-        generate_parser(config, [type_name, ...path], definition, inner),
-      ),
-    )
+    Exp.variant("UnspecifiedFragment", Some([%expr typename]))
     |> Exp.case(name_pattern);
   };
 
-  let map_case = ((type_name, _inner)) => {
-    open Ast_helper;
-    let name_pattern = const_str_pat(type_name);
+  let fragment_cases =
+    List.map(
+      ((type_name, inner)) => {
+        open Ast_helper;
+        let name_pattern = const_str_pat(type_name);
 
-    Exp.variant(
-      type_name,
-      Some(
-        {
-          let%expr value: [%t
-            base_type_name(
-              "Raw." ++ generate_type_name([type_name, ...path]),
-            )
-          ] =
-            Obj.magic(value);
-          generate_parser(config, [type_name, ...path], definition, inner);
-        },
-      ),
-    )
-    |> Exp.case(name_pattern);
-  };
-
-  let fragment_cases = List.map(map_case, fragments);
-  let fallback_case = map_fallback_case(base);
+        Exp.variant(
+          type_name,
+          Some(
+            {
+              let%expr value: [%t
+                base_type_name(
+                  "Raw." ++ generate_type_name([type_name, ...path]),
+                )
+              ] =
+                Obj.magic(value);
+              %e
+              generate_parser(
+                config,
+                [type_name, ...path],
+                definition,
+                inner,
+              );
+            },
+          ),
+        )
+        |> Exp.case(name_pattern);
+      },
+      fragments,
+    );
+  let fallback_case = fallback_case;
   let typename_matcher =
     Ast_helper.(
       Exp.match(
@@ -673,12 +676,11 @@ and generate_parser = (config, path: list(string), definition) =>
       definition,
     )
 
-  | Res_poly_variant_interface({loc, name, base, fragments}) =>
+  | Res_poly_variant_interface({loc, name, fragments}) =>
     generate_poly_variant_interface_decoder(
       config,
       conv_loc(loc),
       name,
-      base,
       fragments,
       [name, ...path],
       definition,

@@ -35,31 +35,31 @@ let base_type = (~inner=[], ~loc=?, name) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = (~atLoc=?, config, path, raw) =>
+let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
   fun
   | Res_string(_) => base_type(~loc=?atLoc, "string")
   | Res_nullable({inner}) =>
     if (raw) {
       base_type(
-        ~inner=[generate_type(config, path, raw, inner)],
+        ~inner=[generate_type(~config, ~path, ~raw, inner)],
         "Js.Nullable.t",
       );
     } else {
       base_type(
         ~loc=?atLoc,
-        ~inner=[generate_type(config, path, raw, inner)],
+        ~inner=[generate_type(~config, ~path, ~raw, inner)],
         "option",
       );
     }
   | Res_array({inner}) =>
     base_type(
       ~loc=?atLoc,
-      ~inner=[generate_type(config, path, raw, inner)],
+      ~inner=[generate_type(~config, ~path, ~raw, inner)],
       "array",
     )
   | Res_custom_decoder({ident: module_name, inner}) =>
     if (raw) {
-      generate_type(config, path, raw, inner);
+      generate_type(~config, ~path, ~raw, inner);
     } else {
       base_type(~loc=?atLoc, module_name ++ ".t");
     }
@@ -77,9 +77,11 @@ let rec generate_type = (~atLoc=?, config, path, raw) =>
     | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
   | Res_poly_variant_selection_set(_)
-  | Res_poly_variant_union(_)
-  | Res_poly_variant_interface(_) => {
+  | Res_poly_variant_union(_) => {
       base_type(~loc=?atLoc, generate_type_name(path));
+    }
+  | Res_poly_variant_interface({name}) => {
+      base_type(~loc=?atLoc, generate_type_name([name, ...path]));
     }
   | Res_solo_fragment_spread({loc, name: module_name}) =>
     if (raw) {
@@ -165,9 +167,9 @@ let generate_record_type =
                    {Location.txt: to_valid_ident(name), loc: Location.none},
                    generate_type(
                      ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
-                     config,
-                     [name, ...path],
-                     raw,
+                     ~config,
+                     ~path=[name, ...path],
+                     ~raw,
                      type_,
                    ),
                  ),
@@ -231,9 +233,9 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
                              conv_loc(
                                config.Generator_utils.map_loc(name.span),
                              ),
-                           config,
-                           [name.item, ...path],
-                           raw,
+                           ~config,
+                           ~path=[name.item, ...path],
+                           ~raw,
                            res,
                          ),
                        ],
@@ -291,9 +293,9 @@ let generate_variant_union =
                    generate_type(
                      ~atLoc=
                        conv_loc(config.Generator_utils.map_loc(name.span)),
-                     config,
-                     [name.item, ...path],
-                     raw,
+                     ~config,
+                     ~path=[name.item, ...path],
+                     ~raw,
                      res,
                    ),
                  ],
@@ -319,16 +321,23 @@ let generate_variant_union =
   };
 
 let generate_variant_interface =
-    (~config, ~fragments, ~base, ~path, ~loc, ~raw, ~shared_fields) =>
+    (~name as interface_name, ~config, ~fragments, ~path, ~loc, ~raw) =>
   if (raw) {
-    generate_opaque(path, loc);
+    generate_opaque([interface_name, ...path], loc);
   } else {
     let map_case_ty = ((name, res)) => {
       prf_desc:
         Rtag(
           {txt: name, loc: conv_loc(loc)},
           false,
-          [generate_type(config, [name, ...path], raw, res)],
+          [
+            generate_type(
+              ~config,
+              ~path=[name, interface_name, ...path],
+              ~raw,
+              res,
+            ),
+          ],
         ),
       prf_loc: conv_loc(loc),
       prf_attributes: [],
@@ -351,40 +360,37 @@ let generate_variant_interface =
         Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
       );
 
-    switch (shared_fields, base, fragments) {
-    | (false, _, []) =>
-      wrap_type_declaration(
-        ~manifest=base_type_name("Js.Json.t"),
-        Ptype_abstract,
-        loc,
-        path,
-      )
-    | (true, (name, res), []) =>
-      wrap_type_declaration(
-        ~manifest=generate_type(config, [name, ...path], raw, res),
-        Ptype_abstract,
-        loc,
-        path,
-      )
-
-    | (false, _, _fragments) =>
-      wrap_type_declaration(Ptype_abstract, ~manifest=variant_type, loc, path)
-    | (true, (_name, inner), _fragments) =>
-      wrap_type_declaration(
-        Ptype_record([
-          Ast_helper.Type.field(
-            {Location.txt: "shared", loc: Location.none},
-            generate_type(config, ["shared", ...path], raw, inner),
-          ),
-          Ast_helper.Type.field(
-            {Location.txt: "fragment", loc: Location.none},
-            variant_type,
-          ),
-        ]),
-        loc,
-        path,
-      )
-    };
+    // switch (shared_fields, base, fragments) {
+    // | (false, _, []) =>
+    //   wrap_type_declaration(
+    //     ~manifest=base_type_name("Js.Json.t"),
+    //     Ptype_abstract,
+    //     loc,
+    //     path,
+    //   )
+    // | (true, (name, inner), []) =>
+    //   wrap_type_declaration(
+    //     ~manifest=generate_type(~config, ~path=[name, ...path], ~raw, inner),
+    //     Ptype_abstract,
+    //     loc,
+    //     path,
+    //   )
+    // | (false, _, _fragments) =>
+    //   wrap_type_declaration(Ptype_abstract, ~manifest=variant_type, loc, path)
+    // | (true, (name, inner), _fragments) =>
+    //   wrap_type_declaration(
+    //     ~manifest=generate_type(~config, ~path=[name, ...path], ~raw, inner),
+    //     Ptype_abstract,
+    //     loc,
+    //     path,
+    //   )
+    // };
+    wrap_type_declaration(
+      Ptype_abstract,
+      ~manifest=variant_type,
+      loc,
+      [interface_name, ...path],
+    );
   };
 
 let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
@@ -477,9 +483,9 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                      {txt: to_valid_ident(name), loc: Location.none},
                      generate_type(
                        ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
-                       config,
-                       [name, ...path],
-                       raw,
+                       ~config,
+                       ~path=[name, ...path],
+                       ~raw,
                        type_,
                      ),
                    ),
@@ -605,15 +611,14 @@ let generate_types =
              loc,
              raw,
            )
-         | VariantInterface({loc, path, base, fragments, shared_fields}) =>
+         | VariantInterface({name, loc, path, fragments}) =>
            generate_variant_interface(
+             ~name,
              ~config,
              ~fragments,
-             ~base,
              ~path,
              ~loc,
              ~raw,
-             ~shared_fields,
            )
          | Enum({loc, path, fields, omit_future_value}) =>
            generate_enum(config, fields, path, loc, raw, omit_future_value),

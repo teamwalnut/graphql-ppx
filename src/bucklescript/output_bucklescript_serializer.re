@@ -699,7 +699,7 @@ and generate_poly_variant_selection_set_encoder =
   Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
-    (_config, _loc, _name, _base, _fragments, _path, _definition) => [%expr
+    (_config, _loc, _name, _fragments, _path, _definition) => [%expr
   Obj.magic(Js.Json.null)
 ]
 and generate_solo_fragment_spread_encorder =
@@ -789,12 +789,11 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       path,
       definition,
     )
-  | Res_poly_variant_interface({loc, name, base, fragments}) =>
+  | Res_poly_variant_interface({loc, name, fragments}) =>
     generate_poly_variant_interface_encoder(
       config,
       conv_loc(loc),
       name,
-      base,
       fragments,
       [name, ...path],
       definition,

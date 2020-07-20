@@ -50,12 +50,14 @@ and t =
       name: string,
       fields: list(field_result),
       type_name: option(string),
+      interface_fragments: option(list((string, t))),
     })
   | Res_object({
       loc,
       name: string,
       fields: list(field_result),
       type_name: option(string),
+      interface_fragments: option(list((string, t))),
     })
   | Res_poly_variant_selection_set({
       loc,
@@ -72,9 +74,7 @@ and t =
   | Res_poly_variant_interface({
       loc,
       name: string,
-      base: (string, t),
       fragments: list((string, t)),
-      shared_fields: bool,
     })
   | Res_solo_fragment_spread({
       loc,

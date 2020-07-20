@@ -41,11 +41,10 @@ and type_def =
       omit_future_value: bool,
     })
   | VariantInterface({
+      name: string,
       loc: Source_pos.ast_location,
       path,
-      base: (string, Result_structure.t),
       fragments: list((string, Result_structure.t)),
-      shared_fields: bool,
     })
   | Enum({
       loc: Source_pos.ast_location,

@@ -186,14 +186,8 @@ let rec generate_decoder = config =>
       fragments,
       exhaustive,
     )
-  | Res_poly_variant_interface({loc, name, base, fragments}) =>
-    generate_poly_variant_interface(
-      config,
-      conv_loc(loc),
-      name,
-      base,
-      fragments,
-    )
+  | Res_poly_variant_interface({loc, name, fragments}) =>
+    generate_poly_variant_interface(config, conv_loc(loc), name, fragments)
   | Res_solo_fragment_spread({loc, name}) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
   | Res_error({loc, message}) => generate_error(conv_loc(loc), message)
@@ -501,12 +495,15 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     }
   );
 }
-and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
-  let map_fallback_case = ((type_name, inner)) => {
+and generate_poly_variant_interface = (config, loc, name, fragments) => {
+  let fallback_case = {
     open Ast_helper;
     let name_pattern = Pat.any();
     let variant =
-      Exp.variant(type_name, Some(generate_decoder(config, inner)));
+      Exp.variant(
+        "UnspecifiedFragment",
+        Some(Exp.constant(Pconst_string("otherVariant", None))),
+      );
     Exp.case(name_pattern, variant);
   };
 
@@ -536,9 +533,24 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
   };
 
   let fragment_cases = List.map(map_case, fragments);
-  let fallback_case = map_fallback_case(base);
-  let (base_name, base_decoder) = base;
-  let fallback_case_ty = map_case_ty(({txt: base_name, loc}, base_decoder));
+  let fallback_case = fallback_case;
+  let fallback_case_ty = {
+    prf_desc:
+      Rtag(
+        {txt: "UnspecifiedFragment", loc},
+        false,
+        [
+          {
+            ptyp_desc: Ptyp_any,
+            ptyp_attributes: [],
+            ptyp_loc: Location.none,
+            ptyp_loc_stack: [],
+          },
+        ],
+      ),
+    prf_loc: loc,
+    prf_attributes: [],
+  };
 
   let fragment_case_tys =
     List.map(

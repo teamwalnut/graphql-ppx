@@ -232,6 +232,7 @@ and unify_interface =
         fields:
           List.map(unify_selection(error_marker, config, ty), selection),
         type_name: None,
+        interface_fragments: None,
       }),
     );
     let generate_fragment_case =
@@ -251,16 +252,29 @@ and unify_interface =
       };
 
     let fragment_cases = List.map(generate_fragment_case, fragments);
-    let base_case =
-      generate_case(base_selection_set, ty, interface_meta.im_name);
 
-    Res_poly_variant_interface({
-      loc: config.map_loc(span),
-      name: interface_meta.im_name,
-      base: base_case,
-      fragments: fragment_cases,
-      shared_fields: base_selection_set != [],
-    });
+    let interface =
+      Res_poly_variant_interface({
+        loc: config.map_loc(span),
+        name: interface_meta.im_name,
+        fragments: fragment_cases,
+      });
+
+    switch (base_selection_set) {
+    | [] => interface
+    | _ =>
+      Res_object({
+        loc: config.map_loc(span),
+        name: interface_meta.im_name,
+        fields:
+          List.map(
+            unify_selection(error_marker, config, ty),
+            base_selection_set,
+          ),
+        type_name: None,
+        interface_fragments: Some(fragment_cases),
+      })
+    };
   }
 and unify_union =
     (error_marker, config, span, union_meta, omit_future_value, selection_set) =>
@@ -718,6 +732,7 @@ and unify_selection_set =
       name: type_name(ty),
       fields: List.map(unify_selection(error_marker, config, ty), item),
       type_name: existing_record,
+      interface_fragments: None,
     })
   | Some({item, _}) =>
     Res_object({
@@ -725,6 +740,7 @@ and unify_selection_set =
       name: type_name(ty),
       fields: List.map(unify_selection(error_marker, config, ty), item),
       type_name: existing_record,
+      interface_fragments: None,
     })
   };
 
