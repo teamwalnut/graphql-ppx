@@ -265,12 +265,12 @@ let error_filenames =
        }
      });
 
-type ppxConfig = {
+type ppx_config = {
   name: string,
   options: array(string),
 };
 
-let ppxConfigs = [
+let ppx_configs = [
   {name: "Records", options: [||]},
   {name: "Objects", options: [|"-objects"|]},
   {name: "Template", options: [|"-template-tag-location=gql"|]},
@@ -278,12 +278,12 @@ let ppxConfigs = [
   {name: "Apollo", options: [|"-apollo-mode"|]},
 ];
 
-type testType =
+type test_type =
   | Generate
   | Compile
   | Error;
 
-let testTypes = [Generate, Compile, Error];
+let test_types = [Generate, Compile, Error];
 
 type descriptor('a, 'b) =
   | Ppx('a)
@@ -291,8 +291,8 @@ type descriptor('a, 'b) =
 
 type test('a, 'b) = {
   id: int,
-  testType,
-  ppxConfig,
+  test_type,
+  ppx_config,
   filename: string,
   descriptors: option(descriptor('a, 'b)),
 };
@@ -303,19 +303,19 @@ let get_id = () => {
   increm^;
 };
 let tests =
-  testTypes
-  |> List.map(testType =>
-       ppxConfigs
-       |> List.map(ppxConfig =>
-            switch (testType) {
+  test_types
+  |> List.map(test_type =>
+       ppx_configs
+       |> List.map(ppx_config =>
+            switch (test_type) {
             | Generate
             | Compile =>
               filenames
               |> List.map(filename =>
                    {
                      id: get_id(),
-                     testType,
-                     ppxConfig,
+                     test_type,
+                     ppx_config,
                      filename,
                      descriptors: None,
                    }
@@ -325,8 +325,8 @@ let tests =
               |> List.map(filename =>
                    {
                      id: get_id(),
-                     testType,
-                     ppxConfig,
+                     test_type,
+                     ppx_config,
                      filename,
                      descriptors: None,
                    }
@@ -349,26 +349,26 @@ let fill_inflight = () => {
              descriptors:
                Some(
                  switch (test) {
-                 | {testType: Generate, filename, ppxConfig, _} =>
+                 | {test_type: Generate, filename, ppx_config, _} =>
                    Ppx(
                      start_ppx(
                        "tests_bucklescript/operations/" ++ filename,
-                       ppxConfig.options,
+                       ppx_config.options,
                      ),
                    )
-                 | {testType: Compile, filename, ppxConfig, _} =>
+                 | {test_type: Compile, filename, ppx_config, _} =>
                    Bsb(
                      start_bsb(
-                       ~ppxOptions=ppxConfig.options,
+                       ~ppxOptions=ppx_config.options,
                        ~filename,
                        ~pathIn="tests_bucklescript/operations",
                      ),
                    )
 
-                 | {testType: Error, filename, ppxConfig, _} =>
+                 | {test_type: Error, filename, ppx_config, _} =>
                    Bsb(
                      start_bsb(
-                       ~ppxOptions=ppxConfig.options,
+                       ~ppxOptions=ppx_config.options,
                        ~filename,
                        ~pathIn="tests_bucklescript/operations/errors",
                      ),
@@ -406,35 +406,29 @@ let get_bsb_descriptors =
 
 let get_type_and_config = tests =>
   switch (tests) {
-  | [[{testType, _}, ..._], ..._] => testType
-  | _ => raise(Not_found)
-  };
-let get_config = tests =>
-  switch (tests) {
-  | [{ppxConfig, _}, ..._] => ppxConfig
+  | [{ppx_config, test_type, _}, ..._] => (test_type, ppx_config)
   | _ => raise(Not_found)
   };
 
 tests
 |> List.iter(tests_by_type => {
-     let testType = get_type_and_config(tests_by_type);
-     let typeName =
-       switch (testType) {
-       | Generate => "Generate"
-       | Compile => "Compile"
-       | Error => "Error"
-       };
      tests_by_type
      |> List.iter(tests_by_config => {
-          let ppxConfig = get_config(tests_by_config);
+          let (test_type, ppx_config) = get_type_and_config(tests_by_config);
+          let typeName =
+            switch (test_type) {
+            | Generate => "Generate"
+            | Compile => "Compile"
+            | Error => "Error"
+            };
 
-          describe(typeName ++ " " ++ ppxConfig.name, ({describe, _}) => {
+          describe(typeName ++ " " ++ ppx_config.name, ({describe, _}) => {
             tests_by_config
             |> List.iter(({filename, id, _}) => {
                  describe(filename, ({test, _}) => {
                    test("output", ({expect, _}) => {
                      fill_inflight();
-                     switch (testType) {
+                     switch (test_type) {
                      | Generate =>
                        let descriptors =
                          id |> get_descriptors |> get_ppx_descriptors;
@@ -459,5 +453,5 @@ tests
                  })
                })
           });
-        });
+        })
    });
