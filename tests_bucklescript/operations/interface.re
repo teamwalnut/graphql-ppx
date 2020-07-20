@@ -1,3 +1,10 @@
+module GraphQL_PPX = {
+  // mock
+  let deepMerge = (json1, _) => {
+    json1;
+  };
+};
+
 module QueryWithOnlyFragments = [%graphql
   {|
     query {

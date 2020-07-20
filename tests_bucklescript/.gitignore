@@ -7,3 +7,5 @@ node_modules
 /build/
 bs-ppx-css
 *.bs.js
+operations/*.js
+yarn.lock

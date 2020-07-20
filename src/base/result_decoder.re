@@ -272,7 +272,7 @@ and unify_interface =
             base_selection_set,
           ),
         type_name: None,
-        interface_fragments: Some(fragment_cases),
+        interface_fragments: Some((interface_meta.im_name, fragment_cases)),
       })
     };
   }

@@ -4,10 +4,13 @@
   "scripts": {
     "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ../graphql_schema.json ../schema.graphql"
   },
-  "keywords": ["BuckleScript"],
+  "keywords": [
+    "BuckleScript"
+  ],
   "license": "MIT",
   "devDependencies": {
     "gql-tools": "^0.0.15",
-    "graphql": "^0.13.2"
+    "graphql": "^0.13.2",
+    "bs-platform": "^8.0.3"
   }
 }

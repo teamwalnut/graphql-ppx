@@ -25,6 +25,22 @@ let record_to_object = (loc, record) => {
   );
 };
 
+let raw_opaque_object = (interface_fragments, fields) => {
+  let has_fragments =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+  switch (has_fragments, interface_fragments) {
+  | (true, _) => true
+  | (_, Some((_, []))) => false
+  | (_, Some((_, _))) => true
+  | _ => false
+  };
+};
+
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
   | Tr_named({item: name}) => name
@@ -238,27 +254,23 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) =>
   }
 and generate_object_decoder =
     (
-      config,
-      loc,
-      _name,
+      ~config,
+      ~loc,
+      ~name as _name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record,
+      ~interface_fragments,
       fields,
-      path,
-      definition,
-      existing_record,
-      force_record,
     ) => {
   // whether we can use inline values, this compiles to better javascript
   // but we can't use this if we are constructing objects instead of records
   let inline_values = config.records;
   let do_obj_constructor_base = (is_object, wrap) => {
     open Ast_helper;
-    let opaque =
-      fields
-      |> List.exists(
-           fun
-           | Fr_fragment_spread(_) => true
-           | _ => false,
-         );
+
+    let opaque = raw_opaque_object(interface_fragments, fields);
     let object_type = base_type_name("Raw." ++ generate_type_name(path));
 
     let get_value =
@@ -333,14 +345,33 @@ and generate_object_decoder =
           get_value(field),
         );
 
-    let record =
-      Exp.record(
-        List.map(
-          inline_values ? get_record_contents_inline : get_record_contents,
-          fields,
-        ),
-        None,
+    let record_fields =
+      List.map(
+        inline_values ? get_record_contents_inline : get_record_contents,
+        fields,
       );
+
+    let record_fields =
+      switch (interface_fragments) {
+      | None
+      | Some((_, [])) => record_fields
+      | Some((interface_name, fragments)) => [
+          (
+            {txt: Longident.Lident("fragment"), loc: Location.none},
+            generate_poly_variant_interface_decoder(
+              config,
+              conv_loc(loc),
+              interface_name,
+              fragments,
+              [interface_name, ...path],
+              definition,
+            ),
+          ),
+          ...record_fields,
+        ]
+      };
+
+    let record = Exp.record(record_fields, None);
 
     let record = wrap ? record_to_object(loc, record) : record;
 
@@ -627,27 +658,41 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_record({loc, name, fields, type_name: existing_record}) =>
-    generate_object_decoder(
-      config,
+  | Res_record({
       loc,
       name,
       fields,
-      path,
-      definition,
-      existing_record,
-      true,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
+    generate_object_decoder(
+      ~config,
+      ~loc,
+      ~name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record=true,
+      ~interface_fragments,
+      fields,
     )
-  | Res_object({loc, name, fields, type_name: existing_record}) =>
-    generate_object_decoder(
-      config,
+  | Res_object({
       loc,
       name,
       fields,
-      path,
-      definition,
-      existing_record,
-      false,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
+    generate_object_decoder(
+      ~config,
+      ~loc,
+      ~name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record=false,
+      ~interface_fragments,
+      fields,
     )
   | Res_poly_variant_union({
       loc,

@@ -28,6 +28,8 @@ and type_def =
       path,
       existing_type: option(string),
       fields: list(object_field),
+      interface_fragments:
+        option((string, list((string, Result_structure.t)))),
     })
   | VariantSelection({
       loc: Source_pos.ast_location,

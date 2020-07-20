@@ -3,6 +3,14 @@ Compile Apollo › interface.re › output
 'use strict';
 
 
+function deepMerge(json1, param) {
+  return json1;
+}
+
+var GraphQL_PPX = {
+  deepMerge: deepMerge
+};
+
 var Raw = {};
 
 function parse(value) {
@@ -82,8 +90,38 @@ function parse$1(value) {
   var value$1 = value.users;
   return {
           users: value$1.map(function (value) {
+                var typename = value[\"__typename\"];
+                var tmp;
+                switch (typename) {
+                  case \"AdminUser\" :
+                      tmp = {
+                        HASH: /* AdminUser */632766042,
+                        VAL: {
+                          id: value.id,
+                          __typename: value.__typename,
+                          name: value.name
+                        }
+                      };
+                      break;
+                  case \"AnonymousUser\" :
+                      tmp = {
+                        HASH: /* AnonymousUser */-1001300680,
+                        VAL: {
+                          id: value.id,
+                          __typename: value.__typename,
+                          anonymousId: value.anonymousId
+                        }
+                      };
+                      break;
+                  default:
+                    tmp = {
+                      HASH: /* UnspecifiedFragment */300385927,
+                      VAL: typename
+                    };
+                }
                 return {
-                        id: value.id
+                        fragment: tmp,
+                        id: value[\"id\"]
                       };
               })
         };
@@ -92,10 +130,9 @@ function parse$1(value) {
 function serialize$1(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        var value$1 = value.id;
-        return {
-                id: value$1
-              };
+        return [null].reduce(deepMerge, {
+                    id: value.id
+                  });
       });
   return {
           users: users
@@ -182,6 +219,7 @@ var QueryWithoutFragments = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+exports.GraphQL_PPX = GraphQL_PPX;
 exports.QueryWithOnlyFragments = QueryWithOnlyFragments;
 exports.QueryWithMixedFragments = QueryWithMixedFragments;
 exports.QueryWithoutFragments = QueryWithoutFragments;

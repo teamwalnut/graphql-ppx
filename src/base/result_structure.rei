@@ -50,14 +50,14 @@ and t =
       name: string,
       fields: list(field_result),
       type_name: option(string),
-      interface_fragments: option(list((string, t))),
+      interface_fragments: option((string, list((string, t)))),
     })
   | Res_object({
       loc,
       name: string,
       fields: list(field_result),
       type_name: option(string),
-      interface_fragments: option(list((string, t))),
+      interface_fragments: option((string, list((string, t)))),
     })
   | Res_poly_variant_selection_set({
       loc,

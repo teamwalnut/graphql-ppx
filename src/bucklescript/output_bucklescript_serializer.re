@@ -17,6 +17,22 @@ open Output_bucklescript_types;
 let conv_loc = _ => Location.none;
 
 let raw_value = loc => [@metaloc loc] [%expr value];
+
+let raw_opaque_object = (interface_fragments, fields) => {
+  let has_fragments =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+  switch (has_fragments, interface_fragments) {
+  | (true, _) => true
+  | (_, Some((_, []))) => false
+  | (_, Some((_, _))) => true
+  | _ => false
+  };
+};
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -441,8 +457,10 @@ and generate_object_encoder =
       existing_record,
       typename,
       force_record,
+      interface_fragments,
     ) => {
   open Ast_helper;
+  let is_opaque = raw_opaque_object(interface_fragments, fields);
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
       fields
@@ -561,6 +579,53 @@ and generate_object_encoder =
   // really anything that we can do about this.
 
   let merge_into_opaque = is_object => {
+    let fields =
+      fields
+      |> List.fold_left(
+           acc =>
+             fun
+             | Fr_named_field(_) => acc
+             | Fr_fragment_spread({key, name}) => [
+                 [%expr
+                   (
+                     Obj.magic(
+                       [%e ident_from_string(name ++ ".serialize")](
+                         [%e
+                           get_field(is_object, key, existing_record, path)
+                         ],
+                       ),
+                     ): Js.Json.t
+                   )
+                 ],
+                 ...acc,
+               ],
+           [],
+         )
+      |> List.rev;
+    let fields =
+      switch (interface_fragments) {
+      | None
+      | Some((_, [])) => fields
+      | Some((interface_name, fragments)) => [
+          {
+            let%expr value = [%e get_field(is_object, "fragment", None, path)];
+            Obj.magic(
+              [%e
+                generate_poly_variant_interface_encoder(
+                  config,
+                  loc,
+                  interface_name,
+                  fragments,
+                  path,
+                  definition,
+                )
+              ]: Js.Json.t,
+            );
+          },
+          ...fields,
+        ]
+      };
+
     %expr
     (
       Obj.magic(
@@ -572,36 +637,7 @@ and generate_object_encoder =
               do_obj_constructor(is_object);
             },
           ): Js.Json.t,
-          [%e
-            fields
-            |> List.fold_left(
-                 acc =>
-                   fun
-                   | Fr_named_field(_) => acc
-                   | Fr_fragment_spread({key, name}) => [
-                       [%expr
-                         (
-                           Obj.magic(
-                             [%e ident_from_string(name ++ ".serialize")](
-                               [%e
-                                 get_field(
-                                   is_object,
-                                   key,
-                                   existing_record,
-                                   path,
-                                 )
-                               ],
-                             ),
-                           ): Js.Json.t
-                         )
-                       ],
-                       ...acc,
-                     ],
-                 [],
-               )
-            |> List.rev
-            |> Ast_helper.Exp.array
-          ],
+          [%e fields |> Ast_helper.Exp.array],
         ),
       ): [%t
         base_type_name("Raw." ++ generate_type_name(path))
@@ -609,15 +645,7 @@ and generate_object_encoder =
     );
   };
 
-  let has_fragment_spreads =
-    fields
-    |> List.exists(
-         fun
-         | Fr_fragment_spread(_) => true
-         | _ => false,
-       );
-
-  switch (has_fragment_spreads, config.records, existing_record, force_record) {
+  switch (is_opaque, config.records, existing_record, force_record) {
   | (true, records, _, _) => merge_into_opaque(!records)
   | (false, true, _, _) => do_obj_constructor_records()
   | (false, false, _, true) => do_obj_constructor(false)
@@ -739,7 +767,13 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       path,
       definition,
     )
-  | Res_record({loc, name, fields, type_name: existing_record}) =>
+  | Res_record({
+      loc,
+      name,
+      fields,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
     generate_object_encoder(
       config,
       conv_loc(loc),
@@ -750,8 +784,15 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       existing_record,
       typename,
       true,
+      interface_fragments,
     )
-  | Res_object({loc, name, fields, type_name: existing_record}) =>
+  | Res_object({
+      loc,
+      name,
+      fields,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
     generate_object_encoder(
       config,
       conv_loc(loc),
@@ -762,6 +803,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       existing_record,
       typename,
       false,
+      interface_fragments,
     )
   | Res_poly_variant_union({
       loc,

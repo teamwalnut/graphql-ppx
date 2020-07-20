@@ -17,6 +17,9 @@ Generate Objects › interface.re › output
     cookies: [],
   }
 ];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
 module QueryWithOnlyFragments = {
   [@ocaml.warning \"-32\"];
   module Raw = {
@@ -161,10 +164,38 @@ module QueryWithOnlyFragments {
 module QueryWithMixedFragments = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t_users = {. \"id\": string};
+    type t_users_User_AnonymousUser = {
+      .
+      \"__typename\": string,
+      \"id\": string,
+      \"anonymousId\": int,
+    };
+    type t_users_User_AdminUser = {
+      .
+      \"__typename\": string,
+      \"id\": string,
+      \"name\": string,
+    };
+    type t_users_User;
+    type t_users;
     type t = {. \"users\": array(t_users)};
     type t_variables = unit;
   };
+  type t_users_User_AnonymousUser = {
+    .
+    \"id\": string,
+    \"anonymousId\": int,
+  };
+  type t_users_User_AdminUser = {
+    .
+    \"id\": string,
+    \"name\": string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AnonymousUser(t_users_User_AnonymousUser)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
   type t_users = {. \"id\": string};
   type t = {. \"users\": array(t_users)};
   /**The GraphQL query string*/
@@ -177,10 +208,56 @@ module QueryWithMixedFragments = {
       value
       |> Js.Array.map(value =>
            let id = {
-             let value = value##id;
+             let value =
+               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
              value;
            };
-           {\"id\": id};
+           {
+             \"fragment\": {
+               let typename: string =
+                 Obj.magic(
+                   Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
+                 );
+               (
+                 switch (typename) {
+                 | \"AnonymousUser\" =>
+                   `AnonymousUser(
+                     {
+                       let value: Raw.t_users_User_AnonymousUser =
+                         Obj.magic(value);
+                       let anonymousId = {
+                         let value = value##anonymousId;
+                         value;
+                       }
+                       and id = {
+                         let value = value##id;
+                         value;
+                       };
+                       {\"id\": id, \"anonymousId\": anonymousId};
+                     },
+                   )
+                 | \"AdminUser\" =>
+                   `AdminUser(
+                     {
+                       let value: Raw.t_users_User_AdminUser =
+                         Obj.magic(value);
+                       let name = {
+                         let value = value##name;
+                         value;
+                       }
+                       and id = {
+                         let value = value##id;
+                         value;
+                       };
+                       {\"id\": id, \"name\": name};
+                     },
+                   )
+                 | _ => `UnspecifiedFragment(typename)
+                 }: t_users_User
+               );
+             },
+             \"id\": id,
+           };
          );
     };
     {\"users\": users};
@@ -190,12 +267,29 @@ module QueryWithMixedFragments = {
     let users = {
       let value = value##users;
       value
-      |> Js.Array.map(value =>
-           let id = {
-             let value = value##id;
-             value;
-           };
-           {\"id\": id};
+      |> Js.Array.map((value) =>
+           (
+             Obj.magic(
+               Js.Array.reduce(
+                 GraphQL_PPX.deepMerge,
+                 Obj.magic(
+                   {
+                     let id = {
+                       let value = value##id;
+                       value;
+                     };
+                     {\"id\": id};
+                   },
+                 ): Js.Json.t,
+                 [|
+                   {
+                     let value = value##fragment;
+                     Obj.magic(Obj.magic(Js.Json.null): Js.Json.t);
+                   },
+                 |],
+               ),
+             ): Raw.t_users
+           )
          );
     };
     {\"users\": users};
