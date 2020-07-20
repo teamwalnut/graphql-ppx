@@ -266,17 +266,16 @@ let error_filenames =
      });
 
 type ppxConfig = {
-  id: int,
   name: string,
   options: array(string),
 };
 
 let ppxConfigs = [
-  {id: 1, name: "Records", options: [||]},
-  {id: 2, name: "Objects", options: [|"-objects"|]},
-  {id: 3, name: "Template", options: [|"-template-tag-location=gql"|]},
-  {id: 4, name: "Legacy", options: [|"-legacy"|]},
-  {id: 5, name: "Apollo", options: [|"-apollo-mode"|]},
+  {name: "Records", options: [||]},
+  {name: "Objects", options: [|"-objects"|]},
+  {name: "Template", options: [|"-template-tag-location=gql"|]},
+  {name: "Legacy", options: [|"-legacy"|]},
+  {name: "Apollo", options: [|"-apollo-mode"|]},
 ];
 
 type testType =
@@ -335,7 +334,9 @@ let tests =
             }
           )
      );
-let concurrent_processes = 28;
+
+// on macOS the number of in-flight file descriptors is max 256
+let concurrent_processes = 30;
 
 let inflight_files = ref(tests |> List.flatten |> List.flatten);
 let fill_inflight = () => {
