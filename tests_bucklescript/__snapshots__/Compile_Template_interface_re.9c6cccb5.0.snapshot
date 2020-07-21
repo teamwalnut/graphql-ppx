@@ -64,7 +64,28 @@ function parse(value) {
 function serialize(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        return null;
+        var variant = value.HASH;
+        if (variant === 300385927) {
+          return {};
+        }
+        if (variant >= 632766042) {
+          var value$1 = value.VAL;
+          var value$2 = value$1.name;
+          var value$3 = value$1.id;
+          return {
+                  __typename: \"AdminUser\",
+                  id: value$3,
+                  name: value$2
+                };
+        }
+        var value$4 = value.VAL;
+        var value$5 = value$4.anonymousId;
+        var value$6 = value$4.id;
+        return {
+                __typename: \"AnonymousUser\",
+                id: value$6,
+                anonymousId: value$5
+              };
       });
   return {
           users: users
@@ -157,7 +178,33 @@ function parse$1(value) {
 function serialize$1(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        return [null].reduce(deepMerge, {
+        var value$1 = value.fragment;
+        var variant = value$1.HASH;
+        var tmp;
+        if (variant !== 300385927) {
+          if (variant >= 632766042) {
+            var value$2 = value$1.VAL;
+            var value$3 = value$2.name;
+            var value$4 = value$2.id;
+            tmp = {
+              __typename: \"AdminUser\",
+              id: value$4,
+              name: value$3
+            };
+          } else {
+            var value$5 = value$1.VAL;
+            var value$6 = value$5.anonymousId;
+            var value$7 = value$5.id;
+            tmp = {
+              __typename: \"AnonymousUser\",
+              id: value$7,
+              anonymousId: value$6
+            };
+          }
+        } else {
+          tmp = {};
+        }
+        return [tmp].reduce(deepMerge, {
                     id: value.id
                   });
       });

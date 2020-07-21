@@ -609,17 +609,19 @@ and generate_object_encoder =
       | Some((interface_name, fragments)) => [
           {
             let%expr value = [%e get_field(is_object, "fragment", None, path)];
-            Obj.magic(
-              [%e
-                generate_poly_variant_interface_encoder(
-                  config,
-                  loc,
-                  interface_name,
-                  fragments,
-                  path,
-                  definition,
-                )
-              ]: Js.Json.t,
+            (
+              Obj.magic(
+                [%e
+                  generate_poly_variant_interface_encoder(
+                    config,
+                    loc,
+                    interface_name,
+                    fragments,
+                    path,
+                    definition,
+                  )
+                ],
+              ): Js.Json.t
             );
           },
           ...fields,
@@ -727,9 +729,62 @@ and generate_poly_variant_selection_set_encoder =
   Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
-    (_config, _loc, _name, _fragments, _path, _definition) => [%expr
-  Obj.magic(Js.Json.null)
-]
+    (config, _loc, name, fragments, path, definition) => {
+  open Ast_helper;
+  let fragment_cases =
+    fragments
+    |> List.map(((type_name, inner)) => {
+         Ast_helper.(
+           Exp.case(
+             Pat.variant(
+               type_name,
+               Some(Pat.var({txt: "value", loc: Location.none})),
+             ),
+             [%expr
+               (
+                 Obj.magic(
+                   [%e
+                     generate_serializer(
+                       config,
+                       [type_name, name, ...path],
+                       definition,
+                       Some(type_name),
+                       inner,
+                     )
+                   ],
+                 ): [%t
+                   base_type_name(
+                     "Raw." ++ generate_type_name([name, ...path]),
+                   )
+                 ]
+               )
+             ],
+           )
+         )
+       });
+
+  let fallback_case =
+    Exp.case(
+      Pat.variant("UnspecifiedFragment", Some(Pat.any())),
+      [%expr
+        (
+          Obj.magic(Js.Dict.empty()): [%t
+            base_type_name("Raw." ++ generate_type_name([name, ...path]))
+          ]
+        )
+      ],
+    );
+
+  let typename_matcher =
+    Exp.match(
+      [%expr value],
+      List.concat([fragment_cases, [fallback_case]]),
+    );
+
+  %expr
+  [%e typename_matcher];
+}
+
 and generate_solo_fragment_spread_encorder =
     (_config, _loc, name, _arguments, _definition) => [%expr
   [%e ident_from_string(name ++ ".serialize")](
@@ -837,7 +892,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       conv_loc(loc),
       name,
       fragments,
-      [name, ...path],
+      path,
       definition,
     )
   | Res_solo_fragment_spread({loc, name, arguments}) =>

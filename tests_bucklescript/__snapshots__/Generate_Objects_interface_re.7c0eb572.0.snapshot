@@ -110,7 +110,48 @@ module QueryWithOnlyFragments = {
   let serialize = (value: t): Raw.t => {
     let users = {
       let value = value##users;
-      value |> Js.Array.map(value => Obj.magic(Js.Json.null));
+      value
+      |> Js.Array.map(value =>
+           switch (value) {
+           | `AnonymousUser(value) => (
+               Obj.magic(
+                 {
+                   let anonymousId = {
+                     let value = value##anonymousId;
+                     value;
+                   }
+                   and id = {
+                     let value = value##id;
+                     value;
+                   };
+                   {
+                     \"__typename\": \"AnonymousUser\",
+                     \"id\": id,
+                     \"anonymousId\": anonymousId,
+                   };
+                 },
+               ): Raw.t_users_User
+             )
+           | `AdminUser(value) => (
+               Obj.magic(
+                 {
+                   let name = {
+                     let value = value##name;
+                     value;
+                   }
+                   and id = {
+                     let value = value##id;
+                     value;
+                   };
+                   {\"__typename\": \"AdminUser\", \"id\": id, \"name\": name};
+                 },
+               ): Raw.t_users_User
+             )
+           | `UnspecifiedFragment(_) => (
+               Obj.magic(Js.Dict.empty()): Raw.t_users_User
+             )
+           }
+         );
     };
     {\"users\": users};
   };
@@ -284,7 +325,53 @@ module QueryWithMixedFragments = {
                  [|
                    {
                      let value = value##fragment;
-                     Obj.magic(Obj.magic(Js.Json.null): Js.Json.t);
+                     (
+                       Obj.magic(
+                         switch (value) {
+                         | `AnonymousUser(value) => (
+                             Obj.magic(
+                               {
+                                 let anonymousId = {
+                                   let value = value##anonymousId;
+                                   value;
+                                 }
+                                 and id = {
+                                   let value = value##id;
+                                   value;
+                                 };
+                                 {
+                                   \"__typename\": \"AnonymousUser\",
+                                   \"id\": id,
+                                   \"anonymousId\": anonymousId,
+                                 };
+                               },
+                             ): Raw.t_users_User
+                           )
+                         | `AdminUser(value) => (
+                             Obj.magic(
+                               {
+                                 let name = {
+                                   let value = value##name;
+                                   value;
+                                 }
+                                 and id = {
+                                   let value = value##id;
+                                   value;
+                                 };
+                                 {
+                                   \"__typename\": \"AdminUser\",
+                                   \"id\": id,
+                                   \"name\": name,
+                                 };
+                               },
+                             ): Raw.t_users_User
+                           )
+                         | `UnspecifiedFragment(_) => (
+                             Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                           )
+                         },
+                       ): Js.Json.t
+                     );
                    },
                  |],
                ),
