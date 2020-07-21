@@ -530,7 +530,7 @@ and unify_field = (error_marker, config, field_span, ty) => {
             error_marker,
             config.map_loc,
             span,
-            "pxxDecoder must be given 'module' argument",
+            "ppxDecoder must be given 'module' argument",
           ),
         arguments,
       })
