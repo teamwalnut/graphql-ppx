@@ -109,6 +109,7 @@ let decode_with_fragments = () =>
     [|
       `AdminUser({as _; pub id = "1"; pub name = "bob"}),
       `AnonymousUser({as _; pub id = "2"; pub anonymousId = 1}),
+      `UnspecifiedFragment("otherVariant"),
     |],
   );
 
