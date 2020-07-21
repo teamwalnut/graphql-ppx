@@ -242,7 +242,11 @@ module QueryWithMixedFragments = {
     | `AnonymousUser(t_users_User_AnonymousUser)
     | `AdminUser(t_users_User_AdminUser)
   ];
-  type t_users = {. \"id\": string};
+  type t_users = {
+    .
+    \"fragment\": t_users_User,
+    \"id\": string,
+  };
   type t = {. \"users\": array(t_users)};
   /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n...on AdminUser   {\\nname  \\n}\\n\\n...on AnonymousUser   {\\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\";

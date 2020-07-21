@@ -288,14 +288,6 @@ let generate_record_type =
         Ast_helper.Type.field(
           {Location.txt: "fragment", loc: Location.none},
           base_type(generate_type_name([interface_name, ...obj_path])),
-          // variant_interface_type(
-          //   ~name=interface_name,
-          //   ~config,
-          //   ~fragments,
-          //   ~path=obj_path,
-          //   ~loc,
-          //   ~raw,
-          // ),
         ),
         ...record_fields,
       ]
@@ -550,6 +542,23 @@ let generate_object_type =
       ];
     } else {
       object_fields;
+    };
+  let object_fields =
+    switch (interface_fragments) {
+    | Some((_, []))
+    | None => object_fields
+    | Some((interface_name, _fragments)) => [
+        {
+          pof_desc:
+            Otag(
+              {txt: "fragment", loc: Location.none},
+              base_type(generate_type_name([interface_name, ...obj_path])),
+            ),
+          pof_loc: Location.none,
+          pof_attributes: [],
+        },
+        ...object_fields,
+      ]
     };
 
   raw && raw_opaque_object(interface_fragments, fields)
