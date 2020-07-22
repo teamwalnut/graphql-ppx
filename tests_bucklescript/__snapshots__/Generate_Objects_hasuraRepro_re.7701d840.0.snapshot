@@ -100,18 +100,18 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module Untitled1 = {
+module HasuraRepro = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {. \"hasuraRepro\": Dog.Raw.t};
-    type t_variables = unit;
+    type t_variables = {. \"blockNumber\": Js.Nullable.t(int)};
   };
   type t = {. \"hasuraRepro\": Dog.t};
   /**The GraphQL query string*/
   let query =
-    \"query   {\\nhasuraRepro(orderBy: [{id: desc}])  {\\n...Dog   \\n}\\n\\n}\\n\"
+    \"query HasuraRepro($blockNumber: Int)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber})  {\\n...Dog   \\n}\\n\\n}\\n\"
     ++ Dog.query;
-  type t_variables = unit;
+  type t_variables = {. \"blockNumber\": option(int)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let hasuraRepro = {
@@ -129,8 +129,21 @@ module Untitled1 = {
     };
     {\"hasuraRepro\": hasuraRepro};
   };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      \"blockNumber\":
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          inp##blockNumber,
+        ),
+    };
+  let makeVariables = (~blockNumber=?, ()) =>
+    serializeVariables({\"blockNumber\": blockNumber}: t_variables);
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";

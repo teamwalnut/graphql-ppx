@@ -117,18 +117,18 @@ module GraphQL {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module Untitled1 = {
+module HasuraRepro = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {hasuraRepro: Dog.Raw.t};
-    type t_variables = unit;
+    type t_variables = {blockNumber: Js.Nullable.t(int)};
   };
   type t = {hasuraRepro: Dog.t};
   /**The GraphQL query string*/
   let query =
-    \"query   {\\nhasuraRepro(orderBy: [{id: desc}])  {\\n...Dog   \\n}\\n\\n}\\n\"
+    \"query HasuraRepro($blockNumber: Int)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber})  {\\n...Dog   \\n}\\n\\n}\\n\"
     ++ Dog.query;
-  type t_variables = unit;
+  type t_variables = {blockNumber: option(int)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -149,14 +149,27 @@ module Untitled1 = {
       {hasuraRepro: hasuraRepro};
     }: Raw.t
   );
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      blockNumber:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return((a => a)(b))
+            }
+        )(
+          (inp: t_variables).blockNumber,
+        ),
+    };
+  let makeVariables = (~blockNumber=?, ()) =>
+    serializeVariables({blockNumber: blockNumber}: t_variables);
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   module Z__INTERNAL = {
-    type nonrec _graphql_orderBy_89;
+    type nonrec _graphql_orderBy_119;
     /**Argument **orderBy** on field **hasuraRepro** has the following graphql type:
 
 ```
@@ -164,7 +177,16 @@ module Untitled1 = {
   id: OrderBy
 }]
 ```*/
-    let _graphql_orderBy_89: _graphql_orderBy_89 = Obj.magic(0);
+    let _graphql_orderBy_119: _graphql_orderBy_119 = Obj.magic(0);
+    type nonrec _graphql_block_142;
+    /**Argument **block** on field **hasuraRepro** has the following graphql type:
+
+```
+blockObj {
+  number: Int
+}
+```*/
+    let _graphql_block_142: _graphql_block_142 = Obj.magic(0);
     type root = t;
     type nonrec graphql_module;
     /****--- graphql-ppx module ---**

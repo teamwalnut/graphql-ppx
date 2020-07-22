@@ -52,8 +52,8 @@ var Dog = {
 var Raw$1 = {};
 
 var query$1 = ((frag_0) => require(\"gql\")`
-  query   {
-    hasuraRepro(orderBy: [{id: desc}])  {
+  query HasuraRepro($blockNumber: Int)  {
+    hasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber})  {
       ...Dog
     }
   }
@@ -77,24 +77,32 @@ function serialize$1(value) {
         };
 }
 
-function serializeVariables(param) {
-  
+function serializeVariables(inp) {
+  var a = inp.blockNumber;
+  return {
+          blockNumber: a !== undefined ? a : undefined
+        };
 }
 
-function makeVariables(param) {
-  
+function makeVariables(blockNumber, param) {
+  return serializeVariables({
+              blockNumber: blockNumber
+            });
 }
 
 function makeDefaultVariables(param) {
-  
+  return serializeVariables({
+              blockNumber: undefined
+            });
 }
 
 var Z__INTERNAL$1 = {
-  _graphql_orderBy_89: 0,
+  _graphql_orderBy_119: 0,
+  _graphql_block_142: 0,
   graphql_module: 0
 };
 
-var Untitled1 = {
+var HasuraRepro = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -106,6 +114,6 @@ var Untitled1 = {
 };
 
 exports.Dog = Dog;
-exports.Untitled1 = Untitled1;
+exports.HasuraRepro = HasuraRepro;
 /* query Not a pure module */
 

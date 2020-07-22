@@ -35,7 +35,7 @@ type Query {
   variousScalars: VariousScalars!
   lists: Lists!
   users: [User!]!
-  hasuraRepro(orderBy: [hasuraObj]): Dog!
+  hasuraRepro(orderBy: [hasuraObj], block: blockObj): Dog!
   scalarsInput(arg: VariousScalarsInput!): String!
   listsInput(arg: ListsInput!): String!
   recursiveInput(arg: RecursiveInput!): String!
@@ -114,6 +114,10 @@ enum OrderBy {
 
 input hasuraObj {
   id: OrderBy
+}
+
+input blockObj {
+  number: Int
 }
 
 type VariousScalars {

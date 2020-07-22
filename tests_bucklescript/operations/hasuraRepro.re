@@ -3,8 +3,8 @@
     fragment Dog on Dog {
       name
     }
-    query  {
-      hasuraRepro(orderBy: [{id: desc}]) {
+    query HasuraRepro($blockNumber: Int) {
+      hasuraRepro(orderBy: [{id: desc}], block: { number: $blockNumber }) {
         ...Dog
       }
     }
