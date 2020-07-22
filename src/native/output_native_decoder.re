@@ -79,7 +79,7 @@ let boolean_decoder = loc =>
 let generate_poly_enum_decoder = (loc, enum_meta) => {
   let enum_match_arms =
     Ast_helper.(
-      List.map(
+      Stdlib.List.map(
         ({evm_name, _}) =>
           Exp.case(
             Pat.constant(Pconst_string(evm_name, None)),
@@ -106,14 +106,14 @@ let generate_poly_enum_decoder = (loc, enum_meta) => {
     Ast_helper.(
       Exp.match(
         [%expr value],
-        List.concat([enum_match_arms, [fallback_arm]]),
+        Stdlib.List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
   let enum_ty =
     [@metaloc loc]
     Ast_helper.(
       Typ.variant(
-        List.map(
+        Stdlib.List.map(
           ({evm_name, _}) =>
             {
               prf_desc: Rtag({txt: evm_name, loc}, true, []),
@@ -204,7 +204,7 @@ and generate_array_decoder = (config, loc, inner) =>
   (
     switch%expr (value) {
     | `List(value) =>
-      List.map(
+      Stdlib.List.map(
         value => {
           let _ = ();
           %e
@@ -269,7 +269,9 @@ and generate_record_decoder = (config, loc, name, fields) => {
                let loc = conv_loc(loc);
                [@metaloc loc]
                Some(
-                 switch%expr (List.assoc([%e const_str_expr(field)], value)) {
+                 switch%expr (
+                   Stdlib.List.assoc([%e const_str_expr(field)], value)
+                 ) {
                  | value =>
                    %e
                    generate_decoder(config, inner)
@@ -299,7 +301,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
   let record_fields =
     Ast_helper.(
       fields
-      |> List.map(
+      |> Stdlib.List.map(
            fun
            | Fr_named_field({name: field, loc}) => {
                let loc = conv_loc(loc);
@@ -354,7 +356,7 @@ and generate_object_decoder = (config, loc, _name, fields) =>
         Exp.object_(
           Cstr.mk(
             Pat.any(),
-            List.map(
+            Stdlib.List.map(
               fun
               | Fr_named_field({name as key, type_: inner}) =>
                 Cf.method(
@@ -362,7 +364,9 @@ and generate_object_decoder = (config, loc, _name, fields) =>
                   Public,
                   Cfk_concrete(
                     Fresh,
-                    switch%expr (List.assoc([%e const_str_expr(key)], value)) {
+                    switch%expr (
+                      Stdlib.List.assoc([%e const_str_expr(key)], value)
+                    ) {
                     | value =>
                       %e
                       generate_decoder(config, inner)
@@ -420,7 +424,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
               Some(generate_decoder(config, inner)),
             )
           );
-        switch%expr (List.assoc([%e const_str_expr(field)], value)) {
+        switch%expr (Stdlib.List.assoc([%e const_str_expr(field)], value)) {
         | exception Not_found =>
           %e
           make_error_raiser(
@@ -455,7 +459,7 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
   let variant_type =
     Ast_helper.(
       Typ.variant(
-        List.map(
+        Stdlib.List.map(
           (({item: name}: Result_structure.name, _)) =>
             {
               prf_desc:
@@ -532,7 +536,7 @@ and generate_poly_variant_interface = (config, loc, name, fragments) => {
     prf_attributes: [],
   };
 
-  let fragment_cases = List.map(map_case, fragments);
+  let fragment_cases = Stdlib.List.map(map_case, fragments);
   let fallback_case = fallback_case;
   let fallback_case_ty = {
     prf_desc:
@@ -553,9 +557,9 @@ and generate_poly_variant_interface = (config, loc, name, fragments) => {
   };
 
   let fragment_case_tys =
-    List.map(
+    Stdlib.List.map(
       map_case_ty,
-      fragments |> List.map(((key, ty)) => ({txt: key, loc}, ty)),
+      fragments |> Stdlib.List.map(((key, ty)) => ({txt: key, loc}, ty)),
     );
   let interface_ty =
     Ast_helper.(
@@ -565,14 +569,14 @@ and generate_poly_variant_interface = (config, loc, name, fragments) => {
     Ast_helper.(
       Exp.match(
         [%expr typename],
-        List.concat([fragment_cases, [fallback_case]]),
+        Stdlib.List.concat([fragment_cases, [fallback_case]]),
       )
     );
   [@metaloc loc]
   (
     switch%expr (value) {
     | `Assoc(typename_obj) =>
-      switch (List.assoc("__typename", typename_obj)) {
+      switch (Stdlib.List.assoc("__typename", typename_obj)) {
       | exception Not_found =>
         %e
         make_error_raiser(
@@ -614,7 +618,8 @@ and generate_poly_variant_union =
   let fragment_cases =
     Ast_helper.(
       fragments
-      |> List.map((({item: type_name}: Result_structure.name, inner)) => {
+      |> Stdlib.List.map(
+           (({item: type_name}: Result_structure.name, inner)) => {
            let name_pattern = Pat.constant(Pconst_string(type_name, None));
            let variant =
              Ast_helper.(
@@ -653,7 +658,7 @@ and generate_poly_variant_union =
       }
     );
   let fragment_case_tys =
-    List.map(
+    Stdlib.List.map(
       (({item: name}: Result_structure.name, _)) =>
         {
           prf_desc:
@@ -677,7 +682,7 @@ and generate_poly_variant_union =
   let union_ty =
     Ast_helper.(
       Typ.variant(
-        List.concat([fallback_case_ty, fragment_case_tys]),
+        Stdlib.List.concat([fallback_case_ty, fragment_case_tys]),
         Closed,
         None,
       )
@@ -686,14 +691,14 @@ and generate_poly_variant_union =
     Ast_helper.(
       Exp.match(
         [%expr typename],
-        List.concat([fragment_cases, [fallback_case]]),
+        Stdlib.List.concat([fragment_cases, [fallback_case]]),
       )
     );
   [@metaloc loc]
   (
     switch%expr (value) {
     | `Assoc(typename_obj) =>
-      switch (List.assoc("__typename", typename_obj)) {
+      switch (Stdlib.List.assoc("__typename", typename_obj)) {
       | exception Not_found =>
         %e
         make_error_raiser(

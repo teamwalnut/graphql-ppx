@@ -12,7 +12,7 @@ let make_error = (error_marker, map_loc, span, message) => {
 };
 
 let has_directive = (~prepend=false, name, directives) =>
-  List.exists(
+  Stdlib.List.exists(
     ({item: {d_name: {item, _}, _}, _}) =>
       prepend ? item == "bs" ++ name || item == "ppx" ++ name : item == name,
     directives,
@@ -20,7 +20,7 @@ let has_directive = (~prepend=false, name, directives) =>
 
 let find_directive = (~prepend=false, name, directives) =>
   switch (
-    List.find(
+    Stdlib.List.find(
       ({item: {d_name: {item, _}, _}, _}) =>
         prepend ? item == "bs" ++ name || item == "ppx" ++ name : item == name,
       directives,
@@ -34,7 +34,7 @@ let find_argument = (name, arguments) =>
   arguments
   |> Option.flat_map(({item: arguments, _}) =>
        switch (
-         List.find(
+         Stdlib.List.find(
            (({item: arg_name, _}, _)) => arg_name == name,
            arguments,
          )
@@ -46,10 +46,12 @@ let find_argument = (name, arguments) =>
 
 let find_fragment_arguments =
     (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
-  switch (directives |> List.find(d => d.item.d_name.item == "arguments")) {
+  switch (
+    directives |> Stdlib.List.find(d => d.item.d_name.item == "arguments")
+  ) {
   | {item: {d_arguments: Some(arguments), _}, _} =>
     arguments.item
-    |> List.fold_left(
+    |> Stdlib.List.fold_left(
          acc =>
            fun
            | ({item: name, _}, {item: Iv_variable(variable_name), _})
@@ -224,7 +226,7 @@ and unify_interface =
       };
 
     let (base_selection_set, fragments) =
-      List.fold_left(unwrap_type_conds, ([], []), selection_set.item);
+      Stdlib.List.fold_left(unwrap_type_conds, ([], []), selection_set.item);
 
     let generate_case = (selection, ty, name) => (
       name,
@@ -232,7 +234,10 @@ and unify_interface =
         loc: config.map_loc(span),
         name,
         fields:
-          List.map(unify_selection(error_marker, config, ty), selection),
+          Stdlib.List.map(
+            unify_selection(error_marker, config, ty),
+            selection,
+          ),
         type_name: None,
         interface_fragments: None,
       }),
@@ -254,7 +259,7 @@ and unify_interface =
       | None => assert(false)
       };
 
-    let fragment_cases = List.map(generate_fragment_case, fragments);
+    let fragment_cases = Stdlib.List.map(generate_fragment_case, fragments);
 
     let interface =
       Res_poly_variant_interface({
@@ -270,7 +275,7 @@ and unify_interface =
         loc: config.map_loc(span),
         name: interface_meta.im_name,
         fields:
-          List.map(
+          Stdlib.List.map(
             unify_selection(error_marker, config, ty),
             base_selection_set,
           ),
@@ -346,15 +351,15 @@ and unify_union =
       | None => assert(false)
       };
 
-    let fragments = List.map(unwrap_type_conds, selection_set.item);
+    let fragments = Stdlib.List.map(unwrap_type_conds, selection_set.item);
     let covered_cases =
-      List.map(type_cond_name, fragments) |> List.sort(compare);
-    let possible_cases = List.sort(compare, union_meta.um_of_types);
+      Stdlib.List.map(type_cond_name, fragments) |> Stdlib.List.sort(compare);
+    let possible_cases = Stdlib.List.sort(compare, union_meta.um_of_types);
 
     Res_poly_variant_union({
       loc: config.map_loc(span),
       name: union_meta.um_name,
-      fragments: List.map(generate_case, fragments),
+      fragments: Stdlib.List.map(generate_case, fragments),
       exhaustive:
         if (covered_cases == possible_cases) {
           Exhaustive;
@@ -408,7 +413,7 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
       | Some({item, _}) =>
         let fields =
           item
-          |> List.map(selection =>
+          |> Stdlib.List.map(selection =>
                switch (selection) {
                | Field({item, _}) =>
                  switch (lookup_field(ty, item.fd_name.item)) {
@@ -645,8 +650,8 @@ and unify_selection = (error_marker, config, ty, selection) =>
       let key =
         fs_name.item
         |> String.split_on_char('.')
-        |> List.rev
-        |> List.hd
+        |> Stdlib.List.rev
+        |> Stdlib.List.hd
         |> String.uncapitalize_ascii;
       Fr_fragment_spread({
         key,
@@ -733,7 +738,8 @@ and unify_selection_set =
     Res_record({
       loc: config.map_loc(span),
       name: type_name(ty),
-      fields: List.map(unify_selection(error_marker, config, ty), item),
+      fields:
+        Stdlib.List.map(unify_selection(error_marker, config, ty), item),
       type_name: existing_record,
       interface_fragments: None,
     })
@@ -741,7 +747,8 @@ and unify_selection_set =
     Res_object({
       loc: config.map_loc(span),
       name: type_name(ty),
-      fields: List.map(unify_selection(error_marker, config, ty), item),
+      fields:
+        Stdlib.List.map(unify_selection(error_marker, config, ty), item),
       type_name: existing_record,
       interface_fragments: None,
     })
@@ -803,11 +810,12 @@ let unify_operation = (error_marker, config) =>
 let getFragmentArgumentDefinitions =
     (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
   switch (
-    directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
+    directives
+    |> Stdlib.List.find(d => {d.item.d_name.item == "argumentDefinitions"})
   ) {
   | {item: {d_arguments: Some(arguments), _}, _} =>
     arguments.item
-    |> List.fold_left(
+    |> Stdlib.List.fold_left(
          acc =>
            fun
            | (
@@ -816,7 +824,7 @@ let getFragmentArgumentDefinitions =
              ) => {
                let type_ =
                  values
-                 |> List.fold_left(
+                 |> Stdlib.List.fold_left(
                       acc =>
                         fun
                         | ({item: "type", _}, {item: Iv_string(type_), _}) =>
