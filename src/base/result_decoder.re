@@ -240,7 +240,7 @@ and unify_interface =
       switch (if_type_condition) {
       | Some(if_type_condition) =>
         let {item, _} = if_selection_set;
-        let selection = List.append(base_selection_set, item);
+        let selection = item;
         let ty =
           switch (lookup_type(config.schema, if_type_condition.item)) {
           | Some(ty) => ty

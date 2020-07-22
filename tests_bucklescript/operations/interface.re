@@ -22,6 +22,19 @@ module QueryWithOnlyFragments = [%graphql
   |}
 ];
 
+module QueryWithTypename = [%graphql
+  {|
+    query {
+      users {
+        ... on AdminUser {
+          __typename
+          id
+        }
+      }
+    }
+  |}
+];
+
 module QueryWithMixedFragments = [%graphql
   {|
     query {
@@ -36,6 +49,21 @@ module QueryWithMixedFragments = [%graphql
       }
     }
    |}
+];
+
+module MixedQueryWithTypename = [%graphql
+  {|
+    query {
+      users {
+        id
+        __typename
+        ... on AdminUser {
+          __typename
+          id
+        }
+      }
+    }
+  |}
 ];
 
 module QueryWithoutFragments = [%graphql

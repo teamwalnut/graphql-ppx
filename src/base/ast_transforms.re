@@ -172,7 +172,6 @@ let rec do_add_typename_to_selection_set = (parent, schema, ty, selection_set) =
 let rec do_remove_typename_from_union = (_parent, schema, ty, selection_set) => {
   let selection_set =
     switch (ty) {
-    | Schema.Interface(_)
     | Schema.Union(_) =>
       Graphql_ast.(
         selection_set

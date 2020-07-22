@@ -31,6 +31,16 @@ module OneFieldQuery = [%graphql
   }
 |}
 ];
+module OneFieldQueryWithTypename = [%graphql
+  {|
+  {
+    variousScalars {
+      __typename
+      nullableString
+    }
+  }
+|}
+];
 module ExternalFragmentQuery = [%graphql
   {|
   fragment Fragment on VariousScalars @bsRecord {

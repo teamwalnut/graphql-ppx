@@ -111,60 +111,26 @@ var OneFieldQuery = {
 
 var Raw$2 = {};
 
-var query = \"fragment Fragment on VariousScalars   {\\nstring  \\nint  \\n}\\n\";
-
 function parse$2(value) {
+  var value$1 = value.variousScalars;
+  var value$2 = value$1.nullableString;
   return {
-          string: value.string,
-          int: value.int
+          variousScalars: {
+            __typename: value$1.__typename,
+            nullableString: !(value$2 == null) ? value$2 : undefined
+          }
         };
-}
-
-function verifyArgsAndParse(_Fragment, value) {
-  return parse$2(value);
 }
 
 function serialize$2(value) {
-  var value$1 = value.int;
-  var value$2 = value.string;
-  return {
-          string: value$2,
-          int: value$1
-        };
-}
-
-function verifyName(param) {
-  
-}
-
-var Z__INTERNAL$2 = {
-  graphql: 0,
-  graphql_module: 0
-};
-
-var Fragment = {
-  Raw: Raw$2,
-  query: query,
-  parse: parse$2,
-  verifyArgsAndParse: verifyArgsAndParse,
-  serialize: serialize$2,
-  verifyName: verifyName,
-  Z__INTERNAL: Z__INTERNAL$2
-};
-
-var Raw$3 = {};
-
-var query$1 = \"query   {\\nvariousScalars  {\\n...Fragment   \\n}\\n\\n}\\nfragment Fragment on VariousScalars   {\\nstring  \\nint  \\n}\\n\";
-
-function parse$3(value) {
-  return {
-          variousScalars: parse$2(value.variousScalars)
-        };
-}
-
-function serialize$3(value) {
   var value$1 = value.variousScalars;
-  var variousScalars = serialize$2(value$1);
+  var value$2 = value$1.nullableString;
+  var nullableString = value$2 !== undefined ? value$2 : null;
+  var value$3 = value$1.__typename;
+  var variousScalars = {
+    __typename: value$3,
+    nullableString: nullableString
+  };
   return {
           variousScalars: variousScalars
         };
@@ -182,64 +148,79 @@ function makeDefaultVariables$2(param) {
   
 }
 
-var Z__INTERNAL$3 = {
+var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var Untitled1 = {
-  Raw: Raw$3,
-  query: query$1,
-  parse: parse$3,
-  serialize: serialize$3,
+var OneFieldQueryWithTypename = {
+  Raw: Raw$2,
+  query: \"query   {\\nvariousScalars  {\\n__typename  \\nnullableString  \\n}\\n\\n}\\n\",
+  parse: parse$2,
+  serialize: serialize$2,
   serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
   makeDefaultVariables: makeDefaultVariables$2,
-  Z__INTERNAL: Z__INTERNAL$3
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
-var ExternalFragmentQuery = {
-  Fragment: Fragment,
-  Untitled1: Untitled1
+var Raw$3 = {};
+
+var query = \"fragment Fragment on VariousScalars   {\\nstring  \\nint  \\n}\\n\";
+
+function parse$3(value) {
+  return {
+          string: value.string,
+          int: value.int
+        };
+}
+
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$3(value);
+}
+
+function serialize$3(value) {
+  var value$1 = value.int;
+  var value$2 = value.string;
+  return {
+          string: value$2,
+          int: value$1
+        };
+}
+
+function verifyName(param) {
+  
+}
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var Fragment = {
+  Raw: Raw$3,
+  query: query,
+  parse: parse$3,
+  verifyArgsAndParse: verifyArgsAndParse,
+  serialize: serialize$3,
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = {};
 
+var query$1 = \"query   {\\nvariousScalars  {\\n...Fragment   \\n}\\n\\n}\\nfragment Fragment on VariousScalars   {\\nstring  \\nint  \\n}\\n\";
+
 function parse$4(value) {
-  var value$1 = value.dogOrHuman;
-  var typename = value$1[\"__typename\"];
-  var tmp = typename === \"Dog\" ? ({
-        HASH: /* Dog */3406428,
-        VAL: {
-          __typename: value$1.__typename,
-          name: value$1.name,
-          barkVolume: value$1.barkVolume
-        }
-      }) : ({
-        HASH: /* FutureAddedValue */-31101740,
-        VAL: value$1
-      });
   return {
-          dogOrHuman: tmp
+          variousScalars: parse$3(value.variousScalars)
         };
 }
 
 function serialize$4(value) {
-  var value$1 = value.dogOrHuman;
-  var dogOrHuman;
-  if (value$1.HASH >= 3406428) {
-    var value$2 = value$1.VAL;
-    var value$3 = value$2.barkVolume;
-    var value$4 = value$2.name;
-    dogOrHuman = {
-      __typename: \"Dog\",
-      name: value$4,
-      barkVolume: value$3
-    };
-  } else {
-    dogOrHuman = value$1.VAL;
-  }
+  var value$1 = value.variousScalars;
+  var variousScalars = serialize$3(value$1);
   return {
-          dogOrHuman: dogOrHuman
+          variousScalars: variousScalars
         };
 }
 
@@ -259,9 +240,9 @@ var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
-var InlineFragmentQuery = {
+var Untitled1 = {
   Raw: Raw$4,
-  query: \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\n}\\n\\n}\\n\",
+  query: query$1,
   parse: parse$4,
   serialize: serialize$4,
   serializeVariables: serializeVariables$3,
@@ -270,62 +251,23 @@ var InlineFragmentQuery = {
   Z__INTERNAL: Z__INTERNAL$4
 };
 
+var ExternalFragmentQuery = {
+  Fragment: Fragment,
+  Untitled1: Untitled1
+};
+
 var Raw$5 = {};
 
-var query$2 = \"fragment DogFragment on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\";
-
 function parse$5(value) {
-  return {
-          __typename: value.__typename,
-          name: value.name,
-          barkVolume: value.barkVolume
-        };
-}
-
-function verifyArgsAndParse$1(_DogFragment, value) {
-  return parse$5(value);
-}
-
-function serialize$5(value) {
-  var value$1 = value.barkVolume;
-  var value$2 = value.name;
-  var value$3 = value.__typename;
-  return {
-          __typename: value$3,
-          name: value$2,
-          barkVolume: value$1
-        };
-}
-
-function verifyName$1(param) {
-  
-}
-
-var Z__INTERNAL$5 = {
-  graphql: 0,
-  graphql_module: 0
-};
-
-var DogFragment = {
-  Raw: Raw$5,
-  query: query$2,
-  parse: parse$5,
-  verifyArgsAndParse: verifyArgsAndParse$1,
-  serialize: serialize$5,
-  verifyName: verifyName$1,
-  Z__INTERNAL: Z__INTERNAL$5
-};
-
-var Raw$6 = {};
-
-var query$3 = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n...DogFragment   \\n}\\n\\n}\\n\\n}\\nfragment DogFragment on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\";
-
-function parse$6(value) {
   var value$1 = value.dogOrHuman;
   var typename = value$1[\"__typename\"];
   var tmp = typename === \"Dog\" ? ({
         HASH: /* Dog */3406428,
-        VAL: parse$5(value$1)
+        VAL: {
+          __typename: value$1.__typename,
+          name: value$1.name,
+          barkVolume: value$1.barkVolume
+        }
       }) : ({
         HASH: /* FutureAddedValue */-31101740,
         VAL: value$1
@@ -335,9 +277,21 @@ function parse$6(value) {
         };
 }
 
-function serialize$6(value) {
+function serialize$5(value) {
   var value$1 = value.dogOrHuman;
-  var dogOrHuman = value$1.HASH >= 3406428 ? serialize$5(value$1.VAL) : value$1.VAL;
+  var dogOrHuman;
+  if (value$1.HASH >= 3406428) {
+    var value$2 = value$1.VAL;
+    var value$3 = value$2.barkVolume;
+    var value$4 = value$2.name;
+    dogOrHuman = {
+      __typename: \"Dog\",
+      name: value$4,
+      barkVolume: value$3
+    };
+  } else {
+    dogOrHuman = value$1.VAL;
+  }
   return {
           dogOrHuman: dogOrHuman
         };
@@ -355,19 +309,119 @@ function makeDefaultVariables$4(param) {
   
 }
 
+var Z__INTERNAL$5 = {
+  graphql_module: 0
+};
+
+var InlineFragmentQuery = {
+  Raw: Raw$5,
+  query: \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\n}\\n\\n}\\n\",
+  parse: parse$5,
+  serialize: serialize$5,
+  serializeVariables: serializeVariables$4,
+  makeVariables: makeVariables$4,
+  makeDefaultVariables: makeDefaultVariables$4,
+  Z__INTERNAL: Z__INTERNAL$5
+};
+
+var Raw$6 = {};
+
+var query$2 = \"fragment DogFragment on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\";
+
+function parse$6(value) {
+  return {
+          __typename: value.__typename,
+          name: value.name,
+          barkVolume: value.barkVolume
+        };
+}
+
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$6(value);
+}
+
+function serialize$6(value) {
+  var value$1 = value.barkVolume;
+  var value$2 = value.name;
+  var value$3 = value.__typename;
+  return {
+          __typename: value$3,
+          name: value$2,
+          barkVolume: value$1
+        };
+}
+
+function verifyName$1(param) {
+  
+}
+
 var Z__INTERNAL$6 = {
+  graphql: 0,
+  graphql_module: 0
+};
+
+var DogFragment = {
+  Raw: Raw$6,
+  query: query$2,
+  parse: parse$6,
+  verifyArgsAndParse: verifyArgsAndParse$1,
+  serialize: serialize$6,
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$6
+};
+
+var Raw$7 = {};
+
+var query$3 = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n...DogFragment   \\n}\\n\\n}\\n\\n}\\nfragment DogFragment on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\";
+
+function parse$7(value) {
+  var value$1 = value.dogOrHuman;
+  var typename = value$1[\"__typename\"];
+  var tmp = typename === \"Dog\" ? ({
+        HASH: /* Dog */3406428,
+        VAL: parse$6(value$1)
+      }) : ({
+        HASH: /* FutureAddedValue */-31101740,
+        VAL: value$1
+      });
+  return {
+          dogOrHuman: tmp
+        };
+}
+
+function serialize$7(value) {
+  var value$1 = value.dogOrHuman;
+  var dogOrHuman = value$1.HASH >= 3406428 ? serialize$6(value$1.VAL) : value$1.VAL;
+  return {
+          dogOrHuman: dogOrHuman
+        };
+}
+
+function serializeVariables$5(param) {
+  
+}
+
+function makeVariables$5(param) {
+  
+}
+
+function makeDefaultVariables$5(param) {
+  
+}
+
+var Z__INTERNAL$7 = {
   graphql_module: 0
 };
 
 var Untitled1$1 = {
-  Raw: Raw$6,
+  Raw: Raw$7,
   query: query$3,
-  parse: parse$6,
-  serialize: serialize$6,
-  serializeVariables: serializeVariables$4,
-  makeVariables: makeVariables$4,
-  makeDefaultVariables: makeDefaultVariables$4,
-  Z__INTERNAL: Z__INTERNAL$6
+  parse: parse$7,
+  serialize: serialize$7,
+  serializeVariables: serializeVariables$5,
+  makeVariables: makeVariables$5,
+  makeDefaultVariables: makeDefaultVariables$5,
+  Z__INTERNAL: Z__INTERNAL$7
 };
 
 var UnionExternalFragmentQuery = {
@@ -377,6 +431,7 @@ var UnionExternalFragmentQuery = {
 
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery = OneFieldQuery;
+exports.OneFieldQueryWithTypename = OneFieldQueryWithTypename;
 exports.ExternalFragmentQuery = ExternalFragmentQuery;
 exports.InlineFragmentQuery = InlineFragmentQuery;
 exports.UnionExternalFragmentQuery = UnionExternalFragmentQuery;

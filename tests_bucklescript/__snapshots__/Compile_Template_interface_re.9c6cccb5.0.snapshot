@@ -125,12 +125,9 @@ var query$1 = (require(\"gql\")`
   query   {
     users  {
       __typename
-      id
       ...on AdminUser   {
-        name
-      }
-      ...on AnonymousUser   {
-        anonymousId
+        __typename
+        id
       }
     }
   }
@@ -141,36 +138,20 @@ function parse$1(value) {
   return {
           users: value$1.map(function (value) {
                 var typename = value[\"__typename\"];
-                var tmp;
-                switch (typename) {
-                  case \"AdminUser\" :
-                      tmp = {
-                        HASH: /* AdminUser */632766042,
-                        VAL: {
-                          id: value.id,
-                          name: value.name
-                        }
-                      };
-                      break;
-                  case \"AnonymousUser\" :
-                      tmp = {
-                        HASH: /* AnonymousUser */-1001300680,
-                        VAL: {
-                          id: value.id,
-                          anonymousId: value.anonymousId
-                        }
-                      };
-                      break;
-                  default:
-                    tmp = {
-                      HASH: /* UnspecifiedFragment */300385927,
-                      VAL: typename
-                    };
+                if (typename === \"AdminUser\") {
+                  return {
+                          HASH: /* AdminUser */632766042,
+                          VAL: {
+                            __typename: value.__typename,
+                            id: value.id
+                          }
+                        };
+                } else {
+                  return {
+                          HASH: /* UnspecifiedFragment */300385927,
+                          VAL: typename
+                        };
                 }
-                return {
-                        fragment: tmp,
-                        id: value[\"id\"]
-                      };
               })
         };
 }
@@ -178,35 +159,14 @@ function parse$1(value) {
 function serialize$1(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        var value$1 = value.fragment;
-        var variant = value$1.HASH;
-        var tmp;
-        if (variant !== 300385927) {
-          if (variant >= 632766042) {
-            var value$2 = value$1.VAL;
-            var value$3 = value$2.name;
-            var value$4 = value$2.id;
-            tmp = {
-              __typename: \"AdminUser\",
-              id: value$4,
-              name: value$3
-            };
-          } else {
-            var value$5 = value$1.VAL;
-            var value$6 = value$5.anonymousId;
-            var value$7 = value$5.id;
-            tmp = {
-              __typename: \"AnonymousUser\",
-              id: value$7,
-              anonymousId: value$6
-            };
-          }
-        } else {
-          tmp = {};
+        if (value.HASH < 632766042) {
+          return {};
         }
-        return [tmp].reduce(deepMerge, {
-                    id: value.id
-                  });
+        var value$1 = value.VAL.id;
+        return {
+                __typename: \"AdminUser\",
+                id: value$1
+              };
       });
   return {
           users: users
@@ -229,7 +189,7 @@ var Z__INTERNAL$1 = {
   graphql_module: 0
 };
 
-var QueryWithMixedFragments = {
+var QueryWithTypename = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
@@ -247,6 +207,12 @@ var query$2 = (require(\"gql\")`
     users  {
       __typename
       id
+      ...on AdminUser   {
+        name
+      }
+      ...on AnonymousUser   {
+        anonymousId
+      }
     }
   }
 `);
@@ -255,8 +221,34 @@ function parse$2(value) {
   var value$1 = value.users;
   return {
           users: value$1.map(function (value) {
+                var typename = value[\"__typename\"];
+                var tmp;
+                switch (typename) {
+                  case \"AdminUser\" :
+                      tmp = {
+                        HASH: /* AdminUser */632766042,
+                        VAL: {
+                          name: value.name
+                        }
+                      };
+                      break;
+                  case \"AnonymousUser\" :
+                      tmp = {
+                        HASH: /* AnonymousUser */-1001300680,
+                        VAL: {
+                          anonymousId: value.anonymousId
+                        }
+                      };
+                      break;
+                  default:
+                    tmp = {
+                      HASH: /* UnspecifiedFragment */300385927,
+                      VAL: typename
+                    };
+                }
                 return {
-                        id: value.id
+                        fragment: tmp,
+                        id: value[\"id\"]
                       };
               })
         };
@@ -265,10 +257,29 @@ function parse$2(value) {
 function serialize$2(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        var value$1 = value.id;
-        return {
-                id: value$1
-              };
+        var value$1 = value.fragment;
+        var variant = value$1.HASH;
+        var tmp;
+        if (variant !== 300385927) {
+          if (variant >= 632766042) {
+            var value$2 = value$1.VAL.name;
+            tmp = {
+              __typename: \"AdminUser\",
+              name: value$2
+            };
+          } else {
+            var value$3 = value$1.VAL.anonymousId;
+            tmp = {
+              __typename: \"AnonymousUser\",
+              anonymousId: value$3
+            };
+          }
+        } else {
+          tmp = {};
+        }
+        return [tmp].reduce(deepMerge, {
+                    id: value.id
+                  });
       });
   return {
           users: users
@@ -291,7 +302,7 @@ var Z__INTERNAL$2 = {
   graphql_module: 0
 };
 
-var QueryWithoutFragments = {
+var QueryWithMixedFragments = {
   Raw: Raw$2,
   query: query$2,
   parse: parse$2,
@@ -302,9 +313,166 @@ var QueryWithoutFragments = {
   Z__INTERNAL: Z__INTERNAL$2
 };
 
+var Raw$3 = {};
+
+var query$3 = (require(\"gql\")`
+  query   {
+    users  {
+      __typename
+      id
+      __typename
+      ...on AdminUser   {
+        __typename
+        id
+      }
+    }
+  }
+`);
+
+function parse$3(value) {
+  var value$1 = value.users;
+  return {
+          users: value$1.map(function (value) {
+                var typename = value[\"__typename\"];
+                var tmp = typename === \"AdminUser\" ? ({
+                      HASH: /* AdminUser */632766042,
+                      VAL: {
+                        __typename: value.__typename,
+                        id: value.id
+                      }
+                    }) : ({
+                      HASH: /* UnspecifiedFragment */300385927,
+                      VAL: typename
+                    });
+                return {
+                        fragment: tmp,
+                        __typename: value[\"__typename\"],
+                        id: value[\"id\"]
+                      };
+              })
+        };
+}
+
+function serialize$3(value) {
+  var value$1 = value.users;
+  var users = value$1.map(function (value) {
+        var value$1 = value.id;
+        var value$2 = value.__typename;
+        var value$3 = value.fragment;
+        var tmp;
+        if (value$3.HASH >= 632766042) {
+          var value$4 = value$3.VAL.id;
+          tmp = {
+            __typename: \"AdminUser\",
+            id: value$4
+          };
+        } else {
+          tmp = {};
+        }
+        return [tmp].reduce(deepMerge, {
+                    __typename: value$2,
+                    id: value$1
+                  });
+      });
+  return {
+          users: users
+        };
+}
+
+function serializeVariables$3(param) {
+  
+}
+
+function makeVariables$3(param) {
+  
+}
+
+function makeDefaultVariables$3(param) {
+  
+}
+
+var Z__INTERNAL$3 = {
+  graphql_module: 0
+};
+
+var MixedQueryWithTypename = {
+  Raw: Raw$3,
+  query: query$3,
+  parse: parse$3,
+  serialize: serialize$3,
+  serializeVariables: serializeVariables$3,
+  makeVariables: makeVariables$3,
+  makeDefaultVariables: makeDefaultVariables$3,
+  Z__INTERNAL: Z__INTERNAL$3
+};
+
+var Raw$4 = {};
+
+var query$4 = (require(\"gql\")`
+  query   {
+    users  {
+      __typename
+      id
+    }
+  }
+`);
+
+function parse$4(value) {
+  var value$1 = value.users;
+  return {
+          users: value$1.map(function (value) {
+                return {
+                        id: value.id
+                      };
+              })
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.users;
+  var users = value$1.map(function (value) {
+        var value$1 = value.id;
+        return {
+                id: value$1
+              };
+      });
+  return {
+          users: users
+        };
+}
+
+function serializeVariables$4(param) {
+  
+}
+
+function makeVariables$4(param) {
+  
+}
+
+function makeDefaultVariables$4(param) {
+  
+}
+
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
+var QueryWithoutFragments = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  serializeVariables: serializeVariables$4,
+  makeVariables: makeVariables$4,
+  makeDefaultVariables: makeDefaultVariables$4,
+  Z__INTERNAL: Z__INTERNAL$4
+};
+
 exports.GraphQL_PPX = GraphQL_PPX;
 exports.QueryWithOnlyFragments = QueryWithOnlyFragments;
+exports.QueryWithTypename = QueryWithTypename;
 exports.QueryWithMixedFragments = QueryWithMixedFragments;
+exports.MixedQueryWithTypename = MixedQueryWithTypename;
 exports.QueryWithoutFragments = QueryWithoutFragments;
 /* query Not a pure module */
 
