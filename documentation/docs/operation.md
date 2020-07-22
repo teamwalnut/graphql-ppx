@@ -14,7 +14,7 @@ module type Operation = {
     type t_variables;
   };
   type t_variables;
-  let makeVariables: (~exampleVariable: string, unit) => Raw.t_variables;
+  let makeVariables: (~exampleVariable: string, unit) => t_variables;
   let serializeVariables: t_variables => Raw.t_variables;
 }
 ```

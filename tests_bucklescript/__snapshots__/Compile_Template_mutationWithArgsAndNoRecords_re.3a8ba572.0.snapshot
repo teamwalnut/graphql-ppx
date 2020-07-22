@@ -30,9 +30,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(required, param) {
-  return serializeVariables({
-              required: required
-            });
+  return {
+          required: required
+        };
 }
 
 var Z__INTERNAL = {

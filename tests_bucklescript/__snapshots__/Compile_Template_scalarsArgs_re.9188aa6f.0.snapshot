@@ -45,18 +45,18 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
-  return serializeVariables({
-              nullableString: nullableString,
-              string: string,
-              nullableInt: nullableInt,
-              int: $$int,
-              nullableFloat: nullableFloat,
-              float: $$float,
-              nullableBoolean: nullableBoolean,
-              boolean: $$boolean,
-              nullableID: nullableID,
-              id: id
-            });
+  return {
+          nullableString: nullableString,
+          string: string,
+          nullableInt: nullableInt,
+          int: $$int,
+          nullableFloat: nullableFloat,
+          float: $$float,
+          nullableBoolean: nullableBoolean,
+          boolean: $$boolean,
+          nullableID: nullableID,
+          id: id
+        };
 }
 
 var Z__INTERNAL = {

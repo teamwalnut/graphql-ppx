@@ -127,8 +127,7 @@ module MyQuery = {
           inp##nonNullableOfNonNullable,
         ),
     };
-  let makeVariables = (~arg, ()) =>
-    serializeVariables({\"arg\": arg}: t_variables)
+  let makeVariables = (~arg, ()): t_variables => {\"arg\": arg}
   and makeInputObjectListsInput =
       (
         ~nullableOfNullable=?,

@@ -51,17 +51,17 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(id, name, param) {
-  return serializeVariables({
-              id: id,
-              name: name
-            });
+  return {
+          id: id,
+          name: name
+        };
 }
 
 function makeDefaultVariables(param) {
-  return serializeVariables({
-              id: undefined,
-              name: undefined
-            });
+  return {
+          id: undefined,
+          name: undefined
+        };
 }
 
 var Z__INTERNAL = {

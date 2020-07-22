@@ -199,8 +199,7 @@ module MyQuery = {
           (inp: t_variables_EmbeddedInput).field,
         ),
     };
-  let makeVariables = (~arg, ()) =>
-    serializeVariables({arg: arg}: t_variables)
+  let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectNonrecursiveInput =
       (
         ~nonNullableField,
@@ -513,8 +512,7 @@ module MyQuery2 = {
           (inp: t_variables_EmbeddedInput).field,
         ),
     };
-  let makeVariables = (~arg, ~arg2, ()) =>
-    serializeVariables({arg, arg2}: t_variables)
+  let makeVariables = (~arg, ~arg2, ()): t_variables => {arg, arg2}
   and makeInputObjectNonrecursiveInput =
       (
         ~nonNullableField,

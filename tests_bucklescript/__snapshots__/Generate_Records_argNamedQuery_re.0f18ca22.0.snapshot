@@ -48,8 +48,7 @@ module MyQuery = {
   );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {query: (a => a)((inp: t_variables).query)};
-  let makeVariables = (~query, ()) =>
-    serializeVariables({query: query}: t_variables);
+  let makeVariables = (~query, ()): t_variables => {query: query};
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
@@ -140,8 +139,7 @@ module MultipleQueryWithSameVarName = {
     );
     let serializeVariables: t_variables => Raw.t_variables =
       inp => {query: (a => a)((inp: t_variables).query)};
-    let makeVariables = (~query, ()) =>
-      serializeVariables({query: query}: t_variables);
+    let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
@@ -238,8 +236,7 @@ module MultipleQueryWithSameVarName {
     );
     let serializeVariables: t_variables => Raw.t_variables =
       inp => {query: (a => a)((inp: t_variables).query)};
-    let makeVariables = (~query, ()) =>
-      serializeVariables({query: query}: t_variables);
+    let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";

@@ -62,9 +62,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables($$var, param) {
-  return serializeVariables({
-              var: $$var
-            });
+  return {
+          var: $$var
+        };
 }
 
 var Z__INTERNAL = {

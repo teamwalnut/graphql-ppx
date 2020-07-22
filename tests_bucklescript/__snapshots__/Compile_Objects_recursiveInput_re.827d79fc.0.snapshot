@@ -40,9 +40,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(arg, param) {
-  return serializeVariables({
-              arg: arg
-            });
+  return {
+          arg: arg
+        };
 }
 
 function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {

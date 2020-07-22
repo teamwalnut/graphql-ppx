@@ -112,8 +112,7 @@ module MyQuery = {
           (inp: t_variables_RecursiveInput).enum,
         ),
     };
-  let makeVariables = (~arg, ()) =>
-    serializeVariables({arg: arg}: t_variables)
+  let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
     otherField,

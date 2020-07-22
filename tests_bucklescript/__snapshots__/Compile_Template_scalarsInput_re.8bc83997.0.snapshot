@@ -52,7 +52,7 @@ function serializeVariables(inp) {
 
 function makeVariables(arg, param) {
   return {
-          arg: serializeInputObjectVariousScalarsInput(arg)
+          arg: arg
         };
 }
 

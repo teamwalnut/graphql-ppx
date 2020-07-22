@@ -130,15 +130,13 @@ module MyQuery = {
         ~nonNullableOfNullable,
         ~nonNullableOfNonNullable,
         (),
-      ) =>
-    serializeVariables(
-      {
-        nullableOfNullable,
-        nullableOfNonNullable,
-        nonNullableOfNullable,
-        nonNullableOfNonNullable,
-      }: t_variables,
-    );
+      )
+      : t_variables => {
+    nullableOfNullable,
+    nullableOfNonNullable,
+    nonNullableOfNullable,
+    nonNullableOfNonNullable,
+  };
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";

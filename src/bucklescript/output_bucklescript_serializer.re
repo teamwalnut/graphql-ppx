@@ -232,10 +232,6 @@ let generate_serialize_variables =
   *
   * This also helps if you don't want the build to break if a optional variable
   * is added.
-  *
-  * The makeVariables (root) yields Js.Json.t, the input types will yield
-  * unserialized contents, but if you use them inside of the makeVariables
-  * function, the end-result will be serialized.
  */
 let generate_variable_constructors =
     (config, arg_type_defs: list(arg_type_def)) => {
@@ -315,22 +311,8 @@ let generate_variable_constructors =
 
                switch (name) {
                | None =>
-                 let make_variables_body =
-                   Ast_helper.(
-                     make_labeled_fun(
-                       Exp.apply(
-                         Exp.ident({
-                           Location.txt:
-                             Longident.Lident("serializeVariables"),
-                           loc: conv_loc(loc),
-                         }),
-                         [(Nolabel, body)],
-                       ),
-                       fields,
-                     )
-                   );
+                 let make_variables_body = make_labeled_fun(body, fields);
                  [(name, loc, make_variables_body)];
-
                | Some(_) => [(name, loc, make_labeled_fun(body, fields))]
                };
              })

@@ -52,9 +52,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(arg, param) {
-  return serializeVariables({
-              arg: arg
-            });
+  return {
+          arg: arg
+        };
 }
 
 function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
