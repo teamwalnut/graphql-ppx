@@ -171,6 +171,7 @@ let rec unify_type =
         im,
         ty,
         selection_set,
+        existing_record,
       )
     | Some(InputObject(_)) =>
       make_error(
@@ -199,6 +200,7 @@ and unify_interface =
       interface_meta,
       ty,
       selection_set,
+      existing_record,
     ) =>
   switch (selection_set) {
   | None =>
@@ -235,6 +237,7 @@ and unify_interface =
         interface_fragments: None,
       }),
     );
+
     let generate_fragment_case =
         ({item: {if_type_condition, if_selection_set, _}, _}) =>
       switch (if_type_condition) {
@@ -271,7 +274,7 @@ and unify_interface =
             unify_selection(error_marker, config, ty),
             base_selection_set,
           ),
-        type_name: None,
+        type_name: existing_record,
         interface_fragments: Some((interface_meta.im_name, fragment_cases)),
       })
     };
