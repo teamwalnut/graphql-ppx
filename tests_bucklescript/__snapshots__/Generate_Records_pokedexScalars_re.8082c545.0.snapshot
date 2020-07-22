@@ -120,8 +120,7 @@ module MyQuery = {
           (inp: t_variables).name,
         ),
     };
-  let makeVariables = (~id=?, ~name=?, ()) =>
-    serializeVariables({id, name}: t_variables);
+  let makeVariables = (~id=?, ~name=?, ()): t_variables => {id, name};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";

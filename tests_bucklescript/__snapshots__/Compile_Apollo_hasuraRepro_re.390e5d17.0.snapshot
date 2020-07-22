@@ -74,17 +74,17 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(blockNumber, type_, param) {
-  return serializeVariables({
-              blockNumber: blockNumber,
-              type: type_
-            });
+  return {
+          blockNumber: blockNumber,
+          type: type_
+        };
 }
 
 function makeDefaultVariables(param) {
-  return serializeVariables({
-              blockNumber: undefined,
-              type: undefined
-            });
+  return {
+          blockNumber: undefined,
+          type: undefined
+        };
 }
 
 var Z__INTERNAL$1 = {
@@ -104,12 +104,7 @@ var HasuraRepro = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
-serializeVariables({
-      blockNumber: 1,
-      type: \"1\"
-    });
-
 exports.Dog = Dog;
 exports.HasuraRepro = HasuraRepro;
-/*  Not a pure module */
+/* No side effect */
 

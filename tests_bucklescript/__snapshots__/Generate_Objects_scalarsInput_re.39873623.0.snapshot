@@ -132,8 +132,7 @@ module MyQuery = {
         ),
       \"id\": (a => a)(inp##id),
     };
-  let makeVariables = (~arg, ()) =>
-    serializeVariables({\"arg\": arg}: t_variables)
+  let makeVariables = (~arg, ()): t_variables => {\"arg\": arg}
   and makeInputObjectVariousScalarsInput =
       (
         ~nullableString=?,

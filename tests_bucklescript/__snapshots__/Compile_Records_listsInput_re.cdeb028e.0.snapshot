@@ -54,7 +54,7 @@ function serializeVariables(inp) {
 
 function makeVariables(arg, param) {
   return {
-          arg: serializeInputObjectListsInput(arg)
+          arg: arg
         };
 }
 

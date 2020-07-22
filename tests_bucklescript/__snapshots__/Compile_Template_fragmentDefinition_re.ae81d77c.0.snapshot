@@ -370,15 +370,15 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(arg1, param) {
-  return serializeVariables({
-              arg1: arg1
-            });
+  return {
+          arg1: arg1
+        };
 }
 
 function makeDefaultVariables(param) {
-  return serializeVariables({
-              arg1: undefined
-            });
+  return {
+          arg1: undefined
+        };
 }
 
 var Z__INTERNAL$4 = {

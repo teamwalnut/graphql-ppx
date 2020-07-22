@@ -24,9 +24,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(query, param) {
-  return serializeVariables({
-              query: query
-            });
+  return {
+          query: query
+        };
 }
 
 var Z__INTERNAL = {
@@ -64,9 +64,9 @@ function serializeVariables$1(inp) {
 }
 
 function makeVariables$1(query, param) {
-  return serializeVariables$1({
-              query: query
-            });
+  return {
+          query: query
+        };
 }
 
 var Z__INTERNAL$1 = {
@@ -104,9 +104,9 @@ function serializeVariables$2(inp) {
 }
 
 function makeVariables$2(query, param) {
-  return serializeVariables$2({
-              query: query
-            });
+  return {
+          query: query
+        };
 }
 
 var Z__INTERNAL$2 = {

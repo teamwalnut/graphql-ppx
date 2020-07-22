@@ -150,8 +150,7 @@ module MyQuery = {
   );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {var: (a => a)((inp: t_variables).var)};
-  let makeVariables = (~var, ()) =>
-    serializeVariables({var: var}: t_variables);
+  let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";

@@ -71,7 +71,7 @@ function serializeVariables(inp) {
 
 function makeVariables(arg, param) {
   return {
-          arg: serializeInputObjectNonrecursiveInput(arg)
+          arg: arg
         };
 }
 

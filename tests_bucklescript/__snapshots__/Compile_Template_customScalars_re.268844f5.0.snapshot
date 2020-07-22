@@ -49,10 +49,10 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(opt, req, param) {
-  return serializeVariables({
-              opt: opt,
-              req: req
-            });
+  return {
+          opt: opt,
+          req: req
+        };
 }
 
 var Z__INTERNAL = {

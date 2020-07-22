@@ -194,8 +194,7 @@ module MyQuery = {
           inp##field,
         ),
     };
-  let makeVariables = (~arg, ()) =>
-    serializeVariables({\"arg\": arg}: t_variables)
+  let makeVariables = (~arg, ()): t_variables => {\"arg\": arg}
   and makeInputObjectNonrecursiveInput =
       (
         ~nonNullableField,

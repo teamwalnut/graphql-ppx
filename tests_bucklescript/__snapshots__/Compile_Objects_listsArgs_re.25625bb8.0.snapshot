@@ -46,12 +46,12 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
-  return serializeVariables({
-              nullableOfNullable: nullableOfNullable,
-              nullableOfNonNullable: nullableOfNonNullable,
-              nonNullableOfNullable: nonNullableOfNullable,
-              nonNullableOfNonNullable: nonNullableOfNonNullable
-            });
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable,
+          nonNullableOfNullable: nonNullableOfNullable,
+          nonNullableOfNonNullable: nonNullableOfNonNullable
+        };
 }
 
 var Z__INTERNAL = {

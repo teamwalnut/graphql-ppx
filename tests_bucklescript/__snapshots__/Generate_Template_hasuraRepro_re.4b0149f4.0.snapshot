@@ -171,8 +171,10 @@ module HasuraRepro = {
           (inp: t_variables).type_,
         ),
     };
-  let makeVariables = (~blockNumber=?, ~type_=?, ()) =>
-    serializeVariables({blockNumber, type_}: t_variables);
+  let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {
+    blockNumber,
+    type_,
+  };
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";

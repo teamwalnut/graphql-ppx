@@ -63,9 +63,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(arg, param) {
-  return serializeVariables({
-              arg: arg
-            });
+  return {
+          arg: arg
+        };
 }
 
 function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, custom, param) {
@@ -169,10 +169,10 @@ function serializeVariables$1(inp) {
 }
 
 function makeVariables$1(arg, arg2, param) {
-  return serializeVariables$1({
-              arg: arg,
-              arg2: arg2
-            });
+  return {
+          arg: arg,
+          arg2: arg2
+        };
 }
 
 function makeInputObjectNonrecursiveInput$1(nonNullableField, nullableArray, field, $$enum, embeddedInput, custom, param) {

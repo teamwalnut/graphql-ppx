@@ -44,9 +44,9 @@ function serializeVariables(inp) {
 }
 
 function makeVariables(arg, param) {
-  return serializeVariables({
-              arg: arg
-            });
+  return {
+          arg: arg
+        };
 }
 
 function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
