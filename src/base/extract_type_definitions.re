@@ -34,6 +34,8 @@ and type_def =
       path,
       existing_type: option(string),
       fields: list(object_field),
+      interface_fragments:
+        option((string, list((string, Result_structure.t)))),
     })
   | VariantSelection({
       loc: Source_pos.ast_location,
@@ -47,10 +49,10 @@ and type_def =
       omit_future_value: bool,
     })
   | VariantInterface({
+      name: string,
       loc: Source_pos.ast_location,
       path,
-      base: (string, Result_structure.t),
-      fields: list((string, Result_structure.t)),
+      fragments: list((string, Result_structure.t)),
     })
   | Enum({
       loc: Source_pos.ast_location,
@@ -110,21 +112,48 @@ let generate_type_name = (~prefix="t") =>
 // definitions
 let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
   fun
-  | Res_nullable(_loc, inner) => extract(~path, ~raw, inner)
-  | Res_array(_loc, inner) => extract(~path, ~raw, inner)
-  | Res_object(loc, _name, fields, type_name) as result_structure
-  | Res_record(loc, _name, fields, type_name) as result_structure =>
+  | Res_nullable({inner}) => extract(~path, ~raw, inner)
+  | Res_array({inner}) => extract(~path, ~raw, inner)
+  | Res_object({loc, fields, type_name, interface_fragments}) as result_structure
+  | Res_record({loc, fields, type_name, interface_fragments}) as result_structure =>
     switch (result_structure, type_name, raw, fragment_def) {
     | (_, Some(_type_name), false, false) =>
       create_children(path, raw, fields)
     | (_, Some(_type_name), false, true) =>
-      create_object(path, raw, fields, true, loc, variant, type_name)
-    | (Res_record(_, _, _, _), _, false, _) =>
-      create_object(path, raw, fields, true, loc, variant, None)
+      create_object(
+        ~path,
+        ~raw,
+        ~force_record=true,
+        ~loc,
+        ~variant_parent=variant,
+        ~existing_type=type_name,
+        ~interface_fragments,
+        fields,
+      )
+    | (Res_record(_), _, false, _) =>
+      create_object(
+        ~path,
+        ~raw,
+        ~force_record=true,
+        ~loc,
+        ~variant_parent=variant,
+        ~existing_type=None,
+        ~interface_fragments,
+        fields,
+      )
     | (_, _, _, _) =>
-      create_object(path, raw, fields, false, loc, variant, None)
+      create_object(
+        ~path,
+        ~raw,
+        ~force_record=false,
+        ~loc,
+        ~variant_parent=variant,
+        ~existing_type=None,
+        ~interface_fragments,
+        fields,
+      )
     }
-  | Res_poly_variant_union(loc, _name, fragments, _, omit_future_value) => [
+  | Res_poly_variant_union({loc, fragments, omit_future_value}) => [
       VariantUnion({path, fields: fragments, loc, omit_future_value}),
       ...extract_fragments(
            fragments
@@ -135,7 +164,7 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
            raw,
          ),
     ]
-  | Res_poly_variant_selection_set(loc, _name, fragments) => [
+  | Res_poly_variant_selection_set({loc, fragments}) => [
       VariantSelection({path, fields: fragments, loc}),
       ...extract_fragments(
            fragments
@@ -146,20 +175,20 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
            raw,
          ),
     ]
-  | Res_poly_variant_interface(loc, _name, base, fragments) => [
-      VariantInterface({path, fields: fragments, base, loc}),
-      ...extract_fragments(fragments, path, raw),
+  | Res_poly_variant_interface({loc, name, fragments}) => [
+      VariantInterface({name, path, fragments, loc}),
+      ...extract_fragments(fragments, [name, ...path], raw),
     ]
-  | Res_custom_decoder(_loc, _ident, inner) => extract(~path, ~raw, inner)
-  | Res_solo_fragment_spread(_loc, _name, _) => []
-  | Res_error(_loc, _message) => []
-  | Res_id(_loc) => []
-  | Res_string(_loc) => []
-  | Res_int(_loc) => []
-  | Res_float(_loc) => []
-  | Res_boolean(_loc) => []
+  | Res_custom_decoder({inner}) => extract(~path, ~raw, inner)
+  | Res_solo_fragment_spread(_) => []
+  | Res_error(_) => []
+  | Res_id(_) => []
+  | Res_string(_) => []
+  | Res_int(_) => []
+  | Res_float(_) => []
+  | Res_boolean(_) => []
   | Res_raw_scalar(_) => []
-  | Res_poly_enum(loc, enum_meta, omit_future_value) => [
+  | Res_poly_enum({loc, enum_meta, omit_future_value}) => [
       Enum({
         path,
         fields: enum_meta.em_values |> List.map(({evm_name, _}) => evm_name),
@@ -186,38 +215,55 @@ and create_children = (path, raw, fields) => {
          fun
          | Fr_named_field({name, type_}) =>
            List.append(extract(~path=[name, ...path], ~raw, type_), acc)
-         | Fr_fragment_spread(_key, _loc, _name, _, _arguments) => acc,
+         | Fr_fragment_spread(_) => acc,
        [],
      );
 }
 and create_object =
-    (path, raw, fields, force_record, loc, variant_parent, existing_type) => {
+    (
+      ~path,
+      ~raw,
+      ~force_record,
+      ~loc,
+      ~variant_parent,
+      ~existing_type,
+      ~interface_fragments,
+      fields,
+    ) => {
+  let object_fields =
+    fields
+    |> List.map(
+         fun
+         | Fr_named_field({name, loc, loc_key, type_, arguments}) => {
+             Field({loc, loc_key, path: [name, ...path], type_, arguments});
+           }
+         | Fr_fragment_spread({key, loc: loc_key, name, type_name}) =>
+           Fragment({module_name: name, key, loc_key, type_name}),
+       );
+
   [
-    Object({
-      variant_parent,
-      loc,
-      force_record,
-      path,
-      existing_type,
-      fields:
-        fields
-        |> List.map(
-             fun
-             | Fr_named_field({name, loc, loc_key, type_, arguments}) => {
-                 Field({
-                   loc,
-                   loc_key,
-                   path: [name, ...path],
-                   type_,
-                   arguments,
-                 });
-               }
-             | Fr_fragment_spread(key, loc_key, name, type_name, _arguments) =>
-               Fragment({module_name: name, key, loc_key, type_name}),
-           ),
-    }),
-    ...create_children(path, raw, fields),
-  ];
+    [
+      Object({
+        variant_parent,
+        loc,
+        force_record,
+        path,
+        existing_type,
+        fields: object_fields,
+        interface_fragments,
+      }),
+    ],
+    create_children(path, raw, fields),
+    switch (interface_fragments) {
+    | Some((_, [])) => []
+    | Some((name, fragments)) => [
+        VariantInterface({name, loc, path, fragments}),
+        ...extract_fragments(fragments, [name, ...path], raw),
+      ]
+    | None => []
+    },
+  ]
+  |> List.concat;
 };
 
 let _raise_inconsistent_schema = (type_name, loc) =>

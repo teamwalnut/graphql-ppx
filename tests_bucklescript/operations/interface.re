@@ -1,26 +1,49 @@
-/* TODO: fix */
-/* module QueryWithFragments = [%graphql
-     {|
-      query {
-       users {
-         id
-         ... on AdminUser {
-           name
-         }
-         ... on AnonymousUser {
-           anonymousId
-         }
-       }
-     }
-   |}
-   ];
+module GraphQL_PPX = {
+  // mock
+  let deepMerge = (json1, _) => {
+    json1;
+  };
+};
 
-   module QueryWithoutFragments = [%graphql
-     {|
-      query {
-       users {
-         id
-       }
-     }
+module QueryWithOnlyFragments = [%graphql
+  {|
+    query {
+      users {
+        ... on AdminUser {
+          id
+          name
+        }
+        ... on AnonymousUser {
+          id
+          anonymousId
+        }
+      }
+    }
+  |}
+];
+
+module QueryWithMixedFragments = [%graphql
+  {|
+    query {
+      users {
+        id
+        ... on AdminUser {
+          name
+        }
+        ... on AnonymousUser {
+          anonymousId
+        }
+      }
+    }
    |}
-   ]; */
+];
+
+module QueryWithoutFragments = [%graphql
+  {|
+    query {
+      users {
+        id
+      }
+    }
+  |}
+];

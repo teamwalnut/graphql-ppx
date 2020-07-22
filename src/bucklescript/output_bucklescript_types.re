@@ -35,62 +35,63 @@ let base_type = (~inner=[], ~loc=?, name) => {
 };
 
 // generate the type definition, including nullables, arrays etc.
-let rec generate_type = (~atLoc=?, config, path, raw) =>
+let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
   fun
-  | Res_string(_loc) => base_type(~loc=?atLoc, "string")
-  | Res_nullable(_loc, inner) =>
+  | Res_string(_) => base_type(~loc=?atLoc, "string")
+  | Res_nullable({inner}) =>
     if (raw) {
       base_type(
-        ~inner=[generate_type(config, path, raw, inner)],
+        ~inner=[generate_type(~config, ~path, ~raw, inner)],
         "Js.Nullable.t",
       );
     } else {
       base_type(
         ~loc=?atLoc,
-        ~inner=[generate_type(config, path, raw, inner)],
+        ~inner=[generate_type(~config, ~path, ~raw, inner)],
         "option",
       );
     }
-  | Res_array(_loc, inner) =>
+  | Res_array({inner}) =>
     base_type(
       ~loc=?atLoc,
-      ~inner=[generate_type(config, path, raw, inner)],
+      ~inner=[generate_type(~config, ~path, ~raw, inner)],
       "array",
     )
-  | Res_custom_decoder(_loc, module_name, inner) =>
+  | Res_custom_decoder({ident: module_name, inner}) =>
     if (raw) {
-      generate_type(config, path, raw, inner);
+      generate_type(~config, ~path, ~raw, inner);
     } else {
       base_type(~loc=?atLoc, module_name ++ ".t");
     }
-  | Res_id(_loc) => base_type(~loc=?atLoc, "string")
-  | Res_int(_loc) => {
+  | Res_id(_) => base_type(~loc=?atLoc, "string")
+  | Res_int(_) => {
       base_type(~loc=?atLoc, "int");
     }
-  | Res_float(_loc) => base_type(~loc=?atLoc, "float")
-  | Res_boolean(_loc) => base_type(~loc=?atLoc, "bool")
-  | Res_raw_scalar(_loc) => base_type(~loc=?atLoc, "Js.Json.t")
-  | Res_object(_loc, _name, _fields, type_name)
-  | Res_record(_loc, _name, _fields, type_name) =>
+  | Res_float(_) => base_type(~loc=?atLoc, "float")
+  | Res_boolean(_) => base_type(~loc=?atLoc, "bool")
+  | Res_raw_scalar(_) => base_type(~loc=?atLoc, "Js.Json.t")
+  | Res_object({type_name})
+  | Res_record({type_name}) =>
     switch (type_name, raw) {
     | (Some(type_name), false) => base_type(~loc=?atLoc, type_name)
     | (_, _) => base_type(~loc=?atLoc, generate_type_name(path))
     }
-  | Res_poly_variant_selection_set(_loc, _name, _)
-  | Res_poly_variant_union(_loc, _name, _, _, _)
-  | Res_poly_variant_interface(_loc, _name, _, _) => {
+  | Res_poly_variant_selection_set(_)
+  | Res_poly_variant_union(_) => {
       base_type(~loc=?atLoc, generate_type_name(path));
     }
-  | Res_solo_fragment_spread(loc, module_name, _arguments) =>
+  | Res_poly_variant_interface({name}) => {
+      base_type(~loc=?atLoc, generate_type_name([name, ...path]));
+    }
+  | Res_solo_fragment_spread({loc, name: module_name}) =>
     if (raw) {
       base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t");
     } else {
       base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }
-  | Res_error(loc, error) =>
+  | Res_error({loc, message: error}) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
-  | Res_poly_enum(_loc, _enum_meta, _) =>
-    base_type(~loc=?atLoc, generate_type_name(path));
+  | Res_poly_enum(_) => base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~manifest=?, inner, _loc, path) => {
   Ast_helper.Type.mk(
@@ -104,13 +105,20 @@ let generate_opaque = (path, _loc) => {
   Ast_helper.Type.mk({loc: Location.none, txt: generate_type_name(path)});
 };
 
-let raw_opaque_object = fields => {
-  fields
-  |> List.exists(
-       fun
-       | Fragment(_) => true
-       | _ => false,
-     );
+let raw_opaque_object = (interface_fragments, fields) => {
+  let has_fragments =
+    fields
+    |> List.exists(
+         fun
+         | Fragment(_) => true
+         | _ => false,
+       );
+  switch (has_fragments, interface_fragments) {
+  | (true, _) => true
+  | (_, Some((_, []))) => false
+  | (_, Some((_, _))) => true
+  | _ => false
+  };
 };
 
 let already_has__typename = fields =>
@@ -121,7 +129,79 @@ let already_has__typename = fields =>
     fields,
   );
 
-let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
+let variant_interface_type =
+    (~name as interface_name=?, ~config, ~fragments, ~path, ~loc, ~raw) => {
+  let map_case_ty = ((name, res)) => {
+    prf_desc:
+      Rtag(
+        {txt: name, loc: conv_loc(loc)},
+        false,
+        [
+          generate_type(
+            ~config,
+            ~path=
+              switch (interface_name) {
+              | Some(interface_name) => [name, interface_name, ...path]
+              | None => [name, ...path]
+              },
+            ~raw,
+            res,
+          ),
+        ],
+      ),
+    prf_loc: conv_loc(loc),
+    prf_attributes: [],
+  };
+
+  let fallback_case_ty = {
+    prf_desc:
+      Rtag(
+        {txt: "UnspecifiedFragment", loc: conv_loc(loc)},
+        false,
+        [base_type_name("string")],
+      ),
+    prf_loc: conv_loc(loc),
+    prf_attributes: [],
+  };
+
+  let fragment_case_tys = fragments |> List.map(map_case_ty);
+
+  Ast_helper.(
+    Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
+  );
+};
+
+let generate_variant_interface =
+    (~name, ~config, ~fragments, ~path, ~loc, ~raw) =>
+  wrap_type_declaration(
+    Ptype_abstract,
+    ~manifest=?
+      raw
+        ? None
+        : Some(
+            variant_interface_type(
+              ~name,
+              ~config,
+              ~fragments,
+              ~path,
+              ~loc,
+              ~raw,
+            ),
+          ),
+    loc,
+    [name, ...path],
+  );
+
+let generate_record_type =
+    (
+      ~config,
+      ~obj_path,
+      ~raw,
+      ~loc,
+      ~is_variant,
+      ~interface_fragments,
+      fields,
+    ) => {
   let record_fields =
     fields
     |> List.fold_left(
@@ -165,9 +245,9 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
                    {Location.txt: to_valid_ident(name), loc: Location.none},
                    generate_type(
                      ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
-                     config,
-                     [name, ...path],
-                     raw,
+                     ~config,
+                     ~path=[name, ...path],
+                     ~raw,
                      type_,
                    ),
                  ),
@@ -200,8 +280,20 @@ let generate_record_type = (config, fields, obj_path, raw, loc, is_variant) => {
     } else {
       record_fields;
     };
+  let record_fields =
+    switch (interface_fragments) {
+    | Some((_, []))
+    | None => record_fields
+    | Some((interface_name, _fragments)) => [
+        Ast_helper.Type.field(
+          {Location.txt: "fragment", loc: Location.none},
+          base_type(generate_type_name([interface_name, ...obj_path])),
+        ),
+        ...record_fields,
+      ]
+    };
 
-  raw && raw_opaque_object(fields)
+  raw && raw_opaque_object(interface_fragments, fields)
     ? generate_opaque(obj_path, loc)
     : wrap_type_declaration(Ptype_record(record_fields), loc, obj_path);
 };
@@ -231,9 +323,9 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
                              conv_loc(
                                config.Generator_utils.map_loc(name.span),
                              ),
-                           config,
-                           [name.item, ...path],
-                           raw,
+                           ~config,
+                           ~path=[name.item, ...path],
+                           ~raw,
                            res,
                          ),
                        ],
@@ -291,9 +383,9 @@ let generate_variant_union =
                    generate_type(
                      ~atLoc=
                        conv_loc(config.Generator_utils.map_loc(name.span)),
-                     config,
-                     [name.item, ...path],
-                     raw,
+                     ~config,
+                     ~path=[name.item, ...path],
+                     ~raw,
                      res,
                    ),
                  ],
@@ -312,35 +404,6 @@ let generate_variant_union =
             Closed,
             None,
           )
-        ),
-      loc,
-      path,
-    );
-  };
-
-let generate_variant_interface = (config, fields, base, path, loc, raw) =>
-  if (raw) {
-    generate_opaque(path, loc);
-  } else {
-    let map_case_ty = ((name, res)) => {
-      prf_desc:
-        Rtag(
-          {txt: name, loc: conv_loc(loc)},
-          false,
-          [generate_type(config, [name, ...path], raw, res)],
-        ),
-      prf_loc: conv_loc(loc),
-      prf_attributes: [],
-    };
-
-    let fallback_case_ty = map_case_ty(base);
-    let fragment_case_tys = fields |> List.map(map_case_ty);
-
-    wrap_type_declaration(
-      Ptype_abstract,
-      ~manifest=
-        Ast_helper.(
-          Typ.variant([fallback_case_ty, ...fragment_case_tys], Closed, None)
         ),
       loc,
       path,
@@ -395,7 +458,8 @@ let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
     path,
   );
 
-let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
+let generate_object_type =
+    (config, fields, obj_path, raw, loc, is_variant, interface_fragments) => {
   let object_fields =
     fields
     |> List.fold_left(
@@ -437,9 +501,9 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
                      {txt: to_valid_ident(name), loc: Location.none},
                      generate_type(
                        ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
-                       config,
-                       [name, ...path],
-                       raw,
+                       ~config,
+                       ~path=[name, ...path],
+                       ~raw,
                        type_,
                      ),
                    ),
@@ -479,8 +543,25 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
     } else {
       object_fields;
     };
+  let object_fields =
+    switch (interface_fragments) {
+    | Some((_, []))
+    | None => object_fields
+    | Some((interface_name, _fragments)) => [
+        {
+          pof_desc:
+            Otag(
+              {txt: "fragment", loc: Location.none},
+              base_type(generate_type_name([interface_name, ...obj_path])),
+            ),
+          pof_loc: Location.none,
+          pof_attributes: [],
+        },
+        ...object_fields,
+      ]
+    };
 
-  raw && raw_opaque_object(fields)
+  raw && raw_opaque_object(interface_fragments, fields)
     ? generate_opaque(obj_path, loc)
     : wrap_type_declaration(
         ~manifest=
@@ -498,14 +579,15 @@ let generate_object_type = (config, fields, obj_path, raw, loc, is_variant) => {
 
 let generate_graphql_object =
     (
-      config: Generator_utils.output_config,
+      ~config: Generator_utils.output_config,
+      ~obj_path,
+      ~force_record,
+      ~raw,
+      ~loc,
+      ~is_variant,
+      ~type_name,
+      ~interface_fragments,
       fields,
-      obj_path,
-      force_record,
-      raw,
-      loc,
-      is_variant,
-      type_name,
     ) => {
   switch (type_name) {
   | Some(type_name) =>
@@ -518,8 +600,24 @@ let generate_graphql_object =
 
   | None =>
     config.records || force_record
-      ? generate_record_type(config, fields, obj_path, raw, loc, is_variant)
-      : generate_object_type(config, fields, obj_path, raw, loc, is_variant)
+      ? generate_record_type(
+          ~config,
+          ~obj_path,
+          ~raw,
+          ~loc,
+          ~is_variant,
+          ~interface_fragments,
+          fields,
+        )
+      : generate_object_type(
+          config,
+          fields,
+          obj_path,
+          raw,
+          loc,
+          is_variant,
+          interface_fragments,
+        )
   };
 };
 
@@ -536,16 +634,24 @@ let generate_types =
     extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
     |> List.map(
          fun
-         | Object({fields, path: obj_path, force_record, loc, variant_parent}) =>
-           generate_graphql_object(
-             config,
+         | Object({
              fields,
-             obj_path,
+             path: obj_path,
              force_record,
-             raw,
              loc,
              variant_parent,
-             type_name,
+             interface_fragments,
+           }) =>
+           generate_graphql_object(
+             ~config,
+             ~obj_path,
+             ~force_record,
+             ~raw,
+             ~loc,
+             ~is_variant=variant_parent,
+             ~type_name,
+             ~interface_fragments,
+             fields,
            )
          | VariantSelection({loc, path, fields}) =>
            generate_variant_selection(config, fields, path, loc, raw)
@@ -558,8 +664,15 @@ let generate_types =
              loc,
              raw,
            )
-         | VariantInterface({loc, path, base, fields}) =>
-           generate_variant_interface(config, fields, base, path, loc, raw)
+         | VariantInterface({name, loc, path, fragments}) =>
+           generate_variant_interface(
+             ~name,
+             ~config,
+             ~fragments,
+             ~path,
+             ~loc,
+             ~raw,
+           )
          | Enum({loc, path, fields, omit_future_value}) =>
            generate_enum(config, fields, path, loc, raw, omit_future_value),
        )

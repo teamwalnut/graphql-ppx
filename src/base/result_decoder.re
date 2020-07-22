@@ -8,7 +8,7 @@ open Result_structure;
 
 let make_error = (error_marker, map_loc, span, message) => {
   let () = error_marker.has_error = true;
-  Res_error(map_loc(span), message);
+  Res_error({loc: map_loc(span), message});
 };
 
 let has_directive = (~prepend=false, name, directives) =>
@@ -90,59 +90,62 @@ let rec unify_type =
         ) =>
   switch (ty) {
   | Ntr_nullable(t) =>
-    Res_nullable(
-      config.map_loc(span),
-      unify_type(
-        ~has_decoder,
-        error_marker,
-        as_record,
-        existing_record,
-        omit_future_value,
-        config,
-        span,
-        t,
-        selection_set,
-      ),
-    )
+    Res_nullable({
+      loc: config.map_loc(span),
+      inner:
+        unify_type(
+          ~has_decoder,
+          error_marker,
+          as_record,
+          existing_record,
+          omit_future_value,
+          config,
+          span,
+          t,
+          selection_set,
+        ),
+    })
   | Ntr_list(t) =>
-    Res_array(
-      config.map_loc(span),
-      unify_type(
-        ~has_decoder,
-        error_marker,
-        as_record,
-        existing_record,
-        omit_future_value,
-        config,
-        span,
-        t,
-        selection_set,
-      ),
-    )
+    Res_array({
+      loc: config.map_loc(span),
+      inner:
+        unify_type(
+          ~has_decoder,
+          error_marker,
+          as_record,
+          existing_record,
+          omit_future_value,
+          config,
+          span,
+          t,
+          selection_set,
+        ),
+    })
   | Ntr_named(n) =>
     switch (lookup_type(config.schema, n)) {
     | None => raise_error(config.map_loc, span, "Could not find type " ++ n)
     | Some(Scalar({sm_name: "ID", _}))
     | Some(Scalar({sm_name: "String", _})) =>
-      Res_string(config.map_loc(span))
-    | Some(Scalar({sm_name: "Int", _})) => Res_int(config.map_loc(span))
+      Res_string({loc: config.map_loc(span)})
+    | Some(Scalar({sm_name: "Int", _})) =>
+      Res_int({loc: config.map_loc(span)})
     | Some(Scalar({sm_name: "Float", _})) =>
-      Res_float(config.map_loc(span))
+      Res_float({loc: config.map_loc(span)})
     | Some(Scalar({sm_name: "Boolean", _})) =>
-      Res_boolean(config.map_loc(span))
+      Res_boolean({loc: config.map_loc(span)})
     | Some(Scalar({sm_name})) when !has_decoder =>
       try({
         let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
-        Res_custom_decoder(
-          config.map_loc(span),
-          decoderModule,
-          Res_raw_scalar(config.map_loc(span)),
-        );
+        Res_custom_decoder({
+          loc: config.map_loc(span),
+          ident: decoderModule,
+          inner: Res_raw_scalar({loc: config.map_loc(span)}),
+        });
       }) {
-      | Not_found => Res_raw_scalar(config.map_loc(span))
+      | Not_found => Res_raw_scalar({loc: config.map_loc(span)})
       | other => raise(other)
       }
-    | Some(Scalar(_)) => Res_raw_scalar(config.map_loc(span))
+    | Some(Scalar(_)) => Res_raw_scalar({loc: config.map_loc(span)})
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -154,7 +157,11 @@ let rec unify_type =
         selection_set,
       )
     | Some(Enum(enum_meta)) =>
-      Res_poly_enum(config.map_loc(span), enum_meta, omit_future_value)
+      Res_poly_enum({
+        loc: config.map_loc(span),
+        enum_meta,
+        omit_future_value,
+      })
     | Some(Interface(im) as ty) =>
       unify_interface(
         error_marker,
@@ -219,12 +226,14 @@ and unify_interface =
 
     let generate_case = (selection, ty, name) => (
       name,
-      Res_object(
-        config.map_loc(span),
+      Res_object({
+        loc: config.map_loc(span),
         name,
-        List.map(unify_selection(error_marker, config, ty), selection),
-        None,
-      ),
+        fields:
+          List.map(unify_selection(error_marker, config, ty), selection),
+        type_name: None,
+        interface_fragments: None,
+      }),
     );
     let generate_fragment_case =
         ({item: {if_type_condition, if_selection_set, _}, _}) =>
@@ -243,15 +252,29 @@ and unify_interface =
       };
 
     let fragment_cases = List.map(generate_fragment_case, fragments);
-    let base_case =
-      generate_case(base_selection_set, ty, interface_meta.im_name);
 
-    Res_poly_variant_interface(
-      config.map_loc(span),
-      interface_meta.im_name,
-      base_case,
-      fragment_cases,
-    );
+    let interface =
+      Res_poly_variant_interface({
+        loc: config.map_loc(span),
+        name: interface_meta.im_name,
+        fragments: fragment_cases,
+      });
+
+    switch (base_selection_set) {
+    | [] => interface
+    | _ =>
+      Res_object({
+        loc: config.map_loc(span),
+        name: interface_meta.im_name,
+        fields:
+          List.map(
+            unify_selection(error_marker, config, ty),
+            base_selection_set,
+          ),
+        type_name: None,
+        interface_fragments: Some((interface_meta.im_name, fragment_cases)),
+      })
+    };
   }
 and unify_union =
     (error_marker, config, span, union_meta, omit_future_value, selection_set) =>
@@ -325,30 +348,31 @@ and unify_union =
       List.map(type_cond_name, fragments) |> List.sort(compare);
     let possible_cases = List.sort(compare, union_meta.um_of_types);
 
-    Res_poly_variant_union(
-      config.map_loc(span),
-      union_meta.um_name,
-      List.map(generate_case, fragments),
-      if (covered_cases == possible_cases) {
-        Exhaustive;
-      } else {
-        Nonexhaustive;
-      },
+    Res_poly_variant_union({
+      loc: config.map_loc(span),
+      name: union_meta.um_name,
+      fragments: List.map(generate_case, fragments),
+      exhaustive:
+        if (covered_cases == possible_cases) {
+          Exhaustive;
+        } else {
+          Nonexhaustive;
+        },
       omit_future_value,
-    );
+    });
   }
 and unify_variant = (error_marker, config, span, ty, selection_set) =>
   switch (ty) {
   | Ntr_nullable(t) =>
-    Res_nullable(
-      config.map_loc(span),
-      unify_variant(error_marker, config, span, t, selection_set),
-    )
+    Res_nullable({
+      loc: config.map_loc(span),
+      inner: unify_variant(error_marker, config, span, t, selection_set),
+    })
   | Ntr_list(t) =>
-    Res_array(
-      config.map_loc(span),
-      unify_variant(error_marker, config, span, t, selection_set),
-    )
+    Res_array({
+      loc: config.map_loc(span),
+      inner: unify_variant(error_marker, config, span, t, selection_set),
+    })
   | Ntr_named(n) =>
     switch (lookup_type(config.schema, n)) {
     | None =>
@@ -434,7 +458,11 @@ and unify_variant = (error_marker, config, span, ty, selection_set) =>
                }
              );
 
-        Res_poly_variant_selection_set(config.map_loc(span), n, fields);
+        Res_poly_variant_selection_set({
+          loc: config.map_loc(span),
+          name: n,
+          fragments: fields,
+        });
       }
     }
   }
@@ -493,7 +521,10 @@ and unify_field = (error_marker, config, field_span, ty) => {
           ast_field.fd_selection_set,
         );
       if (has_skip && !is_nullable(field_ty)) {
-        Res_nullable(config.map_loc(field_span.span), sub_unifier);
+        Res_nullable({
+          loc: config.map_loc(field_span.span),
+          inner: sub_unifier,
+        });
       } else {
         sub_unifier;
       };
@@ -536,28 +567,38 @@ and unify_field = (error_marker, config, field_span, ty) => {
       })
     | Some((_, {item: Iv_string(module_name), span})) =>
       switch (parser_expr) {
-      | Res_nullable(loc, t) =>
+      | Res_nullable({loc, inner: t}) =>
         Fr_named_field({
           name: key,
           loc_key,
           loc,
           type_:
-            Res_nullable(
+            Res_nullable({
               loc,
-              Res_custom_decoder(config.map_loc(span), module_name, t),
-            ),
+              inner:
+                Res_custom_decoder({
+                  loc: config.map_loc(span),
+                  ident: module_name,
+                  inner: t,
+                }),
+            }),
           arguments,
         })
-      | Res_array(loc, t) =>
+      | Res_array({loc, inner: t}) =>
         Fr_named_field({
           name: key,
           loc_key,
           loc,
           type_:
-            Res_array(
+            Res_array({
               loc,
-              Res_custom_decoder(config.map_loc(span), module_name, t),
-            ),
+              inner:
+                Res_custom_decoder({
+                  loc: config.map_loc(span),
+                  ident: module_name,
+                  inner: t,
+                }),
+            }),
           arguments,
         })
       | _ =>
@@ -566,11 +607,11 @@ and unify_field = (error_marker, config, field_span, ty) => {
           loc_key,
           loc,
           type_:
-            Res_custom_decoder(
-              config.map_loc(span),
-              module_name,
-              parser_expr,
-            ),
+            Res_custom_decoder({
+              loc: config.map_loc(span),
+              ident: module_name,
+              inner: parser_expr,
+            }),
           arguments,
         })
       }
@@ -604,16 +645,17 @@ and unify_selection = (error_marker, config, ty, selection) =>
         |> List.rev
         |> List.hd
         |> String.uncapitalize_ascii;
-      Fr_fragment_spread(
+      Fr_fragment_spread({
         key,
-        config.map_loc(span),
-        fs_name.item,
-        switch (ty) {
-        | Object({om_name, _}) => Some(om_name)
-        | _ => None
-        },
+        loc: config.map_loc(span),
+        name: fs_name.item,
+        type_name:
+          switch (ty) {
+          | Object({om_name, _}) => Some(om_name)
+          | _ => None
+          },
         arguments,
-      );
+      });
     | Some({item: {d_arguments, _}, span}) =>
       switch (find_argument("name", d_arguments)) {
       | None =>
@@ -623,16 +665,17 @@ and unify_selection = (error_marker, config, ty, selection) =>
           "ppxField must be given 'name' argument",
         )
       | Some((_, {item: Iv_string(key), span})) =>
-        Fr_fragment_spread(
+        Fr_fragment_spread({
           key,
-          config.map_loc(span),
-          fs_name.item,
-          switch (ty) {
-          | Object({om_name, _}) => Some(om_name)
-          | _ => None
-          },
+          loc: config.map_loc(span),
+          name: fs_name.item,
+          type_name:
+            switch (ty) {
+            | Object({om_name, _}) => Some(om_name)
+            | _ => None
+            },
           arguments,
-        )
+        })
       | Some(_) =>
         raise_error(
           config.map_loc,
@@ -677,26 +720,28 @@ and unify_selection_set =
         "@ppxRecord can not be used with fragment spreads, place @ppxRecord on the fragment definition instead",
       );
     } else {
-      Res_solo_fragment_spread(
-        config.map_loc(span),
-        fs_name.item,
+      Res_solo_fragment_spread({
+        loc: config.map_loc(span),
+        name: fs_name.item,
         arguments,
-      );
+      });
     };
   | Some({item, _}) when as_record =>
-    Res_record(
-      config.map_loc(span),
-      type_name(ty),
-      List.map(unify_selection(error_marker, config, ty), item),
-      existing_record,
-    )
+    Res_record({
+      loc: config.map_loc(span),
+      name: type_name(ty),
+      fields: List.map(unify_selection(error_marker, config, ty), item),
+      type_name: existing_record,
+      interface_fragments: None,
+    })
   | Some({item, _}) =>
-    Res_object(
-      config.map_loc(span),
-      type_name(ty),
-      List.map(unify_selection(error_marker, config, ty), item),
-      existing_record,
-    )
+    Res_object({
+      loc: config.map_loc(span),
+      name: type_name(ty),
+      fields: List.map(unify_selection(error_marker, config, ty), item),
+      type_name: existing_record,
+      interface_fragments: None,
+    })
   };
 
 let unify_operation = (error_marker, config) =>
@@ -795,12 +840,12 @@ let rec unify_document_schema = (config, document) => {
   | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      Def_operation(
-        o_variable_definitions,
-        error_marker.has_error,
-        op,
-        structure,
-      ),
+      Def_operation({
+        variable_definitions: o_variable_definitions,
+        has_error: error_marker.has_error,
+        operation: op,
+        inner: structure,
+      }),
       ...unify_document_schema(config, rest),
     ];
   | [
@@ -838,15 +883,15 @@ let rec unify_document_schema = (config, document) => {
                   "ppxDecoder must be given 'fn' argument",
                 ),
               )
-            | Some((_, {item: Iv_string(fn_name), span})) =>
+            | Some((_, {item: Iv_string(ident), span})) =>
               Ok(
                 Some(
                   structure =>
-                    Res_custom_decoder(
-                      config.map_loc(span),
-                      fn_name,
-                      structure,
-                    ),
+                    Res_custom_decoder({
+                      loc: config.map_loc(span),
+                      ident,
+                      inner: structure,
+                    }),
                 ),
               )
             | Some((_, {span, _})) =>
@@ -867,19 +912,20 @@ let rec unify_document_schema = (config, document) => {
           getFragmentArgumentDefinitions(fg_directives);
         switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
         | None =>
-          Def_fragment(
-            fg_name.item,
-            argumentDefinitions,
-            true,
-            fg,
-            None,
-            make_error(
-              error_marker,
-              config.map_loc,
-              fg_type_condition.span,
-              Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
-            ),
-          )
+          Def_fragment({
+            name: fg_name.item,
+            req_vars: argumentDefinitions,
+            has_error: true,
+            fragment: fg,
+            type_name: None,
+            inner:
+              make_error(
+                error_marker,
+                config.map_loc,
+                fg_type_condition.span,
+                Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
+              ),
+          })
         | Some(ty) =>
           let existing_record = get_ppx_as(fg_directives);
           let structure =
@@ -898,26 +944,27 @@ let rec unify_document_schema = (config, document) => {
 
           switch (with_decoder) {
           | Error(err) =>
-            Def_fragment(
-              fg_name.item,
-              argumentDefinitions,
-              true,
-              fg,
-              existing_record,
-              err,
-            )
+            Def_fragment({
+              name: fg_name.item,
+              req_vars: argumentDefinitions,
+              has_error: true,
+              fragment: fg,
+              type_name: existing_record,
+              inner: err,
+            })
           | Ok(decoder) =>
-            Def_fragment(
-              fg_name.item,
-              argumentDefinitions,
-              error_marker.has_error,
-              fg,
-              existing_record,
-              switch (decoder) {
-              | Some(decoder) => decoder(structure)
-              | None => structure
-              },
-            )
+            Def_fragment({
+              name: fg_name.item,
+              req_vars: argumentDefinitions,
+              has_error: error_marker.has_error,
+              fragment: fg,
+              type_name: existing_record,
+              inner:
+                switch (decoder) {
+                | Some(decoder) => decoder(structure)
+                | None => structure
+                },
+            })
           };
         };
       },

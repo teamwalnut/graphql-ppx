@@ -28,6 +28,8 @@ and type_def =
       path,
       existing_type: option(string),
       fields: list(object_field),
+      interface_fragments:
+        option((string, list((string, Result_structure.t)))),
     })
   | VariantSelection({
       loc: Source_pos.ast_location,
@@ -41,10 +43,10 @@ and type_def =
       omit_future_value: bool,
     })
   | VariantInterface({
+      name: string,
       loc: Source_pos.ast_location,
       path,
-      base: (string, Result_structure.t),
-      fields: list((string, Result_structure.t)),
+      fragments: list((string, Result_structure.t)),
     })
   | Enum({
       loc: Source_pos.ast_location,

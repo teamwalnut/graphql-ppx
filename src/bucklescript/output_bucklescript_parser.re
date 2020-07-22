@@ -25,6 +25,22 @@ let record_to_object = (loc, record) => {
   );
 };
 
+let raw_opaque_object = (interface_fragments, fields) => {
+  let has_fragments =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+  switch (has_fragments, interface_fragments) {
+  | (true, _) => true
+  | (_, Some((_, []))) => false
+  | (_, Some((_, _))) => true
+  | _ => false
+  };
+};
+
 let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   switch (type_ref) {
   | Tr_named({item: name}) => name
@@ -238,27 +254,23 @@ and generate_custom_decoder = (config, loc, ident, inner, path, definition) =>
   }
 and generate_object_decoder =
     (
-      config,
-      loc,
-      _name,
+      ~config,
+      ~loc,
+      ~name as _name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record,
+      ~interface_fragments,
       fields,
-      path,
-      definition,
-      existing_record,
-      force_record,
     ) => {
   // whether we can use inline values, this compiles to better javascript
   // but we can't use this if we are constructing objects instead of records
   let inline_values = config.records;
   let do_obj_constructor_base = (is_object, wrap) => {
     open Ast_helper;
-    let opaque =
-      fields
-      |> List.exists(
-           fun
-           | Fr_fragment_spread(_) => true
-           | _ => false,
-         );
+
+    let opaque = raw_opaque_object(interface_fragments, fields);
     let object_type = base_type_name("Raw." ++ generate_type_name(path));
 
     let get_value =
@@ -297,7 +309,7 @@ and generate_object_decoder =
           generate_parser(config, [key, ...path], definition, inner);
         }
 
-      | Fr_fragment_spread(_key, loc, name, _, arguments) =>
+      | Fr_fragment_spread({loc, name, arguments}) =>
         [@metaloc conv_loc(loc)]
         {
           let%expr value: [%t
@@ -319,7 +331,7 @@ and generate_object_decoder =
 
     let get_record_contents =
       fun
-      | Fr_fragment_spread(key, _, _, _, _)
+      | Fr_fragment_spread({key})
       | Fr_named_field({name: key}) => (
           {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
           ident_from_string(to_valid_ident(key)),
@@ -327,20 +339,39 @@ and generate_object_decoder =
 
     let get_record_contents_inline =
       fun
-      | Fr_fragment_spread(key, _, _, _, _) as field
+      | Fr_fragment_spread({key}) as field
       | Fr_named_field({name: key}) as field => (
           {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
           get_value(field),
         );
 
-    let record =
-      Exp.record(
-        List.map(
-          inline_values ? get_record_contents_inline : get_record_contents,
-          fields,
-        ),
-        None,
+    let record_fields =
+      List.map(
+        inline_values ? get_record_contents_inline : get_record_contents,
+        fields,
       );
+
+    let record_fields =
+      switch (interface_fragments) {
+      | None
+      | Some((_, [])) => record_fields
+      | Some((interface_name, fragments)) => [
+          (
+            {txt: Longident.Lident("fragment"), loc: Location.none},
+            generate_poly_variant_interface_decoder(
+              config,
+              conv_loc(loc),
+              interface_name,
+              fragments,
+              [interface_name, ...path],
+              definition,
+            ),
+          ),
+          ...record_fields,
+        ]
+      };
+
+    let record = Exp.record(record_fields, None);
 
     let record = wrap ? record_to_object(loc, record) : record;
 
@@ -352,10 +383,7 @@ and generate_object_decoder =
           |> List.map(
                fun
                | Fr_named_field({name}) as field => (name, field)
-               | Fr_fragment_spread(key, _, _, _, _) as field => (
-                   key,
-                   field,
-                 ),
+               | Fr_fragment_spread({key}) as field => (key, field),
              )
           |> List.map(((key, field)) => {
                Vb.mk(
@@ -450,43 +478,46 @@ and generate_poly_variant_selection_set_decoder =
   );
 }
 and generate_poly_variant_interface_decoder =
-    (config, loc, _name, base, fragments, path, definition) => {
-  let map_fallback_case = ((type_name, inner)) => {
+    (config, loc, _name, fragments, path, definition) => {
+  let fallback_case = {
     open Ast_helper;
     let name_pattern = Pat.any();
 
-    Exp.variant(
-      type_name,
-      Some(
-        generate_parser(config, [type_name, ...path], definition, inner),
-      ),
-    )
+    Exp.variant("UnspecifiedFragment", Some([%expr typename]))
     |> Exp.case(name_pattern);
   };
 
-  let map_case = ((type_name, _inner)) => {
-    open Ast_helper;
-    let name_pattern = const_str_pat(type_name);
+  let fragment_cases =
+    List.map(
+      ((type_name, inner)) => {
+        open Ast_helper;
+        let name_pattern = const_str_pat(type_name);
 
-    Exp.variant(
-      type_name,
-      Some(
-        {
-          let%expr value: [%t
-            base_type_name(
-              "Raw." ++ generate_type_name([type_name, ...path]),
-            )
-          ] =
-            Obj.magic(value);
-          generate_parser(config, [type_name, ...path], definition, inner);
-        },
-      ),
-    )
-    |> Exp.case(name_pattern);
-  };
-
-  let fragment_cases = List.map(map_case, fragments);
-  let fallback_case = map_fallback_case(base);
+        Exp.variant(
+          type_name,
+          Some(
+            {
+              let%expr value: [%t
+                base_type_name(
+                  "Raw." ++ generate_type_name([type_name, ...path]),
+                )
+              ] =
+                Obj.magic(value);
+              %e
+              generate_parser(
+                config,
+                [type_name, ...path],
+                definition,
+                inner,
+              );
+            },
+          ),
+        )
+        |> Exp.case(name_pattern);
+      },
+      fragments,
+    );
+  let fallback_case = fallback_case;
   let typename_matcher =
     Ast_helper.(
       Exp.match(
@@ -525,7 +556,7 @@ and generate_poly_variant_union_decoder =
                  {
                    let%expr value: [%t
                      switch (inner) {
-                     | Res_solo_fragment_spread(_, name, _) =>
+                     | Res_solo_fragment_spread({name}) =>
                        base_type_name(name ++ ".Raw.t")
                      | _ =>
                        base_type_name(
@@ -606,19 +637,19 @@ and generate_poly_variant_union_decoder =
 }
 and generate_parser = (config, path: list(string), definition) =>
   fun
-  | Res_nullable(loc, inner) =>
+  | Res_nullable({loc, inner}) =>
     generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_array(loc, inner) =>
+  | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id(loc) => raw_value(conv_loc(loc))
-  | Res_string(loc) => raw_value(conv_loc(loc))
-  | Res_int(loc) => raw_value(conv_loc(loc))
-  | Res_float(loc) => raw_value(conv_loc(loc))
-  | Res_boolean(loc) => raw_value(conv_loc(loc))
-  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+  | Res_id({loc}) => raw_value(conv_loc(loc))
+  | Res_string({loc}) => raw_value(conv_loc(loc))
+  | Res_int({loc}) => raw_value(conv_loc(loc))
+  | Res_float({loc}) => raw_value(conv_loc(loc))
+  | Res_boolean({loc}) => raw_value(conv_loc(loc))
+  | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
+  | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_decoder(loc, enum_meta, omit_future_value)
-  | Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_decoder(
       config,
       conv_loc(loc),
@@ -627,35 +658,49 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_record(loc, name, fields, existing_record) =>
-    generate_object_decoder(
-      config,
+  | Res_record({
       loc,
       name,
       fields,
-      path,
-      definition,
-      existing_record,
-      true,
-    )
-  | Res_object(loc, name, fields, existing_record) =>
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
     generate_object_decoder(
-      config,
+      ~config,
+      ~loc,
+      ~name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record=true,
+      ~interface_fragments,
+      fields,
+    )
+  | Res_object({
       loc,
       name,
       fields,
-      path,
-      definition,
-      existing_record,
-      false,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
+    generate_object_decoder(
+      ~config,
+      ~loc,
+      ~name,
+      ~path,
+      ~definition,
+      ~existing_record,
+      ~force_record=false,
+      ~interface_fragments,
+      fields,
     )
-  | Res_poly_variant_union(
+  | Res_poly_variant_union({
       loc,
       name,
       fragments,
       exhaustive,
       omit_future_value,
-    ) =>
+    }) =>
     generate_poly_variant_union_decoder(
       config,
       conv_loc(loc),
@@ -666,7 +711,7 @@ and generate_parser = (config, path: list(string), definition) =>
       path,
       definition,
     )
-  | Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set({loc, name, fragments: fields}) =>
     generate_poly_variant_selection_set_decoder(
       config,
       conv_loc(loc),
@@ -676,17 +721,16 @@ and generate_parser = (config, path: list(string), definition) =>
       definition,
     )
 
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
+  | Res_poly_variant_interface({loc, name, fragments}) =>
     generate_poly_variant_interface_decoder(
       config,
       conv_loc(loc),
       name,
-      base,
       fragments,
       [name, ...path],
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
+  | Res_solo_fragment_spread({loc, name, arguments}) =>
     generate_solo_fragment_spread_decoder(
       config,
       loc,
@@ -694,4 +738,4 @@ and generate_parser = (config, path: list(string), definition) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(loc, message);
+  | Res_error({loc, message}) => generate_error(loc, message);

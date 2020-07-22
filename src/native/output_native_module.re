@@ -278,9 +278,14 @@ let generate_fragment_module =
 
 let generate_operation = config =>
   fun
-  | Def_operation(vdefs, has_error, operation, structure) =>
+  | Def_operation({
+      variable_definitions: vdefs,
+      has_error,
+      operation,
+      inner: structure,
+    }) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Def_fragment(name, req_vars, has_error, fragment, _type_name, structure) =>
+  | Def_fragment({name, req_vars, has_error, fragment, inner: structure}) =>
     generate_fragment_module(
       config,
       name,

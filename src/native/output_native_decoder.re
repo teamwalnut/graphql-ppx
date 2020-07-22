@@ -158,27 +158,27 @@ let generate_error = (loc, message) => {
 
 let rec generate_decoder = config =>
   fun
-  | Res_nullable(loc, inner) =>
+  | Res_nullable({loc, inner}) =>
     generate_nullable_decoder(config, conv_loc(loc), inner)
-  | Res_array(loc, inner) =>
+  | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner)
-  | Res_id(loc) => id_decoder(conv_loc(loc))
-  | Res_string(loc) => string_decoder(conv_loc(loc))
-  | Res_int(loc) => int_decoder(conv_loc(loc))
-  | Res_float(loc) => float_decoder(conv_loc(loc))
-  | Res_boolean(loc) => boolean_decoder(conv_loc(loc))
-  | Res_raw_scalar(_loc) => [%expr value]
-  | Res_poly_enum(loc, enum_meta, _) =>
+  | Res_id({loc}) => id_decoder(conv_loc(loc))
+  | Res_string({loc}) => string_decoder(conv_loc(loc))
+  | Res_int({loc}) => int_decoder(conv_loc(loc))
+  | Res_float({loc}) => float_decoder(conv_loc(loc))
+  | Res_boolean({loc}) => boolean_decoder(conv_loc(loc))
+  | Res_raw_scalar(_) => [%expr value]
+  | Res_poly_enum({loc, enum_meta}) =>
     generate_poly_enum_decoder(conv_loc(loc), enum_meta)
-  | Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_decoder(config, conv_loc(loc), ident, inner)
-  | Res_record(loc, name, fields, _) =>
+  | Res_record({loc, name, fields}) =>
     generate_record_decoder(config, conv_loc(loc), name, fields)
-  | Res_object(loc, name, fields, _) =>
+  | Res_object({loc, name, fields}) =>
     generate_object_decoder(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set({loc, name, fragments: fields}) =>
     generate_poly_variant_selection_set(config, conv_loc(loc), name, fields)
-  | Res_poly_variant_union(loc, name, fragments, exhaustive, _) =>
+  | Res_poly_variant_union({loc, name, fragments, exhaustive}) =>
     generate_poly_variant_union(
       config,
       conv_loc(loc),
@@ -186,17 +186,11 @@ let rec generate_decoder = config =>
       fragments,
       exhaustive,
     )
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
-    generate_poly_variant_interface(
-      config,
-      conv_loc(loc),
-      name,
-      base,
-      fragments,
-    )
-  | Res_solo_fragment_spread(loc, name, _arguments) =>
+  | Res_poly_variant_interface({loc, name, fragments}) =>
+    generate_poly_variant_interface(config, conv_loc(loc), name, fragments)
+  | Res_solo_fragment_spread({loc, name}) =>
     generate_solo_fragment_spread(conv_loc(loc), name)
-  | Res_error(loc, message) => generate_error(conv_loc(loc), message)
+  | Res_error({loc, message}) => generate_error(conv_loc(loc), message)
 and generate_nullable_decoder = (config, loc, inner) =>
   [@metaloc loc]
   (
@@ -317,7 +311,7 @@ and generate_record_decoder = (config, loc, name, fields) => {
                  ),
                );
              }
-           | Fr_fragment_spread(field, loc, name, _, _arguments) => {
+           | Fr_fragment_spread({key: field, loc, name}) => {
                let loc = conv_loc(loc);
                (
                  {Location.loc, txt: Longident.Lident(field)},
@@ -390,7 +384,7 @@ and generate_object_decoder = (config, loc, _name, fields) =>
                     },
                   ),
                 )
-              | Fr_fragment_spread(key, loc, name, _, _) => {
+              | Fr_fragment_spread({key, loc, name}) => {
                   let loc = conv_loc(loc);
                   Cf.method(
                     {txt: key, loc: Location.none},
@@ -501,12 +495,15 @@ and generate_poly_variant_selection_set = (config, loc, name, fields) => {
     }
   );
 }
-and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
-  let map_fallback_case = ((type_name, inner)) => {
+and generate_poly_variant_interface = (config, loc, name, fragments) => {
+  let fallback_case = {
     open Ast_helper;
     let name_pattern = Pat.any();
     let variant =
-      Exp.variant(type_name, Some(generate_decoder(config, inner)));
+      Exp.variant(
+        "UnspecifiedFragment",
+        Some(Exp.constant(Pconst_string("otherVariant", None))),
+      );
     Exp.case(name_pattern, variant);
   };
 
@@ -536,9 +533,24 @@ and generate_poly_variant_interface = (config, loc, name, base, fragments) => {
   };
 
   let fragment_cases = List.map(map_case, fragments);
-  let fallback_case = map_fallback_case(base);
-  let (base_name, base_decoder) = base;
-  let fallback_case_ty = map_case_ty(({txt: base_name, loc}, base_decoder));
+  let fallback_case = fallback_case;
+  let fallback_case_ty = {
+    prf_desc:
+      Rtag(
+        {txt: "UnspecifiedFragment", loc},
+        false,
+        [
+          {
+            ptyp_desc: Ptyp_any,
+            ptyp_attributes: [],
+            ptyp_loc: Location.none,
+            ptyp_loc_stack: [],
+          },
+        ],
+      ),
+    prf_loc: loc,
+    prf_attributes: [],
+  };
 
   let fragment_case_tys =
     List.map(

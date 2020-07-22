@@ -2,11 +2,12 @@ module QueryWithFragments = [%graphql
   {|
    query {
     users {
-      id
       ... on AdminUser {
+        id
         name
       }
       ... on AnonymousUser {
+        id
         anonymousId
       }
     }
@@ -15,7 +16,7 @@ module QueryWithFragments = [%graphql
 ];
 
 type user = [
-  | `User({. id: string})
+  | `UnspecifiedFragment(string)
   | `AdminUser(
       {
         .
@@ -32,7 +33,7 @@ type user = [
     )
 ];
 
-type only_user = [ | `User({. id: string})];
+type only_user = {. id: string};
 
 module QueryWithoutFragments = [%graphql
   {|
@@ -58,7 +59,8 @@ let user: module Alcotest.TESTABLE with type t = user =
 
      let pp = formatter =>
        fun
-       | `User(u) => Format.fprintf(formatter, "`User < id = @[%s@] >", u#id)
+       | `UnspecifiedFragment(s) =>
+         Format.fprintf(formatter, "`UnspecifiedFragment < @[%s@] >", s)
        | `AdminUser(u) =>
          Format.fprintf(
            formatter,
@@ -76,7 +78,7 @@ let user: module Alcotest.TESTABLE with type t = user =
 
      let equal = (a: user, b: user) =>
        switch (a, b) {
-       | (`User(u1), `User(u2)) => u1#id == u2#id
+       | (`UnspecifiedFragment(u1), `UnspecifiedFragment(u2)) => u1 == u2
        | (`AdminUser(u1), `AdminUser(u2)) =>
          u1#id == u2#id && u1#name == u2#name
        | (`AnonymousUser(u1), `AnonymousUser(u2)) =>
@@ -92,11 +94,11 @@ let only_user: module Alcotest.TESTABLE with type t = only_user =
 
      let pp = formatter =>
        fun
-       | `User(u) => Format.fprintf(formatter, "`User < id = @[%s@] >", u#id);
+       | u => Format.fprintf(formatter, "`User < id = @[%s@] >", u#id);
 
      let equal = (a: only_user, b: only_user) =>
        switch (a, b) {
-       | (`User(u1), `User(u2)) => u1#id == u2#id
+       | (u1, u2) => u1#id == u2#id
        };
    });
 
@@ -107,7 +109,7 @@ let decode_with_fragments = () =>
     [|
       `AdminUser({as _; pub id = "1"; pub name = "bob"}),
       `AnonymousUser({as _; pub id = "2"; pub anonymousId = 1}),
-      `User({as _; pub id = "3"}),
+      `UnspecifiedFragment("otherVariant"),
     |],
   );
 
@@ -115,11 +117,7 @@ let decode_without_fragments = () =>
   Alcotest.(check(array(only_user)))(
     "query result equality",
     QueryWithoutFragments.parse(Yojson.Basic.from_string(json))#users,
-    [|
-      `User({as _; pub id = "1"}),
-      `User({as _; pub id = "2"}),
-      `User({as _; pub id = "3"}),
-    |],
+    [|{as _; pub id = "1"}, {as _; pub id = "2"}, {as _; pub id = "3"}|],
   );
 
 let tests = [

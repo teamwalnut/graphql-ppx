@@ -31,7 +31,7 @@ let rec really_read = (fd, ~buf, ~start=0, ~length=1024, ()) =>
     };
   };
 
-let run_ppx = (path, opts) => {
+let start_ppx = (path, opts) => {
   let (in_read, in_write) = Unix.pipe(~cloexec=true, ());
   let (err_read, err_write) =
     try(Unix.pipe(~cloexec=true, ())) {
@@ -106,11 +106,28 @@ let run_ppx = (path, opts) => {
       Unix.close(in_write_3);
       raise(e);
     };
-  Unix.close(in_write);
-  Unix.close(err_write);
+
+  (
+    (in_read, in_write),
+    (in_read_2, in_write_2),
+    (in_read_3, in_write_3),
+    (err_read, err_write),
+  );
+};
+let continue_ppx =
+    (
+      (
+        (in_read, in_write),
+        (in_read_2, in_write_2),
+        (in_read_3, in_write_3),
+        (err_read, err_write),
+      ),
+    ) => {
   Unix.close(in_read);
-  Unix.close(in_write_2);
+  Unix.close(in_write);
   Unix.close(in_read_2);
+  Unix.close(in_write_2);
+  Unix.close(err_write);
   Unix.close(in_write_3);
 
   let output_buf = Buffer.create(1024);
@@ -168,7 +185,7 @@ let process_error = error => {
 };
 
 let bsb_path = "./node_modules/bs-platform/" ++ platform ++ "/bsc.exe";
-let run_bsb = (~ppxOptions, ~filename, ~pathIn) => {
+let start_bsb = (~ppxOptions, ~filename, ~pathIn) => {
   let (out_read, out_write) = Unix.pipe(~cloexec=true, ());
   let (err_read, err_write) =
     try(Unix.pipe(~cloexec=true, ())) {
@@ -205,10 +222,16 @@ let run_bsb = (~ppxOptions, ~filename, ~pathIn) => {
       ();
     }) {
     | e =>
+      Unix.close(out_read);
       Unix.close(out_write);
+      Unix.close(err_read);
       Unix.close(err_write);
       raise(e);
     };
+  ((out_read, out_write), (err_read, err_write));
+};
+
+let continue_bsb = (((out_read, out_write), (err_read, err_write))) => {
   Unix.close(out_write);
   Unix.close(err_write);
 
@@ -242,41 +265,12 @@ let error_filenames =
        }
      });
 
-let runOperations = (describe, filenames, options) => {
-  filenames
-  |> List.iter(filename => {
-       describe(filename, ({test, _}) => {
-         test("output", ({expect, _}) => {
-           let (output, error) = run_ppx("operations/" ++ filename, options);
-           expect.string(output).toMatchSnapshot();
-           expect.string(error).toEqual("");
-         })
-       })
-     });
-};
-
-let runCompilation = (describe, filenames, ppxOptions) => {
-  filenames
-  |> List.iter(filename => {
-       describe(
-         filename,
-         ({test, _}) => {
-           let (output, error) =
-             run_bsb(~ppxOptions, ~filename, ~pathIn="operations");
-           test("output", ({expect, _}) => {
-             expect.string(output).toMatchSnapshot();
-             expect.string(error).toEqual("");
-           });
-         },
-       )
-     });
-};
-
-type ppxConfig = {
+type ppx_config = {
   name: string,
   options: array(string),
 };
-let ppxConfigs = [
+
+let ppx_configs = [
   {name: "Records", options: [||]},
   {name: "Objects", options: [|"-objects"|]},
   {name: "Template", options: [|"-template-tag-location=gql"|]},
@@ -284,61 +278,180 @@ let ppxConfigs = [
   {name: "Apollo", options: [|"-apollo-mode"|]},
 ];
 
-ppxConfigs
-|> List.iter(({name, options}) => {
-     describe("Generate " ++ name, ({describe, _}) => {
-       filenames
-       |> List.iter(filename => {
-            describe(filename, ({test, _}) => {
-              test("output", ({expect, _}) => {
-                let (output, error) =
-                  run_ppx(
-                    "tests_bucklescript/operations/" ++ filename,
-                    options,
-                  );
-                expect.string(output).toMatchSnapshot();
-                expect.string(error).toEqual("");
-              })
-            })
-          })
-     });
-     describe("Compile " ++ name, ({describe, _}) => {
-       filenames
-       |> List.iter(filename => {
-            describe(
-              filename,
-              ({test, _}) => {
-                let (output, error) =
-                  run_bsb(
-                    ~ppxOptions=options,
-                    ~filename,
-                    ~pathIn="tests_bucklescript/operations",
-                  );
-                test("output", ({expect, _}) => {
-                  expect.string(output).toMatchSnapshot();
-                  expect.string(error).toEqual("");
-                });
-              },
-            )
-          })
-     });
-     describe("Error " ++ name, ({describe, _}) =>
-       error_filenames
-       |> List.iter(filename => {
-            describe(
-              filename,
-              ({test, _}) => {
-                let (_, error) =
-                  run_bsb(
-                    ~ppxOptions=options,
-                    ~filename,
-                    ~pathIn="tests_bucklescript/operations/errors",
-                  );
-                test("output", ({expect, _}) => {
-                  expect.string(error).toMatchSnapshot()
-                });
-              },
-            )
-          })
+type test_type =
+  | Generate
+  | Compile
+  | Error;
+
+let test_types = [Generate, Compile, Error];
+
+type descriptor('a, 'b) =
+  | Ppx('a)
+  | Bsb('b);
+
+type test('a, 'b) = {
+  id: int,
+  test_type,
+  ppx_config,
+  filename: string,
+  descriptors: option(descriptor('a, 'b)),
+};
+
+let increm = ref(1);
+let get_id = () => {
+  increm := increm^ + 1;
+  increm^;
+};
+let tests =
+  test_types
+  |> List.map(test_type =>
+       ppx_configs
+       |> List.map(ppx_config =>
+            switch (test_type) {
+            | Generate
+            | Compile =>
+              filenames
+              |> List.map(filename =>
+                   {
+                     id: get_id(),
+                     test_type,
+                     ppx_config,
+                     filename,
+                     descriptors: None,
+                   }
+                 )
+            | Error =>
+              error_filenames
+              |> List.map(filename =>
+                   {
+                     id: get_id(),
+                     test_type,
+                     ppx_config,
+                     filename,
+                     descriptors: None,
+                   }
+                 )
+            }
+          )
      );
+
+// on macOS the number of in-flight file descriptors is max 256
+let concurrent_processes = 30;
+
+let inflight_files = ref(tests |> List.flatten |> List.flatten);
+let fill_inflight = () => {
+  inflight_files :=
+    inflight_files^
+    |> List.mapi((i, test) =>
+         switch (test) {
+         | {descriptors: None, _} when i < concurrent_processes => {
+             ...test,
+             descriptors:
+               Some(
+                 switch (test) {
+                 | {test_type: Generate, filename, ppx_config, _} =>
+                   Ppx(
+                     start_ppx(
+                       "tests_bucklescript/operations/" ++ filename,
+                       ppx_config.options,
+                     ),
+                   )
+                 | {test_type: Compile, filename, ppx_config, _} =>
+                   Bsb(
+                     start_bsb(
+                       ~ppxOptions=ppx_config.options,
+                       ~filename,
+                       ~pathIn="tests_bucklescript/operations",
+                     ),
+                   )
+
+                 | {test_type: Error, filename, ppx_config, _} =>
+                   Bsb(
+                     start_bsb(
+                       ~ppxOptions=ppx_config.options,
+                       ~filename,
+                       ~pathIn="tests_bucklescript/operations/errors",
+                     ),
+                   )
+                 },
+               ),
+           }
+         | test => test
+         }
+       );
+};
+
+let remove_inflight = id => {
+  inflight_files :=
+    inflight_files^ |> List.filter(({id: this_id, _}) => id != this_id);
+};
+
+let get_descriptors = id => {
+  switch (List.find(({id: this_id, _}) => this_id == id, inflight_files^)) {
+  | {descriptors: Some(descriptors), _} =>
+    remove_inflight(id);
+    descriptors;
+  | {descriptors: None, _} => raise(Not_found)
+  };
+};
+
+let get_ppx_descriptors =
+  fun
+  | Ppx(descriptor) => descriptor
+  | _ => raise(Not_found);
+let get_bsb_descriptors =
+  fun
+  | Bsb(descriptor) => descriptor
+  | _ => raise(Not_found);
+
+let get_type_and_config = tests =>
+  switch (tests) {
+  | [{ppx_config, test_type, _}, ..._] => (test_type, ppx_config)
+  | _ => raise(Not_found)
+  };
+
+tests
+|> List.iter(tests_by_type => {
+     tests_by_type
+     |> List.iter(tests_by_config => {
+          let (test_type, ppx_config) = get_type_and_config(tests_by_config);
+          let typeName =
+            switch (test_type) {
+            | Generate => "Generate"
+            | Compile => "Compile"
+            | Error => "Error"
+            };
+
+          describe(typeName ++ " " ++ ppx_config.name, ({describe, _}) => {
+            tests_by_config
+            |> List.iter(({filename, id, _}) => {
+                 describe(filename, ({test, _}) => {
+                   test("output", ({expect, _}) => {
+                     fill_inflight();
+                     switch (test_type) {
+                     | Generate =>
+                       let descriptors =
+                         id |> get_descriptors |> get_ppx_descriptors;
+                       let (output, error) = continue_ppx(descriptors);
+                       expect.string(output).toMatchSnapshot();
+                       expect.string(error).toEqual("");
+
+                     | Compile =>
+                       let descriptors =
+                         id |> get_descriptors |> get_bsb_descriptors;
+                       let (output, error) = descriptors |> continue_bsb;
+                       expect.string(output).toMatchSnapshot();
+                       expect.string(error).toEqual("");
+
+                     | Error =>
+                       let descriptors =
+                         id |> get_descriptors |> get_bsb_descriptors;
+                       let (_, error) = descriptors |> continue_bsb;
+                       expect.string(error).toMatchSnapshot();
+                     };
+                   })
+                 })
+               })
+          });
+        })
    });

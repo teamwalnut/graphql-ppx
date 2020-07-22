@@ -17,6 +17,22 @@ open Output_bucklescript_types;
 let conv_loc = _ => Location.none;
 
 let raw_value = loc => [@metaloc loc] [%expr value];
+
+let raw_opaque_object = (interface_fragments, fields) => {
+  let has_fragments =
+    fields
+    |> List.exists(
+         fun
+         | Fr_fragment_spread(_) => true
+         | _ => false,
+       );
+  switch (has_fragments, interface_fragments) {
+  | (true, _) => true
+  | (_, Some((_, []))) => false
+  | (_, Some((_, _))) => true
+  | _ => false
+  };
+};
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -441,14 +457,16 @@ and generate_object_encoder =
       existing_record,
       typename,
       force_record,
+      interface_fragments,
     ) => {
   open Ast_helper;
+  let is_opaque = raw_opaque_object(interface_fragments, fields);
   let do_obj_constructor_base = (is_object, wrap) => {
     switch (
       fields
       |> filter_map(
            fun
-           | Fr_fragment_spread(_, _, _, _, _) => None
+           | Fr_fragment_spread(_) => None
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
@@ -474,7 +492,7 @@ and generate_object_encoder =
                           )
                      )) {
                 [
-                  ("__typename", Res_string(conv_loc_from_ast(loc))),
+                  ("__typename", Res_string({loc: conv_loc_from_ast(loc)})),
                   ...fields,
                 ];
               } else {
@@ -561,6 +579,55 @@ and generate_object_encoder =
   // really anything that we can do about this.
 
   let merge_into_opaque = is_object => {
+    let fields =
+      fields
+      |> List.fold_left(
+           acc =>
+             fun
+             | Fr_named_field(_) => acc
+             | Fr_fragment_spread({key, name}) => [
+                 [%expr
+                   (
+                     Obj.magic(
+                       [%e ident_from_string(name ++ ".serialize")](
+                         [%e
+                           get_field(is_object, key, existing_record, path)
+                         ],
+                       ),
+                     ): Js.Json.t
+                   )
+                 ],
+                 ...acc,
+               ],
+           [],
+         )
+      |> List.rev;
+    let fields =
+      switch (interface_fragments) {
+      | None
+      | Some((_, [])) => fields
+      | Some((interface_name, fragments)) => [
+          {
+            let%expr value = [%e get_field(is_object, "fragment", None, path)];
+            (
+              Obj.magic(
+                [%e
+                  generate_poly_variant_interface_encoder(
+                    config,
+                    loc,
+                    interface_name,
+                    fragments,
+                    path,
+                    definition,
+                  )
+                ],
+              ): Js.Json.t
+            );
+          },
+          ...fields,
+        ]
+      };
+
     %expr
     (
       Obj.magic(
@@ -572,36 +639,7 @@ and generate_object_encoder =
               do_obj_constructor(is_object);
             },
           ): Js.Json.t,
-          [%e
-            fields
-            |> List.fold_left(
-                 acc =>
-                   fun
-                   | Fr_named_field(_) => acc
-                   | Fr_fragment_spread(key, _loc, name, _, _arguments) => [
-                       [%expr
-                         (
-                           Obj.magic(
-                             [%e ident_from_string(name ++ ".serialize")](
-                               [%e
-                                 get_field(
-                                   is_object,
-                                   key,
-                                   existing_record,
-                                   path,
-                                 )
-                               ],
-                             ),
-                           ): Js.Json.t
-                         )
-                       ],
-                       ...acc,
-                     ],
-                 [],
-               )
-            |> List.rev
-            |> Ast_helper.Exp.array
-          ],
+          [%e fields |> Ast_helper.Exp.array],
         ),
       ): [%t
         base_type_name("Raw." ++ generate_type_name(path))
@@ -609,15 +647,7 @@ and generate_object_encoder =
     );
   };
 
-  let has_fragment_spreads =
-    fields
-    |> List.exists(
-         fun
-         | Fr_fragment_spread(_) => true
-         | _ => false,
-       );
-
-  switch (has_fragment_spreads, config.records, existing_record, force_record) {
+  switch (is_opaque, config.records, existing_record, force_record) {
   | (true, records, _, _) => merge_into_opaque(!records)
   | (false, true, _, _) => do_obj_constructor_records()
   | (false, false, _, true) => do_obj_constructor(false)
@@ -699,9 +729,62 @@ and generate_poly_variant_selection_set_encoder =
   Obj.magic(Js.Json.null)
 ]
 and generate_poly_variant_interface_encoder =
-    (_config, _loc, _name, _base, _fragments, _path, _definition) => [%expr
-  Obj.magic(Js.Json.null)
-]
+    (config, _loc, name, fragments, path, definition) => {
+  open Ast_helper;
+  let fragment_cases =
+    fragments
+    |> List.map(((type_name, inner)) => {
+         Ast_helper.(
+           Exp.case(
+             Pat.variant(
+               type_name,
+               Some(Pat.var({txt: "value", loc: Location.none})),
+             ),
+             [%expr
+               (
+                 Obj.magic(
+                   [%e
+                     generate_serializer(
+                       config,
+                       [type_name, name, ...path],
+                       definition,
+                       Some(type_name),
+                       inner,
+                     )
+                   ],
+                 ): [%t
+                   base_type_name(
+                     "Raw." ++ generate_type_name([name, ...path]),
+                   )
+                 ]
+               )
+             ],
+           )
+         )
+       });
+
+  let fallback_case =
+    Exp.case(
+      Pat.variant("UnspecifiedFragment", Some(Pat.any())),
+      [%expr
+        (
+          Obj.magic(Js.Dict.empty()): [%t
+            base_type_name("Raw." ++ generate_type_name([name, ...path]))
+          ]
+        )
+      ],
+    );
+
+  let typename_matcher =
+    Exp.match(
+      [%expr value],
+      List.concat([fragment_cases, [fallback_case]]),
+    );
+
+  %expr
+  [%e typename_matcher];
+}
+
 and generate_solo_fragment_spread_encorder =
     (_config, _loc, name, _arguments, _definition) => [%expr
   [%e ident_from_string(name ++ ".serialize")](
@@ -718,19 +801,19 @@ and generate_error = (loc, message) => {
 }
 and generate_serializer = (config, path: list(string), definition, typename) =>
   fun
-  | Res_nullable(loc, inner) =>
+  | Res_nullable({loc, inner}) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
-  | Res_array(loc, inner) =>
+  | Res_array({loc, inner}) =>
     generate_array_encoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id(loc) => raw_value(conv_loc(loc))
-  | Res_string(loc) => raw_value(conv_loc(loc))
-  | Res_int(loc) => raw_value(conv_loc(loc))
-  | Res_float(loc) => raw_value(conv_loc(loc))
-  | Res_boolean(loc) => raw_value(conv_loc(loc))
-  | Res_raw_scalar(loc) => raw_value(conv_loc(loc))
-  | Res_poly_enum(loc, enum_meta, omit_future_value) =>
+  | Res_id({loc}) => raw_value(conv_loc(loc))
+  | Res_string({loc}) => raw_value(conv_loc(loc))
+  | Res_int({loc}) => raw_value(conv_loc(loc))
+  | Res_float({loc}) => raw_value(conv_loc(loc))
+  | Res_boolean({loc}) => raw_value(conv_loc(loc))
+  | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
+  | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)
-  | Res_custom_decoder(loc, ident, inner) =>
+  | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_encoder(
       config,
       conv_loc(loc),
@@ -739,7 +822,13 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       path,
       definition,
     )
-  | Res_record(loc, name, fields, existing_record) =>
+  | Res_record({
+      loc,
+      name,
+      fields,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
     generate_object_encoder(
       config,
       conv_loc(loc),
@@ -750,8 +839,15 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       existing_record,
       typename,
       true,
+      interface_fragments,
     )
-  | Res_object(loc, name, fields, existing_record) =>
+  | Res_object({
+      loc,
+      name,
+      fields,
+      type_name: existing_record,
+      interface_fragments,
+    }) =>
     generate_object_encoder(
       config,
       conv_loc(loc),
@@ -762,14 +858,15 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       existing_record,
       typename,
       false,
+      interface_fragments,
     )
-  | Res_poly_variant_union(
+  | Res_poly_variant_union({
       loc,
       name,
       fragments,
       exhaustive,
       omit_future_value,
-    ) =>
+    }) =>
     generate_poly_variant_union_encoder(
       config,
       conv_loc(loc),
@@ -780,7 +877,7 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       path,
       definition,
     )
-  | Res_poly_variant_selection_set(loc, name, fields) =>
+  | Res_poly_variant_selection_set({loc, name, fragments: fields}) =>
     generate_poly_variant_selection_set_encoder(
       config,
       conv_loc(loc),
@@ -789,17 +886,16 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       path,
       definition,
     )
-  | Res_poly_variant_interface(loc, name, base, fragments) =>
+  | Res_poly_variant_interface({loc, name, fragments}) =>
     generate_poly_variant_interface_encoder(
       config,
       conv_loc(loc),
       name,
-      base,
       fragments,
-      [name, ...path],
+      path,
       definition,
     )
-  | Res_solo_fragment_spread(loc, name, arguments) =>
+  | Res_solo_fragment_spread({loc, name, arguments}) =>
     generate_solo_fragment_spread_encorder(
       config,
       conv_loc(loc),
@@ -807,4 +903,4 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       arguments,
       definition,
     )
-  | Res_error(loc, message) => generate_error(loc, message);
+  | Res_error({loc, message}) => generate_error(loc, message);

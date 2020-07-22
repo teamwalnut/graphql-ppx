@@ -17,4 +17,541 @@ Generate Template › interface.re › output
     cookies: [],
   }
 ];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
+module QueryWithOnlyFragments = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t_users_User_AnonymousUser = {
+      __typename: string,
+      id: string,
+      anonymousId: int,
+    };
+    type t_users_User_AdminUser = {
+      __typename: string,
+      id: string,
+      name: string,
+    };
+    type t_users_User;
+    type t = {users: array(t_users_User)};
+    type t_variables = unit;
+  };
+  type t_users_User_AnonymousUser = {
+    id: string,
+    anonymousId: int,
+  };
+  type t_users_User_AdminUser = {
+    id: string,
+    name: string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AnonymousUser(t_users_User_AnonymousUser)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t = {users: array(t_users_User)};
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      ...on AdminUser   {\\n        id\\n        name\\n      }\\n      ...on AnonymousUser   {\\n        id\\n        anonymousId\\n      }\\n    }\\n  }\\n`\"
+  ];
+  type t_variables = unit;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      users: {
+        let value = (value: Raw.t).users;
+        value
+        |> Js.Array.map(value =>
+             let typename: string =
+               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+             (
+               switch (typename) {
+               | \"AnonymousUser\" =>
+                 `AnonymousUser(
+                   {
+                     let value: Raw.t_users_User_AnonymousUser =
+                       Obj.magic(value);
+                     (
+                       {
+                         id: {
+                           let value =
+                             (value: Raw.t_users_User_AnonymousUser).id;
+                           value;
+                         },
+                         anonymousId: {
+                           let value =
+                             (value: Raw.t_users_User_AnonymousUser).
+                               anonymousId;
+                           value;
+                         },
+                       }: t_users_User_AnonymousUser
+                     );
+                   },
+                 )
+               | \"AdminUser\" =>
+                 `AdminUser(
+                   {
+                     let value: Raw.t_users_User_AdminUser = Obj.magic(value);
+                     (
+                       {
+                         id: {
+                           let value = (value: Raw.t_users_User_AdminUser).id;
+                           value;
+                         },
+                         name: {
+                           let value =
+                             (value: Raw.t_users_User_AdminUser).name;
+                           value;
+                         },
+                       }: t_users_User_AdminUser
+                     );
+                   },
+                 )
+               | _ => `UnspecifiedFragment(typename)
+               }: t_users_User
+             );
+           );
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let users = {
+        let value = (value: t).users;
+        value
+        |> Js.Array.map(value =>
+             switch (value) {
+             | `AnonymousUser(value) => (
+                 Obj.magic(
+                   {
+                     let anonymousId = {
+                       let value =
+                         (value: t_users_User_AnonymousUser).anonymousId;
+                       value;
+                     }
+                     and id = {
+                       let value = (value: t_users_User_AnonymousUser).id;
+                       value;
+                     };
+                     {__typename: \"AnonymousUser\", id, anonymousId};
+                   }: Raw.t_users_User_AnonymousUser,
+                 ): Raw.t_users_User
+               )
+             | `AdminUser(value) => (
+                 Obj.magic(
+                   {
+                     let name = {
+                       let value = (value: t_users_User_AdminUser).name;
+                       value;
+                     }
+                     and id = {
+                       let value = (value: t_users_User_AdminUser).id;
+                       value;
+                     };
+                     {__typename: \"AdminUser\", id, name};
+                   }: Raw.t_users_User_AdminUser,
+                 ): Raw.t_users_User
+               )
+             | `UnspecifiedFragment(_) => (
+                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
+               )
+             }
+           );
+      };
+      {users: users};
+    }: Raw.t
+  );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by `graphql-ppx`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+```
+module QueryWithOnlyFragments {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+```*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module QueryWithMixedFragments = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t_users_User_AnonymousUser = {
+      __typename: string,
+      id: string,
+      anonymousId: int,
+    };
+    type t_users_User_AdminUser = {
+      __typename: string,
+      id: string,
+      name: string,
+    };
+    type t_users_User;
+    type t_users;
+    type t = {users: array(t_users)};
+    type t_variables = unit;
+  };
+  type t_users_User_AnonymousUser = {
+    id: string,
+    anonymousId: int,
+  };
+  type t_users_User_AdminUser = {
+    id: string,
+    name: string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AnonymousUser(t_users_User_AnonymousUser)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t_users = {
+    fragment: t_users_User,
+    id: string,
+  };
+  type t = {users: array(t_users)};
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      id\\n      ...on AdminUser   {\\n        name\\n      }\\n      ...on AnonymousUser   {\\n        anonymousId\\n      }\\n    }\\n  }\\n`\"
+  ];
+  type t_variables = unit;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      users: {
+        let value = (value: Raw.t).users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               {
+                 fragment: {
+                   let typename: string =
+                     Obj.magic(
+                       Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
+                     );
+                   (
+                     switch (typename) {
+                     | \"AnonymousUser\" =>
+                       `AnonymousUser(
+                         {
+                           let value: Raw.t_users_User_AnonymousUser =
+                             Obj.magic(value);
+                           (
+                             {
+                               id: {
+                                 let value =
+                                   (value: Raw.t_users_User_AnonymousUser).id;
+                                 value;
+                               },
+                               anonymousId: {
+                                 let value =
+                                   (value: Raw.t_users_User_AnonymousUser).
+                                     anonymousId;
+                                 value;
+                               },
+                             }: t_users_User_AnonymousUser
+                           );
+                         },
+                       )
+                     | \"AdminUser\" =>
+                       `AdminUser(
+                         {
+                           let value: Raw.t_users_User_AdminUser =
+                             Obj.magic(value);
+                           (
+                             {
+                               id: {
+                                 let value =
+                                   (value: Raw.t_users_User_AdminUser).id;
+                                 value;
+                               },
+                               name: {
+                                 let value =
+                                   (value: Raw.t_users_User_AdminUser).name;
+                                 value;
+                               },
+                             }: t_users_User_AdminUser
+                           );
+                         },
+                       )
+                     | _ => `UnspecifiedFragment(typename)
+                     }: t_users_User
+                   );
+                 },
+                 id: {
+                   let value =
+                     Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
+                   value;
+                 },
+               }: t_users
+             )
+           );
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let users = {
+        let value = (value: t).users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               Obj.magic(
+                 Js.Array.reduce(
+                   GraphQL_PPX.deepMerge,
+                   Obj.magic(
+                     {
+                       let id = {
+                         let value = (value: t_users).id;
+                         value;
+                       };
+                       {\"id\": id};
+                     },
+                   ): Js.Json.t,
+                   [|
+                     {
+                       let value = (value: t_users).fragment;
+                       (
+                         Obj.magic(
+                           switch (value) {
+                           | `AnonymousUser(value) => (
+                               Obj.magic(
+                                 {
+                                   let anonymousId = {
+                                     let value =
+                                       (value: t_users_User_AnonymousUser).
+                                         anonymousId;
+                                     value;
+                                   }
+                                   and id = {
+                                     let value =
+                                       (value: t_users_User_AnonymousUser).id;
+                                     value;
+                                   };
+                                   {
+                                     __typename: \"AnonymousUser\",
+                                     id,
+                                     anonymousId,
+                                   };
+                                 }: Raw.t_users_User_AnonymousUser,
+                               ): Raw.t_users_User
+                             )
+                           | `AdminUser(value) => (
+                               Obj.magic(
+                                 {
+                                   let name = {
+                                     let value =
+                                       (value: t_users_User_AdminUser).name;
+                                     value;
+                                   }
+                                   and id = {
+                                     let value =
+                                       (value: t_users_User_AdminUser).id;
+                                     value;
+                                   };
+                                   {__typename: \"AdminUser\", id, name};
+                                 }: Raw.t_users_User_AdminUser,
+                               ): Raw.t_users_User
+                             )
+                           | `UnspecifiedFragment(_) => (
+                               Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                             )
+                           },
+                         ): Js.Json.t
+                       );
+                     },
+                   |],
+                 ),
+               ): Raw.t_users
+             )
+           );
+      };
+      {users: users};
+    }: Raw.t
+  );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by `graphql-ppx`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+```
+module QueryWithMixedFragments {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+```*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
+module QueryWithoutFragments = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t_users = {id: string};
+    type t = {users: array(t_users)};
+    type t_variables = unit;
+  };
+  type t_users = {id: string};
+  type t = {users: array(t_users)};
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      id\\n    }\\n  }\\n`\"
+  ];
+  type t_variables = unit;
+  /**Parse the JSON GraphQL data to ReasonML data types*/
+  let parse = (value: Raw.t): t => (
+    {
+      users: {
+        let value = (value: Raw.t).users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               {
+                 id: {
+                   let value = (value: Raw.t_users).id;
+                   value;
+                 },
+               }: t_users
+             )
+           );
+      },
+    }: t
+  );
+  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
+  let serialize = (value: t): Raw.t => (
+    {
+      let users = {
+        let value = (value: t).users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               {
+                 let id = {
+                   let value = (value: t_users).id;
+                   value;
+                 };
+                 {id: id};
+               }: Raw.t_users
+             )
+           );
+      };
+      {users: users};
+    }: Raw.t
+  );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  module Z__INTERNAL = {
+    type root = t;
+    type nonrec graphql_module;
+    /****--- graphql-ppx module ---**
+
+The contents of this module are automatically generated by `graphql-ppx`.
+The following is simply an overview of the most important variables and types that you can access from this module.
+
+```
+module QueryWithoutFragments {
+  /**
+  The GraphQL query string
+  */
+  let query: string;
+
+  /**
+  This is the main type of the result you will get back.
+  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
+  */
+  type t;
+
+  /**
+  Parse the JSON GraphQL data to ReasonML data types
+  */
+  let parse: Raw.t => t;
+
+  /**
+  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
+  */
+  let serialize: t => Raw.t;
+
+  /**
+  This is the JSON compatible type of the GraphQL data.
+  It should not be necessary to access the types inside for normal use cases.
+  */
+  module Raw: { type t; };
+}
+```*/
+    let graphql_module: graphql_module = Obj.magic(0);
+  };
+};
 
