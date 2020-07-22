@@ -3,10 +3,12 @@
     fragment Dog on Dog {
       name
     }
-    query HasuraRepro($blockNumber: Int) {
-      hasuraRepro(orderBy: [{id: desc}], block: { number: $blockNumber }) {
+    query HasuraRepro($blockNumber: Int, $type: String) {
+      hasuraRepro(orderBy: [{id: desc}], block: { number: $blockNumber, type: $type }) {
         ...Dog
       }
     }
   |}
 ];
+
+HasuraRepro.makeVariables(~blockNumber=1, ~type_="1", ());

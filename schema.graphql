@@ -118,6 +118,7 @@ input hasuraObj {
 
 input blockObj {
   number: Int
+  type: String
 }
 
 type VariousScalars {

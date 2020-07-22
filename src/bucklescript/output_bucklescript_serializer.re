@@ -114,7 +114,10 @@ let serialize_fun = (config, loc, fields, type_name) => {
       fields
       |> List.map((InputField({name, type_, loc})) => {
            (
-             {txt: Longident.parse(name), loc: conv_loc(loc)},
+             {
+               txt: Longident.parse(to_valid_ident(name)),
+               loc: conv_loc(loc),
+             },
              [%expr
                [%e serialize_type(type_)](
                  if%e (config.records) {
@@ -261,11 +264,14 @@ let generate_variable_constructors =
                          ~loc=name_loc,
                          switch (type_) {
                          | List(_)
-                         | Type(_) => Labelled(name)
-                         | _ => Optional(name)
+                         | Type(_) => Labelled(to_valid_ident(name))
+                         | _ => Optional(to_valid_ident(name))
                          },
                          None,
-                         Pat.var(~loc=name_loc, {txt: name, loc: name_loc}),
+                         Pat.var(
+                           ~loc=name_loc,
+                           {txt: to_valid_ident(name), loc: name_loc},
+                         ),
                          make_labeled_fun(body, tl),
                        )
                      );
@@ -279,10 +285,11 @@ let generate_variable_constructors =
                      |> List.map((InputField({name, loc})) =>
                           (
                             {
-                              Location.txt: Longident.parse(name),
+                              Location.txt:
+                                Longident.parse(to_valid_ident(name)),
                               loc: conv_loc(loc),
                             },
-                            ident_from_string(name),
+                            ident_from_string(to_valid_ident(name)),
                           )
                         ),
                      None,

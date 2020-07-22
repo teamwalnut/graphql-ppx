@@ -60,7 +60,7 @@ function parse(value) {
           }) : undefined
     };
   }
-  var value$7 = value.let_;
+  var value$7 = value.let;
   var value$8 = value$7.inner;
   var tmp$2;
   if (value$8 == null) {
@@ -80,14 +80,14 @@ function parse(value) {
           second: {
             inner: tmp$1
           },
-          let_: {
+          let: {
             inner: tmp$2
           }
         };
 }
 
 function serialize(value) {
-  var value$1 = value.let_;
+  var value$1 = value.let;
   var value$2 = value$1.inner;
   var inner;
   if (value$2 !== undefined) {
@@ -161,7 +161,7 @@ function serialize(value) {
   return {
           first: first,
           second: second,
-          let_: let_
+          let: let_
         };
 }
 

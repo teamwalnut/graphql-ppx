@@ -240,16 +240,29 @@ let generate_record_type =
                    arguments,
                  );
                };
+               let valid_name = to_valid_ident(name);
                [
-                 Ast_helper.Type.field(
-                   {Location.txt: to_valid_ident(name), loc: Location.none},
-                   generate_type(
-                     ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
-                     ~config,
-                     ~path=[name, ...path],
-                     ~raw,
-                     type_,
-                   ),
+                 Ast_helper.(
+                   Type.field(
+                     ~attrs={
+                       name == valid_name
+                         ? []
+                         : [
+                           Ast_helper.Attr.mk(
+                             {txt: "bs.as", loc: Location.none},
+                             PStr([Str.eval(const_str_expr(name))]),
+                           ),
+                         ];
+                     },
+                     {Location.txt: valid_name, loc: Location.none},
+                     generate_type(
+                       ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                       ~config,
+                       ~path=[name, ...path],
+                       ~raw,
+                       type_,
+                     ),
+                   )
                  ),
                  ...acc,
                ];
@@ -810,42 +823,56 @@ let generate_empty_input_object = () => {
 };
 
 let generate_record_input_object = (raw, input_obj_name, fields) => {
-  Ast_helper.Type.mk(
-    ~kind=
-      Ptype_record(
-        fields
-        |> List.map(
-             fun
-             | InputField({name, type_, loc}) => {
-                 Ast_helper.Type.field(
-                   {Location.txt: name, loc: Location.none},
-                   generate_arg_type(
-                     raw,
-                     {
-                       ...loc,
-                       loc_ghost:
-                         switch (input_obj_name) {
-                         | None => false
-                         | Some(_) => true
-                         },
-                     },
-                     type_,
-                   ),
-                 );
-               },
-           ),
-      ),
-    {
-      loc: Location.none,
-      txt:
-        generate_type_name(
-          ~prefix="t_variables",
-          switch (input_obj_name) {
-          | None => []
-          | Some(name) => [name]
-          },
+  Ast_helper.(
+    Type.mk(
+      ~kind=
+        Ptype_record(
+          fields
+          |> List.map(
+               fun
+               | InputField({name, type_, loc}) => {
+                   let valid_name = to_valid_ident(name);
+                   Ast_helper.Type.field(
+                     ~attrs=
+                       if (valid_name == name) {
+                         [];
+                       } else {
+                         [
+                           Ast_helper.Attr.mk(
+                             {txt: "bs.as", loc: Location.none},
+                             PStr([Str.eval(const_str_expr(name))]),
+                           ),
+                         ];
+                       },
+                     {Location.txt: valid_name, loc: Location.none},
+                     generate_arg_type(
+                       raw,
+                       {
+                         ...loc,
+                         loc_ghost:
+                           switch (input_obj_name) {
+                           | None => false
+                           | Some(_) => true
+                           },
+                       },
+                       type_,
+                     ),
+                   );
+                 },
+             ),
         ),
-    },
+      {
+        loc: Location.none,
+        txt:
+          generate_type_name(
+            ~prefix="t_variables",
+            switch (input_obj_name) {
+            | None => []
+            | Some(name) => [name]
+            },
+          ),
+      },
+    )
   );
 };
 
@@ -863,7 +890,7 @@ let generate_object_input_object = (raw, input_obj_name, fields) => {
                    {
                      pof_desc:
                        Otag(
-                         {txt: name, loc: Location.none},
+                         {txt: to_valid_ident(name), loc: Location.none},
                          generate_arg_type(raw, loc, type_),
                        ),
                      pof_loc: Location.none,

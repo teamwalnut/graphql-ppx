@@ -48,7 +48,7 @@ var Dog = {
 
 var Raw$1 = {};
 
-var query$1 = \"query HasuraRepro($blockNumber: Int)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber})  {\\n...Dog   \\n}\\n\\n}\\nfragment Dog on Dog   {\\n__typename  \\nname  \\n}\\n\";
+var query$1 = \"query HasuraRepro($blockNumber: Int, $type: String)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  {\\n...Dog   \\n}\\n\\n}\\nfragment Dog on Dog   {\\n__typename  \\nname  \\n}\\n\";
 
 function parse$1(value) {
   return {
@@ -66,26 +66,30 @@ function serialize$1(value) {
 
 function serializeVariables(inp) {
   var a = inp.blockNumber;
+  var a$1 = inp.type;
   return {
-          blockNumber: a !== undefined ? a : undefined
+          blockNumber: a !== undefined ? a : undefined,
+          type: a$1 !== undefined ? a$1 : undefined
         };
 }
 
-function makeVariables(blockNumber, param) {
+function makeVariables(blockNumber, type_, param) {
   return serializeVariables({
-              blockNumber: blockNumber
+              blockNumber: blockNumber,
+              type: type_
             });
 }
 
 function makeDefaultVariables(param) {
   return serializeVariables({
-              blockNumber: undefined
+              blockNumber: undefined,
+              type: undefined
             });
 }
 
 var Z__INTERNAL$1 = {
-  _graphql_orderBy_119: 0,
-  _graphql_block_142: 0,
+  _graphql_orderBy_134: 0,
+  _graphql_block_157: 0,
   graphql_module: 0
 };
 
@@ -100,7 +104,12 @@ var HasuraRepro = {
   Z__INTERNAL: Z__INTERNAL$1
 };
 
+serializeVariables({
+      blockNumber: 1,
+      type: \"1\"
+    });
+
 exports.Dog = Dog;
 exports.HasuraRepro = HasuraRepro;
-/* No side effect */
+/*  Not a pure module */
 

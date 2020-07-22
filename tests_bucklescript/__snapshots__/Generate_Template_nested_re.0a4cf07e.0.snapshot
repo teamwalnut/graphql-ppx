@@ -39,6 +39,7 @@ module MyQuery = {
     type t = {
       first: t_first,
       second: t_second,
+      [@bs.as \"let\"]
       let_: t_let,
     };
     type t_variables = unit;
@@ -58,6 +59,7 @@ module MyQuery = {
   type t = {
     first: t_first,
     second: t_second,
+    [@bs.as \"let\"]
     let_: t_let,
   };
   /**The GraphQL query string*/
