@@ -634,7 +634,6 @@ let generate_graphql_object =
   };
 };
 
-// generate all the types necessary types that we later refer to by name.
 let generate_types =
     (
       config: Generator_utils.output_config,
@@ -643,56 +642,82 @@ let generate_types =
       type_name,
       fragment_name,
     ) => {
-  let types =
-    extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
-    |> List.map(
-         fun
-         | Object({
-             fields,
-             path: obj_path,
-             force_record,
-             loc,
-             variant_parent,
-             interface_fragments,
-           }) =>
-           generate_graphql_object(
-             ~config,
-             ~obj_path,
-             ~force_record,
-             ~raw,
-             ~loc,
-             ~is_variant=variant_parent,
-             ~type_name,
-             ~interface_fragments,
-             fields,
-           )
-         | VariantSelection({loc, path, fields}) =>
-           generate_variant_selection(config, fields, path, loc, raw)
-         | VariantUnion({loc, path, fields, omit_future_value}) =>
-           generate_variant_union(
-             config,
-             fields,
-             omit_future_value,
-             path,
-             loc,
-             raw,
-           )
-         | VariantInterface({name, loc, path, fragments}) =>
-           generate_variant_interface(
-             ~name,
-             ~config,
-             ~fragments,
-             ~path,
-             ~loc,
-             ~raw,
-           )
-         | Enum({loc, path, fields, omit_future_value}) =>
-           generate_enum(config, fields, path, loc, raw, omit_future_value),
-       )
-    |> List.rev;
+  extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
+  |> List.map(
+       fun
+       | Object({
+           fields,
+           path: obj_path,
+           force_record,
+           loc,
+           variant_parent,
+           interface_fragments,
+         }) =>
+         generate_graphql_object(
+           ~config,
+           ~obj_path,
+           ~force_record,
+           ~raw,
+           ~loc,
+           ~is_variant=variant_parent,
+           ~type_name,
+           ~interface_fragments,
+           fields,
+         )
+       | VariantSelection({loc, path, fields}) =>
+         generate_variant_selection(config, fields, path, loc, raw)
+       | VariantUnion({loc, path, fields, omit_future_value}) =>
+         generate_variant_union(
+           config,
+           fields,
+           omit_future_value,
+           path,
+           loc,
+           raw,
+         )
+       | VariantInterface({name, loc, path, fragments}) =>
+         generate_variant_interface(
+           ~name,
+           ~config,
+           ~fragments,
+           ~path,
+           ~loc,
+           ~raw,
+         )
+       | Enum({loc, path, fields, omit_future_value}) =>
+         generate_enum(config, fields, path, loc, raw, omit_future_value),
+     )
+  |> List.rev;
+};
 
+let make_fragment_type =
+    (config, raw, type_name, fragment_name, fragment_name_loc) => {
+  Ast_helper.(
+    Type.mk(
+      ~manifest=
+        Typ.constr(
+          raw
+            ? Location.mknoloc(Longident.Lident("t"))
+            : Location.mkloc(
+                switch (type_name) {
+                | Some(type_name) => Longident.parse(type_name)
+                | None => Longident.Lident("t")
+                },
+                conv_loc(config.Generator_utils.map_loc(fragment_name_loc)),
+              ),
+          [],
+        ),
+      Location.mknoloc("t_" ++ fragment_name),
+    )
+  );
+};
+// generate all the types necessary types that we later refer to by name.
+let generate_type_structure_items =
+    (config, res, raw, type_name, fragment_name) => {
   let types =
-    types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
+    generate_types(config, res, raw, type_name, fragment_name)
+    |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
+
   switch (fragment_name) {
   | Some((fragment_name, fragment_name_loc)) =>
     List.append(
@@ -702,21 +727,48 @@ let generate_types =
           Str.type_(
             Nonrecursive,
             [
-              Type.mk(
-                ~manifest=
-                  Typ.constr(
-                    raw
-                      ? Location.mknoloc(Longident.Lident("t"))
-                      : Location.mkloc(
-                          switch (type_name) {
-                          | Some(type_name) => Longident.parse(type_name)
-                          | None => Longident.Lident("t")
-                          },
-                          conv_loc(config.map_loc(fragment_name_loc)),
-                        ),
-                    [],
-                  ),
-                Location.mknoloc("t_" ++ fragment_name),
+              make_fragment_type(
+                config,
+                raw,
+                type_name,
+                fragment_name,
+                fragment_name_loc,
+              ),
+            ],
+          )
+        ),
+      ],
+    )
+  | None => types
+  };
+};
+let generate_type_signature_items =
+    (
+      config: Generator_utils.output_config,
+      res,
+      raw,
+      type_name,
+      fragment_name,
+    ) => {
+  let types =
+    generate_types(config, res, raw, type_name, fragment_name)
+    |> List.map(type_ => Ast_helper.Sig.type_(Recursive, [type_]));
+
+  switch (fragment_name) {
+  | Some((fragment_name, fragment_name_loc)) =>
+    List.append(
+      types,
+      [
+        Ast_helper.(
+          Sig.type_(
+            Nonrecursive,
+            [
+              make_fragment_type(
+                config,
+                raw,
+                type_name,
+                fragment_name,
+                fragment_name_loc,
               ),
             ],
           )
@@ -923,7 +975,7 @@ let generate_input_object =
     : generate_object_input_object(raw, input_obj_name, fields);
 };
 
-let generate_arg_types = (raw, config, variable_defs) => {
+let generate_arg_type_structure_items = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
 
   // Add to internal module
@@ -958,5 +1010,42 @@ let generate_arg_types = (raw, config, variable_defs) => {
            },
        )
     |> Ast_helper.Str.type_(Recursive),
+  ];
+};
+let generate_arg_type_signature_items = (raw, config, variable_defs) => {
+  let input_objects = extract_args(config, variable_defs);
+
+  // Add to internal module
+  if (!raw) {
+    input_objects
+    |> List.iter(
+         fun
+         | NoVariables => ()
+         | InputObject({name, fields}) => {
+             switch (name) {
+             | None =>
+               fields
+               |> List.iter(field => {
+                    Output_bucklescript_docstrings.for_input_constraint(
+                      config,
+                      field,
+                    )
+                  })
+             | Some(_) => ()
+             };
+           },
+       );
+  };
+
+  [
+    input_objects
+    |> List.map(
+         fun
+         | NoVariables => generate_empty_input_object()
+         | InputObject({name, fields}) => {
+             generate_input_object(raw, config, name, fields);
+           },
+       )
+    |> Ast_helper.Sig.type_(Recursive),
   ];
 };

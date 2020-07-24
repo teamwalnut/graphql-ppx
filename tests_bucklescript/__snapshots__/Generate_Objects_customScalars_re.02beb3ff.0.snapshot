@@ -38,13 +38,13 @@ module MyQuery = {
     \"nonNullable\": Js.Json.t,
   };
   type t = {. \"customScalarField\": t_customScalarField};
-  /**The GraphQL query string*/
-  let query = \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\";
   type t_variables = {
     .
     \"opt\": option(Js.Json.t),
     \"req\": Js.Json.t,
   };
+  /**The GraphQL query string*/
+  let query = \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let customScalarField = {

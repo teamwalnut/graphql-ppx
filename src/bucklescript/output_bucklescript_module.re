@@ -336,6 +336,22 @@ let make_printed_query = (config, document) => {
   };
 };
 
+let signature_module = (name, signature) => {
+  {
+    psig_loc: Location.none,
+    psig_desc:
+      Psig_module({
+        pmd_loc: Location.none,
+        pmd_name: {
+          txt: Generator_utils.capitalize_ascii(name),
+          loc: Location.none,
+        },
+        pmd_type: Mty.signature(signature),
+        pmd_attributes: [],
+      }),
+  };
+};
+
 let wrap_module = (~loc as _, ~module_type=?, name: string, contents) => {
   let loc = Location.none;
   {
@@ -420,7 +436,65 @@ let wrap_query_module =
   };
 };
 
-let generate_default_operation =
+let generate_operation_interface = (config, variable_defs, res_structure) => {
+  let raw_types =
+    Output_bucklescript_types.generate_type_signature_items(
+      config,
+      res_structure,
+      true,
+      None,
+      None,
+    );
+  let types =
+    Output_bucklescript_types.generate_type_signature_items(
+      config,
+      res_structure,
+      false,
+      None,
+      None,
+    );
+  let raw_arg_types =
+    Output_bucklescript_types.generate_arg_type_signature_items(
+      true,
+      config,
+      variable_defs,
+    );
+  let arg_types =
+    Output_bucklescript_types.generate_arg_type_signature_items(
+      false,
+      config,
+      variable_defs,
+    );
+  let extracted_args = extract_args(config, variable_defs);
+  let serialize_variable_signatures =
+    Output_bucklescript_serializer.generate_serialize_variables_signature(
+      extracted_args,
+    );
+
+  [
+    [signature_module("Raw", List.append(raw_types, raw_arg_types))],
+    types,
+    arg_types,
+    [
+      [%sigi:
+        let query: [%t
+          base_type_name(
+            switch (config.template_tag_return_type) {
+            | Some(return_type) => return_type
+            | None => "string"
+            },
+          )
+        ]
+      ],
+      [%sigi: let parse: Raw.t => t],
+      [%sigi: let serialize: t => Raw.t],
+    ],
+    serialize_variable_signatures,
+  ]
+  |> List.concat;
+};
+
+let generate_operation_implementation =
     (config, variable_defs, has_error, operation, res_structure) => {
   Output_bucklescript_docstrings.reset();
   let parse_fn =
@@ -439,7 +513,7 @@ let generate_default_operation =
       res_structure,
     );
   let types =
-    Output_bucklescript_types.generate_types(
+    Output_bucklescript_types.generate_type_structure_items(
       config,
       res_structure,
       false,
@@ -449,7 +523,7 @@ let generate_default_operation =
   // Add to internal module
   Output_bucklescript_docstrings.for_operation(config, operation);
   let raw_types =
-    Output_bucklescript_types.generate_types(
+    Output_bucklescript_types.generate_type_structure_items(
       config,
       res_structure,
       true,
@@ -457,16 +531,25 @@ let generate_default_operation =
       None,
     );
   let arg_types =
-    Output_bucklescript_types.generate_arg_types(
+    Output_bucklescript_types.generate_arg_type_structure_items(
       false,
       config,
       variable_defs,
     );
   let raw_arg_types =
-    Output_bucklescript_types.generate_arg_types(true, config, variable_defs);
+    Output_bucklescript_types.generate_arg_type_structure_items(
+      true,
+      config,
+      variable_defs,
+    );
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
+      config,
+      extracted_args,
+    );
+  let variable_constructors =
+    Output_bucklescript_serializer.generate_variable_constructors(
       config,
       extracted_args,
     );
@@ -476,12 +559,6 @@ let generate_default_operation =
     if (has_error) {
       [[%stri let parse: Raw.t => t = value => [%e parse_fn]]];
     } else {
-      let variable_constructors =
-        Output_bucklescript_serializer.generate_variable_constructors(
-          config,
-          extracted_args,
-        );
-
       let printed_query =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
@@ -496,12 +573,12 @@ let generate_default_operation =
             ),
           ],
           types,
+          arg_types,
           [
             Output_bucklescript_docstrings.(
               make_let("query", printed_query, query_docstring)
             ),
           ],
-          arg_types,
           [
             Output_bucklescript_docstrings.(
               make_let(
@@ -520,10 +597,7 @@ let generate_default_operation =
               )
             ),
           ],
-          switch (serialize_variable_functions) {
-          | None => []
-          | Some(f) => [f]
-          },
+          [serialize_variable_functions],
           switch (variable_constructors) {
           | None => [[%stri let makeVariables = () => ()]]
           | Some(c) => [c]
@@ -588,7 +662,7 @@ let generate_fragment_module =
       res_structure,
     );
   let types =
-    Output_bucklescript_types.generate_types(
+    Output_bucklescript_types.generate_type_structure_items(
       config,
       res_structure,
       false,
@@ -601,7 +675,7 @@ let generate_fragment_module =
   // Add to internal module
   Output_bucklescript_docstrings.for_fragment_root(config, fragment);
   let raw_types =
-    Output_bucklescript_types.generate_types(
+    Output_bucklescript_types.generate_type_structure_items(
       config,
       res_structure,
       true,
@@ -765,7 +839,13 @@ let generate_definition = config =>
       operation,
       inner: structure,
     }) =>
-    generate_default_operation(config, vdefs, has_error, operation, structure)
+    generate_operation_implementation(
+      config,
+      vdefs,
+      has_error,
+      operation,
+      structure,
+    )
   | Def_fragment({
       name,
       req_vars,

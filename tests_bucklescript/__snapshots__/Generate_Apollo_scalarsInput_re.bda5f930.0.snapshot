@@ -36,8 +36,6 @@ module MyQuery = {
     };
   };
   type t = {scalarsInput: string};
-  /**The GraphQL query string*/
-  let query = \"query ($arg: VariousScalarsInput!)  {\\nscalarsInput(arg: $arg)  \\n}\\n\";
   type t_variables = {arg: t_variables_VariousScalarsInput}
   and t_variables_VariousScalarsInput = {
     nullableString: option(string),
@@ -51,6 +49,8 @@ module MyQuery = {
     nullableID: option(string),
     id: string,
   };
+  /**The GraphQL query string*/
+  let query = \"query ($arg: VariousScalarsInput!)  {\\nscalarsInput(arg: $arg)  \\n}\\n\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

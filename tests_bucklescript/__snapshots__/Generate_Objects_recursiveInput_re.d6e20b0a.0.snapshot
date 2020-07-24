@@ -30,8 +30,6 @@ module MyQuery = {
     };
   };
   type t = {. \"recursiveInput\": string};
-  /**The GraphQL query string*/
-  let query = \"query ($arg: RecursiveInput!)  {\\nrecursiveInput(arg: $arg)  \\n}\\n\";
   type t_variables = {. \"arg\": t_variables_RecursiveInput}
   and t_variables_RecursiveInput = {
     .
@@ -39,6 +37,8 @@ module MyQuery = {
     \"inner\": option(t_variables_RecursiveInput),
     \"enum\": option([ | `FIRST | `SECOND | `THIRD]),
   };
+  /**The GraphQL query string*/
+  let query = \"query ($arg: RecursiveInput!)  {\\nrecursiveInput(arg: $arg)  \\n}\\n\";
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => {
     let recursiveInput = {

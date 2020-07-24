@@ -48,9 +48,9 @@ module MyQuery = {
     inner: option(t_first_inner),
   };
   type t = {first: t_first};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query = \"query   {\\nfirst: nestedObject  {\\n__typename  \\ninner  {\\n__typename  \\ninner  {\\n__typename  \\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

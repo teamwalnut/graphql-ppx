@@ -34,10 +34,6 @@ module MyQuery = {
     and t_variables_EmbeddedInput = {field: Js.Nullable.t(string)};
   };
   type t = {nonrecursiveInput: string};
-  /**The GraphQL query string*/
-  let query: string = [%raw
-    \"require(\\\"gql\\\")`\\n  query ($arg: NonrecursiveInput!)  {\\n    nonrecursiveInput(arg: $arg)\\n  }\\n`\"
-  ];
   type t_variables = {arg: t_variables_NonrecursiveInput}
   and t_variables_NonrecursiveInput = {
     nonNullableField: string,
@@ -48,6 +44,10 @@ module MyQuery = {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query ($arg: NonrecursiveInput!)  {\\n    nonrecursiveInput(arg: $arg)\\n  }\\n`\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -334,10 +334,6 @@ module MyQuery2 = {
     scalarsInput: string,
     more: string,
   };
-  /**The GraphQL query string*/
-  let query: string = [%raw
-    \"require(\\\"gql\\\")`\\n  query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\n    scalarsInput(arg: $arg)\\n    more: scalarsInput(arg: $arg2)\\n  }\\n`\"
-  ];
   type t_variables = {
     arg: t_variables_NonrecursiveInput,
     arg2: t_variables_NonrecursiveInput,
@@ -351,6 +347,10 @@ module MyQuery2 = {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\n    scalarsInput(arg: $arg)\\n    more: scalarsInput(arg: $arg2)\\n  }\\n`\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

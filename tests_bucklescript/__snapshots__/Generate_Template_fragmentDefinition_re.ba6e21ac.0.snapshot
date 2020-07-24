@@ -552,6 +552,7 @@ module MyQuery = {
     l4: t_l4,
     l5: FragmentWithArgs.t,
   };
+  type t_variables = {arg1: option(string)};
   /**The GraphQL query string*/
   let query: string =
     [%raw
@@ -561,7 +562,6 @@ module MyQuery = {
       InlineListFragment.query,
       ListFragment.query,
     );
-  type t_variables = {arg1: option(string)};
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -858,6 +858,7 @@ module MyQuery2 = {
     type t_variables = unit;
   };
   type t = {lists: ListFragment.t};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string =
     [%raw
@@ -865,7 +866,6 @@ module MyQuery2 = {
     ](
       ListFragment.query,
     );
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

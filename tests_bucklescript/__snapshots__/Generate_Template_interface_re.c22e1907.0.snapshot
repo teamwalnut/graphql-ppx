@@ -51,11 +51,11 @@ module QueryWithOnlyFragments = {
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      ...on AdminUser   {\\n        id\\n        name\\n      }\\n      ...on AnonymousUser   {\\n        id\\n        anonymousId\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -230,11 +230,11 @@ module QueryWithTypename = {
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      ...on AdminUser   {\\n        __typename\\n        id\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -379,11 +379,11 @@ module QueryWithMixedFragments = {
     id: string,
   };
   type t = {users: array(t_users)};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      id\\n      ...on AdminUser   {\\n        name\\n      }\\n      ...on AnonymousUser   {\\n        anonymousId\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -588,11 +588,11 @@ module MixedQueryWithTypename = {
     id: string,
   };
   type t = {users: array(t_users)};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      id\\n      __typename\\n      ...on AdminUser   {\\n        __typename\\n        id\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -773,11 +773,11 @@ module QueryWithoutFragments = {
   };
   type t_users = {id: string};
   type t = {users: array(t_users)};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    users  {\\n      __typename\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

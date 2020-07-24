@@ -45,11 +45,11 @@ module Normal = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -209,11 +209,11 @@ module ByConfig = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -372,11 +372,11 @@ module ByDirective = {
     errors: option(array(t_mutationWithError_errors)),
   };
   type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

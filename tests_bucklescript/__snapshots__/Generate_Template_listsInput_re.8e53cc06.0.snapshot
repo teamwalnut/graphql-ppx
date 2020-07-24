@@ -30,10 +30,6 @@ module MyQuery = {
     };
   };
   type t = {listsInput: string};
-  /**The GraphQL query string*/
-  let query: string = [%raw
-    \"require(\\\"gql\\\")`\\n  query ($arg: ListsInput!)  {\\n    listsInput(arg: $arg)\\n  }\\n`\"
-  ];
   type t_variables = {arg: t_variables_ListsInput}
   and t_variables_ListsInput = {
     nullableOfNullable: option(array(option(string))),
@@ -41,6 +37,10 @@ module MyQuery = {
     nonNullableOfNullable: array(option(string)),
     nonNullableOfNonNullable: array(string),
   };
+  /**The GraphQL query string*/
+  let query: string = [%raw
+    \"require(\\\"gql\\\")`\\n  query ($arg: ListsInput!)  {\\n    listsInput(arg: $arg)\\n  }\\n`\"
+  ];
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

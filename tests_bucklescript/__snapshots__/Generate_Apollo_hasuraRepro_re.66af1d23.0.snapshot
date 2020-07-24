@@ -128,15 +128,15 @@ module HasuraRepro = {
     };
   };
   type t = {hasuraRepro: Dog.t};
-  /**The GraphQL query string*/
-  let query =
-    \"query HasuraRepro($blockNumber: Int, $type: String)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  {\\n...Dog   \\n}\\n\\n}\\n\"
-    ++ Dog.query;
   type t_variables = {
     blockNumber: option(int),
     [@bs.as \"type\"]
     type_: option(string),
   };
+  /**The GraphQL query string*/
+  let query =
+    \"query HasuraRepro($blockNumber: Int, $type: String)  {\\nhasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  {\\n...Dog   \\n}\\n\\n}\\n\"
+    ++ Dog.query;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

@@ -51,11 +51,11 @@ module MyQuery = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -285,11 +285,11 @@ module MyQuery1a = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: MyTypes.query = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -515,11 +515,11 @@ module MyQuery1b = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -745,11 +745,11 @@ module MyQuery2 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gatsby\\\").graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -975,11 +975,11 @@ module MyQuery3 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gatsby\\\").graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -1205,11 +1205,11 @@ module MyQuery4 = {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -1548,11 +1548,11 @@ module MyQuery5 = {
     type t_variables = unit;
   };
   type t = {lists: ListFragment.t};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query MyQuery5  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -1627,6 +1627,7 @@ module MyQuery6 = {
     type t_variables = unit;
   };
   type t = {lists: ListFragment.t};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string =
     [%raw
@@ -1634,7 +1635,6 @@ module MyQuery6 = {
     ](
       ListFragment.query,
     );
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -1709,11 +1709,11 @@ module MyQuery7 = {
     type t_variables = unit;
   };
   type t = {lists: ListFragment.t};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query MyQuery7  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

@@ -44,9 +44,9 @@ module MyQuery = {
     int: StringOfInt.t,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\nint  \\n}\\n\\n}\\n\";
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {

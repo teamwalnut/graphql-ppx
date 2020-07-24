@@ -173,54 +173,91 @@ let filter_map = f => {
   aux([]);
 };
 
+let generate_serialize_variables_signature =
+    (arg_type_defs: list(arg_type_def)) =>
+  switch (arg_type_defs) {
+  | [NoVariables] => [%sig: let serializeVariables: unit => unit]
+  | arg_type_defs =>
+    Ast_helper.(
+      arg_type_defs
+      |> filter_map(
+           fun
+           | InputObject({name, loc}) => Some((name, loc))
+           | NoVariables => None,
+         )
+      |> List.map(((name, loc)) => {
+           let type_name =
+             switch (name) {
+             | None => "t_variables"
+             | Some(input_object_name) => "t_variables_" ++ input_object_name
+             };
+           Sig.value(
+             Val.mk(
+               {
+                 loc: conv_loc(loc),
+                 txt:
+                   switch (name) {
+                   | None => "serializeVariables"
+                   | Some(input_object_name) =>
+                     "serializeInputObject" ++ input_object_name
+                   },
+               },
+               Typ.arrow(
+                 ~loc=conv_loc(loc),
+                 Nolabel,
+                 base_type_name(type_name),
+                 base_type_name("Raw." ++ type_name),
+               ),
+             ),
+           );
+         })
+    )
+  };
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => Some([%stri let serializeVariables = () => ()])
+  | [NoVariables] => [%stri let serializeVariables = () => ()]
   | arg_type_defs =>
-    Some(
-      Ast_helper.(
-        Str.value(
-          is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
-          arg_type_defs
-          |> filter_map(
-               fun
-               | InputObject({name, fields, loc}) =>
-                 Some((name, fields, loc))
-               | NoVariables => None,
-             )
-          |> List.map(((name, fields, loc)) => {
-               let type_name =
-                 switch (name) {
-                 | None => "t_variables"
-                 | Some(input_object_name) =>
-                   "t_variables_" ++ input_object_name
-                 };
-               [@metaloc conv_loc(loc)]
-               Vb.mk(
-                 Pat.constraint_(
+    Ast_helper.(
+      Str.value(
+        is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
+        arg_type_defs
+        |> filter_map(
+             fun
+             | InputObject({name, fields, loc}) => Some((name, fields, loc))
+             | NoVariables => None,
+           )
+        |> List.map(((name, fields, loc)) => {
+             let type_name =
+               switch (name) {
+               | None => "t_variables"
+               | Some(input_object_name) =>
+                 "t_variables_" ++ input_object_name
+               };
+             [@metaloc conv_loc(loc)]
+             Vb.mk(
+               Pat.constraint_(
+                 ~loc=conv_loc(loc),
+                 Pat.var({
+                   loc: conv_loc(loc),
+                   txt:
+                     switch (name) {
+                     | None => "serializeVariables"
+                     | Some(input_object_name) =>
+                       "serializeInputObject" ++ input_object_name
+                     },
+                 }),
+                 Typ.arrow(
                    ~loc=conv_loc(loc),
-                   Pat.var({
-                     loc: conv_loc(loc),
-                     txt:
-                       switch (name) {
-                       | None => "serializeVariables"
-                       | Some(input_object_name) =>
-                         "serializeInputObject" ++ input_object_name
-                       },
-                   }),
-                   Typ.arrow(
-                     ~loc=conv_loc(loc),
-                     Nolabel,
-                     base_type_name(type_name),
-                     base_type_name("Raw." ++ type_name),
-                   ),
+                   Nolabel,
+                   base_type_name(type_name),
+                   base_type_name("Raw." ++ type_name),
                  ),
-                 serialize_fun(config, loc, fields, type_name),
-               );
-             }),
-        )
-      ),
+               ),
+               serialize_fun(config, loc, fields, type_name),
+             );
+           }),
+      )
     )
   };
 

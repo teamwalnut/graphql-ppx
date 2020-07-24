@@ -62,11 +62,11 @@ module MyQuery = {
     [@bs.as \"let\"]
     let_: t_let,
   };
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    first: nestedObject  {\\n      inner  {\\n        inner  {\\n          field\\n        }\\n      }\\n    }\\n    second: nestedObject  {\\n      inner  {\\n        inner  {\\n          f1: field\\n          f2: field\\n        }\\n      }\\n    }\\n    let: nestedObject  {\\n      inner  {\\n        inner  {\\n          field\\n        }\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
