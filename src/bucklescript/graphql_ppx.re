@@ -360,7 +360,15 @@ let get_template_tag = query_config => {
 };
 
 let rewrite_query =
-    (~query_config: query_config, ~loc, ~delim, ~query, ~module_name, ()) => {
+    (
+      ~query_config: query_config,
+      ~loc,
+      ~delim,
+      ~query,
+      ~module_name,
+      ~module_type,
+      (),
+    ) => {
   open Ast_408;
 
   let lexer = Graphql_lexer.make(query);
@@ -461,7 +469,11 @@ let rewrite_query =
            });
 
         Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(config, module_name);
+        |> Output_bucklescript_module.generate_modules(
+             config,
+             module_name,
+             module_type,
+           );
       };
     };
   };
@@ -488,6 +500,26 @@ let mapper = (_config, _cookies) => {
                            pmb_expr: {
                              pmod_desc:
                                Pmod_extension(({txt: "graphql", loc}, pstr)),
+                           },
+                         }),
+                     } as item
+                   | {
+                       pstr_desc:
+                         Pstr_module({
+                           pmb_name: {txt: _},
+                           pmb_expr: {
+                             pmod_desc:
+                               Pmod_constraint(
+                                 {
+                                   pmod_desc:
+                                     Pmod_extension((
+                                       {txt: "graphql", loc},
+                                       pstr,
+                                     )),
+                                   _,
+                                 },
+                                 _,
+                               ),
                            },
                          }),
                      } as item
@@ -523,6 +555,20 @@ let mapper = (_config, _cookies) => {
                          switch (item) {
                          | {pstr_desc: Pstr_module({pmb_name: {txt: name}})} =>
                            Some(name)
+                         | _ => None
+                         };
+                       let module_type =
+                         switch (item) {
+                         | {
+                             pstr_desc:
+                               Pstr_module({
+                                 pmb_expr: {
+                                   pmod_desc: Pmod_constraint(_, module_type),
+                                 },
+                                 _,
+                               }),
+                           } =>
+                           Some(module_type)
                          | _ => None
                          };
                        Output_bucklescript_docstrings.for_module_information(
@@ -562,6 +608,7 @@ let mapper = (_config, _cookies) => {
                              ~delim,
                              ~query,
                              ~module_name,
+                             ~module_type,
                              (),
                            )
                            |> List.rev,
@@ -591,6 +638,7 @@ let mapper = (_config, _cookies) => {
                              ~delim,
                              ~query,
                              ~module_name,
+                             ~module_type,
                              (),
                            )
                            |> List.rev,
