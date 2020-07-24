@@ -50,7 +50,7 @@ jobs:
 
       - name: test-bucklescript
         env:
-          CI: true
+          GRAPHQL_CI: true
         run: |
           npm ci --no-optional --ignore-scripts
           esy test
@@ -111,7 +111,7 @@ jobs:
           npm ci --no-optional
           esy test
         env:
-          CI: true
+          GRAPHQL_CI: true
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
