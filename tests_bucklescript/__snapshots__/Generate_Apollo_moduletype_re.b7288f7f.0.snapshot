@@ -32,9 +32,9 @@ module MyQuery: {type t;} = {
     string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\n}\\n\\n}\\n\";
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
@@ -142,9 +142,9 @@ module MyQuery2: {
     string,
   };
   type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
   /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\n}\\n\\n}\\n\";
-  type t_variables = unit;
   /**Parse the JSON GraphQL data to ReasonML data types*/
   let parse = (value: Raw.t): t => (
     {
