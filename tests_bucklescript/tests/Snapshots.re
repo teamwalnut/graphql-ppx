@@ -274,7 +274,6 @@ let ppx_configs = [
   {name: "Records", options: [||]},
   {name: "Objects", options: [|"-objects"|]},
   {name: "Template", options: [|"-template-tag-location=gql"|]},
-  {name: "Legacy", options: [|"-legacy"|]},
   {name: "Apollo", options: [|"-apollo-mode"|]},
 ];
 

@@ -54,7 +54,6 @@ let fmt_lex_err = err =>
   );
 
 let global_records = () => Ppx_config.records();
-let legacy = () => Ppx_config.legacy();
 let global_template_tag = () => Ppx_config.template_tag();
 let global_template_tag_import = () => Ppx_config.template_tag_import();
 let global_template_tag_location = () => Ppx_config.template_tag_location();
@@ -426,7 +425,6 @@ let rewrite_query =
           | Some(value) => value
           | None => Ppx_config.future_added_value()
           },
-        legacy: legacy(),
         /*  the only call site of schema, make it lazy! */
         schema,
         template_tag,
@@ -707,16 +705,6 @@ let args = [
       () => Ppx_config.update_config(current => {...current, records: true}),
     ),
     "Compile to records by default",
-  ),
-  (
-    "-legacy",
-    Arg.Unit(
-      () =>
-        Ppx_config.update_config(current =>
-          {...current, legacy: true, records: false}
-        ),
-    ),
-    "Legacy mode (make, makeWithVariables, and objects by default)",
   ),
   (
     "-template-tag",

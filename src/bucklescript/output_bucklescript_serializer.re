@@ -329,26 +329,7 @@ let generate_variable_constructors =
                        fields,
                      )
                    );
-                 if (config.legacy && name == None) {
-                   let make_body =
-                     make_labeled_fun(
-                       [%expr
-                         {
-                           "query": query,
-                           "variables": serializeVariables([%e body]),
-                           "parse": parse,
-                         }
-                       ],
-                       fields,
-                     );
-
-                   [
-                     (Some("make"), loc, make_body),
-                     (name, loc, make_variables_body),
-                   ];
-                 } else {
-                   [(name, loc, make_variables_body)];
-                 };
+                 [(name, loc, make_variables_body)];
 
                | Some(_) => [(name, loc, make_labeled_fun(body, fields))]
                };

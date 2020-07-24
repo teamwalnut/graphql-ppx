@@ -15,7 +15,6 @@ type config = {
   schema_file: string,
   raise_error_with_loc: 'a. (Source_pos.ast_location, string) => 'a,
   records: bool,
-  legacy: bool,
   template_tag: option(string),
   template_tag_location: option(string),
   template_tag_import: option(string),
@@ -51,7 +50,6 @@ let future_added_value = () =>
 let apollo_mode = () => (config_ref^ |> Option.unsafe_unwrap).apollo_mode;
 
 let records = () => (config_ref^ |> Option.unsafe_unwrap).records;
-let legacy = () => (config_ref^ |> Option.unsafe_unwrap).legacy;
 
 let template_tag = () => (config_ref^ |> Option.unsafe_unwrap).template_tag;
 let fragment_in_query = () =>

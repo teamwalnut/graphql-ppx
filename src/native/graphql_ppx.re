@@ -130,7 +130,6 @@ let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
         template_tag_return_type: None,
         records: false,
         inline: false,
-        legacy: false,
         future_added_value: Ppx_config.future_added_value(),
         extend: None,
         fragment_in_query: Include,
@@ -218,7 +217,6 @@ let () =
         raise(Location.Error(Location.error(~loc, message)));
       },
       records: false,
-      legacy: true,
       template_tag: None,
       template_tag_location: None,
       template_tag_import: None,

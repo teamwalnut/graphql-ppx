@@ -59,7 +59,6 @@ let defaultConfig =
       raise(Location.Error(Location.error(~loc, message)));
     },
     records: true,
-    legacy: false,
     template_tag: None,
     template_tag_location: None,
     template_tag_import: None,
@@ -159,10 +158,6 @@ let read_config = () => {
     ppxConfig
     |> JsonHelper.mapString("mode", mode => {
          switch (mode) {
-         | "legacy" =>
-           Ppx_config.update_config(current =>
-             {...current, legacy: true, records: false}
-           )
          | "objects" =>
            Ppx_config.update_config(current => {...current, records: false})
          | "records" =>
@@ -172,7 +167,7 @@ let read_config = () => {
              Config_error(
                "Error in graphql-ppx configuration: mode \""
                ++ other
-               ++ "\" is not supported. Choose either records, objects or legacy.",
+               ++ "\" is not supported. Choose either records or objects.",
              ),
            )
          }

@@ -25,7 +25,6 @@ type output_config = {
   template_tag_return_type: option(string),
   records: bool,
   inline: bool,
-  legacy: bool,
   future_added_value: bool,
   extend: option(string),
   fragment_in_query: Ppx_config.fragment_in_query,

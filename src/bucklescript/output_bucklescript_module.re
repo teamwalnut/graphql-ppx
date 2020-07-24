@@ -473,14 +473,6 @@ let generate_default_operation =
       let printed_query =
         make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
-      let legacy_make_with_variables = [%stri
-        let makeWithVariables = variables => {
-          "query": query,
-          "variables": serializeVariables(variables),
-          "parse": parse,
-        }
-      ];
-
       List.concat([
         List.concat([
           [[%stri [@ocaml.warning "-32"]]],
@@ -526,19 +518,6 @@ let generate_default_operation =
           },
           has_required_variables
             ? [] : [[%stri let makeDefaultVariables = () => makeVariables()]],
-          config.legacy && variable_constructors != None
-            ? [legacy_make_with_variables] : [],
-          config.legacy && variable_constructors == None
-            ? [
-              [%stri
-                let make = () => {
-                  "query": query,
-                  "variables": Js.Json.null,
-                  "parse": parse,
-                }
-              ],
-            ]
-            : [],
           [
             [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
           ],
