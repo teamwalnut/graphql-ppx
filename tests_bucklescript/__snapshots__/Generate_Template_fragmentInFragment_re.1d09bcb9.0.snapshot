@@ -20,7 +20,24 @@ Generate Template › fragmentInFragment.re › output
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-module ListFragment = {
+module ListFragment: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {
@@ -81,6 +98,7 @@ module ListFragment = {
       {nullableOfNullable: nullableOfNullable};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `ListFragment => ();
@@ -104,7 +122,25 @@ Lists {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module Another = {
+module Another: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t;
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `Another], Raw.t) => t;
+  let verifyName: [ | `Another] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t;
@@ -189,6 +225,7 @@ module Another = {
       ),
     ): Raw.t
   );
+
   let verifyName =
     fun
     | `Another => ();

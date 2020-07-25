@@ -27,7 +27,31 @@ module IntOfString = {
   let serialize = string_of_int;
   type t = int;
 };
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_variousScalars = {
+      string,
+      int,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    string: IntOfString.t,
+    int: StringOfInt.t,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {

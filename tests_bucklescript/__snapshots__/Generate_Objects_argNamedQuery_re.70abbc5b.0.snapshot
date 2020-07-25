@@ -17,7 +17,22 @@ Generate Objects › argNamedQuery.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {. \"argNamedQuery\": int};
+    type t_variables = {. \"query\": int};
+  };
+  type t = {. \"argNamedQuery\": int};
+  type t_variables = {. \"query\": int};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables: (~query: int, unit) => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {. \"argNamedQuery\": int};
@@ -57,7 +72,22 @@ module MyQuery = {
   };
 };
 module MultipleQueryWithSameVarName = {
-  module Query1 = {
+  module Query1: {
+    module Raw: {
+      type t = {. \"argNamedQuery\": int};
+      type t_variables = {. \"query\": int};
+    };
+    type t = {. \"argNamedQuery\": int};
+    type t_variables = {. \"query\": int};
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let serializeVariables: t_variables => Raw.t_variables;
+    let makeVariables: (~query: int, unit) => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {. \"argNamedQuery\": int};
@@ -96,7 +126,22 @@ module MultipleQueryWithSameVarName = {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Query2 = {
+  module Query2: {
+    module Raw: {
+      type t = {. \"argNamedQuery\": int};
+      type t_variables = {. \"query\": int};
+    };
+    type t = {. \"argNamedQuery\": int};
+    type t_variables = {. \"query\": int};
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let serializeVariables: t_variables => Raw.t_variables;
+    let makeVariables: (~query: int, unit) => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {. \"argNamedQuery\": int};

@@ -17,7 +17,40 @@ Generate Template › listsArgs.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {listsInput: string};
+    type t_variables = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+  };
+  type t = {listsInput: string};
+  type t_variables = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables:
+    (
+      ~nullableOfNullable: array(option(string))=?,
+      ~nullableOfNonNullable: array(string)=?,
+      ~nonNullableOfNullable: array(option(string)),
+      ~nonNullableOfNonNullable: array(string),
+      unit
+    ) =>
+    t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {listsInput: string};

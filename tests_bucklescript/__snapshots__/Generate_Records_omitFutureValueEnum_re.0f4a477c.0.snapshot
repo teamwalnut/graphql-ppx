@@ -17,7 +17,44 @@ Generate Records › omitFutureValueEnum.re › output
     cookies: [],
   }
 ];
-module Normal = {
+module Normal: {
+  module Raw: {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+    type t_variables = unit;
+  };
+  type t_mutationWithError_errors_field = [
+    | `FutureAddedValue(string)
+    | `FIRST
+    | `SECOND
+    | `THIRD
+  ];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
@@ -150,7 +187,39 @@ module Normal = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByConfig = {
+module ByConfig: {
+  module Raw: {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+    type t_variables = unit;
+  };
+  type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
@@ -277,7 +346,39 @@ module ByConfig = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ByDirective = {
+module ByDirective: {
+  module Raw: {
+    type t_mutationWithError_errors_field = string;
+    type t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    };
+    type t_mutationWithError = {
+      errors: Js.Nullable.t(array(t_mutationWithError_errors)),
+    };
+    type t = {mutationWithError: t_mutationWithError};
+    type t_variables = unit;
+  };
+  type t_mutationWithError_errors_field = [ | `FIRST | `SECOND | `THIRD];
+  type t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  };
+  type t_mutationWithError = {
+    errors: option(array(t_mutationWithError_errors)),
+  };
+  type t = {mutationWithError: t_mutationWithError};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;

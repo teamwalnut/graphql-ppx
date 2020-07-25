@@ -17,7 +17,22 @@ Generate Objects › mutationWithArgs.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {. \"optionalInputArgs\": string};
+    type t_variables = {. \"required\": string};
+  };
+  type t = {. \"optionalInputArgs\": string};
+  type t_variables = {. \"required\": string};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables: (~required: string, unit) => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {. \"optionalInputArgs\": string};

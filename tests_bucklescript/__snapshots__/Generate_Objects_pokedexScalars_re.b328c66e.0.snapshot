@@ -17,7 +17,41 @@ Generate Objects › pokedexScalars.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_pokemon = {
+      .
+      \"id\": string,
+      \"name\": Js.Nullable.t(string),
+    };
+    type t = {. \"pokemon\": Js.Nullable.t(t_pokemon)};
+    type t_variables = {
+      .
+      \"id\": Js.Nullable.t(string),
+      \"name\": Js.Nullable.t(string),
+    };
+  };
+  type t_pokemon = {
+    .
+    \"id\": string,
+    \"name\": option(string),
+  };
+  type t = {. \"pokemon\": option(t_pokemon)};
+  type t_variables = {
+    .
+    \"id\": option(string),
+    \"name\": option(string),
+  };
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables: (~id: string=?, ~name: string=?, unit) => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_pokemon = {

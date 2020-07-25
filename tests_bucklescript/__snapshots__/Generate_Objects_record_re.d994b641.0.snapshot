@@ -30,7 +30,29 @@ type dog = {
 };
 
 type oneFieldQuery = {nullableString: option(string)};
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_variousScalars = {
+      .
+      \"__typename\": string,
+      \"string\": string,
+      \"int\": int,
+    };
+    type t = {. \"variousScalars\": t_variousScalars};
+    type t_variables = unit;
+  };
+  type t = {. \"variousScalars\": scalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -103,7 +125,25 @@ module MyQuery = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQuery = {
+module OneFieldQuery: {
+  module Raw: {
+    type t_variousScalars = {. \"nullableString\": Js.Nullable.t(string)};
+    type t = {. \"variousScalars\": t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {nullableString: option(string)};
+  type t = {. \"variousScalars\": t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {. \"nullableString\": Js.Nullable.t(string)};
@@ -162,7 +202,33 @@ module OneFieldQuery = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module OneFieldQueryWithTypename = {
+module OneFieldQueryWithTypename: {
+  module Raw: {
+    type t_variousScalars = {
+      .
+      \"__typename\": string,
+      \"nullableString\": Js.Nullable.t(string),
+    };
+    type t = {. \"variousScalars\": t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    .
+    \"__typename\": string,
+    \"nullableString\": option(string),
+  };
+  type t = {. \"variousScalars\": t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -234,7 +300,29 @@ module OneFieldQueryWithTypename = {
   };
 };
 module ExternalFragmentQuery = {
-  module Fragment = {
+  module Fragment: {
+    [@ocaml.warning \"-32\"];
+    module Raw: {
+      type t = {
+        .
+        \"string\": string,
+        \"int\": int,
+      };
+      type nonrec t_VariousScalars = t;
+    };
+    type t = {
+      string,
+      int,
+    };
+    type nonrec t_VariousScalars = t;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let verifyArgsAndParse: (~fragmentName: [ | `Fragment], Raw.t) => t;
+    let verifyName: [ | `Fragment] => unit;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {
@@ -281,6 +369,7 @@ module ExternalFragmentQuery = {
       };
       {\"string\": string, \"int\": int};
     };
+
     let verifyName =
       fun
       | `Fragment => ();
@@ -309,7 +398,23 @@ VariousScalars {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Untitled1: {
+    module Raw: {
+      type t = {. \"variousScalars\": Fragment.Raw.t};
+      type t_variables = unit;
+    };
+    type t = {. \"variousScalars\": Fragment.t};
+    type t_variables = unit;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {. \"variousScalars\": Fragment.Raw.t};
@@ -352,7 +457,39 @@ VariousScalars {
     };
   };
 };
-module InlineFragmentQuery = {
+module InlineFragmentQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      .
+      \"__typename\": string,
+      \"name\": string,
+      \"barkVolume\": float,
+    };
+    type t_dogOrHuman;
+    type t = {. \"dogOrHuman\": t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {. \"dogOrHuman\": t_dogOrHuman};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -458,7 +595,31 @@ module InlineFragmentQuery = {
   };
 };
 module UnionExternalFragmentQuery = {
-  module DogFragment = {
+  module DogFragment: {
+    [@ocaml.warning \"-32\"];
+    module Raw: {
+      type t = {
+        .
+        \"__typename\": string,
+        \"name\": string,
+        \"barkVolume\": float,
+      };
+      type nonrec t_Dog = t;
+    };
+    type t = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type nonrec t_Dog = t;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let verifyArgsAndParse: (~fragmentName: [ | `DogFragment], Raw.t) => t;
+    let verifyName: [ | `DogFragment] => unit;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {
@@ -515,6 +676,7 @@ module UnionExternalFragmentQuery = {
       };
       {\"__typename\": __typename, \"name\": name, \"barkVolume\": barkVolume};
     };
+
     let verifyName =
       fun
       | `DogFragment => ();
@@ -535,7 +697,28 @@ Dog {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module Untitled1 = {
+  module Untitled1: {
+    module Raw: {
+      type t_dogOrHuman;
+      type t = {. \"dogOrHuman\": t_dogOrHuman};
+      type t_variables = unit;
+    };
+    type t_dogOrHuman = [
+      | `FutureAddedValue(Js.Json.t)
+      | `Dog(DogFragment.t)
+    ];
+    type t = {. \"dogOrHuman\": t_dogOrHuman};
+    type t_variables = unit;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t_dogOrHuman;

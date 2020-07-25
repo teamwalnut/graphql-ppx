@@ -17,7 +17,53 @@ Generate Objects › typename.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_first_inner_inner = {
+      .
+      \"__typename\": string,
+      \"field\": string,
+    };
+    type t_first_inner = {
+      .
+      \"__typename\": string,
+      \"inner\": Js.Nullable.t(t_first_inner_inner),
+    };
+    type t_first = {
+      .
+      \"__typename\": string,
+      \"inner\": Js.Nullable.t(t_first_inner),
+    };
+    type t = {. \"first\": t_first};
+    type t_variables = unit;
+  };
+  type t_first_inner_inner = {
+    .
+    \"__typename\": string,
+    \"field\": string,
+  };
+  type t_first_inner = {
+    .
+    \"__typename\": string,
+    \"inner\": option(t_first_inner_inner),
+  };
+  type t_first = {
+    .
+    \"__typename\": string,
+    \"inner\": option(t_first_inner),
+  };
+  type t = {. \"first\": t_first};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_first_inner_inner = {

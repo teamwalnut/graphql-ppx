@@ -20,7 +20,49 @@ Generate Apollo › tagged_template.re › output
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -231,7 +273,49 @@ module MyQuery = {
 module MyTypes = {
   type query;
 };
-module MyQuery1a = {
+module MyQuery1a: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: MyTypes.query;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -438,7 +522,49 @@ module MyQuery1a = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery1b = {
+module MyQuery1b: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -645,7 +771,49 @@ module MyQuery1b = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery2: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -852,7 +1020,49 @@ module MyQuery2 = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery3 = {
+module MyQuery3: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -1059,7 +1269,49 @@ module MyQuery3 = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery4 = {
+module MyQuery4: {
+  module Raw: {
+    type t_variousScalars = {
+      __typename: string,
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    __typename: string,
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_variousScalars = {
@@ -1266,7 +1518,30 @@ module MyQuery4 = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module ListFragment = {
+module ListFragment: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t = {
+      __typename: string,
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    __typename: string,
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {
@@ -1356,6 +1631,7 @@ module ListFragment = {
       {__typename, nullableOfNullable, nullableOfNonNullable};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `ListFragment => ();
@@ -1379,7 +1655,23 @@ Lists {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery5 = {
+module MyQuery5: {
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
@@ -1424,7 +1716,23 @@ module MyQuery5 = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery6 = {
+module MyQuery6: {
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
@@ -1472,7 +1780,23 @@ module MyQuery6 = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery7 = {
+module MyQuery7: {
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};

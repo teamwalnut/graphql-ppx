@@ -17,7 +17,38 @@ Generate Apollo › unionPartial.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {

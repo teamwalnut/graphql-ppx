@@ -779,7 +779,7 @@ let generate_type_signature_items =
   };
 };
 
-let rec generate_arg_type = (raw, originalLoc) => {
+let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
   let loc = raw ? None : Some(conv_loc(originalLoc));
   fun
   | Type(Scalar({sm_name: "ID"}))
@@ -841,13 +841,15 @@ let rec generate_arg_type = (raw, originalLoc) => {
       ),
     )
   | Nullable(inner) =>
-    base_type(
-      ~loc?,
-      ~inner=[
-        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
-      ],
-      raw ? "Js.Nullable.t" : "option",
-    )
+    nulls
+      ? base_type(
+          ~loc?,
+          ~inner=[
+            generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+          ],
+          raw ? "Js.Nullable.t" : "option",
+        )
+      : generate_arg_type(raw, conv_loc_from_ast(Location.none), inner)
   | List(inner) =>
     base_type(
       ~loc?,

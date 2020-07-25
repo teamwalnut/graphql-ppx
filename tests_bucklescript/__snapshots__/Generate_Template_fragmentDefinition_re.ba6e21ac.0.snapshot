@@ -20,7 +20,28 @@ Generate Template › fragmentDefinition.re › output
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-module ListFragment = {
+module ListFragment: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {
@@ -100,6 +121,7 @@ module ListFragment = {
       {nullableOfNullable, nullableOfNonNullable};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `ListFragment => ();
@@ -123,7 +145,22 @@ Lists {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module Another = {
+module Another: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
+    type nonrec t_Lists = t;
+  };
+  type t = {nullableOfNonNullable: option(array(string))};
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `Another], Raw.t) => t;
+  let verifyName: [ | `Another] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
@@ -165,6 +202,7 @@ module Another = {
       {nullableOfNonNullable: nullableOfNonNullable};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `Another => ();
@@ -188,7 +226,23 @@ Lists {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module FragmentWithArgs = {
+module FragmentWithArgs: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {
+    type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
+    type nonrec t_Lists = t;
+  };
+  type t = {listWithArg: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse:
+    (~arg1: [ | `String], ~fragmentName: [ | `FragmentWithArgs], Raw.t) => t;
+  let verifyName: [ | `FragmentWithArgs] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
@@ -251,6 +305,7 @@ module FragmentWithArgs = {
       {listWithArg: listWithArg};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `FragmentWithArgs => ();
@@ -358,6 +413,7 @@ module InlineListFragment = {
       {nullableOfNullable, nullableOfNonNullable};
     }: Raw.t
   );
+
   let verifyName =
     fun
     | `InlineListFragment => ();
@@ -381,7 +437,51 @@ Lists {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_l2;
+    type t_l3;
+    type t_l4;
+    type t = {
+      l1: ListFragment.Raw.t,
+      l2: t_l2,
+      l3: t_l3,
+      l4: t_l4,
+      l5: FragmentWithArgs.Raw.t,
+    };
+    type t_variables = {arg1: Js.Nullable.t(string)};
+  };
+  type t_l2 = {
+    frag1: ListFragment.t_Lists,
+    frag2: ListFragment.t_Lists,
+  };
+  type t_l3 = {
+    nullableOfNullable: option(array(option(string))),
+    frag1: ListFragment.t_Lists,
+    frag2: ListFragment.t_Lists,
+  };
+  type t_l4 = {
+    nullableOfNullable: option(array(option(string))),
+    inlineListFragment: InlineListFragment.t_Lists,
+  };
+  type t = {
+    l1: ListFragment.t,
+    l2: t_l2,
+    l3: t_l3,
+    l4: t_l4,
+    l5: FragmentWithArgs.t,
+  };
+  type t_variables = {arg1: option(string)};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables: (~arg1: string=?, unit) => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_l2;
@@ -681,7 +781,23 @@ module MyQuery = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQuery2 = {
+module MyQuery2: {
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};

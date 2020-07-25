@@ -17,7 +17,23 @@ Generate Apollo › enumInput.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {enumInput: string};
+    type t_variables = {arg: string};
+  };
+  type t = {enumInput: string};
+  type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables:
+    (~arg: [ | `FIRST | `SECOND | `THIRD], unit) => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {enumInput: string};

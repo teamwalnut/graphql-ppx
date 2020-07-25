@@ -84,10 +84,6 @@ function makeDefaultVariables(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var RecordsQuery = {
   Raw: Raw,
   query: \"query   {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\",
@@ -95,8 +91,7 @@ var RecordsQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables
 };
 
 var Raw$1 = {};
@@ -183,10 +178,6 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL$1 = {
-  graphql_module: 0
-};
-
 var ObjectsQuery = {
   Raw: Raw$1,
   query: \"query   {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\",
@@ -194,8 +185,7 @@ var ObjectsQuery = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeDefaultVariables: makeDefaultVariables$1
 };
 
 exports.RecordsQuery = RecordsQuery;

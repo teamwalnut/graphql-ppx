@@ -399,18 +399,22 @@ let generate_variable_constructor_signatures =
                    | Type(_) => Labelled(to_valid_ident(name))
                    | _ => Optional(to_valid_ident(name))
                    },
-                   generate_arg_type(false, loc, type_),
+                   generate_arg_type(~nulls=false, false, loc, type_),
                    make_labeled_fun(final_type, tl),
                  );
                }
            );
 
            let final_type =
-             base_type_name(
-               switch (name) {
-               | None => "t_variables"
-               | Some(input_type_name) => "t_variables_" ++ input_type_name
-               },
+             Typ.arrow(
+               Nolabel,
+               base_type_name("unit"),
+               base_type_name(
+                 switch (name) {
+                 | None => "t_variables"
+                 | Some(input_type_name) => "t_variables_" ++ input_type_name
+                 },
+               ),
              );
 
            (name, loc, make_labeled_fun(final_type, fields));

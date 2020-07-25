@@ -29,18 +29,13 @@ function makeVariables(query, param) {
         };
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: \"query ($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeVariables: makeVariables
 };
 
 var Raw$1 = {};
@@ -69,18 +64,13 @@ function makeVariables$1(query, param) {
         };
 }
 
-var Z__INTERNAL$1 = {
-  graphql_module: 0
-};
-
 var Query1 = {
   Raw: Raw$1,
   query: \"query Query1($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\",
   parse: parse$1,
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
-  makeVariables: makeVariables$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeVariables: makeVariables$1
 };
 
 var Raw$2 = {};
@@ -109,18 +99,13 @@ function makeVariables$2(query, param) {
         };
 }
 
-var Z__INTERNAL$2 = {
-  graphql_module: 0
-};
-
 var Query2 = {
   Raw: Raw$2,
   query: \"query Query2($query: Int!)  {\\nargNamedQuery(query: $query)  \\n}\\n\",
   parse: parse$2,
   serialize: serialize$2,
   serializeVariables: serializeVariables$2,
-  makeVariables: makeVariables$2,
-  Z__INTERNAL: Z__INTERNAL$2
+  makeVariables: makeVariables$2
 };
 
 var MultipleQueryWithSameVarName = {

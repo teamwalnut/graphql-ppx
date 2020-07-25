@@ -17,7 +17,47 @@ Generate Apollo › union.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -165,7 +205,47 @@ module MyQuery = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MyQueryNoError = {
+module MyQueryNoError: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    __typename: string,
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {
+    __typename: string,
+    name: string,
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -318,7 +398,37 @@ type named = {
   name: string,
   __typename: string,
 };
-module NamedQuery = {
+module NamedQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      name: string,
+      __typename: string,
+    };
+    type t_dogOrHuman_Human = {
+      name: string,
+      __typename: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(named)
+    | `Human(named)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -449,7 +559,25 @@ module NamedQuery = {
   };
 };
 module NamedSpread = {
-  module DogFields = {
+  module DogFields: {
+    [@ocaml.warning \"-32\"];
+    module Raw: {
+      type t = {
+        name: string,
+        __typename: string,
+      };
+      type nonrec t_Dog = t;
+    };
+    type t = named;
+    type nonrec t_Dog = named;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let verifyArgsAndParse: (~fragmentName: [ | `DogFields], Raw.t) => t;
+    let verifyName: [ | `DogFields] => unit;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {
@@ -493,6 +621,7 @@ module NamedSpread = {
         {name, __typename};
       }: Raw.t
     );
+
     let verifyName =
       fun
       | `DogFields => ();
@@ -513,7 +642,28 @@ Dog {
       let graphql_module: graphql_module = Obj.magic(0);
     };
   };
-  module DogOrHuman = {
+  module DogOrHuman: {
+    module Raw: {
+      type t_dogOrHuman;
+      type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = unit;
+    };
+    type t_dogOrHuman = [
+      | `FutureAddedValue(Js.Json.t)
+      | `Dog(DogFields.t)
+    ];
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+    let query: string;
+    let parse: Raw.t => t;
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t_dogOrHuman;

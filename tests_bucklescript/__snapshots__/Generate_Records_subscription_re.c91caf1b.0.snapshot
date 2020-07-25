@@ -17,7 +17,39 @@ Generate Records › subscription.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_simpleSubscription_Dog = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_simpleSubscription;
+    type t = {simpleSubscription: t_simpleSubscription};
+    type t_variables = unit;
+  };
+  type t_simpleSubscription_Dog = {name: string};
+  type t_simpleSubscription_Human = {name: string};
+  type t_simpleSubscription = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_simpleSubscription_Dog)
+    | `Human(t_simpleSubscription_Human)
+  ];
+  type t = {simpleSubscription: t_simpleSubscription};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_simpleSubscription_Dog = {

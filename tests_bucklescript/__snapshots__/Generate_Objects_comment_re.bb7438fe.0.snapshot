@@ -17,7 +17,61 @@ Generate Objects › comment.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {. \"nonrecursiveInput\": string};
+    type t_variables = {. \"arg\": t_variables_NonrecursiveInput}
+    and t_variables_NonrecursiveInput = {
+      .
+      \"nonNullableField\": string,
+      \"nullableArray\": Js.Nullable.t(array(Js.Nullable.t(string))),
+      \"field\": Js.Nullable.t(string),
+      \"enum\": Js.Nullable.t(string),
+      \"embeddedInput\":
+        Js.Nullable.t(array(Js.Nullable.t(t_variables_EmbeddedInput))),
+      \"custom\": Js.Nullable.t(Js.Json.t),
+    }
+    and t_variables_EmbeddedInput = {. \"field\": Js.Nullable.t(string)};
+  };
+  type t = {. \"nonrecursiveInput\": string};
+  type t_variables = {. \"arg\": t_variables_NonrecursiveInput}
+  and t_variables_NonrecursiveInput = {
+    .
+    \"nonNullableField\": string,
+    \"nullableArray\": option(array(option(string))),
+    \"field\": option(string),
+    \"enum\": option([ | `FIRST | `SECOND | `THIRD]),
+    \"embeddedInput\": option(array(option(t_variables_EmbeddedInput))),
+    \"custom\": option(Js.Json.t),
+  }
+  and t_variables_EmbeddedInput = {. \"field\": option(string)};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeInputObjectNonrecursiveInput:
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput;
+  let serializeInputObjectEmbeddedInput:
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput;
+  let makeVariables:
+    (~arg: t_variables_NonrecursiveInput, unit) => t_variables;
+  let makeInputObjectNonrecursiveInput:
+    (
+      ~nonNullableField: string,
+      ~nullableArray: array(option(string))=?,
+      ~field: string=?,
+      ~enum: [ | `FIRST | `SECOND | `THIRD]=?,
+      ~embeddedInput: array(option(t_variables_EmbeddedInput))=?,
+      ~custom: Js.Json.t=?,
+      unit
+    ) =>
+    t_variables_NonrecursiveInput;
+  let makeInputObjectEmbeddedInput:
+    (~field: string=?, unit) => t_variables_EmbeddedInput;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {. \"nonrecursiveInput\": string};

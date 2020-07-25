@@ -20,7 +20,47 @@ Generate Template › interface.re › output
 module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
-module QueryWithOnlyFragments = {
+module QueryWithOnlyFragments: {
+  module Raw: {
+    type t_users_User_AnonymousUser = {
+      __typename: string,
+      id: string,
+      anonymousId: int,
+    };
+    type t_users_User_AdminUser = {
+      __typename: string,
+      id: string,
+      name: string,
+    };
+    type t_users_User;
+    type t = {users: array(t_users_User)};
+    type t_variables = unit;
+  };
+  type t_users_User_AnonymousUser = {
+    id: string,
+    anonymousId: int,
+  };
+  type t_users_User_AdminUser = {
+    id: string,
+    name: string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AnonymousUser(t_users_User_AnonymousUser)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t = {users: array(t_users_User)};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_users_User_AnonymousUser = {
@@ -176,7 +216,36 @@ module QueryWithOnlyFragments = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module QueryWithTypename = {
+module QueryWithTypename: {
+  module Raw: {
+    type t_users_User_AdminUser = {
+      __typename: string,
+      id: string,
+    };
+    type t_users_User;
+    type t = {users: array(t_users_User)};
+    type t_variables = unit;
+  };
+  type t_users_User_AdminUser = {
+    __typename: string,
+    id: string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t = {users: array(t_users_User)};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_users_User_AdminUser = {
@@ -283,7 +352,44 @@ module QueryWithTypename = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module QueryWithMixedFragments = {
+module QueryWithMixedFragments: {
+  module Raw: {
+    type t_users_User_AnonymousUser = {
+      __typename: string,
+      anonymousId: int,
+    };
+    type t_users_User_AdminUser = {
+      __typename: string,
+      name: string,
+    };
+    type t_users_User;
+    type t_users;
+    type t = {users: array(t_users)};
+    type t_variables = unit;
+  };
+  type t_users_User_AnonymousUser = {anonymousId: int};
+  type t_users_User_AdminUser = {name: string};
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AnonymousUser(t_users_User_AnonymousUser)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t_users = {
+    fragment: t_users_User,
+    id: string,
+  };
+  type t = {users: array(t_users)};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_users_User_AnonymousUser = {
@@ -460,7 +566,42 @@ module QueryWithMixedFragments = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module MixedQueryWithTypename = {
+module MixedQueryWithTypename: {
+  module Raw: {
+    type t_users_User_AdminUser = {
+      __typename: string,
+      id: string,
+    };
+    type t_users_User;
+    type t_users;
+    type t = {users: array(t_users)};
+    type t_variables = unit;
+  };
+  type t_users_User_AdminUser = {
+    __typename: string,
+    id: string,
+  };
+  type t_users_User = [
+    | `UnspecifiedFragment(string)
+    | `AdminUser(t_users_User_AdminUser)
+  ];
+  type t_users = {
+    fragment: t_users_User,
+    __typename: string,
+    id: string,
+  };
+  type t = {users: array(t_users)};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_users_User_AdminUser = {
@@ -628,7 +769,25 @@ module MixedQueryWithTypename = {
     let graphql_module: graphql_module = Obj.magic(0);
   };
 };
-module QueryWithoutFragments = {
+module QueryWithoutFragments: {
+  module Raw: {
+    type t_users = {id: string};
+    type t = {users: array(t_users)};
+    type t_variables = unit;
+  };
+  type t_users = {id: string};
+  type t = {users: array(t_users)};
+  type t_variables = unit;
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_users = {id: string};

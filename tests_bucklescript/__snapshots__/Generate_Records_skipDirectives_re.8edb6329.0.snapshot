@@ -17,7 +17,44 @@ Generate Records › skipDirectives.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_v1 = {
+      nullableString: Js.Nullable.t(string),
+      string: Js.Nullable.t(string),
+    };
+    type t_v2 = {
+      nullableString: Js.Nullable.t(string),
+      string: Js.Nullable.t(string),
+    };
+    type t = {
+      v1: t_v1,
+      v2: t_v2,
+    };
+    type t_variables = {var: bool};
+  };
+  type t_v1 = {
+    nullableString: option(string),
+    string: option(string),
+  };
+  type t_v2 = {
+    nullableString: option(string),
+    string: option(string),
+  };
+  type t = {
+    v1: t_v1,
+    v2: t_v2,
+  };
+  type t_variables = {var: bool};
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables: (~var: bool, unit) => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_v1 = {

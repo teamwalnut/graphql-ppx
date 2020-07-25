@@ -94,10 +94,6 @@ function makeDefaultVariables(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -105,8 +101,7 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables
 };
 
 var Raw$1 = {};
@@ -200,10 +195,6 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL$1 = {
-  graphql_module: 0
-};
-
 var MyQueryNoError = {
   Raw: Raw$1,
   query: query$1,
@@ -211,8 +202,7 @@ var MyQueryNoError = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeDefaultVariables: makeDefaultVariables$1
 };
 
 var Raw$2 = {};
@@ -305,10 +295,6 @@ function makeDefaultVariables$2(param) {
   
 }
 
-var Z__INTERNAL$2 = {
-  graphql_module: 0
-};
-
 var NamedQuery = {
   Raw: Raw$2,
   query: query$2,
@@ -316,8 +302,7 @@ var NamedQuery = {
   serialize: serialize$2,
   serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: makeDefaultVariables$2,
-  Z__INTERNAL: Z__INTERNAL$2
+  makeDefaultVariables: makeDefaultVariables$2
 };
 
 var Raw$3 = {};
@@ -353,19 +338,13 @@ function verifyName(param) {
   
 }
 
-var Z__INTERNAL$3 = {
-  graphql: 0,
-  graphql_module: 0
-};
-
 var DogFields = {
   Raw: Raw$3,
   query: query$3,
   parse: parse$3,
-  verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize$3,
-  verifyName: verifyName,
-  Z__INTERNAL: Z__INTERNAL$3
+  verifyArgsAndParse: verifyArgsAndParse,
+  verifyName: verifyName
 };
 
 var Raw$4 = {};
@@ -417,10 +396,6 @@ function makeDefaultVariables$3(param) {
   
 }
 
-var Z__INTERNAL$4 = {
-  graphql_module: 0
-};
-
 var DogOrHuman = {
   Raw: Raw$4,
   query: query$4,
@@ -428,8 +403,7 @@ var DogOrHuman = {
   serialize: serialize$4,
   serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: makeDefaultVariables$3,
-  Z__INTERNAL: Z__INTERNAL$4
+  makeDefaultVariables: makeDefaultVariables$3
 };
 
 var NamedSpread = {

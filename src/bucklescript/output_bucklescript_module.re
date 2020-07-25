@@ -436,7 +436,8 @@ let wrap_query_module =
   };
 };
 
-let generate_operation_interface = (config, variable_defs, res_structure) => {
+let generate_operation_signature = (config, variable_defs, res_structure) => {
+  Output_bucklescript_docstrings.reset();
   let raw_types =
     Output_bucklescript_types.generate_type_signature_items(
       config,
@@ -648,12 +649,144 @@ let generate_operation_implementation =
   );
 };
 
-let generate_fragment_module =
+let generate_fragment_signature =
     (
       config,
       name,
       required_variables,
-      has_error,
+      _has_error,
+      fragment: Source_pos.spanning(Graphql_ast.fragment),
+      type_name,
+      res_structure,
+    ) => {
+  Output_bucklescript_docstrings.reset();
+
+  let types =
+    Output_bucklescript_types.generate_type_signature_items(
+      config,
+      res_structure,
+      false,
+      type_name,
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
+    );
+
+  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
+  let raw_types =
+    Output_bucklescript_types.generate_type_signature_items(
+      config,
+      res_structure,
+      true,
+      None,
+      Some((
+        fragment.item.fg_type_condition.item,
+        fragment.item.fg_name.span,
+      )),
+    );
+
+  let rec make_labeled_fun_sig = final_type =>
+    fun
+    | [] => final_type
+    | [(name, type_, _span, type_span), ...tl] => {
+        let type_loc = config.map_loc(type_span) |> conv_loc;
+
+        Typ.arrow(
+          Labelled(name),
+          Typ.variant(
+            [
+              {
+                prf_desc:
+                  Rtag(
+                    {
+                      txt:
+                        Output_bucklescript_parser.type_name_to_words(type_),
+                      loc: type_loc,
+                    },
+                    true,
+                    [],
+                  ),
+                prf_loc: type_loc,
+                prf_attributes: [],
+              },
+            ],
+            Closed,
+            None,
+          ),
+          make_labeled_fun_sig(final_type, tl),
+        );
+      };
+
+  let verify_parse =
+    make_labeled_fun_sig(
+      Typ.arrow(
+        Labelled("fragmentName"),
+        Typ.variant(
+          [
+            {
+              prf_desc: Rtag({txt: name, loc: Location.none}, true, []),
+              prf_loc: Location.none,
+              prf_attributes: [],
+            },
+          ],
+          Closed,
+          None,
+        ),
+        Typ.arrow(Nolabel, base_type_name("Raw.t"), base_type_name("t")),
+      ),
+      required_variables,
+    );
+
+  let verify_name =
+    Typ.arrow(
+      Nolabel,
+      Typ.variant(
+        [
+          {
+            prf_desc: Rtag({txt: name, loc: Location.none}, true, []),
+            prf_loc: Location.none,
+            prf_attributes: [],
+          },
+        ],
+        Closed,
+        None,
+      ),
+      base_type_name("unit"),
+    );
+
+  Output_bucklescript_docstrings.for_fragment(config, fragment);
+  [
+    [[%sigi: [@ocaml.warning "-32"]]],
+    [signature_module("Raw", raw_types)],
+    types,
+    [
+      [%sigi:
+        let query: [%t
+          base_type_name(
+            switch (config.template_tag_return_type) {
+            | Some(return_type) => return_type
+            | None => "string"
+            },
+          )
+        ]
+      ],
+      [%sigi: let parse: Raw.t => t],
+      [%sigi: let serialize: t => Raw.t],
+      [%sigi: let verifyArgsAndParse: [%t verify_parse]],
+      [%sigi: let verifyName: [%t verify_name]],
+      [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+      [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
+    ],
+  ]
+  |> List.concat;
+};
+let generate_fragment_implementation =
+    (
+      config,
+      name,
+      required_variables,
+      _has_error,
       fragment,
       type_name,
       res_structure,
@@ -740,101 +873,82 @@ let generate_fragment_module =
         );
       };
 
-  let contents =
-    if (has_error) {
-      [[%stri let parse = (_vars, value) => [%e parse_fn]]];
-    } else {
-      let printed_query =
-        make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
-      let verify_parse =
-        make_labeled_fun(
-          Exp.fun_(
-            Labelled("fragmentName"),
+  let printed_query =
+    make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+  let verify_parse =
+    make_labeled_fun(
+      Exp.fun_(
+        Labelled("fragmentName"),
+        None,
+        Pat.constraint_(
+          Pat.var({txt: "_" ++ name, loc: Location.none}),
+          Typ.variant(
+            [
+              {
+                prf_desc: Rtag({txt: name, loc: Location.none}, true, []),
+                prf_loc: Location.none,
+                prf_attributes: [],
+              },
+            ],
+            Closed,
             None,
-            Pat.constraint_(
-              Pat.var({txt: "_" ++ name, loc: Location.none}),
-              Typ.variant(
-                [
-                  {
-                    prf_desc: Rtag({txt: name, loc: Location.none}, true, []),
-                    prf_loc: Location.none,
-                    prf_attributes: [],
-                  },
-                ],
-                Closed,
-                None,
-              ),
-            ),
-            [%expr (value: Raw.t) => parse(value)],
           ),
-          required_variables,
-        );
+        ),
+        [%expr (value: Raw.t) => parse(value)],
+      ),
+      required_variables,
+    );
+  let verifyName =
+    Ast_helper.(
+      Exp.function_([
+        Exp.case(
+          Pat.variant(name, None),
+          Exp.construct(
+            {txt: Longident.Lident("()"), loc: Location.none},
+            None,
+          ),
+        ),
+      ])
+    );
 
-      let type_name = base_type_name(Option.get_or_else("t", type_name));
+  let type_name = base_type_name(Option.get_or_else("t", type_name));
 
-      // Add to internal module
-      Output_bucklescript_docstrings.for_fragment(config, fragment);
-      List.concat(
-        List.concat([
-          [
-            [[%stri [@ocaml.warning "-32"]]],
-            [wrap_module(~loc=Location.none, "Raw", raw_types)],
-            types,
-            [
-              Output_bucklescript_docstrings.(
-                make_let("query", printed_query, query_docstring)
-              ),
-            ],
-            [
-              Output_bucklescript_docstrings.(
-                make_let(
-                  "parse",
-                  [%expr (value: Raw.t) => ([%e parse_fn]: [%t type_name])],
-                  parse_docstring,
-                )
-              ),
-            ],
-            [@metaloc fragment.span |> config.map_loc |> conv_loc]
-            [[%stri let verifyArgsAndParse = [%e verify_parse]]],
-            [
-              Output_bucklescript_docstrings.(
-                make_let(
-                  "serialize",
-                  [%expr
-                    (value: [%t type_name]) => ([%e serialize_fn]: Raw.t)
-                  ],
-                  serialize_docstring,
-                )
-              ),
-            ],
-            [
-              [%stri
-                let verifyName = [%e
-                  Ast_helper.(
-                    Exp.function_([
-                      Exp.case(
-                        Pat.variant(name, None),
-                        Exp.construct(
-                          {txt: Longident.Lident("()"), loc: Location.none},
-                          None,
-                        ),
-                      ),
-                    ])
-                  )
-                ]
-              ],
-            ],
-            [
-              [%stri
-                external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-              ],
-            ],
-            [[%stri external toJson: Raw.t => Js.Json.t = "%identity"]],
-            Output_bucklescript_docstrings.get_module(),
-          ],
-        ]),
-      );
-    };
+  // Add to internal module
+  Output_bucklescript_docstrings.for_fragment(config, fragment);
+  let contents =
+    [
+      [[%stri [@ocaml.warning "-32"]]],
+      [wrap_module(~loc=Location.none, "Raw", raw_types)],
+      types,
+      [
+        Output_bucklescript_docstrings.(
+          make_let("query", printed_query, query_docstring)
+        ),
+        Output_bucklescript_docstrings.(
+          make_let(
+            "parse",
+            [%expr (value: Raw.t) => ([%e parse_fn]: [%t type_name])],
+            parse_docstring,
+          )
+        ),
+      ],
+      [@metaloc fragment.span |> config.map_loc |> conv_loc]
+      [
+        [%stri let verifyArgsAndParse = [%e verify_parse]],
+        Output_bucklescript_docstrings.(
+          make_let(
+            "serialize",
+            [%expr (value: [%t type_name]) => ([%e serialize_fn]: Raw.t)],
+            serialize_docstring,
+          )
+        ),
+        [%stri let verifyName = [%e verifyName]],
+        [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+        [%stri external toJson: Raw.t => Js.Json.t = "%identity"],
+      ],
+      Output_bucklescript_docstrings.get_module(),
+    ]
+    |> List.concat;
 
   (
     Fragment,
@@ -851,14 +965,17 @@ let generate_definition = config =>
       has_error,
       operation,
       inner: structure,
-    }) =>
-    generate_operation_implementation(
-      config,
-      vdefs,
-      has_error,
-      operation,
-      structure,
+    }) => (
+      generate_operation_implementation(
+        config,
+        vdefs,
+        has_error,
+        operation,
+        structure,
+      ),
+      generate_operation_signature(config, vdefs, structure),
     )
+
   | Def_fragment({
       name,
       req_vars,
@@ -866,15 +983,25 @@ let generate_definition = config =>
       fragment,
       type_name,
       inner: structure,
-    }) =>
-    generate_fragment_module(
-      config,
-      name,
-      req_vars,
-      has_error,
-      fragment,
-      type_name,
-      structure,
+    }) => (
+      generate_fragment_implementation(
+        config,
+        name,
+        req_vars,
+        has_error,
+        fragment,
+        type_name,
+        structure,
+      ),
+      generate_fragment_signature(
+        config,
+        name,
+        req_vars,
+        has_error,
+        fragment,
+        type_name,
+        structure,
+      ),
     );
 
 let generate_modules = (config, module_name, module_type, operations) => {
@@ -882,10 +1009,15 @@ let generate_modules = (config, module_name, module_type, operations) => {
   | [] => []
   | [operation] =>
     switch (generate_definition(config, operation)) {
-    | (definition, Some(name), contents, loc) =>
+    | ((definition, Some(name), contents, loc), signature) =>
+      let module_type =
+        switch (module_type) {
+        | Some(module_type) => module_type
+        | None => Mty.mk(Pmty_signature(signature))
+        };
       wrap_query_module(
         ~loc,
-        ~module_type?,
+        ~module_type,
         definition,
         switch (config.inline, module_name) {
         | (true, _) => None
@@ -894,27 +1026,37 @@ let generate_modules = (config, module_name, module_type, operations) => {
         },
         contents,
         config,
-      )
-    | (definition, None, contents, loc) =>
+      );
+    | ((definition, None, contents, loc), signature) =>
+      let module_type =
+        switch (module_type) {
+        | Some(module_type) => module_type
+        | None => Mty.mk(Pmty_signature(signature))
+        };
       wrap_query_module(
         ~loc,
-        ~module_type?,
+        ~module_type,
         definition,
         module_name,
         contents,
         config,
-      )
+      );
     }
-
   | operations =>
     let contents =
       operations
       |> List.map(generate_definition(config))
-      |> List.mapi((i, (definition, name, contents, loc)) =>
+      |> List.mapi((i, ((definition, name, contents, loc), signature)) => {
+           let module_type =
+             switch (module_type) {
+             | Some(module_type) => module_type
+             | None => Mty.mk(Pmty_signature(signature))
+             };
            switch (name) {
            | Some(name) =>
              wrap_query_module(
                ~loc,
+               ~module_type,
                definition,
                Some(name),
                contents,
@@ -924,17 +1066,19 @@ let generate_modules = (config, module_name, module_type, operations) => {
            | None =>
              wrap_query_module(
                ~loc,
+               ~module_type,
                definition,
                Some("Untitled" ++ string_of_int(i)),
                contents,
                config,
              )
-           }
-         )
+           };
+         })
       |> List.concat;
+
     switch (module_name) {
     | Some(module_name) => [
-        wrap_module(~module_type?, ~loc=Location.none, module_name, contents),
+        wrap_module(~loc=Location.none, module_name, contents),
       ]
     | None => contents
     };

@@ -17,7 +17,58 @@ Generate Apollo › scalarsArgs.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t = {scalarsInput: string};
+    type t_variables = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+  };
+  type t = {scalarsInput: string};
+  type t_variables = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  let query: string;
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables:
+    (
+      ~nullableString: string=?,
+      ~string: string,
+      ~nullableInt: int=?,
+      ~int: int,
+      ~nullableFloat: float=?,
+      ~float: float,
+      ~nullableBoolean: bool=?,
+      ~boolean: bool,
+      ~nullableID: string=?,
+      ~id: string,
+      unit
+    ) =>
+    t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t = {scalarsInput: string};
