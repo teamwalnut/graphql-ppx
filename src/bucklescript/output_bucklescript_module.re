@@ -381,9 +381,14 @@ let wrap_module = (~loc as _, ~module_type=?, name: string, contents) => {
 };
 
 let wrap_query_module =
-    (~loc as _, ~module_type=?, definition, name, contents, config) => {
+    (~loc as _, ~module_type, definition, name, contents, config) => {
   let loc = Location.none;
-  let module_name = "Inner";
+  let module_name =
+    switch (name) {
+    | Some(name) => name ++ "_inner"
+    | None => "Inner"
+    };
+
   let funct =
     switch (config.extend) {
     | Some(funct) => Some(funct)
@@ -411,10 +416,11 @@ let wrap_query_module =
       }
     };
 
-  let contents =
+  let inner_module = wrap_module(~module_type, ~loc, module_name, contents);
+  let (contents, module_type) =
     switch (funct) {
-    | Some(funct) => [
-        wrap_module(~loc, module_name, contents),
+    | Some(funct) =>
+      let contents = [
         Str.include_(
           Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
         ),
@@ -426,13 +432,55 @@ let wrap_query_module =
             ),
           ),
         ),
-      ]
-    | None => contents
+      ];
+      let signature = [
+        Sig.include_(
+          Incl.mk(
+            Mty.typeof_(
+              Mod.mk(
+                Pmod_structure([
+                  Str.include_(
+                    Incl.mk(
+                      Mod.ident({txt: Longident.parse(module_name), loc}),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ),
+        Sig.include_(
+          Incl.mk(
+            Mty.typeof_(
+              Mod.mk(
+                Pmod_structure([
+                  Str.include_(
+                    Incl.mk(
+                      Mod.apply(
+                        Mod.ident({txt: Longident.parse(funct), loc}),
+                        Mod.ident({txt: Longident.parse(module_name), loc}),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ];
+
+      (contents, Mty.mk(Pmty_signature(signature)));
+    | None => (contents, module_type)
     };
 
-  switch (name) {
-  | Some(name) => [wrap_module(~module_type?, ~loc, name, contents)]
-  | None => contents
+  switch (funct, name) {
+  | (Some(_), Some(name)) => [
+      inner_module,
+      wrap_module(~module_type, ~loc, name, contents),
+    ]
+  | (Some(_), None) => [inner_module, ...contents]
+  | (None, Some(name)) => [wrap_module(~module_type, ~loc, name, contents)]
+  | (None, None) => contents
   };
 };
 

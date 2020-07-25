@@ -108,7 +108,7 @@ function makeDefaultVariables(param) {
   
 }
 
-var Bla = {
+var Bla_inner = {
   Raw: Raw,
   query: query,
   parse: parse,
@@ -116,6 +116,21 @@ var Bla = {
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables
+};
+
+function use(param) {
+  
+}
+
+var Bla = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  makeDefaultVariables: makeDefaultVariables,
+  use: use
 };
 
 var Raw$1 = {};
@@ -210,10 +225,6 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var Inner = {
   Raw: Raw$1,
   query: query$1,
@@ -221,15 +232,15 @@ var Inner = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables$1
 };
 
-function use(param) {
+function use$1(param) {
   
 }
 
 exports.Parent = Parent;
+exports.Bla_inner = Bla_inner;
 exports.Bla = Bla;
 exports.Inner = Inner;
 exports.Raw = Raw$1;
@@ -239,7 +250,6 @@ exports.serialize = serialize$1;
 exports.serializeVariables = serializeVariables$1;
 exports.makeVariables = makeVariables$1;
 exports.makeDefaultVariables = makeDefaultVariables$1;
-exports.Z__INTERNAL = Z__INTERNAL;
-exports.use = use;
+exports.use = use$1;
 /* query Not a pure module */
 

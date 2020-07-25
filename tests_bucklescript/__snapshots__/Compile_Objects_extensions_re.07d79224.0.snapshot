@@ -18,6 +18,8 @@ var Parent = {
 
 var Raw = {};
 
+var query = \"query Bla  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
+
 function parse(value) {
   var value$1 = value.lists;
   var value$2 = value$1.nonNullableOfNonNullable;
@@ -100,9 +102,9 @@ function makeDefaultVariables(param) {
   
 }
 
-var Bla = {
+var Bla_inner = {
   Raw: Raw,
-  query: \"query Bla  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\",
+  query: query,
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
@@ -110,9 +112,24 @@ var Bla = {
   makeDefaultVariables: makeDefaultVariables
 };
 
+function use(param) {
+  
+}
+
+var Bla = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  makeDefaultVariables: makeDefaultVariables,
+  use: use
+};
+
 var Raw$1 = {};
 
-var query = \"query Bla2  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
+var query$1 = \"query Bla2  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
 
 function parse$1(value) {
   var value$1 = value.lists;
@@ -196,36 +213,31 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var Inner = {
   Raw: Raw$1,
-  query: query,
+  query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables$1
 };
 
-function use(param) {
+function use$1(param) {
   
 }
 
 exports.Parent = Parent;
+exports.Bla_inner = Bla_inner;
 exports.Bla = Bla;
 exports.Inner = Inner;
 exports.Raw = Raw$1;
-exports.query = query;
+exports.query = query$1;
 exports.parse = parse$1;
 exports.serialize = serialize$1;
 exports.serializeVariables = serializeVariables$1;
 exports.makeVariables = makeVariables$1;
 exports.makeDefaultVariables = makeDefaultVariables$1;
-exports.Z__INTERNAL = Z__INTERNAL;
-exports.use = use;
+exports.use = use$1;
 /* No side effect */
 
