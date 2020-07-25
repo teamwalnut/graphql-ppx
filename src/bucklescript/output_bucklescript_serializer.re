@@ -376,6 +376,66 @@ let generate_variable_constructors =
   };
 };
 
+let generate_variable_constructors_signature =
+    (arg_type_defs: list(arg_type_def)) => {
+  switch (arg_type_defs) {
+  | [NoVariables] => []
+  | _ =>
+    Ast_helper.(
+      arg_type_defs
+      |> filter_map(
+           fun
+           | InputObject({name, fields, loc}) => Some((name, fields, loc))
+           | NoVariables => None,
+         )
+      |> List.map(((name, fields, loc)) => {
+           let rec make_labeled_fun = final_type => (
+             fun
+             | [] => final_type
+             | [InputField({name, loc, type_}), ...tl] => {
+                 Typ.arrow(
+                   switch (type_) {
+                   | List(_)
+                   | Type(_) => Labelled(to_valid_ident(name))
+                   | _ => Optional(to_valid_ident(name))
+                   },
+                   generate_arg_type(false, loc, type_),
+                   make_labeled_fun(final_type, tl),
+                 );
+               }
+           );
+
+           let final_type =
+             base_type_name(
+               switch (name) {
+               | None => "t_variables"
+               | Some(input_type_name) => "t_variables_" ++ input_type_name
+               },
+             );
+
+           (name, loc, make_labeled_fun(final_type, fields));
+         })
+      |> List.map(((name, loc, type_)) => {
+           Sig.value(
+             Val.mk(
+               {
+                 loc: conv_loc(loc),
+                 txt:
+                   switch (name) {
+                   | None => "makeVariables"
+                   | Some("make") => "make"
+                   | Some(input_object_name) =>
+                     "makeInputObject" ++ input_object_name
+                   },
+               },
+               type_,
+             ),
+           )
+         })
+    )
+  };
+};
+
 let get_field = (is_object, key, existing_record, path) => {
   is_object
     ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
