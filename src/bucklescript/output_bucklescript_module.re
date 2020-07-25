@@ -467,9 +467,14 @@ let generate_operation_interface = (config, variable_defs, res_structure) => {
     );
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_signatures =
-    Output_bucklescript_serializer.generate_serialize_variables_signature(
+    Output_bucklescript_serializer.generate_serialize_variable_signatures(
       extracted_args,
     );
+  let variable_constructor_signatures =
+    Output_bucklescript_serializer.generate_variable_constructor_signatures(
+      extracted_args,
+    );
+  let has_required_variables = has_required_variables(extracted_args);
 
   [
     [signature_module("Raw", List.append(raw_types, raw_arg_types))],
@@ -490,12 +495,25 @@ let generate_operation_interface = (config, variable_defs, res_structure) => {
       [%sigi: let serialize: t => Raw.t],
     ],
     serialize_variable_signatures,
+    switch (variable_constructor_signatures) {
+    | [] => [[%sigi: let makeVariables: unit => unit]]
+    | signatures => signatures
+    },
+    has_required_variables
+      ? [] : [[%sigi: let makeDefaultVariables: unit => t_variables]],
+    [
+      [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+      [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
+      [%sigi:
+        external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+      ],
+    ],
   ]
   |> List.concat;
 };
 
 let generate_operation_implementation =
-    (config, variable_defs, has_error, operation, res_structure) => {
+    (config, variable_defs, _has_error, operation, res_structure) => {
   Output_bucklescript_docstrings.reset();
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
@@ -555,69 +573,64 @@ let generate_operation_implementation =
     );
   let has_required_variables = has_required_variables(extracted_args);
 
-  let contents =
-    if (has_error) {
-      [[%stri let parse: Raw.t => t = value => [%e parse_fn]]];
-    } else {
-      let printed_query =
-        make_printed_query(config, [Graphql_ast.Operation(operation)]);
+  let contents = {
+    let printed_query =
+      make_printed_query(config, [Graphql_ast.Operation(operation)]);
 
+    List.concat([
       List.concat([
-        List.concat([
-          [[%stri [@ocaml.warning "-32"]]],
-          [
-            wrap_module(
-              ~loc=Location.none,
-              "Raw",
-              List.append(raw_types, raw_arg_types),
-            ),
+        [[%stri [@ocaml.warning "-32"]]],
+        [
+          wrap_module(
+            ~loc=Location.none,
+            "Raw",
+            List.append(raw_types, raw_arg_types),
+          ),
+        ],
+        types,
+        arg_types,
+        [
+          Output_bucklescript_docstrings.(
+            make_let("query", printed_query, query_docstring)
+          ),
+        ],
+        [
+          Output_bucklescript_docstrings.(
+            make_let(
+              "parse",
+              [%expr (value: Raw.t) => ([%e parse_fn]: t)],
+              parse_docstring,
+            )
+          ),
+        ],
+        [
+          Output_bucklescript_docstrings.(
+            make_let(
+              "serialize",
+              [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
+              serialize_docstring,
+            )
+          ),
+        ],
+        [serialize_variable_functions],
+        switch (variable_constructors) {
+        | None => [[%stri let makeVariables = () => ()]]
+        | Some(c) => [c]
+        },
+        has_required_variables
+          ? [] : [[%stri let makeDefaultVariables = () => makeVariables()]],
+        [[%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"]],
+        [[%stri external toJson: Raw.t => Js.Json.t = "%identity"]],
+        [
+          [%stri
+            external variablesToJson: Raw.t_variables => Js.Json.t =
+              "%identity"
           ],
-          types,
-          arg_types,
-          [
-            Output_bucklescript_docstrings.(
-              make_let("query", printed_query, query_docstring)
-            ),
-          ],
-          [
-            Output_bucklescript_docstrings.(
-              make_let(
-                "parse",
-                [%expr (value: Raw.t) => ([%e parse_fn]: t)],
-                parse_docstring,
-              )
-            ),
-          ],
-          [
-            Output_bucklescript_docstrings.(
-              make_let(
-                "serialize",
-                [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
-                serialize_docstring,
-              )
-            ),
-          ],
-          [serialize_variable_functions],
-          switch (variable_constructors) {
-          | None => [[%stri let makeVariables = () => ()]]
-          | Some(c) => [c]
-          },
-          has_required_variables
-            ? [] : [[%stri let makeDefaultVariables = () => makeVariables()]],
-          [
-            [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
-          ],
-          [[%stri external toJson: Raw.t => Js.Json.t = "%identity"]],
-          [
-            [%stri
-              external variablesToJson: Raw.t_variables => Js.Json.t =
-                "%identity"
-            ],
-          ],
-          Output_bucklescript_docstrings.get_module(),
-        ]),
-      ]);
-    };
+        ],
+        Output_bucklescript_docstrings.get_module(),
+      ]),
+    ]);
+  };
 
   let name =
     switch (operation) {

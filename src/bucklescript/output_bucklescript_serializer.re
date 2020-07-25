@@ -173,7 +173,7 @@ let filter_map = f => {
   aux([]);
 };
 
-let generate_serialize_variables_signature =
+let generate_serialize_variable_signatures =
     (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
   | [NoVariables] => [%sig: let serializeVariables: unit => unit]
@@ -376,7 +376,7 @@ let generate_variable_constructors =
   };
 };
 
-let generate_variable_constructors_signature =
+let generate_variable_constructor_signatures =
     (arg_type_defs: list(arg_type_def)) => {
   switch (arg_type_defs) {
   | [NoVariables] => []
