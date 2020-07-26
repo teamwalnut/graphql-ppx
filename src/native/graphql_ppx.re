@@ -88,7 +88,7 @@ let drop_prefix = (prefix, str) => {
   String.sub(str, len, rest);
 };
 
-let rewrite_query = (~schema=?, ~loc, ~delim, ~query, ()) => {
+let rewrite_definition = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_408;
 
   let lexer = Graphql_lexer.make(query);
@@ -268,7 +268,7 @@ let mapper = (_config, _cookies) => {
                   },
                 ]) =>
                 let maybe_schema = extract_schema_from_config(fields);
-                rewrite_query(
+                rewrite_definition(
                   ~schema=?maybe_schema,
                   ~loc=conv_loc_from_ast(loc),
                   ~delim,
@@ -290,7 +290,7 @@ let mapper = (_config, _cookies) => {
                     _,
                   },
                 ]) =>
-                rewrite_query(
+                rewrite_definition(
                   ~loc=conv_loc_from_ast(loc),
                   ~delim,
                   ~query,
