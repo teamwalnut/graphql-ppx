@@ -62,29 +62,29 @@ You can write a query like this:
 This generates the following module (simplified):
 
 ```reason
-  module type UserQuery = {
-    module Raw: {
-      type t_user_type = string;
-      type t_user = {
-        id: string,
-        name: Js.Nullable.t(string),
-        type: t_user_type
-      };
-      type t = {user: Js.Nullable.t(t_user)};
-    }
-    type t_user_type = [
-    | ADMIN
-    | MEMBER
-    ];
+module type UserQuery = {
+  module Raw: {
+    type t_user_type = string;
     type t_user = {
       id: string,
-      name: option(string),
+      name: Js.Nullable.t(string),
       type: t_user_type
     };
-    type t = {user: option(t_user)};
-    let parse: Raw.t => t;
-    let serialize: t => Raw.t;
+    type t = {user: Js.Nullable.t(t_user)};
   }
+  type t_user_type = [
+  | ADMIN
+  | MEMBER
+  ];
+  type t_user = {
+    id: string,
+    name: option(string),
+    type: t_user_type
+  };
+  type t = {user: option(t_user)};
+  let parse: Raw.t => t;
+  let serialize: t => Raw.t;
+}
 ```
 
 `UserQuery.Raw.t` is what you get back from the server. This is something that
