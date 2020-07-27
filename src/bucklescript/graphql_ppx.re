@@ -487,13 +487,26 @@ let rewrite_definition =
   };
 };
 
+let filter_map = f => {
+  let rec aux = accu =>
+    fun
+    | [] => List.rev(accu)
+    | [x, ...l] =>
+      switch (f(x)) {
+      | None => aux(accu, l)
+      | Some(v) => aux([v, ...accu], l)
+      };
+
+  aux([]);
+};
+
 // Default configuration
 let () = Bucklescript_config.read_config();
 
 let get_module_bindings = structure => {
   Ast_408.(
     structure
-    |> List.filter_map(
+    |> filter_map(
          fun
          | {Parsetree.pstr_desc: Pstr_module(module_binding)} =>
            Some(module_binding)
