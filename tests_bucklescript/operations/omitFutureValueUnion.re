@@ -35,7 +35,7 @@ module ByConfig = [%graphql
     }
   }
 |};
-  {future_added_value: false}
+  {futureAddedValue: false}
 ];
 /**
  * By directive

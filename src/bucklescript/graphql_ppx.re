@@ -257,8 +257,9 @@ let extract_fragment_in_query_from_config = config_fields => {
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
+let extract_apollo_mode_from_config = extract_bool_from_config("apolloMode");
 let extract_future_added_value_from_config =
-  extract_bool_from_config("future_added_value");
+  extract_bool_from_config("futureAddedValue");
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
 
