@@ -15,7 +15,7 @@ ubiquitous, and it looks like it has become the successor of the REST protocol.
 
 GraphQL is a great pairing with Reason, because the protocol is **typed**. This
 means that you have a predefined schema of data that your application can fetch.
-In priciple when we compose a query, given the schema, we know exactly what the
+In principle when we compose a query, given the schema, we know exactly what the
 types of the data that is returned is going to be.
 
 In my experience the biggest source of bugs is that the data you get back is not
