@@ -21,3 +21,32 @@ module MyQuery2: {
 |};
   {records: true}
 ];
+
+module rec MyQueryRecursive = [%graphql
+  {|
+  query {
+    nestedObject @ppxCustom(module: "VariousScalars") {
+      inner {
+        inner {
+          field
+        }
+      }
+    }
+  }
+|};
+  {records: true, apolloMode: false}
+]
+and VariousScalars: {
+  type t;
+  let parse: MyQueryRecursive.t_nestedObject => t;
+  let serialize: t => MyQueryRecursive.t_nestedObject;
+} = {
+  type t = {otherInner: option(MyQueryRecursive.t_nestedObject_inner)};
+  let parse = (nestedObject: MyQueryRecursive.t_nestedObject) => {
+    {otherInner: nestedObject.inner};
+  };
+  let serialize: t => MyQueryRecursive.t_nestedObject =
+    t => {
+      {inner: t.otherInner};
+    };
+};

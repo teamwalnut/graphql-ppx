@@ -512,10 +512,9 @@ and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
 and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   [@metaloc loc]
   {
-    %expr
-    [%e ident_from_string(ident ++ ".serialize")](
-      [%e generate_serializer(config, path, definition, None, inner)],
-    );
+    let%expr value = [%e ident_from_string(ident ++ ".serialize")](value);
+    %e
+    generate_serializer(config, path, definition, None, inner);
   }
 and generate_object_encoder =
     (

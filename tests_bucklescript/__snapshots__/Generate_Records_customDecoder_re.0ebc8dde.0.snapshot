@@ -98,11 +98,13 @@ module MyQuery: {
           {
             let int = {
               let value = (value: t_variousScalars).int;
-              StringOfInt.serialize(value);
+              let value = StringOfInt.serialize(value);
+              value;
             }
             and string = {
               let value = (value: t_variousScalars).string;
-              IntOfString.serialize(value);
+              let value = IntOfString.serialize(value);
+              value;
             };
             {string, int};
           }: Raw.t_variousScalars

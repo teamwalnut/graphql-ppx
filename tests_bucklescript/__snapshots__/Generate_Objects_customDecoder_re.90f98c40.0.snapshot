@@ -95,11 +95,13 @@ module MyQuery: {
       let value = value##variousScalars;
       let int = {
         let value = value##int;
-        StringOfInt.serialize(value);
+        let value = StringOfInt.serialize(value);
+        value;
       }
       and string = {
         let value = value##string;
-        IntOfString.serialize(value);
+        let value = IntOfString.serialize(value);
+        value;
       };
       {\"string\": string, \"int\": int};
     };

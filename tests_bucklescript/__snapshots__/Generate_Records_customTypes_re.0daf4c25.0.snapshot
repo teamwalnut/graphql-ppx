@@ -143,7 +143,13 @@ module MyQuery: {
             let nullableColor = {
               let value = (value: t_customFields).nullableColor;
               switch (value) {
-              | Some(value) => Js.Nullable.return(Color.serialize(value))
+              | Some(value) =>
+                Js.Nullable.return(
+                  {
+                    let value = Color.serialize(value);
+                    value;
+                  },
+                )
               | None => Js.Nullable.null
               };
             }
