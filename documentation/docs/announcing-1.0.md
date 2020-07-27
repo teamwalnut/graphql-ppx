@@ -144,7 +144,7 @@ incrementally, we would have a number of breaking changes along the way. This
 would be a pretty bad experience for the users of the library and the authors of
 GraphQL clients. This is why we stayed in low-profile beta a little longer to
 ship something that is feature complete with no major breaking changes in the
-forseeable future.
+foreseeable future.
 
 ## Values
 
