@@ -276,6 +276,7 @@ type query_config = {
   future_added_value: option(bool),
   extend: option(string),
   fragment_in_query: option(Ppx_config.fragment_in_query),
+  apollo_mode: option(bool),
 };
 
 let get_query_config = fields => {
@@ -293,6 +294,7 @@ let get_query_config = fields => {
     future_added_value: extract_future_added_value_from_config(fields),
     extend: extract_extend_from_config(fields),
     fragment_in_query: extract_fragment_in_query_from_config(fields),
+    apollo_mode: extract_apollo_mode_from_config(fields),
   };
 };
 
@@ -309,6 +311,7 @@ let empty_query_config = {
   future_added_value: None,
   extend: None,
   fragment_in_query: None,
+  apollo_mode: None,
 };
 
 let get_with_default = (value, default_value) => {
@@ -404,13 +407,17 @@ let rewrite_definition =
       let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
       let document =
         (
-          if (Ppx_config.apollo_mode()) {
+          if (switch (query_config.apollo_mode) {
+              | None => Ppx_config.apollo_mode()
+              | Some(apollo_mode) => apollo_mode
+              }) {
             document |> Ast_transforms.add_typename_to_selection_set(schema);
           } else {
             document;
           }
         )
         |> Ast_transforms.remove_typename_from_union(schema);
+
       let template_tag = get_template_tag(query_config);
 
       let config = {
