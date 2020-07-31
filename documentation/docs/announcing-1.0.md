@@ -118,7 +118,7 @@ you can just use the following:
 ## Long in the making
 
 What you saw above is how to use the new version of `graphql-ppx`. This version
-has been long in the making. Personally `graphql-ppx` drove me to Reason after
+has been long in the making. Personally, `graphql-ppx` drove me to Reason after
 seeing a demo by Sean Grove, as there was no way to deliver this kind of
 seamless end-to-end typing in our Typescript application.
 
