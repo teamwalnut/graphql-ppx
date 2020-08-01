@@ -11,6 +11,7 @@ let get_parent_span =
   | Definition(Graphql_ast.Operation({span})) => span
   | Definition(Graphql_ast.Fragment({span})) => span;
 
+
 // get's the type of a field name
 let rec safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
   let ty_fields =

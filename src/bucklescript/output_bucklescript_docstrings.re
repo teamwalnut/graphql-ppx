@@ -11,29 +11,52 @@ let parse_docstring = {|Parse the JSON GraphQL data to ReasonML data types|};
 
 let serialize_docstring = {|Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data |};
 
-let str_items: ref(list(Parsetree.structure_item)) = ref([]);
+let items:
+  ref(
+    list((list(Parsetree.structure_item), list(Parsetree.signature_item))),
+  ) =
+  ref([]);
 let str_module_information: ref(list(Parsetree.structure_item)) = ref([]);
 
 let reset = () => {
-  str_items := [];
+  items := [];
 };
 
 let make_let = (value, expr, docstring) => {
-  Ast_helper.Str.value(
-    Nonrecursive,
-    [
-      Vb.mk(
-        ~attrs=[
-          Docstrings.docs_attr(
-            Docstrings.docstring(docstring, Location.none),
-          ),
-        ],
-        Ast_helper.Pat.var(Location.mkloc(value, Location.none)),
-        expr,
-      ),
-    ],
+  Ast_helper.Sig.value(
+    Val.mk(
+      ~attrs=[
+        Docstrings.docs_attr(Docstrings.docstring(docstring, Location.none)),
+      ],
+      {txt: value, loc: Location.none},
+      expr,
+    ),
   );
 };
+let generate_text_sig = (name, loc, text) => [
+  Sig.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
+  Sig.value(
+    Val.mk(
+      ~attrs=[
+        Docstrings.docs_attr(Docstrings.docstring(text, conv_loc(loc))),
+      ],
+      {txt: name, loc: conv_loc(loc)},
+      Typ.constr(Location.mknoloc(Longident.parse(name)), []),
+    ),
+  ),
+];
+let generate_text_sig = (name, loc, text) => [
+  Sig.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
+  Sig.value(
+    Val.mk(
+      ~attrs=[
+        Docstrings.docs_attr(Docstrings.docstring(text, conv_loc(loc))),
+      ],
+      {txt: name, loc: conv_loc(loc)},
+      Typ.constr(Location.mknoloc(Longident.parse(name)), []),
+    ),
+  ),
+];
 
 let generate_text_struct = (name, loc, text) => [
   Str.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
@@ -66,9 +89,9 @@ let for_field_arguments =
   switch (field_meta) {
   | None => ()
   | Some({fm_arguments, fm_name}) =>
-    str_items :=
+    items :=
       List.concat([
-        str_items^,
+        items^,
         ...arguments
            |> List.map(((name, type_): Graphql_ast.argument) => {
                 List.concat([
@@ -126,18 +149,36 @@ let for_field_arguments =
                                  ++ (loc.loc_start.pos_cnum |> string_of_int);
                                List.append(
                                  p,
-                                 generate_text_struct(
-                                   safe_name,
-                                   loc,
-                                   "Variable **$"
-                                   ++ var_name
-                                   ++ "** has the following graphql type:\n\n```\n"
-                                   ++ Schema_printer.print_type_from_ref(
-                                        s_type |> Type_utils.to_schema_type_ref,
-                                        config.schema,
-                                      )
-                                   ++ "\n```",
-                                 ),
+                                 [
+                                   (
+                                     generate_text_struct(
+                                       safe_name,
+                                       loc,
+                                       "Variable **$"
+                                       ++ var_name
+                                       ++ "** has the following graphql type:\n\n```\n"
+                                       ++ Schema_printer.print_type_from_ref(
+                                            s_type
+                                            |> Type_utils.to_schema_type_ref,
+                                            config.schema,
+                                          )
+                                       ++ "\n```",
+                                     ),
+                                     generate_text_sig(
+                                       safe_name,
+                                       loc,
+                                       "Variable **$"
+                                       ++ var_name
+                                       ++ "** has the following graphql type:\n\n```\n"
+                                       ++ Schema_printer.print_type_from_ref(
+                                            s_type
+                                            |> Type_utils.to_schema_type_ref,
+                                            config.schema,
+                                          )
+                                       ++ "\n```",
+                                     ),
+                                   ),
+                                 ],
                                );
                              }
                            }
@@ -311,6 +352,21 @@ let for_module_information = (loc: Location.t) => {
     );
 };
 
+let get_module = () => {
+  switch (sig_items^) {
+  | [] => []
+  | items => [
+      Sig.module_(
+        Md.mk(
+          Location.mknoloc("Z__INTERNAL"),
+          Mty.mk(
+            Pmty_signature(List.append(items, str_module_information^)),
+          ),
+        ),
+      ),
+    ]
+  };
+};
 let get_module = () => {
   switch (str_items^) {
   | [] => []
