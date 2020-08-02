@@ -6,11 +6,6 @@ open Migrate_parsetree;
 open Ast_408;
 open Ast_helper;
 
-let query_docstring = {|The GraphQL query string|};
-let parse_docstring = {|Parse the JSON GraphQL data to ReasonML data types|};
-
-let serialize_docstring = {|Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data |};
-
 let items:
   ref(
     list((list(Parsetree.structure_item), list(Parsetree.signature_item))),

@@ -648,27 +648,9 @@ let generate_operation_implementation =
         types,
         arg_types,
         [
-          Output_bucklescript_docstrings.(
-            make_let_str("query", printed_query, query_docstring)
-          ),
-        ],
-        [
-          Output_bucklescript_docstrings.(
-            make_let_str(
-              "parse",
-              [%expr (value: Raw.t) => ([%e parse_fn]: t)],
-              parse_docstring,
-            )
-          ),
-        ],
-        [
-          Output_bucklescript_docstrings.(
-            make_let_str(
-              "serialize",
-              [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
-              serialize_docstring,
-            )
-          ),
+          [%stri let query = [%e printed_query]],
+          [%stri let parse: Raw.t => t = [%e parse_f]],
+          [%stri let serialize: t => Raw.t = [%e serialize_fn]],
         ],
         [serialize_variable_functions],
         switch (variable_constructors) {
