@@ -124,6 +124,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"mutation   {\\nmutationForVariant  {\\nbaseType  \\nbaseTypeList  \\ndog  {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\nhuman  {\\n__typename  \\nname  \\n}\\n\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\n__typename  \\nname  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
@@ -131,7 +135,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

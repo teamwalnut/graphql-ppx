@@ -32,13 +32,19 @@ function makeVariables(arg, param) {
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_SampleField_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query ($arg: SampleField!)  {\\nenumInput(arg: $arg)  \\n}\\n\",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables
+  makeVariables: makeVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

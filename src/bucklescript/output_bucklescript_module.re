@@ -484,8 +484,9 @@ let wrap_query_module =
   };
 };
 
-let generate_operation_signature = (config, variable_defs, res_structure) => {
+let generate_operation_signature = (config, variable_defs, operation, res_structure) => {
   Output_bucklescript_docstrings.reset();
+  Output_bucklescript_docstrings.for_operation(config, operation)
   let raw_types =
     Output_bucklescript_types.generate_type_signature_items(
       config,
@@ -531,6 +532,7 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
     arg_types,
     [
       [%sigi:
+        /** The GraphQL query */
         let query: [%t
           base_type_name(
             switch (config.template_tag_return_type) {
@@ -540,8 +542,15 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
           )
         ]
       ],
-      [%sigi: let parse: Raw.t => t],
-      [%sigi: let serialize: t => Raw.t],
+      [%sigi: 
+        /** Parse the JSON GraphQL data to ReasonML data types */
+        let parse: Raw.t => t],
+      [%sigi: 
+        /** 
+  Serialize the ReasonML GraphQL data that was parsed using the parse
+  function back to the original JSON compatible data 
+  */
+        let serialize: t => Raw.t],
     ],
     serialize_variable_signatures,
     switch (variable_constructor_signatures) {
@@ -557,6 +566,7 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
         external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
       ],
     ],
+    Output_bucklescript_docstrings.get_module_sig()
   ]
   |> List.concat;
 };
@@ -564,6 +574,7 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
 let generate_operation_implementation =
     (config, variable_defs, _has_error, operation, res_structure) => {
   Output_bucklescript_docstrings.reset();
+  Output_bucklescript_docstrings.for_operation(config, operation);
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
       config,
@@ -587,8 +598,6 @@ let generate_operation_implementation =
       None,
       None,
     );
-  // Add to internal module
-  Output_bucklescript_docstrings.for_operation(config, operation);
   let raw_types =
     Output_bucklescript_types.generate_type_structure_items(
       config,
@@ -640,12 +649,12 @@ let generate_operation_implementation =
         arg_types,
         [
           Output_bucklescript_docstrings.(
-            make_let("query", printed_query, query_docstring)
+            make_let_str("query", printed_query, query_docstring)
           ),
         ],
         [
           Output_bucklescript_docstrings.(
-            make_let(
+            make_let_str(
               "parse",
               [%expr (value: Raw.t) => ([%e parse_fn]: t)],
               parse_docstring,
@@ -654,7 +663,7 @@ let generate_operation_implementation =
         ],
         [
           Output_bucklescript_docstrings.(
-            make_let(
+            make_let_str(
               "serialize",
               [%expr (value: t) => ([%e serialize_fn]: Raw.t)],
               serialize_docstring,
@@ -676,7 +685,7 @@ let generate_operation_implementation =
               "%identity"
           ],
         ],
-        Output_bucklescript_docstrings.get_module(),
+        Output_bucklescript_docstrings.get_module_str(),
       ]),
     ]);
   };
@@ -970,10 +979,10 @@ let generate_fragment_implementation =
       types,
       [
         Output_bucklescript_docstrings.(
-          make_let("query", printed_query, query_docstring)
+          make_let_str("query", printed_query, query_docstring)
         ),
         Output_bucklescript_docstrings.(
-          make_let(
+          make_let_str(
             "parse",
             [%expr (value: Raw.t) => ([%e parse_fn]: [%t type_name])],
             parse_docstring,
@@ -984,7 +993,7 @@ let generate_fragment_implementation =
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]],
         Output_bucklescript_docstrings.(
-          make_let(
+          make_let_str(
             "serialize",
             [%expr (value: [%t type_name]) => ([%e serialize_fn]: Raw.t)],
             serialize_docstring,
@@ -994,7 +1003,7 @@ let generate_fragment_implementation =
         [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
         [%stri external toJson: Raw.t => Js.Json.t = "%identity"],
       ],
-      Output_bucklescript_docstrings.get_module(),
+      Output_bucklescript_docstrings.get_module_str(),
     ]
     |> List.concat;
 
@@ -1021,7 +1030,7 @@ let generate_definition = config =>
         operation,
         structure,
       ),
-      generate_operation_signature(config, vdefs, structure),
+      generate_operation_signature(config, vdefs, operation, structure),
     )
 
   | Def_fragment({

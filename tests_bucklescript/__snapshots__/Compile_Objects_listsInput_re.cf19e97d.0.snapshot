@@ -66,6 +66,11 @@ function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, no
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_ListsInput_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query ($arg: ListsInput!)  {\\nlistsInput(arg: $arg)  \\n}\\n\",
@@ -74,7 +79,8 @@ var MyQuery = {
   serializeVariables: serializeVariables,
   serializeInputObjectListsInput: serializeInputObjectListsInput,
   makeVariables: makeVariables,
-  makeInputObjectListsInput: makeInputObjectListsInput
+  makeInputObjectListsInput: makeInputObjectListsInput,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

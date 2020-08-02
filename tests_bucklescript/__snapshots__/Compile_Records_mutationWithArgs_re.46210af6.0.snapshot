@@ -30,13 +30,18 @@ function makeVariables(required, param) {
         };
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"mutation MyMutation($required: String!)  {\\noptionalInputArgs(required: $required, anotherRequired: \\\"val\\\")  \\n}\\n\",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables
+  makeVariables: makeVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

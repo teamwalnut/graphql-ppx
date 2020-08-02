@@ -148,6 +148,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
@@ -155,7 +159,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

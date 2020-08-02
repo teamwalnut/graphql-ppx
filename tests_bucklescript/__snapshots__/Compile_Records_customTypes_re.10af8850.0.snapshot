@@ -104,6 +104,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query   {\\ncustomFields  {\\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\",
@@ -111,7 +115,8 @@ var MyQuery = {
   serialize: serialize$2,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.Color = Color;

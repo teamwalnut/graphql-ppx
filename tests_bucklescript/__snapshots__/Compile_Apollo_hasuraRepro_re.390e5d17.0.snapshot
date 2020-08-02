@@ -81,6 +81,12 @@ function makeDefaultVariables(param) {
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_orderBy_134: 0,
+  _graphql_block_157: 0,
+  graphql_module: 0
+};
+
 var HasuraRepro = {
   Raw: Raw$1,
   query: query$1,
@@ -88,7 +94,8 @@ var HasuraRepro = {
   serialize: serialize$1,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.Dog = Dog;

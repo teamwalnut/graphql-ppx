@@ -90,6 +90,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var QueryWithOnlyFragments = {
   Raw: Raw,
   query: \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\n__typename  \\nid  \\nname  \\n}\\n\\n...on AnonymousUser   {\\n__typename  \\nid  \\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\",
@@ -97,7 +101,8 @@ var QueryWithOnlyFragments = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = {};
@@ -154,6 +159,10 @@ function makeDefaultVariables$1(param) {
   
 }
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var QueryWithTypename = {
   Raw: Raw$1,
   query: \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\",
@@ -161,7 +170,8 @@ var QueryWithTypename = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1
+  makeDefaultVariables: makeDefaultVariables$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var Raw$2 = {};
@@ -249,6 +259,10 @@ function makeDefaultVariables$2(param) {
   
 }
 
+var Z__INTERNAL$2 = {
+  graphql_module: 0
+};
+
 var QueryWithMixedFragments = {
   Raw: Raw$2,
   query: \"query   {\\nusers  {\\n__typename\\nid  \\n...on AdminUser   {\\n__typename  \\nname  \\n}\\n\\n...on AnonymousUser   {\\n__typename  \\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\",
@@ -256,7 +270,8 @@ var QueryWithMixedFragments = {
   serialize: serialize$2,
   serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: makeDefaultVariables$2
+  makeDefaultVariables: makeDefaultVariables$2,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 var Raw$3 = {};
@@ -323,6 +338,10 @@ function makeDefaultVariables$3(param) {
   
 }
 
+var Z__INTERNAL$3 = {
+  graphql_module: 0
+};
+
 var MixedQueryWithTypename = {
   Raw: Raw$3,
   query: \"query   {\\nusers  {\\n__typename\\nid  \\n__typename  \\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\",
@@ -330,7 +349,8 @@ var MixedQueryWithTypename = {
   serialize: serialize$3,
   serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: makeDefaultVariables$3
+  makeDefaultVariables: makeDefaultVariables$3,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = {};
@@ -371,6 +391,10 @@ function makeDefaultVariables$4(param) {
   
 }
 
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
 var QueryWithoutFragments = {
   Raw: Raw$4,
   query: \"query   {\\nusers  {\\n__typename\\nid  \\n}\\n\\n}\\n\",
@@ -378,7 +402,8 @@ var QueryWithoutFragments = {
   serialize: serialize$4,
   serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
-  makeDefaultVariables: makeDefaultVariables$4
+  makeDefaultVariables: makeDefaultVariables$4,
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;

@@ -92,6 +92,13 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_arg_100: 0,
+  _graphql_arg_95: 0,
+  _graphql_NonrecursiveInput_49: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -102,7 +109,8 @@ var MyQuery = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

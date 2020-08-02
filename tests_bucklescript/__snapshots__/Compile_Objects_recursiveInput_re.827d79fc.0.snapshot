@@ -53,6 +53,11 @@ function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_RecursiveInput_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query ($arg: RecursiveInput!)  {\\nrecursiveInput(arg: $arg)  \\n}\\n\",
@@ -61,7 +66,8 @@ var MyQuery = {
   serializeVariables: serializeVariables,
   serializeInputObjectRecursiveInput: serializeInputObjectRecursiveInput,
   makeVariables: makeVariables,
-  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput
+  makeInputObjectRecursiveInput: makeInputObjectRecursiveInput,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

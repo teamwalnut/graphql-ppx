@@ -74,13 +74,18 @@ function makeVariables($$var, param) {
         };
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables
+  makeVariables: makeVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

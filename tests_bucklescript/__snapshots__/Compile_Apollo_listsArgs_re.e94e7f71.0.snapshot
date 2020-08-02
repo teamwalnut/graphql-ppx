@@ -55,13 +55,19 @@ function makeVariables(nullableOfNullable, nullableOfNonNullable, nonNullableOfN
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_arg_219: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\n}\\n\",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables
+  makeVariables: makeVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

@@ -16,13 +16,17 @@ let items:
     list((list(Parsetree.structure_item), list(Parsetree.signature_item))),
   ) =
   ref([]);
-let str_module_information: ref(list(Parsetree.structure_item)) = ref([]);
+let module_information:
+  ref(
+    list((list(Parsetree.structure_item), list(Parsetree.signature_item))),
+  ) =
+  ref([]);
 
 let reset = () => {
   items := [];
 };
 
-let make_let = (value, expr, docstring) => {
+let make_let_sig = (value, expr, docstring) => {
   Ast_helper.Sig.value(
     Val.mk(
       ~attrs=[
@@ -33,18 +37,25 @@ let make_let = (value, expr, docstring) => {
     ),
   );
 };
-let generate_text_sig = (name, loc, text) => [
-  Sig.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
-  Sig.value(
-    Val.mk(
-      ~attrs=[
-        Docstrings.docs_attr(Docstrings.docstring(text, conv_loc(loc))),
-      ],
-      {txt: name, loc: conv_loc(loc)},
-      Typ.constr(Location.mknoloc(Longident.parse(name)), []),
-    ),
-  ),
-];
+
+
+let make_let_str = (value, expr, docstring) => {
+  Ast_helper.Str.value(
+    Nonrecursive,
+    [
+      Vb.mk(
+        ~attrs=[
+          Docstrings.docs_attr(
+            Docstrings.docstring(docstring, Location.none),
+          ),
+        ],
+        Ast_helper.Pat.var(Location.mkloc(value, Location.none)),
+        expr,
+      ),
+    ],
+  );
+};
+
 let generate_text_sig = (name, loc, text) => [
   Sig.type_(Nonrecursive, [Type.mk(Location.mknoloc(name))]),
   Sig.value(
@@ -201,20 +212,38 @@ let for_field_arguments =
                       ++ name.item
                       ++ "_"
                       ++ (name_loc.loc_start.pos_cnum |> string_of_int);
-                    generate_text_struct(
-                      safe_name,
-                      name_loc,
-                      "Argument **"
-                      ++ name.item
-                      ++ "** on field **"
-                      ++ fm_name
-                      ++ "** has the following graphql type:\n\n```\n"
-                      ++ Schema_printer.print_type_from_ref(
-                           am_arg_type,
-                           config.schema,
-                         )
-                      ++ "\n```",
-                    );
+                    [
+                      (
+                        generate_text_struct(
+                          safe_name,
+                          name_loc,
+                          "Argument **"
+                          ++ name.item
+                          ++ "** on field **"
+                          ++ fm_name
+                          ++ "** has the following graphql type:\n\n```\n"
+                          ++ Schema_printer.print_type_from_ref(
+                               am_arg_type,
+                               config.schema,
+                             )
+                          ++ "\n```",
+                        ),
+                        generate_text_sig(
+                          safe_name,
+                          name_loc,
+                          "Argument **"
+                          ++ name.item
+                          ++ "** on field **"
+                          ++ fm_name
+                          ++ "** has the following graphql type:\n\n```\n"
+                          ++ Schema_printer.print_type_from_ref(
+                               am_arg_type,
+                               config.schema,
+                             )
+                          ++ "\n```",
+                        ),
+                      ),
+                    ];
                   },
                 ])
               }),
@@ -223,17 +252,39 @@ let for_field_arguments =
 };
 
 let for_root_identifier = (_config: Generator_utils.output_config, loc) => {
-  str_items :=
+  items :=
     List.append(
-      str_items^,
+      items^,
       [
-        Ast_helper.Str.type_(
-          Recursive,
+        (
           [
-            Type.mk(
-              ~manifest=
-                Typ.constr(Location.mkloc(Longident.parse("t"), loc), []),
-              Location.mknoloc("root"),
+            Ast_helper.Str.type_(
+              Recursive,
+              [
+                Type.mk(
+                  ~manifest=
+                    Typ.constr(
+                      Location.mkloc(Longident.parse("t"), loc),
+                      [],
+                    ),
+                  Location.mknoloc("root"),
+                ),
+              ],
+            ),
+          ],
+          [
+            Ast_helper.Sig.type_(
+              Recursive,
+              [
+                Type.mk(
+                  ~manifest=
+                    Typ.constr(
+                      Location.mkloc(Longident.parse("t"), loc),
+                      [],
+                    ),
+                  Location.mknoloc("root"),
+                ),
+              ],
             ),
           ],
         ),
@@ -302,14 +353,23 @@ let for_input_constraint =
       ++ type_name
       ++ "_"
       ++ (loc_type.loc_start.pos_cnum |> string_of_int);
-    str_items :=
+    items :=
       List.append(
-        str_items^,
-        generate_text_struct(
-          safe_name,
-          loc_type,
-          "```\n" ++ printed_type ++ "\n```",
-        ),
+        items^,
+        [
+          (
+            generate_text_struct(
+              safe_name,
+              loc_type,
+              "```\n" ++ printed_type ++ "\n```",
+            ),
+            generate_text_sig(
+              safe_name,
+              loc_type,
+              "```\n" ++ printed_type ++ "\n```",
+            ),
+          ),
+        ],
       );
   | (None, _)
   | (_, None) => ()
@@ -329,53 +389,84 @@ let for_fragment =
   | Some(printed_type) =>
     let loc = config.map_loc(fragment.item.fg_type_condition.span);
 
-    str_items :=
+    items :=
       List.append(
-        str_items^,
-        generate_text_struct(
-          "graphql",
-          loc,
-          "```\n" ++ printed_type ++ "\n```",
-        ),
+        items^,
+        [
+          (
+            generate_text_struct(
+              "graphql",
+              loc,
+              "```\n" ++ printed_type ++ "\n```",
+            ),
+            generate_text_sig(
+              "graphql",
+              loc,
+              "```\n" ++ printed_type ++ "\n```",
+            ),
+          ),
+        ],
       );
   };
 };
 
 let for_module_information = (loc: Location.t) => {
-  str_module_information :=
-    generate_text_struct(
-      "graphql_module",
-      loc |> conv_loc_from_ast,
-      Printf.sprintf(
-        {|The contents of this module are automatically generated by graphql-ppx.|},
+  module_information :=
+    [
+      (
+        generate_text_struct(
+          "graphql_module",
+          loc |> conv_loc_from_ast,
+          Printf.sprintf(
+            {|The contents of this module are automatically generated by graphql-ppx.|},
+          ),
+        ),
+        generate_text_sig(
+          "graphql_module",
+          loc |> conv_loc_from_ast,
+          Printf.sprintf(
+            {|The contents of this module are automatically generated by graphql-ppx.|},
+          ),
+        ),
       ),
-    );
+    ];
 };
 
-let get_module = () => {
-  switch (sig_items^) {
+let get_module_sig = () => {
+  switch (items^) {
   | [] => []
   | items => [
       Sig.module_(
         Md.mk(
           Location.mknoloc("Z__INTERNAL"),
           Mty.mk(
-            Pmty_signature(List.append(items, str_module_information^)),
+            Pmty_signature(
+              List.append(
+                items |> List.map(((_, s)) => s) |> List.concat,
+                module_information^ |> List.map(((_, s)) => s) |> List.concat,
+              ),
+            ),
           ),
         ),
       ),
     ]
   };
 };
-let get_module = () => {
-  switch (str_items^) {
+
+let get_module_str = () => {
+  switch (items^) {
   | [] => []
   | items => [
       Str.module_(
         Mb.mk(
           Location.mknoloc("Z__INTERNAL"),
           Mod.mk(
-            Pmod_structure(List.append(items, str_module_information^)),
+            Pmod_structure(
+              List.append(
+                items |> List.map(((s, _)) => s) |> List.concat,
+                module_information^ |> List.map(((s, _)) => s) |> List.concat,
+              ),
+            ),
           ),
         ),
       ),

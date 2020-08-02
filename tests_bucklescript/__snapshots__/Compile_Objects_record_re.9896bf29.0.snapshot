@@ -45,6 +45,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\nint  \\n}\\n\\n}\\n\",
@@ -52,7 +56,8 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = {};
@@ -91,6 +96,10 @@ function makeDefaultVariables$1(param) {
   
 }
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var OneFieldQuery = {
   Raw: Raw$1,
   query: \"query   {\\nvariousScalars  {\\nnullableString  \\n}\\n\\n}\\n\",
@@ -98,7 +107,8 @@ var OneFieldQuery = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1
+  makeDefaultVariables: makeDefaultVariables$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var Raw$2 = {};
@@ -141,6 +151,10 @@ function makeDefaultVariables$2(param) {
   
 }
 
+var Z__INTERNAL$2 = {
+  graphql_module: 0
+};
+
 var OneFieldQueryWithTypename = {
   Raw: Raw$2,
   query: \"query   {\\nvariousScalars  {\\n__typename  \\nnullableString  \\n}\\n\\n}\\n\",
@@ -148,7 +162,8 @@ var OneFieldQueryWithTypename = {
   serialize: serialize$2,
   serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: makeDefaultVariables$2
+  makeDefaultVariables: makeDefaultVariables$2,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 var Raw$3 = {};
@@ -220,6 +235,10 @@ function makeDefaultVariables$3(param) {
   
 }
 
+var Z__INTERNAL$3 = {
+  graphql_module: 0
+};
+
 var Untitled1 = {
   Raw: Raw$4,
   query: query$1,
@@ -227,7 +246,8 @@ var Untitled1 = {
   serialize: serialize$4,
   serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
-  makeDefaultVariables: makeDefaultVariables$3
+  makeDefaultVariables: makeDefaultVariables$3,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var ExternalFragmentQuery = {
@@ -296,6 +316,10 @@ function makeDefaultVariables$4(param) {
   
 }
 
+var Z__INTERNAL$4 = {
+  graphql_module: 0
+};
+
 var InlineFragmentQuery = {
   Raw: Raw$5,
   query: \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\n}\\n\\n}\\n\",
@@ -303,7 +327,8 @@ var InlineFragmentQuery = {
   serialize: serialize$5,
   serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
-  makeDefaultVariables: makeDefaultVariables$4
+  makeDefaultVariables: makeDefaultVariables$4,
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 var Raw$6 = {};
@@ -387,6 +412,10 @@ function makeDefaultVariables$5(param) {
   
 }
 
+var Z__INTERNAL$5 = {
+  graphql_module: 0
+};
+
 var Untitled1$1 = {
   Raw: Raw$7,
   query: query$3,
@@ -394,7 +423,8 @@ var Untitled1$1 = {
   serialize: serialize$7,
   serializeVariables: serializeVariables$5,
   makeVariables: makeVariables$5,
-  makeDefaultVariables: makeDefaultVariables$5
+  makeDefaultVariables: makeDefaultVariables$5,
+  Z__INTERNAL: Z__INTERNAL$5
 };
 
 var UnionExternalFragmentQuery = {

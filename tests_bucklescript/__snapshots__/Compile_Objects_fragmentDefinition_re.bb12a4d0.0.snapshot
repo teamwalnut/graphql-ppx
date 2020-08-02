@@ -334,6 +334,10 @@ function makeDefaultVariables(param) {
         };
 }
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw$4,
   query: query$3,
@@ -341,7 +345,8 @@ var MyQuery = {
   serialize: serialize$4,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var Raw$5 = {};
@@ -374,6 +379,10 @@ function makeDefaultVariables$1(param) {
   
 }
 
+var Z__INTERNAL$2 = {
+  graphql_module: 0
+};
+
 var MyQuery2 = {
   Raw: Raw$5,
   query: query$4,
@@ -381,7 +390,8 @@ var MyQuery2 = {
   serialize: serialize$5,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1
+  makeDefaultVariables: makeDefaultVariables$1,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;

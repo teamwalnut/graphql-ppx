@@ -92,6 +92,13 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_arg_99: 0,
+  _graphql_arg_94: 0,
+  _graphql_NonrecursiveInput_48: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -102,7 +109,8 @@ var MyQuery = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = {};
@@ -198,6 +206,14 @@ function makeInputObjectEmbeddedInput$1(field, param) {
         };
 }
 
+var Z__INTERNAL$1 = {
+  _graphql_arg_238: 0,
+  _graphql_arg_233: 0,
+  _graphql_NonrecursiveInput_167: 0,
+  _graphql_NonrecursiveInput_194: 0,
+  graphql_module: 0
+};
+
 var MyQuery2 = {
   Raw: Raw$1,
   query: query$1,
@@ -208,7 +224,8 @@ var MyQuery2 = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 exports.MyQuery = MyQuery;

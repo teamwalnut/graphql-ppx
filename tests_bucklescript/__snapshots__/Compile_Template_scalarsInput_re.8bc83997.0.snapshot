@@ -71,6 +71,13 @@ function makeInputObjectVariousScalarsInput(nullableString, string, nullableInt,
         };
 }
 
+var Z__INTERNAL = {
+  _graphql_arg_93: 0,
+  _graphql_arg_88: 0,
+  _graphql_VariousScalarsInput_47: 0,
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: query,
@@ -79,7 +86,8 @@ var MyQuery = {
   serializeVariables: serializeVariables,
   serializeInputObjectVariousScalarsInput: serializeInputObjectVariousScalarsInput,
   makeVariables: makeVariables,
-  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput
+  makeInputObjectVariousScalarsInput: makeInputObjectVariousScalarsInput,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;

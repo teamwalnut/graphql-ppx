@@ -108,6 +108,10 @@ function makeDefaultVariables(param) {
   
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var Bla_inner = {
   Raw: Raw,
   query: query,
@@ -115,7 +119,8 @@ var Bla_inner = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 function use(param) {
@@ -130,6 +135,7 @@ var Bla = {
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
+  Z__INTERNAL: Z__INTERNAL,
   use: use
 };
 
@@ -225,6 +231,10 @@ function makeDefaultVariables$1(param) {
   
 }
 
+var Z__INTERNAL$1 = {
+  graphql_module: 0
+};
+
 var Inner = {
   Raw: Raw$1,
   query: query$1,
@@ -232,7 +242,8 @@ var Inner = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1
+  makeDefaultVariables: makeDefaultVariables$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 function use$1(param) {
@@ -250,6 +261,7 @@ exports.serialize = serialize$1;
 exports.serializeVariables = serializeVariables$1;
 exports.makeVariables = makeVariables$1;
 exports.makeDefaultVariables = makeDefaultVariables$1;
+exports.Z__INTERNAL = Z__INTERNAL$1;
 exports.use = use$1;
 /* query Not a pure module */
 

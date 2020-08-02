@@ -47,13 +47,18 @@ function makeVariables(opt, req, param) {
         };
 }
 
+var Z__INTERNAL = {
+  graphql_module: 0
+};
+
 var MyQuery = {
   Raw: Raw,
   query: \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\",
   parse: parse,
   serialize: serialize,
   serializeVariables: serializeVariables,
-  makeVariables: makeVariables
+  makeVariables: makeVariables,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 exports.MyQuery = MyQuery;
