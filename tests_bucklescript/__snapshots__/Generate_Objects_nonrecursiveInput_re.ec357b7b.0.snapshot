@@ -47,12 +47,10 @@ module MyQuery: {
   and t_variables_EmbeddedInput = {. \"field\": option(string)};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectNonrecursiveInput:
@@ -124,24 +122,23 @@ NonrecursiveInput {
     \"custom\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \"field\": option(string)};
-  /**The GraphQL query string*/
   let query = \"query ($arg: NonrecursiveInput!)  {\\nnonrecursiveInput(arg: $arg)  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let nonrecursiveInput = {
-      let value = value##nonrecursiveInput;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let nonrecursiveInput = {
+        let value = value##nonrecursiveInput;
+        value;
+      };
+      {\"nonrecursiveInput\": nonrecursiveInput};
     };
-    {\"nonrecursiveInput\": nonrecursiveInput};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let nonrecursiveInput = {
-      let value = value##nonrecursiveInput;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let nonrecursiveInput = {
+        let value = value##nonrecursiveInput;
+        value;
+      };
+      {\"nonrecursiveInput\": nonrecursiveInput};
     };
-    {\"nonrecursiveInput\": nonrecursiveInput};
-  };
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"arg\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),
@@ -363,12 +360,10 @@ module MyQuery2: {
   and t_variables_EmbeddedInput = {. \"field\": option(string)};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectNonrecursiveInput:
@@ -473,32 +468,31 @@ NonrecursiveInput {
     \"custom\": option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {. \"field\": option(string)};
-  /**The GraphQL query string*/
   let query = \"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\nscalarsInput(arg: $arg)  \\nmore: scalarsInput(arg: $arg2)  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let more = {
-      let value = value##more;
-      value;
-    }
-    and scalarsInput = {
-      let value = value##scalarsInput;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let more = {
+        let value = value##more;
+        value;
+      }
+      and scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {\"scalarsInput\": scalarsInput, \"more\": more};
     };
-    {\"scalarsInput\": scalarsInput, \"more\": more};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let more = {
-      let value = value##more;
-      value;
-    }
-    and scalarsInput = {
-      let value = value##scalarsInput;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let more = {
+        let value = value##more;
+        value;
+      }
+      and scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {\"scalarsInput\": scalarsInput, \"more\": more};
     };
-    {\"scalarsInput\": scalarsInput, \"more\": more};
-  };
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"arg\": (a => serializeInputObjectNonrecursiveInput(a))(inp##arg),

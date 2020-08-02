@@ -26,12 +26,10 @@ module MyQuery: {
   type t_variables = {. \"arg\": [ | `FIRST | `SECOND | `THIRD]};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
@@ -62,24 +60,23 @@ SampleField {
   };
   type t = {. \"enumInput\": string};
   type t_variables = {. \"arg\": [ | `FIRST | `SECOND | `THIRD]};
-  /**The GraphQL query string*/
   let query = \"query ($arg: SampleField!)  {\\nenumInput(arg: $arg)  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let enumInput = {
-      let value = value##enumInput;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let enumInput = {
+        let value = value##enumInput;
+        value;
+      };
+      {\"enumInput\": enumInput};
     };
-    {\"enumInput\": enumInput};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let enumInput = {
-      let value = value##enumInput;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let enumInput = {
+        let value = value##enumInput;
+        value;
+      };
+      {\"enumInput\": enumInput};
     };
-    {\"enumInput\": enumInput};
-  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"arg\":

@@ -38,12 +38,10 @@ module MyQuery: {
   };
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
@@ -84,24 +82,23 @@ module MyQuery: {
     \"nonNullableOfNullable\": array(option(string)),
     \"nonNullableOfNonNullable\": array(string),
   };
-  /**The GraphQL query string*/
   let query = \"query ($nullableOfNullable: [String], $nullableOfNonNullable: [String!], $nonNullableOfNullable: [String]!, $nonNullableOfNonNullable: [String!]!)  {\\nlistsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let listsInput = {
-      let value = value##listsInput;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let listsInput = {
+        let value = value##listsInput;
+        value;
+      };
+      {\"listsInput\": listsInput};
     };
-    {\"listsInput\": listsInput};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let listsInput = {
-      let value = value##listsInput;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let listsInput = {
+        let value = value##listsInput;
+        value;
+      };
+      {\"listsInput\": listsInput};
     };
-    {\"listsInput\": listsInput};
-  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"nullableOfNullable\":

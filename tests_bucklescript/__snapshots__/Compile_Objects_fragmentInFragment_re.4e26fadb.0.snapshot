@@ -27,10 +27,6 @@ function parse(value) {
         };
 }
 
-function verifyArgsAndParse(_ListFragment, value) {
-  return parse(value);
-}
-
 function serialize(value) {
   var value$1 = value.nullableOfNullable;
   return {
@@ -44,9 +40,18 @@ function serialize(value) {
         };
 }
 
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
 function verifyName(param) {
   
 }
+
+var Z__INTERNAL = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var ListFragment = {
   Raw: Raw,
@@ -54,7 +59,8 @@ var ListFragment = {
   parse: parse,
   serialize: serialize,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = {};
@@ -76,10 +82,6 @@ function parse$1(value) {
         };
 }
 
-function verifyArgsAndParse$1(_Another, value) {
-  return parse$1(value);
-}
-
 function serialize$1(value) {
   var value$1 = value.nullableOfNullable;
   return [serialize(value.listFragment)].reduce(deepMerge, {
@@ -93,9 +95,18 @@ function serialize$1(value) {
             });
 }
 
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
+
 function verifyName$1(param) {
   
 }
+
+var Z__INTERNAL$1 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var Another = {
   Raw: Raw$1,
@@ -103,7 +114,8 @@ var Another = {
   parse: parse$1,
   serialize: serialize$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
-  verifyName: verifyName$1
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;

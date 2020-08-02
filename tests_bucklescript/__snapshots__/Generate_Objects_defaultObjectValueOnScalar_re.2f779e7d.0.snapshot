@@ -26,12 +26,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -53,24 +51,23 @@ module MyQuery: {
   };
   type t = {. \"defaultObjectValueOnScalar\": string};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\ndefaultObjectValueOnScalar(filter: {some: {json: \\\"value\\\"}}, arg: {field: \\\"otherValue\\\"})  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let defaultObjectValueOnScalar = {
-      let value = value##defaultObjectValueOnScalar;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let defaultObjectValueOnScalar = {
+        let value = value##defaultObjectValueOnScalar;
+        value;
+      };
+      {\"defaultObjectValueOnScalar\": defaultObjectValueOnScalar};
     };
-    {\"defaultObjectValueOnScalar\": defaultObjectValueOnScalar};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let defaultObjectValueOnScalar = {
-      let value = value##defaultObjectValueOnScalar;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let defaultObjectValueOnScalar = {
+        let value = value##defaultObjectValueOnScalar;
+        value;
+      };
+      {\"defaultObjectValueOnScalar\": defaultObjectValueOnScalar};
     };
-    {\"defaultObjectValueOnScalar\": defaultObjectValueOnScalar};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

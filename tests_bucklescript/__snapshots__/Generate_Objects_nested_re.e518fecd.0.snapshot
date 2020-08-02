@@ -65,12 +65,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -127,216 +125,215 @@ module MyQuery: {
     \"let_\": t_let,
   };
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let let_ = {
-      let value = value##let_;
-      let inner = {
-        let value = value##inner;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      let field = {
-                        let value = value##field;
-                        value;
-                      };
-                      {\"field\": field};
-                    },
-                  )
-                | None => None
+  let parse: Raw.t => t =
+    value => {
+      let let_ = {
+        let value = value##let_;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => None
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => None
+                {\"inner\": inner};
+              },
+            )
+          | None => None
+          };
         };
-      };
-      {\"inner\": inner};
-    }
-    and second = {
-      let value = value##second;
-      let inner = {
-        let value = value##inner;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      let f2 = {
-                        let value = value##f2;
-                        value;
-                      }
-                      and f1 = {
-                        let value = value##f1;
-                        value;
-                      };
-                      {f1, f2};
-                    }: t_second_inner_inner,
-                  )
-                | None => None
+        {\"inner\": inner};
+      }
+      and second = {
+        let value = value##second;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let f2 = {
+                          let value = value##f2;
+                          value;
+                        }
+                        and f1 = {
+                          let value = value##f1;
+                          value;
+                        };
+                        {f1, f2};
+                      }: t_second_inner_inner,
+                    )
+                  | None => None
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => None
+                {\"inner\": inner};
+              },
+            )
+          | None => None
+          };
         };
-      };
-      {\"inner\": inner};
-    }
-    and first = {
-      let value = value##first;
-      let inner = {
-        let value = value##inner;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (Js.toOption(value)) {
-                | Some(value) =>
-                  Some(
-                    {
-                      let field = {
-                        let value = value##field;
-                        value;
-                      };
-                      {\"field\": field};
-                    },
-                  )
-                | None => None
+        {\"inner\": inner};
+      }
+      and first = {
+        let value = value##first;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => None
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => None
+                {\"inner\": inner};
+              },
+            )
+          | None => None
+          };
         };
+        {\"inner\": inner};
       };
-      {\"inner\": inner};
+      {\"first\": first, \"second\": second, \"let_\": let_};
     };
-    {\"first\": first, \"second\": second, \"let_\": let_};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let let_ = {
-      let value = value##let_;
-      let inner = {
-        let value = value##inner;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let field = {
-                        let value = value##field;
-                        value;
-                      };
-                      {\"field\": field};
-                    },
-                  )
-                | None => Js.Nullable.null
+  let serialize: t => Raw.t =
+    value => {
+      let let_ = {
+        let value = value##let_;
+        let inner = {
+          let value = value##inner;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => Js.Nullable.null
+                {\"inner\": inner};
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
-      };
-      {\"inner\": inner};
-    }
-    and second = {
-      let value = value##second;
-      let inner = {
-        let value = value##inner;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let f2 = {
-                        let value = (value: t_second_inner_inner).f2;
-                        value;
-                      }
-                      and f1 = {
-                        let value = (value: t_second_inner_inner).f1;
-                        value;
-                      };
-                      {\"f1\": f1, \"f2\": f2};
-                    },
-                  )
-                | None => Js.Nullable.null
+        {\"inner\": inner};
+      }
+      and second = {
+        let value = value##second;
+        let inner = {
+          let value = value##inner;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let f2 = {
+                          let value = (value: t_second_inner_inner).f2;
+                          value;
+                        }
+                        and f1 = {
+                          let value = (value: t_second_inner_inner).f1;
+                          value;
+                        };
+                        {\"f1\": f1, \"f2\": f2};
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => Js.Nullable.null
+                {\"inner\": inner};
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
-      };
-      {\"inner\": inner};
-    }
-    and first = {
-      let value = value##first;
-      let inner = {
-        let value = value##inner;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            {
-              let inner = {
-                let value = value##inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let field = {
-                        let value = value##field;
-                        value;
-                      };
-                      {\"field\": field};
-                    },
-                  )
-                | None => Js.Nullable.null
+        {\"inner\": inner};
+      }
+      and first = {
+        let value = value##first;
+        let inner = {
+          let value = value##inner;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
                 };
-              };
-              {\"inner\": inner};
-            },
-          )
-        | None => Js.Nullable.null
+                {\"inner\": inner};
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
+        {\"inner\": inner};
       };
-      {\"inner\": inner};
+      {\"first\": first, \"second\": second, \"let_\": let_};
     };
-    {\"first\": first, \"second\": second, \"let_\": let_};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

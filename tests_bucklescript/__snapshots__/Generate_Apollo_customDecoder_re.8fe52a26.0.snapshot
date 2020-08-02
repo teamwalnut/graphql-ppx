@@ -46,12 +46,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -83,60 +81,59 @@ module MyQuery: {
   };
   type t = {variousScalars: t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\nint  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      variousScalars: {
-        let value = (value: Raw.t).variousScalars;
-        (
-          {
-            __typename: {
-              let value = (value: Raw.t_variousScalars).__typename;
-              value;
-            },
-            string: {
-              let value = (value: Raw.t_variousScalars).string;
-              IntOfString.parse(value);
-            },
-            int: {
-              let value = (value: Raw.t_variousScalars).int;
-              StringOfInt.parse(value);
-            },
-          }: t_variousScalars
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let variousScalars = {
-        let value = (value: t).variousScalars;
-        (
-          {
-            let int = {
-              let value = (value: t_variousScalars).int;
-              let value = StringOfInt.serialize(value);
-              value;
-            }
-            and string = {
-              let value = (value: t_variousScalars).string;
-              let value = IntOfString.serialize(value);
-              value;
-            }
-            and __typename = {
-              let value = (value: t_variousScalars).__typename;
-              value;
-            };
-            {__typename, string, int};
-          }: Raw.t_variousScalars
-        );
-      };
-      {variousScalars: variousScalars};
-    }: Raw.t
-  );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_variousScalars).__typename;
+                value;
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                IntOfString.parse(value);
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                StringOfInt.parse(value);
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let int = {
+                let value = (value: t_variousScalars).int;
+                let value = StringOfInt.serialize(value);
+                value;
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                let value = IntOfString.serialize(value);
+                value;
+              }
+              and __typename = {
+                let value = (value: t_variousScalars).__typename;
+                value;
+              };
+              {__typename, string, int};
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

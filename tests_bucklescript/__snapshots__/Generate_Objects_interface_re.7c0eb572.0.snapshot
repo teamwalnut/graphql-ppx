@@ -57,12 +57,10 @@ module QueryWithOnlyFragments: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -112,105 +110,104 @@ module QueryWithOnlyFragments: {
   ];
   type t = {. \"users\": array(t_users_User)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\nid  \\nname  \\n}\\n\\n...on AnonymousUser   {\\nid  \\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let typename: string =
-             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-           (
-             switch (typename) {
-             | \"AnonymousUser\" =>
-               `AnonymousUser(
-                 {
-                   let value: Raw.t_users_User_AnonymousUser =
-                     Obj.magic(value);
-                   let anonymousId = {
-                     let value = value##anonymousId;
-                     value;
-                   }
-                   and id = {
-                     let value = value##id;
-                     value;
-                   };
-                   {\"id\": id, \"anonymousId\": anonymousId};
-                 },
-               )
-             | \"AdminUser\" =>
-               `AdminUser(
-                 {
-                   let value: Raw.t_users_User_AdminUser = Obj.magic(value);
-                   let name = {
-                     let value = value##name;
-                     value;
-                   }
-                   and id = {
-                     let value = value##id;
-                     value;
-                   };
-                   {\"id\": id, \"name\": name};
-                 },
-               )
-             | _ => `UnspecifiedFragment(typename)
-             }: t_users_User
-           );
-         );
-    };
-    {\"users\": users};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           switch (value) {
-           | `AnonymousUser(value) => (
-               Obj.magic(
-                 {
-                   let anonymousId = {
-                     let value = value##anonymousId;
-                     value;
-                   }
-                   and id = {
-                     let value = value##id;
-                     value;
-                   };
+  let parse: Raw.t => t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let typename: string =
+               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+             (
+               switch (typename) {
+               | \"AnonymousUser\" =>
+                 `AnonymousUser(
                    {
-                     \"__typename\": \"AnonymousUser\",
-                     \"id\": id,
-                     \"anonymousId\": anonymousId,
-                   };
-                 },
-               ): Raw.t_users_User
-             )
-           | `AdminUser(value) => (
-               Obj.magic(
-                 {
-                   let name = {
-                     let value = value##name;
-                     value;
-                   }
-                   and id = {
-                     let value = value##id;
-                     value;
-                   };
-                   {\"__typename\": \"AdminUser\", \"id\": id, \"name\": name};
-                 },
-               ): Raw.t_users_User
-             )
-           | `UnspecifiedFragment(_) => (
-               Obj.magic(Js.Dict.empty()): Raw.t_users_User
-             )
-           }
-         );
+                     let value: Raw.t_users_User_AnonymousUser =
+                       Obj.magic(value);
+                     let anonymousId = {
+                       let value = value##anonymousId;
+                       value;
+                     }
+                     and id = {
+                       let value = value##id;
+                       value;
+                     };
+                     {\"id\": id, \"anonymousId\": anonymousId};
+                   },
+                 )
+               | \"AdminUser\" =>
+                 `AdminUser(
+                   {
+                     let value: Raw.t_users_User_AdminUser = Obj.magic(value);
+                     let name = {
+                       let value = value##name;
+                       value;
+                     }
+                     and id = {
+                       let value = value##id;
+                       value;
+                     };
+                     {\"id\": id, \"name\": name};
+                   },
+                 )
+               | _ => `UnspecifiedFragment(typename)
+               }: t_users_User
+             );
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
+  let serialize: t => Raw.t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             switch (value) {
+             | `AnonymousUser(value) => (
+                 Obj.magic(
+                   {
+                     let anonymousId = {
+                       let value = value##anonymousId;
+                       value;
+                     }
+                     and id = {
+                       let value = value##id;
+                       value;
+                     };
+                     {
+                       \"__typename\": \"AnonymousUser\",
+                       \"id\": id,
+                       \"anonymousId\": anonymousId,
+                     };
+                   },
+                 ): Raw.t_users_User
+               )
+             | `AdminUser(value) => (
+                 Obj.magic(
+                   {
+                     let name = {
+                       let value = value##name;
+                       value;
+                     }
+                     and id = {
+                       let value = value##id;
+                       value;
+                     };
+                     {\"__typename\": \"AdminUser\", \"id\": id, \"name\": name};
+                   },
+                 ): Raw.t_users_User
+               )
+             | `UnspecifiedFragment(_) => (
+                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
+               )
+             }
+           );
+      };
+      {\"users\": users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -248,12 +245,10 @@ module QueryWithTypename: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -290,70 +285,69 @@ module QueryWithTypename: {
   ];
   type t = {. \"users\": array(t_users_User)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let typename: string =
-             Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-           (
-             switch (typename) {
-             | \"AdminUser\" =>
-               `AdminUser(
-                 {
-                   let value: Raw.t_users_User_AdminUser = Obj.magic(value);
-                   let id = {
-                     let value = value##id;
-                     value;
-                   }
-                   and __typename = {
-                     let value = value##__typename;
-                     value;
-                   };
-                   {\"__typename\": __typename, \"id\": id};
-                 },
-               )
-             | _ => `UnspecifiedFragment(typename)
-             }: t_users_User
+  let parse: Raw.t => t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let typename: string =
+               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+             (
+               switch (typename) {
+               | \"AdminUser\" =>
+                 `AdminUser(
+                   {
+                     let value: Raw.t_users_User_AdminUser = Obj.magic(value);
+                     let id = {
+                       let value = value##id;
+                       value;
+                     }
+                     and __typename = {
+                       let value = value##__typename;
+                       value;
+                     };
+                     {\"__typename\": __typename, \"id\": id};
+                   },
+                 )
+               | _ => `UnspecifiedFragment(typename)
+               }: t_users_User
+             );
            );
-         );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           switch (value) {
-           | `AdminUser(value) => (
-               Obj.magic(
-                 {
-                   let id = {
-                     let value = value##id;
-                     value;
-                   }
-                   and __typename = {
-                     let value = value##__typename;
-                     value;
-                   };
-                   {\"__typename\": \"AdminUser\", \"id\": id};
-                 },
-               ): Raw.t_users_User
-             )
-           | `UnspecifiedFragment(_) => (
-               Obj.magic(Js.Dict.empty()): Raw.t_users_User
-             )
-           }
-         );
+  let serialize: t => Raw.t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             switch (value) {
+             | `AdminUser(value) => (
+                 Obj.magic(
+                   {
+                     let id = {
+                       let value = value##id;
+                       value;
+                     }
+                     and __typename = {
+                       let value = value##__typename;
+                       value;
+                     };
+                     {\"__typename\": \"AdminUser\", \"id\": id};
+                   },
+                 ): Raw.t_users_User
+               )
+             | `UnspecifiedFragment(_) => (
+                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
+               )
+             }
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -400,12 +394,10 @@ module QueryWithMixedFragments: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -451,126 +443,125 @@ module QueryWithMixedFragments: {
   };
   type t = {. \"users\": array(t_users)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n...on AdminUser   {\\nname  \\n}\\n\\n...on AnonymousUser   {\\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let id = {
-             let value =
-               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
-             value;
-           };
-           {
-             \"fragment\": {
-               let typename: string =
-                 Obj.magic(
-                   Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
+  let parse: Raw.t => t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let id = {
+               let value =
+                 Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
+               value;
+             };
+             {
+               \"fragment\": {
+                 let typename: string =
+                   Obj.magic(
+                     Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
+                   );
+                 (
+                   switch (typename) {
+                   | \"AnonymousUser\" =>
+                     `AnonymousUser(
+                       {
+                         let value: Raw.t_users_User_AnonymousUser =
+                           Obj.magic(value);
+                         let anonymousId = {
+                           let value = value##anonymousId;
+                           value;
+                         };
+                         {\"anonymousId\": anonymousId};
+                       },
+                     )
+                   | \"AdminUser\" =>
+                     `AdminUser(
+                       {
+                         let value: Raw.t_users_User_AdminUser =
+                           Obj.magic(value);
+                         let name = {
+                           let value = value##name;
+                           value;
+                         };
+                         {\"name\": name};
+                       },
+                     )
+                   | _ => `UnspecifiedFragment(typename)
+                   }: t_users_User
                  );
-               (
-                 switch (typename) {
-                 | \"AnonymousUser\" =>
-                   `AnonymousUser(
-                     {
-                       let value: Raw.t_users_User_AnonymousUser =
-                         Obj.magic(value);
-                       let anonymousId = {
-                         let value = value##anonymousId;
-                         value;
-                       };
-                       {\"anonymousId\": anonymousId};
-                     },
-                   )
-                 | \"AdminUser\" =>
-                   `AdminUser(
-                     {
-                       let value: Raw.t_users_User_AdminUser =
-                         Obj.magic(value);
-                       let name = {
-                         let value = value##name;
-                         value;
-                       };
-                       {\"name\": name};
-                     },
-                   )
-                 | _ => `UnspecifiedFragment(typename)
-                 }: t_users_User
-               );
-             },
-             \"id\": id,
-           };
-         );
+               },
+               \"id\": id,
+             };
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map((value) =>
-           (
-             Obj.magic(
-               Js.Array.reduce(
-                 GraphQL_PPX.deepMerge,
-                 Obj.magic(
-                   {
-                     let id = {
-                       let value = value##id;
-                       value;
-                     };
-                     {\"id\": id};
-                   },
-                 ): Js.Json.t,
-                 [|
-                   {
-                     let value = value##fragment;
-                     (
-                       Obj.magic(
-                         switch (value) {
-                         | `AnonymousUser(value) => (
-                             Obj.magic(
-                               {
-                                 let anonymousId = {
-                                   let value = value##anonymousId;
-                                   value;
-                                 };
+  let serialize: t => Raw.t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               Obj.magic(
+                 Js.Array.reduce(
+                   GraphQL_PPX.deepMerge,
+                   Obj.magic(
+                     {
+                       let id = {
+                         let value = value##id;
+                         value;
+                       };
+                       {\"id\": id};
+                     },
+                   ): Js.Json.t,
+                   [|
+                     {
+                       let value = value##fragment;
+                       (
+                         Obj.magic(
+                           switch (value) {
+                           | `AnonymousUser(value) => (
+                               Obj.magic(
                                  {
-                                   \"__typename\": \"AnonymousUser\",
-                                   \"anonymousId\": anonymousId,
-                                 };
-                               },
-                             ): Raw.t_users_User
-                           )
-                         | `AdminUser(value) => (
-                             Obj.magic(
-                               {
-                                 let name = {
-                                   let value = value##name;
-                                   value;
-                                 };
-                                 {\"__typename\": \"AdminUser\", \"name\": name};
-                               },
-                             ): Raw.t_users_User
-                           )
-                         | `UnspecifiedFragment(_) => (
-                             Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                           )
-                         },
-                       ): Js.Json.t
-                     );
-                   },
-                 |],
-               ),
-             ): Raw.t_users
-           )
-         );
+                                   let anonymousId = {
+                                     let value = value##anonymousId;
+                                     value;
+                                   };
+                                   {
+                                     \"__typename\": \"AnonymousUser\",
+                                     \"anonymousId\": anonymousId,
+                                   };
+                                 },
+                               ): Raw.t_users_User
+                             )
+                           | `AdminUser(value) => (
+                               Obj.magic(
+                                 {
+                                   let name = {
+                                     let value = value##name;
+                                     value;
+                                   };
+                                   {\"__typename\": \"AdminUser\", \"name\": name};
+                                 },
+                               ): Raw.t_users_User
+                             )
+                           | `UnspecifiedFragment(_) => (
+                               Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                             )
+                           },
+                         ): Js.Json.t
+                       );
+                     },
+                   |],
+                 ),
+               ): Raw.t_users
+             )
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -615,12 +606,10 @@ module MixedQueryWithTypename: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -664,37 +653,72 @@ module MixedQueryWithTypename: {
   };
   type t = {. \"users\": array(t_users)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n__typename  \\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let id = {
-             let value =
-               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
-             value;
-           }
-           and __typename = {
-             let value =
-               Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-             value;
-           };
-           {
-             \"fragment\": {
-               let typename: string =
+  let parse: Raw.t => t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let id = {
+               let value =
+                 Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"id\"));
+               value;
+             }
+             and __typename = {
+               let value =
                  Obj.magic(
                    Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
                  );
-               (
-                 switch (typename) {
-                 | \"AdminUser\" =>
-                   `AdminUser(
+               value;
+             };
+             {
+               \"fragment\": {
+                 let typename: string =
+                   Obj.magic(
+                     Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"),
+                   );
+                 (
+                   switch (typename) {
+                   | \"AdminUser\" =>
+                     `AdminUser(
+                       {
+                         let value: Raw.t_users_User_AdminUser =
+                           Obj.magic(value);
+                         let id = {
+                           let value = value##id;
+                           value;
+                         }
+                         and __typename = {
+                           let value = value##__typename;
+                           value;
+                         };
+                         {\"__typename\": __typename, \"id\": id};
+                       },
+                     )
+                   | _ => `UnspecifiedFragment(typename)
+                   }: t_users_User
+                 );
+               },
+               \"__typename\": __typename,
+               \"id\": id,
+             };
+           );
+      };
+      {\"users\": users};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map((value) =>
+             (
+               Obj.magic(
+                 Js.Array.reduce(
+                   GraphQL_PPX.deepMerge,
+                   Obj.magic(
                      {
-                       let value: Raw.t_users_User_AdminUser =
-                         Obj.magic(value);
                        let id = {
                          let value = value##id;
                          value;
@@ -705,77 +729,43 @@ module MixedQueryWithTypename: {
                        };
                        {\"__typename\": __typename, \"id\": id};
                      },
-                   )
-                 | _ => `UnspecifiedFragment(typename)
-                 }: t_users_User
-               );
-             },
-             \"__typename\": __typename,
-             \"id\": id,
-           };
-         );
+                   ): Js.Json.t,
+                   [|
+                     {
+                       let value = value##fragment;
+                       (
+                         Obj.magic(
+                           switch (value) {
+                           | `AdminUser(value) => (
+                               Obj.magic(
+                                 {
+                                   let id = {
+                                     let value = value##id;
+                                     value;
+                                   }
+                                   and __typename = {
+                                     let value = value##__typename;
+                                     value;
+                                   };
+                                   {\"__typename\": \"AdminUser\", \"id\": id};
+                                 },
+                               ): Raw.t_users_User
+                             )
+                           | `UnspecifiedFragment(_) => (
+                               Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                             )
+                           },
+                         ): Js.Json.t
+                       );
+                     },
+                   |],
+                 ),
+               ): Raw.t_users
+             )
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map((value) =>
-           (
-             Obj.magic(
-               Js.Array.reduce(
-                 GraphQL_PPX.deepMerge,
-                 Obj.magic(
-                   {
-                     let id = {
-                       let value = value##id;
-                       value;
-                     }
-                     and __typename = {
-                       let value = value##__typename;
-                       value;
-                     };
-                     {\"__typename\": __typename, \"id\": id};
-                   },
-                 ): Js.Json.t,
-                 [|
-                   {
-                     let value = value##fragment;
-                     (
-                       Obj.magic(
-                         switch (value) {
-                         | `AdminUser(value) => (
-                             Obj.magic(
-                               {
-                                 let id = {
-                                   let value = value##id;
-                                   value;
-                                 }
-                                 and __typename = {
-                                   let value = value##__typename;
-                                   value;
-                                 };
-                                 {\"__typename\": \"AdminUser\", \"id\": id};
-                               },
-                             ): Raw.t_users_User
-                           )
-                         | `UnspecifiedFragment(_) => (
-                             Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                           )
-                         },
-                       ): Js.Json.t
-                     );
-                   },
-                 |],
-               ),
-             ): Raw.t_users
-           )
-         );
-    };
-    {\"users\": users};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -800,12 +790,10 @@ module QueryWithoutFragments: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -829,38 +817,37 @@ module QueryWithoutFragments: {
   type t_users = {. \"id\": string};
   type t = {. \"users\": array(t_users)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let id = {
-             let value = value##id;
-             value;
-           };
-           {\"id\": id};
-         );
+  let parse: Raw.t => t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let id = {
+               let value = value##id;
+               value;
+             };
+             {\"id\": id};
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let users = {
-      let value = value##users;
-      value
-      |> Js.Array.map(value =>
-           let id = {
-             let value = value##id;
-             value;
-           };
-           {\"id\": id};
-         );
+  let serialize: t => Raw.t =
+    value => {
+      let users = {
+        let value = value##users;
+        value
+        |> Js.Array.map(value =>
+             let id = {
+               let value = value##id;
+               value;
+             };
+             {\"id\": id};
+           );
+      };
+      {\"users\": users};
     };
-    {\"users\": users};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

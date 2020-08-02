@@ -543,13 +543,11 @@ let generate_operation_signature = (config, variable_defs, operation, res_struct
         ]
       ],
       [%sigi: 
-        /** Parse the JSON GraphQL data to ReasonML data types */
+        /** Parse the JSON-compatible GraphQL data to ReasonML data types */
         let parse: Raw.t => t],
       [%sigi: 
-        /** 
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data 
-  */
+        /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
         let serialize: t => Raw.t],
     ],
     serialize_variable_signatures,
@@ -649,8 +647,8 @@ let generate_operation_implementation =
         arg_types,
         [
           [%stri let query = [%e printed_query]],
-          [%stri let parse: Raw.t => t = [%e parse_f]],
-          [%stri let serialize: t => Raw.t = [%e serialize_fn]],
+          [%stri let parse: Raw.t => t = value => [%e parse_fn]],
+          [%stri let serialize: t => Raw.t = value => [%e serialize_fn]],
         ],
         [serialize_variable_functions],
         switch (variable_constructors) {
@@ -699,6 +697,8 @@ let generate_fragment_signature =
       res_structure,
     ) => {
   Output_bucklescript_docstrings.reset();
+  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
+  Output_bucklescript_docstrings.for_fragment(config, fragment);
 
   let types =
     Output_bucklescript_types.generate_type_signature_items(
@@ -712,7 +712,6 @@ let generate_fragment_signature =
       )),
     );
 
-  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
   let raw_types =
     Output_bucklescript_types.generate_type_signature_items(
       config,
@@ -793,14 +792,15 @@ let generate_fragment_signature =
       ),
       base_type_name("unit"),
     );
+  let type_name = base_type_name(Option.get_or_else("t", type_name));
 
-  Output_bucklescript_docstrings.for_fragment(config, fragment);
   [
     [[%sigi: [@ocaml.warning "-32"]]],
     [signature_module("Raw", raw_types)],
     types,
     [
       [%sigi:
+        /** the GraphQL fragment */
         let query: [%t
           base_type_name(
             switch (config.template_tag_return_type) {
@@ -810,13 +810,21 @@ let generate_fragment_signature =
           )
         ]
       ],
-      [%sigi: let parse: Raw.t => t],
-      [%sigi: let serialize: t => Raw.t],
+      [%sigi: 
+        /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+        let parse: Raw.t => [%t type_name]],
+      [%sigi: 
+        /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+        let serialize: [%t type_name] => Raw.t
+
+      ],
       [%sigi: let verifyArgsAndParse: [%t verify_parse]],
       [%sigi: let verifyName: [%t verify_name]],
       [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
       [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
     ],
+    Output_bucklescript_docstrings.get_module_sig()
   ]
   |> List.concat;
 };
@@ -831,6 +839,9 @@ let generate_fragment_implementation =
       res_structure,
     ) => {
   Output_bucklescript_docstrings.reset();
+  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
+  Output_bucklescript_docstrings.for_fragment(config, fragment);
+
   let parse_fn =
     Output_bucklescript_parser.generate_parser(
       config,
@@ -857,8 +868,6 @@ let generate_fragment_implementation =
         fragment.item.fg_name.span,
       )),
     );
-  // Add to internal module
-  Output_bucklescript_docstrings.for_fragment_root(config, fragment);
   let raw_types =
     Output_bucklescript_types.generate_type_structure_items(
       config,
@@ -951,36 +960,19 @@ let generate_fragment_implementation =
     );
 
   let type_name = base_type_name(Option.get_or_else("t", type_name));
-
-  // Add to internal module
-  Output_bucklescript_docstrings.for_fragment(config, fragment);
   let contents =
     [
       [[%stri [@ocaml.warning "-32"]]],
       [wrap_module(~loc=Location.none, "Raw", raw_types)],
       types,
       [
-        Output_bucklescript_docstrings.(
-          make_let_str("query", printed_query, query_docstring)
-        ),
-        Output_bucklescript_docstrings.(
-          make_let_str(
-            "parse",
-            [%expr (value: Raw.t) => ([%e parse_fn]: [%t type_name])],
-            parse_docstring,
-          )
-        ),
+        [%stri let query = [%e printed_query]],
+        [%stri let parse: Raw.t => [%t type_name] = value => [%e parse_fn]],
+        [%stri let serialize: [%t type_name] => Raw.t = value => [%e serialize_fn]]
       ],
       [@metaloc fragment.span |> config.map_loc |> conv_loc]
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]],
-        Output_bucklescript_docstrings.(
-          make_let_str(
-            "serialize",
-            [%expr (value: [%t type_name]) => ([%e serialize_fn]: Raw.t)],
-            serialize_docstring,
-          )
-        ),
         [%stri let verifyName = [%e verifyName]],
         [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
         [%stri external toJson: Raw.t => Js.Json.t = "%identity"],

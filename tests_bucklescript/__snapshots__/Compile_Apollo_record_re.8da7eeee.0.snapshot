@@ -178,10 +178,6 @@ function parse$3(value) {
         };
 }
 
-function verifyArgsAndParse(_Fragment, value) {
-  return parse$3(value);
-}
-
 function serialize$3(value) {
   var value$1 = value.int;
   var value$2 = value.string;
@@ -193,9 +189,18 @@ function serialize$3(value) {
         };
 }
 
+function verifyArgsAndParse(_Fragment, value) {
+  return parse$3(value);
+}
+
 function verifyName(param) {
   
 }
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var Fragment = {
   Raw: Raw$3,
@@ -203,7 +208,8 @@ var Fragment = {
   parse: parse$3,
   serialize: serialize$3,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = {};
@@ -236,7 +242,7 @@ function makeDefaultVariables$3(param) {
   
 }
 
-var Z__INTERNAL$3 = {
+var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
@@ -248,7 +254,7 @@ var Untitled1 = {
   serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
-  Z__INTERNAL: Z__INTERNAL$3
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 var ExternalFragmentQuery = {
@@ -309,7 +315,7 @@ function makeDefaultVariables$4(param) {
   
 }
 
-var Z__INTERNAL$4 = {
+var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
@@ -321,7 +327,7 @@ var InlineFragmentQuery = {
   serializeVariables: serializeVariables$4,
   makeVariables: makeVariables$4,
   makeDefaultVariables: makeDefaultVariables$4,
-  Z__INTERNAL: Z__INTERNAL$4
+  Z__INTERNAL: Z__INTERNAL$5
 };
 
 var Raw$6 = {};
@@ -336,10 +342,6 @@ function parse$6(value) {
         };
 }
 
-function verifyArgsAndParse$1(_DogFragment, value) {
-  return parse$6(value);
-}
-
 function serialize$6(value) {
   var value$1 = value.barkVolume;
   var value$2 = value.name;
@@ -351,9 +353,18 @@ function serialize$6(value) {
         };
 }
 
+function verifyArgsAndParse$1(_DogFragment, value) {
+  return parse$6(value);
+}
+
 function verifyName$1(param) {
   
 }
+
+var Z__INTERNAL$6 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var DogFragment = {
   Raw: Raw$6,
@@ -361,7 +372,8 @@ var DogFragment = {
   parse: parse$6,
   serialize: serialize$6,
   verifyArgsAndParse: verifyArgsAndParse$1,
-  verifyName: verifyName$1
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$6
 };
 
 var Raw$7 = {};
@@ -403,7 +415,7 @@ function makeDefaultVariables$5(param) {
   
 }
 
-var Z__INTERNAL$5 = {
+var Z__INTERNAL$7 = {
   graphql_module: 0
 };
 
@@ -415,7 +427,7 @@ var Untitled1$1 = {
   serializeVariables: serializeVariables$5,
   makeVariables: makeVariables$5,
   makeDefaultVariables: makeDefaultVariables$5,
-  Z__INTERNAL: Z__INTERNAL$5
+  Z__INTERNAL: Z__INTERNAL$7
 };
 
 var UnionExternalFragmentQuery = {

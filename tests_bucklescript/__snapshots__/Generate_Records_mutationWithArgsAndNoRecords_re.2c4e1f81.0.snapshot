@@ -26,12 +26,10 @@ module MyQuery: {
   type t_variables = {. \"required\": string};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~required: string, unit) => t_variables;
@@ -52,24 +50,23 @@ module MyQuery: {
   };
   type t = {. \"optionalInputArgs\": string};
   type t_variables = {. \"required\": string};
-  /**The GraphQL query string*/
   let query = \"mutation MyMutation($required: String!)  {\\noptionalInputArgs(required: $required, anotherRequired: \\\"val\\\")  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let optionalInputArgs = {
-      let value = value##optionalInputArgs;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let optionalInputArgs = {
+        let value = value##optionalInputArgs;
+        value;
+      };
+      {\"optionalInputArgs\": optionalInputArgs};
     };
-    {\"optionalInputArgs\": optionalInputArgs};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let optionalInputArgs = {
-      let value = value##optionalInputArgs;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let optionalInputArgs = {
+        let value = value##optionalInputArgs;
+        value;
+      };
+      {\"optionalInputArgs\": optionalInputArgs};
     };
-    {\"optionalInputArgs\": optionalInputArgs};
-  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {\"required\": (a => a)(inp##required)};
   let makeVariables = (~required, ()): t_variables => {\"required\": required};

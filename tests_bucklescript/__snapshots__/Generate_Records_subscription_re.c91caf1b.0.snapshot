@@ -42,12 +42,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -85,87 +83,87 @@ module MyQuery: {
   ];
   type t = {simpleSubscription: t_simpleSubscription};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"subscription   {\\nsimpleSubscription  {\\n__typename\\n...on Dog   {\\nname  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      simpleSubscription: {
-        let value = (value: Raw.t).simpleSubscription;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_simpleSubscription_Dog).name;
-                      value;
-                    },
-                  }: t_simpleSubscription_Dog
-                );
-              },
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        simpleSubscription: {
+          let value = (value: Raw.t).simpleSubscription;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_simpleSubscription_Dog).name;
+                        value;
+                      },
+                    }: t_simpleSubscription_Dog
+                  );
+                },
+              )
+            | \"Human\" =>
+              `Human(
+                {
+                  let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value =
+                          (value: Raw.t_simpleSubscription_Human).name;
+                        value;
+                      },
+                    }: t_simpleSubscription_Human
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_simpleSubscription
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let simpleSubscription = {
+          let value = (value: t).simpleSubscription;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_simpleSubscription_Dog).name;
+                    value;
+                  };
+                  {__typename: \"Dog\", name};
+                }: Raw.t_simpleSubscription_Dog,
+              ): Raw.t_simpleSubscription
             )
-          | \"Human\" =>
-            `Human(
-              {
-                let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_simpleSubscription_Human).name;
-                      value;
-                    },
-                  }: t_simpleSubscription_Human
-                );
-              },
+          | `Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_simpleSubscription_Human).name;
+                    value;
+                  };
+                  {__typename: \"Human\", name};
+                }: Raw.t_simpleSubscription_Human,
+              ): Raw.t_simpleSubscription
             )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_simpleSubscription
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let simpleSubscription = {
-        let value = (value: t).simpleSubscription;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = (value: t_simpleSubscription_Dog).name;
-                  value;
-                };
-                {__typename: \"Dog\", name};
-              }: Raw.t_simpleSubscription_Dog,
-            ): Raw.t_simpleSubscription
-          )
-        | `Human(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = (value: t_simpleSubscription_Human).name;
-                  value;
-                };
-                {__typename: \"Human\", name};
-              }: Raw.t_simpleSubscription_Human,
-            ): Raw.t_simpleSubscription
-          )
-        | `FutureAddedValue(value) => (
-            Obj.magic(value): Raw.t_simpleSubscription
-          )
+          | `FutureAddedValue(value) => (
+              Obj.magic(value): Raw.t_simpleSubscription
+            )
+          };
         };
-      };
-      {simpleSubscription: simpleSubscription};
-    }: Raw.t
-  );
+        {simpleSubscription: simpleSubscription};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

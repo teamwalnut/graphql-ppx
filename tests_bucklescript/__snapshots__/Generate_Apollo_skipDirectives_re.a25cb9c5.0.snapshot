@@ -52,12 +52,10 @@ module MyQuery: {
   type t_variables = {var: bool};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~var: bool, unit) => t_variables;
@@ -104,121 +102,120 @@ module MyQuery: {
     v2: t_v2,
   };
   type t_variables = {var: bool};
-  /**The GraphQL query string*/
   let query = \"query ($var: Boolean!)  {\\nv1: variousScalars  {\\n__typename  \\nnullableString @skip(if: $var) \\nstring @skip(if: $var) \\n}\\n\\nv2: variousScalars  {\\n__typename  \\nnullableString @include(if: $var) \\nstring @include(if: $var) \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      v1: {
-        let value = (value: Raw.t).v1;
-        (
-          {
-            __typename: {
-              let value = (value: Raw.t_v1).__typename;
-              value;
-            },
-            nullableString: {
-              let value = (value: Raw.t_v1).nullableString;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        v1: {
+          let value = (value: Raw.t).v1;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_v1).__typename;
+                value;
+              },
+              nullableString: {
+                let value = (value: Raw.t_v1).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_v1).string;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+            }: t_v1
+          );
+        },
+        v2: {
+          let value = (value: Raw.t).v2;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_v2).__typename;
+                value;
+              },
+              nullableString: {
+                let value = (value: Raw.t_v2).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_v2).string;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+            }: t_v2
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let v2 = {
+          let value = (value: t).v2;
+          (
+            {
+              let string = {
+                let value = (value: t_v2).string;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableString = {
+                let value = (value: t_v2).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_v2).__typename;
+                value;
               };
-            },
-            string: {
-              let value = (value: Raw.t_v1).string;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+              {__typename, nullableString, string};
+            }: Raw.t_v2
+          );
+        }
+        and v1 = {
+          let value = (value: t).v1;
+          (
+            {
+              let string = {
+                let value = (value: t_v1).string;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableString = {
+                let value = (value: t_v1).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_v1).__typename;
+                value;
               };
-            },
-          }: t_v1
-        );
-      },
-      v2: {
-        let value = (value: Raw.t).v2;
-        (
-          {
-            __typename: {
-              let value = (value: Raw.t_v2).__typename;
-              value;
-            },
-            nullableString: {
-              let value = (value: Raw.t_v2).nullableString;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
-              };
-            },
-            string: {
-              let value = (value: Raw.t_v2).string;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
-              };
-            },
-          }: t_v2
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let v2 = {
-        let value = (value: t).v2;
-        (
-          {
-            let string = {
-              let value = (value: t_v2).string;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and nullableString = {
-              let value = (value: t_v2).nullableString;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and __typename = {
-              let value = (value: t_v2).__typename;
-              value;
-            };
-            {__typename, nullableString, string};
-          }: Raw.t_v2
-        );
-      }
-      and v1 = {
-        let value = (value: t).v1;
-        (
-          {
-            let string = {
-              let value = (value: t_v1).string;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and nullableString = {
-              let value = (value: t_v1).nullableString;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and __typename = {
-              let value = (value: t_v1).__typename;
-              value;
-            };
-            {__typename, nullableString, string};
-          }: Raw.t_v1
-        );
-      };
-      {v1, v2};
-    }: Raw.t
-  );
+              {__typename, nullableString, string};
+            }: Raw.t_v1
+          );
+        };
+        {v1, v2};
+      }: Raw.t
+    );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {var: (a => a)((inp: t_variables).var)};
   let makeVariables = (~var, ()): t_variables => {var: var};

@@ -42,12 +42,10 @@ module MyQuery: {
   };
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~opt: Js.Json.t=?, ~req: Js.Json.t, unit) => t_variables;
@@ -112,64 +110,63 @@ CustomScalar!
     opt: option(Js.Json.t),
     req: Js.Json.t,
   };
-  /**The GraphQL query string*/
   let query = \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\n__typename  \\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      customScalarField: {
-        let value = (value: Raw.t).customScalarField;
-        (
-          {
-            __typename: {
-              let value = (value: Raw.t_customScalarField).__typename;
-              value;
-            },
-            nullable: {
-              let value = (value: Raw.t_customScalarField).nullable;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        customScalarField: {
+          let value = (value: Raw.t).customScalarField;
+          (
+            {
+              __typename: {
+                let value = (value: Raw.t_customScalarField).__typename;
+                value;
+              },
+              nullable: {
+                let value = (value: Raw.t_customScalarField).nullable;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              nonNullable: {
+                let value = (value: Raw.t_customScalarField).nonNullable;
+                value;
+              },
+            }: t_customScalarField
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let customScalarField = {
+          let value = (value: t).customScalarField;
+          (
+            {
+              let nonNullable = {
+                let value = (value: t_customScalarField).nonNullable;
+                value;
+              }
+              and nullable = {
+                let value = (value: t_customScalarField).nullable;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and __typename = {
+                let value = (value: t_customScalarField).__typename;
+                value;
               };
-            },
-            nonNullable: {
-              let value = (value: Raw.t_customScalarField).nonNullable;
-              value;
-            },
-          }: t_customScalarField
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let customScalarField = {
-        let value = (value: t).customScalarField;
-        (
-          {
-            let nonNullable = {
-              let value = (value: t_customScalarField).nonNullable;
-              value;
-            }
-            and nullable = {
-              let value = (value: t_customScalarField).nullable;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and __typename = {
-              let value = (value: t_customScalarField).__typename;
-              value;
-            };
-            {__typename, nullable, nonNullable};
-          }: Raw.t_customScalarField
-        );
-      };
-      {customScalarField: customScalarField};
-    }: Raw.t
-  );
+              {__typename, nullable, nonNullable};
+            }: Raw.t_customScalarField
+          );
+        };
+        {customScalarField: customScalarField};
+      }: Raw.t
+    );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       opt:

@@ -40,12 +40,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -81,70 +79,69 @@ module MyQuery: {
   ];
   type t = {dogOrHuman: t_dogOrHuman};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        name\\n        barkVolume\\n      }\\n    }\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).name;
-                      value;
-                    },
-                    barkVolume: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                      value;
-                    },
-                  }: t_dogOrHuman_Dog
-                );
-              },
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \"Dog\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
             )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_dogOrHuman
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let barkVolume = {
-                  let value = (value: t_dogOrHuman_Dog).barkVolume;
-                  value;
-                }
-                and name = {
-                  let value = (value: t_dogOrHuman_Dog).name;
-                  value;
-                };
-                {__typename: \"Dog\", name, barkVolume};
-              }: Raw.t_dogOrHuman_Dog,
-            ): Raw.t_dogOrHuman
-          )
-        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
         };
-      };
-      {dogOrHuman: dogOrHuman};
-    }: Raw.t
-  );
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

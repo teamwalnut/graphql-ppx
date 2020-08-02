@@ -656,10 +656,6 @@ function parse$6(value) {
         };
 }
 
-function verifyArgsAndParse(_ListFragment, value) {
-  return parse$6(value);
-}
-
 function serialize$6(value) {
   var value$1 = value.nullableOfNonNullable;
   var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
@@ -679,9 +675,18 @@ function serialize$6(value) {
         };
 }
 
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse$6(value);
+}
+
 function verifyName(param) {
   
 }
+
+var Z__INTERNAL$6 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var ListFragment = {
   Raw: Raw$6,
@@ -689,7 +694,8 @@ var ListFragment = {
   parse: parse$6,
   serialize: serialize$6,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$6
 };
 
 var Raw$7 = {};
@@ -728,7 +734,7 @@ function makeDefaultVariables$6(param) {
   
 }
 
-var Z__INTERNAL$6 = {
+var Z__INTERNAL$7 = {
   graphql_module: 0
 };
 
@@ -740,7 +746,7 @@ var MyQuery5 = {
   serializeVariables: serializeVariables$6,
   makeVariables: makeVariables$6,
   makeDefaultVariables: makeDefaultVariables$6,
-  Z__INTERNAL: Z__INTERNAL$6
+  Z__INTERNAL: Z__INTERNAL$7
 };
 
 var Raw$8 = {};
@@ -780,7 +786,7 @@ function makeDefaultVariables$7(param) {
   
 }
 
-var Z__INTERNAL$7 = {
+var Z__INTERNAL$8 = {
   graphql_module: 0
 };
 
@@ -792,7 +798,7 @@ var MyQuery6 = {
   serializeVariables: serializeVariables$7,
   makeVariables: makeVariables$7,
   makeDefaultVariables: makeDefaultVariables$7,
-  Z__INTERNAL: Z__INTERNAL$7
+  Z__INTERNAL: Z__INTERNAL$8
 };
 
 var Raw$9 = {};
@@ -831,7 +837,7 @@ function makeDefaultVariables$8(param) {
   
 }
 
-var Z__INTERNAL$8 = {
+var Z__INTERNAL$9 = {
   graphql_module: 0
 };
 
@@ -843,7 +849,7 @@ var MyQuery7 = {
   serializeVariables: serializeVariables$8,
   makeVariables: makeVariables$8,
   makeDefaultVariables: makeDefaultVariables$8,
-  Z__INTERNAL: Z__INTERNAL$8
+  Z__INTERNAL: Z__INTERNAL$9
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;

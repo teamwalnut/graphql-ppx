@@ -26,12 +26,10 @@ module MyQuery: {
   type t_variables = {query: int};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~query: int, unit) => t_variables;
@@ -66,29 +64,28 @@ Int!
   };
   type t = {argNamedQuery: int};
   type t_variables = {query: int};
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query ($query: Int!)  {\\n    argNamedQuery(query: $query)\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      argNamedQuery: {
-        let value = (value: Raw.t).argNamedQuery;
-        value;
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let argNamedQuery = {
-        let value = (value: t).argNamedQuery;
-        value;
-      };
-      {argNamedQuery: argNamedQuery};
-    }: Raw.t
-  );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        argNamedQuery: {
+          let value = (value: Raw.t).argNamedQuery;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let argNamedQuery = {
+          let value = (value: t).argNamedQuery;
+          value;
+        };
+        {argNamedQuery: argNamedQuery};
+      }: Raw.t
+    );
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {query: (a => a)((inp: t_variables).query)};
   let makeVariables = (~query, ()): t_variables => {query: query};
@@ -126,12 +123,10 @@ module MultipleQueryWithSameVarName = {
     type t_variables = {query: int};
     /** The GraphQL query */
     let query: string;
-    /** Parse the JSON GraphQL data to ReasonML data types */
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
     let parse: Raw.t => t;
-    /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: t_variables => Raw.t_variables;
     let makeVariables: (~query: int, unit) => t_variables;
@@ -173,29 +168,28 @@ Int!
     };
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
-    /**The GraphQL query string*/
     let query: string = [%raw
       \"require(\\\"gql\\\")`\\n  query Query1($query: Int!)  {\\n    argNamedQuery(query: $query)\\n  }\\n`\"
     ];
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => (
-      {
-        argNamedQuery: {
-          let value = (value: Raw.t).argNamedQuery;
-          value;
-        },
-      }: t
-    );
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => (
-      {
-        let argNamedQuery = {
-          let value = (value: t).argNamedQuery;
-          value;
-        };
-        {argNamedQuery: argNamedQuery};
-      }: Raw.t
-    );
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          argNamedQuery: {
+            let value = (value: Raw.t).argNamedQuery;
+            value;
+          },
+        }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let argNamedQuery = {
+            let value = (value: t).argNamedQuery;
+            value;
+          };
+          {argNamedQuery: argNamedQuery};
+        }: Raw.t
+      );
     let serializeVariables: t_variables => Raw.t_variables =
       inp => {query: (a => a)((inp: t_variables).query)};
     let makeVariables = (~query, ()): t_variables => {query: query};
@@ -239,12 +233,10 @@ Int!
     type t_variables = {query: int};
     /** The GraphQL query */
     let query: string;
-    /** Parse the JSON GraphQL data to ReasonML data types */
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
     let parse: Raw.t => t;
-    /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: t_variables => Raw.t_variables;
     let makeVariables: (~query: int, unit) => t_variables;
@@ -286,29 +278,28 @@ Int!
     };
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
-    /**The GraphQL query string*/
     let query: string = [%raw
       \"require(\\\"gql\\\")`\\n  query Query2($query: Int!)  {\\n    argNamedQuery(query: $query)\\n  }\\n`\"
     ];
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => (
-      {
-        argNamedQuery: {
-          let value = (value: Raw.t).argNamedQuery;
-          value;
-        },
-      }: t
-    );
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => (
-      {
-        let argNamedQuery = {
-          let value = (value: t).argNamedQuery;
-          value;
-        };
-        {argNamedQuery: argNamedQuery};
-      }: Raw.t
-    );
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          argNamedQuery: {
+            let value = (value: Raw.t).argNamedQuery;
+            value;
+          },
+        }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let argNamedQuery = {
+            let value = (value: t).argNamedQuery;
+            value;
+          };
+          {argNamedQuery: argNamedQuery};
+        }: Raw.t
+      );
     let serializeVariables: t_variables => Raw.t_variables =
       inp => {query: (a => a)((inp: t_variables).query)};
     let makeVariables = (~query, ()): t_variables => {query: query};

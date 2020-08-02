@@ -44,12 +44,10 @@ module MyQuery: {
   };
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~opt: Js.Json.t=?, ~req: Js.Json.t, unit) => t_variables;
@@ -88,46 +86,45 @@ module MyQuery: {
     \"opt\": option(Js.Json.t),
     \"req\": Js.Json.t,
   };
-  /**The GraphQL query string*/
   let query = \"query ($opt: CustomScalar, $req: CustomScalar!)  {\\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\\nnullable  \\nnonNullable  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let customScalarField = {
-      let value = value##customScalarField;
-      let nonNullable = {
-        let value = value##nonNullable;
-        value;
-      }
-      and nullable = {
-        let value = value##nullable;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value)
-        | None => None
+  let parse: Raw.t => t =
+    value => {
+      let customScalarField = {
+        let value = value##customScalarField;
+        let nonNullable = {
+          let value = value##nonNullable;
+          value;
+        }
+        and nullable = {
+          let value = value##nullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
         };
+        {\"nullable\": nullable, \"nonNullable\": nonNullable};
       };
-      {\"nullable\": nullable, \"nonNullable\": nonNullable};
+      {\"customScalarField\": customScalarField};
     };
-    {\"customScalarField\": customScalarField};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let customScalarField = {
-      let value = value##customScalarField;
-      let nonNullable = {
-        let value = value##nonNullable;
-        value;
-      }
-      and nullable = {
-        let value = value##nullable;
-        switch (value) {
-        | Some(value) => Js.Nullable.return(value)
-        | None => Js.Nullable.null
+  let serialize: t => Raw.t =
+    value => {
+      let customScalarField = {
+        let value = value##customScalarField;
+        let nonNullable = {
+          let value = value##nonNullable;
+          value;
+        }
+        and nullable = {
+          let value = value##nullable;
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
         };
+        {\"nullable\": nullable, \"nonNullable\": nonNullable};
       };
-      {\"nullable\": nullable, \"nonNullable\": nonNullable};
+      {\"customScalarField\": customScalarField};
     };
-    {\"customScalarField\": customScalarField};
-  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"opt\":

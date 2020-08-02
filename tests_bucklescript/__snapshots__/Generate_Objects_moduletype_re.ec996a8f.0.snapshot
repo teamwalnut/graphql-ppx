@@ -27,32 +27,31 @@ module MyQuery: {type t;} = {
   type t_variousScalars = {. \"string\": string};
   type t = {. \"variousScalars\": t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\nstring  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let string = {
-        let value = value##string;
-        value;
+  let parse: Raw.t => t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let string = {
+          let value = value##string;
+          value;
+        };
+        {\"string\": string};
       };
-      {\"string\": string};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let string = {
-        let value = value##string;
-        value;
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let string = {
+          let value = value##string;
+          value;
+        };
+        {\"string\": string};
       };
-      {\"string\": string};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -79,42 +78,41 @@ module MyQuery2: {
   type t_variousScalars = {string};
   type t = {variousScalars: t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\nstring  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      variousScalars: {
-        let value = (value: Raw.t).variousScalars;
-        (
-          {
-            string: {
-              let value = (value: Raw.t_variousScalars).string;
-              value;
-            },
-          }: t_variousScalars
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let variousScalars = {
-        let value = (value: t).variousScalars;
-        (
-          {
-            let string = {
-              let value = (value: t_variousScalars).string;
-              value;
-            };
-            {string: string};
-          }: Raw.t_variousScalars
-        );
-      };
-      {variousScalars: variousScalars};
-    }: Raw.t
-  );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              };
+              {string: string};
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -146,12 +144,10 @@ module rec MyQueryRecursive: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -181,91 +177,91 @@ module rec MyQueryRecursive: {
   type t_nestedObject = {inner: option(t_nestedObject_inner)};
   type t = {nestedObject: VariousScalars.t};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      nestedObject: {
-        let value = (value: Raw.t).nestedObject;
-        VariousScalars.parse(
-          {
-            inner: {
-              let value = (value: Raw.t_nestedObject).inner;
-              switch (Js.toOption(value)) {
-              | Some(value) =>
-                Some(
-                  {
-                    inner: {
-                      let value = (value: Raw.t_nestedObject_inner).inner;
-                      switch (Js.toOption(value)) {
-                      | Some(value) =>
-                        Some(
-                          {
-                            field: {
-                              let value =
-                                (value: Raw.t_nestedObject_inner_inner).field;
-                              value;
-                            },
-                          }: t_nestedObject_inner_inner,
-                        )
-                      | None => None
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nestedObject: {
+          let value = (value: Raw.t).nestedObject;
+          VariousScalars.parse(
+            {
+              inner: {
+                let value = (value: Raw.t_nestedObject).inner;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    {
+                      inner: {
+                        let value = (value: Raw.t_nestedObject_inner).inner;
+                        switch (Js.toOption(value)) {
+                        | Some(value) =>
+                          Some(
+                            {
+                              field: {
+                                let value =
+                                  (value: Raw.t_nestedObject_inner_inner).
+                                    field;
+                                value;
+                              },
+                            }: t_nestedObject_inner_inner,
+                          )
+                        | None => None
+                        };
+                      },
+                    }: t_nestedObject_inner,
+                  )
+                | None => None
+                };
+              },
+            }: t_nestedObject,
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nestedObject = {
+          let value = (value: t).nestedObject;
+          let value = VariousScalars.serialize(value);
+          (
+            {
+              let inner = {
+                let value = (value: t_nestedObject).inner;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_nestedObject_inner).inner;
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let field = {
+                                let value =
+                                  (value: t_nestedObject_inner_inner).field;
+                                value;
+                              };
+                              {field: field};
+                            }: Raw.t_nestedObject_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
                       };
-                    },
-                  }: t_nestedObject_inner,
-                )
-              | None => None
+                      {inner: inner};
+                    }: Raw.t_nestedObject_inner,
+                  )
+                | None => Js.Nullable.null
+                };
               };
-            },
-          }: t_nestedObject,
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let nestedObject = {
-        let value = (value: t).nestedObject;
-        let value = VariousScalars.serialize(value);
-        (
-          {
-            let inner = {
-              let value = (value: t_nestedObject).inner;
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  {
-                    let inner = {
-                      let value = (value: t_nestedObject_inner).inner;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          {
-                            let field = {
-                              let value =
-                                (value: t_nestedObject_inner_inner).field;
-                              value;
-                            };
-                            {field: field};
-                          }: Raw.t_nestedObject_inner_inner,
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    };
-                    {inner: inner};
-                  }: Raw.t_nestedObject_inner,
-                )
-              | None => Js.Nullable.null
-              };
-            };
-            {inner: inner};
-          }: Raw.t_nestedObject
-        );
-      };
-      {nestedObject: nestedObject};
-    }: Raw.t
-  );
+              {inner: inner};
+            }: Raw.t_nestedObject
+          );
+        };
+        {nestedObject: nestedObject};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

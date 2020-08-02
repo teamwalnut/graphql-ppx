@@ -34,12 +34,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -76,64 +74,63 @@ String
   };
   type t = {pokemon: option(t_pokemon)};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\npokemon(name: \\\"Pikachu\\\")  {\\nid  \\nname  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      pokemon: {
-        let value = (value: Raw.t).pokemon;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            {
-              id: {
-                let value = (value: Raw.t_pokemon).id;
-                value;
-              },
-              name: {
-                let value = (value: Raw.t_pokemon).name;
-                switch (Js.toOption(value)) {
-                | Some(value) => Some(value)
-                | None => None
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        pokemon: {
+          let value = (value: Raw.t).pokemon;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                id: {
+                  let value = (value: Raw.t_pokemon).id;
+                  value;
+                },
+                name: {
+                  let value = (value: Raw.t_pokemon).name;
+                  switch (Js.toOption(value)) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  };
+                },
+              }: t_pokemon,
+            )
+          | None => None
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let pokemon = {
+          let value = (value: t).pokemon;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let name = {
+                  let value = (value: t_pokemon).name;
+                  switch (value) {
+                  | Some(value) => Js.Nullable.return(value)
+                  | None => Js.Nullable.null
+                  };
+                }
+                and id = {
+                  let value = (value: t_pokemon).id;
+                  value;
                 };
-              },
-            }: t_pokemon,
-          )
-        | None => None
+                {id, name};
+              }: Raw.t_pokemon,
+            )
+          | None => Js.Nullable.null
+          };
         };
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let pokemon = {
-        let value = (value: t).pokemon;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            {
-              let name = {
-                let value = (value: t_pokemon).name;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and id = {
-                let value = (value: t_pokemon).id;
-                value;
-              };
-              {id, name};
-            }: Raw.t_pokemon,
-          )
-        | None => Js.Nullable.null
-        };
-      };
-      {pokemon: pokemon};
-    }: Raw.t
-  );
+        {pokemon: pokemon};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

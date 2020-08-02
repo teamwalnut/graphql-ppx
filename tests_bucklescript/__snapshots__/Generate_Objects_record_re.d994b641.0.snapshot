@@ -45,12 +45,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -78,52 +76,51 @@ module MyQuery: {
   };
   type t = {. \"variousScalars\": scalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nstring  \\nint  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      (
-        {
-          let int = {
-            let value = value##int;
-            value;
-          }
-          and string = {
-            let value = value##string;
-            value;
-          }
-          and __typename = {
-            let value = value##__typename;
-            value;
-          };
-          {__typename, string, int};
-        }: scalars
-      );
-    };
-    {\"variousScalars\": variousScalars};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let int = {
-        let value = (value: scalars).int;
-        value;
-      }
-      and string = {
-        let value = (value: scalars).string;
-        value;
-      }
-      and __typename = {
-        let value = (value: scalars).__typename;
-        value;
+  let parse: Raw.t => t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        (
+          {
+            let int = {
+              let value = value##int;
+              value;
+            }
+            and string = {
+              let value = value##string;
+              value;
+            }
+            and __typename = {
+              let value = value##__typename;
+              value;
+            };
+            {__typename, string, int};
+          }: scalars
+        );
       };
-      {\"__typename\": __typename, \"string\": string, \"int\": int};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let int = {
+          let value = (value: scalars).int;
+          value;
+        }
+        and string = {
+          let value = (value: scalars).string;
+          value;
+        }
+        and __typename = {
+          let value = (value: scalars).__typename;
+          value;
+        };
+        {\"__typename\": __typename, \"string\": string, \"int\": int};
+      };
+      {\"variousScalars\": variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -148,12 +145,10 @@ module OneFieldQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -177,42 +172,41 @@ module OneFieldQuery: {
   type t_variousScalars = {nullableString: option(string)};
   type t = {. \"variousScalars\": t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\nnullableString  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      (
-        {
-          let nullableString = {
-            let value = value##nullableString;
-            switch (Js.toOption(value)) {
-            | Some(value) => Some(value)
-            | None => None
+  let parse: Raw.t => t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        (
+          {
+            let nullableString = {
+              let value = value##nullableString;
+              switch (Js.toOption(value)) {
+              | Some(value) => Some(value)
+              | None => None
+              };
             };
-          };
-          {nullableString: nullableString};
-        }: t_variousScalars
-      );
-    };
-    {\"variousScalars\": variousScalars};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let nullableString = {
-        let value = (value: t_variousScalars).nullableString;
-        switch (value) {
-        | Some(value) => Js.Nullable.return(value)
-        | None => Js.Nullable.null
-        };
+            {nullableString: nullableString};
+          }: t_variousScalars
+        );
       };
-      {\"nullableString\": nullableString};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        };
+        {\"nullableString\": nullableString};
+      };
+      {\"variousScalars\": variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -245,12 +239,10 @@ module OneFieldQueryWithTypename: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -282,46 +274,45 @@ module OneFieldQueryWithTypename: {
   };
   type t = {. \"variousScalars\": t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\n__typename  \\nnullableString  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let nullableString = {
-        let value = value##nullableString;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value)
-        | None => None
+  let parse: Raw.t => t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let nullableString = {
+          let value = value##nullableString;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value)
+          | None => None
+          };
+        }
+        and __typename = {
+          let value = value##__typename;
+          value;
         };
-      }
-      and __typename = {
-        let value = value##__typename;
-        value;
+        {\"__typename\": __typename, \"nullableString\": nullableString};
       };
-      {\"__typename\": __typename, \"nullableString\": nullableString};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let nullableString = {
-        let value = value##nullableString;
-        switch (value) {
-        | Some(value) => Js.Nullable.return(value)
-        | None => Js.Nullable.null
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let nullableString = {
+          let value = value##nullableString;
+          switch (value) {
+          | Some(value) => Js.Nullable.return(value)
+          | None => Js.Nullable.null
+          };
+        }
+        and __typename = {
+          let value = value##__typename;
+          value;
         };
-      }
-      and __typename = {
-        let value = value##__typename;
-        value;
+        {\"__typename\": __typename, \"nullableString\": nullableString};
       };
-      {\"__typename\": __typename, \"nullableString\": nullableString};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -351,13 +342,39 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
+    /** the GraphQL fragment */
     let query: string;
+    /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
     let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
     let serialize: t => Raw.t;
     let verifyArgsAndParse: (~fragmentName: [ | `Fragment], Raw.t) => t;
     let verifyName: [ | `Fragment] => unit;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
+    module Z__INTERNAL: {
+      type root = t;
+      type nonrec graphql;
+      /**```
+VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+```*/
+      let graphql: graphql;
+      type nonrec graphql_module;
+      /**The contents of this module are automatically generated by graphql-ppx.*/
+      let graphql_module: graphql_module;
+    };
   } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
@@ -373,39 +390,37 @@ module ExternalFragmentQuery = {
       int,
     };
     type nonrec t_VariousScalars = t;
-    /**The GraphQL query string*/
     let query = \"fragment Fragment on VariousScalars   {\\nstring  \\nint  \\n}\\n\";
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => (
-      {
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          let int = {
+            let value = value##int;
+            value;
+          }
+          and string = {
+            let value = value##string;
+            value;
+          };
+          {string, int};
+        }: t
+      );
+    let serialize: t => Raw.t =
+      value => {
         let int = {
-          let value = value##int;
+          let value = (value: t).int;
           value;
         }
         and string = {
-          let value = value##string;
+          let value = (value: t).string;
           value;
         };
-        {string, int};
-      }: t
-    );
+        {\"string\": string, \"int\": int};
+      };
 
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
       parse(value);
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => {
-      let int = {
-        let value = (value: t).int;
-        value;
-      }
-      and string = {
-        let value = (value: t).string;
-        value;
-      };
-      {\"string\": string, \"int\": int};
-    };
-
     let verifyName =
       fun
       | `Fragment => ();
@@ -443,12 +458,10 @@ VariousScalars {
     type t_variables = unit;
     /** The GraphQL query */
     let query: string;
-    /** Parse the JSON GraphQL data to ReasonML data types */
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
     let parse: Raw.t => t;
-    /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: unit => unit;
     let makeVariables: unit => unit;
@@ -470,27 +483,26 @@ VariousScalars {
     };
     type t = {. \"variousScalars\": Fragment.t};
     type t_variables = unit;
-    /**The GraphQL query string*/
     let query =
       \"query   {\\nvariousScalars  {\\n...Fragment   \\n}\\n\\n}\\n\"
       ++ Fragment.query;
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => {
-      let variousScalars = {
-        let value = value##variousScalars;
+    let parse: Raw.t => t =
+      value => {
+        let variousScalars = {
+          let value = value##variousScalars;
 
-        Fragment.verifyArgsAndParse(~fragmentName=`Fragment, value);
+          Fragment.verifyArgsAndParse(~fragmentName=`Fragment, value);
+        };
+        {\"variousScalars\": variousScalars};
       };
-      {\"variousScalars\": variousScalars};
-    };
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => {
-      let variousScalars = {
-        let value = value##variousScalars;
-        Fragment.serialize(value);
+    let serialize: t => Raw.t =
+      value => {
+        let variousScalars = {
+          let value = value##variousScalars;
+          Fragment.serialize(value);
+        };
+        {\"variousScalars\": variousScalars};
       };
-      {\"variousScalars\": variousScalars};
-    };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
@@ -530,12 +542,10 @@ module InlineFragmentQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -573,74 +583,73 @@ module InlineFragmentQuery: {
   ];
   type t = {. \"dogOrHuman\": t_dogOrHuman};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let dogOrHuman = {
-      let value = value##dogOrHuman;
-      let typename: string =
-        Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-      (
-        switch (typename) {
-        | \"Dog\" =>
-          `Dog(
-            {
-              let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-              (
-                {
-                  let barkVolume = {
-                    let value = value##barkVolume;
-                    value;
-                  }
-                  and name = {
-                    let value = value##name;
-                    value;
-                  }
-                  and __typename = {
-                    let value = value##__typename;
-                    value;
-                  };
-                  {__typename, name, barkVolume};
-                }: t_dogOrHuman_Dog
-              );
-            },
-          )
-        | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-        }: t_dogOrHuman
-      );
-    };
-    {\"dogOrHuman\": dogOrHuman};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let dogOrHuman = {
-      let value = value##dogOrHuman;
-      switch (value) {
-      | `Dog(value) => (
-          Obj.magic(
-            {
-              let barkVolume = {
-                let value = (value: t_dogOrHuman_Dog).barkVolume;
-                value;
-              }
-              and name = {
-                let value = (value: t_dogOrHuman_Dog).name;
-                value;
-              }
-              and __typename = {
-                let value = (value: t_dogOrHuman_Dog).__typename;
-                value;
-              };
-              {\"__typename\": \"Dog\", \"name\": name, \"barkVolume\": barkVolume};
-            },
-          ): Raw.t_dogOrHuman
-        )
-      | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+  let parse: Raw.t => t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        let typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+        (
+          switch (typename) {
+          | \"Dog\" =>
+            `Dog(
+              {
+                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                (
+                  {
+                    let barkVolume = {
+                      let value = value##barkVolume;
+                      value;
+                    }
+                    and name = {
+                      let value = value##name;
+                      value;
+                    }
+                    and __typename = {
+                      let value = value##__typename;
+                      value;
+                    };
+                    {__typename, name, barkVolume};
+                  }: t_dogOrHuman_Dog
+                );
+              },
+            )
+          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+          }: t_dogOrHuman
+        );
       };
+      {\"dogOrHuman\": dogOrHuman};
     };
-    {\"dogOrHuman\": dogOrHuman};
-  };
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = value##dogOrHuman;
+        switch (value) {
+        | `Dog(value) => (
+            Obj.magic(
+              {
+                let barkVolume = {
+                  let value = (value: t_dogOrHuman_Dog).barkVolume;
+                  value;
+                }
+                and name = {
+                  let value = (value: t_dogOrHuman_Dog).name;
+                  value;
+                }
+                and __typename = {
+                  let value = (value: t_dogOrHuman_Dog).__typename;
+                  value;
+                };
+                {\"__typename\": \"Dog\", \"name\": name, \"barkVolume\": barkVolume};
+              },
+            ): Raw.t_dogOrHuman
+          )
+        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+        };
+      };
+      {\"dogOrHuman\": dogOrHuman};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -672,13 +681,31 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
+    /** the GraphQL fragment */
     let query: string;
+    /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
     let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
     let serialize: t => Raw.t;
     let verifyArgsAndParse: (~fragmentName: [ | `DogFragment], Raw.t) => t;
     let verifyName: [ | `DogFragment] => unit;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
+    module Z__INTERNAL: {
+      type root = t;
+      type nonrec graphql;
+      /**```
+Dog {
+  name: String!
+  barkVolume: Float!
+}
+```*/
+      let graphql: graphql;
+      type nonrec graphql_module;
+      /**The contents of this module are automatically generated by graphql-ppx.*/
+      let graphql_module: graphql_module;
+    };
   } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
@@ -696,47 +723,45 @@ module UnionExternalFragmentQuery = {
       barkVolume: float,
     };
     type nonrec t_Dog = t;
-    /**The GraphQL query string*/
     let query = \"fragment DogFragment on Dog   {\\n__typename  \\nname  \\nbarkVolume  \\n}\\n\";
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => (
-      {
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          let barkVolume = {
+            let value = value##barkVolume;
+            value;
+          }
+          and name = {
+            let value = value##name;
+            value;
+          }
+          and __typename = {
+            let value = value##__typename;
+            value;
+          };
+          {__typename, name, barkVolume};
+        }: t
+      );
+    let serialize: t => Raw.t =
+      value => {
         let barkVolume = {
-          let value = value##barkVolume;
+          let value = (value: t).barkVolume;
           value;
         }
         and name = {
-          let value = value##name;
+          let value = (value: t).name;
           value;
         }
         and __typename = {
-          let value = value##__typename;
+          let value = (value: t).__typename;
           value;
         };
-        {__typename, name, barkVolume};
-      }: t
-    );
+        {\"__typename\": __typename, \"name\": name, \"barkVolume\": barkVolume};
+      };
 
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
       parse(value);
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => {
-      let barkVolume = {
-        let value = (value: t).barkVolume;
-        value;
-      }
-      and name = {
-        let value = (value: t).name;
-        value;
-      }
-      and __typename = {
-        let value = (value: t).__typename;
-        value;
-      };
-      {\"__typename\": __typename, \"name\": name, \"barkVolume\": barkVolume};
-    };
-
     let verifyName =
       fun
       | `DogFragment => ();
@@ -771,12 +796,10 @@ Dog {
     type t_variables = unit;
     /** The GraphQL query */
     let query: string;
-    /** Parse the JSON GraphQL data to ReasonML data types */
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
     let parse: Raw.t => t;
-    /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: unit => unit;
     let makeVariables: unit => unit;
@@ -803,48 +826,47 @@ Dog {
     ];
     type t = {. \"dogOrHuman\": t_dogOrHuman};
     type t_variables = unit;
-    /**The GraphQL query string*/
     let query =
       \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\n...DogFragment   \\n}\\n\\n}\\n\\n}\\n\"
       ++ DogFragment.query;
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => {
-      let dogOrHuman = {
-        let value = value##dogOrHuman;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: DogFragment.Raw.t = Obj.magic(value);
+    let parse: Raw.t => t =
+      value => {
+        let dogOrHuman = {
+          let value = value##dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: DogFragment.Raw.t = Obj.magic(value);
 
-                DogFragment.verifyArgsAndParse(
-                  ~fragmentName=`DogFragment,
-                  value,
-                );
-              },
-            )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_dogOrHuman
-        );
-      };
-      {\"dogOrHuman\": dogOrHuman};
-    };
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => {
-      let dogOrHuman = {
-        let value = value##dogOrHuman;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
-          )
-        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=`DogFragment,
+                    value,
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
         };
+        {\"dogOrHuman\": dogOrHuman};
       };
-      {\"dogOrHuman\": dogOrHuman};
-    };
+    let serialize: t => Raw.t =
+      value => {
+        let dogOrHuman = {
+          let value = value##dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
+        };
+        {\"dogOrHuman\": dogOrHuman};
+      };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();

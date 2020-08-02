@@ -295,10 +295,6 @@ function parse$3(value) {
         };
 }
 
-function verifyArgsAndParse(_DogFields, value) {
-  return parse$3(value);
-}
-
 function serialize$3(value) {
   var value$1 = value.__typename;
   var value$2 = value.name;
@@ -308,9 +304,18 @@ function serialize$3(value) {
         };
 }
 
+function verifyArgsAndParse(_DogFields, value) {
+  return parse$3(value);
+}
+
 function verifyName(param) {
   
 }
+
+var Z__INTERNAL$3 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var DogFields = {
   Raw: Raw$3,
@@ -318,7 +323,8 @@ var DogFields = {
   parse: parse$3,
   serialize: serialize$3,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = {};
@@ -359,7 +365,7 @@ function makeDefaultVariables$3(param) {
   
 }
 
-var Z__INTERNAL$3 = {
+var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
@@ -371,7 +377,7 @@ var DogOrHuman = {
   serializeVariables: serializeVariables$3,
   makeVariables: makeVariables$3,
   makeDefaultVariables: makeDefaultVariables$3,
-  Z__INTERNAL: Z__INTERNAL$3
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 var NamedSpread = {

@@ -45,12 +45,10 @@ module MyQuery: {
   and t_variables_EmbeddedInput = {field: option(string)};
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectNonrecursiveInput:
@@ -148,29 +146,28 @@ NonrecursiveInput {
     custom: option(Js.Json.t),
   }
   and t_variables_EmbeddedInput = {field: option(string)};
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query ($arg: NonrecursiveInput!)  {\\n    nonrecursiveInput(arg: $arg)\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      nonrecursiveInput: {
-        let value = (value: Raw.t).nonrecursiveInput;
-        value;
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let nonrecursiveInput = {
-        let value = (value: t).nonrecursiveInput;
-        value;
-      };
-      {nonrecursiveInput: nonrecursiveInput};
-    }: Raw.t
-  );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nonrecursiveInput: {
+          let value = (value: Raw.t).nonrecursiveInput;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nonrecursiveInput = {
+          let value = (value: t).nonrecursiveInput;
+          value;
+        };
+        {nonrecursiveInput: nonrecursiveInput};
+      }: Raw.t
+    );
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:

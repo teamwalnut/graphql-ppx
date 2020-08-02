@@ -58,12 +58,10 @@ module Bla_inner: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -99,109 +97,108 @@ module Bla_inner: {
   };
   type t = {. \"lists\": t_lists};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query Bla  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let lists = {
-      let value = value##lists;
-      let nonNullableOfNonNullable = {
-        let value = value##nonNullableOfNonNullable;
-        value |> Js.Array.map(value => value);
-      }
-      and nonNullableOfNullable = {
-        let value = value##nonNullableOfNullable;
-        value
-        |> Js.Array.map(value =>
-             switch (Js.toOption(value)) {
-             | Some(value) => Some(value)
-             | None => None
-             }
-           );
-      }
-      and nullableOfNonNullable = {
-        let value = value##nullableOfNonNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value |> Js.Array.map(value => value))
-        | None => None
+  let parse: Raw.t => t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
         };
-      }
-      and nullableOfNullable = {
-        let value = value##nullableOfNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            value
-            |> Js.Array.map(value =>
-                 switch (Js.toOption(value)) {
-                 | Some(value) => Some(value)
-                 | None => None
-                 }
-               ),
-          )
-        | None => None
+        {
+          \"nullableOfNullable\": nullableOfNullable,
+          \"nullableOfNonNullable\": nullableOfNonNullable,
+          \"nonNullableOfNullable\": nonNullableOfNullable,
+          \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
         };
       };
-      {
-        \"nullableOfNullable\": nullableOfNullable,
-        \"nullableOfNonNullable\": nullableOfNonNullable,
-        \"nonNullableOfNullable\": nonNullableOfNullable,
-        \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
-      };
+      {\"lists\": lists};
     };
-    {\"lists\": lists};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let lists = {
-      let value = value##lists;
-      let nonNullableOfNonNullable = {
-        let value = value##nonNullableOfNonNullable;
-        value |> Js.Array.map(value => value);
-      }
-      and nonNullableOfNullable = {
-        let value = value##nonNullableOfNullable;
-        value
-        |> Js.Array.map(value =>
-             switch (value) {
-             | Some(value) => Js.Nullable.return(value)
-             | None => Js.Nullable.null
-             }
-           );
-      }
-      and nullableOfNonNullable = {
-        let value = value##nullableOfNonNullable;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(value |> Js.Array.map(value => value))
-        | None => Js.Nullable.null
+  let serialize: t => Raw.t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
         };
-      }
-      and nullableOfNullable = {
-        let value = value##nullableOfNullable;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            value
-            |> Js.Array.map(value =>
-                 switch (value) {
-                 | Some(value) => Js.Nullable.return(value)
-                 | None => Js.Nullable.null
-                 }
-               ),
-          )
-        | None => Js.Nullable.null
+        {
+          \"nullableOfNullable\": nullableOfNullable,
+          \"nullableOfNonNullable\": nullableOfNonNullable,
+          \"nonNullableOfNullable\": nonNullableOfNullable,
+          \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
         };
       };
-      {
-        \"nullableOfNullable\": nullableOfNullable,
-        \"nullableOfNonNullable\": nullableOfNonNullable,
-        \"nonNullableOfNullable\": nonNullableOfNullable,
-        \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
-      };
+      {\"lists\": lists};
     };
-    {\"lists\": lists};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -249,12 +246,10 @@ module Inner: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -290,109 +285,108 @@ module Inner: {
   };
   type t = {. \"lists\": t_lists};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query Bla2  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let lists = {
-      let value = value##lists;
-      let nonNullableOfNonNullable = {
-        let value = value##nonNullableOfNonNullable;
-        value |> Js.Array.map(value => value);
-      }
-      and nonNullableOfNullable = {
-        let value = value##nonNullableOfNullable;
-        value
-        |> Js.Array.map(value =>
-             switch (Js.toOption(value)) {
-             | Some(value) => Some(value)
-             | None => None
-             }
-           );
-      }
-      and nullableOfNonNullable = {
-        let value = value##nullableOfNonNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) => Some(value |> Js.Array.map(value => value))
-        | None => None
+  let parse: Raw.t => t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (Js.toOption(value)) {
+               | Some(value) => Some(value)
+               | None => None
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
         };
-      }
-      and nullableOfNullable = {
-        let value = value##nullableOfNullable;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            value
-            |> Js.Array.map(value =>
-                 switch (Js.toOption(value)) {
-                 | Some(value) => Some(value)
-                 | None => None
-                 }
-               ),
-          )
-        | None => None
+        {
+          \"nullableOfNullable\": nullableOfNullable,
+          \"nullableOfNonNullable\": nullableOfNonNullable,
+          \"nonNullableOfNullable\": nonNullableOfNullable,
+          \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
         };
       };
-      {
-        \"nullableOfNullable\": nullableOfNullable,
-        \"nullableOfNonNullable\": nullableOfNonNullable,
-        \"nonNullableOfNullable\": nonNullableOfNullable,
-        \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
-      };
+      {\"lists\": lists};
     };
-    {\"lists\": lists};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let lists = {
-      let value = value##lists;
-      let nonNullableOfNonNullable = {
-        let value = value##nonNullableOfNonNullable;
-        value |> Js.Array.map(value => value);
-      }
-      and nonNullableOfNullable = {
-        let value = value##nonNullableOfNullable;
-        value
-        |> Js.Array.map(value =>
-             switch (value) {
-             | Some(value) => Js.Nullable.return(value)
-             | None => Js.Nullable.null
-             }
-           );
-      }
-      and nullableOfNonNullable = {
-        let value = value##nullableOfNonNullable;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(value |> Js.Array.map(value => value))
-        | None => Js.Nullable.null
+  let serialize: t => Raw.t =
+    value => {
+      let lists = {
+        let value = value##lists;
+        let nonNullableOfNonNullable = {
+          let value = value##nonNullableOfNonNullable;
+          value |> Js.Array.map(value => value);
+        }
+        and nonNullableOfNullable = {
+          let value = value##nonNullableOfNullable;
+          value
+          |> Js.Array.map(value =>
+               switch (value) {
+               | Some(value) => Js.Nullable.return(value)
+               | None => Js.Nullable.null
+               }
+             );
+        }
+        and nullableOfNonNullable = {
+          let value = value##nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = value##nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
         };
-      }
-      and nullableOfNullable = {
-        let value = value##nullableOfNullable;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            value
-            |> Js.Array.map(value =>
-                 switch (value) {
-                 | Some(value) => Js.Nullable.return(value)
-                 | None => Js.Nullable.null
-                 }
-               ),
-          )
-        | None => Js.Nullable.null
+        {
+          \"nullableOfNullable\": nullableOfNullable,
+          \"nullableOfNonNullable\": nullableOfNonNullable,
+          \"nonNullableOfNullable\": nonNullableOfNullable,
+          \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
         };
       };
-      {
-        \"nullableOfNullable\": nullableOfNullable,
-        \"nullableOfNonNullable\": nullableOfNonNullable,
-        \"nonNullableOfNullable\": nonNullableOfNullable,
-        \"nonNullableOfNonNullable\": nonNullableOfNonNullable,
-      };
+      {\"lists\": lists};
     };
-    {\"lists\": lists};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

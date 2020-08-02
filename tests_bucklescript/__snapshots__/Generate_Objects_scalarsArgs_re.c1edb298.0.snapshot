@@ -50,12 +50,10 @@ module MyQuery: {
   };
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
@@ -114,24 +112,23 @@ module MyQuery: {
     \"nullableID\": option(string),
     \"id\": string,
   };
-  /**The GraphQL query string*/
   let query = \"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let scalarsInput = {
-      let value = value##scalarsInput;
-      value;
+  let parse: Raw.t => t =
+    value => {
+      let scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {\"scalarsInput\": scalarsInput};
     };
-    {\"scalarsInput\": scalarsInput};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let scalarsInput = {
-      let value = value##scalarsInput;
-      value;
+  let serialize: t => Raw.t =
+    value => {
+      let scalarsInput = {
+        let value = value##scalarsInput;
+        value;
+      };
+      {\"scalarsInput\": scalarsInput};
     };
-    {\"scalarsInput\": scalarsInput};
-  };
   let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       \"nullableString\":

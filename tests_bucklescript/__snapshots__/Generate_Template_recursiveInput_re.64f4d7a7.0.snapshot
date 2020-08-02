@@ -36,12 +36,10 @@ module MyQuery: {
   };
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectRecursiveInput:
@@ -113,29 +111,28 @@ RecursiveInput {
     inner: option(t_variables_RecursiveInput),
     enum: option([ | `FIRST | `SECOND | `THIRD]),
   };
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query ($arg: RecursiveInput!)  {\\n    recursiveInput(arg: $arg)\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      recursiveInput: {
-        let value = (value: Raw.t).recursiveInput;
-        value;
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let recursiveInput = {
-        let value = (value: t).recursiveInput;
-        value;
-      };
-      {recursiveInput: recursiveInput};
-    }: Raw.t
-  );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        recursiveInput: {
+          let value = (value: Raw.t).recursiveInput;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let recursiveInput = {
+          let value = (value: t).recursiveInput;
+          value;
+        };
+        {recursiveInput: recursiveInput};
+      }: Raw.t
+    );
   let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:

@@ -55,12 +55,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -111,108 +109,107 @@ module MyQuery: {
   };
   type t = {. \"mutationWithError\": t_mutationWithError};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"mutation   {\\nmutationWithError  {\\nvalue  {\\nstringField  \\n}\\n\\nerrors  {\\nfield  \\nmessage  \\n}\\n\\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let mutationWithError = {
-      let value = value##mutationWithError;
-      let errors = {
-        let value = value##errors;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            value
-            |> Js.Array.map(value =>
-                 let message = {
-                   let value = value##message;
-                   value;
-                 }
-                 and field = {
-                   let value = value##field;
-                   switch (Obj.magic(value: string)) {
-                   | \"FIRST\" => `FIRST
-                   | \"SECOND\" => `SECOND
-                   | \"THIRD\" => `THIRD
-                   | other => `FutureAddedValue(other)
+  let parse: Raw.t => t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   let message = {
+                     let value = value##message;
+                     value;
+                   }
+                   and field = {
+                     let value = value##field;
+                     switch (Obj.magic(value: string)) {
+                     | \"FIRST\" => `FIRST
+                     | \"SECOND\" => `SECOND
+                     | \"THIRD\" => `THIRD
+                     | other => `FutureAddedValue(other)
+                     };
                    };
-                 };
-                 {\"field\": field, \"message\": message};
-               ),
-          )
-        | None => None
+                   {\"field\": field, \"message\": message};
+                 ),
+            )
+          | None => None
+          };
+        }
+        and value = {
+          let value = value##value;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let stringField = {
+                  let value = value##stringField;
+                  value;
+                };
+                {\"stringField\": stringField};
+              },
+            )
+          | None => None
+          };
         };
-      }
-      and value = {
-        let value = value##value;
-        switch (Js.toOption(value)) {
-        | Some(value) =>
-          Some(
-            {
-              let stringField = {
-                let value = value##stringField;
-                value;
-              };
-              {\"stringField\": stringField};
-            },
-          )
-        | None => None
-        };
+        {\"value\": value, \"errors\": errors};
       };
-      {\"value\": value, \"errors\": errors};
+      {\"mutationWithError\": mutationWithError};
     };
-    {\"mutationWithError\": mutationWithError};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let mutationWithError = {
-      let value = value##mutationWithError;
-      let errors = {
-        let value = value##errors;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            value
-            |> Js.Array.map(value =>
-                 let message = {
-                   let value = value##message;
-                   value;
-                 }
-                 and field = {
-                   let value = value##field;
-                   switch (value) {
-                   | `FIRST => \"FIRST\"
-                   | `SECOND => \"SECOND\"
-                   | `THIRD => \"THIRD\"
-                   | `FutureAddedValue(other) => other
+  let serialize: t => Raw.t =
+    value => {
+      let mutationWithError = {
+        let value = value##mutationWithError;
+        let errors = {
+          let value = value##errors;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   let message = {
+                     let value = value##message;
+                     value;
+                   }
+                   and field = {
+                     let value = value##field;
+                     switch (value) {
+                     | `FIRST => \"FIRST\"
+                     | `SECOND => \"SECOND\"
+                     | `THIRD => \"THIRD\"
+                     | `FutureAddedValue(other) => other
+                     };
                    };
-                 };
-                 {\"field\": field, \"message\": message};
-               ),
-          )
-        | None => Js.Nullable.null
+                   {\"field\": field, \"message\": message};
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        }
+        and value = {
+          let value = value##value;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let stringField = {
+                  let value = value##stringField;
+                  value;
+                };
+                {\"stringField\": stringField};
+              },
+            )
+          | None => Js.Nullable.null
+          };
         };
-      }
-      and value = {
-        let value = value##value;
-        switch (value) {
-        | Some(value) =>
-          Js.Nullable.return(
-            {
-              let stringField = {
-                let value = value##stringField;
-                value;
-              };
-              {\"stringField\": stringField};
-            },
-          )
-        | None => Js.Nullable.null
-        };
+        {\"value\": value, \"errors\": errors};
       };
-      {\"value\": value, \"errors\": errors};
+      {\"mutationWithError\": mutationWithError};
     };
-    {\"mutationWithError\": mutationWithError};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

@@ -47,12 +47,10 @@ module Normal: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -95,99 +93,99 @@ module Normal: {
   };
   type t = {mutationWithError: t_mutationWithError};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      mutationWithError: {
-        let value = (value: Raw.t).mutationWithError;
-        (
-          {
-            errors: {
-              let value = (value: Raw.t_mutationWithError).errors;
-              switch (Js.toOption(value)) {
-              | Some(value) =>
-                Some(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           message: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).message;
-                             value;
-                           },
-                           field: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).field;
-                             switch (Obj.magic(value: string)) {
-                             | \"FIRST\" => `FIRST
-                             | \"SECOND\" => `SECOND
-                             | \"THIRD\" => `THIRD
-                             | other => `FutureAddedValue(other)
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \"FIRST\" => `FIRST
+                               | \"SECOND\" => `SECOND
+                               | \"THIRD\" => `THIRD
+                               | other => `FutureAddedValue(other)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | `FIRST => \"FIRST\"
+                               | `SECOND => \"SECOND\"
+                               | `THIRD => \"THIRD\"
+                               | `FutureAddedValue(other) => other
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
                              };
-                           },
-                         }: t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => None
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
               };
-            },
-          }: t_mutationWithError
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let mutationWithError = {
-        let value = (value: t).mutationWithError;
-        (
-          {
-            let errors = {
-              let value = (value: t_mutationWithError).errors;
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           let field = {
-                             let value =
-                               (value: t_mutationWithError_errors).field;
-                             switch (value) {
-                             | `FIRST => \"FIRST\"
-                             | `SECOND => \"SECOND\"
-                             | `THIRD => \"THIRD\"
-                             | `FutureAddedValue(other) => other
-                             };
-                           }
-                           and message = {
-                             let value =
-                               (value: t_mutationWithError_errors).message;
-                             value;
-                           };
-                           {message, field};
-                         }: Raw.t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => Js.Nullable.null
-              };
-            };
-            {errors: errors};
-          }: Raw.t_mutationWithError
-        );
-      };
-      {mutationWithError: mutationWithError};
-    }: Raw.t
-  );
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -226,12 +224,10 @@ module ByConfig: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -269,98 +265,98 @@ module ByConfig: {
   };
   type t = {mutationWithError: t_mutationWithError};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      mutationWithError: {
-        let value = (value: Raw.t).mutationWithError;
-        (
-          {
-            errors: {
-              let value = (value: Raw.t_mutationWithError).errors;
-              switch (Js.toOption(value)) {
-              | Some(value) =>
-                Some(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           message: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).message;
-                             value;
-                           },
-                           field: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).field;
-                             switch (Obj.magic(value: string)) {
-                             | \"FIRST\" => `FIRST
-                             | \"SECOND\" => `SECOND
-                             | \"THIRD\" => `THIRD
-                             | _ => raise(Not_found)
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \"FIRST\" => `FIRST
+                               | \"SECOND\" => `SECOND
+                               | \"THIRD\" => `THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | `FIRST => \"FIRST\"
+                               | `SECOND => \"SECOND\"
+                               | `THIRD => \"THIRD\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
                              };
-                           },
-                         }: t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => None
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
               };
-            },
-          }: t_mutationWithError
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let mutationWithError = {
-        let value = (value: t).mutationWithError;
-        (
-          {
-            let errors = {
-              let value = (value: t_mutationWithError).errors;
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           let field = {
-                             let value =
-                               (value: t_mutationWithError_errors).field;
-                             switch (value) {
-                             | `FIRST => \"FIRST\"
-                             | `SECOND => \"SECOND\"
-                             | `THIRD => \"THIRD\"
-                             };
-                           }
-                           and message = {
-                             let value =
-                               (value: t_mutationWithError_errors).message;
-                             value;
-                           };
-                           {message, field};
-                         }: Raw.t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => Js.Nullable.null
-              };
-            };
-            {errors: errors};
-          }: Raw.t_mutationWithError
-        );
-      };
-      {mutationWithError: mutationWithError};
-    }: Raw.t
-  );
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -399,12 +395,10 @@ module ByDirective: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -442,98 +436,98 @@ module ByDirective: {
   };
   type t = {mutationWithError: t_mutationWithError};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation   {\\n    mutationWithError  {\\n      errors  {\\n        message\\n        field\\n      }\\n    }\\n  }\\n`\"
   ];
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      mutationWithError: {
-        let value = (value: Raw.t).mutationWithError;
-        (
-          {
-            errors: {
-              let value = (value: Raw.t_mutationWithError).errors;
-              switch (Js.toOption(value)) {
-              | Some(value) =>
-                Some(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           message: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).message;
-                             value;
-                           },
-                           field: {
-                             let value =
-                               (value: Raw.t_mutationWithError_errors).field;
-                             switch (Obj.magic(value: string)) {
-                             | \"FIRST\" => `FIRST
-                             | \"SECOND\" => `SECOND
-                             | \"THIRD\" => `THIRD
-                             | _ => raise(Not_found)
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationWithError: {
+          let value = (value: Raw.t).mutationWithError;
+          (
+            {
+              errors: {
+                let value = (value: Raw.t_mutationWithError).errors;
+                switch (Js.toOption(value)) {
+                | Some(value) =>
+                  Some(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             message: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).
+                                   message;
+                               value;
+                             },
+                             field: {
+                               let value =
+                                 (value: Raw.t_mutationWithError_errors).field;
+                               switch (Obj.magic(value: string)) {
+                               | \"FIRST\" => `FIRST
+                               | \"SECOND\" => `SECOND
+                               | \"THIRD\" => `THIRD
+                               | _ => raise(Not_found)
+                               };
+                             },
+                           }: t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => None
+                };
+              },
+            }: t_mutationWithError
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationWithError = {
+          let value = (value: t).mutationWithError;
+          (
+            {
+              let errors = {
+                let value = (value: t_mutationWithError).errors;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map((value) =>
+                         (
+                           {
+                             let field = {
+                               let value =
+                                 (value: t_mutationWithError_errors).field;
+                               switch (value) {
+                               | `FIRST => \"FIRST\"
+                               | `SECOND => \"SECOND\"
+                               | `THIRD => \"THIRD\"
+                               };
+                             }
+                             and message = {
+                               let value =
+                                 (value: t_mutationWithError_errors).message;
+                               value;
                              };
-                           },
-                         }: t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => None
+                             {message, field};
+                           }: Raw.t_mutationWithError_errors
+                         )
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
               };
-            },
-          }: t_mutationWithError
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let mutationWithError = {
-        let value = (value: t).mutationWithError;
-        (
-          {
-            let errors = {
-              let value = (value: t_mutationWithError).errors;
-              switch (value) {
-              | Some(value) =>
-                Js.Nullable.return(
-                  value
-                  |> Js.Array.map((value) =>
-                       (
-                         {
-                           let field = {
-                             let value =
-                               (value: t_mutationWithError_errors).field;
-                             switch (value) {
-                             | `FIRST => \"FIRST\"
-                             | `SECOND => \"SECOND\"
-                             | `THIRD => \"THIRD\"
-                             };
-                           }
-                           and message = {
-                             let value =
-                               (value: t_mutationWithError_errors).message;
-                             value;
-                           };
-                           {message, field};
-                         }: Raw.t_mutationWithError_errors
-                       )
-                     ),
-                )
-              | None => Js.Nullable.null
-              };
-            };
-            {errors: errors};
-          }: Raw.t_mutationWithError
-        );
-      };
-      {mutationWithError: mutationWithError};
-    }: Raw.t
-  );
+              {errors: errors};
+            }: Raw.t_mutationWithError
+          );
+        };
+        {mutationWithError: mutationWithError};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

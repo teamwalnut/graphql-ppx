@@ -46,12 +46,10 @@ module MyQuery: {
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
-  /** Parse the JSON GraphQL data to ReasonML data types */
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
   let parse: Raw.t => t;
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse
-  function back to the original JSON compatible data
-  */
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: unit => unit;
   let makeVariables: unit => unit;
@@ -83,42 +81,41 @@ module MyQuery: {
   };
   type t = {. \"variousScalars\": t_variousScalars};
   type t_variables = unit;
-  /**The GraphQL query string*/
   let query = \"query   {\\nvariousScalars  {\\nstring  \\nint  \\n}\\n\\n}\\n\";
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let int = {
-        let value = value##int;
-        StringOfInt.parse(value);
-      }
-      and string = {
-        let value = value##string;
-        IntOfString.parse(value);
+  let parse: Raw.t => t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let int = {
+          let value = value##int;
+          StringOfInt.parse(value);
+        }
+        and string = {
+          let value = value##string;
+          IntOfString.parse(value);
+        };
+        {\"string\": string, \"int\": int};
       };
-      {\"string\": string, \"int\": int};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => {
-    let variousScalars = {
-      let value = value##variousScalars;
-      let int = {
-        let value = value##int;
-        let value = StringOfInt.serialize(value);
-        value;
-      }
-      and string = {
-        let value = value##string;
-        let value = IntOfString.serialize(value);
-        value;
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = value##variousScalars;
+        let int = {
+          let value = value##int;
+          let value = StringOfInt.serialize(value);
+          value;
+        }
+        and string = {
+          let value = value##string;
+          let value = IntOfString.serialize(value);
+          value;
+        };
+        {\"string\": string, \"int\": int};
       };
-      {\"string\": string, \"int\": int};
+      {\"variousScalars\": variousScalars};
     };
-    {\"variousScalars\": variousScalars};
-  };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

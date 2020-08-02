@@ -32,10 +32,6 @@ function parse(value) {
         };
 }
 
-function verifyArgsAndParse(_ListFragment, value) {
-  return parse(value);
-}
-
 function serialize(value) {
   var value$1 = value.nullableOfNonNullable;
   var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
@@ -57,9 +53,18 @@ function serialize(value) {
         };
 }
 
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
 function verifyName(param) {
   
 }
+
+var Z__INTERNAL = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var ListFragment = {
   Raw: Raw,
@@ -67,7 +72,8 @@ var ListFragment = {
   parse: parse,
   serialize: serialize,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName
+  verifyName: verifyName,
+  Z__INTERNAL: Z__INTERNAL
 };
 
 var Raw$1 = {};
@@ -82,10 +88,6 @@ function parse$1(value) {
         };
 }
 
-function verifyArgsAndParse$1(_Another, value) {
-  return parse$1(value);
-}
-
 function serialize$1(value) {
   var value$1 = value.nullableOfNonNullable;
   var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
@@ -98,9 +100,18 @@ function serialize$1(value) {
         };
 }
 
+function verifyArgsAndParse$1(_Another, value) {
+  return parse$1(value);
+}
+
 function verifyName$1(param) {
   
 }
+
+var Z__INTERNAL$1 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var Another = {
   Raw: Raw$1,
@@ -108,7 +119,8 @@ var Another = {
   parse: parse$1,
   serialize: serialize$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
-  verifyName: verifyName$1
+  verifyName: verifyName$1,
+  Z__INTERNAL: Z__INTERNAL$1
 };
 
 var Raw$2 = {};
@@ -128,10 +140,6 @@ function parse$2(value) {
         };
 }
 
-function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
-  return parse$2(value);
-}
-
 function serialize$2(value) {
   var value$1 = value.listWithArg;
   var listWithArg = value$1 !== undefined ? value$1.map(function (value) {
@@ -148,9 +156,18 @@ function serialize$2(value) {
         };
 }
 
+function verifyArgsAndParse$2(_arg1, _FragmentWithArgs, value) {
+  return parse$2(value);
+}
+
 function verifyName$2(param) {
   
 }
+
+var Z__INTERNAL$2 = {
+  graphql: 0,
+  graphql_module: 0
+};
 
 var FragmentWithArgs = {
   Raw: Raw$2,
@@ -158,7 +175,8 @@ var FragmentWithArgs = {
   parse: parse$2,
   serialize: serialize$2,
   verifyArgsAndParse: verifyArgsAndParse$2,
-  verifyName: verifyName$2
+  verifyName: verifyName$2,
+  Z__INTERNAL: Z__INTERNAL$2
 };
 
 var Raw$3 = {};
@@ -182,10 +200,6 @@ function parse$3(value) {
         };
 }
 
-function verifyArgsAndParse$3(_InlineListFragment, value) {
-  return parse$3(value);
-}
-
 function serialize$3(value) {
   var value$1 = value.nullableOfNonNullable;
   var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
@@ -207,11 +221,15 @@ function serialize$3(value) {
         };
 }
 
+function verifyArgsAndParse$3(_InlineListFragment, value) {
+  return parse$3(value);
+}
+
 function verifyName$3(param) {
   
 }
 
-var Z__INTERNAL = {
+var Z__INTERNAL$3 = {
   graphql: 0,
   graphql_module: 0
 };
@@ -220,10 +238,10 @@ var InlineListFragment = {
   Raw: Raw$3,
   query: query$2,
   parse: parse$3,
-  verifyArgsAndParse: verifyArgsAndParse$3,
   serialize: serialize$3,
+  verifyArgsAndParse: verifyArgsAndParse$3,
   verifyName: verifyName$3,
-  Z__INTERNAL: Z__INTERNAL
+  Z__INTERNAL: Z__INTERNAL$3
 };
 
 var Raw$4 = {};
@@ -339,7 +357,7 @@ function makeDefaultVariables(param) {
         };
 }
 
-var Z__INTERNAL$1 = {
+var Z__INTERNAL$4 = {
   graphql_module: 0
 };
 
@@ -351,7 +369,7 @@ var MyQuery = {
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL$1
+  Z__INTERNAL: Z__INTERNAL$4
 };
 
 var Raw$5 = {};
@@ -384,7 +402,7 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL$2 = {
+var Z__INTERNAL$5 = {
   graphql_module: 0
 };
 
@@ -396,7 +414,7 @@ var MyQuery2 = {
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL$2
+  Z__INTERNAL: Z__INTERNAL$5
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;
