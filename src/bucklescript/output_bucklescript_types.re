@@ -302,7 +302,10 @@ let generate_record_type =
                            }
                          ),
                        ),
-                     loc: emit_locations ? conv_loc(loc_key) : Location.none,
+                     // this needs to be emitted both in the implementation and
+                     // signature. Otherwise errors or hover types are not
+                     // correct
+                     loc: !raw ? conv_loc(loc_key) : Location.none,
                    },
                    [],
                  ),
@@ -625,8 +628,10 @@ let generate_object_type =
                                }
                              ),
                            ),
-                         loc:
-                           emit_locations ? conv_loc(loc_key) : Location.none,
+                         // this needs to be emitted both in the implementation and
+                         // signature. Otherwise errors or hover types are not
+                         // correct
+                         loc: !raw ? conv_loc(loc_key) : Location.none,
                        },
                        [],
                      ),
@@ -874,7 +879,7 @@ let generate_type_structure_items =
   let types =
     generate_types(
       ~config,
-      ~emit_locations=true,
+      ~emit_locations=false,
       ~raw,
       ~type_name,
       ~fragment_name,
@@ -917,7 +922,7 @@ let generate_type_signature_items =
   let types =
     generate_types(
       ~config,
-      ~emit_locations=false,
+      ~emit_locations=raw ? false : true,
       ~raw,
       ~type_name,
       ~fragment_name,

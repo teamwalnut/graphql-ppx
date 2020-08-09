@@ -561,7 +561,6 @@ function back to the original JSON-compatible data */
         };
         {\"name\": name, \"__typename\": __typename};
       };
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFields: [ | `DogFields], value: Raw.t) =>
       parse(value);

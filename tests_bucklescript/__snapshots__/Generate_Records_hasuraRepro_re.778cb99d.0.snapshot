@@ -64,7 +64,6 @@ function back to the original JSON-compatible data */
         {name: name};
       }: Raw.t
     );
-
   let verifyArgsAndParse = (~fragmentName as _Dog: [ | `Dog], value: Raw.t) =>
     parse(value);
   let verifyName =

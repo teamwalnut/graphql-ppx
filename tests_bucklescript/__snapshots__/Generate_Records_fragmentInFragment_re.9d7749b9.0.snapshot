@@ -95,7 +95,6 @@ function back to the original JSON-compatible data */
         {nullableOfNullable: nullableOfNullable};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -204,7 +203,6 @@ function back to the original JSON-compatible data */
         ),
       ): Raw.t
     );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
     parse(value);

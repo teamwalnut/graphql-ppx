@@ -1612,7 +1612,6 @@ function back to the original JSON-compatible data */
         {__typename, nullableOfNullable, nullableOfNonNullable};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);

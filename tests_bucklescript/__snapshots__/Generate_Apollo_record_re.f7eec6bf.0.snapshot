@@ -406,7 +406,6 @@ function back to the original JSON-compatible data */
           {__typename, string, int};
         }: Raw.t
       );
-
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
       parse(value);
@@ -689,7 +688,6 @@ function back to the original JSON-compatible data */
           {__typename, name, barkVolume};
         }: Raw.t
       );
-
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
       parse(value);

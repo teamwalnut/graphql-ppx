@@ -130,7 +130,6 @@ function back to the original JSON-compatible data */
         {__typename, nullableOfNullable, nullableOfNonNullable};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -214,7 +213,6 @@ function back to the original JSON-compatible data */
         {__typename, nullableOfNonNullable};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
     parse(value);
@@ -316,7 +314,6 @@ function back to the original JSON-compatible data */
         {__typename, listWithArg};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | `String],
@@ -414,7 +411,6 @@ module InlineListFragment = {
         {__typename, nullableOfNullable, nullableOfNonNullable};
       }: Raw.t
     );
-
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | `InlineListFragment],

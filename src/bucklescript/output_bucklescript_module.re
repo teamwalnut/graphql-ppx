@@ -959,7 +959,6 @@ let generate_fragment_implementation =
           let serialize: [%t type_name] => Raw.t = value => [%e serialize_fn]
         ],
       ],
-      [@metaloc fragment.span |> config.map_loc |> conv_loc]
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]],
         [%stri let verifyName = [%e verifyName]],
