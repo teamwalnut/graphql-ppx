@@ -865,7 +865,11 @@ let make_fragment_type =
                 | Some(type_name) => Longident.parse(type_name)
                 | None => Longident.Lident("t")
                 },
-                conv_loc(config.Generator_utils.map_loc(fragment_name_loc)),
+                switch (fragment_name_loc) {
+                | Some(fragment_name_loc) =>
+                  conv_loc(config.Generator_utils.map_loc(fragment_name_loc))
+                | None => Location.none
+                },
               ),
           [],
         ),
@@ -888,7 +892,7 @@ let generate_type_structure_items =
     |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
 
   switch (fragment_name) {
-  | Some((fragment_name, fragment_name_loc)) =>
+  | Some((fragment_name, _fragment_name_loc)) =>
     List.append(
       types,
       [
@@ -896,13 +900,7 @@ let generate_type_structure_items =
           Str.type_(
             Nonrecursive,
             [
-              make_fragment_type(
-                config,
-                raw,
-                type_name,
-                fragment_name,
-                fragment_name_loc,
-              ),
+              make_fragment_type(config, raw, type_name, fragment_name, None),
             ],
           )
         ),
@@ -919,10 +917,11 @@ let generate_type_signature_items =
       type_name,
       fragment_name,
     ) => {
+  let emit_locations = raw ? false : true;
   let types =
     generate_types(
       ~config,
-      ~emit_locations=raw ? false : true,
+      ~emit_locations,
       ~raw,
       ~type_name,
       ~fragment_name,
@@ -944,7 +943,7 @@ let generate_type_signature_items =
                 raw,
                 type_name,
                 fragment_name,
-                fragment_name_loc,
+                emit_locations ? Some(fragment_name_loc) : None,
               ),
             ],
           )
