@@ -381,7 +381,7 @@ let wrap_module = (~loc as _, ~module_type=?, name: string, contents) => {
 };
 
 let wrap_query_module =
-    (~loc as _, ~module_type, definition, name, contents, config) => {
+    (~loc as module_loc, ~module_type, definition, name, contents, config) => {
   let loc = Location.none;
   let module_name =
     switch (name) {
@@ -416,7 +416,8 @@ let wrap_query_module =
       }
     };
 
-  let inner_module = wrap_module(~module_type, ~loc, module_name, contents);
+  let inner_module =
+    wrap_module(~module_type, ~loc=Location.none, module_name, contents);
   let (contents, module_type) =
     switch (funct) {
     | Some(funct) =>
@@ -469,17 +470,19 @@ let wrap_query_module =
         ),
       ];
 
-      (contents, Mty.mk(Pmty_signature(signature)));
+      (contents, Mty.mk(~loc=module_loc, Pmty_signature(signature)));
     | None => (contents, module_type)
     };
 
   switch (funct, name) {
   | (Some(_), Some(name)) => [
       inner_module,
-      wrap_module(~module_type, ~loc, name, contents),
+      wrap_module(~module_type, ~loc=module_loc, name, contents),
     ]
   | (Some(_), None) => [inner_module, ...contents]
-  | (None, Some(name)) => [wrap_module(~module_type, ~loc, name, contents)]
+  | (None, Some(name)) => [
+      wrap_module(~module_type, ~loc=module_loc, name, contents),
+    ]
   | (None, None) => contents
   };
 };
@@ -719,9 +722,7 @@ let generate_fragment_signature =
   let rec make_labeled_fun_sig = final_type =>
     fun
     | [] => final_type
-    | [(name, type_, _span, type_span), ...tl] => {
-        let type_loc = config.map_loc(type_span) |> conv_loc;
-
+    | [(name, type_, _span, _type_span), ...tl] => {
         Typ.arrow(
           Labelled(name),
           Typ.variant(
@@ -732,12 +733,12 @@ let generate_fragment_signature =
                     {
                       txt:
                         Output_bucklescript_parser.type_name_to_words(type_),
-                      loc: type_loc,
+                      loc: Location.none,
                     },
                     true,
                     [],
                   ),
-                prf_loc: type_loc,
+                prf_loc: Location.none,
                 prf_attributes: [],
               },
             ],
@@ -870,14 +871,13 @@ let generate_fragment_implementation =
   let rec make_labeled_fun = body =>
     fun
     | [] => body
-    | [(name, type_, _, type_span), ...tl] => {
-        let type_loc = config.map_loc(type_span) |> conv_loc;
+    | [(name, type_, _, _type_span), ...tl] => {
         Ast_helper.(
           Exp.fun_(
             Labelled(name),
             None,
             Pat.constraint_(
-              Pat.var({txt: "_" ++ name, loc: type_loc}),
+              Pat.var({txt: "_" ++ name, loc: Location.none}),
               Typ.variant(
                 [
                   {
@@ -888,12 +888,12 @@ let generate_fragment_implementation =
                             Output_bucklescript_parser.type_name_to_words(
                               type_,
                             ),
-                          loc: type_loc,
+                          loc: Location.none,
                         },
                         true,
                         [],
                       ),
-                    prf_loc: type_loc,
+                    prf_loc: Location.none,
                     prf_attributes: [],
                   },
                 ],
