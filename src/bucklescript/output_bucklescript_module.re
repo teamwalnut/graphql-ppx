@@ -870,12 +870,10 @@ let generate_fragment_implementation =
   let rec make_labeled_fun = body =>
     fun
     | [] => body
-    | [(name, type_, span, type_span), ...tl] => {
-        let loc = config.map_loc(span) |> conv_loc;
+    | [(name, type_, _, type_span), ...tl] => {
         let type_loc = config.map_loc(type_span) |> conv_loc;
         Ast_helper.(
           Exp.fun_(
-            ~loc,
             Labelled(name),
             None,
             Pat.constraint_(
