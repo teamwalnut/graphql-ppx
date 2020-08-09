@@ -13,12 +13,6 @@ function parse(value) {
         };
 }
 
-function verifyArgsAndParse(_Dog, value) {
-  return {
-          name: value.name
-        };
-}
-
 function serialize(value) {
   var value$1 = value.name;
   return {
@@ -26,23 +20,23 @@ function serialize(value) {
         };
 }
 
+function verifyArgsAndParse(_Dog, value) {
+  return {
+          name: value.name
+        };
+}
+
 function verifyName(param) {
   
 }
-
-var Z__INTERNAL = {
-  graphql: 0,
-  graphql_module: 0
-};
 
 var Dog = {
   Raw: Raw,
   query: query,
   parse: parse,
-  verifyArgsAndParse: verifyArgsAndParse,
   serialize: serialize,
-  verifyName: verifyName,
-  Z__INTERNAL: Z__INTERNAL
+  verifyArgsAndParse: verifyArgsAndParse,
+  verifyName: verifyName
 };
 
 var Raw$1 = {};
@@ -89,12 +83,6 @@ function makeDefaultVariables(param) {
         };
 }
 
-var Z__INTERNAL$1 = {
-  _graphql_orderBy_134: 0,
-  _graphql_block_157: 0,
-  graphql_module: 0
-};
-
 var HasuraRepro = {
   Raw: Raw$1,
   query: query$1,
@@ -102,8 +90,7 @@ var HasuraRepro = {
   serialize: serialize$1,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeDefaultVariables: makeDefaultVariables
 };
 
 exports.Dog = Dog;

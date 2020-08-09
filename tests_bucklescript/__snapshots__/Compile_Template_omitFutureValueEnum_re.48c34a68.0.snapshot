@@ -85,10 +85,6 @@ function makeDefaultVariables(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var Normal = {
   Raw: Raw,
   query: query,
@@ -96,8 +92,7 @@ var Normal = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables
 };
 
 var Raw$1 = {};
@@ -180,10 +175,6 @@ function makeDefaultVariables$1(param) {
   
 }
 
-var Z__INTERNAL$1 = {
-  graphql_module: 0
-};
-
 var ByConfig = {
   Raw: Raw$1,
   query: query$1,
@@ -191,8 +182,7 @@ var ByConfig = {
   serialize: serialize$1,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
-  makeDefaultVariables: makeDefaultVariables$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeDefaultVariables: makeDefaultVariables$1
 };
 
 var Raw$2 = {};
@@ -275,10 +265,6 @@ function makeDefaultVariables$2(param) {
   
 }
 
-var Z__INTERNAL$2 = {
-  graphql_module: 0
-};
-
 var ByDirective = {
   Raw: Raw$2,
   query: query$2,
@@ -286,8 +272,7 @@ var ByDirective = {
   serialize: serialize$2,
   serializeVariables: serializeVariables$2,
   makeVariables: makeVariables$2,
-  makeDefaultVariables: makeDefaultVariables$2,
-  Z__INTERNAL: Z__INTERNAL$2
+  makeDefaultVariables: makeDefaultVariables$2
 };
 
 exports.Normal = Normal;

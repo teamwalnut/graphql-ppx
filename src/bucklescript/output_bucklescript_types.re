@@ -93,7 +93,7 @@ let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
     raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
   | Res_poly_enum(_) => base_type(~loc=?atLoc, generate_type_name(path));
 
-let wrap_type_declaration = (~manifest=?, inner, _loc, path) => {
+let wrap_type_declaration = (~loc as _=?, ~manifest=?, inner, path) => {
   Ast_helper.Type.mk(
     ~kind=inner,
     ~manifest?,
@@ -101,7 +101,7 @@ let wrap_type_declaration = (~manifest=?, inner, _loc, path) => {
   );
 };
 
-let generate_opaque = (path, _loc) => {
+let generate_opaque = (path, _loc: option(ast_location)) => {
   Ast_helper.Type.mk({loc: Location.none, txt: generate_type_name(path)});
 };
 
@@ -130,11 +130,25 @@ let already_has__typename = fields =>
   );
 
 let variant_interface_type =
-    (~name as interface_name=?, ~config, ~fragments, ~path, ~loc, ~raw) => {
+    (
+      ~name as interface_name=?,
+      ~config,
+      ~fragments,
+      ~path,
+      ~loc: option(ast_location),
+      ~raw,
+    ) => {
   let map_case_ty = ((name, res)) => {
     prf_desc:
       Rtag(
-        {txt: name, loc: conv_loc(loc)},
+        {
+          txt: name,
+          loc:
+            switch (loc) {
+            | Some(loc) => conv_loc(loc)
+            | None => Location.none
+            },
+        },
         false,
         [
           generate_type(
@@ -149,18 +163,33 @@ let variant_interface_type =
           ),
         ],
       ),
-    prf_loc: conv_loc(loc),
+    prf_loc:
+      switch (loc) {
+      | Some(loc) => conv_loc(loc)
+      | None => Location.none
+      },
     prf_attributes: [],
   };
 
   let fallback_case_ty = {
     prf_desc:
       Rtag(
-        {txt: "UnspecifiedFragment", loc: conv_loc(loc)},
+        {
+          txt: "UnspecifiedFragment",
+          loc:
+            switch (loc) {
+            | Some(loc) => conv_loc(loc)
+            | None => Location.none
+            },
+        },
         false,
         [base_type_name("string")],
       ),
-    prf_loc: conv_loc(loc),
+    prf_loc:
+      switch (loc) {
+      | Some(loc) => conv_loc(loc)
+      | None => Location.none
+      },
     prf_attributes: [],
   };
 
@@ -172,7 +201,15 @@ let variant_interface_type =
 };
 
 let generate_variant_interface =
-    (~name, ~config, ~fragments, ~path, ~loc, ~raw) =>
+    (
+      ~emit_locations,
+      ~name,
+      ~config,
+      ~fragments,
+      ~path,
+      ~loc: ast_location,
+      ~raw,
+    ) =>
   wrap_type_declaration(
     Ptype_abstract,
     ~manifest=?
@@ -184,22 +221,64 @@ let generate_variant_interface =
               ~config,
               ~fragments,
               ~path,
-              ~loc,
+              ~loc=emit_locations ? Some(loc) : None,
               ~raw,
             ),
           ),
-    loc,
+    ~loc=?emit_locations ? Some(loc) : None,
     [name, ...path],
   );
+
+/*
+ * for given query:
+ *
+ * {
+ *   user {
+ *     id
+ *     name
+ *         loc_key
+ *     |<---->|
+ *     friends: {
+ *       id
+ *     }
+ *     -----------
+ *     With
+ *       friends: {
+ *         id
+ *       }
+ *     as the whole loc. They cannot be overlapping, so the most we can use for
+ *     this is until the bracket
+ *     -----------
+ *   }
+ * }
+ *
+ * the generated type is:
+ *
+ * type t = {
+ *   user: option(t_user)
+ * } and
+ * t_user = {
+ *   id: string
+ *   friends: t_user_friends
+ * } and
+ * t_user_friends = {
+ *   id: string
+ * }
+ *
+ * When we add locations to the types, the types are not nested, so we cannot
+ * add nested locations. The best way to model it is to just type the keys, and
+ * set the location of the query to the module
+ */
 
 let generate_record_type =
     (
       ~config,
       ~obj_path,
       ~raw,
-      ~loc,
+      ~loc: ast_location,
       ~is_variant,
       ~interface_fragments,
+      ~emit_locations,
       fields,
     ) => {
   let record_fields =
@@ -223,27 +302,24 @@ let generate_record_type =
                            }
                          ),
                        ),
-                     loc: conv_loc(loc_key),
+                     // this needs to be emitted both in the implementation and
+                     // signature. Otherwise errors or hover types are not
+                     // correct
+                     loc: !raw ? conv_loc(loc_key) : Location.none,
                    },
                    [],
                  ),
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_, loc_key, arguments}) => {
-               // Add field to internal module
-               if (!raw) {
-                 Output_bucklescript_docstrings.for_field_arguments(
-                   config,
-                   name
-                   |> Schema.lookup_field(Schema.query_type(config.schema)),
-                   arguments,
-                 );
-               };
+           | Field({path: [name, ...path], type_, loc_key, loc: _loc_field}) => {
                let valid_name = to_valid_ident(name);
                [
                  Ast_helper.(
                    Type.field(
+                     ~loc=?{
+                       emit_locations ? None : Some(conv_loc(loc_key));
+                     },
                      ~attrs={
                        name == valid_name
                          ? []
@@ -254,9 +330,14 @@ let generate_record_type =
                            ),
                          ];
                      },
-                     {Location.txt: valid_name, loc: Location.none},
+                     {
+                       Location.txt: valid_name,
+                       loc:
+                         emit_locations ? Location.none : conv_loc(loc_key),
+                     },
                      generate_type(
-                       ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                       ~atLoc=?
+                         emit_locations ? None : Some(conv_loc(loc_key)),
                        ~config,
                        ~path=[name, ...path],
                        ~raw,
@@ -307,13 +388,20 @@ let generate_record_type =
     };
 
   raw && raw_opaque_object(interface_fragments, fields)
-    ? generate_opaque(obj_path, loc)
-    : wrap_type_declaration(Ptype_record(record_fields), loc, obj_path);
+    ? generate_opaque(obj_path, emit_locations ? Some(loc) : None)
+    : wrap_type_declaration(
+        Ptype_record(record_fields),
+        ~loc={
+          emit_locations ? Some(loc) : None;
+        },
+        obj_path,
+      );
 };
 
-let generate_variant_selection = (config, fields, path, loc, raw) =>
+let generate_variant_selection =
+    (~emit_locations, config, fields, path, loc: ast_location, raw) =>
   if (raw) {
-    generate_opaque(path, loc);
+    generate_opaque(path, emit_locations ? Some(loc) : None);
   } else {
     wrap_type_declaration(
       Ptype_abstract,
@@ -332,10 +420,16 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
                        false,
                        [
                          generate_type(
-                           ~atLoc=
-                             conv_loc(
-                               config.Generator_utils.map_loc(name.span),
-                             ),
+                           ~atLoc=?
+                             emit_locations
+                               ? Some(
+                                   conv_loc(
+                                     config.Generator_utils.map_loc(
+                                       name.span,
+                                     ),
+                                   ),
+                                 )
+                               : None,
                            ~config,
                            ~path=[name.item, ...path],
                            ~raw,
@@ -351,22 +445,23 @@ let generate_variant_selection = (config, fields, path, loc, raw) =>
             None,
           )
         ),
-      loc,
+      ~loc=?emit_locations ? Some(loc) : None,
       path,
     );
   };
 
 let generate_variant_union =
     (
+      ~emit_locations,
       config,
       fields: list((Result_structure.name, Result_structure.t)),
       omit_future_value,
       path,
-      loc,
+      loc: ast_location,
       raw,
     ) =>
   if (raw) {
-    generate_opaque(path, loc);
+    generate_opaque(path, emit_locations ? Some(loc) : None);
   } else {
     let fallback_case_ty =
       omit_future_value
@@ -375,11 +470,14 @@ let generate_variant_union =
           {
             prf_desc:
               Rtag(
-                {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                {
+                  txt: "FutureAddedValue",
+                  loc: emit_locations ? conv_loc(loc) : Location.none,
+                },
                 false,
                 [base_type("Js.Json.t")],
               ),
-            prf_loc: conv_loc(loc),
+            prf_loc: emit_locations ? conv_loc(loc) : Location.none,
             prf_attributes: [],
           },
         ];
@@ -390,12 +488,21 @@ let generate_variant_union =
            {
              prf_desc:
                Rtag(
-                 {txt: name.item, loc: conv_loc(loc)},
+                 {
+                   txt: name.item,
+                   loc: emit_locations ? conv_loc(loc) : Location.none,
+                 },
                  false,
                  [
                    generate_type(
-                     ~atLoc=
-                       conv_loc(config.Generator_utils.map_loc(name.span)),
+                     ~atLoc=?
+                       emit_locations
+                         ? Some(
+                             conv_loc(
+                               config.Generator_utils.map_loc(name.span),
+                             ),
+                           )
+                         : None,
                      ~config,
                      ~path=[name.item, ...path],
                      ~raw,
@@ -403,7 +510,7 @@ let generate_variant_union =
                    ),
                  ],
                ),
-             prf_loc: conv_loc(loc),
+             prf_loc: emit_locations ? conv_loc(loc) : Location.none,
              prf_attributes: [],
            }
          );
@@ -418,19 +525,28 @@ let generate_variant_union =
             None,
           )
         ),
-      loc,
+      ~loc=?emit_locations ? Some(conv_loc(loc)) : None,
       path,
     );
   };
 
-let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
+let generate_enum =
+    (
+      ~emit_locations,
+      _config,
+      fields,
+      path,
+      ~loc: ast_location,
+      raw,
+      omit_future_value,
+    ) =>
   wrap_type_declaration(
     Ptype_abstract,
     ~manifest=
       if (raw) {
         base_type("string");
       } else {
-        [@metaloc conv_loc(loc)]
+        [@metaloc emit_locations ? conv_loc(loc) : Location.none]
         Ast_helper.(
           Typ.variant(
             List.append(
@@ -440,11 +556,14 @@ let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
                   {
                     prf_desc:
                       Rtag(
-                        {txt: "FutureAddedValue", loc: conv_loc(loc)},
+                        {
+                          txt: "FutureAddedValue",
+                          loc: emit_locations ? conv_loc(loc) : Location.none,
+                        },
                         false,
                         [base_type("string")],
                       ),
-                    prf_loc: conv_loc(loc),
+                    prf_loc: emit_locations ? conv_loc(loc) : Location.none,
                     prf_attributes: [],
                   },
                 ],
@@ -453,11 +572,15 @@ let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
                    {
                      prf_desc:
                        Rtag(
-                         {txt: to_valid_ident(field), loc: conv_loc(loc)},
+                         {
+                           txt: to_valid_ident(field),
+                           loc:
+                             emit_locations ? conv_loc(loc) : Location.none,
+                         },
                          true,
                          [],
                        ),
-                     prf_loc: conv_loc(loc),
+                     prf_loc: emit_locations ? conv_loc(loc) : Location.none,
                      prf_attributes: [],
                    }
                  ),
@@ -467,12 +590,21 @@ let generate_enum = (_config, fields, path, loc, raw, omit_future_value) =>
           )
         );
       },
-    loc,
+    ~loc,
     path,
   );
 
 let generate_object_type =
-    (config, fields, obj_path, raw, loc, is_variant, interface_fragments) => {
+    (
+      ~emit_locations,
+      config,
+      fields,
+      obj_path,
+      raw,
+      loc: ast_location,
+      is_variant,
+      interface_fragments,
+    ) => {
   let object_fields =
     fields
     |> List.fold_left(
@@ -496,7 +628,10 @@ let generate_object_type =
                                }
                              ),
                            ),
-                         loc: conv_loc(loc_key),
+                         // this needs to be emitted both in the implementation and
+                         // signature. Otherwise errors or hover types are not
+                         // correct
+                         loc: !raw ? conv_loc(loc_key) : Location.none,
                        },
                        [],
                      ),
@@ -513,7 +648,8 @@ let generate_object_type =
                    Otag(
                      {txt: to_valid_ident(name), loc: Location.none},
                      generate_type(
-                       ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
+                       ~atLoc=?
+                         emit_locations ? None : Some(conv_loc(loc_key)),
                        ~config,
                        ~path=[name, ...path],
                        ~raw,
@@ -575,7 +711,7 @@ let generate_object_type =
     };
 
   raw && raw_opaque_object(interface_fragments, fields)
-    ? generate_opaque(obj_path, loc)
+    ? generate_opaque(obj_path, emit_locations ? Some(loc) : None)
     : wrap_type_declaration(
         ~manifest=
           Ast_helper.(
@@ -585,7 +721,9 @@ let generate_object_type =
             )
           ),
         Ptype_abstract,
-        loc,
+        ~loc=?{
+          emit_locations ? Some(loc) : None;
+        },
         obj_path,
       );
 };
@@ -596,6 +734,7 @@ let generate_graphql_object =
       ~obj_path,
       ~force_record,
       ~raw,
+      ~emit_locations,
       ~loc,
       ~is_variant,
       ~type_name,
@@ -607,13 +746,16 @@ let generate_graphql_object =
     wrap_type_declaration(
       ~manifest=base_type(type_name),
       Ptype_abstract,
-      loc,
+      ~loc=?{
+        emit_locations ? Some(loc) : None;
+      },
       obj_path,
     )
 
   | None =>
     config.records || force_record
       ? generate_record_type(
+          ~emit_locations,
           ~config,
           ~obj_path,
           ~raw,
@@ -623,6 +765,7 @@ let generate_graphql_object =
           fields,
         )
       : generate_object_type(
+          ~emit_locations,
           config,
           fields,
           obj_path,
@@ -634,67 +777,122 @@ let generate_graphql_object =
   };
 };
 
-// generate all the types necessary types that we later refer to by name.
 let generate_types =
     (
-      config: Generator_utils.output_config,
+      ~config: Generator_utils.output_config,
+      ~raw,
+      ~emit_locations,
+      ~type_name,
+      ~fragment_name,
       res,
-      raw,
-      type_name,
-      fragment_name,
     ) => {
-  let types =
-    extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
-    |> List.map(
-         fun
-         | Object({
-             fields,
-             path: obj_path,
-             force_record,
-             loc,
-             variant_parent,
-             interface_fragments,
-           }) =>
-           generate_graphql_object(
-             ~config,
-             ~obj_path,
-             ~force_record,
-             ~raw,
-             ~loc,
-             ~is_variant=variant_parent,
-             ~type_name,
-             ~interface_fragments,
-             fields,
-           )
-         | VariantSelection({loc, path, fields}) =>
-           generate_variant_selection(config, fields, path, loc, raw)
-         | VariantUnion({loc, path, fields, omit_future_value}) =>
-           generate_variant_union(
-             config,
-             fields,
-             omit_future_value,
-             path,
-             loc,
-             raw,
-           )
-         | VariantInterface({name, loc, path, fragments}) =>
-           generate_variant_interface(
-             ~name,
-             ~config,
-             ~fragments,
-             ~path,
-             ~loc,
-             ~raw,
-           )
-         | Enum({loc, path, fields, omit_future_value}) =>
-           generate_enum(config, fields, path, loc, raw, omit_future_value),
-       )
-    |> List.rev;
+  extract(~fragment_def=Option.is_some(fragment_name), ~path=[], ~raw, res)
+  |> List.map(
+       fun
+       | Object({
+           fields,
+           path: obj_path,
+           force_record,
+           loc,
+           variant_parent,
+           interface_fragments,
+         }) =>
+         generate_graphql_object(
+           ~config,
+           ~obj_path,
+           ~force_record,
+           ~raw,
+           ~loc,
+           ~emit_locations,
+           ~is_variant=variant_parent,
+           ~type_name,
+           ~interface_fragments,
+           fields,
+         )
+       | VariantSelection({loc, path, fields}) =>
+         generate_variant_selection(
+           ~emit_locations,
+           config,
+           fields,
+           path,
+           loc,
+           raw,
+         )
+       | VariantUnion({loc, path, fields, omit_future_value}) =>
+         generate_variant_union(
+           ~emit_locations,
+           config,
+           fields,
+           omit_future_value,
+           path,
+           loc,
+           raw,
+         )
+       | VariantInterface({name, loc, path, fragments}) =>
+         generate_variant_interface(
+           ~emit_locations,
+           ~name,
+           ~config,
+           ~fragments,
+           ~path,
+           ~loc,
+           ~raw,
+         )
+       | Enum({loc, path, fields, omit_future_value}) =>
+         generate_enum(
+           ~emit_locations,
+           config,
+           fields,
+           path,
+           ~loc,
+           raw,
+           omit_future_value,
+         ),
+     )
+  |> List.rev;
+};
 
+let make_fragment_type =
+    (config, raw, type_name, fragment_name, fragment_name_loc) => {
+  Ast_helper.(
+    Type.mk(
+      ~manifest=
+        Typ.constr(
+          raw
+            ? Location.mknoloc(Longident.Lident("t"))
+            : Location.mkloc(
+                switch (type_name) {
+                | Some(type_name) => Longident.parse(type_name)
+                | None => Longident.Lident("t")
+                },
+                switch (fragment_name_loc) {
+                | Some(fragment_name_loc) =>
+                  conv_loc(config.Generator_utils.map_loc(fragment_name_loc))
+                | None => Location.none
+                },
+              ),
+          [],
+        ),
+      Location.mknoloc("t_" ++ fragment_name),
+    )
+  );
+};
+// generate all the types necessary types that we later refer to by name.
+let generate_type_structure_items =
+    (config, res, raw, type_name, fragment_name) => {
   let types =
-    types |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
+    generate_types(
+      ~config,
+      ~emit_locations=false,
+      ~raw,
+      ~type_name,
+      ~fragment_name,
+      res,
+    )
+    |> List.map(type_ => Ast_helper.Str.type_(Recursive, [type_]));
+
   switch (fragment_name) {
-  | Some((fragment_name, fragment_name_loc)) =>
+  | Some((fragment_name, _fragment_name_loc)) =>
     List.append(
       types,
       [
@@ -702,21 +900,50 @@ let generate_types =
           Str.type_(
             Nonrecursive,
             [
-              Type.mk(
-                ~manifest=
-                  Typ.constr(
-                    raw
-                      ? Location.mknoloc(Longident.Lident("t"))
-                      : Location.mkloc(
-                          switch (type_name) {
-                          | Some(type_name) => Longident.parse(type_name)
-                          | None => Longident.Lident("t")
-                          },
-                          conv_loc(config.map_loc(fragment_name_loc)),
-                        ),
-                    [],
-                  ),
-                Location.mknoloc("t_" ++ fragment_name),
+              make_fragment_type(config, raw, type_name, fragment_name, None),
+            ],
+          )
+        ),
+      ],
+    )
+  | None => types
+  };
+};
+let generate_type_signature_items =
+    (
+      config: Generator_utils.output_config,
+      res,
+      raw,
+      type_name,
+      fragment_name,
+    ) => {
+  let emit_locations = raw ? false : true;
+  let types =
+    generate_types(
+      ~config,
+      ~emit_locations,
+      ~raw,
+      ~type_name,
+      ~fragment_name,
+      res,
+    )
+    |> List.map(type_ => Ast_helper.Sig.type_(Recursive, [type_]));
+
+  switch (fragment_name) {
+  | Some((fragment_name, fragment_name_loc)) =>
+    List.append(
+      types,
+      [
+        Ast_helper.(
+          Sig.type_(
+            Nonrecursive,
+            [
+              make_fragment_type(
+                config,
+                raw,
+                type_name,
+                fragment_name,
+                emit_locations ? Some(fragment_name_loc) : None,
               ),
             ],
           )
@@ -727,7 +954,7 @@ let generate_types =
   };
 };
 
-let rec generate_arg_type = (raw, originalLoc) => {
+let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
   let loc = raw ? None : Some(conv_loc(originalLoc));
   fun
   | Type(Scalar({sm_name: "ID"}))
@@ -789,13 +1016,15 @@ let rec generate_arg_type = (raw, originalLoc) => {
       ),
     )
   | Nullable(inner) =>
-    base_type(
-      ~loc?,
-      ~inner=[
-        generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
-      ],
-      raw ? "Js.Nullable.t" : "option",
-    )
+    nulls
+      ? base_type(
+          ~loc?,
+          ~inner=[
+            generate_arg_type(raw, conv_loc_from_ast(Location.none), inner),
+          ],
+          raw ? "Js.Nullable.t" : "option",
+        )
+      : generate_arg_type(raw, conv_loc_from_ast(Location.none), inner)
   | List(inner) =>
     base_type(
       ~loc?,
@@ -844,7 +1073,10 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
                            ),
                          ];
                        },
-                     {Location.txt: valid_name, loc: Location.none},
+                     {
+                       Location.txt: valid_name,
+                       loc: raw ? Location.none : conv_loc(loc),
+                     },
                      generate_arg_type(
                        raw,
                        {
@@ -923,31 +1155,8 @@ let generate_input_object =
     : generate_object_input_object(raw, input_obj_name, fields);
 };
 
-let generate_arg_types = (raw, config, variable_defs) => {
+let generate_arg_type_structure_items = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
-
-  // Add to internal module
-  if (!raw) {
-    input_objects
-    |> List.iter(
-         fun
-         | NoVariables => ()
-         | InputObject({name, fields}) => {
-             switch (name) {
-             | None =>
-               fields
-               |> List.iter(field => {
-                    Output_bucklescript_docstrings.for_input_constraint(
-                      config,
-                      field,
-                    )
-                  })
-             | Some(_) => ()
-             };
-           },
-       );
-  };
-
   [
     input_objects
     |> List.map(
@@ -958,5 +1167,19 @@ let generate_arg_types = (raw, config, variable_defs) => {
            },
        )
     |> Ast_helper.Str.type_(Recursive),
+  ];
+};
+let generate_arg_type_signature_items = (raw, config, variable_defs) => {
+  let input_objects = extract_args(config, variable_defs);
+  [
+    input_objects
+    |> List.map(
+         fun
+         | NoVariables => generate_empty_input_object()
+         | InputObject({name, fields}) => {
+             generate_input_object(raw, config, name, fields);
+           },
+       )
+    |> Ast_helper.Sig.type_(Recursive),
   ];
 };

@@ -49,7 +49,39 @@ module DateTime = {
     };
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_customFields = {
+      currentTime: Js.Json.t,
+      favoriteColor: Js.Json.t,
+      futureTime: Js.Nullable.t(Js.Json.t),
+      nullableColor: Js.Nullable.t(Js.Json.t),
+    };
+    type t = {customFields: t_customFields};
+    type t_variables = unit;
+  };
+  type t_customFields = {
+    currentTime: Js.Json.t,
+    favoriteColor: Js.Json.t,
+    futureTime: option(Js.Json.t),
+    nullableColor: option(Color.t),
+  };
+  type t = {customFields: t_customFields};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_customFields = {
@@ -68,124 +100,89 @@ module MyQuery = {
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
-  /**The GraphQL query string*/
-  let query = \"query   {\\ncustomFields  {\\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\";
   type t_variables = unit;
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      customFields: {
-        let value = (value: Raw.t).customFields;
-        (
-          {
-            currentTime: {
-              let value = (value: Raw.t_customFields).currentTime;
-              value;
-            },
-            favoriteColor: {
-              let value = (value: Raw.t_customFields).favoriteColor;
-              value;
-            },
-            futureTime: {
-              let value = (value: Raw.t_customFields).futureTime;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(value)
-              | None => None
+  let query = \"query   {\\ncustomFields  {\\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        customFields: {
+          let value = (value: Raw.t).customFields;
+          (
+            {
+              currentTime: {
+                let value = (value: Raw.t_customFields).currentTime;
+                value;
+              },
+              favoriteColor: {
+                let value = (value: Raw.t_customFields).favoriteColor;
+                value;
+              },
+              futureTime: {
+                let value = (value: Raw.t_customFields).futureTime;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              nullableColor: {
+                let value = (value: Raw.t_customFields).nullableColor;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(Color.parse(value))
+                | None => None
+                };
+              },
+            }: t_customFields
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let customFields = {
+          let value = (value: t).customFields;
+          (
+            {
+              let nullableColor = {
+                let value = (value: t_customFields).nullableColor;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let value = Color.serialize(value);
+                      value;
+                    },
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and futureTime = {
+                let value = (value: t_customFields).futureTime;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and favoriteColor = {
+                let value = (value: t_customFields).favoriteColor;
+                value;
+              }
+              and currentTime = {
+                let value = (value: t_customFields).currentTime;
+                value;
               };
-            },
-            nullableColor: {
-              let value = (value: Raw.t_customFields).nullableColor;
-              switch (Js.toOption(value)) {
-              | Some(value) => Some(Color.parse(value))
-              | None => None
-              };
-            },
-          }: t_customFields
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let customFields = {
-        let value = (value: t).customFields;
-        (
-          {
-            let nullableColor = {
-              let value = (value: t_customFields).nullableColor;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(Color.serialize(value))
-              | None => Js.Nullable.null
-              };
-            }
-            and futureTime = {
-              let value = (value: t_customFields).futureTime;
-              switch (value) {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              };
-            }
-            and favoriteColor = {
-              let value = (value: t_customFields).favoriteColor;
-              value;
-            }
-            and currentTime = {
-              let value = (value: t_customFields).currentTime;
-              value;
-            };
-            {currentTime, favoriteColor, futureTime, nullableColor};
-          }: Raw.t_customFields
-        );
-      };
-      {customFields: customFields};
-    }: Raw.t
-  );
+              {currentTime, favoriteColor, futureTime, nullableColor};
+            }: Raw.t_customFields
+          );
+        };
+        {customFields: customFields};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
-  module Z__INTERNAL = {
-    type root = t;
-    type nonrec graphql_module;
-    /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module MyQuery {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-    let graphql_module: graphql_module = Obj.magic(0);
-  };
 };
 

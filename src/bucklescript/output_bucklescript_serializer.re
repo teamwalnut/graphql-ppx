@@ -173,54 +173,91 @@ let filter_map = f => {
   aux([]);
 };
 
+let generate_serialize_variable_signatures =
+    (arg_type_defs: list(arg_type_def)) =>
+  switch (arg_type_defs) {
+  | [NoVariables] => [%sig: let serializeVariables: unit => unit]
+  | arg_type_defs =>
+    Ast_helper.(
+      arg_type_defs
+      |> filter_map(
+           fun
+           | InputObject({name, loc}) => Some((name, loc))
+           | NoVariables => None,
+         )
+      |> List.map(((name, loc)) => {
+           let type_name =
+             switch (name) {
+             | None => "t_variables"
+             | Some(input_object_name) => "t_variables_" ++ input_object_name
+             };
+           Sig.value(
+             Val.mk(
+               {
+                 loc: conv_loc(loc),
+                 txt:
+                   switch (name) {
+                   | None => "serializeVariables"
+                   | Some(input_object_name) =>
+                     "serializeInputObject" ++ input_object_name
+                   },
+               },
+               Typ.arrow(
+                 ~loc=conv_loc(loc),
+                 Nolabel,
+                 base_type_name(type_name),
+                 base_type_name("Raw." ++ type_name),
+               ),
+             ),
+           );
+         })
+    )
+  };
 let generate_serialize_variables =
     (config, arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => Some([%stri let serializeVariables = () => ()])
+  | [NoVariables] => [%stri let serializeVariables = () => ()]
   | arg_type_defs =>
-    Some(
-      Ast_helper.(
-        Str.value(
-          is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
-          arg_type_defs
-          |> filter_map(
-               fun
-               | InputObject({name, fields, loc}) =>
-                 Some((name, fields, loc))
-               | NoVariables => None,
-             )
-          |> List.map(((name, fields, loc)) => {
-               let type_name =
-                 switch (name) {
-                 | None => "t_variables"
-                 | Some(input_object_name) =>
-                   "t_variables_" ++ input_object_name
-                 };
-               [@metaloc conv_loc(loc)]
-               Vb.mk(
-                 Pat.constraint_(
+    Ast_helper.(
+      Str.value(
+        is_recursive(arg_type_defs) ? Recursive : Nonrecursive,
+        arg_type_defs
+        |> filter_map(
+             fun
+             | InputObject({name, fields, loc}) => Some((name, fields, loc))
+             | NoVariables => None,
+           )
+        |> List.map(((name, fields, loc)) => {
+             let type_name =
+               switch (name) {
+               | None => "t_variables"
+               | Some(input_object_name) =>
+                 "t_variables_" ++ input_object_name
+               };
+             [@metaloc conv_loc(loc)]
+             Vb.mk(
+               Pat.constraint_(
+                 ~loc=conv_loc(loc),
+                 Pat.var({
+                   loc: conv_loc(loc),
+                   txt:
+                     switch (name) {
+                     | None => "serializeVariables"
+                     | Some(input_object_name) =>
+                       "serializeInputObject" ++ input_object_name
+                     },
+                 }),
+                 Typ.arrow(
                    ~loc=conv_loc(loc),
-                   Pat.var({
-                     loc: conv_loc(loc),
-                     txt:
-                       switch (name) {
-                       | None => "serializeVariables"
-                       | Some(input_object_name) =>
-                         "serializeInputObject" ++ input_object_name
-                       },
-                   }),
-                   Typ.arrow(
-                     ~loc=conv_loc(loc),
-                     Nolabel,
-                     base_type_name(type_name),
-                     base_type_name("Raw." ++ type_name),
-                   ),
+                   Nolabel,
+                   base_type_name(type_name),
+                   base_type_name("Raw." ++ type_name),
                  ),
-                 serialize_fun(config, loc, fields, type_name),
-               );
-             }),
-        )
-      ),
+               ),
+               serialize_fun(config, loc, fields, type_name),
+             );
+           }),
+      )
     )
   };
 
@@ -339,6 +376,70 @@ let generate_variable_constructors =
   };
 };
 
+let generate_variable_constructor_signatures =
+    (arg_type_defs: list(arg_type_def)) => {
+  switch (arg_type_defs) {
+  | [NoVariables] => []
+  | _ =>
+    Ast_helper.(
+      arg_type_defs
+      |> filter_map(
+           fun
+           | InputObject({name, fields, loc}) => Some((name, fields, loc))
+           | NoVariables => None,
+         )
+      |> List.map(((name, fields, loc)) => {
+           let rec make_labeled_fun = final_type => (
+             fun
+             | [] => final_type
+             | [InputField({name, loc, type_}), ...tl] => {
+                 Typ.arrow(
+                   switch (type_) {
+                   | List(_)
+                   | Type(_) => Labelled(to_valid_ident(name))
+                   | _ => Optional(to_valid_ident(name))
+                   },
+                   generate_arg_type(~nulls=false, false, loc, type_),
+                   make_labeled_fun(final_type, tl),
+                 );
+               }
+           );
+
+           let final_type =
+             Typ.arrow(
+               Nolabel,
+               base_type_name("unit"),
+               base_type_name(
+                 switch (name) {
+                 | None => "t_variables"
+                 | Some(input_type_name) => "t_variables_" ++ input_type_name
+                 },
+               ),
+             );
+
+           (name, loc, make_labeled_fun(final_type, fields));
+         })
+      |> List.map(((name, loc, type_)) => {
+           Sig.value(
+             Val.mk(
+               {
+                 loc: conv_loc(loc),
+                 txt:
+                   switch (name) {
+                   | None => "makeVariables"
+                   | Some("make") => "make"
+                   | Some(input_object_name) =>
+                     "makeInputObject" ++ input_object_name
+                   },
+               },
+               type_,
+             ),
+           )
+         })
+    )
+  };
+};
+
 let get_field = (is_object, key, existing_record, path) => {
   is_object
     ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
@@ -411,10 +512,9 @@ and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
 and generate_custom_encoder = (config, loc, ident, inner, path, definition) =>
   [@metaloc loc]
   {
-    %expr
-    [%e ident_from_string(ident ++ ".serialize")](
-      [%e generate_serializer(config, path, definition, None, inner)],
-    );
+    let%expr value = [%e ident_from_string(ident ++ ".serialize")](value);
+    %e
+    generate_serializer(config, path, definition, None, inner);
   }
 and generate_object_encoder =
     (

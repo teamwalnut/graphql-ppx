@@ -257,8 +257,9 @@ let extract_fragment_in_query_from_config = config_fields => {
 let extract_records_from_config = extract_bool_from_config("records");
 let extract_objects_from_config = extract_bool_from_config("objects");
 let extract_inline_from_config = extract_bool_from_config("inline");
+let extract_apollo_mode_from_config = extract_bool_from_config("apolloMode");
 let extract_future_added_value_from_config =
-  extract_bool_from_config("future_added_value");
+  extract_bool_from_config("futureAddedValue");
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
 
@@ -275,6 +276,7 @@ type query_config = {
   future_added_value: option(bool),
   extend: option(string),
   fragment_in_query: option(Ppx_config.fragment_in_query),
+  apollo_mode: option(bool),
 };
 
 let get_query_config = fields => {
@@ -292,6 +294,7 @@ let get_query_config = fields => {
     future_added_value: extract_future_added_value_from_config(fields),
     extend: extract_extend_from_config(fields),
     fragment_in_query: extract_fragment_in_query_from_config(fields),
+    apollo_mode: extract_apollo_mode_from_config(fields),
   };
 };
 
@@ -308,6 +311,7 @@ let empty_query_config = {
   future_added_value: None,
   extend: None,
   fragment_in_query: None,
+  apollo_mode: None,
 };
 
 let get_with_default = (value, default_value) => {
@@ -359,8 +363,16 @@ let get_template_tag = query_config => {
   };
 };
 
-let rewrite_query =
-    (~query_config: query_config, ~loc, ~delim, ~query, ~module_name, ()) => {
+let rewrite_definition =
+    (
+      ~query_config: query_config,
+      ~loc,
+      ~delim,
+      ~query,
+      ~module_name,
+      ~module_type,
+      (),
+    ) => {
   open Ast_408;
 
   let lexer = Graphql_lexer.make(query);
@@ -395,13 +407,17 @@ let rewrite_query =
       let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
       let document =
         (
-          if (Ppx_config.apollo_mode()) {
+          if (switch (query_config.apollo_mode) {
+              | None => Ppx_config.apollo_mode()
+              | Some(apollo_mode) => apollo_mode
+              }) {
             document |> Ast_transforms.add_typename_to_selection_set(schema);
           } else {
             document;
           }
         )
         |> Ast_transforms.remove_typename_from_union(schema);
+
       let template_tag = get_template_tag(query_config);
 
       let config = {
@@ -461,14 +477,43 @@ let rewrite_query =
            });
 
         Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(config, module_name);
+        |> Output_bucklescript_module.generate_modules(
+             config,
+             module_name,
+             module_type,
+           );
       };
     };
   };
 };
 
+let filter_map = f => {
+  let rec aux = accu =>
+    fun
+    | [] => List.rev(accu)
+    | [x, ...l] =>
+      switch (f(x)) {
+      | None => aux(accu, l)
+      | Some(v) => aux([v, ...accu], l)
+      };
+
+  aux([]);
+};
+
 // Default configuration
 let () = Bucklescript_config.read_config();
+
+let get_module_bindings = structure => {
+  Ast_408.(
+    structure
+    |> filter_map(
+         fun
+         | {Parsetree.pstr_desc: Pstr_module(module_binding)} =>
+           Some(module_binding)
+         | _ => None,
+       )
+  );
+};
 
 let mapper = (_config, _cookies) => {
   Ast_408.(
@@ -488,6 +533,26 @@ let mapper = (_config, _cookies) => {
                            pmb_expr: {
                              pmod_desc:
                                Pmod_extension(({txt: "graphql", loc}, pstr)),
+                           },
+                         }),
+                     } as item
+                   | {
+                       pstr_desc:
+                         Pstr_module({
+                           pmb_name: {txt: _},
+                           pmb_expr: {
+                             pmod_desc:
+                               Pmod_constraint(
+                                 {
+                                   pmod_desc:
+                                     Pmod_extension((
+                                       {txt: "graphql", loc},
+                                       pstr,
+                                     )),
+                                   _,
+                                 },
+                                 _,
+                               ),
                            },
                          }),
                      } as item
@@ -525,10 +590,20 @@ let mapper = (_config, _cookies) => {
                            Some(name)
                          | _ => None
                          };
-                       Output_bucklescript_docstrings.for_module_information(
-                         loc,
-                         module_name,
-                       );
+                       let module_type =
+                         switch (item) {
+                         | {
+                             pstr_desc:
+                               Pstr_module({
+                                 pmb_expr: {
+                                   pmod_desc: Pmod_constraint(_, module_type),
+                                 },
+                                 _,
+                               }),
+                           } =>
+                           Some(module_type)
+                         | _ => None
+                         };
                        switch (pstr) {
                        | PStr([
                            {
@@ -556,12 +631,13 @@ let mapper = (_config, _cookies) => {
                            },
                          ]) =>
                          List.append(
-                           rewrite_query(
+                           rewrite_definition(
                              ~query_config=get_query_config(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
                              ~module_name,
+                             ~module_type,
                              (),
                            )
                            |> List.rev,
@@ -585,12 +661,13 @@ let mapper = (_config, _cookies) => {
                            },
                          ]) =>
                          List.append(
-                           rewrite_query(
+                           rewrite_definition(
                              ~query_config=empty_query_config,
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
                              ~module_name,
+                             ~module_type,
                              (),
                            )
                            |> List.rev,
@@ -607,6 +684,164 @@ let mapper = (_config, _cookies) => {
                          )
                        };
                      }
+                   | {pstr_desc: Pstr_recmodule(module_bindings)} as pstr => [
+                       {
+                         ...pstr,
+                         pstr_desc:
+                           Pstr_recmodule(
+                             module_bindings
+                             |> List.fold_left(
+                                  acc =>
+                                    fun
+                                    | {
+                                        pmb_name: {txt: name},
+                                        pmb_expr:
+                                          {
+                                            pmod_desc:
+                                              Pmod_constraint(
+                                                {
+                                                  pmod_desc:
+                                                    Pmod_extension((
+                                                      {txt: "graphql", loc},
+                                                      pstr,
+                                                    )),
+                                                  _,
+                                                },
+                                                _,
+                                              ),
+                                          } as module_expr,
+                                      }
+                                    | {
+                                        pmb_name: {txt: name},
+                                        pmb_expr:
+                                          {
+                                            pmod_desc:
+                                              Pmod_extension((
+                                                {txt: "graphql", loc},
+                                                pstr,
+                                              )),
+                                          } as module_expr,
+                                      } => {
+                                        let module_name = Some(name);
+                                        let module_type =
+                                          switch (module_expr) {
+                                          | {
+                                              pmod_desc:
+                                                Pmod_constraint(
+                                                  _,
+                                                  module_type,
+                                                ),
+                                            } =>
+                                            Some(module_type)
+                                          | _ => None
+                                          };
+                                        switch (pstr) {
+                                        | PStr([
+                                            {
+                                              pstr_desc:
+                                                Pstr_eval(
+                                                  {
+                                                    pexp_loc: loc,
+                                                    pexp_desc:
+                                                      Pexp_constant(
+                                                        Pconst_string(
+                                                          query,
+                                                          delim,
+                                                        ),
+                                                      ),
+                                                    _,
+                                                  },
+                                                  _,
+                                                ),
+                                              _,
+                                            },
+                                            {
+                                              pstr_desc:
+                                                Pstr_eval(
+                                                  {
+                                                    pexp_desc:
+                                                      Pexp_record(
+                                                        fields,
+                                                        None,
+                                                      ),
+                                                    _,
+                                                  },
+                                                  _,
+                                                ),
+                                              _,
+                                            },
+                                          ]) =>
+                                          List.append(
+                                            get_module_bindings(
+                                              rewrite_definition(
+                                                ~query_config=
+                                                  get_query_config(fields),
+                                                ~loc=conv_loc_from_ast(loc),
+                                                ~delim,
+                                                ~query,
+                                                ~module_name,
+                                                ~module_type,
+                                                (),
+                                              ),
+                                            )
+                                            |> List.rev,
+                                            acc,
+                                          )
+                                        | PStr([
+                                            {
+                                              pstr_desc:
+                                                Pstr_eval(
+                                                  {
+                                                    pexp_loc: loc,
+                                                    pexp_desc:
+                                                      Pexp_constant(
+                                                        Pconst_string(
+                                                          query,
+                                                          delim,
+                                                        ),
+                                                      ),
+                                                    _,
+                                                  },
+                                                  _,
+                                                ),
+                                              _,
+                                            },
+                                          ]) =>
+                                          List.append(
+                                            get_module_bindings(
+                                              rewrite_definition(
+                                                ~query_config=empty_query_config,
+                                                ~loc=conv_loc_from_ast(loc),
+                                                ~delim,
+                                                ~query,
+                                                ~module_name,
+                                                ~module_type,
+                                                (),
+                                              ),
+                                            )
+                                            |> List.rev,
+                                            acc,
+                                          )
+                                        | _ =>
+                                          raise(
+                                            Location.Error(
+                                              Location.error(
+                                                ~loc,
+                                                "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                                              ),
+                                            ),
+                                          )
+                                        };
+                                      }
+                                    | other => [other, ...acc],
+                                  [],
+                                )
+                             |> List.rev,
+                           ),
+                       },
+                       ...acc,
+                     ]
+
                    | other => [
                        default_mapper.structure_item(mapper, other),
                        ...acc,

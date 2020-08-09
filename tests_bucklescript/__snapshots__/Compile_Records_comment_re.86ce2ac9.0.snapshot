@@ -86,13 +86,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var Z__INTERNAL = {
-  _graphql_arg_100: 0,
-  _graphql_arg_95: 0,
-  _graphql_NonrecursiveInput_49: 0,
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: \"query ($arg: NonrecursiveInput!)  {\\nnonrecursiveInput(arg: $arg)  \\n}\\n\",
@@ -103,8 +96,7 @@ var MyQuery = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  Z__INTERNAL: Z__INTERNAL
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput
 };
 
 exports.MyQuery = MyQuery;

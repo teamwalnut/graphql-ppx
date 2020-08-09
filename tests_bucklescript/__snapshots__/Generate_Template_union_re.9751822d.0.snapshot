@@ -17,7 +17,47 @@ Generate Template › union.re › output
     cookies: [],
   }
 ];
-module MyQuery = {
+module MyQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -44,144 +84,143 @@ module MyQuery = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  /**The GraphQL query string*/
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        name\\n        barkVolume\\n      }\\n      ...on Human   {\\n        name\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).name;
-                      value;
-                    },
-                    barkVolume: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                      value;
-                    },
-                  }: t_dogOrHuman_Dog
-                );
-              },
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \"Human\" =>
+              `Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \"Dog\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
             )
-          | \"Human\" =>
-            `Human(
-              {
-                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Human).name;
-                      value;
-                    },
-                  }: t_dogOrHuman_Human
-                );
-              },
+          | `Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  };
+                  {__typename: \"Human\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
             )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_dogOrHuman
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let barkVolume = {
-                  let value = (value: t_dogOrHuman_Dog).barkVolume;
-                  value;
-                }
-                and name = {
-                  let value = (value: t_dogOrHuman_Dog).name;
-                  value;
-                };
-                {__typename: \"Dog\", name, barkVolume};
-              }: Raw.t_dogOrHuman_Dog,
-            ): Raw.t_dogOrHuman
-          )
-        | `Human(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = (value: t_dogOrHuman_Human).name;
-                  value;
-                };
-                {__typename: \"Human\", name};
-              }: Raw.t_dogOrHuman_Human,
-            ): Raw.t_dogOrHuman
-          )
-        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
         };
-      };
-      {dogOrHuman: dogOrHuman};
-    }: Raw.t
-  );
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
-  module Z__INTERNAL = {
-    type root = t;
-    type nonrec graphql_module;
-    /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module MyQuery {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-    let graphql_module: graphql_module = Obj.magic(0);
-  };
 };
-module MyQueryNoError = {
+module MyQueryNoError: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      __typename: string,
+      name: string,
+      barkVolume: float,
+    };
+    type t_dogOrHuman_Human = {
+      __typename: string,
+      name: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -208,149 +247,142 @@ module MyQueryNoError = {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  /**The GraphQL query string*/
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        name\\n        barkVolume\\n      }\\n      ...on Human   {\\n        name\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).name;
-                      value;
-                    },
-                    barkVolume: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                      value;
-                    },
-                  }: t_dogOrHuman_Dog
-                );
-              },
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      barkVolume: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
+                        value;
+                      },
+                    }: t_dogOrHuman_Dog
+                  );
+                },
+              )
+            | \"Human\" =>
+              `Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                    }: t_dogOrHuman_Human
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let barkVolume = {
+                    let value = (value: t_dogOrHuman_Dog).barkVolume;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: t_dogOrHuman_Dog).name;
+                    value;
+                  };
+                  {__typename: \"Dog\", name, barkVolume};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
             )
-          | \"Human\" =>
-            `Human(
-              {
-                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Human).name;
-                      value;
-                    },
-                  }: t_dogOrHuman_Human
-                );
-              },
+          | `Human(value) => (
+              Obj.magic(
+                {
+                  let name = {
+                    let value = (value: t_dogOrHuman_Human).name;
+                    value;
+                  };
+                  {__typename: \"Human\", name};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
             )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_dogOrHuman
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let barkVolume = {
-                  let value = (value: t_dogOrHuman_Dog).barkVolume;
-                  value;
-                }
-                and name = {
-                  let value = (value: t_dogOrHuman_Dog).name;
-                  value;
-                };
-                {__typename: \"Dog\", name, barkVolume};
-              }: Raw.t_dogOrHuman_Dog,
-            ): Raw.t_dogOrHuman
-          )
-        | `Human(value) => (
-            Obj.magic(
-              {
-                let name = {
-                  let value = (value: t_dogOrHuman_Human).name;
-                  value;
-                };
-                {__typename: \"Human\", name};
-              }: Raw.t_dogOrHuman_Human,
-            ): Raw.t_dogOrHuman
-          )
-        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
         };
-      };
-      {dogOrHuman: dogOrHuman};
-    }: Raw.t
-  );
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
-  module Z__INTERNAL = {
-    type root = t;
-    type nonrec graphql_module;
-    /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module MyQueryNoError {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-    let graphql_module: graphql_module = Obj.magic(0);
-  };
 };
 
 type named = {
   name: string,
   __typename: string,
 };
-module NamedQuery = {
+module NamedQuery: {
+  module Raw: {
+    type t_dogOrHuman_Dog = {
+      name: string,
+      __typename: string,
+    };
+    type t_dogOrHuman_Human = {
+      name: string,
+      __typename: string,
+    };
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(named)
+    | `Human(named)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
   [@ocaml.warning \"-32\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
@@ -371,153 +403,134 @@ module NamedQuery = {
     | `Human(named)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  /**The GraphQL query string*/
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  query   {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        name\\n        __typename\\n      }\\n      ...on Human   {\\n        name\\n        __typename\\n      }\\n    }\\n  }\\n`\"
   ];
-  type t_variables = unit;
-  /**Parse the JSON GraphQL data to ReasonML data types*/
-  let parse = (value: Raw.t): t => (
-    {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman;
-        let typename: string =
-          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-        (
-          switch (typename) {
-          | \"Dog\" =>
-            `Dog(
-              {
-                let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).name;
-                      value;
-                    },
-                    __typename: {
-                      let value = (value: Raw.t_dogOrHuman_Dog).__typename;
-                      value;
-                    },
-                  }: named
-                );
-              },
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+          (
+            switch (typename) {
+            | \"Dog\" =>
+              `Dog(
+                {
+                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).name;
+                        value;
+                      },
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Dog).__typename;
+                        value;
+                      },
+                    }: named
+                  );
+                },
+              )
+            | \"Human\" =>
+              `Human(
+                {
+                  let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
+                  (
+                    {
+                      name: {
+                        let value = (value: Raw.t_dogOrHuman_Human).name;
+                        value;
+                      },
+                      __typename: {
+                        let value = (value: Raw.t_dogOrHuman_Human).__typename;
+                        value;
+                      },
+                    }: named
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(
+                {
+                  let __typename = {
+                    let value = (value: named).__typename;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: named).name;
+                    value;
+                  };
+                  {name, __typename: \"Dog\"};
+                }: Raw.t_dogOrHuman_Dog,
+              ): Raw.t_dogOrHuman
             )
-          | \"Human\" =>
-            `Human(
-              {
-                let value: Raw.t_dogOrHuman_Human = Obj.magic(value);
-                (
-                  {
-                    name: {
-                      let value = (value: Raw.t_dogOrHuman_Human).name;
-                      value;
-                    },
-                    __typename: {
-                      let value = (value: Raw.t_dogOrHuman_Human).__typename;
-                      value;
-                    },
-                  }: named
-                );
-              },
+          | `Human(value) => (
+              Obj.magic(
+                {
+                  let __typename = {
+                    let value = (value: named).__typename;
+                    value;
+                  }
+                  and name = {
+                    let value = (value: named).name;
+                    value;
+                  };
+                  {name, __typename: \"Human\"};
+                }: Raw.t_dogOrHuman_Human,
+              ): Raw.t_dogOrHuman
             )
-          | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-          }: t_dogOrHuman
-        );
-      },
-    }: t
-  );
-  /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-  let serialize = (value: t): Raw.t => (
-    {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman;
-        switch (value) {
-        | `Dog(value) => (
-            Obj.magic(
-              {
-                let __typename = {
-                  let value = (value: named).__typename;
-                  value;
-                }
-                and name = {
-                  let value = (value: named).name;
-                  value;
-                };
-                {name, __typename: \"Dog\"};
-              }: Raw.t_dogOrHuman_Dog,
-            ): Raw.t_dogOrHuman
-          )
-        | `Human(value) => (
-            Obj.magic(
-              {
-                let __typename = {
-                  let value = (value: named).__typename;
-                  value;
-                }
-                and name = {
-                  let value = (value: named).name;
-                  value;
-                };
-                {name, __typename: \"Human\"};
-              }: Raw.t_dogOrHuman_Human,
-            ): Raw.t_dogOrHuman
-          )
-        | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
         };
-      };
-      {dogOrHuman: dogOrHuman};
-    }: Raw.t
-  );
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
-  module Z__INTERNAL = {
-    type root = t;
-    type nonrec graphql_module;
-    /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module NamedQuery {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-    let graphql_module: graphql_module = Obj.magic(0);
-  };
 };
 module NamedSpread = {
-  module DogFields = {
+  module DogFields: {
+    [@ocaml.warning \"-32\"];
+    module Raw: {
+      type t = {
+        name: string,
+        __typename: string,
+      };
+      type nonrec t_Dog = t;
+    };
+    type t = named;
+    type nonrec t_Dog = named;
+    /** the GraphQL fragment */
+    let query: string;
+    /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+    let parse: Raw.t => named;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+    let serialize: named => Raw.t;
+    let verifyArgsAndParse: (~fragmentName: [ | `DogFields], Raw.t) => t;
+    let verifyName: [ | `DogFields] => unit;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t = {
@@ -528,96 +541,71 @@ module NamedSpread = {
     };
     type t = named;
     type nonrec t_Dog = named;
-    /**The GraphQL query string*/
     let query: string = [%raw
       \"require(\\\"gql\\\")`\\n  fragment DogFields on Dog   {\\n    name\\n    __typename\\n  }\\n`\"
     ];
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): named => (
-      {
-        name: {
-          let value = (value: Raw.t).name;
-          value;
-        },
-        __typename: {
-          let value = (value: Raw.t).__typename;
-          value;
-        },
-      }: named
-    );
-
+    let parse: Raw.t => named =
+      (value) => (
+        {
+          name: {
+            let value = (value: Raw.t).name;
+            value;
+          },
+          __typename: {
+            let value = (value: Raw.t).__typename;
+            value;
+          },
+        }: named
+      );
+    let serialize: named => Raw.t =
+      (value) => (
+        {
+          let __typename = {
+            let value = (value: named).__typename;
+            value;
+          }
+          and name = {
+            let value = (value: named).name;
+            value;
+          };
+          {name, __typename};
+        }: Raw.t
+      );
     let verifyArgsAndParse =
         (~fragmentName as _DogFields: [ | `DogFields], value: Raw.t) =>
       parse(value);
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: named): Raw.t => (
-      {
-        let __typename = {
-          let value = (value: named).__typename;
-          value;
-        }
-        and name = {
-          let value = (value: named).name;
-          value;
-        };
-        {name, __typename};
-      }: Raw.t
-    );
     let verifyName =
       fun
       | `DogFields => ();
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
-    module Z__INTERNAL = {
-      type root = t;
-      type nonrec graphql;
-      /**```
-Dog {
-  name: String!
-  barkVolume: Float!
-}
-```*/
-      let graphql: graphql = Obj.magic(0);
-      type nonrec graphql_module;
-      /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module NamedSpread {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-      let graphql_module: graphql_module = Obj.magic(0);
-    };
   };
-  module DogOrHuman = {
+  module DogOrHuman: {
+    module Raw: {
+      type t_dogOrHuman;
+      type t = {dogOrHuman: t_dogOrHuman};
+      type t_variables = unit;
+    };
+    type t_dogOrHuman = [
+      | `FutureAddedValue(Js.Json.t)
+      | `Dog(DogFields.t)
+    ];
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
       type t_dogOrHuman;
@@ -629,101 +617,62 @@ module NamedSpread {
       | `Dog(DogFields.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
-    /**The GraphQL query string*/
+    type t_variables = unit;
     let query: string =
       [%raw
         \"(frag_0) => require(\\\"gql\\\")`\\n  query dogOrHuman  {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        ...DogFields\\n      }\\n    }\\n  }\\n  ${frag_0}\\n`\"
       ](
         DogFields.query,
       );
-    type t_variables = unit;
-    /**Parse the JSON GraphQL data to ReasonML data types*/
-    let parse = (value: Raw.t): t => (
-      {
-        dogOrHuman: {
-          let value = (value: Raw.t).dogOrHuman;
-          let typename: string =
-            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-          (
-            switch (typename) {
-            | \"Dog\" =>
-              `Dog(
-                {
-                  let value: DogFields.Raw.t = Obj.magic(value);
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          dogOrHuman: {
+            let value = (value: Raw.t).dogOrHuman;
+            let typename: string =
+              Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
+            (
+              switch (typename) {
+              | \"Dog\" =>
+                `Dog(
+                  {
+                    let value: DogFields.Raw.t = Obj.magic(value);
 
-                  DogFields.verifyArgsAndParse(
-                    ~fragmentName=`DogFields,
-                    value,
-                  );
-                },
+                    DogFields.verifyArgsAndParse(
+                      ~fragmentName=`DogFields,
+                      value,
+                    );
+                  },
+                )
+              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+              }: t_dogOrHuman
+            );
+          },
+        }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let dogOrHuman = {
+            let value = (value: t).dogOrHuman;
+            switch (value) {
+            | `Dog(value) => (
+                Obj.magic(DogFields.serialize(value)): Raw.t_dogOrHuman
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-            }: t_dogOrHuman
-          );
-        },
-      }: t
-    );
-    /**Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data */
-    let serialize = (value: t): Raw.t => (
-      {
-        let dogOrHuman = {
-          let value = (value: t).dogOrHuman;
-          switch (value) {
-          | `Dog(value) => (
-              Obj.magic(DogFields.serialize(value)): Raw.t_dogOrHuman
-            )
-          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+            | `FutureAddedValue(value) => (
+                Obj.magic(value): Raw.t_dogOrHuman
+              )
+            };
           };
-        };
-        {dogOrHuman: dogOrHuman};
-      }: Raw.t
-    );
+          {dogOrHuman: dogOrHuman};
+        }: Raw.t
+      );
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
-    module Z__INTERNAL = {
-      type root = t;
-      type nonrec graphql_module;
-      /****--- graphql-ppx module ---**
-
-The contents of this module are automatically generated by `graphql-ppx`.
-The following is simply an overview of the most important variables and types that you can access from this module.
-
-```
-module NamedSpread {
-  /**
-  The GraphQL query string
-  */
-  let query: string;
-
-  /**
-  This is the main type of the result you will get back.
-  You can hover above the identifier key (e.g. query or mutation) to see the fully generated type for your module.
-  */
-  type t;
-
-  /**
-  Parse the JSON GraphQL data to ReasonML data types
-  */
-  let parse: Raw.t => t;
-
-  /**
-  Serialize the ReasonML GraphQL data that was parsed using the parse function back to the original JSON compatible data
-  */
-  let serialize: t => Raw.t;
-
-  /**
-  This is the JSON compatible type of the GraphQL data.
-  It should not be necessary to access the types inside for normal use cases.
-  */
-  module Raw: { type t; };
-}
-```*/
-      let graphql_module: graphql_module = Obj.magic(0);
-    };
   };
 };
 
