@@ -108,11 +108,22 @@ function makeDefaultVariables(param) {
   
 }
 
+var Bla_inner = {
+  Raw: Raw,
+  query: query,
+  parse: parse,
+  serialize: serialize,
+  serializeVariables: serializeVariables,
+  makeVariables: makeVariables,
+  makeDefaultVariables: makeDefaultVariables
+};
+
 function use(param) {
   
 }
 
 var Bla = {
+  Bla_inner: Bla_inner,
   Raw: Raw,
   query: query,
   parse: parse,

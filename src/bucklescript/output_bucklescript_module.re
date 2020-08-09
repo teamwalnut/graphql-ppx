@@ -444,21 +444,33 @@ let wrap_query_module =
       ];
 
       let signature =
-        List.append(
+        List.concat([
+          [signature_module(module_name, signature)],
           signature,
           [
             Sig.include_(
               Incl.mk(
-                Mty.mk(
-                  Pmty_ident({
-                    txt: Longident.parse(funct),
-                    loc: Location.none,
-                  }),
+                Mty.typeof_(
+                  Mod.mk(
+                    Pmod_structure([
+                      Str.include_(
+                        Incl.mk(
+                          Mod.apply(
+                            Mod.ident({txt: Longident.parse(funct), loc}),
+                            Mod.ident({
+                              txt: Longident.parse(module_name),
+                              loc,
+                            }),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
                 ),
               ),
             ),
           ],
-        );
+        ]);
 
       (contents, Mty.mk(~loc=module_loc, Pmty_signature(signature)));
     | None => (contents, module_type)
