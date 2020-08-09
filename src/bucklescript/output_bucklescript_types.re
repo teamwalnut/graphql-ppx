@@ -192,6 +192,47 @@ let generate_variant_interface =
     [name, ...path],
   );
 
+/*
+ * for given query:
+ *
+ * {
+ *   user {
+ *     id
+ *     name
+ *         loc_key
+ *     |<---->|
+ *     friends: {
+ *       id
+ *     }
+ *     -----------
+ *     With
+ *       friends: {
+ *         id
+ *       }
+ *     as the whole loc. They cannot be overlapping, so the most we can use for
+ *     this is until the bracket
+ *     -----------
+ *   }
+ * }
+ *
+ * the generated type is:
+ *
+ * type t = {
+ *   user: option(t_user)
+ * } and
+ * t_user = {
+ *   id: string
+ *   friends: t_user_friends
+ * } and
+ * t_user_friends = {
+ *   id: string
+ * }
+ *
+ * When we add locations to the types, the types are not nested, so we cannot
+ * add nested locations. The best way to model it is to just type the keys, and
+ * set the location of the query to the module
+ */
+
 let generate_record_type =
     (
       ~config,
@@ -230,11 +271,14 @@ let generate_record_type =
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_, loc_key}) => {
+           | Field({path: [name, ...path], type_, loc_key, loc: _loc_field}) => {
                let valid_name = to_valid_ident(name);
                [
                  Ast_helper.(
                    Type.field(
+                     ~loc=?{
+                       raw ? None : Some(conv_loc(loc_key));
+                     },
                      ~attrs={
                        name == valid_name
                          ? []
@@ -245,7 +289,10 @@ let generate_record_type =
                            ),
                          ];
                      },
-                     {Location.txt: valid_name, loc: Location.none},
+                     {
+                       Location.txt: valid_name,
+                       loc: raw ? Location.none : conv_loc(loc_key),
+                     },
                      generate_type(
                        ~atLoc=?raw ? None : Some(conv_loc(loc_key)),
                        ~config,
