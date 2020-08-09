@@ -416,59 +416,51 @@ let wrap_query_module =
       }
     };
 
+  let signature =
+    switch (module_type) {
+    | {pmty_desc: Pmty_signature(signature)} => signature
+    | _ => []
+    };
+
   let inner_module =
     wrap_module(~module_type, ~loc=Location.none, module_name, contents);
+
   let (contents, module_type) =
     switch (funct) {
     | Some(funct) =>
-      let contents = [
-        Str.include_(
-          Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
-        ),
-        Str.include_(
-          Incl.mk(
-            Mod.apply(
-              Mod.ident({txt: Longident.parse(funct), loc}),
-              Mod.ident({txt: Longident.parse(module_name), loc}),
-            ),
-          ),
-        ),
-      ];
-      let signature = [
-        Sig.include_(
-          Incl.mk(
-            Mty.typeof_(
-              Mod.mk(
-                Pmod_structure([
-                  Str.include_(
-                    Incl.mk(
-                      Mod.ident({txt: Longident.parse(module_name), loc}),
-                    ),
-                  ),
-                ]),
+      let contents =
+        [
+          [inner_module],
+          contents,
+          [
+            Str.include_(
+              Incl.mk(
+                Mod.apply(
+                  Mod.ident({txt: Longident.parse(funct), loc}),
+                  Mod.ident({txt: Longident.parse(module_name), loc}),
+                ),
               ),
             ),
-          ),
-        ),
-        Sig.include_(
-          Incl.mk(
-            Mty.typeof_(
-              Mod.mk(
-                Pmod_structure([
-                  Str.include_(
-                    Incl.mk(
-                      Mod.apply(
-                        Mod.ident({txt: Longident.parse(funct), loc}),
-                        Mod.ident({txt: Longident.parse(module_name), loc}),
-                      ),
-                    ),
-                  ),
-                ]),
+          ],
+        ]
+        |> List.concat;
+
+      let signature =
+        List.append(
+          signature,
+          [
+            Sig.include_(
+              Incl.mk(
+                Mty.mk(
+                  Pmty_ident({
+                    txt: Longident.parse(funct),
+                    loc: Location.none,
+                  }),
+                ),
               ),
             ),
-          ),
-        ),
-      ];
+          ],
+        );
 
       (contents, Mty.mk(~loc=module_loc, Pmty_signature(signature)));
     | None => (contents, module_type)
@@ -476,10 +468,9 @@ let wrap_query_module =
 
   switch (funct, name) {
   | (Some(_), Some(name)) => [
-      inner_module,
       wrap_module(~module_type, ~loc=module_loc, name, contents),
     ]
-  | (Some(_), None) => [inner_module, ...contents]
+  | (Some(_), None) => contents
   | (None, Some(name)) => [
       wrap_module(~module_type, ~loc=module_loc, name, contents),
     ]
