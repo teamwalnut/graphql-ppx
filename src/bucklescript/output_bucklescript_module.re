@@ -428,22 +428,20 @@ let wrap_query_module =
   let (contents, module_type) =
     switch (funct) {
     | Some(funct) =>
-      let contents =
-        [
-          [inner_module],
-          contents,
-          [
-            Str.include_(
-              Incl.mk(
-                Mod.apply(
-                  Mod.ident({txt: Longident.parse(funct), loc}),
-                  Mod.ident({txt: Longident.parse(module_name), loc}),
-                ),
-              ),
+      let contents = [
+        inner_module,
+        Str.include_(
+          Incl.mk(Mod.ident({txt: Longident.parse(module_name), loc})),
+        ),
+        Str.include_(
+          Incl.mk(
+            Mod.apply(
+              Mod.ident({txt: Longident.parse(funct), loc}),
+              Mod.ident({txt: Longident.parse(module_name), loc}),
             ),
-          ],
-        ]
-        |> List.concat;
+          ),
+        ),
+      ];
 
       let signature =
         List.append(
