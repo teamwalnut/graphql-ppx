@@ -52,19 +52,13 @@ function verifyName(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql: 0,
-  graphql_module: 0
-};
-
 var ListFragment = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
   verifyArgsAndParse: verifyArgsAndParse,
-  verifyName: verifyName,
-  Z__INTERNAL: Z__INTERNAL
+  verifyName: verifyName
 };
 
 var Raw$1 = {};
@@ -109,19 +103,13 @@ function verifyName$1(param) {
   
 }
 
-var Z__INTERNAL$1 = {
-  graphql: 0,
-  graphql_module: 0
-};
-
 var Another = {
   Raw: Raw$1,
   query: query$1,
   parse: parse$1,
   serialize: serialize$1,
   verifyArgsAndParse: verifyArgsAndParse$1,
-  verifyName: verifyName$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  verifyName: verifyName$1
 };
 
 exports.GraphQL_PPX = GraphQL_PPX;

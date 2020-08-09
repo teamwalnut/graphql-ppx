@@ -64,14 +64,6 @@ function makeDefaultVariables(param) {
         };
 }
 
-var Z__INTERNAL = {
-  _graphql_pokemon_name_100: 0,
-  _graphql_name_94: 0,
-  _graphql_pokemon_id_111: 0,
-  _graphql_id_107: 0,
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: \"query pokemon($id: String, $name: String)  {\\npokemon(name: $name, id: $id)  {\\nid  \\nname  \\n}\\n\\n}\\n\",
@@ -79,8 +71,7 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables
 };
 
 exports.MyQuery = MyQuery;

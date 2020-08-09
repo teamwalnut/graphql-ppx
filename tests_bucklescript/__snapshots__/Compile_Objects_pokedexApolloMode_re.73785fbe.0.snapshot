@@ -57,10 +57,6 @@ function makeDefaultVariables(param) {
   
 }
 
-var Z__INTERNAL = {
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: \"query   {\\npokemon(name: \\\"Pikachu\\\")  {\\nid  \\nname  \\n}\\n\\n}\\n\",
@@ -68,8 +64,7 @@ var MyQuery = {
   serialize: serialize,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables,
-  Z__INTERNAL: Z__INTERNAL
+  makeDefaultVariables: makeDefaultVariables
 };
 
 exports.MyQuery = MyQuery;

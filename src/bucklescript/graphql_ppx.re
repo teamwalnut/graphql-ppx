@@ -604,9 +604,6 @@ let mapper = (_config, _cookies) => {
                            Some(module_type)
                          | _ => None
                          };
-                       Output_bucklescript_docstrings.for_module_information(
-                         loc,
-                       );
                        switch (pstr) {
                        | PStr([
                            {
@@ -738,9 +735,6 @@ let mapper = (_config, _cookies) => {
                                             Some(module_type)
                                           | _ => None
                                           };
-                                        Output_bucklescript_docstrings.for_module_information(
-                                          loc,
-                                        );
                                         switch (pstr) {
                                         | PStr([
                                             {

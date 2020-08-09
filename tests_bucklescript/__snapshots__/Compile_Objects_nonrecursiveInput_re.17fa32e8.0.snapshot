@@ -85,11 +85,6 @@ function makeInputObjectEmbeddedInput(field, param) {
         };
 }
 
-var Z__INTERNAL = {
-  _graphql_NonrecursiveInput_48: 0,
-  graphql_module: 0
-};
-
 var MyQuery = {
   Raw: Raw,
   query: \"query ($arg: NonrecursiveInput!)  {\\nnonrecursiveInput(arg: $arg)  \\n}\\n\",
@@ -100,8 +95,7 @@ var MyQuery = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput,
   makeVariables: makeVariables,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput,
-  Z__INTERNAL: Z__INTERNAL
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput
 };
 
 var Raw$1 = {};
@@ -192,12 +186,6 @@ function makeInputObjectEmbeddedInput$1(field, param) {
         };
 }
 
-var Z__INTERNAL$1 = {
-  _graphql_NonrecursiveInput_167: 0,
-  _graphql_NonrecursiveInput_194: 0,
-  graphql_module: 0
-};
-
 var MyQuery2 = {
   Raw: Raw$1,
   query: \"query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\\nscalarsInput(arg: $arg)  \\nmore: scalarsInput(arg: $arg2)  \\n}\\n\",
@@ -208,8 +196,7 @@ var MyQuery2 = {
   serializeInputObjectEmbeddedInput: serializeInputObjectEmbeddedInput$1,
   makeVariables: makeVariables$1,
   makeInputObjectNonrecursiveInput: makeInputObjectNonrecursiveInput$1,
-  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1,
-  Z__INTERNAL: Z__INTERNAL$1
+  makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput$1
 };
 
 exports.MyQuery = MyQuery;

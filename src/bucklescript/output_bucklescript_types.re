@@ -230,16 +230,7 @@ let generate_record_type =
                ),
                ...acc,
              ]
-           | Field({path: [name, ...path], type_, loc_key, arguments}) => {
-               // Add field to internal module
-               if (!raw) {
-                 Output_bucklescript_docstrings.for_field_arguments(
-                   config,
-                   name
-                   |> Schema.lookup_field(Schema.query_type(config.schema)),
-                   arguments,
-                 );
-               };
+           | Field({path: [name, ...path], type_, loc_key}) => {
                let valid_name = to_valid_ident(name);
                [
                  Ast_helper.(
@@ -898,7 +889,10 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
                            ),
                          ];
                        },
-                     {Location.txt: valid_name, loc: Location.none},
+                     {
+                       Location.txt: valid_name,
+                       loc: raw ? Location.none : conv_loc(loc),
+                     },
                      generate_arg_type(
                        raw,
                        {
@@ -979,29 +973,6 @@ let generate_input_object =
 
 let generate_arg_type_structure_items = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
-
-  // Add to internal module
-  if (!raw) {
-    input_objects
-    |> List.iter(
-         fun
-         | NoVariables => ()
-         | InputObject({name, fields}) => {
-             switch (name) {
-             | None =>
-               fields
-               |> List.iter(field => {
-                    Output_bucklescript_docstrings.for_input_constraint(
-                      config,
-                      field,
-                    )
-                  })
-             | Some(_) => ()
-             };
-           },
-       );
-  };
-
   [
     input_objects
     |> List.map(
@@ -1016,29 +987,6 @@ let generate_arg_type_structure_items = (raw, config, variable_defs) => {
 };
 let generate_arg_type_signature_items = (raw, config, variable_defs) => {
   let input_objects = extract_args(config, variable_defs);
-
-  // Add to internal module
-  if (!raw) {
-    input_objects
-    |> List.iter(
-         fun
-         | NoVariables => ()
-         | InputObject({name, fields}) => {
-             switch (name) {
-             | None =>
-               fields
-               |> List.iter(field => {
-                    Output_bucklescript_docstrings.for_input_constraint(
-                      config,
-                      field,
-                    )
-                  })
-             | Some(_) => ()
-             };
-           },
-       );
-  };
-
   [
     input_objects
     |> List.map(
