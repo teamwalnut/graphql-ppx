@@ -9,10 +9,13 @@ let hash = file => {
 
 let read_hash = src => {
   let () = Log.log("[read hash from] " ++ src);
-  let hash_file = open_in_bin(src);
-  let hash = Digest.input(hash_file);
-  close_in(hash_file);
-  hash;
+  switch (open_in_bin(src)) {
+  | hash_file =>
+    let hash = Digest.input(hash_file);
+    close_in(hash_file);
+    Some(hash);
+  | exception _ => None
+  };
 };
 
 let write_hash = (hash, dest) => {
@@ -55,13 +58,12 @@ let check = checker =>
   | None => raise(File_not_found)
   | Some(file) =>
     let new_hash = hash(file);
-    switch (find_file(checker.hash_path)) {
+    switch (read_hash(checker.hash_path)) {
     | None => dirty_update(new_hash, checker) /* dirty */
-    | Some(hash_file) =>
-      let old_hash = read_hash(hash_file);
+    | Some(old_hash) =>
       switch (Digest.compare(old_hash, new_hash)) {
       | 0 => Log.log("[resource unchanged]")
       | _ => dirty_update(new_hash, checker)
-      };
+      }
     };
   }; /* dirty */
