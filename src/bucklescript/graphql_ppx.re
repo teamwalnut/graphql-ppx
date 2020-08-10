@@ -363,6 +363,12 @@ let get_template_tag = query_config => {
   };
 };
 
+let directives_to_config = (directives, extension_point_config) => {
+  // todo write reducer for query config by iterating on the directives and
+  // pattern matching
+  extension_point_config;
+};
+
 let rewrite_definition =
     (
       ~query_config: query_config,
@@ -476,12 +482,25 @@ let rewrite_definition =
              );
            });
 
-        Result_decoder.unify_document_schema(config, document)
-        |> Output_bucklescript_module.generate_modules(
-             config,
-             module_name,
-             module_type,
-           );
+        Result_structure.(
+          Result_decoder.unify_document_schema(config, document)
+          |> List.map(
+               fun
+               | Def_fragment({
+                   fragment: {item: {fg_directives: directives}},
+                 }) as definition
+               | Def_operation({
+                   operation: {item: {o_directives: directives}},
+                 }) as definition => (
+                   definition,
+                   directives_to_config(directives, config),
+                 ),
+             )
+          |> Output_bucklescript_module.generate_modules(
+               module_name,
+               module_type,
+             )
+        );
       };
     };
   };
