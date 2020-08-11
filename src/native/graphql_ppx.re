@@ -137,15 +137,13 @@ let rewrite_definition = (~schema=?, ~loc, ~delim, ~query, ()) => {
         ),
       )
     | Result.Ok(document) =>
-      let schema = Lazy.force(Read_schema.get_schema(schema));
       let map_loc = add_loc(delimLength, loc);
 
       let document_with_config =
         Result_decoder.generate_config(
-          ~schema,
           ~map_loc,
           ~delimiter=delim,
-          ~initial_query_config=empty_query_config,
+          ~initial_query_config={...empty_query_config, schema},
           document,
         );
 

@@ -385,24 +385,8 @@ let rewrite_definition =
         ),
       )
     | Result.Ok(document) =>
-      // TODO: See if we can do this per definition
-      let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
-      let document =
-        (
-          if (switch (query_config.apollo_mode) {
-              | None => Ppx_config.apollo_mode()
-              | Some(apollo_mode) => apollo_mode
-              }) {
-            document |> Ast_transforms.add_typename_to_selection_set(schema);
-          } else {
-            document;
-          }
-        )
-        |> Ast_transforms.remove_typename_from_union(schema);
-
       let document_with_config =
         Result_decoder.generate_config(
-          ~schema,
           ~map_loc=add_loc(delimLength, loc),
           ~delimiter=delim,
           ~initial_query_config=query_config,

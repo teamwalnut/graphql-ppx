@@ -942,66 +942,89 @@ let config_arguments_to_config =
 };
 
 let to_output_config =
-    (~schema, ~document, ~map_loc, ~delimiter, query_config) => {
+    (~map_loc, ~delimiter, ~document, (definition, query_config)) => {
+  let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+  let definition =
+    switch (
+      {
+        (
+          if (switch (query_config.apollo_mode) {
+              | None => Ppx_config.apollo_mode()
+              | Some(apollo_mode) => apollo_mode
+              }) {
+            [definition]
+            |> Ast_transforms.add_typename_to_selection_set(schema);
+          } else {
+            [definition];
+          }
+        )
+        |> Ast_transforms.remove_typename_from_union(schema);
+      }
+    ) {
+    | [definition] => definition
+    | _ => definition
+    };
+
   let template_tag = get_template_tag(query_config);
-  {
-    Generator_utils.map_loc,
-    delimiter,
-    full_document: document,
-    records:
-      switch (query_config.records, query_config.objects) {
-      | (Some(value), _) => value
-      | (_, Some(true)) => false
-      | (_, Some(false)) => true
-      | (None, None) => Ppx_config.records()
-      },
-    inline:
-      switch (query_config.inline) {
-      | Some(value) => value
-      | None => false
-      },
-    future_added_value:
-      switch (query_config.future_added_value) {
-      | Some(value) => value
-      | None => Ppx_config.future_added_value()
-      },
-    /*  the only call site of schema, make it lazy! */
-    schema,
-    template_tag,
-    template_tag_return_type:
-      get_with_default(
-        query_config.template_tag_return_type,
-        Ppx_config.template_tag_return_type(),
-      ),
-    extend: query_config.extend,
-    fragment_in_query:
-      switch (query_config.fragment_in_query) {
-      | Some(value) => value
-      | None => Ppx_config.fragment_in_query()
-      },
-  };
+
+  (
+    definition,
+    {
+      Generator_utils.map_loc,
+      delimiter,
+      full_document: document,
+      records:
+        switch (query_config.records, query_config.objects) {
+        | (Some(value), _) => value
+        | (_, Some(true)) => false
+        | (_, Some(false)) => true
+        | (None, None) => Ppx_config.records()
+        },
+      inline:
+        switch (query_config.inline) {
+        | Some(value) => value
+        | None => false
+        },
+      future_added_value:
+        switch (query_config.future_added_value) {
+        | Some(value) => value
+        | None => Ppx_config.future_added_value()
+        },
+      /*  the only call site of schema, make it lazy! */
+      schema,
+      template_tag,
+      template_tag_return_type:
+        get_with_default(
+          query_config.template_tag_return_type,
+          Ppx_config.template_tag_return_type(),
+        ),
+      extend: query_config.extend,
+      fragment_in_query:
+        switch (query_config.fragment_in_query) {
+        | Some(value) => value
+        | None => Ppx_config.fragment_in_query()
+        },
+    },
+  );
 };
 
 let rec generate_config =
-        (~schema, ~map_loc, ~delimiter, ~initial_query_config, document) => {
+        (~map_loc, ~delimiter, ~initial_query_config, document) => {
   switch (document) {
   | [Operation({item: {o_directives: directives}}) as definition, ...rest]
   | [Fragment({item: {fg_directives: directives}}) as definition, ...rest] =>
-    let config =
+    let query_config =
       directives
       |> get_config_arguments
-      |> config_arguments_to_config(initial_query_config)
-      |> to_output_config(~schema, ~document, ~map_loc, ~delimiter);
-
+      |> config_arguments_to_config(initial_query_config);
     [
-      (definition, config),
-      ...generate_config(
-           ~schema,
-           ~map_loc,
-           ~delimiter,
-           ~initial_query_config,
-           rest,
-         ),
+      to_output_config(
+        ~document,
+        ~map_loc,
+        ~delimiter,
+        (definition, query_config),
+      ),
+      ...generate_config(~map_loc, ~delimiter, ~initial_query_config, rest),
     ];
   | [] => []
   };

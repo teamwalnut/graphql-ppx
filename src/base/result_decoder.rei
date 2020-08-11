@@ -20,7 +20,6 @@ type query_config = {
 
 let generate_config:
   (
-    ~schema: Schema.t,
     ~map_loc: ((Source_pos.source_position, Source_pos.source_position)) =>
               Source_pos.ast_location,
     ~delimiter: option(string),
