@@ -187,6 +187,178 @@ var MyQuery = {
   makeDefaultVariables: makeDefaultVariables
 };
 
+var Raw$1 = {};
+
+function parse$1(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var tmp;
+  if (value$2 == null) {
+    tmp = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    tmp = {
+      __typename: value$2.__typename,
+      inner: !(value$3 == null) ? ({
+            __typename: value$3.__typename,
+            field: value$3.field
+          }) : undefined
+    };
+  }
+  return {
+          nestedObject: {
+            __typename: value$1.__typename,
+            inner: tmp
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 !== undefined) {
+      var value$4 = value$3.field;
+      var value$5 = value$3.__typename;
+      inner$1 = {
+        __typename: value$5,
+        field: value$4
+      };
+    } else {
+      inner$1 = null;
+    }
+    var value$6 = value$2.__typename;
+    inner = {
+      __typename: value$6,
+      inner: inner$1
+    };
+  } else {
+    inner = null;
+  }
+  var value$7 = value$1.__typename;
+  var nestedObject = {
+    __typename: value$7,
+    inner: inner
+  };
+  return {
+          nestedObject: nestedObject
+        };
+}
+
+function serializeVariables$1(param) {
+  
+}
+
+function makeVariables$1(param) {
+  
+}
+
+function makeDefaultVariables$1(param) {
+  
+}
+
+var MyQueryWithSig = {
+  Raw: Raw$1,
+  query: \"query   {\\nnestedObject  {\\n__typename  \\ninner  {\\n__typename  \\ninner  {\\n__typename  \\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: makeDefaultVariables$1
+};
+
+var Test = {
+  MyQueryWithSig: MyQueryWithSig
+};
+
+var Raw$2 = {};
+
+function parse$2(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var tmp;
+  if (value$2 == null) {
+    tmp = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    tmp = {
+      __typename: value$2.__typename,
+      inner: !(value$3 == null) ? ({
+            __typename: value$3.__typename,
+            field: value$3.field
+          }) : undefined
+    };
+  }
+  return {
+          nestedObject: {
+            __typename: value$1.__typename,
+            inner: tmp
+          }
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = value$2.inner;
+    var inner$1;
+    if (value$3 !== undefined) {
+      var value$4 = value$3.field;
+      var value$5 = value$3.__typename;
+      inner$1 = {
+        __typename: value$5,
+        field: value$4
+      };
+    } else {
+      inner$1 = null;
+    }
+    var value$6 = value$2.__typename;
+    inner = {
+      __typename: value$6,
+      inner: inner$1
+    };
+  } else {
+    inner = null;
+  }
+  var value$7 = value$1.__typename;
+  var nestedObject = {
+    __typename: value$7,
+    inner: inner
+  };
+  return {
+          nestedObject: nestedObject
+        };
+}
+
+function serializeVariables$2(param) {
+  
+}
+
+function makeVariables$2(param) {
+  
+}
+
+function makeDefaultVariables$2(param) {
+  
+}
+
+var MyQueryWithSigDirect = {
+  Raw: Raw$2,
+  query: \"query   {\\nnestedObject  {\\n__typename  \\ninner  {\\n__typename  \\ninner  {\\n__typename  \\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
+  parse: parse$2,
+  serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: makeDefaultVariables$2
+};
+
 exports.MyQuery = MyQuery;
+exports.Test = Test;
+exports.MyQueryWithSigDirect = MyQueryWithSigDirect;
 /* No side effect */
 
