@@ -902,7 +902,7 @@ let mapper = (_config, _cookies) => {
                                     Some({
                                       pmty_desc:
                                         Pmty_signature(
-                                          signature_mapper(mapper, signature),
+                                          mapper.signature(mapper, signature),
                                         ),
                                       pmty_loc,
                                       pmty_attributes,
