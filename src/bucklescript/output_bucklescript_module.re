@@ -380,6 +380,33 @@ let wrap_module = (~loc as _, ~module_type=?, name: string, contents) => {
   };
 };
 
+let get_functor = (config, definition) =>
+  switch (config.extend) {
+  | Some(funct) => Some(funct)
+  | None =>
+    switch (definition) {
+    | Fragment => Ppx_config.extend_fragment()
+    | Operation(Query, {has_required_variables: false}) =>
+      switch (Ppx_config.extend_query_no_required_variables()) {
+      | Some(extension) => Some(extension)
+      | None => Ppx_config.extend_query()
+      }
+    | Operation(Query, _) => Ppx_config.extend_query()
+    | Operation(Mutation, {has_required_variables: false}) =>
+      switch (Ppx_config.extend_mutation_no_required_variables()) {
+      | Some(extension) => Some(extension)
+      | None => Ppx_config.extend_mutation()
+      }
+    | Operation(Mutation, _) => Ppx_config.extend_mutation()
+    | Operation(Subscription, {has_required_variables: false}) =>
+      switch (Ppx_config.extend_subscription_no_required_variables()) {
+      | Some(extension) => Some(extension)
+      | None => Ppx_config.extend_subscription()
+      }
+    | Operation(Subscription, _) => Ppx_config.extend_subscription()
+    }
+  };
+
 let wrap_query_module =
     (~loc as module_loc, ~module_type, definition, name, contents, config) => {
   let loc = Location.none;
@@ -389,32 +416,7 @@ let wrap_query_module =
     | None => "Inner"
     };
 
-  let funct =
-    switch (config.extend) {
-    | Some(funct) => Some(funct)
-    | None =>
-      switch (definition) {
-      | Fragment => Ppx_config.extend_fragment()
-      | Operation(Query, {has_required_variables: false}) =>
-        switch (Ppx_config.extend_query_no_required_variables()) {
-        | Some(extension) => Some(extension)
-        | None => Ppx_config.extend_query()
-        }
-      | Operation(Query, _) => Ppx_config.extend_query()
-      | Operation(Mutation, {has_required_variables: false}) =>
-        switch (Ppx_config.extend_mutation_no_required_variables()) {
-        | Some(extension) => Some(extension)
-        | None => Ppx_config.extend_mutation()
-        }
-      | Operation(Mutation, _) => Ppx_config.extend_mutation()
-      | Operation(Subscription, {has_required_variables: false}) =>
-        switch (Ppx_config.extend_subscription_no_required_variables()) {
-        | Some(extension) => Some(extension)
-        | None => Ppx_config.extend_subscription()
-        }
-      | Operation(Subscription, _) => Ppx_config.extend_subscription()
-      }
-    };
+  let funct = get_functor(config, definition);
 
   let signature =
     switch (module_type) {
@@ -485,6 +487,57 @@ let wrap_query_module =
       wrap_module(~module_type, ~loc=module_loc, name, contents),
     ]
   | (None, None) => contents
+  };
+};
+
+let wrap_query_module_signature = (~signature, definition, name, config) => {
+  let loc = Location.none;
+  let module_name =
+    switch (name) {
+    | Some(name) => name ++ "_inner"
+    | None => "Inner"
+    };
+
+  let funct = get_functor(config, definition);
+
+  let signature =
+    switch (funct) {
+    | Some(funct) =>
+      List.concat([
+        [signature_module(module_name, signature)],
+        signature,
+        [
+          Sig.include_(
+            Incl.mk(
+              Mty.typeof_(
+                Mod.mk(
+                  Pmod_structure([
+                    Str.include_(
+                      Incl.mk(
+                        Mod.apply(
+                          Mod.ident({txt: Longident.parse(funct), loc}),
+                          Mod.ident({
+                            txt: Longident.parse(module_name),
+                            loc,
+                          }),
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ])
+    | None => signature
+    };
+
+  switch (funct, name) {
+  | (Some(_), Some(name)) => [signature_module(name, signature)]
+  | (Some(_), None) => signature
+  | (None, Some(name)) => [signature_module(name, signature)]
+  | (None, None) => signature
   };
 };
 
@@ -1031,6 +1084,7 @@ let generate_modules = (module_name, module_type, operations) => {
         | Some(module_type) => module_type
         | None => Mty.mk(Pmty_signature(signature))
         };
+
       wrap_query_module(
         ~loc,
         ~module_type,
@@ -1099,6 +1153,59 @@ let generate_modules = (module_name, module_type, operations) => {
     | Some(module_name) => [
         wrap_module(~loc=Location.none, module_name, contents),
       ]
+    | None => contents
+    };
+  };
+};
+
+let generate_module_interfaces = (module_name, operations) => {
+  switch (operations) {
+  | [] => []
+  | [(operation, config)] =>
+    switch (generate_definition(config, operation)) {
+    | ((definition, Some(name), _contents, _loc), signature) =>
+      wrap_query_module_signature(
+        ~signature,
+        definition,
+        switch (config.inline, module_name) {
+        | (true, _) => None
+        | (_, Some(name)) => Some(name)
+        | (_, None) => Some(name)
+        },
+        config,
+      )
+    | ((definition, None, _contents, _loc), signature) =>
+      wrap_query_module_signature(~signature, definition, module_name, config)
+    }
+  | operations =>
+    let contents =
+      operations
+      |> List.map(((operation, config)) =>
+           (generate_definition(config, operation), config)
+         )
+      |> List.mapi((i, (((definition, name, _, _), signature), config)) => {
+           switch (name) {
+           | Some(name) =>
+             wrap_query_module_signature(
+               ~signature,
+               definition,
+               Some(name),
+               config,
+             )
+
+           | None =>
+             wrap_query_module_signature(
+               ~signature,
+               definition,
+               Some("Untitled" ++ string_of_int(i)),
+               config,
+             )
+           }
+         })
+      |> List.concat;
+
+    switch (module_name) {
+    | Some(module_name) => [signature_module(module_name, contents)]
     | None => contents
     };
   };

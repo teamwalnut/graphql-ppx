@@ -34,3 +34,61 @@ module MyQuery = [%graphql
   }
 |}
 ];
+
+module Test: {
+  module MyQueryWithSig: [%graphql
+    {|
+    {
+      nestedObject {
+        inner {
+          inner {
+            field
+          }
+        }
+      }
+    }
+  |}
+  ];
+} = {
+  module MyQueryWithSig = [%graphql
+    {|
+    {
+      nestedObject {
+        inner {
+          inner {
+            field
+          }
+        }
+      }
+    }
+  |}
+  ];
+};
+
+// not sure why we would need this...
+// might remove this functionality later
+module MyQueryWithSigDirect: [%graphql
+  {|
+  {
+    nestedObject {
+      inner {
+        inner {
+          field
+        }
+      }
+    }
+  }
+  |}
+] = [%graphql
+  {|
+  {
+    nestedObject {
+      inner {
+        inner {
+          field
+        }
+      }
+    }
+  }
+|}
+];

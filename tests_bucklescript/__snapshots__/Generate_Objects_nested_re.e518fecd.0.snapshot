@@ -336,3 +336,304 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 
+module Test: {
+  module MyQueryWithSig: {
+    module Raw: {
+      type t_nestedObject_inner_inner = {. \"field\": string};
+      type t_nestedObject_inner = {
+        .
+        \"inner\": Js.Nullable.t(t_nestedObject_inner_inner),
+      };
+      type t_nestedObject = {. \"inner\": Js.Nullable.t(t_nestedObject_inner)};
+      type t = {. \"nestedObject\": t_nestedObject};
+      type t_variables = unit;
+    };
+    type t_nestedObject_inner_inner = {. \"field\": string};
+    type t_nestedObject_inner = {
+      .
+      \"inner\": option(t_nestedObject_inner_inner),
+    };
+    type t_nestedObject = {. \"inner\": option(t_nestedObject_inner)};
+    type t = {. \"nestedObject\": t_nestedObject};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  };
+} = {
+  module MyQueryWithSig: {
+    module Raw: {
+      type t_nestedObject_inner_inner = {. \"field\": string};
+      type t_nestedObject_inner = {
+        .
+        \"inner\": Js.Nullable.t(t_nestedObject_inner_inner),
+      };
+      type t_nestedObject = {. \"inner\": Js.Nullable.t(t_nestedObject_inner)};
+      type t = {. \"nestedObject\": t_nestedObject};
+      type t_variables = unit;
+    };
+    type t_nestedObject_inner_inner = {. \"field\": string};
+    type t_nestedObject_inner = {
+      .
+      \"inner\": option(t_nestedObject_inner_inner),
+    };
+    type t_nestedObject = {. \"inner\": option(t_nestedObject_inner)};
+    type t = {. \"nestedObject\": t_nestedObject};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  } = {
+    [@ocaml.warning \"-32\"];
+    module Raw = {
+      type t_nestedObject_inner_inner = {. \"field\": string};
+      type t_nestedObject_inner = {
+        .
+        \"inner\": Js.Nullable.t(t_nestedObject_inner_inner),
+      };
+      type t_nestedObject = {. \"inner\": Js.Nullable.t(t_nestedObject_inner)};
+      type t = {. \"nestedObject\": t_nestedObject};
+      type t_variables = unit;
+    };
+    type t_nestedObject_inner_inner = {. \"field\": string};
+    type t_nestedObject_inner = {
+      .
+      \"inner\": option(t_nestedObject_inner_inner),
+    };
+    type t_nestedObject = {. \"inner\": option(t_nestedObject_inner)};
+    type t = {. \"nestedObject\": t_nestedObject};
+    type t_variables = unit;
+    let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+    let parse: Raw.t => t =
+      value => {
+        let nestedObject = {
+          let value = value##nestedObject;
+          let inner = {
+            let value = value##inner;
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some(
+                {
+                  let inner = {
+                    let value = value##inner;
+                    switch (Js.toOption(value)) {
+                    | Some(value) =>
+                      Some(
+                        {
+                          let field = {
+                            let value = value##field;
+                            value;
+                          };
+                          {\"field\": field};
+                        },
+                      )
+                    | None => None
+                    };
+                  };
+                  {\"inner\": inner};
+                },
+              )
+            | None => None
+            };
+          };
+          {\"inner\": inner};
+        };
+        {\"nestedObject\": nestedObject};
+      };
+    let serialize: t => Raw.t =
+      value => {
+        let nestedObject = {
+          let value = value##nestedObject;
+          let inner = {
+            let value = value##inner;
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                {
+                  let inner = {
+                    let value = value##inner;
+                    switch (value) {
+                    | Some(value) =>
+                      Js.Nullable.return(
+                        {
+                          let field = {
+                            let value = value##field;
+                            value;
+                          };
+                          {\"field\": field};
+                        },
+                      )
+                    | None => Js.Nullable.null
+                    };
+                  };
+                  {\"inner\": inner};
+                },
+              )
+            | None => Js.Nullable.null
+            };
+          };
+          {\"inner\": inner};
+        };
+        {\"nestedObject\": nestedObject};
+      };
+    let serializeVariables = () => ();
+    let makeVariables = () => ();
+    let makeDefaultVariables = () => makeVariables();
+    external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Js.Json.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  };
+};
+module MyQueryWithSigDirect: {
+  module Raw: {
+    type t_nestedObject_inner_inner = {. \"field\": string};
+    type t_nestedObject_inner = {
+      .
+      \"inner\": Js.Nullable.t(t_nestedObject_inner_inner),
+    };
+    type t_nestedObject = {. \"inner\": Js.Nullable.t(t_nestedObject_inner)};
+    type t = {. \"nestedObject\": t_nestedObject};
+    type t_variables = unit;
+  };
+  type t_nestedObject_inner_inner = {. \"field\": string};
+  type t_nestedObject_inner = {
+    .
+    \"inner\": option(t_nestedObject_inner_inner),
+  };
+  type t_nestedObject = {. \"inner\": option(t_nestedObject_inner)};
+  type t = {. \"nestedObject\": t_nestedObject};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t_nestedObject_inner_inner = {. \"field\": string};
+    type t_nestedObject_inner = {
+      .
+      \"inner\": Js.Nullable.t(t_nestedObject_inner_inner),
+    };
+    type t_nestedObject = {. \"inner\": Js.Nullable.t(t_nestedObject_inner)};
+    type t = {. \"nestedObject\": t_nestedObject};
+    type t_variables = unit;
+  };
+  type t_nestedObject_inner_inner = {. \"field\": string};
+  type t_nestedObject_inner = {
+    .
+    \"inner\": option(t_nestedObject_inner_inner),
+  };
+  type t_nestedObject = {. \"inner\": option(t_nestedObject_inner)};
+  type t = {. \"nestedObject\": t_nestedObject};
+  type t_variables = unit;
+  let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    value => {
+      let nestedObject = {
+        let value = value##nestedObject;
+        let inner = {
+          let value = value##inner;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (Js.toOption(value)) {
+                  | Some(value) =>
+                    Some(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => None
+                  };
+                };
+                {\"inner\": inner};
+              },
+            )
+          | None => None
+          };
+        };
+        {\"inner\": inner};
+      };
+      {\"nestedObject\": nestedObject};
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let nestedObject = {
+        let value = value##nestedObject;
+        let inner = {
+          let value = value##inner;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let inner = {
+                  let value = value##inner;
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let field = {
+                          let value = value##field;
+                          value;
+                        };
+                        {\"field\": field};
+                      },
+                    )
+                  | None => Js.Nullable.null
+                  };
+                };
+                {\"inner\": inner};
+              },
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {\"inner\": inner};
+      };
+      {\"nestedObject\": nestedObject};
+    };
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+};
+

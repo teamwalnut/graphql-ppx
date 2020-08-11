@@ -158,6 +158,144 @@ var MyQuery = {
   makeDefaultVariables: makeDefaultVariables
 };
 
+var Raw$1 = {};
+
+function parse$1(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    inner = {
+      inner: !(value$3 == null) ? ({
+            field: value$3.field
+          }) : undefined
+    };
+  }
+  return {
+          nestedObject: {
+            inner: inner
+          }
+        };
+}
+
+function serialize$1(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = Caml_option.valFromOption(value$2).inner;
+    inner = {
+      inner: value$3 !== undefined ? ({
+            field: Caml_option.valFromOption(value$3).field
+          }) : null
+    };
+  } else {
+    inner = null;
+  }
+  return {
+          nestedObject: {
+            inner: inner
+          }
+        };
+}
+
+function serializeVariables$1(param) {
+  
+}
+
+function makeVariables$1(param) {
+  
+}
+
+function makeDefaultVariables$1(param) {
+  
+}
+
+var MyQueryWithSig = {
+  Raw: Raw$1,
+  query: \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
+  parse: parse$1,
+  serialize: serialize$1,
+  serializeVariables: serializeVariables$1,
+  makeVariables: makeVariables$1,
+  makeDefaultVariables: makeDefaultVariables$1
+};
+
+var Test = {
+  MyQueryWithSig: MyQueryWithSig
+};
+
+var Raw$2 = {};
+
+function parse$2(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 == null) {
+    inner = undefined;
+  } else {
+    var value$3 = value$2.inner;
+    inner = {
+      inner: !(value$3 == null) ? ({
+            field: value$3.field
+          }) : undefined
+    };
+  }
+  return {
+          nestedObject: {
+            inner: inner
+          }
+        };
+}
+
+function serialize$2(value) {
+  var value$1 = value.nestedObject;
+  var value$2 = value$1.inner;
+  var inner;
+  if (value$2 !== undefined) {
+    var value$3 = Caml_option.valFromOption(value$2).inner;
+    inner = {
+      inner: value$3 !== undefined ? ({
+            field: Caml_option.valFromOption(value$3).field
+          }) : null
+    };
+  } else {
+    inner = null;
+  }
+  return {
+          nestedObject: {
+            inner: inner
+          }
+        };
+}
+
+function serializeVariables$2(param) {
+  
+}
+
+function makeVariables$2(param) {
+  
+}
+
+function makeDefaultVariables$2(param) {
+  
+}
+
+var MyQueryWithSigDirect = {
+  Raw: Raw$2,
+  query: \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\",
+  parse: parse$2,
+  serialize: serialize$2,
+  serializeVariables: serializeVariables$2,
+  makeVariables: makeVariables$2,
+  makeDefaultVariables: makeDefaultVariables$2
+};
+
 exports.MyQuery = MyQuery;
+exports.Test = Test;
+exports.MyQueryWithSigDirect = MyQueryWithSigDirect;
 /* No side effect */
 
