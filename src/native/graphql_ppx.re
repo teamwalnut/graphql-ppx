@@ -88,6 +88,23 @@ let drop_prefix = (prefix, str) => {
   String.sub(str, len, rest);
 };
 
+let empty_query_config =
+  Result_decoder.{
+    schema: None,
+    records: None,
+    objects: None,
+    inline: None,
+    tagged_template: None,
+    template_tag: None,
+    template_tag_location: None,
+    template_tag_import: None,
+    template_tag_return_type: None,
+    future_added_value: None,
+    extend: None,
+    fragment_in_query: None,
+    apollo_mode: None,
+  };
+
 let rewrite_definition = (~schema=?, ~loc, ~delim, ~query, ()) => {
   open Ast_408;
 
@@ -120,46 +137,57 @@ let rewrite_definition = (~schema=?, ~loc, ~delim, ~query, ()) => {
         ),
       )
     | Result.Ok(document) =>
-      let config = {
-        Generator_utils.map_loc: add_loc(delimLength, loc),
-        delimiter: delim,
-        full_document: document,
-        /*  the only call site of schema, make it lazy! */
-        schema: Lazy.force(Read_schema.get_schema(schema)),
-        template_tag: (None, None, None),
-        template_tag_return_type: None,
-        records: false,
-        inline: false,
-        future_added_value: Ppx_config.future_added_value(),
-        extend: None,
-        fragment_in_query: Include,
-      };
-      switch (Validations.run_validators(config, document)) {
-      | (Some(errs), _) =>
-        Ast_helper.Mod.mk(
-          Pmod_structure(
-            List.map(
-              ((loc, msg)) => {
-                let loc = conv_loc(loc);
-                %stri
-                [%e make_error_expr(loc, msg)];
-              },
-              errs,
-            ),
-          ),
-        )
-      | (None, warnings) =>
-        warnings
-        |> List.iter(((loc, message)) => {
-             let loc = conv_loc(loc);
-             Location.print_warning(
-               loc,
-               Location.formatter_for_warnings^,
-               Warnings.Preprocessor(message),
-             );
-           });
-        let parts = Result_decoder.unify_document_schema(config, document);
-        Output_native_module.generate_modules(config, parts);
+      let map_loc = add_loc(delimLength, loc);
+
+      let document_with_config =
+        Result_decoder.generate_config(
+          ~map_loc,
+          ~delimiter=delim,
+          ~initial_query_config={...empty_query_config, schema},
+          document,
+        );
+
+      let errors =
+        document_with_config
+        |> List.fold_left(
+             (acc, (definition, config)) => {
+               switch (Validations.run_validators(config, [definition])) {
+               | (Some(errs), _) =>
+                 List.append(
+                   List.map(
+                     ((loc, msg)) => {
+                       let loc = conv_loc(loc);
+                       %stri
+                       [%e make_error_expr(loc, msg)];
+                     },
+                     errs,
+                   ),
+                   acc,
+                 )
+               | (None, warnings) =>
+                 warnings
+                 |> List.iter(((loc, message)) => {
+                      let loc = conv_loc(loc);
+                      Location.print_warning(
+                        loc,
+                        Location.formatter_for_warnings^,
+                        Warnings.Preprocessor(message),
+                      );
+                    });
+                 acc;
+               }
+             },
+             [],
+           )
+        |> List.rev;
+
+      switch (errors) {
+      | [] =>
+        document_with_config
+        |> Result_decoder.unify_document_schema
+        |> Output_native_module.generate_modules
+
+      | errors => Ast_helper.Mod.mk(Pmod_structure(errors))
       };
     };
   };

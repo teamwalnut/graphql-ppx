@@ -6,6 +6,13 @@ open Type_utils;
 open Generator_utils;
 open Result_structure;
 
+let get_with_default = (value, default_value) => {
+  switch (value) {
+  | Some(value) => Some(value)
+  | None => default_value
+  };
+};
+
 let make_error = (error_marker, map_loc, span, message) => {
   let () = error_marker.has_error = true;
   Res_error({loc: map_loc(span), message});
@@ -837,32 +844,283 @@ let getFragmentArgumentDefinitions =
   };
 };
 
-let rec unify_document_schema = (config, document) => {
+type query_config = {
+  schema: option(string),
+  records: option(bool),
+  objects: option(bool),
+  inline: option(bool),
+  template_tag: option(string),
+  template_tag_location: option(string),
+  template_tag_import: option(string),
+  template_tag_return_type: option(string),
+  tagged_template: option(bool),
+  future_added_value: option(bool),
+  extend: option(string),
+  fragment_in_query: option(Ppx_config.fragment_in_query),
+  apollo_mode: option(bool),
+};
+
+let get_template_tag = query_config => {
+  switch (query_config.tagged_template) {
+  | Some(false) => (None, None, None)
+  | _ =>
+    switch (
+      get_with_default(query_config.template_tag, Ppx_config.template_tag()),
+      get_with_default(
+        query_config.template_tag_location,
+        Ppx_config.template_tag_location(),
+      ),
+      get_with_default(
+        query_config.template_tag_import,
+        Ppx_config.template_tag_import(),
+      ),
+    ) {
+    | (Some(tag), Some(location), Some(import)) => (
+        Some(tag),
+        Some(location),
+        Some(import),
+      )
+    | (None, Some(location), Some(import)) => (
+        Some(import),
+        Some(location),
+        Some(import),
+      )
+    | (Some(tag), Some(location), None) => (
+        Some(tag),
+        Some(location),
+        Some("default"),
+      )
+    | (None, Some(location), None) => (
+        None,
+        Some(location),
+        Some("default"),
+      )
+    | (Some(tag), None, Some(_))
+    | (Some(tag), None, None) => (Some(tag), None, None)
+    | (None, _, _) => (None, None, None)
+    }
+  };
+};
+
+let get_config_arguments = directives => {
+  Graphql_ast.(
+    directives
+    |> filter_map(
+         fun
+         | {
+             item: {
+               d_name: {item: "ppxConfig"},
+               d_arguments: Some({item: arguments}),
+             },
+           } =>
+           Some(arguments)
+         | _ => None,
+       )
+    |> List.concat
+  );
+};
+
+/**
+  Allow configuration per definition using directives
+*/
+
+let config_arguments_to_config =
+    (existing_query_config, directive_arguments): query_config => {
+  Graphql_ast.(
+    directive_arguments
+    |> List.fold_left(
+         config =>
+           fun
+           | ({item: "schema"}, {item: Iv_string(value)}) => {
+               ...config,
+               schema: Some(value),
+             }
+           | ({item: "records"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               records: Some(value),
+             }
+           | ({item: "objects"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               objects: Some(value),
+             }
+           | ({item: "inline"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               inline: Some(value),
+             }
+           | ({item: "templateTag"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag: Some(value),
+             }
+           | ({item: "templateTagLocation"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_location: Some(value),
+             }
+           | ({item: "templateTagImport"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_import: Some(value),
+             }
+           | ({item: "templateTagReturnType"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_return_type: Some(value),
+             }
+           | ({item: "taggedTemplate"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               tagged_template: Some(value),
+             }
+           | ({item: "futureAddedValue"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               future_added_value: Some(value),
+             }
+           | ({item: "extend"}, {item: Iv_string(value)}) => {
+               ...config,
+               extend: Some(value),
+             }
+           | ({item: "fragmentInQuery"}, {item: Iv_string("include")}) => {
+               ...config,
+               fragment_in_query: Some(Include),
+             }
+           | ({item: "fragmentInQuery"}, {item: Iv_string("exclude")}) => {
+               ...config,
+               fragment_in_query: Some(Exclude),
+             }
+           | ({item: "apollo_mode"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               apollo_mode: Some(value),
+             }
+           | _ => config,
+         existing_query_config,
+       )
+  );
+};
+
+let to_output_config =
+    (~map_loc, ~delimiter, ~document, (definition, query_config)) => {
+  let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
+  let definition =
+    switch (
+      {
+        (
+          if (switch (query_config.apollo_mode) {
+              | None => Ppx_config.apollo_mode()
+              | Some(apollo_mode) => apollo_mode
+              }) {
+            [definition]
+            |> Ast_transforms.add_typename_to_selection_set(schema);
+          } else {
+            [definition];
+          }
+        )
+        |> Ast_transforms.remove_typename_from_union(schema);
+      }
+    ) {
+    | [definition] => definition
+    | _ => definition
+    };
+
+  let template_tag = get_template_tag(query_config);
+
+  (
+    definition,
+    {
+      Generator_utils.map_loc,
+      delimiter,
+      full_document: document,
+      records:
+        switch (query_config.records, query_config.objects) {
+        | (Some(value), _) => value
+        | (_, Some(true)) => false
+        | (_, Some(false)) => true
+        | (None, None) => Ppx_config.records()
+        },
+      inline:
+        switch (query_config.inline) {
+        | Some(value) => value
+        | None => false
+        },
+      future_added_value:
+        switch (query_config.future_added_value) {
+        | Some(value) => value
+        | None => Ppx_config.future_added_value()
+        },
+      /*  the only call site of schema, make it lazy! */
+      schema,
+      template_tag,
+      template_tag_return_type:
+        get_with_default(
+          query_config.template_tag_return_type,
+          Ppx_config.template_tag_return_type(),
+        ),
+      extend: query_config.extend,
+      fragment_in_query:
+        switch (query_config.fragment_in_query) {
+        | Some(value) => value
+        | None => Ppx_config.fragment_in_query()
+        },
+    },
+  );
+};
+
+let rec generate_config =
+        (~map_loc, ~delimiter, ~initial_query_config, document) => {
+  switch (document) {
+  | [Operation({item: {o_directives: directives}}) as definition, ...rest]
+  | [Fragment({item: {fg_directives: directives}}) as definition, ...rest] =>
+    let query_config =
+      directives
+      |> get_config_arguments
+      |> config_arguments_to_config(initial_query_config);
+    [
+      to_output_config(
+        ~document,
+        ~map_loc,
+        ~delimiter,
+        (definition, query_config),
+      ),
+      ...generate_config(~map_loc, ~delimiter, ~initial_query_config, rest),
+    ];
+  | [] => []
+  };
+};
+
+let rec unify_document_schema = document => {
   let error_marker = {Generator_utils.has_error: false};
   switch (document) {
-  | [Operation({item: {o_variable_definitions, _}, _} as op), ...rest] =>
+  | [
+      (Operation({item: {o_variable_definitions, _}, _} as op), config),
+      ...rest,
+    ] =>
     let structure = unify_operation(error_marker, config, op);
     [
-      Def_operation({
-        variable_definitions: o_variable_definitions,
-        has_error: error_marker.has_error,
-        operation: op,
-        inner: structure,
-      }),
-      ...unify_document_schema(config, rest),
+      (
+        Def_operation({
+          variable_definitions: o_variable_definitions,
+          has_error: error_marker.has_error,
+          operation: op,
+          inner: structure,
+        }),
+        config,
+      ),
+      ...unify_document_schema(rest),
     ];
   | [
-      Fragment(
-        {
-          item: {fg_name, fg_selection_set, fg_type_condition, fg_directives},
-          span,
-        } as fg,
+      (
+        Fragment(
+          {
+            item: {
+              fg_name,
+              fg_selection_set,
+              fg_type_condition,
+              fg_directives,
+            },
+            span,
+          } as fg,
+        ),
+        config,
       ),
       ...rest,
     ] => [
       {
         open Result;
-
         let with_decoder =
           switch (
             switch (
@@ -913,65 +1171,72 @@ let rec unify_document_schema = (config, document) => {
 
         let argumentDefinitions =
           getFragmentArgumentDefinitions(fg_directives);
-        switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
-        | None =>
-          Def_fragment({
-            name: fg_name.item,
-            req_vars: argumentDefinitions,
-            has_error: true,
-            fragment: fg,
-            type_name: None,
-            inner:
-              make_error(
-                error_marker,
-                config.map_loc,
-                fg_type_condition.span,
-                Printf.sprintf("Unknown type \"%s\"", fg_type_condition.item),
-              ),
-          })
-        | Some(ty) =>
-          let existing_record = get_ppx_as(fg_directives);
-          let structure =
-            unify_selection_set(
-              error_marker,
-              is_record,
-              existing_record,
-              config,
-              span,
-              ty,
-              Some(fg_selection_set),
-            );
 
-          let argumentDefinitions =
-            getFragmentArgumentDefinitions(fg_directives);
-
-          switch (with_decoder) {
-          | Error(err) =>
+        (
+          switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
+          | None =>
             Def_fragment({
               name: fg_name.item,
               req_vars: argumentDefinitions,
               has_error: true,
               fragment: fg,
-              type_name: existing_record,
-              inner: err,
-            })
-          | Ok(decoder) =>
-            Def_fragment({
-              name: fg_name.item,
-              req_vars: argumentDefinitions,
-              has_error: error_marker.has_error,
-              fragment: fg,
-              type_name: existing_record,
+              type_name: None,
               inner:
-                switch (decoder) {
-                | Some(decoder) => decoder(structure)
-                | None => structure
-                },
+                make_error(
+                  error_marker,
+                  config.map_loc,
+                  fg_type_condition.span,
+                  Printf.sprintf(
+                    "Unknown type \"%s\"",
+                    fg_type_condition.item,
+                  ),
+                ),
             })
-          };
-        };
+          | Some(ty) =>
+            let existing_record = get_ppx_as(fg_directives);
+            let structure =
+              unify_selection_set(
+                error_marker,
+                is_record,
+                existing_record,
+                config,
+                span,
+                ty,
+                Some(fg_selection_set),
+              );
+
+            let argumentDefinitions =
+              getFragmentArgumentDefinitions(fg_directives);
+
+            switch (with_decoder) {
+            | Error(err) =>
+              Def_fragment({
+                name: fg_name.item,
+                req_vars: argumentDefinitions,
+                has_error: true,
+                fragment: fg,
+                type_name: existing_record,
+                inner: err,
+              })
+            | Ok(decoder) =>
+              Def_fragment({
+                name: fg_name.item,
+                req_vars: argumentDefinitions,
+                has_error: error_marker.has_error,
+                fragment: fg,
+                type_name: existing_record,
+                inner:
+                  switch (decoder) {
+                  | Some(decoder) => decoder(structure)
+                  | None => structure
+                  },
+              })
+            };
+          },
+          config,
+        );
       },
-      ...unify_document_schema(config, rest),
+      ...unify_document_schema(rest),
     ]
   | [] => []
   };

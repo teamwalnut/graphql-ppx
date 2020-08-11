@@ -992,7 +992,6 @@ let generate_definition = config =>
       ),
       generate_operation_signature(config, vdefs, structure),
     )
-
   | Def_fragment({
       name,
       req_vars,
@@ -1021,10 +1020,10 @@ let generate_definition = config =>
       ),
     );
 
-let generate_modules = (config, module_name, module_type, operations) => {
+let generate_modules = (module_name, module_type, operations) => {
   switch (operations) {
   | [] => []
-  | [operation] =>
+  | [(operation, config)] =>
     switch (generate_definition(config, operation)) {
     | ((definition, Some(name), contents, loc), signature) =>
       let module_type =
@@ -1062,8 +1061,11 @@ let generate_modules = (config, module_name, module_type, operations) => {
   | operations =>
     let contents =
       operations
-      |> List.map(generate_definition(config))
-      |> List.mapi((i, ((definition, name, contents, loc), signature)) => {
+      |> List.map(((operation, config)) =>
+           (generate_definition(config, operation), config)
+         )
+      |> List.mapi(
+           (i, (((definition, name, contents, loc), signature), config)) => {
            let module_type =
              switch (module_type) {
              | Some(module_type) => module_type
