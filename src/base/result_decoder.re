@@ -931,9 +931,61 @@ let config_arguments_to_config =
     |> List.fold_left(
          config =>
            fun
-           | ({item: "schema"}, {item: Iv_string(location)}) => {
+           | ({item: "schema"}, {item: Iv_string(value)}) => {
                ...config,
-               schema: Some(location),
+               schema: Some(value),
+             }
+           | ({item: "records"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               records: Some(value),
+             }
+           | ({item: "objects"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               objects: Some(value),
+             }
+           | ({item: "inline"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               inline: Some(value),
+             }
+           | ({item: "templateTag"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag: Some(value),
+             }
+           | ({item: "templateTagLocation"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_location: Some(value),
+             }
+           | ({item: "templateTagImport"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_import: Some(value),
+             }
+           | ({item: "templateTagReturnType"}, {item: Iv_string(value)}) => {
+               ...config,
+               template_tag_return_type: Some(value),
+             }
+           | ({item: "taggedTemplate"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               tagged_template: Some(value),
+             }
+           | ({item: "futureAddedValue"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               future_added_value: Some(value),
+             }
+           | ({item: "extend"}, {item: Iv_string(value)}) => {
+               ...config,
+               extend: Some(value),
+             }
+           | ({item: "fragmentInQuery"}, {item: Iv_string("include")}) => {
+               ...config,
+               fragment_in_query: Some(Include),
+             }
+           | ({item: "fragmentInQuery"}, {item: Iv_string("exclude")}) => {
+               ...config,
+               fragment_in_query: Some(Exclude),
+             }
+           | ({item: "apollo_mode"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               apollo_mode: Some(value),
              }
            | _ => config,
          existing_query_config,
