@@ -4,7 +4,6 @@ open Result_structure;
 open Extract_type_definitions;
 open Source_pos;
 open Output_bucklescript_utils;
-
 open Ast_408;
 open Parsetree;
 

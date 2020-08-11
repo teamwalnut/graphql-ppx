@@ -295,7 +295,11 @@ let generate_operation = config =>
       structure,
     );
 
-let generate_modules = (config, operations) => {
-  let generated = List.map(generate_operation(config), operations);
+let generate_modules = operations => {
+  let generated =
+    List.map(
+      ((definition, config)) => generate_operation(config, definition),
+      operations,
+    );
   Mod.mk(Pmod_structure(List.concat(generated)));
 };

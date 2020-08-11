@@ -1,8 +1,21 @@
 open Migrate_parsetree;
 open Graphql_ppx_base;
 open Source_pos;
-
 open Output_bucklescript_utils;
+
+// not available in all supported versions of OCaml so inlining here
+let filter_map = f => {
+  let rec aux = accu =>
+    fun
+    | [] => List.rev(accu)
+    | [x, ...l] =>
+      switch (f(x)) {
+      | None => aux(accu, l)
+      | Some(v) => aux([v, ...accu], l)
+      };
+
+  aux([]);
+};
 
 let add_loc = (delimLength, base, span) => {
   let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
@@ -52,14 +65,6 @@ let fmt_lex_err = err =>
     | Invalid_number => Printf.sprintf("Invalid number")
     }
   );
-
-let global_records = () => Ppx_config.records();
-let global_template_tag = () => Ppx_config.template_tag();
-let global_template_tag_import = () => Ppx_config.template_tag_import();
-let global_template_tag_location = () => Ppx_config.template_tag_location();
-let global_template_tag_return_type = () =>
-  Ppx_config.template_tag_return_type();
-let global_fragment_in_query = () => Ppx_config.fragment_in_query();
 
 let fmt_parse_err = err =>
   Graphql_parser.(
@@ -263,56 +268,47 @@ let extract_future_added_value_from_config =
 let extract_tagged_template_config =
   extract_bool_from_config("taggedTemplate");
 
-type query_config = {
-  schema: option(string),
-  records: option(bool),
-  objects: option(bool),
-  inline: option(bool),
-  template_tag: option(string),
-  template_tag_location: option(string),
-  template_tag_import: option(string),
-  template_tag_return_type: option(string),
-  tagged_template: option(bool),
-  future_added_value: option(bool),
-  extend: option(string),
-  fragment_in_query: option(Ppx_config.fragment_in_query),
-  apollo_mode: option(bool),
-};
+type query_config = Result_decoder.query_config;
 
-let get_query_config = fields => {
-  {
-    schema: extract_schema_from_config(fields),
-    records: extract_records_from_config(fields),
-    objects: extract_objects_from_config(fields),
-    inline: extract_inline_from_config(fields),
-    template_tag: extract_template_tag_from_config(fields),
-    template_tag_import: extract_template_tag_import_from_config(fields),
-    template_tag_location: extract_template_tag_location_from_config(fields),
-    template_tag_return_type:
-      extract_template_tag_return_type_from_config(fields),
-    tagged_template: extract_tagged_template_config(fields),
-    future_added_value: extract_future_added_value_from_config(fields),
-    extend: extract_extend_from_config(fields),
-    fragment_in_query: extract_fragment_in_query_from_config(fields),
-    apollo_mode: extract_apollo_mode_from_config(fields),
+let get_query_config_from_trailing_record = fields =>
+  Result_decoder.(
+    {
+      {
+        schema: extract_schema_from_config(fields),
+        records: extract_records_from_config(fields),
+        objects: extract_objects_from_config(fields),
+        inline: extract_inline_from_config(fields),
+        template_tag: extract_template_tag_from_config(fields),
+        template_tag_import: extract_template_tag_import_from_config(fields),
+        template_tag_location:
+          extract_template_tag_location_from_config(fields),
+        template_tag_return_type:
+          extract_template_tag_return_type_from_config(fields),
+        tagged_template: extract_tagged_template_config(fields),
+        future_added_value: extract_future_added_value_from_config(fields),
+        extend: extract_extend_from_config(fields),
+        fragment_in_query: extract_fragment_in_query_from_config(fields),
+        apollo_mode: extract_apollo_mode_from_config(fields),
+      };
+    }
+  );
+
+let empty_query_config =
+  Result_decoder.{
+    schema: None,
+    records: None,
+    objects: None,
+    inline: None,
+    tagged_template: None,
+    template_tag: None,
+    template_tag_location: None,
+    template_tag_import: None,
+    template_tag_return_type: None,
+    future_added_value: None,
+    extend: None,
+    fragment_in_query: None,
+    apollo_mode: None,
   };
-};
-
-let empty_query_config = {
-  schema: None,
-  records: None,
-  objects: None,
-  inline: None,
-  tagged_template: None,
-  template_tag: None,
-  template_tag_location: None,
-  template_tag_import: None,
-  template_tag_return_type: None,
-  future_added_value: None,
-  extend: None,
-  fragment_in_query: None,
-  apollo_mode: None,
-};
 
 let get_with_default = (value, default_value) => {
   switch (value) {
@@ -321,52 +317,30 @@ let get_with_default = (value, default_value) => {
   };
 };
 
-let get_template_tag = query_config => {
-  switch (query_config.tagged_template) {
-  | Some(false) => (None, None, None)
-  | _ =>
-    switch (
-      get_with_default(query_config.template_tag, global_template_tag()),
-      get_with_default(
-        query_config.template_tag_location,
-        global_template_tag_location(),
-      ),
-      get_with_default(
-        query_config.template_tag_import,
-        global_template_tag_import(),
-      ),
-    ) {
-    | (Some(tag), Some(location), Some(import)) => (
-        Some(tag),
-        Some(location),
-        Some(import),
-      )
-    | (None, Some(location), Some(import)) => (
-        Some(import),
-        Some(location),
-        Some(import),
-      )
-    | (Some(tag), Some(location), None) => (
-        Some(tag),
-        Some(location),
-        Some("default"),
-      )
-    | (None, Some(location), None) => (
-        None,
-        Some(location),
-        Some("default"),
-      )
-    | (Some(tag), None, Some(_))
-    | (Some(tag), None, None) => (Some(tag), None, None)
-    | (None, _, _) => (None, None, None)
-    }
+let run_validations = (config, definition) => {
+  switch (Validations.run_validators(config, [definition])) {
+  | (Some(errs), _) =>
+    Some(
+      errs
+      |> List.rev
+      |> List.map(((loc, msg)) => {
+           let loc = conv_loc(loc);
+           %stri
+           [%e make_error_expr(loc, msg)];
+         }),
+    )
+  | (None, warnings) =>
+    warnings
+    |> List.iter(((loc, message)) => {
+         let loc = conv_loc(loc);
+         Location.print_warning(
+           loc,
+           Location.formatter_for_warnings^,
+           Warnings.Preprocessor(message),
+         );
+       });
+    None;
   };
-};
-
-let directives_to_config = (directives, extension_point_config) => {
-  // todo write reducer for query config by iterating on the directives and
-  // pattern matching
-  extension_point_config;
 };
 
 let rewrite_definition =
@@ -387,6 +361,7 @@ let rewrite_definition =
     | Some(s) => 2 + String.length(s)
     | None => 1
     };
+
   switch (Graphql_lexer.consume(lexer)) {
   | Result.Error(e) =>
     raise(
@@ -410,6 +385,7 @@ let rewrite_definition =
         ),
       )
     | Result.Ok(document) =>
+      // TODO: See if we can do this per definition
       let schema = Lazy.force(Read_schema.get_schema(query_config.schema));
       let document =
         (
@@ -424,99 +400,40 @@ let rewrite_definition =
         )
         |> Ast_transforms.remove_typename_from_union(schema);
 
-      let template_tag = get_template_tag(query_config);
-
-      let config = {
-        Generator_utils.map_loc: add_loc(delimLength, loc),
-        delimiter: delim,
-        full_document: document,
-        records:
-          switch (query_config.records, query_config.objects) {
-          | (Some(value), _) => value
-          | (_, Some(true)) => false
-          | (_, Some(false)) => true
-          | (None, None) => global_records()
-          },
-        inline:
-          switch (query_config.inline) {
-          | Some(value) => value
-          | None => false
-          },
-        future_added_value:
-          switch (query_config.future_added_value) {
-          | Some(value) => value
-          | None => Ppx_config.future_added_value()
-          },
-        /*  the only call site of schema, make it lazy! */
-        schema,
-        template_tag,
-        template_tag_return_type:
-          get_with_default(
-            query_config.template_tag_return_type,
-            global_template_tag_return_type(),
-          ),
-        extend: query_config.extend,
-        fragment_in_query:
-          switch (query_config.fragment_in_query) {
-          | Some(value) => value
-          | None => global_fragment_in_query()
-          },
-      };
-      switch (Validations.run_validators(config, document)) {
-      | (Some(errs), _) =>
-        errs
-        |> List.rev
-        |> List.map(((loc, msg)) => {
-             let loc = conv_loc(loc);
-             %stri
-             [%e make_error_expr(loc, msg)];
-           })
-      | (None, warnings) =>
-        warnings
-        |> List.iter(((loc, message)) => {
-             let loc = conv_loc(loc);
-             Location.print_warning(
-               loc,
-               Location.formatter_for_warnings^,
-               Warnings.Preprocessor(message),
-             );
-           });
-
-        Result_structure.(
-          Result_decoder.unify_document_schema(config, document)
-          |> List.map(
-               fun
-               | Def_fragment({
-                   fragment: {item: {fg_directives: directives}},
-                 }) as definition
-               | Def_operation({
-                   operation: {item: {o_directives: directives}},
-                 }) as definition => (
-                   definition,
-                   directives_to_config(directives, config),
-                 ),
-             )
-          |> Output_bucklescript_module.generate_modules(
-               module_name,
-               module_type,
-             )
+      let document_with_config =
+        Result_decoder.generate_config(
+          ~schema,
+          ~map_loc=add_loc(delimLength, loc),
+          ~delimiter=delim,
+          ~initial_query_config=query_config,
+          document,
         );
+
+      let errors =
+        document_with_config
+        |> List.fold_left(
+             (acc, (definition, config)) => {
+               switch (run_validations(config, definition)) {
+               | Some(error) => [error, ...acc]
+               | None => acc
+               }
+             },
+             [],
+           )
+        |> List.rev;
+
+      switch (errors) {
+      | [] =>
+        document_with_config
+        |> Result_decoder.unify_document_schema
+        |> Output_bucklescript_module.generate_modules(
+             module_name,
+             module_type,
+           )
+      | errors => errors |> List.concat
       };
     };
   };
-};
-
-let filter_map = f => {
-  let rec aux = accu =>
-    fun
-    | [] => List.rev(accu)
-    | [x, ...l] =>
-      switch (f(x)) {
-      | None => aux(accu, l)
-      | Some(v) => aux([v, ...accu], l)
-      };
-
-  aux([]);
 };
 
 // Default configuration
@@ -651,7 +568,8 @@ let mapper = (_config, _cookies) => {
                          ]) =>
                          List.append(
                            rewrite_definition(
-                             ~query_config=get_query_config(fields),
+                             ~query_config=
+                               get_query_config_from_trailing_record(fields),
                              ~loc=conv_loc_from_ast(loc),
                              ~delim,
                              ~query,
@@ -794,7 +712,9 @@ let mapper = (_config, _cookies) => {
                                             get_module_bindings(
                                               rewrite_definition(
                                                 ~query_config=
-                                                  get_query_config(fields),
+                                                  get_query_config_from_trailing_record(
+                                                    fields,
+                                                  ),
                                                 ~loc=conv_loc_from_ast(loc),
                                                 ~delim,
                                                 ~query,

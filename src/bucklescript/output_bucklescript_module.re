@@ -991,7 +991,6 @@ let generate_definition = config =>
       ),
       generate_operation_signature(config, vdefs, structure),
     )
-
   | Def_fragment({
       name,
       req_vars,
