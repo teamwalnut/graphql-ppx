@@ -12,7 +12,7 @@ module type GraphQLQuery = {
 };
 
 module Parent = {
-  module ExtendQuery = (M: GraphQLQuery) => {
+  module ExtendQuery = (M: GraphQLQuery) : {let use: unit => unit;} => {
     let use = () => ();
   };
 };

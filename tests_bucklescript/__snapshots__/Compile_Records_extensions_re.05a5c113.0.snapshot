@@ -114,6 +114,7 @@ function use(param) {
 }
 
 var Bla = {
+  Bla_inner: Bla_inner,
   Raw: Raw,
   query: query,
   parse: parse,
@@ -222,7 +223,6 @@ function use$1(param) {
 }
 
 exports.Parent = Parent;
-exports.Bla_inner = Bla_inner;
 exports.Bla = Bla;
 exports.Inner = Inner;
 exports.Raw = Raw$1;
