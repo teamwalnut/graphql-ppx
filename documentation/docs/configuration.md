@@ -2,9 +2,7 @@
 title: Configuration
 ---
 
-## `bsconfig.json`
-
-## configuration in extension point
+## Configuration inside of graphql definitions
 
 If you want to use multiple schemas in your project it can be provided as a
 secondary config argument in your `graphql-ppx` definition.
@@ -12,34 +10,45 @@ secondary config argument in your `graphql-ppx` definition.
 ```reason
 module MyQuery = [%graphql
   {|
-    query pokemon($id: String, $name: String) {
+    query pokemon($id: String, $name: String)
+      @ppxConfig(schema: "pokedex_schema.json") {
       pokemon(name: $name, id: $id) {
         id
         name
       }
     }
-  |};
-  {schema: "pokedex_schema.json"}
+  |}
 ];
 ```
 
-This will use the `pokedex_schema.json` instead of using the default
-`graphql_schema.json` file.
+## Configuration in `bsconfig.json`
 
-This opens up the possibility to use multiple different GraphQL APIs in the same
-project.
+You can configure `graphql-ppx` globally using `bsconfig.json` under the
+`graphql` key.
 
-**Note** the path to your file is based on where you run `bsb`. In this case
-`pokedex_schema.json` is a sibling to `node_modules`.
+```json
+{
+  "name": "my-project",
+  "graphql": {
+    "schema": "pokedex_schema.json"
+  }
+}
+```
 
-## command line configuration
+## Command line configuration
 
-### -apollo-mode
+You can also configure `graphql-ppx` using command line arguments of the `ppx`
+executable.
 
-By default `graphql-ppx` adds `__typename` only to fields on which we need those
-informations (Unions and Interfaces). If you want to add `__typename` on every
-object in a query you can specify it by using `-apollo-mode` in `ppx-flags`.
-It's usefull in case of using `apollo-client` because of it's cache.
+for instance:
+
+```json
+"ppx-flags": [
+  ["@reasonml-community/graphql-ppx/ppx", "-schema ../graphql_schema.json"]
+],
+```
+
+or
 
 ```json
 "ppx-flags": [
@@ -47,14 +56,74 @@ It's usefull in case of using `apollo-client` because of it's cache.
 ],
 ```
 
-### -schema
+## Configuration options
+
+The configuration options are in `kebab-case` for command line arguments and
+`bsconfig.json` configuration, but in `camelCase` for directives on a GraphQL
+definition.
+
+### schema
 
 By default `graphql-ppx` uses `graphql_schema.json` file from your root
-directory. You can override it by providing `-schema` argument in `ppx-flags` to
-overriding it.
+directory. You can override it with the `schema` option.
 
-```json
-"ppx-flags": [
-  ["@baransu/graphql-ppx/ppx", "-schema ../graphql_schema.json"]
-],
-```
+This opens up the possibility to use multiple different GraphQL APIs in the same
+project.
+
+**Note** the path to your file is based on where you run `bsb`. In this case
+`pokedex_schema.json` is a sibling to `node_modules`.
+
+### objects
+
+Globally compile definitions to use objects instead of records (to have a
+migration path with with 0.x versions of `graphql-ppx`.
+
+### fragmentInQuery
+
+This option can be either "include" or "exclude". It configures if the fragment
+definition is included in the query. Necessary for Apollo, but not necessary for
+for instance Gatsby.
+
+### apolloMode
+
+By default `graphql-ppx` adds `__typename` only to fields on which we need those
+informations (Unions and Interfaces). If you want to add `__typename` on every
+object in a query you can specify it by using `apolloMode`.
+
+### customFields
+
+Custom fields allow a mapping from GraphQL type names to modules with a type
+(`t`), `parse` and `serialize` functions.
+
+### template tag literal support
+
+These options facilitate template tag literal support
+
+- `templateTag`
+
+- `templateTagLocation`
+
+- `templateTagLocation`
+
+- `templateTagImport`
+
+- `templateTagReturnType`
+
+### extension
+
+We allow the extension of the GraphQL definition modules using the following
+configuration:
+
+- `extendQuery`
+
+- `extendQueryNoRequiredVariables`
+
+- `extendMutation`
+
+- `extendMutationNoRequiredVariables`
+
+- `extendSubscription`
+
+- `extendSubscriptionNoRequiredVariables`
+
+- `extendFragment`

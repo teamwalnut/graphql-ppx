@@ -52,7 +52,7 @@ module type GraphQLQuery = {
   let query: string;
   /* this just makes sure it's just a type conversion, and no function have
      to be called */
-  external cast: Js.Json.t => Raw.t = "%identity";
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   let parse: Raw.t => t;
 };
 ```
@@ -108,24 +108,20 @@ module ExtendedUserQuery = {
 };
 ```
 
-This is why there is a way to let Graphql-ppx do this work for you. You can do
+This is why there is a way to let `graphql-ppx` do this work for you. You can do
 it on a query basis:
 
 ```reason
 [%graphql {|
-  query UserQuery {
+  query UserQuery @ppxConfig(extend: "ExtendQuery") {
     user {
       id
       name
     }
   }
-|}; {extend: "ExtendQuery"}
+|}
 ];
 ```
-
-This will name the original query as `UserQuery'` (mind the prime symbol), and
-the extended query would be `UserQuery`. (That `UserQuery'` is still available
-is an implementation detail.)
 
 Most probably you'd want to do this for each query in your project. This is
 possible by using the BuckleScript configuration file (`bsconfig.json`):

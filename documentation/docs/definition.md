@@ -51,8 +51,18 @@ Arrays are just typed as `array`.
 
 ##### Interfaces
 
-Interfaces are typed just like unions. We do not allow shared field at the
-moment.
+Interfaces can be typed in three way. If you **justt** have inline fragments,
+they are typed as polymorphic variants. If you just have shared fields, they are
+just typed as a record. In case you have both, it's typed as a record with an
+extra `fragment` field:
+
+```reason
+type t_user = {
+  fragment: t_user_User
+  id: string
+  ...any other fields you might have
+}
+```
 
 ##### Scalars (String / Int / Float)
 
