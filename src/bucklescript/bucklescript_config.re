@@ -118,175 +118,207 @@ let read_config = () => {
   let parseConfig = (json: Yojson.Basic.t) => {
     let ppxConfig = json |> member("graphql");
 
-    ppxConfig
-    |> JsonHelper.mapBool("verbose", verbose_logging => {
-         Ppx_config.update_config(current => {...current, verbose_logging})
-       });
-    ppxConfig
-    |> JsonHelper.mapBool("future-added-value", future_added_value => {
-         Ppx_config.update_config(current => {...current, future_added_value})
-       });
-    ppxConfig
-    |> JsonHelper.mapBool("apollo-mode", apollo_mode => {
-         Ppx_config.update_config(current => {...current, apollo_mode})
-       });
-    ppxConfig
-    |> JsonHelper.mapString("schema", schema_file => {
-         Ppx_config.update_config(current => {...current, schema_file})
-       });
-    ppxConfig
-    |> JsonHelper.mapString("ast-out", ast_out => {
-         Ppx_config.update_config(current =>
-           {
-             ...current,
-             output_mode:
-               switch (ast_out) {
-               | "apollo" => Ppx_config.Apollo_AST
-               | "string" => Ppx_config.String
-               | other =>
-                 raise(
-                   Config_error(
-                     "Error in graphql configuration: ast-out \""
-                     ++ other
-                     ++ "\" is not supported. Choose either apollo or string.",
-                   ),
-                 )
-               },
-           }
-         )
-       });
-    ppxConfig
-    |> JsonHelper.mapString("mode", mode => {
-         switch (mode) {
-         | "objects" =>
-           Ppx_config.update_config(current => {...current, records: false})
-         | "records" =>
-           Ppx_config.update_config(current => {...current, records: true})
-         | other =>
-           raise(
-             Config_error(
-               "Error in graphql-ppx configuration: mode \""
-               ++ other
-               ++ "\" is not supported. Choose either records or objects.",
-             ),
-           )
-         }
-       });
+    let handleVerboseLogging = verbose_logging => {
+      Ppx_config.update_config(current => {...current, verbose_logging});
+    };
+    let handleFutureAddedValue = future_added_value => {
+      Ppx_config.update_config(current => {...current, future_added_value});
+    };
+    let handleOmitFutureAddedValue = omit_future_added_value => {
+      Ppx_config.update_config(current =>
+        {...current, future_added_value: !omit_future_added_value}
+      );
+    };
+    let handleApolloMode = apollo_mode => {
+      Ppx_config.update_config(current => {...current, apollo_mode});
+    };
 
-    ppxConfig
-    |> JsonHelper.mapString("fragment-in-query", mode => {
-         switch (mode) {
-         | "include" =>
-           Ppx_config.update_config(current =>
-             {...current, fragment_in_query: Include}
-           )
-         | "exclude" =>
-           Ppx_config.update_config(current =>
-             {...current, fragment_in_query: Exclude}
-           )
-         | other =>
-           raise(
-             Config_error(
-               "Error in graphql-ppx configuration: fragment-in-query\""
-               ++ other
-               ++ "\" is not supported. Choose either 'include' or 'exclude'.",
-             ),
-           )
-         }
-       });
+    let handleSchema = schema_file => {
+      Ppx_config.update_config(current => {...current, schema_file});
+    };
+    let handleAstOut = ast_out => {
+      Ppx_config.update_config(current =>
+        {
+          ...current,
+          output_mode:
+            switch (ast_out) {
+            | "apollo" => Ppx_config.Apollo_AST
+            | "string" => Ppx_config.String
+            | other =>
+              raise(
+                Config_error(
+                  "Error in graphql configuration: ast-out \""
+                  ++ other
+                  ++ "\" is not supported. Choose either apollo or string.",
+                ),
+              )
+            },
+        }
+      );
+    };
+    let handleMode = mode => {
+      switch (mode) {
+      | "objects" =>
+        Ppx_config.update_config(current => {...current, records: false})
+      | "records" =>
+        Ppx_config.update_config(current => {...current, records: true})
+      | other =>
+        raise(
+          Config_error(
+            "Error in graphql-ppx configuration: mode \""
+            ++ other
+            ++ "\" is not supported. Choose either records or objects.",
+          ),
+        )
+      };
+    };
+    let handleFragmentInQuery = mode => {
+      switch (mode) {
+      | "include" =>
+        Ppx_config.update_config(current =>
+          {...current, fragment_in_query: Include}
+        )
+      | "exclude" =>
+        Ppx_config.update_config(current =>
+          {...current, fragment_in_query: Exclude}
+        )
+      | other =>
+        raise(
+          Config_error(
+            "Error in graphql-ppx configuration: fragment-in-query\""
+            ++ other
+            ++ "\" is not supported. Choose either 'include' or 'exclude'.",
+          ),
+        )
+      };
+    };
 
-    ppxConfig
-    |> JsonHelper.mapString("extend-query", extend_query => {
-         Ppx_config.update_config(current =>
-           {...current, extend_query: Some(extend_query)}
-         )
-       });
+    let handleExtendQuery = extend_query => {
+      Ppx_config.update_config(current =>
+        {...current, extend_query: Some(extend_query)}
+      );
+    };
 
-    ppxConfig
-    |> JsonHelper.mapString("extend-query-no-required-variables", extend_query => {
-         Ppx_config.update_config(current =>
-           {
-             ...current,
-             extend_query_no_required_variables: Some(extend_query),
-           }
-         )
-       });
+    let handleExtendQueryNoRequiredVariables = extend_query => {
+      Ppx_config.update_config(current =>
+        {...current, extend_query_no_required_variables: Some(extend_query)}
+      );
+    };
+    let handleExtendMutation = extend_mutation => {
+      Ppx_config.update_config(current =>
+        {...current, extend_mutation: Some(extend_mutation)}
+      );
+    };
+    let handleExtendMutationNoRequiredVariables = extend_mutation => {
+      Ppx_config.update_config(current =>
+        {
+          ...current,
+          extend_mutation_no_required_variables: Some(extend_mutation),
+        }
+      );
+    };
+    let handleExtendSubscription = extend_subscription => {
+      Ppx_config.update_config(current =>
+        {...current, extend_subscription: Some(extend_subscription)}
+      );
+    };
+    let handleExtendSubscriptionNoRequiredVariables = extend_subscription => {
+      Ppx_config.update_config(current =>
+        {
+          ...current,
+          extend_subscription_no_required_variables:
+            Some(extend_subscription),
+        }
+      );
+    };
+    let handleExtendFragment = extend_fragment => {
+      Ppx_config.update_config(current =>
+        {...current, extend_fragment: Some(extend_fragment)}
+      );
+    };
+    let handleTemplateTag = template_tag => {
+      Ppx_config.update_config(current =>
+        {...current, template_tag: Some(template_tag)}
+      );
+    };
 
-    ppxConfig
-    |> JsonHelper.mapString("extend-mutation", extend_mutation => {
-         Ppx_config.update_config(current =>
-           {...current, extend_mutation: Some(extend_mutation)}
-         )
-       });
+    let handleTemplateTagImport = template_tag_import => {
+      Ppx_config.update_config(current =>
+        {...current, template_tag_import: Some(template_tag_import)}
+      );
+    };
+    let handleTemplateTagLocation = template_tag_location => {
+      Ppx_config.update_config(current =>
+        {...current, template_tag_location: Some(template_tag_location)}
+      );
+    };
+    let handleTemplateTagReturnType = template_tag_return_type => {
+      Ppx_config.update_config(current =>
+        {
+          ...current,
+          template_tag_return_type: Some(template_tag_return_type),
+        }
+      );
+    };
 
-    ppxConfig
-    |> JsonHelper.mapString(
-         "extend-mutation-no-required-variables", extend_mutation => {
-         Ppx_config.update_config(current =>
-           {
-             ...current,
-             extend_mutation_no_required_variables: Some(extend_mutation),
-           }
-         )
-       });
+    let configBool = (key, value) =>
+      ppxConfig |> JsonHelper.mapBool(key, value);
+    let configString = (key, value) =>
+      ppxConfig |> JsonHelper.mapString(key, value);
 
-    ppxConfig
-    |> JsonHelper.mapString("extend-subscription", extend_subscription => {
-         Ppx_config.update_config(current =>
-           {...current, extend_subscription: Some(extend_subscription)}
-         )
-       });
+    configBool("verbose", handleVerboseLogging);
+    configBool("future-added-value", handleFutureAddedValue);
+    configBool("futureAddedValue", handleFutureAddedValue);
+    configBool("omitFutureAddedValue", handleOmitFutureAddedValue);
+    configBool("apollo-mode", handleApolloMode);
+    configBool("apolloMode", handleApolloMode);
+    configString("schema", handleSchema);
+    configString("ast-out", handleAstOut);
+    configString("astOut", handleAstOut);
+    configString("mode", handleMode);
+    configString("fragment-in-query", handleFragmentInQuery);
+    configString("fragmentInQuery", handleFragmentInQuery);
+    configString("extend-query", handleExtendQuery);
+    configString("extendQuery", handleExtendQuery);
+    configString(
+      "extend-query-no-required-variables",
+      handleExtendQueryNoRequiredVariables,
+    );
+    configString(
+      "extendQueryNoRequiredVariables",
+      handleExtendQueryNoRequiredVariables,
+    );
+    configString("extend-mutation", handleExtendMutation);
+    configString("extendMutation", handleExtendMutation);
+    configString(
+      "extend-mutation-no-required-variables",
+      handleExtendMutationNoRequiredVariables,
+    );
+    configString(
+      "extendMutationNoRequiredVariables",
+      handleExtendMutationNoRequiredVariables,
+    );
 
-    ppxConfig
-    |> JsonHelper.mapString(
-         "extend-subscription-no-required-variables", extend_subscription => {
-         Ppx_config.update_config(current =>
-           {
-             ...current,
-             extend_subscription_no_required_variables:
-               Some(extend_subscription),
-           }
-         )
-       });
-
-    ppxConfig
-    |> JsonHelper.mapString("extend-fragment", extend_fragment => {
-         Ppx_config.update_config(current =>
-           {...current, extend_fragment: Some(extend_fragment)}
-         )
-       });
-
-    ppxConfig
-    |> JsonHelper.mapString("template-tag", template_tag => {
-         Ppx_config.update_config(current =>
-           {...current, template_tag: Some(template_tag)}
-         )
-       });
-
-    ppxConfig
-    |> JsonHelper.mapString("template-tag-import", template_tag_import => {
-         Ppx_config.update_config(current =>
-           {...current, template_tag_import: Some(template_tag_import)}
-         )
-       });
-
-    ppxConfig
-    |> JsonHelper.mapString("template-tag-location", template_tag_location => {
-         Ppx_config.update_config(current =>
-           {...current, template_tag_location: Some(template_tag_location)}
-         )
-       });
-
-    ppxConfig
-    |> JsonHelper.mapString(
-         "template-tag-return-type", template_tag_return_type => {
-         Ppx_config.update_config(current =>
-           {
-             ...current,
-             template_tag_return_type: Some(template_tag_return_type),
-           }
-         )
-       });
+    configString("extend-subscription", handleExtendSubscription);
+    configString("extendSubscription", handleExtendSubscription);
+    configString(
+      "extend-subscription-no-required-variables",
+      handleExtendSubscriptionNoRequiredVariables,
+    );
+    configString(
+      "extendSubscriptionNoRequiredVariables",
+      handleExtendSubscriptionNoRequiredVariables,
+    );
+    configString("extend-fragment", handleExtendFragment);
+    configString("extendFragment", handleExtendFragment);
+    configString("template-tag", handleTemplateTag);
+    configString("templateTag", handleTemplateTag);
+    configString("template-tag-import", handleTemplateTagImport);
+    configString("templateTagImport", handleTemplateTagImport);
+    configString("template-tag-location", handleTemplateTagLocation);
+    configString("templateTagLocation", handleTemplateTagLocation);
+    configString("template-tag-return-type", handleTemplateTagReturnType);
+    configString("templateTagReturnType", handleTemplateTagReturnType);
 
     ppxConfig |> read_custom_fields;
   };
