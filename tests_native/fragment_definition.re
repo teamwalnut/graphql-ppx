@@ -39,7 +39,7 @@ module Fragments = [%graphql
     nullableOfNonNullable
   }
 
-  fragment concatFragment on Lists @bsRecord @bsDecoder(fn: "Concat") {
+  fragment concatFragment on Lists @bsRecord @bsDecoder(module: "Concat") {
     nullableOfNullable
     nullableOfNonNullable
   }

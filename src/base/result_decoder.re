@@ -1134,14 +1134,14 @@ let rec unify_document_schema = document => {
           ) {
           | None => Ok(None)
           | Some({item: {d_arguments, _}, span}) =>
-            switch (find_argument("fn", d_arguments)) {
+            switch (find_argument("module", d_arguments)) {
             | None =>
               Error(
                 make_error(
                   error_marker,
                   config.map_loc,
                   span,
-                  "ppxDecoder must be given 'fn' argument",
+                  "ppxDecoder must be given 'module' argument",
                 ),
               )
             | Some((_, {item: Iv_string(ident), span})) =>
@@ -1161,7 +1161,7 @@ let rec unify_document_schema = document => {
                   error_marker,
                   config.map_loc,
                   span,
-                  "The 'fn' argument must be a string",
+                  "The 'module' argument must be a string",
                 ),
               )
             }
