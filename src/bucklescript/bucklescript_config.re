@@ -172,6 +172,11 @@ let read_config = () => {
         )
       };
     };
+    let handleObjects = objects => {
+      objects
+        ? Ppx_config.update_config(current => {...current, records: false})
+        : Ppx_config.update_config(current => {...current, records: true});
+    };
     let handleFragmentInQuery = mode => {
       switch (mode) {
       | "include" =>
@@ -276,6 +281,7 @@ let read_config = () => {
     configString("ast-out", handleAstOut);
     configString("astOut", handleAstOut);
     configString("mode", handleMode);
+    configBool("objects", handleObjects);
     configString("fragment-in-query", handleFragmentInQuery);
     configString("fragmentInQuery", handleFragmentInQuery);
     configString("extend-query", handleExtendQuery);
