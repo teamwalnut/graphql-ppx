@@ -121,9 +121,35 @@ extra variant.
 
 ## `ppxVariant`
 
+## `ppxField`
+
+If you'd like to specify which field the fragment uses in the record, you can do
+it by using `@ppxField`. (By default it used the name of the fragment with the
+first letter decapitalized.)
+
+```reason
+[%graphql
+  {|
+  query MyQuery {
+    lists {
+      ...ListFragment @ppxField(name: "myFragment")
+    }
+  }
+|}
+];
+```
+
 ## skip
 
+The standard [skip directive](https://graphql.org/learn/queries/#directives) is
+also supported within GraphQL ppx. This makes sure the field is always an option
+type.
+
 ## include
+
+The standard [include directive](https://graphql.org/learn/queries/#directives)
+is also supported within GraphQL ppx. This makes sure the field is always an
+option type.
 
 ## `ppxObject` (deprecated)
 
