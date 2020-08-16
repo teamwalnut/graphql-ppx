@@ -44,6 +44,16 @@ of the main changes. After 1.0 we are going to record a more detailed changelog.
 - :rocket: `graphql` extension points in interface files
 - :house: Snapshot and compile testing
 
+## [0.7.2](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.2...v0.7.0) (2020-02-25)
+
+- :house: fix issues with running `graphql-ppx` in a high-concurrency
+  environment
+
+## [0.7.1](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.0...v0.7.1) (2020-02-25)
+
+- :house: Add opam file
+  [#81](https://github.com/reasonml-community/graphql-ppx/pull/81)
+
 ## [0.7.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.6.4...v0.7.0) (2020-02-24)
 
 - :house: use OMP (ocaml-migrate-parsetree) 1.6.0
