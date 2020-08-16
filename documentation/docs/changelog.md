@@ -44,7 +44,7 @@ of the main changes. After 1.0 we are going to record a more detailed changelog.
 - :rocket: `graphql` extension points in interface files
 - :house: Snapshot and compile testing
 
-## [0.7.2](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.2...v0.7.0) (2020-02-25)
+## [0.7.2](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.2...v0.7.0) (2020-08-10)
 
 - :house: fix issues with running `graphql-ppx` in a high-concurrency
   environment
