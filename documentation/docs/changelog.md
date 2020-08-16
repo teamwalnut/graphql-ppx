@@ -39,8 +39,8 @@ of the main changes. After 1.0 we are going to record a more detailed changelog.
 - :rocket: Better errors
 - :rocket: Docstrings
 - :rocket: Multiple fragments or operations per extension point
-- Configuration in `bsconfig.json`
-- Tagged template literal support
+- :rocket: Configuration in `bsconfig.json`
+- :rocket: Tagged template literal support
 - :rocket: `graphql` extension points in interface files
 - :house: Snapshot and compile testing
 
@@ -52,7 +52,7 @@ of the main changes. After 1.0 we are going to record a more detailed changelog.
 ## [0.7.1](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.0...v0.7.1) (2020-02-25)
 
 - :house: Add opam file
-  [#81](https://github.com/reasonml-community/graphql-ppx/pull/81)
+  [(#81)](https://github.com/reasonml-community/graphql-ppx/pull/81)
 
 ## [0.7.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.6.4...v0.7.0) (2020-02-24)
 
