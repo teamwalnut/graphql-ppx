@@ -21,6 +21,7 @@ module.exports = {
       },
       links: [
         { to: "docs/introduction", label: "Docs", position: "left" },
+        { to: "docs/changelog", label: "Changelog", position: "left" },
         {
           href: "https://github.com/reasonml-community/graphql-ppx",
           label: "GitHub",
