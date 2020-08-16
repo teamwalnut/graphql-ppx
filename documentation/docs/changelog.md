@@ -19,7 +19,7 @@ title: Changelog
 There has been a lot of new features in version 1.0 of `graphql-ppx`. Below some
 of the main changes. After 1.0 we are going to record a more detailed changelog.
 
-## Large changes
+### Large changes
 
 - :rocket: :boom: New API, no definition, first class modules and clients can
   extend definitions
