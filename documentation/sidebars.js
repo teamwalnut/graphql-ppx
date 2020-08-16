@@ -20,7 +20,6 @@ module.exports = {
     Guides: ["extending-graphql-ppx", "using-with-apollo", "using-with-gatsby"],
     Advanced: [
       "future-added-values",
-      "modeling-expected-errors",
       "troubleshooting",
       "not-supported-yet",
       "contributing",

@@ -15,8 +15,7 @@ esy build
 ### BuckleScript
 
 ```
-cd tests_bucklescript
-npm test
+esy test
 ```
 
 ### Native

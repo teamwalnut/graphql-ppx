@@ -7,7 +7,7 @@ title: Configuration
 If you want to use multiple schemas in your project it can be provided as a
 secondary config argument in your `graphql-ppx` definition.
 
-```reason
+```reason {4}
 module MyQuery = [%graphql
   {|
     query pokemon($id: String, $name: String)
@@ -26,7 +26,7 @@ module MyQuery = [%graphql
 You can configure `graphql-ppx` globally using `bsconfig.json` under the
 `graphql` key.
 
-```json
+```json {4}
 {
   "name": "my-project",
   "graphql": {

@@ -129,13 +129,13 @@ possible by using the BuckleScript configuration file (`bsconfig.json`):
 ```json
 {
   "graphql": {
-    "extend-query": "ExtendQuery",
-    "extend-query-no-required-variables": "ExtendQueryNoRequiredVars",
-    "extend-mutation": "ExtendMutation",
-    "extend-mutation-no-required-variables": "ExtendMutationNoRequiredVars",
-    "extend-subscription": "ExtendSubscription",
-    "extend-subscription-no-required-variables": "ExtendSubscriptionNoRequiredVars",
-    "extend-fragment": "ExtendFragment"
+    "extendQuery": "ExtendQuery",
+    "extendQueryNoRequiredVariables": "ExtendQueryNoRequiredVars",
+    "extendMutation": "ExtendMutation",
+    "extendMutationNoRequiredVariables": "ExtendMutationNoRequiredVars",
+    "extendSubscription": "ExtendSubscription",
+    "extendSubscriptionNoRequiredVariables": "ExtendSubscriptionNoRequiredVars",
+    "extendFragment": "ExtendFragment"
   }
 }
 ```

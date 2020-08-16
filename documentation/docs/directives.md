@@ -18,7 +18,7 @@ See [Fragment](fragment.md)
 If you add the directive ppxAs to a GraphQL object, it will be casted using that
 record. Be careful this is unsafe and should only be used as an excape hatch.
 
-```reason
+```reason {8}
 type user = {
   id: string,
   name: option(string),
@@ -44,7 +44,7 @@ more useful. For instance,
 directly useful in our apps, using the `ppxCustom` directive we can make a
 little annotation to convert this to an actual date. Here is an example.
 
-```reason
+```reason {15}
 module MyDate = {
   type t = option(Js.Date.t);
   let parse = json => switch(json->Js.Json.decodeString) {
@@ -82,11 +82,10 @@ two modules as recursive. However it is possible to use the `%graphql` extension
 point as a recursive module. In below example we transforming a user record into
 a customized record:
 
-```reason
+```reason {3}
 module UserQuery = [%graphql {|
   query {
-    @ppxCustom(module: "User")
-    user {
+    user @ppxCustom(module: "User") {
       id
       name
     }
@@ -121,6 +120,48 @@ extra variant.
 
 ## `ppxVariant`
 
+If you've got an GraphQL object which in practice behaves like a variant, where
+you _either_ get a user _or_ a list of errors - you can add a `@bsVariant`
+directive to the field to turn it into a polymorphic variant:
+
+```reason
+module SignUpQuery = [%graphql
+  {|
+  mutation($name: String!, $email: String!, $password: String!) {
+    signUp(email: $email, email: $email, password: $password) @bsVariant {
+      user {
+        name
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+|}
+];
+
+let (mutation, _) =
+  SignUpQuery.useWithVariables(SignUpQuery.makeVariables(
+    ~name="My name",
+    ~email="email@example.com",
+    ~password="secret",
+    (),
+  ))
+
+mutation()
+|> Promise.then_(data =>
+  switch (data.signUp) {
+  | `User(user) => Js.log2("Signed up a user with name ", user.name)
+  | `Errors(errors) => Js.log2("Errors when signing up: ", errors)
+  }
+  |> Promise.resolve
+);
+```
+
+This helps with the fairly common pattern for mutations that can fail with
+user-readable errors.
+
 ## `ppxField`
 
 If you'd like to specify which field the fragment uses in the record, you can do
@@ -139,13 +180,13 @@ first letter decapitalized.)
 ];
 ```
 
-## skip
+## `skip`
 
 The standard [skip directive](https://graphql.org/learn/queries/#directives) is
 also supported within GraphQL ppx. This makes sure the field is always an option
 type.
 
-## include
+## `include`
 
 The standard [include directive](https://graphql.org/learn/queries/#directives)
 is also supported within GraphQL ppx. This makes sure the field is always an
