@@ -384,17 +384,25 @@ let rec extract_input_object =
               let (_type_name, type_) = fetch_type(schema, type_ref);
               switch (type_) {
               | Some(Schema.InputObject({iom_name, iom_input_fields, _})) =>
-                let already_created_earlier =
-                  finalized_input_objects |> List.exists(f => f == iom_name);
-                let already_created_in_same_list =
+                let finalized_input_objects_in_same_list =
                   acc
-                  |> List.exists(
-                       fun
-                       | InputObject({name}) => name == Some(iom_name)
-                       | NoVariables => false,
+                  |> List.fold_left(
+                       acc =>
+                         fun
+                         | InputObject({name: Some(name)}) => [name, ...acc]
+                         | _ => acc,
+                       [],
                      );
 
-                if (already_created_earlier || already_created_in_same_list) {
+                let finalized_input_objects =
+                  List.append(
+                    finalized_input_objects,
+                    finalized_input_objects_in_same_list,
+                  );
+                let already_created_earlier =
+                  finalized_input_objects |> List.exists(f => f == iom_name);
+
+                if (already_created_earlier) {
                   // we already generated this input object
                   acc;
                 } else {

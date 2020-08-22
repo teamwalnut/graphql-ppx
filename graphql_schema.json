@@ -89,6 +89,37 @@
               "deprecationReason": null
             },
             {
+              "name": "recursiveRepro",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "problem_input",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "hasuraRepro",
               "description": null,
               "args": [
@@ -1084,6 +1115,83 @@
               "ofType": null
             }
           ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "problem_input",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "the_problem",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "this_will_be_duplicated",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "b",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "nested_type",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "this_will_be_duplicated",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "nested_type",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "the_problem",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "this_will_be_duplicated",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
         },
         {
           "kind": "INPUT_OBJECT",

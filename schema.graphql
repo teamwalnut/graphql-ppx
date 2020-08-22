@@ -35,6 +35,7 @@ type Query {
   variousScalars: VariousScalars!
   lists: Lists!
   users: [User!]!
+  recursiveRepro(input: problem_input!): Boolean!
   hasuraRepro(orderBy: [hasuraObj], block: blockObj): Dog!
   scalarsInput(arg: VariousScalarsInput!): String!
   listsInput(arg: ListsInput!): String!
@@ -119,6 +120,19 @@ input hasuraObj {
 input blockObj {
   number: Int
   type: String
+}
+
+input this_will_be_duplicated {
+  id: String!
+}
+
+input nested_type {
+  the_problem: this_will_be_duplicated
+}
+
+input problem_input {
+  the_problem: this_will_be_duplicated
+  b: nested_type
 }
 
 type VariousScalars {
