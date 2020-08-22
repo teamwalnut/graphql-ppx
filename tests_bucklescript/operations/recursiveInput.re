@@ -5,3 +5,11 @@ module MyQuery = [%graphql
   }
 |}
 ];
+
+[%graphql
+  {|
+    query Test($input: problem_input!) {
+      recursiveRepro(input: $input)
+    }
+  |}
+];
