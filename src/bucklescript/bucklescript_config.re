@@ -90,23 +90,40 @@ module JsonHelper = {
 };
 
 let read_custom_fields = json => {
-  Yojson.Basic.Util.(
-    try({
-      let custom_fields = Ppx_config.custom_fields() |> Hashtbl.copy;
-      json
-      |> (json => json |> member("custom-fields") |> to_assoc)
-      |> List.map(((key, value)) => (key, value |> to_string))
-      |> List.iter(((key, value)) => {
-           Hashtbl.add(custom_fields, key, value)
-         });
-      Ppx_config.update_config(current => {...current, custom_fields});
+  open Yojson.Basic.Util;
+  let custom_fields = Ppx_config.custom_fields() |> Hashtbl.copy;
 
-      ();
-    }) {
-    | Yojson.Basic.Util.Type_error(_) => ()
+  let custom_fields_result_depr =
+    try(json |> member("custom-fields") |> to_assoc) {
+    | Yojson.Basic.Util.Type_error(_) => []
     | other => raise(other)
-    }
-  );
+    };
+  let custom_fields_result =
+    try(json |> member("customFields") |> to_assoc) {
+    | Yojson.Basic.Util.Type_error(_) => []
+    | other => raise(other)
+    };
+
+  List.append(custom_fields_result_depr, custom_fields_result)
+  |> List.map(((key, value)) => {
+       let value =
+         try(Some(value |> to_string)) {
+         | Yojson.Basic.Util.Type_error(_) => None
+         | other => raise(other)
+         };
+
+       (key, value);
+     })
+  |> List.iter(((key, value)) => {
+       switch (value) {
+       | Some(value) => Hashtbl.add(custom_fields, key, value)
+       | None => ()
+       }
+     });
+
+  Ppx_config.update_config(current => {...current, custom_fields});
+
+  ();
 };
 
 let read_config = () => {
