@@ -90,7 +90,7 @@ let rec serialize_type =
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
   | List(inner) => [%expr
-      (a => Array.map(b => {[%e serialize_type(inner)](b)}, a))
+      (a => Js.Array.map(b => {[%e serialize_type(inner)](b)}, a))
     ]
   | Type(Object(_)) => [%expr (v => None)]
   | Type(Union(_)) => [%expr (v => None)]

@@ -103,7 +103,7 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Array.map(
+                    Js.Array.map(
                       b =>
                         (
                           a =>
@@ -130,7 +130,9 @@ function back to the original JSON compatible data */
             switch (a) {
             | None => Js.Nullable.undefined
             | Some(b) =>
-              Js.Nullable.return((a => Array.map(b => (a => a)(b), a))(b))
+              Js.Nullable.return(
+                (a => Js.Array.map(b => (a => a)(b), a))(b),
+              )
             }
         )(
           (inp: t_variables).nullableOfNonNullable,
@@ -138,7 +140,7 @@ function back to the original JSON compatible data */
       nonNullableOfNullable:
         (
           a =>
-            Array.map(
+            Js.Array.map(
               b =>
                 (
                   a =>
@@ -155,7 +157,7 @@ function back to the original JSON compatible data */
           (inp: t_variables).nonNullableOfNullable,
         ),
       nonNullableOfNonNullable:
-        (a => Array.map(b => (a => a)(b), a))(
+        (a => Js.Array.map(b => (a => a)(b), a))(
           (inp: t_variables).nonNullableOfNonNullable,
         ),
     };

@@ -143,7 +143,7 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Array.map(
+                    Js.Array.map(
                       b =>
                         (
                           a =>
@@ -205,7 +205,7 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Array.map(
+                    Js.Array.map(
                       b =>
                         (
                           a =>
@@ -449,7 +449,7 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Array.map(
+                    Js.Array.map(
                       b =>
                         (
                           a =>
@@ -511,7 +511,7 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Array.map(
+                    Js.Array.map(
                       b =>
                         (
                           a =>
