@@ -70,7 +70,7 @@ can do this as follows:
   fragment Avatar_User on User @argumentDefinitions(pixelRatio: {type: "Float!"}) {
     id
     name
-    smallAvatar: avatar(pixelRatio: 2, width: 60, height: 60) {
+    smallAvatar: avatar(pixelRatio: $pixelRatio, width: 60, height: 60) {
       url
     }
   }
