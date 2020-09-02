@@ -32,7 +32,6 @@ type Workspace {
   title: String!
   image: String
   description: String
-  # user(id: String): WorkspaceUser!
   user(id: String!): WorkspaceUser!
 }
 
