@@ -285,11 +285,17 @@ let generate_operation = config =>
       inner: structure,
     }) =>
     generate_default_operation(config, vdefs, has_error, operation, structure)
-  | Def_fragment({name, req_vars, has_error, fragment, inner: structure}) =>
+  | Def_fragment({
+      name,
+      variable_definitions,
+      has_error,
+      fragment,
+      inner: structure,
+    }) =>
     generate_fragment_module(
       config,
       name,
-      req_vars,
+      variable_definitions,
       has_error,
       fragment,
       structure,

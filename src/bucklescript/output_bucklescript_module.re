@@ -743,7 +743,7 @@ let generate_fragment_signature =
     (
       config,
       name,
-      required_variables,
+      variable_definitions,
       _has_error,
       fragment: Source_pos.spanning(Graphql_ast.fragment),
       type_name,
@@ -776,7 +776,10 @@ let generate_fragment_signature =
   let rec make_labeled_fun_sig = final_type =>
     fun
     | [] => final_type
-    | [(name, type_, _span, _type_span), ...tl] => {
+    | [
+        ({Source_pos.item: name}, {Graphql_ast.vd_type: {item: type_ref}}),
+        ...tl,
+      ] => {
         Typ.arrow(
           Labelled(name),
           Typ.variant(
@@ -786,7 +789,9 @@ let generate_fragment_signature =
                   Rtag(
                     {
                       txt:
-                        Output_bucklescript_parser.type_name_to_words(type_),
+                        Output_bucklescript_parser.generate_poly_type_ref_name(
+                          type_ref,
+                        ),
                       loc: Location.none,
                     },
                     true,
@@ -820,7 +825,10 @@ let generate_fragment_signature =
         ),
         Typ.arrow(Nolabel, base_type_name("Raw.t"), base_type_name("t")),
       ),
-      required_variables,
+      switch (variable_definitions) {
+      | Some({Source_pos.item: variable_definitions}) => variable_definitions
+      | None => []
+      },
     );
 
   let verify_name =
@@ -878,7 +886,8 @@ let generate_fragment_implementation =
     (
       config,
       name,
-      required_variables,
+      variable_definitions:
+        option(Source_pos.spanning(Graphql_ast.variable_definitions)),
       _has_error,
       fragment,
       type_name,
@@ -925,7 +934,10 @@ let generate_fragment_implementation =
   let rec make_labeled_fun = body =>
     fun
     | [] => body
-    | [(name, type_, _, _type_span), ...tl] => {
+    | [
+        ({Source_pos.item: name}, {Graphql_ast.vd_type: {item: type_ref}}),
+        ...tl,
+      ] => {
         Ast_helper.(
           Exp.fun_(
             Labelled(name),
@@ -939,8 +951,8 @@ let generate_fragment_implementation =
                       Rtag(
                         {
                           txt:
-                            Output_bucklescript_parser.type_name_to_words(
-                              type_,
+                            Output_bucklescript_parser.generate_poly_type_ref_name(
+                              type_ref,
                             ),
                           loc: Location.none,
                         },
@@ -983,7 +995,10 @@ let generate_fragment_implementation =
         ),
         [%expr (value: Raw.t) => parse(value)],
       ),
-      required_variables,
+      switch (variable_definitions) {
+      | Some({Source_pos.item: variable_definitions}) => variable_definitions
+      | None => []
+      },
     );
   let verifyName =
     Ast_helper.(
@@ -1047,7 +1062,7 @@ let generate_definition = config =>
     )
   | Def_fragment({
       name,
-      req_vars,
+      variable_definitions,
       has_error,
       fragment,
       type_name,
@@ -1056,7 +1071,7 @@ let generate_definition = config =>
       generate_fragment_implementation(
         config,
         name,
-        req_vars,
+        variable_definitions,
         has_error,
         fragment,
         type_name,
@@ -1065,7 +1080,7 @@ let generate_definition = config =>
       generate_fragment_signature(
         config,
         name,
-        req_vars,
+        variable_definitions,
         has_error,
         fragment,
         type_name,

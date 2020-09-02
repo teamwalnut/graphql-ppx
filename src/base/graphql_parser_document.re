@@ -434,6 +434,81 @@ let parse_operation_definition = parser =>
     }
   );
 
+// we need to parse the argumentTypes directive, and produce a
+// type from a string.
+let parse_string_to_type = str => {
+  switch (str |> Graphql_lexer.make |> Graphql_lexer.consume) {
+  | Ok(tokens) =>
+    switch (parse_type(Graphql_parser.make(tokens))) {
+    | Ok(type_) => Some(type_.item)
+    | Error(_) => None
+    }
+
+  | Error(_) => None
+  };
+};
+
+let get_fragment_argument_definitions =
+    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
+  switch (
+    directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
+  ) {
+  | {item: {d_arguments: Some(arguments), _}, span} =>
+    let arguments =
+      arguments.item
+      |> List.fold_left(
+           acc =>
+             fun
+             | (
+                 {item: key, span},
+                 {item: Iv_object(values), span: type_span},
+               ) => {
+                 let type_ =
+                   values
+                   |> List.fold_left(
+                        acc =>
+                          fun
+                          | (
+                              {item: "type", _},
+                              {item: Iv_string(type_), _},
+                            ) =>
+                            Some(type_)
+                          | _ => acc,
+                        None,
+                      );
+                 switch (type_) {
+                 | Some(type_) =>
+                   switch (parse_string_to_type(type_)) {
+                   | Some(type_) => [
+                       (
+                         {item: key, span},
+                         {
+                           vd_type: {
+                             item: type_,
+                             span: type_span,
+                           },
+                           vd_default_value: None,
+                         },
+                       ),
+                       ...acc,
+                     ]
+                   | None => acc
+                   }
+                 | _ => acc
+                 };
+               }
+             | _ => acc,
+           [],
+         );
+    switch (arguments) {
+    | [] => None
+    | arguments => Some({span, item: arguments})
+    };
+  | _ => None
+  | exception Not_found => None
+  };
+};
+
 let parse_fragment_definition = parser =>
   Result_ext.(
     expect(parser, Graphql_lexer.Name("fragment"))
@@ -472,6 +547,8 @@ let parse_fragment_definition = parser =>
            end_pos(selection_set),
            {
              fg_name: name,
+             fg_variable_definitions:
+               get_fragment_argument_definitions(directives),
              fg_type_condition: type_cond,
              fg_directives: directives,
              fg_selection_set: selection_set,

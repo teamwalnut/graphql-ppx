@@ -68,6 +68,7 @@ type operation = {
 };
 
 type fragment = {
+  fg_variable_definitions: option(spanning(variable_definitions)),
   fg_name: spanning(string),
   fg_type_condition: spanning(string),
   fg_directives: list(spanning(directive)),

@@ -52,25 +52,9 @@ let rec generate_poly_type_ref_name = (type_ref: Graphql_ast.type_ref) => {
   };
 };
 
-let type_name_to_words = type_name => {
-  let str = ref("");
-  type_name
-  |> String.iter(
-       fun
-       | '!' => str := str^ ++ "_NonNull"
-       | ']' => str := str^ ++ "_OfList"
-       | c => str := str^ ++ String.make(1, c),
-     );
-  str^;
-};
-
 let get_variable_definitions = (definition: Graphql_ast.definition) => {
   switch (definition) {
-  | Fragment({item: {fg_directives: directives}}) =>
-    Result_decoder.getFragmentArgumentDefinitions(directives)
-    |> List.map(((name, type_, span, type_span)) =>
-         (name, type_name_to_words(type_), span, type_span)
-       )
+  | Fragment({item: {fg_variable_definitions: Some({item: definitions})}})
   | Operation({item: {o_variable_definitions: Some({item: definitions})}}) =>
     Graphql_ast.(
       definitions
@@ -83,12 +67,7 @@ let get_variable_definitions = (definition: Graphql_ast.definition) => {
              ),
            ) =>
              [
-               (
-                 name,
-                 Graphql_printer.print_type(type_ref) |> type_name_to_words,
-                 span,
-                 type_span,
-               ),
+               (name, generate_poly_type_ref_name(type_ref), span, type_span),
                ...acc,
              ],
            [],
