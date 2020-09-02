@@ -6,6 +6,8 @@ schema {
 
 interface User {
   id: ID!
+  firstname: String
+  lastname: String!
 }
 
 interface Name {
@@ -19,6 +21,14 @@ interface Anonymous {
 type AdminUser implements User & Name {
   id: ID!
   name: String!
+}
+
+type Workspace {
+  id: String!
+  title: String!
+  image: String
+  description: String
+  user(id: String!): User!
 }
 
 type AnonymousUser implements User & Anonymous {
@@ -73,6 +83,9 @@ type Query {
   dogOrHuman: DogOrHuman!
 
   nestedObject: NestedObject!
+
+  workspace(id: String!): Workspace!
+  workspaceByTitle(title: String!): Workspace!
 }
 
 type Mutation {
