@@ -30,8 +30,14 @@ module Visitor: Traversal_utils.VisitorSig = {
   let enter_fragment_definition = ((opts, self), _, def) => {
     opts.active = true;
     let () = Hashtbl.clear(self);
-    Result_decoder.getFragmentArgumentDefinitions(def.item.fg_directives)
-    |> List.iter(((name, _, span, _)) => Hashtbl.add(self, name, span));
+    switch (def.item.fg_variable_definitions) {
+    | None => ()
+    | Some({item, _}) =>
+      List.iter(
+        ((name, _)) => Hashtbl.add(self, name.item, name.span),
+        item,
+      )
+    };
   };
 
   let exit_fragment_definition = ((opts, _), _, _) => {

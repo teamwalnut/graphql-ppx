@@ -1,7 +1,3 @@
-let getFragmentArgumentDefinitions:
-  list(Source_pos.spanning(Graphql_ast.directive)) =>
-  list((string, string, Source_pos.span, Source_pos.span));
-
 type query_config = {
   schema: option(string),
   records: option(bool),

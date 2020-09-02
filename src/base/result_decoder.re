@@ -807,43 +807,6 @@ let unify_operation = (error_marker, config) =>
       )
     };
 
-let getFragmentArgumentDefinitions =
-    (directives: list(Source_pos.spanning(Graphql_ast.directive))) => {
-  switch (
-    directives |> List.find(d => {d.item.d_name.item == "argumentDefinitions"})
-  ) {
-  | {item: {d_arguments: Some(arguments), _}, _} =>
-    arguments.item
-    |> List.fold_left(
-         acc =>
-           fun
-           | (
-               {item: key, span},
-               {item: Iv_object(values), span: type_span},
-             ) => {
-               let type_ =
-                 values
-                 |> List.fold_left(
-                      acc =>
-                        fun
-                        | ({item: "type", _}, {item: Iv_string(type_), _}) =>
-                          Some(type_)
-                        | _ => acc,
-                      None,
-                    );
-               switch (type_) {
-               | Some(type_) => [(key, type_, span, type_span), ...acc]
-               | _ => acc
-               };
-             }
-           | _ => acc,
-         [],
-       )
-  | _ => []
-  | exception Not_found => []
-  };
-};
-
 type query_config = {
   schema: option(string),
   records: option(bool),
@@ -1169,15 +1132,14 @@ let rec unify_document_schema = document => {
 
         let is_record = has_directive(~prepend=true, "Record", fg_directives);
 
-        let argumentDefinitions =
-          getFragmentArgumentDefinitions(fg_directives);
+        let argumentDefinitions = fg.item.fg_variable_definitions;
 
         (
           switch (Schema.lookup_type(config.schema, fg_type_condition.item)) {
           | None =>
             Def_fragment({
               name: fg_name.item,
-              req_vars: argumentDefinitions,
+              variable_definitions: argumentDefinitions,
               has_error: true,
               fragment: fg,
               type_name: None,
@@ -1205,14 +1167,13 @@ let rec unify_document_schema = document => {
                 Some(fg_selection_set),
               );
 
-            let argumentDefinitions =
-              getFragmentArgumentDefinitions(fg_directives);
+            let argumentDefinitions = fg.item.fg_variable_definitions;
 
             switch (with_decoder) {
             | Error(err) =>
               Def_fragment({
                 name: fg_name.item,
-                req_vars: argumentDefinitions,
+                variable_definitions: argumentDefinitions,
                 has_error: true,
                 fragment: fg,
                 type_name: existing_record,
@@ -1221,7 +1182,7 @@ let rec unify_document_schema = document => {
             | Ok(decoder) =>
               Def_fragment({
                 name: fg_name.item,
-                req_vars: argumentDefinitions,
+                variable_definitions: argumentDefinitions,
                 has_error: error_marker.has_error,
                 fragment: fg,
                 type_name: existing_record,

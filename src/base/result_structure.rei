@@ -89,7 +89,8 @@ and t =
 type definition =
   | Def_fragment({
       name: string,
-      req_vars: list((string, string, Source_pos.span, Source_pos.span)),
+      variable_definitions:
+        option(Source_pos.spanning(Graphql_ast.variable_definitions)),
       has_error: bool,
       fragment: Source_pos.spanning(Graphql_ast.fragment),
       type_name: option(string), // decodes to a custom type (ppxAs)
