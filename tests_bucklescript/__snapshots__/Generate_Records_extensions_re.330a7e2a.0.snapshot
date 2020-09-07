@@ -69,37 +69,9 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   };
-  module Raw: {
-    type t_lists = {
-      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
-      nullableOfNonNullable: Js.Nullable.t(array(string)),
-      nonNullableOfNullable: array(Js.Nullable.t(string)),
-      nonNullableOfNonNullable: array(string),
-    };
-    type t = {lists: t_lists};
-    type t_variables = unit;
-  };
-  type t_lists = {
-    nullableOfNullable: option(array(option(string))),
-    nullableOfNonNullable: option(array(string)),
-    nonNullableOfNullable: array(option(string)),
-    nonNullableOfNonNullable: array(string),
-  };
-  type t = {lists: t_lists};
-  type t_variables = unit;
-  /** The GraphQL query */
-  let query: string;
-  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
-  let parse: Raw.t => t;
-  /** Serialize the ReasonML GraphQL data that was parsed using the parse
-function back to the original JSON compatible data */
-  let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
-  let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
-  external toJson: Raw.t => Js.Json.t = \"%identity\";
-  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+  include (module type of {
+    include Bla_inner;
+  });
   include (module type of {
     include Parent.ExtendQuery(Bla_inner);
   });

@@ -14,7 +14,23 @@ title: Changelog
 (_Tags are copied from
 [babel](https://github.com/babel/babel/blob/master/CHANGELOG.md)_)
 
-## [1.0.0](https://github.com/reasonml-community/graphql_ppx/compare/legacy...master) (in beta)
+## [1.0.1](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.0...v1.0.1) (2020-09-07)
+
+- :bug: remove `@ppxConfig` directive from query output
+  ([b697b83](https://github.com/reasonml-community/graphql_ppx/commit/b697b83))
+
+- :bug: do not strengthen module type of extended module to prevent type errors
+  like below when the the definition is being extended
+  ([4ae9895](https://github.com/reasonml-community/graphql_ppx/commit/4ae9895))
+
+```
+This has type:
+  MyQuery.t_variables
+But somewhere wanted:
+  MyQuery.MyQuery_inner.t_variables
+```
+
+## [1.0.0](https://github.com/reasonml-community/graphql_ppx/compare/v0.7.2...v1.0.0) (2020-09-06)
 
 There has been a lot of new features in version 1.0 of `graphql-ppx`. Below some
 of the main changes. After 1.0 we are going to record a more detailed changelog.

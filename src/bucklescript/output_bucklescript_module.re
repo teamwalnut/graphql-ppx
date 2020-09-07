@@ -448,7 +448,26 @@ let wrap_query_module =
       let signature =
         List.concat([
           [signature_module(module_name, signature)],
-          signature,
+          [
+            Sig.include_(
+              Incl.mk(
+                Mty.typeof_(
+                  Mod.mk(
+                    Pmod_structure([
+                      Str.include_(
+                        Incl.mk(
+                          Mod.ident({
+                            txt: Longident.parse(module_name),
+                            loc,
+                          }),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+              ),
+            ),
+          ],
           [
             Sig.include_(
               Incl.mk(
