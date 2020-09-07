@@ -21,7 +21,7 @@ title: Changelog
 
 - :bug: do not strengthen module type of extended module to prevent type errors
   like below when the the definition is being extended
-  ([4ae9895](https://github.com/reasonml-community/graphql_ppx/commit/4ae9895))
+  ([546e15f](https://github.com/reasonml-community/graphql_ppx/commit/546e15f))
 
 ```
 This has type:
