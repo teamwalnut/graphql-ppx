@@ -92,7 +92,8 @@ let is_internal_directive = d =>
   | "argumentDefinitions"
   | "arguments"
   | "bsField"
-  | "ppxField" => true
+  | "ppxField"
+  | "ppxConfig" => true
   | _ => false
   };
 

@@ -218,7 +218,7 @@ function back to the original JSON compatible data */
     name: option(string),
   };
   let query: string = [%raw
-    \"require(\\\"gql\\\")`\\n  query pokemon($id: String, $name: String) @ppxConfig(schema: \\\"pokedex_schema.json\\\") {\\n    pokemon(name: $name, id: $id)  {\\n      id\\n      name\\n    }\\n  }\\n`\"
+    \"require(\\\"gql\\\")`\\n  query pokemon($id: String, $name: String)  {\\n    pokemon(name: $name, id: $id)  {\\n      id\\n      name\\n    }\\n  }\\n`\"
   ];
   let parse: Raw.t => t =
     (value) => (

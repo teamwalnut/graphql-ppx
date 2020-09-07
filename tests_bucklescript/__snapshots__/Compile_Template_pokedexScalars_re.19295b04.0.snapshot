@@ -86,7 +86,7 @@ var MyQuery = {
 var Raw$1 = {};
 
 var query$1 = (require(\"gql\")`
-  query pokemon($id: String, $name: String) @ppxConfig(schema: \"pokedex_schema.json\") {
+  query pokemon($id: String, $name: String)  {
     pokemon(name: $name, id: $id)  {
       id
       name

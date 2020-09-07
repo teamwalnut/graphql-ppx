@@ -231,7 +231,7 @@ function back to the original JSON compatible data */
     id: option(string),
     name: option(string),
   };
-  let query = \"query pokemon($id: String, $name: String) @ppxConfig(schema: \\\"pokedex_schema.json\\\") {\\npokemon(name: $name, id: $id)  {\\n__typename  \\nid  \\nname  \\n}\\n\\n}\\n\";
+  let query = \"query pokemon($id: String, $name: String)  {\\npokemon(name: $name, id: $id)  {\\n__typename  \\nid  \\nname  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
