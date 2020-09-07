@@ -421,7 +421,6 @@ let rec read_marshaled_schema = json_schema => {
 }
 and recovery_build = json_schema => {
   let () = Log.error_log("Marshaled file is broken. Doing recovery build...");
-  let () = Sys.remove(get_hash_path(json_schema));
   /* we don't remove marshal file since it might result in race condition,
    * we simply let every thread noticed the broken marshal file rewrite to it */
   build_schema_if_dirty(json_schema);

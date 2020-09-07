@@ -20,9 +20,13 @@ let read_hash = src => {
 
 let write_hash = (hash, dest) => {
   let () = Log.log("[write hash to] " ++ dest);
-  let dest = open_out_bin(dest);
-  Digest.output(dest, hash);
-  close_out(dest);
+  switch (open_out_bin(dest)) {
+  | dest =>
+    Digest.output(dest, hash);
+    close_out(dest);
+  | exception _ => ()
+  };
+  ();
 };
 
 let find_file = file =>
