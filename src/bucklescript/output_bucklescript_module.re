@@ -609,9 +609,10 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
         /** The GraphQL query */
         let query: [%t
           base_type_name(
-            switch (config.template_tag_return_type) {
-            | Some(return_type) => return_type
-            | None => "string"
+            switch (config.template_tag, config.template_tag_return_type) {
+            | ((Some(_), _, _), Some(return_type))
+            | ((_, Some(_), _), Some(return_type)) => return_type
+            | _ => "string"
             },
           )
         ]
@@ -877,9 +878,10 @@ let generate_fragment_signature =
         /** the GraphQL fragment */
         let query: [%t
           base_type_name(
-            switch (config.template_tag_return_type) {
-            | Some(return_type) => return_type
-            | None => "string"
+            switch (config.template_tag, config.template_tag_return_type) {
+            | ((Some(_), _, _), Some(return_type))
+            | ((_, Some(_), _), Some(return_type)) => return_type
+            | _ => "string"
             },
           )
         ]
