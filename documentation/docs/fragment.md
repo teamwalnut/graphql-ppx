@@ -59,6 +59,34 @@ is no special field for the fragment necessary. So if this is the query:
 
 Then `user` will be of the type `Avatar_User.t`.
 
+#### Referencing fragments from other modules
+
+Often, you'll want to reference a fragment in a different module, so that you
+can compose it into a query that's defined with a different component. When
+doing so, there are two rules you need to adhere to:
+
+1. You must create a new module definition that aliases the fragment you're
+   tring to use. (The GraphQL spec doesn't allow for dot notation in fragment
+   names!)
+2. You must use the same name for the alias as the actual fragment - otherwise
+   you'll see a type error.
+
+For example, let's say we decided to move the `UserQuery` out of the `Avatar`
+module where it originally lived alongside `Avatar_User`. In the new module,
+we'd reference `Avatar_User` like so:
+
+```reason
+module Avatar_User = Avatar.Avatar_User;
+
+[%graphql {|
+  query UserQuery {
+    user {
+      ...Avatar_User
+    }
+  }
+|}]
+```
+
 #### Variables within fragments
 
 Sometimes fragments need to accept variables. Take our previous fragment. If we
