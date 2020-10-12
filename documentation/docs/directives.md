@@ -70,7 +70,7 @@ As you can see we need to define a type `t` and two functions, `parse` and
 `serialize`. These two functions are to go from `Js.Json.t` to `t` and how to go
 from `t` back to `Js.Json.t`.
 
-In [customFields](/configuration#customfields) in `bsconfig.json` you can
+In [customFields](/docs/configuration#customfields) in `bsconfig.json` you can
 actually configure certain types (such as the custom date type, that **always**
 gets converted, so you never have to use the `@ppxCustom` annotation for them.
 
