@@ -63,20 +63,28 @@ Then `user` will be of the type `Avatar_User.t`.
 
 Often, you'll want to reference a fragment in a different module, so that you
 can compose it into a query that's defined with a different component. When
-doing so, there are two rules you need to adhere to:
+doing so, you must use the same name for the fragment in the GraphQL document as
+you gave it where you defined it - you can't rename it.
 
-1. You must create a new module definition that aliases the fragment you're
-   tring to use. (The GraphQL spec doesn't allow for dot notation in fragment
-   names!)
-2. You must use the same name for the alias as the actual fragment - otherwise
-   you'll see a type error.
-
-For example, let's say we decided to move the `UserQuery` out of the `Avatar`
-module where it originally lived alongside `Avatar_User`. In the new module,
-we'd reference `Avatar_User` like so:
+One way to achieve this is to define a new aliased module with the same name:
 
 ```reason
 module Avatar_User = Avatar.Avatar_User;
+
+[%graphql {|
+  query UserQuery {
+    user {
+      ...Avatar_User
+    }
+  }
+|}]
+```
+
+Alternatively, you can also `open` the module containing the fragment where it's
+being used, and reference it like this:
+
+```reason
+open Avatar;
 
 [%graphql {|
   query UserQuery {
