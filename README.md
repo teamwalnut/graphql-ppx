@@ -1,5 +1,3 @@
-> This is README for the upcoming 1.0 release. It's available via "@reasonml-community/graphql-ppx@next", contains breaking changes and may not work. If you're using 0.x version please check [README from master branch](https://github.com/reasonml-community/graphql-ppx/blob/master/README.md)
-
 <p align="center">
     <img width="200" src="https://beta.graphql-ppx.com/img/logo.svg" alt="Logo">
   	<br><br>
