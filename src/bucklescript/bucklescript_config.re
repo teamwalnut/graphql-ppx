@@ -352,6 +352,7 @@ let read_config = () => {
     configString("template-tag-return-type", handleTemplateTagReturnType);
     configString("templateTagReturnType", handleTemplateTagReturnType);
     configBool("template-tag-is-function", handleTemplateTagIsFunction);
+    configBool("templateTagIsFunction", handleTemplateTagIsFunction);
 
     ppxConfig |> read_custom_fields;
   };
