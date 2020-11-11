@@ -280,8 +280,11 @@ let make_printed_query = (config, document) => {
     |> emit_json(config)
 
   | Ppx_config.String =>
-    switch (config.template_tag) {
-    | (template_tag, location, import)
+    switch (config.template_tag_is_function, config.template_tag) {
+    | (Some(true), (_, location, _)) when location != None =>
+      %expr
+      graphql([%e emit_printed_query(source, config)])
+    | (_, (template_tag, location, import))
         when template_tag != None || location != None =>
       open Graphql_printer;
       // the only way to emit a template literal for now, using the bs.raw
@@ -331,7 +334,7 @@ let make_printed_query = (config, document) => {
         config.template_tag_return_type,
       );
 
-    | (_, _, _) => emit_printed_query(source, config)
+    | _ => emit_printed_query(source, config)
     }
   };
 };
@@ -645,6 +648,44 @@ function back to the original JSON compatible data */
   |> List.concat;
 };
 
+let graphql_external = (config: output_config) => {
+  switch (config) {
+  | {
+      template_tag: (import, Some(location), _),
+      template_tag_return_type,
+      template_tag_is_function: Some(true),
+    } =>
+    let return_type =
+      switch (template_tag_return_type) {
+      | None => "string"
+      | Some(return_type) => return_type
+      };
+    let import =
+      switch (import) {
+      | None => "default"
+      | Some(import) => import
+      };
+    [
+      Ast_helper.(
+        Str.primitive(
+          Val.mk(
+            ~attrs=[
+              Ast_helper.Attr.mk(
+                {txt: "bs.module", loc: Location.none},
+                PStr([Str.eval(const_str_expr(location))]),
+              ),
+            ],
+            ~prim=[import],
+            {txt: "graphql", loc: Location.none},
+            [%type: string => [%t base_type_name(return_type)]],
+          ),
+        )
+      ),
+    ];
+  | _ => []
+  };
+};
+
 let generate_operation_implementation =
     (config, variable_defs, _has_error, operation, res_structure) => {
   let parse_fn =
@@ -719,6 +760,7 @@ let generate_operation_implementation =
         ],
         types,
         arg_types,
+        graphql_external(config),
         [
           [%stri let query = [%e printed_query]],
           [%stri let parse: Raw.t => t = value => [%e parse_fn]],
@@ -1040,6 +1082,7 @@ let generate_fragment_implementation =
       [[%stri [@ocaml.warning "-32"]]],
       [wrap_module(~loc=Location.none, "Raw", raw_types)],
       types,
+      graphql_external(config),
       [
         [%stri let query = [%e printed_query]],
         [%stri let parse: Raw.t => [%t type_name] = value => [%e parse_fn]],

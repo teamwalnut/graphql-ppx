@@ -63,6 +63,7 @@ let defaultConfig =
     template_tag_location: None,
     template_tag_import: None,
     template_tag_return_type: None,
+    template_tag_is_function: None,
     custom_fields: Hashtbl.create(0),
     future_added_value: true,
     extend_query: None,
@@ -282,6 +283,14 @@ let read_config = () => {
         }
       );
     };
+    let handleTemplateTagIsFunction = template_tag_is_function => {
+      Ppx_config.update_config(current =>
+        {
+          ...current,
+          template_tag_is_function: Some(template_tag_is_function),
+        }
+      );
+    };
 
     let configBool = (key, value) =>
       ppxConfig |> JsonHelper.mapBool(key, value);
@@ -342,6 +351,7 @@ let read_config = () => {
     configString("templateTagLocation", handleTemplateTagLocation);
     configString("template-tag-return-type", handleTemplateTagReturnType);
     configString("templateTagReturnType", handleTemplateTagReturnType);
+    configBool("template-tag-is-function", handleTemplateTagIsFunction);
 
     ppxConfig |> read_custom_fields;
   };

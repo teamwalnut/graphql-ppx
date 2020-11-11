@@ -817,6 +817,7 @@ type query_config = {
   template_tag_import: option(string),
   template_tag_return_type: option(string),
   tagged_template: option(bool),
+  template_tag_is_function: option(bool),
   future_added_value: option(bool),
   extend: option(string),
   fragment_in_query: option(Ppx_config.fragment_in_query),
@@ -930,6 +931,10 @@ let config_arguments_to_config =
                ...config,
                tagged_template: Some(value),
              }
+           | ({item: "templateTagIsFunction"}, {item: Iv_boolean(value)}) => {
+               ...config,
+               template_tag_is_function: Some(value),
+             }
            | ({item: "futureAddedValue"}, {item: Iv_boolean(value)}) => {
                ...config,
                future_added_value: Some(value),
@@ -1012,6 +1017,11 @@ let to_output_config =
         get_with_default(
           query_config.template_tag_return_type,
           Ppx_config.template_tag_return_type(),
+        ),
+      template_tag_is_function:
+        get_with_default(
+          query_config.template_tag_is_function,
+          Ppx_config.template_tag_is_function(),
         ),
       extend: query_config.extend,
       fragment_in_query:

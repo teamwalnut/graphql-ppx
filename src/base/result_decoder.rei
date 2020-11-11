@@ -8,6 +8,7 @@ type query_config = {
   template_tag_import: option(string),
   template_tag_return_type: option(string),
   tagged_template: option(bool),
+  template_tag_is_function: option(bool),
   future_added_value: option(bool),
   extend: option(string),
   fragment_in_query: option(Ppx_config.fragment_in_query),

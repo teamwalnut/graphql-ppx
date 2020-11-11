@@ -19,6 +19,7 @@ type config = {
   template_tag_location: option(string),
   template_tag_import: option(string),
   template_tag_return_type: option(string),
+  template_tag_is_function: option(bool),
   custom_fields: Hashtbl.t(string, string),
   future_added_value: bool,
   extend_query: option(string),
@@ -61,6 +62,9 @@ let template_tag_location = () =>
   (config_ref^ |> Option.unsafe_unwrap).template_tag_location;
 let template_tag_return_type = () =>
   (config_ref^ |> Option.unsafe_unwrap).template_tag_return_type;
+
+let template_tag_is_function = () =>
+  (config_ref^ |> Option.unsafe_unwrap).template_tag_is_function;
 
 let verbose_error_handling = () =>
   (config_ref^ |> Option.unsafe_unwrap).verbose_error_handling;

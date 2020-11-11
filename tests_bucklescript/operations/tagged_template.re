@@ -177,3 +177,26 @@ module MyQuery4 = [%graphql
   |};
   {templateTag: graphql, fragmentInQuery: "exclude"}
 ];
+
+module MyQuery8 = [%graphql
+  {|
+  query MyQuery6 @ppxConfig(
+    templateTagImport: "gql",
+    templateTagLocation: "apollo-client",
+    templateTagIsFunction: true
+  ) {
+    variousScalars {
+      nullableString
+      string
+      nullableInt
+      int
+      nullableFloat
+      float
+      nullableBoolean
+      boolean
+      nullableID
+      id
+    }
+  }
+|}
+];

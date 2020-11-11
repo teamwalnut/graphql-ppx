@@ -289,6 +289,8 @@ let get_query_config_from_trailing_record = fields =>
         extend: extract_extend_from_config(fields),
         fragment_in_query: extract_fragment_in_query_from_config(fields),
         apollo_mode: extract_apollo_mode_from_config(fields),
+        // do not support these new options in the trailing record
+        template_tag_is_function: None,
       };
     }
   );
@@ -304,6 +306,7 @@ let empty_query_config =
     template_tag_location: None,
     template_tag_import: None,
     template_tag_return_type: None,
+    template_tag_is_function: None,
     future_added_value: None,
     extend: None,
     fragment_in_query: None,
