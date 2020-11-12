@@ -3,7 +3,8 @@
   "description": "Used for native Reason/OCaml using latest version of OCaml",
   "scripts": {
     "format": "esy dune build @fmt --auto-promote",
-    "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
+    "release-static":
+      "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
     "test": "dune exec tests_bucklescript/tests/RunTests.exe --"
   },
   "dependencies": {
@@ -14,13 +15,13 @@
     "@opam/yojson": "*"
   },
   "devDependencies": {
+    "@opam/ocaml-lsp-server": "1.1.0",
     "@opam/merlin": "*",
     "@opam/alcotest": "*",
     "ocaml": "~4.9.0",
     "refmterr": "*",
     "@reason-native/rely": "*"
   },
-
   "esy": {
     "build": "dune build -p #{self.name}",
     "buildDev": "refmterr dune build --promote-install-files --root .",
