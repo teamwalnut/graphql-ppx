@@ -8,11 +8,10 @@ directive to insert a custom function in the decoder:
 
 ```reason
 module StringHeight = {
+  type t = string;
   let parse = (height) => string_of_float(height);
   let serialize = (height) => float_of_string(height);
-  type t = string;
 }
-
 
 module HeroQuery = [%graphql {|
 {

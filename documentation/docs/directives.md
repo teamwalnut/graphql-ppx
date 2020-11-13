@@ -44,14 +44,17 @@ more useful. For instance,
 directly useful in our apps, using the `ppxCustom` directive we can make a
 little annotation to convert this to an actual date. Here is an example.
 
-```reason {15}
+```reason {18}
 module MyDate = {
   type t = option(Js.Date.t);
   let parse = json => switch(json->Js.Json.decodeString) {
-    | Some(str) => str->Js.Date.fromString
+    | Some(str) => Some(str->Js.Date.fromString)
     | None => None
   }
-  let serialize = date => date->Js.Date.toString->Js.Json.string
+  let serialize = date => switch(date) {
+    | Some(date) => date->Js.Date.toString->Js.Json.string
+    | None => Js.Json.null
+  }
 }
 
 [%graphql {|
