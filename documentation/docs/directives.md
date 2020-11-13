@@ -46,15 +46,16 @@ little annotation to convert this to an actual date. Here is an example.
 
 ```reason {18}
 module MyDate = {
-  type t = option(Js.Date.t);
-  let parse = json => switch(json->Js.Json.decodeString) {
-    | Some(str) => Some(str->Js.Date.fromString)
-    | None => None
-  }
-  let serialize = date => switch(date) {
-    | Some(date) => date->Js.Date.toString->Js.Json.string
-    | None => Js.Json.null
-  }
+  type t = Js.Date.t;
+  let parse = json =>
+    json
+    ->Js.Json.decodeString
+    // we know it is a string type
+    ->Belt.Option.getUnsafe
+    ->Js.Date.fromString
+  };
+  let serialize = date =>
+    date->Js.Date.toString->Js.Json.string;
 }
 
 [%graphql {|
