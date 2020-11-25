@@ -42,16 +42,15 @@ function copyBinary(filename, destFilename) {
     process.exit(0);
   }
 
-  if (!fs.existsSync(destFilename)) {
-    copyFileSync(filename, destFilename);
-    fs.chmodSync(destFilename, 0755);
-  }
+  copyFileSync(filename, destFilename);
+  fs.chmodSync(destFilename, 0755);
 
+  // I am not sure why we need this but let's keep it for backwards compatibility
+  // perhaps it's necessary for windows?
+  // if it's not needed we can remove it later
   var destFilenameExe = destFilename + ".exe";
-  if (!fs.existsSync(destFilenameExe)) {
-    copyFileSync(filename, destFilenameExe);
-    fs.chmodSync(destFilenameExe, 0755);
-  }
+  copyFileSync(filename, destFilenameExe);
+  fs.chmodSync(destFilenameExe, 0755);
 }
 
 function copyFileSync(source, dest) {
