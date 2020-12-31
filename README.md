@@ -115,6 +115,8 @@ and update your `dune` file:
 
 Make your first query:
 
+### Reason
+
 ```reason
 [%graphql {|
   query UserQuery {
@@ -124,6 +126,19 @@ Make your first query:
     }
   }
 |}];
+```
+
+### ReScript
+
+```rescript
+%graphql(`
+  query UserQuery {
+    user {
+      id
+      name
+    }
+  }
+`)
 ```
 
 [Open getting started in the docs](https://beta.graphql-ppx.com/docs/getting-started)
