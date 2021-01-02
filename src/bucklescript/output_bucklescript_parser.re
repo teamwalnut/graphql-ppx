@@ -239,14 +239,12 @@ and generate_object_decoder =
       ~path,
       ~definition,
       ~existing_record,
-      ~force_record,
       ~interface_fragments,
       fields,
     ) => {
   // whether we can use inline values, this compiles to better javascript
   // but we can't use this if we are constructing objects instead of records
-  let inline_values = config.records;
-  let do_obj_constructor_base = (is_object, wrap) => {
+  let do_obj_constructor_base = () => {
     open Ast_helper;
 
     let opaque = raw_opaque_object(interface_fragments, fields);
@@ -258,8 +256,8 @@ and generate_object_decoder =
         [@metaloc conv_loc(loc)]
         {
           let%expr value =
-            switch%e (opaque, is_object) {
-            | (true, _) =>
+            switch%e (opaque) {
+            | true =>
               %expr
               Obj.magic(
                 Js.Dict.unsafeGet(
@@ -268,10 +266,7 @@ and generate_object_decoder =
                 ),
               )
 
-            | (_, true) =>
-              %expr
-              value##[%e ident_from_string(to_valid_ident(key))]
-            | (_, false) =>
+            | false =>
               %expr
               [%e
                 Ast_helper.Exp.field(
@@ -308,14 +303,6 @@ and generate_object_decoder =
           );
         };
 
-    let get_record_contents =
-      fun
-      | Fr_fragment_spread({key})
-      | Fr_named_field({name: key}) => (
-          {txt: Longident.parse(to_valid_ident(key)), loc: conv_loc(loc)},
-          ident_from_string(to_valid_ident(key)),
-        );
-
     let get_record_contents_inline =
       fun
       | Fr_fragment_spread({key}) as field
@@ -324,11 +311,7 @@ and generate_object_decoder =
           get_value(field),
         );
 
-    let record_fields =
-      List.map(
-        inline_values ? get_record_contents_inline : get_record_contents,
-        fields,
-      );
+    let record_fields = List.map(get_record_contents_inline, fields);
 
     let record_fields =
       switch (interface_fragments) {
@@ -350,43 +333,15 @@ and generate_object_decoder =
         ]
       };
 
-    let record = Exp.record(record_fields, None);
-
-    let record = wrap ? record_to_object(loc, record) : record;
-
-    inline_values
-      ? record
-      : {
-        let bindings =
-          fields
-          |> List.map(
-               fun
-               | Fr_named_field({name}) as field => (name, field)
-               | Fr_fragment_spread({key}) as field => (key, field),
-             )
-          |> List.map(((key, field)) => {
-               Vb.mk(
-                 Pat.var({txt: to_valid_ident(key), loc: conv_loc(loc)}),
-                 get_value(field),
-               )
-             })
-          |> List.rev;
-        Exp.let_(Nonrecursive, bindings, record);
-      };
+    Exp.record(record_fields, None);
   };
-
-  let do_obj_constructor = () =>
-    [@metaloc loc]
-    {
-      do_obj_constructor_base(true, true);
-    };
 
   let do_obj_constructor_records = () =>
     [@metaloc loc]
     {
       Ast_helper.(
         Exp.constraint_(
-          do_obj_constructor_base(!config.records, false),
+          do_obj_constructor_base(),
           base_type_name(
             switch (existing_record) {
             | None => generate_type_name(path)
@@ -397,8 +352,7 @@ and generate_object_decoder =
       );
     };
 
-  config.records || existing_record != None || force_record
-    ? do_obj_constructor_records() : do_obj_constructor();
+  do_obj_constructor_records();
 }
 and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
@@ -651,7 +605,6 @@ and generate_parser = (config, path: list(string), definition) =>
       ~path,
       ~definition,
       ~existing_record,
-      ~force_record=true,
       ~interface_fragments,
       fields,
     )
@@ -669,7 +622,6 @@ and generate_parser = (config, path: list(string), definition) =>
       ~path,
       ~definition,
       ~existing_record,
-      ~force_record=false,
       ~interface_fragments,
       fields,
     )

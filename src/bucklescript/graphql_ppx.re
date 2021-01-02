@@ -1101,20 +1101,6 @@ let args = [
     "Verbose error handling. If not defined NODE_ENV will be used",
   ),
   (
-    "-objects",
-    Arg.Unit(
-      () => Ppx_config.update_config(current => {...current, records: false}),
-    ),
-    "Compile to objects instead of records by default (legacy)",
-  ),
-  (
-    "-records",
-    Arg.Unit(
-      () => Ppx_config.update_config(current => {...current, records: true}),
-    ),
-    "Compile to records by default",
-  ),
-  (
     "-template-tag",
     Arg.String(
       template_tag =>
@@ -1253,6 +1239,13 @@ let args = [
         ),
     ),
     "extend fragments with the following functor",
+  ),
+  (
+    "-native",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, native: true}),
+    ),
+    "native mode (non-ReScript)",
   ),
 ];
 

@@ -18,8 +18,9 @@ function parse(value) {
 }
 
 function serialize(value) {
+  var value$1 = value.optionalInputArgs;
   return {
-          optionalInputArgs: value.optionalInputArgs
+          optionalInputArgs: value$1
         };
 }
 

@@ -58,7 +58,6 @@ let defaultConfig =
       let loc = Output_bucklescript_utils.conv_loc(loc);
       raise(Location.Error(Location.error(~loc, message)));
     },
-    records: true,
     template_tag: None,
     template_tag_location: None,
     template_tag_import: None,
@@ -74,6 +73,7 @@ let defaultConfig =
     extend_subscription_no_required_variables: None,
     extend_fragment: None,
     fragment_in_query: Include,
+    native: false,
   };
 
 module JsonHelper = {
@@ -173,27 +173,6 @@ let read_config = () => {
             },
         }
       );
-    };
-    let handleMode = mode => {
-      switch (mode) {
-      | "objects" =>
-        Ppx_config.update_config(current => {...current, records: false})
-      | "records" =>
-        Ppx_config.update_config(current => {...current, records: true})
-      | other =>
-        raise(
-          Config_error(
-            "Error in graphql-ppx configuration: mode \""
-            ++ other
-            ++ "\" is not supported. Choose either records or objects.",
-          ),
-        )
-      };
-    };
-    let handleObjects = objects => {
-      objects
-        ? Ppx_config.update_config(current => {...current, records: false})
-        : Ppx_config.update_config(current => {...current, records: true});
     };
     let handleFragmentInQuery = mode => {
       switch (mode) {
@@ -306,8 +285,6 @@ let read_config = () => {
     configString("schema", handleSchema);
     configString("ast-out", handleAstOut);
     configString("astOut", handleAstOut);
-    configString("mode", handleMode);
-    configBool("objects", handleObjects);
     configString("fragment-in-query", handleFragmentInQuery);
     configString("fragmentInQuery", handleFragmentInQuery);
     configString("extend-query", handleExtendQuery);

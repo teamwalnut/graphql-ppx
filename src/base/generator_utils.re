@@ -24,7 +24,6 @@ type output_config = {
   template_tag: (option(string), option(string), option(string)),
   template_tag_return_type: option(string),
   template_tag_is_function: option(bool),
-  records: bool,
   inline: bool,
   future_added_value: bool,
   extend: option(string),

@@ -19,11 +19,11 @@ Generate Template › mutationWithArgsAndNoRecords.re › output
 ];
 module MyQuery: {
   module Raw: {
-    type t = {. \"optionalInputArgs\": string};
-    type t_variables = {. \"required\": string};
+    type t = {optionalInputArgs: string};
+    type t_variables = {required: string};
   };
-  type t = {. \"optionalInputArgs\": string};
-  type t_variables = {. \"required\": string};
+  type t = {optionalInputArgs: string};
+  type t_variables = {required: string};
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -39,33 +39,36 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = {. \"optionalInputArgs\": string};
-    type t_variables = {. \"required\": string};
+    type t = {optionalInputArgs: string};
+    type t_variables = {required: string};
   };
-  type t = {. \"optionalInputArgs\": string};
-  type t_variables = {. \"required\": string};
+  type t = {optionalInputArgs: string};
+  type t_variables = {required: string};
   let query: string = [%raw
     \"require(\\\"gql\\\")`\\n  mutation MyMutation($required: String!)  {\\n    optionalInputArgs(required: $required, anotherRequired: \\\"val\\\")\\n  }\\n`\"
   ];
   let parse: Raw.t => t =
-    value => {
-      let optionalInputArgs = {
-        let value = value##optionalInputArgs;
-        value;
-      };
-      {\"optionalInputArgs\": optionalInputArgs};
-    };
+    (value) => (
+      {
+        optionalInputArgs: {
+          let value = (value: Raw.t).optionalInputArgs;
+          value;
+        },
+      }: t
+    );
   let serialize: t => Raw.t =
-    value => {
-      let optionalInputArgs = {
-        let value = value##optionalInputArgs;
-        value;
-      };
-      {\"optionalInputArgs\": optionalInputArgs};
-    };
+    (value) => (
+      {
+        let optionalInputArgs = {
+          let value = (value: t).optionalInputArgs;
+          value;
+        };
+        {optionalInputArgs: optionalInputArgs};
+      }: Raw.t
+    );
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {\"required\": (a => a)(inp##required)};
-  let makeVariables = (~required, ()): t_variables => {\"required\": required};
+    inp => {required: (a => a)((inp: t_variables).required)};
+  let makeVariables = (~required, ()): t_variables => {required: required};
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";

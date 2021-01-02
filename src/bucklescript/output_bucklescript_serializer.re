@@ -6,7 +6,7 @@ open Schema;
 open Ast_408;
 open Asttypes;
 
-open Generator_utils;
+// open Generator_utils;
 open Output_bucklescript_utils;
 open Extract_type_definitions;
 open Result_structure;
@@ -106,7 +106,7 @@ let record_to_object = (loc, record) => {
   );
 };
 
-let serialize_fun = (config, loc, fields, type_name) => {
+let serialize_fun = (fields, type_name) => {
   let arg = "inp";
   open Ast_helper;
   let record =
@@ -120,7 +120,7 @@ let serialize_fun = (config, loc, fields, type_name) => {
              },
              [%expr
                [%e serialize_type(type_)](
-                 if%e (config.records) {
+                 [%e
                    Exp.field(
                      Exp.constraint_(
                        ident_from_string(arg),
@@ -130,22 +130,14 @@ let serialize_fun = (config, loc, fields, type_name) => {
                        loc: Location.none,
                        Location.txt: Longident.parse(to_valid_ident(name)),
                      },
-                   );
-                 } else {
-                   %expr
-                   [%e ident_from_string(arg)]##[%e
-                                                   ident_from_string(
-                                                     to_valid_ident(name),
-                                                   )
-                                                 ];
-                 },
+                   )
+                 ],
                )
              ],
            )
          }),
       None,
     );
-  let record = !config.records ? record_to_object(loc, record) : record;
   Ast_helper.(
     Exp.fun_(
       Nolabel,
@@ -213,8 +205,7 @@ let generate_serialize_variable_signatures =
          })
     )
   };
-let generate_serialize_variables =
-    (config, arg_type_defs: list(arg_type_def)) =>
+let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
   | [NoVariables] => [%stri let serializeVariables = () => ()]
   | arg_type_defs =>
@@ -254,7 +245,7 @@ let generate_serialize_variables =
                    base_type_name("Raw." ++ type_name),
                  ),
                ),
-               serialize_fun(config, loc, fields, type_name),
+               serialize_fun(fields, type_name),
              );
            }),
       )
@@ -270,8 +261,7 @@ let generate_serialize_variables =
   * This also helps if you don't want the build to break if a optional variable
   * is added.
  */
-let generate_variable_constructors =
-    (config, arg_type_defs: list(arg_type_def)) => {
+let generate_variable_constructors = (arg_type_defs: list(arg_type_def)) => {
   switch (arg_type_defs) {
   | [NoVariables] => None
   | _ =>
@@ -329,13 +319,11 @@ let generate_variable_constructors =
                    )
                  );
 
-               let object_ = record_to_object(loc, record);
-
                let body =
                  Ast_helper.(
                    Exp.constraint_(
                      ~loc=conv_loc(loc),
-                     config.records ? record : object_,
+                     record,
                      base_type_name(
                        switch (name) {
                        | None => "t_variables"
@@ -440,27 +428,24 @@ let generate_variable_constructor_signatures =
   };
 };
 
-let get_field = (is_object, key, existing_record, path) => {
-  is_object
-    ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
-    : [%expr
-      [%e
-        Ast_helper.(
-          Exp.field(
-            Exp.constraint_(
-              ident_from_string("value"),
-              base_type_name(
-                switch (existing_record) {
-                | None => generate_type_name(path)
-                | Some(existing) => existing
-                },
-              ),
-            ),
-            {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
-          )
-        )
-      ]
-    ];
+let get_field = (key, existing_record, path) => {
+  %expr
+  [%e
+    Ast_helper.(
+      Exp.field(
+        Exp.constraint_(
+          ident_from_string("value"),
+          base_type_name(
+            switch (existing_record) {
+            | None => generate_type_name(path)
+            | Some(existing) => existing
+            },
+          ),
+        ),
+        {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
+      )
+    )
+  ];
 };
 
 let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
@@ -526,12 +511,11 @@ and generate_object_encoder =
       definition,
       existing_record,
       typename,
-      force_record,
       interface_fragments,
     ) => {
   open Ast_helper;
   let is_opaque = raw_opaque_object(interface_fragments, fields);
-  let do_obj_constructor_base = (is_object, wrap) => {
+  let do_obj_constructor_base = wrap => {
     switch (
       fields
       |> filter_map(
@@ -597,9 +581,7 @@ and generate_object_encoder =
                {
                  // TODO: would be nice to pass the input instead of relying
                  // on a static identifier called `value`
-                 let%expr value = [%e
-                   get_field(is_object, key, existing_record, path)
-                 ];
+                 let%expr value = [%e get_field(key, existing_record, path)];
                  %e
                  generate_serializer(
                    config,
@@ -616,17 +598,17 @@ and generate_object_encoder =
     };
   };
 
-  let do_obj_constructor = with_objects =>
+  let do_obj_constructor = () =>
     [@metaloc conv_loc(loc)]
     {
-      do_obj_constructor_base(with_objects, true);
+      do_obj_constructor_base(true);
     };
 
   let do_obj_constructor_records = () =>
     [@metaloc conv_loc(loc)]
     {
       Exp.constraint_(
-        do_obj_constructor_base(false, false),
+        do_obj_constructor_base(false),
         base_type_name("Raw." ++ generate_type_name(path)),
       );
     };
@@ -648,7 +630,7 @@ and generate_object_encoder =
   // in the raw representation if it is merged last. Unfortunately there is not
   // really anything that we can do about this.
 
-  let merge_into_opaque = is_object => {
+  let merge_into_opaque = () => {
     let fields =
       fields
       |> List.fold_left(
@@ -660,9 +642,7 @@ and generate_object_encoder =
                    (
                      Obj.magic(
                        [%e ident_from_string(name ++ ".serialize")](
-                         [%e
-                           get_field(is_object, key, existing_record, path)
-                         ],
+                         [%e get_field(key, existing_record, path)],
                        ),
                      ): Js.Json.t
                    )
@@ -678,7 +658,7 @@ and generate_object_encoder =
       | Some((_, [])) => fields
       | Some((interface_name, fragments)) => [
           {
-            let%expr value = [%e get_field(is_object, "fragment", None, path)];
+            let%expr value = [%e get_field("fragment", None, path)];
             (
               Obj.magic(
                 [%e
@@ -706,7 +686,7 @@ and generate_object_encoder =
           Obj.magic(
             {
               %e
-              do_obj_constructor(is_object);
+              do_obj_constructor();
             },
           ): Js.Json.t,
           [%e fields |> Ast_helper.Exp.array],
@@ -717,13 +697,7 @@ and generate_object_encoder =
     );
   };
 
-  switch (is_opaque, config.records, existing_record, force_record) {
-  | (true, records, _, _) => merge_into_opaque(!records)
-  | (false, true, _, _) => do_obj_constructor_records()
-  | (false, false, _, true) => do_obj_constructor(false)
-  | (false, false, Some(_), _) => do_obj_constructor(false)
-  | (false, false, _, _) => do_obj_constructor(true)
-  };
+  is_opaque ? merge_into_opaque() : do_obj_constructor_records();
 }
 and generate_poly_variant_union_encoder =
     (
@@ -908,7 +882,6 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
-      true,
       interface_fragments,
     )
   | Res_object({
@@ -927,7 +900,6 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
-      false,
       interface_fragments,
     )
   | Res_poly_variant_union({

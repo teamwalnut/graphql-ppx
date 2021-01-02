@@ -993,13 +993,6 @@ let to_output_config =
       Generator_utils.map_loc,
       delimiter,
       full_document: document,
-      records:
-        switch (query_config.records, query_config.objects) {
-        | (Some(value), _) => value
-        | (_, Some(true)) => false
-        | (_, Some(false)) => true
-        | (None, None) => Ppx_config.records()
-        },
       inline:
         switch (query_config.inline) {
         | Some(value) => value

@@ -731,7 +731,6 @@ let generate_graphql_object =
     (
       ~config: Generator_utils.output_config,
       ~obj_path,
-      ~force_record,
       ~raw,
       ~emit_locations,
       ~loc,
@@ -750,29 +749,17 @@ let generate_graphql_object =
       },
       obj_path,
     )
-
   | None =>
-    config.records || force_record
-      ? generate_record_type(
-          ~emit_locations,
-          ~config,
-          ~obj_path,
-          ~raw,
-          ~loc,
-          ~is_variant,
-          ~interface_fragments,
-          fields,
-        )
-      : generate_object_type(
-          ~emit_locations,
-          config,
-          fields,
-          obj_path,
-          raw,
-          loc,
-          is_variant,
-          interface_fragments,
-        )
+    generate_record_type(
+      ~emit_locations,
+      ~config,
+      ~obj_path,
+      ~raw,
+      ~loc,
+      ~is_variant,
+      ~interface_fragments,
+      fields,
+    )
   };
 };
 
@@ -791,7 +778,6 @@ let generate_types =
        | Object({
            fields,
            path: obj_path,
-           force_record,
            loc,
            variant_parent,
            interface_fragments,
@@ -799,7 +785,6 @@ let generate_types =
          generate_graphql_object(
            ~config,
            ~obj_path,
-           ~force_record,
            ~raw,
            ~loc,
            ~emit_locations,
@@ -1147,11 +1132,8 @@ let generate_object_input_object = (raw, input_obj_name, fields) => {
   );
 };
 
-let generate_input_object =
-    (raw, config: Generator_utils.output_config, input_obj_name, fields) => {
-  config.records
-    ? generate_record_input_object(raw, input_obj_name, fields)
-    : generate_object_input_object(raw, input_obj_name, fields);
+let generate_input_object = (raw, _, input_obj_name, fields) => {
+  generate_record_input_object(raw, input_obj_name, fields);
 };
 
 let generate_arg_type_structure_items = (raw, config, variable_defs) => {

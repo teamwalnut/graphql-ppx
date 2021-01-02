@@ -24,7 +24,6 @@ and type_def =
   | Object({
       loc: Source_pos.ast_location,
       variant_parent: bool,
-      force_record: bool,
       path,
       existing_type: option(string),
       fields: list(object_field),

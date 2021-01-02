@@ -734,12 +734,10 @@ let generate_operation_implementation =
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
-      config,
       extracted_args,
     );
   let variable_constructors =
     Output_bucklescript_serializer.generate_variable_constructors(
-      config,
       extracted_args,
     );
   let has_required_variables = has_required_variables(extracted_args);
