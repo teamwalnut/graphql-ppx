@@ -1,0 +1,250 @@
+Generate Native › variant.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"migrate_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_mutationForVariant_dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_human = {name: string};
+  type t_mutationForVariant_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_dogOrHuman_Human = {name: string};
+  type t_mutationForVariant_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_mutationForVariant_dogOrHuman_Dog)
+    | `Human(t_mutationForVariant_dogOrHuman_Human)
+  ];
+  type t_mutationForVariant = [
+    | `BaseType(string)
+    | `BaseTypeList(array(string))
+    | `Dog(t_mutationForVariant_dog)
+    | `Human(t_mutationForVariant_human)
+    | `DogOrHuman(t_mutationForVariant_dogOrHuman)
+  ];
+  type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t = Yojson.Basic.json;
+    type t_variables = Yojson.Basic.json;
+  };
+  type t_mutationForVariant_dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_human = {name: string};
+  type t_mutationForVariant_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_dogOrHuman_Human = {name: string};
+  type t_mutationForVariant_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(t_mutationForVariant_dogOrHuman_Dog)
+    | `Human(t_mutationForVariant_dogOrHuman_Human)
+  ];
+  type t_mutationForVariant = [
+    | `BaseType(string)
+    | `BaseTypeList(array(string))
+    | `Dog(t_mutationForVariant_dog)
+    | `Human(t_mutationForVariant_human)
+    | `DogOrHuman(t_mutationForVariant_dogOrHuman)
+  ];
+  type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = unit;
+  let query = \"mutation   {\\nmutationForVariant  {\\nbaseType  \\nbaseTypeList  \\ndog  {\\nname  \\nbarkVolume  \\n}\\n\\nhuman  {\\nname  \\n}\\n\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationForVariant: {
+          let value = Yojson.Basic.member(\"mutationForVariant\", value);
+          switch (Yojson.Basic.to_option(value)) {
+          | None =>
+            raise(
+              Failure(
+                \"graphql-ppx: \"
+                ++ \"Expected type \"
+                ++ \"VariantTestResult\"
+                ++ \" to be an object\",
+              ),
+            )
+          | Some(value) =>
+            let temp = Yojson.Basic.member(\"baseType\", value);
+            switch (Yojson.Basic.to_option(temp)) {
+            | None =>
+              let value = temp;
+              `BaseType(Yojson.Basic.to_string(value));
+            | Some(_) =>
+              let temp = Yojson.Basic.member(\"baseTypeList\", value);
+              switch (Yojson.Basic.to_option(temp)) {
+              | None =>
+                let value = temp;
+                `BaseTypeList(
+                  switch (value) {
+                  | `List(json_list) =>
+                    Array.map(json_list => Yojson.Basic.to_string(value))
+                  | _ => []
+                  },
+                );
+              | Some(_) =>
+                let temp = Yojson.Basic.member(\"dog\", value);
+                switch (Yojson.Basic.to_option(temp)) {
+                | None =>
+                  let value = temp;
+                  `Dog(
+                    {
+                      name: {
+                        let value = Yojson.Basic.member(\"name\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                      barkVolume: {
+                        let value = Yojson.Basic.member(\"barkVolume\", value);
+                        Yojson.Basic.to_float(value);
+                      },
+                    }: t_mutationForVariant_dog,
+                  );
+                | Some(_) =>
+                  let temp = Yojson.Basic.member(\"human\", value);
+                  switch (Yojson.Basic.to_option(temp)) {
+                  | None =>
+                    let value = temp;
+                    `Human(
+                      {
+                        name: {
+                          let value = Yojson.Basic.member(\"name\", value);
+                          Yojson.Basic.to_string(value);
+                        },
+                      }: t_mutationForVariant_human,
+                    );
+                  | Some(_) =>
+                    let temp = Yojson.Basic.member(\"dogOrHuman\", value);
+                    switch (Yojson.Basic.to_option(temp)) {
+                    | None =>
+                      let value = temp;
+                      `DogOrHuman(
+                        {
+                          let typename: string =
+                            value
+                            |> Yojson.Basic.member(\"__typename\")
+                            |> Yojson.to_string;
+                          (
+                            switch (typename) {
+                            | \"Dog\" =>
+                              `Dog(
+                                {
+                                  let value: Raw.t_mutationForVariant_dogOrHuman_Dog =
+                                    Obj.magic(value);
+                                  (
+                                    {
+                                      name: {
+                                        let value =
+                                          Yojson.Basic.member(\"name\", value);
+                                        Yojson.Basic.to_string(value);
+                                      },
+                                      barkVolume: {
+                                        let value =
+                                          Yojson.Basic.member(
+                                            \"barkVolume\",
+                                            value,
+                                          );
+                                        Yojson.Basic.to_float(value);
+                                      },
+                                    }: t_mutationForVariant_dogOrHuman_Dog
+                                  );
+                                },
+                              )
+                            | \"Human\" =>
+                              `Human(
+                                {
+                                  let value: Raw.t_mutationForVariant_dogOrHuman_Human =
+                                    Obj.magic(value);
+                                  (
+                                    {
+                                      name: {
+                                        let value =
+                                          Yojson.Basic.member(\"name\", value);
+                                        Yojson.Basic.to_string(value);
+                                      },
+                                    }: t_mutationForVariant_dogOrHuman_Human
+                                  );
+                                },
+                              )
+                            | _ =>
+                              `FutureAddedValue(Obj.magic(value): Js.Json.t)
+                            }: t_mutationForVariant_dogOrHuman
+                          );
+                        },
+                      );
+                    | Some(_) =>
+                      raise(
+                        Failure(
+                          \"graphql-ppx: \"
+                          ++ \"All fields on variant selection set on type \"
+                          ++ \"VariantTestResult\"
+                          ++ \" were null\",
+                        ),
+                      )
+                    };
+                  };
+                };
+              };
+            };
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let mutationForVariant = {
+          let value = (value: t).mutationForVariant;
+          Obj.magic(Js.Json.null);
+        };
+        {mutationForVariant: mutationForVariant};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+

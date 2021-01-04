@@ -1,0 +1,598 @@
+Generate Native › nested.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"migrate_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+type record = {
+  f1: string,
+  f2: string,
+};
+module MyQuery: {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_first_inner_inner = {field: string};
+  type t_first_inner = {inner: option(t_first_inner_inner)};
+  type t_first = {inner: option(t_first_inner)};
+  type t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  };
+  type t_second_inner = {inner: option(t_second_inner_inner)};
+  type t_second = {inner: option(t_second_inner)};
+  type t_let_inner_inner = {field: string};
+  type t_let_inner = {inner: option(t_let_inner_inner)};
+  type t_let = {inner: option(t_let_inner)};
+  type t = {
+    first: t_first,
+    second: t_second,
+    [@bs.as \"let\"]
+    let_: t_let,
+  };
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t = Yojson.Basic.json;
+    type t_variables = Yojson.Basic.json;
+  };
+  type t_first_inner_inner = {field: string};
+  type t_first_inner = {inner: option(t_first_inner_inner)};
+  type t_first = {inner: option(t_first_inner)};
+  type t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  };
+  type t_second_inner = {inner: option(t_second_inner_inner)};
+  type t_second = {inner: option(t_second_inner)};
+  type t_let_inner_inner = {field: string};
+  type t_let_inner = {inner: option(t_let_inner_inner)};
+  type t_let = {inner: option(t_let_inner)};
+  type t = {
+    first: t_first,
+    second: t_second,
+    [@bs.as \"let\"]
+    let_: t_let,
+  };
+  type t_variables = unit;
+  let query = \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        first: {
+          let value = Yojson.Basic.member(\"first\", value);
+          (
+            {
+              inner: {
+                let value = Yojson.Basic.member(\"inner\", value);
+                switch (value) {
+                | value =>
+                  Some(
+                    {
+                      inner: {
+                        let value = Yojson.Basic.member(\"inner\", value);
+                        switch (value) {
+                        | value =>
+                          Some(
+                            {
+                              field: {
+                                let value =
+                                  Yojson.Basic.member(\"field\", value);
+                                Yojson.Basic.to_string(value);
+                              },
+                            }: t_first_inner_inner,
+                          )
+                        | `Null => None
+                        };
+                      },
+                    }: t_first_inner,
+                  )
+                | `Null => None
+                };
+              },
+            }: t_first
+          );
+        },
+        second: {
+          let value = Yojson.Basic.member(\"second\", value);
+          (
+            {
+              inner: {
+                let value = Yojson.Basic.member(\"inner\", value);
+                switch (value) {
+                | value =>
+                  Some(
+                    {
+                      inner: {
+                        let value = Yojson.Basic.member(\"inner\", value);
+                        switch (value) {
+                        | value =>
+                          Some(
+                            {
+                              f1: {
+                                let value = Yojson.Basic.member(\"f1\", value);
+                                Yojson.Basic.to_string(value);
+                              },
+                              f2: {
+                                let value = Yojson.Basic.member(\"f2\", value);
+                                Yojson.Basic.to_string(value);
+                              },
+                            }: t_second_inner_inner,
+                          )
+                        | `Null => None
+                        };
+                      },
+                    }: t_second_inner,
+                  )
+                | `Null => None
+                };
+              },
+            }: t_second
+          );
+        },
+        let_: {
+          let value = Yojson.Basic.member(\"let\", value);
+          (
+            {
+              inner: {
+                let value = Yojson.Basic.member(\"inner\", value);
+                switch (value) {
+                | value =>
+                  Some(
+                    {
+                      inner: {
+                        let value = Yojson.Basic.member(\"inner\", value);
+                        switch (value) {
+                        | value =>
+                          Some(
+                            {
+                              field: {
+                                let value =
+                                  Yojson.Basic.member(\"field\", value);
+                                Yojson.Basic.to_string(value);
+                              },
+                            }: t_let_inner_inner,
+                          )
+                        | `Null => None
+                        };
+                      },
+                    }: t_let_inner,
+                  )
+                | `Null => None
+                };
+              },
+            }: t_let
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let let_ = {
+          let value = (value: t).let_;
+          (
+            {
+              let inner = {
+                let value = (value: t_let).inner;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_let_inner).inner;
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let field = {
+                                let value = (value: t_let_inner_inner).field;
+                                value;
+                              };
+                              {field: field};
+                            }: Raw.t_let_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {inner: inner};
+                    }: Raw.t_let_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {inner: inner};
+            }: Raw.t_let
+          );
+        }
+        and second = {
+          let value = (value: t).second;
+          (
+            {
+              let inner = {
+                let value = (value: t_second).inner;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_second_inner).inner;
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let f2 = {
+                                let value = (value: t_second_inner_inner).f2;
+                                value;
+                              }
+                              and f1 = {
+                                let value = (value: t_second_inner_inner).f1;
+                                value;
+                              };
+                              {f1, f2};
+                            }: Raw.t_second_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {inner: inner};
+                    }: Raw.t_second_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {inner: inner};
+            }: Raw.t_second
+          );
+        }
+        and first = {
+          let value = (value: t).first;
+          (
+            {
+              let inner = {
+                let value = (value: t_first).inner;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_first_inner).inner;
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let field = {
+                                let value = (value: t_first_inner_inner).field;
+                                value;
+                              };
+                              {field: field};
+                            }: Raw.t_first_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {inner: inner};
+                    }: Raw.t_first_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {inner: inner};
+            }: Raw.t_first
+          );
+        };
+        {first, second, let_};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+
+module Test: {
+  module MyQueryWithSig: {
+    module Raw: {
+      type t;
+      type t_variables;
+    };
+    type t_nestedObject_inner_inner = {field: string};
+    type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+    type t_nestedObject = {inner: option(t_nestedObject_inner)};
+    type t = {nestedObject: t_nestedObject};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+  };
+} = {
+  module MyQueryWithSig: {
+    module Raw: {
+      type t;
+      type t_variables;
+    };
+    type t_nestedObject_inner_inner = {field: string};
+    type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+    type t_nestedObject = {inner: option(t_nestedObject_inner)};
+    type t = {nestedObject: t_nestedObject};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => unit;
+    let makeVariables: unit => unit;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+  } = {
+    [@ocaml.warning \"-32\"];
+    module Raw = {
+      type t = Yojson.Basic.json;
+      type t_variables = Yojson.Basic.json;
+    };
+    type t_nestedObject_inner_inner = {field: string};
+    type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+    type t_nestedObject = {inner: option(t_nestedObject_inner)};
+    type t = {nestedObject: t_nestedObject};
+    type t_variables = unit;
+    let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          nestedObject: {
+            let value = Yojson.Basic.member(\"nestedObject\", value);
+            (
+              {
+                inner: {
+                  let value = Yojson.Basic.member(\"inner\", value);
+                  switch (value) {
+                  | value =>
+                    Some(
+                      {
+                        inner: {
+                          let value = Yojson.Basic.member(\"inner\", value);
+                          switch (value) {
+                          | value =>
+                            Some(
+                              {
+                                field: {
+                                  let value =
+                                    Yojson.Basic.member(\"field\", value);
+                                  Yojson.Basic.to_string(value);
+                                },
+                              }: t_nestedObject_inner_inner,
+                            )
+                          | `Null => None
+                          };
+                        },
+                      }: t_nestedObject_inner,
+                    )
+                  | `Null => None
+                  };
+                },
+              }: t_nestedObject
+            );
+          },
+        }: t
+      );
+    let serialize: t => Raw.t =
+      (value) => (
+        {
+          let nestedObject = {
+            let value = (value: t).nestedObject;
+            (
+              {
+                let inner = {
+                  let value = (value: t_nestedObject).inner;
+                  switch (value) {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      {
+                        let inner = {
+                          let value = (value: t_nestedObject_inner).inner;
+                          switch (value) {
+                          | Some(value) =>
+                            Js.Nullable.return(
+                              {
+                                let field = {
+                                  let value =
+                                    (value: t_nestedObject_inner_inner).field;
+                                  value;
+                                };
+                                {field: field};
+                              }: Raw.t_nestedObject_inner_inner,
+                            )
+                          | None => Js.Nullable.null
+                          };
+                        };
+                        {inner: inner};
+                      }: Raw.t_nestedObject_inner,
+                    )
+                  | None => Js.Nullable.null
+                  };
+                };
+                {inner: inner};
+              }: Raw.t_nestedObject
+            );
+          };
+          {nestedObject: nestedObject};
+        }: Raw.t
+      );
+    let serializeVariables = () => ();
+    let makeVariables = () => ();
+    let makeDefaultVariables = () => makeVariables();
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+    external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+    external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+  };
+};
+module MyQueryWithSigDirect: {
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_nestedObject_inner_inner = {field: string};
+  type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+  type t_nestedObject = {inner: option(t_nestedObject_inner)};
+  type t = {nestedObject: t_nestedObject};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => unit;
+  let makeVariables: unit => unit;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t = Yojson.Basic.json;
+    type t_variables = Yojson.Basic.json;
+  };
+  type t_nestedObject_inner_inner = {field: string};
+  type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+  type t_nestedObject = {inner: option(t_nestedObject_inner)};
+  type t = {nestedObject: t_nestedObject};
+  type t_variables = unit;
+  let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nestedObject: {
+          let value = Yojson.Basic.member(\"nestedObject\", value);
+          (
+            {
+              inner: {
+                let value = Yojson.Basic.member(\"inner\", value);
+                switch (value) {
+                | value =>
+                  Some(
+                    {
+                      inner: {
+                        let value = Yojson.Basic.member(\"inner\", value);
+                        switch (value) {
+                        | value =>
+                          Some(
+                            {
+                              field: {
+                                let value =
+                                  Yojson.Basic.member(\"field\", value);
+                                Yojson.Basic.to_string(value);
+                              },
+                            }: t_nestedObject_inner_inner,
+                          )
+                        | `Null => None
+                        };
+                      },
+                    }: t_nestedObject_inner,
+                  )
+                | `Null => None
+                };
+              },
+            }: t_nestedObject
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nestedObject = {
+          let value = (value: t).nestedObject;
+          (
+            {
+              let inner = {
+                let value = (value: t_nestedObject).inner;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let inner = {
+                        let value = (value: t_nestedObject_inner).inner;
+                        switch (value) {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            {
+                              let field = {
+                                let value =
+                                  (value: t_nestedObject_inner_inner).field;
+                                value;
+                              };
+                              {field: field};
+                            }: Raw.t_nestedObject_inner_inner,
+                          )
+                        | None => Js.Nullable.null
+                        };
+                      };
+                      {inner: inner};
+                    }: Raw.t_nestedObject_inner,
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {inner: inner};
+            }: Raw.t_nestedObject
+          );
+        };
+        {nestedObject: nestedObject};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+

@@ -1022,6 +1022,7 @@ let to_output_config =
         | Some(value) => value
         | None => Ppx_config.fragment_in_query()
         },
+      native: Ppx_config.native(),
     },
   );
 };
@@ -1035,6 +1036,7 @@ let rec generate_config =
       directives
       |> get_config_arguments
       |> config_arguments_to_config(initial_query_config);
+
     [
       to_output_config(
         ~document,

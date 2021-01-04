@@ -9,7 +9,15 @@ open Parsetree;
 
 // duplicate of ouput_bucklescript_decoder
 let make_error_raiser = message =>
-  if (Ppx_config.verbose_error_handling()) {
+  if (Ppx_config.native()) {
+    if (Ppx_config.verbose_error_handling()) {
+      %expr
+      raise(Failure("graphql-ppx: " ++ [%e message]));
+    } else {
+      %expr
+      raise(Failure("Unexpected GraphQL query response"));
+    };
+  } else if (Ppx_config.verbose_error_handling()) {
     %expr
     Js.Exn.raiseError("graphql-ppx: " ++ [%e message]);
   } else {
@@ -68,7 +76,11 @@ let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
     }
   | Res_float(_) => base_type(~loc=?atLoc, "float")
   | Res_boolean(_) => base_type(~loc=?atLoc, "bool")
-  | Res_raw_scalar(_) => base_type(~loc=?atLoc, "Js.Json.t")
+  | Res_raw_scalar(_) =>
+    base_type(
+      ~loc=?atLoc,
+      Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t",
+    )
   | Res_object({type_name})
   | Res_record({type_name}) =>
     switch (type_name, raw) {
@@ -946,7 +958,8 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
   | Type(Scalar({sm_name: "Int"})) => base_type(~loc?, "int")
   | Type(Scalar({sm_name: "Float"})) => base_type(~loc?, "float")
   | Type(Scalar({sm_name: "Boolean"})) => base_type(~loc?, "bool")
-  | Type(Scalar({sm_name: _})) => base_type(~loc?, "Js.Json.t")
+  | Type(Scalar({sm_name: _})) =>
+    base_type(~loc?, Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t")
   | Type(Enum(enum_meta)) =>
     if (raw) {
       base_type("string");
@@ -1050,12 +1063,14 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
                        if (valid_name == name) {
                          [];
                        } else {
-                         [
-                           Ast_helper.Attr.mk(
-                             {txt: "bs.as", loc: Location.none},
-                             PStr([Str.eval(const_str_expr(name))]),
-                           ),
-                         ];
+                         Ppx_config.native()
+                           ? []
+                           : [
+                             Ast_helper.Attr.mk(
+                               {txt: "bs.as", loc: Location.none},
+                               PStr([Str.eval(const_str_expr(name))]),
+                             ),
+                           ];
                        },
                      {
                        Location.txt: valid_name,
@@ -1076,46 +1091,6 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
                    );
                  },
              ),
-        ),
-      {
-        loc: Location.none,
-        txt:
-          generate_type_name(
-            ~prefix="t_variables",
-            switch (input_obj_name) {
-            | None => []
-            | Some(name) => [name]
-            },
-          ),
-      },
-    )
-  );
-};
-
-let generate_object_input_object = (raw, input_obj_name, fields) => {
-  Ast_helper.(
-    Type.mk(
-      ~kind=Ptype_abstract,
-      ~manifest=
-        Typ.constr(
-          {Location.txt: Longident.parse("Js.t"), loc: Location.none},
-          [
-            Ast_helper.Typ.object_(
-              fields
-              |> List.map((InputField({name, type_, loc})) =>
-                   {
-                     pof_desc:
-                       Otag(
-                         {txt: to_valid_ident(name), loc: Location.none},
-                         generate_arg_type(raw, loc, type_),
-                       ),
-                     pof_loc: Location.none,
-                     pof_attributes: [],
-                   }
-                 ),
-              Closed,
-            ),
-          ],
         ),
       {
         loc: Location.none,

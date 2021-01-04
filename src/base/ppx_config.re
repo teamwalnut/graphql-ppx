@@ -88,5 +88,7 @@ let extend_subscription_no_required_variables = () =>
 let extend_fragment = () =>
   (config_ref^ |> Option.unsafe_unwrap).extend_fragment;
 
+let native = () => (config_ref^ |> Option.unsafe_unwrap).native;
+
 let raise_error_with_loc = (loc, message) =>
   (config_ref^ |> Option.unsafe_unwrap).raise_error_with_loc(loc, message);

@@ -1,0 +1,206 @@
+Generate Native › fragmentInFragment.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"migrate_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
+module ListFragment: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {type t;};
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t;
+  };
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  let query = \"fragment ListFragment on Lists   {\\nnullableOfNullable  \\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value = Yojson.Basic.member(\"nullableOfNullable\", value);
+          switch (value) {
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                Array.map(json_list =>
+                  switch (value) {
+                  | value => Some(Yojson.Basic.to_string(value))
+                  | `Null => None
+                  }
+                )
+              | _ => []
+              },
+            )
+          | `Null => None
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nullableOfNullable = {
+          let value = (value: t).nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {nullableOfNullable: nullableOfNullable};
+      }: Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `ListFragment => ();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+};
+module Another: {
+  [@ocaml.warning \"-32\"];
+  module Raw: {type t;};
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `Another], Raw.t) => t;
+  let verifyName: [ | `Another] => unit;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  let query =
+    \"fragment Another on Lists   {\\nnullableOfNullable  \\n...ListFragment   \\n}\\n\"
+    ++ ListFragment.query;
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value = Yojson.Basic.member(\"nullableOfNullable\", value);
+          switch (value) {
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                Array.map(json_list =>
+                  switch (value) {
+                  | value => Some(Yojson.Basic.to_string(value))
+                  | `Null => None
+                  }
+                )
+              | _ => []
+              },
+            )
+          | `Null => None
+          };
+        },
+        listFragment: {
+          let value: ListFragment.Raw.t = Obj.magic(value);
+
+          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      Obj.magic(
+        Js.Array.reduce(
+          GraphQL_PPX.deepMerge,
+          Obj.magic(
+            {
+              let nullableOfNullable = {
+                let value = (value: t).nullableOfNullable;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    value
+                    |> Js.Array.map(value =>
+                         switch (value) {
+                         | Some(value) => Js.Nullable.return(value)
+                         | None => Js.Nullable.null
+                         }
+                       ),
+                  )
+                | None => Js.Nullable.null
+                };
+              };
+              {\"nullableOfNullable\": nullableOfNullable};
+            },
+          ): Js.Json.t,
+          [|
+            (
+              Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
+            ),
+          |],
+        ),
+      ): Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `Another => ();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+};
+

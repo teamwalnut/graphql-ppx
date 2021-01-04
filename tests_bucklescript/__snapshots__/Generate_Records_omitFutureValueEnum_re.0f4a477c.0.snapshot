@@ -113,7 +113,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD
@@ -271,7 +271,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD
@@ -428,7 +428,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD

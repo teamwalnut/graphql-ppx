@@ -78,7 +78,15 @@ let get_variable_definitions = (definition: Graphql_ast.definition) => {
 };
 
 let make_error_raiser = message =>
-  if (Ppx_config.verbose_error_handling()) {
+  if (Ppx_config.native()) {
+    if (Ppx_config.verbose_error_handling()) {
+      %expr
+      raise(Failure("graphql-ppx: " ++ [%e message]));
+    } else {
+      %expr
+      raise(Failure("Unexpected GraphQL query response"));
+    };
+  } else if (Ppx_config.verbose_error_handling()) {
     %expr
     Js.Exn.raiseError("graphql-ppx: " ++ [%e message]);
   } else {
@@ -137,7 +145,9 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
   let match_expr =
     Ast_helper.(
       Exp.match(
-        [@metaloc conv_loc(loc)] [%expr Obj.magic(value: string)],
+        Ppx_config.native()
+          ? [@metaloc conv_loc(loc)] [%expr value |> Yojson.Basic.to_string]
+          : [@metaloc conv_loc(loc)] [%expr (Obj.magic(value): string)],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
     );
@@ -206,23 +216,44 @@ let generate_error = (loc, message) => {
 };
 
 let rec generate_nullable_decoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  (
-    switch%expr (Js.toOption(value)) {
-    | Some(value) =>
-      Some([%e generate_parser(config, path, definition, inner)])
-    | None => None
-    }
-  )
+  config.native
+    ? [@metaloc loc]
+      (
+        switch%expr (value) {
+        | value =>
+          Some([%e generate_parser(config, path, definition, inner)])
+        | `Null => None
+        }
+      )
+    : [@metaloc loc]
+      (
+        switch%expr (Js.toOption(value)) {
+        | Some(value) =>
+          Some([%e generate_parser(config, path, definition, inner)])
+        | None => None
+        }
+      )
 and generate_array_decoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  [%expr
-    value
-    |> Js.Array.map(value => {
-         %e
-         generate_parser(config, path, definition, inner)
-       })
-  ]
+  config.native
+    ? [@metaloc loc]
+      (
+        switch%expr (value) {
+        | `List(json_list) =>
+          Array.map(json_list => {
+            %e
+            generate_parser(config, path, definition, inner)
+          })
+        | _ => []
+        }
+      )
+    : [@metaloc loc]
+      [%expr
+        value
+        |> Js.Array.map(value => {
+             %e
+             generate_parser(config, path, definition, inner)
+           })
+      ]
 and generate_custom_decoder = (config, loc, ident, inner, path, definition) =>
   [@metaloc loc]
   {
@@ -246,42 +277,53 @@ and generate_object_decoder =
   // but we can't use this if we are constructing objects instead of records
   let do_obj_constructor_base = () => {
     open Ast_helper;
-
     let opaque = raw_opaque_object(interface_fragments, fields);
     let object_type = base_type_name("Raw." ++ generate_type_name(path));
 
     let get_value =
       fun
       | Fr_named_field({name: key, type_: inner}) =>
-        [@metaloc conv_loc(loc)]
-        {
-          let%expr value =
-            switch%e (opaque) {
-            | true =>
-              %expr
-              Obj.magic(
-                Js.Dict.unsafeGet(
-                  Obj.magic(value),
-                  [%e const_str_expr(key)],
-                ),
-              )
+        config.native
+          ? [@metaloc conv_loc(loc)]
+            {
+              let%expr value =
+                Yojson.Basic.member([%e const_str_expr(key)], value);
 
-            | false =>
-              %expr
-              [%e
-                Ast_helper.Exp.field(
-                  Exp.constraint_(ident_from_string("value"), object_type),
-                  {
-                    loc: Location.none,
-                    Location.txt: Longident.parse(to_valid_ident(key)),
-                  },
-                )
-              ]
-            };
+              %e
+              generate_parser(config, [key, ...path], definition, inner);
+            }
+          : [@metaloc conv_loc(loc)]
+            {
+              let%expr value =
+                switch%e (opaque) {
+                | true =>
+                  %expr
+                  Obj.magic(
+                    Js.Dict.unsafeGet(
+                      Obj.magic(value),
+                      [%e const_str_expr(key)],
+                    ),
+                  )
 
-          %e
-          generate_parser(config, [key, ...path], definition, inner);
-        }
+                | false =>
+                  %expr
+                  [%e
+                    Ast_helper.Exp.field(
+                      Exp.constraint_(
+                        ident_from_string("value"),
+                        object_type,
+                      ),
+                      {
+                        loc: Location.none,
+                        Location.txt: Longident.parse(to_valid_ident(key)),
+                      },
+                    )
+                  ]
+                };
+
+              %e
+              generate_parser(config, [key, ...path], definition, inner);
+            }
 
       | Fr_fragment_spread({loc, name, arguments}) =>
         [@metaloc conv_loc(loc)]
@@ -336,23 +378,18 @@ and generate_object_decoder =
     Exp.record(record_fields, None);
   };
 
-  let do_obj_constructor_records = () =>
-    [@metaloc loc]
-    {
-      Ast_helper.(
-        Exp.constraint_(
-          do_obj_constructor_base(),
-          base_type_name(
-            switch (existing_record) {
-            | None => generate_type_name(path)
-            | Some(type_name) => type_name
-            },
-          ),
-        )
-      );
-    };
-
-  do_obj_constructor_records();
+  [@metaloc loc]
+  Ast_helper.(
+    Exp.constraint_(
+      do_obj_constructor_base(),
+      base_type_name(
+        switch (existing_record) {
+        | None => generate_type_name(path)
+        | Some(type_name) => type_name
+        },
+      ),
+    )
+  );
 }
 and generate_poly_variant_selection_set_decoder =
     (config, loc, name, fields, path, definition) => {
@@ -369,21 +406,40 @@ and generate_poly_variant_selection_set_decoder =
               ),
             )
           );
-        [@metaloc loc]
-        {
-          let%expr temp =
-            Js.Dict.unsafeGet(Obj.magic(value), [%e const_str_expr(field)]);
+        config.native
+          ? [@metaloc loc]
+            {
+              let%expr temp =
+                Yojson.Basic.member([%e const_str_expr(field)], value);
 
-          switch (Js.Json.decodeNull(temp)) {
-          | None =>
-            let value = temp;
-            %e
-            variant_decoder;
-          | Some(_) =>
-            %e
-            generator_loop(next)
-          };
-        };
+              switch (Yojson.Basic.to_option(temp)) {
+              | None =>
+                let value = temp;
+                %e
+                variant_decoder;
+              | Some(_) =>
+                %e
+                generator_loop(next)
+              };
+            }
+          : [@metaloc loc]
+            {
+              let%expr temp =
+                Js.Dict.unsafeGet(
+                  Obj.magic(value),
+                  [%e const_str_expr(field)],
+                );
+
+              switch (Js.Json.decodeNull(temp)) {
+              | None =>
+                let value = temp;
+                %e
+                variant_decoder;
+              | Some(_) =>
+                %e
+                generator_loop(next)
+              };
+            };
       }
     | [] =>
       make_error_raiser(
@@ -394,21 +450,41 @@ and generate_poly_variant_selection_set_decoder =
         ],
       );
 
-  [@metaloc loc]
-  (
-    switch%expr (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
-    | None =>
-      %e
-      make_error_raiser(
-        [%expr
-          "Expected type " ++ [%e const_str_expr(name)] ++ " to be an object"
-        ],
+  config.native
+    ? [@metaloc loc]
+      (
+        switch%expr (Yojson.Basic.to_option(value)) {
+        | None =>
+          %e
+          make_error_raiser(
+            [%expr
+              "Expected type "
+              ++ [%e const_str_expr(name)]
+              ++ " to be an object"
+            ],
+          )
+        | Some(value) =>
+          %e
+          generator_loop(fields)
+        }
       )
-    | Some(value) =>
-      %e
-      generator_loop(fields)
-    }
-  );
+    : [@metaloc loc]
+      (
+        switch%expr (Js.Json.decodeObject(Obj.magic(value): Js.Json.t)) {
+        | None =>
+          %e
+          make_error_raiser(
+            [%expr
+              "Expected type "
+              ++ [%e const_str_expr(name)]
+              ++ " to be an object"
+            ],
+          )
+        | Some(value) =>
+          %e
+          generator_loop(fields)
+        }
+      );
 }
 and generate_poly_variant_interface_decoder =
     (config, loc, _name, fragments, path, definition) => {
@@ -459,12 +535,23 @@ and generate_poly_variant_interface_decoder =
       )
     );
 
-  [@metaloc loc]
-  {
-    let%expr typename: string =
-      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
-  };
+  config.native
+    ? [@metaloc loc]
+      {
+        let%expr typename: string =
+          value |> Yojson.Basic.member("__typename") |> Yojson.to_string;
+        (
+          [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
+        );
+      }
+    : [@metaloc loc]
+      {
+        let%expr typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+        (
+          [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
+        );
+      };
 }
 and generate_poly_variant_union_decoder =
     (
@@ -561,12 +648,23 @@ and generate_poly_variant_union_decoder =
       )
     );
 
-  [@metaloc loc]
-  {
-    let%expr typename: string =
-      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
-    ([%e typename_matcher]: [%t base_type_name(generate_type_name(path))]);
-  };
+  config.native
+    ? [@metaloc loc]
+      {
+        let%expr typename: string =
+          value |> Yojson.Basic.member("__typename") |> Yojson.to_string;
+        (
+          [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
+        );
+      }
+    : [@metaloc loc]
+      {
+        let%expr typename: string =
+          Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+        (
+          [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
+        );
+      };
 }
 and generate_parser = (config, path: list(string), definition) =>
   fun
@@ -574,12 +672,27 @@ and generate_parser = (config, path: list(string), definition) =>
     generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
   | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id({loc}) => raw_value(conv_loc(loc))
-  | Res_string({loc}) => raw_value(conv_loc(loc))
-  | Res_int({loc}) => raw_value(conv_loc(loc))
-  | Res_float({loc}) => raw_value(conv_loc(loc))
-  | Res_boolean({loc}) => raw_value(conv_loc(loc))
-  | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
+  | Res_id({loc}) =>
+    config.native
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_string(value)]
+      : [@metaloc conv_loc(loc)] [%expr value]
+  | Res_string({loc}) =>
+    config.native
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_string(value)]
+      : [@metaloc conv_loc(loc)] [%expr value]
+  | Res_int({loc}) =>
+    config.native
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_int(value)]
+      : [@metaloc conv_loc(loc)] [%expr value]
+  | Res_float({loc}) =>
+    config.native
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_float(value)]
+      : [@metaloc conv_loc(loc)] [%expr value]
+  | Res_boolean({loc}) =>
+    config.native
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_bool(value)]
+      : [@metaloc conv_loc(loc)] [%expr value]
+  | Res_raw_scalar({loc}) => [@metaloc conv_loc(loc)] [%expr value]
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_decoder(loc, enum_meta, omit_future_value)
   | Res_custom_decoder({loc, ident, inner}) =>

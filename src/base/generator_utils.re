@@ -28,6 +28,7 @@ type output_config = {
   future_added_value: bool,
   extend: option(string),
   fragment_in_query: Ppx_config.fragment_in_query,
+  native: bool,
 };
 
 let filter_map = (f, l) => {
