@@ -67,9 +67,9 @@ using `graphql-ppx` with Bucklescript or using Reason Native.
 First, add it to you dependencies using `npm` or `yarn`:
 
 ```sh
-yarn add @reasonml-community/graphql-ppx@next --dev
+yarn add @reasonml-community/graphql-ppx --dev
 # or
-npm install @reasonml-community/graphql-ppx@next  --saveDev
+npm install @reasonml-community/graphql-ppx  --saveDev
 ```
 
 Second, add it to `ppx-flags` and `bs-dependencies` in your `bsconfig.json`:
