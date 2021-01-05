@@ -225,7 +225,7 @@ let generate_serialize_variable_signatures =
                  Nolabel,
                  base_type_name(type_name),
                  Ppx_config.native()
-                   ? base_type_name("Yojson.Basic.json")
+                   ? base_type_name("Yojson.Basic.t")
                    : base_type_name("Raw." ++ type_name),
                ),
              ),
@@ -271,7 +271,7 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
                    Nolabel,
                    base_type_name(type_name),
                    Ppx_config.native()
-                     ? base_type_name("Yojson.Basic.json")
+                     ? base_type_name("Yojson.Basic.t")
                      : base_type_name("Raw." ++ type_name),
                  ),
                ),

@@ -146,7 +146,8 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
     Ast_helper.(
       Exp.match(
         Ppx_config.native()
-          ? [@metaloc conv_loc(loc)] [%expr value |> Yojson.Basic.to_string]
+          ? [@metaloc conv_loc(loc)]
+            [%expr value |> Yojson.Basic.Util.to_string]
           : [@metaloc conv_loc(loc)] [%expr (Obj.magic(value): string)],
         List.concat([enum_match_arms, [fallback_arm]]),
       )
@@ -288,7 +289,7 @@ and generate_object_decoder =
           ? [@metaloc conv_loc(loc)]
             {
               let%expr value =
-                Yojson.Basic.member([%e const_str_expr(key)], value);
+                Yojson.Basic.Util.member([%e const_str_expr(key)], value);
 
               %e
               generate_parser(config, [key, ...path], definition, inner);
@@ -413,9 +414,9 @@ and generate_poly_variant_selection_set_decoder =
           ? [@metaloc loc]
             {
               let%expr temp =
-                Yojson.Basic.member([%e const_str_expr(field)], value);
+                Yojson.Basic.Util.member([%e const_str_expr(field)], value);
 
-              switch (Yojson.Basic.to_option(temp)) {
+              switch (Yojson.Basic.Util.to_option(temp)) {
               | None =>
                 let value = temp;
                 %e
@@ -456,7 +457,7 @@ and generate_poly_variant_selection_set_decoder =
   config.native
     ? [@metaloc loc]
       (
-        switch%expr (Yojson.Basic.to_option(value)) {
+        switch%expr (Yojson.Basic.Util.to_option(value)) {
         | None =>
           %e
           make_error_raiser(
@@ -549,7 +550,7 @@ and generate_poly_variant_interface_decoder =
     ? [@metaloc loc]
       {
         let%expr typename: string =
-          value |> Yojson.Basic.member("__typename") |> Yojson.to_string;
+          value |> Yojson.Basic.Util.member("__typename") |> Yojson.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );
@@ -669,7 +670,7 @@ and generate_poly_variant_union_decoder =
     ? [@metaloc loc]
       {
         let%expr typename: string =
-          value |> Yojson.Basic.member("__typename") |> Yojson.to_string;
+          value |> Yojson.Basic.Util.member("__typename") |> Yojson.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );
@@ -691,23 +692,23 @@ and generate_parser = (config, path: list(string), definition) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
   | Res_id({loc}) =>
     config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_string(value)]
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_string(value)]
       : [@metaloc conv_loc(loc)] [%expr value]
   | Res_string({loc}) =>
     config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_string(value)]
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_string(value)]
       : [@metaloc conv_loc(loc)] [%expr value]
   | Res_int({loc}) =>
     config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_int(value)]
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_int(value)]
       : [@metaloc conv_loc(loc)] [%expr value]
   | Res_float({loc}) =>
     config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_float(value)]
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_float(value)]
       : [@metaloc conv_loc(loc)] [%expr value]
   | Res_boolean({loc}) =>
     config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.to_bool(value)]
+      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_bool(value)]
       : [@metaloc conv_loc(loc)] [%expr value]
   | Res_raw_scalar({loc}) => [@metaloc conv_loc(loc)] [%expr value]
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>

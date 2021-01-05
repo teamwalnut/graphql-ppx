@@ -739,7 +739,7 @@ let generate_operation_implementation =
     );
   let raw_types =
     config.native
-      ? [[%stri type t = Yojson.Basic.json]]
+      ? [[%stri type t = Yojson.Basic.t]]
       : Output_bucklescript_types.generate_type_structure_items(
           config,
           res_structure,
@@ -755,7 +755,7 @@ let generate_operation_implementation =
     );
   let raw_arg_types =
     config.native
-      ? [[%stri type t_variables = Yojson.Basic.json]]
+      ? [[%stri type t_variables = Yojson.Basic.t]]
       : Output_bucklescript_types.generate_arg_type_structure_items(
           true,
           config,
