@@ -212,9 +212,65 @@ var InlineListFragment = {
 
 var Raw$4 = {};
 
+function parse$4(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = !(value$1 == null) ? value$1.map(function (value) {
+          return value;
+        }) : undefined;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = !(value$2 == null) ? value$2.map(function (value) {
+          if (!(value == null)) {
+            return value;
+          }
+          
+        }) : undefined;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function verifyArgsAndParse$4(_InlineListFragment, value) {
+  return parse$4(value);
+}
+
+function verifyName$4(param) {
+  
+}
+
+var Wrapper = {
+  Raw: Raw$4,
+  query: \"fragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\",
+  parse: parse$4,
+  serialize: serialize$4,
+  verifyArgsAndParse: verifyArgsAndParse$4,
+  verifyName: verifyName$4
+};
+
+var Raw$5 = {};
+
 var query$3 = \"query MyQuery($arg1: String)  {\\nl1: lists  {\\n...ListFragment   \\n}\\n\\nl2: lists  {\\n...ListFragment   \\n...ListFragment   \\n}\\n\\nl3: lists  {\\nnullableOfNullable  \\n...ListFragment   \\n...ListFragment   \\n}\\n\\nl4: lists  {\\nnullableOfNullable  \\n...InlineListFragment   \\n}\\n\\nl5: lists  {\\n...FragmentWithArgs   \\n}\\n\\n}\\nfragment FragmentWithArgs on Lists   {\\nlistWithArg(arg1: $arg1)  \\n}\\nfragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\nfragment ListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 
-function parse$4(value) {
+function parse$5(value) {
   var value$1 = value.l5;
   var l5 = parse$2(value$1);
   var value$2 = value.l4;
@@ -263,7 +319,7 @@ function parse$4(value) {
         };
 }
 
-function serialize$4(value) {
+function serialize$5(value) {
   var value$1 = value.l5;
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
@@ -329,27 +385,27 @@ function makeDefaultVariables(param) {
 }
 
 var MyQuery = {
-  Raw: Raw$4,
+  Raw: Raw$5,
   query: query$3,
-  parse: parse$4,
-  serialize: serialize$4,
+  parse: parse$5,
+  serialize: serialize$5,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables
 };
 
-var Raw$5 = {};
+var Raw$6 = {};
 
 var query$4 = \"query   {\\nlists  {\\n...ListFragment   \\n}\\n\\n}\\nfragment ListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
 
-function parse$5(value) {
+function parse$6(value) {
   var value$1 = value.lists;
   return {
           lists: parse(value$1)
         };
 }
 
-function serialize$5(value) {
+function serialize$6(value) {
   var value$1 = value.lists;
   return {
           lists: serialize(value$1)
@@ -369,10 +425,10 @@ function makeDefaultVariables$1(param) {
 }
 
 var MyQuery2 = {
-  Raw: Raw$5,
+  Raw: Raw$6,
   query: query$4,
-  parse: parse$5,
-  serialize: serialize$5,
+  parse: parse$6,
+  serialize: serialize$6,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1
@@ -383,6 +439,7 @@ exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
 exports.InlineListFragment = InlineListFragment;
+exports.Wrapper = Wrapper;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* No side effect */

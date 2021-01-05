@@ -373,6 +373,97 @@ module InlineListFragment = {
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
+
+module Wrapper = {
+  [@ocaml.warning \"-32\"];
+  module Raw = {
+    type t = {
+      .
+      \"nullableOfNullable\": Js.Nullable.t(array(Js.Nullable.t(string))),
+      \"nullableOfNonNullable\": Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    .
+    \"nullableOfNullable\": option(array(option(string))),
+    \"nullableOfNonNullable\": option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  let query = \"fragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
+  let parse: Raw.t => t =
+    value => {
+      let nullableOfNonNullable = {
+        let value = value##nullableOfNonNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) => Some(value |> Js.Array.map(value => value))
+        | None => None
+        };
+      }
+      and nullableOfNullable = {
+        let value = value##nullableOfNullable;
+        switch (Js.toOption(value)) {
+        | Some(value) =>
+          Some(
+            value
+            |> Js.Array.map(value =>
+                 switch (Js.toOption(value)) {
+                 | Some(value) => Some(value)
+                 | None => None
+                 }
+               ),
+          )
+        | None => None
+        };
+      };
+      {
+        \"nullableOfNullable\": nullableOfNullable,
+        \"nullableOfNonNullable\": nullableOfNonNullable,
+      };
+    };
+  let serialize: t => Raw.t =
+    value => {
+      let nullableOfNonNullable = {
+        let value = value##nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(value |> Js.Array.map(value => value))
+        | None => Js.Nullable.null
+        };
+      }
+      and nullableOfNullable = {
+        let value = value##nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            value
+            |> Js.Array.map(value =>
+                 switch (value) {
+                 | Some(value) => Js.Nullable.return(value)
+                 | None => Js.Nullable.null
+                 }
+               ),
+          )
+        | None => Js.Nullable.null
+        };
+      };
+      {
+        \"nullableOfNullable\": nullableOfNullable,
+        \"nullableOfNonNullable\": nullableOfNonNullable,
+      };
+    };
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | `InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `InlineListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+};
 module MyQuery: {
   module Raw: {
     type t_l2;

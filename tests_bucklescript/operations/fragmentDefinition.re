@@ -35,6 +35,17 @@ module InlineListFragment = {
   ];
 };
 
+module Wrapper = {
+  include [%graphql
+            {|
+    fragment InlineListFragment on Lists {
+      nullableOfNullable
+      nullableOfNonNullable
+    }
+  |}
+          ];
+};
+
 [%graphql
   {|
   query MyQuery($arg1: String) {
