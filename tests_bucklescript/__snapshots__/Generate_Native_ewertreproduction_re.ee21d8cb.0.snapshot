@@ -80,34 +80,28 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let user = {
-          let value = (value: t).user;
-          (
-            {
-              let lastname = {
-                let value = (value: t_user).lastname;
-                value;
-              }
-              and firstname = {
-                let value = (value: t_user).firstname;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and id = {
-                let value = (value: t_user).id;
-                value;
-              };
-              {id, firstname, lastname};
-            }: Raw.t_user
-          );
+    value => {
+      let user = {
+        let value = (value: t).user;
+        let lastname = {
+          let value = (value: t_user).lastname;
+          value;
+        }
+        and firstname = {
+          let value = (value: t_user).firstname;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and id = {
+          let value = (value: t_user).id;
+          value;
         };
-        {user: user};
-      }: Raw.t
-    );
+        {id, firstname, lastname};
+      };
+      {user: user};
+    };
   let verifyArgsAndParse =
       (
         ~userId as _userId: [ | `NonNull_String],

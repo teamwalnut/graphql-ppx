@@ -51,15 +51,13 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let name = {
-          let value = (value: t).name;
-          value;
-        };
-        {name: name};
-      }: Raw.t
-    );
+    value => {
+      let name = {
+        let value = (value: t).name;
+        value;
+      };
+      {name: name};
+    };
   let verifyArgsAndParse = (~fragmentName as _Dog: [ | `Dog], value: Raw.t) =>
     parse(value);
   let verifyName =
@@ -85,7 +83,7 @@ module HasuraRepro: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables:
     (~blockNumber: int=?, ~type_: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
@@ -117,23 +115,21 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let hasuraRepro = {
-          let value = (value: t).hasuraRepro;
-          Dog.serialize(value);
-        };
-        {hasuraRepro: hasuraRepro};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let hasuraRepro = {
+        let value = (value: t).hasuraRepro;
+        Dog.serialize(value);
+      };
+      {hasuraRepro: hasuraRepro};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       blockNumber:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Int(a))(b)
             }
         )(
           (inp: t_variables).blockNumber,
@@ -142,8 +138,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).type_,

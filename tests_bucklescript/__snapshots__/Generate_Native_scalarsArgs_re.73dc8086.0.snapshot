@@ -42,7 +42,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables:
     (
       ~nullableString: string=?,
@@ -91,72 +91,70 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let scalarsInput = {
-          let value = (value: t).scalarsInput;
-          value;
-        };
-        {scalarsInput: scalarsInput};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let scalarsInput = {
+        let value = (value: t).scalarsInput;
+        value;
+      };
+      {scalarsInput: scalarsInput};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       nullableString:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).nullableString,
         ),
-      string: (a => a)((inp: t_variables).string),
+      string: (a => `String(a))((inp: t_variables).string),
       nullableInt:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Int(a))(b)
             }
         )(
           (inp: t_variables).nullableInt,
         ),
-      int: (a => a)((inp: t_variables).int),
+      int: (a => `Int(a))((inp: t_variables).int),
       nullableFloat:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Float(a))(b)
             }
         )(
           (inp: t_variables).nullableFloat,
         ),
-      float: (a => a)((inp: t_variables).float),
+      float: (a => `Float(a))((inp: t_variables).float),
       nullableBoolean:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Bool(a))(b)
             }
         )(
           (inp: t_variables).nullableBoolean,
         ),
-      boolean: (a => a)((inp: t_variables).boolean),
+      boolean: (a => `Bool(a))((inp: t_variables).boolean),
       nullableID:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).nullableID,
         ),
-      id: (a => a)((inp: t_variables).id),
+      id: (a => `String(a))((inp: t_variables).id),
     };
   let makeVariables =
       (

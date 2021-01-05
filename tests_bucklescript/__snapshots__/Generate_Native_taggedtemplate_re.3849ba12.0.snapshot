@@ -143,85 +143,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -356,85 +350,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -565,85 +553,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -774,85 +756,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -983,85 +959,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -1192,85 +1162,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -1320,12 +1284,13 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list =>
+                List.map(json_list =>
                   switch (value) {
                   | value => Some(Yojson.Basic.to_string(value))
                   | `Null => None
                   }
                 )
+                |> Array.of_list
               | _ => []
               },
             )
@@ -1339,7 +1304,8 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list => Yojson.Basic.to_string(value))
+                List.map(json_list => Yojson.Basic.to_string(value))
+                |> Array.of_list
               | _ => []
               },
             )
@@ -1349,35 +1315,34 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableOfNullable = {
-          let value = (value: t).nullableOfNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
+    value => {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(value |> Array.map(value => value) |> Array.to_list)
+        | None => `Null
         };
-        {nullableOfNullable, nullableOfNonNullable};
-      }: Raw.t
-    );
+      }
+      and nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => value
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
+        };
+      };
+      {nullableOfNullable, nullableOfNonNullable};
+    };
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -1429,15 +1394,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          ListFragment.serialize(value);
-        };
-        {lists: lists};
-      }: Raw.t
-    );
+    value => {
+      let lists = {
+        let value = (value: t).lists;
+        ListFragment.serialize(value);
+      };
+      {lists: lists};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -1490,15 +1453,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          ListFragment.serialize(value);
-        };
-        {lists: lists};
-      }: Raw.t
-    );
+    value => {
+      let lists = {
+        let value = (value: t).lists;
+        ListFragment.serialize(value);
+      };
+      {lists: lists};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -1548,15 +1509,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          ListFragment.serialize(value);
-        };
-        {lists: lists};
-      }: Raw.t
-    );
+    value => {
+      let lists = {
+        let value = (value: t).lists;
+        ListFragment.serialize(value);
+      };
+      {lists: lists};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -1689,85 +1648,79 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let id = {
-                let value = (value: t_variousScalars).id;
-                value;
-              }
-              and nullableID = {
-                let value = (value: t_variousScalars).nullableID;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and boolean = {
-                let value = (value: t_variousScalars).boolean;
-                value;
-              }
-              and nullableBoolean = {
-                let value = (value: t_variousScalars).nullableBoolean;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and float = {
-                let value = (value: t_variousScalars).float;
-                value;
-              }
-              and nullableFloat = {
-                let value = (value: t_variousScalars).nullableFloat;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and int = {
-                let value = (value: t_variousScalars).int;
-                value;
-              }
-              and nullableInt = {
-                let value = (value: t_variousScalars).nullableInt;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              }
-              and nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableString,
-                string,
-                nullableInt,
-                int,
-                nullableFloat,
-                float,
-                nullableBoolean,
-                boolean,
-                nullableID,
-                id,
-              };
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let id = {
+          let value = (value: t_variousScalars).id;
+          value;
+        }
+        and nullableID = {
+          let value = (value: t_variousScalars).nullableID;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and boolean = {
+          let value = (value: t_variousScalars).boolean;
+          value;
+        }
+        and nullableBoolean = {
+          let value = (value: t_variousScalars).nullableBoolean;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and float = {
+          let value = (value: t_variousScalars).float;
+          value;
+        }
+        and nullableFloat = {
+          let value = (value: t_variousScalars).nullableFloat;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and int = {
+          let value = (value: t_variousScalars).int;
+          value;
+        }
+        and nullableInt = {
+          let value = (value: t_variousScalars).nullableInt;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and string = {
+          let value = (value: t_variousScalars).string;
+          value;
+        }
+        and nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {
+          nullableString,
+          string,
+          nullableInt,
+          int,
+          nullableFloat,
+          float,
+          nullableBoolean,
+          boolean,
+          nullableID,
+          id,
+        };
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

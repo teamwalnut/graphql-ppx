@@ -119,7 +119,8 @@ function back to the original JSON compatible data */
                 `BaseTypeList(
                   switch (value) {
                   | `List(json_list) =>
-                    Array.map(json_list => Yojson.Basic.to_string(value))
+                    List.map(json_list => Yojson.Basic.to_string(value))
+                    |> Array.of_list
                   | _ => []
                   },
                 );
@@ -169,42 +170,30 @@ function back to the original JSON compatible data */
                             | \"Dog\" =>
                               `Dog(
                                 {
-                                  let value: Raw.t_mutationForVariant_dogOrHuman_Dog =
-                                    Obj.magic(value);
-                                  (
-                                    {
-                                      name: {
-                                        let value =
-                                          Yojson.Basic.member(\"name\", value);
-                                        Yojson.Basic.to_string(value);
-                                      },
-                                      barkVolume: {
-                                        let value =
-                                          Yojson.Basic.member(
-                                            \"barkVolume\",
-                                            value,
-                                          );
-                                        Yojson.Basic.to_float(value);
-                                      },
-                                    }: t_mutationForVariant_dogOrHuman_Dog
-                                  );
-                                },
+                                  name: {
+                                    let value =
+                                      Yojson.Basic.member(\"name\", value);
+                                    Yojson.Basic.to_string(value);
+                                  },
+                                  barkVolume: {
+                                    let value =
+                                      Yojson.Basic.member(
+                                        \"barkVolume\",
+                                        value,
+                                      );
+                                    Yojson.Basic.to_float(value);
+                                  },
+                                }: t_mutationForVariant_dogOrHuman_Dog,
                               )
                             | \"Human\" =>
                               `Human(
                                 {
-                                  let value: Raw.t_mutationForVariant_dogOrHuman_Human =
-                                    Obj.magic(value);
-                                  (
-                                    {
-                                      name: {
-                                        let value =
-                                          Yojson.Basic.member(\"name\", value);
-                                        Yojson.Basic.to_string(value);
-                                      },
-                                    }: t_mutationForVariant_dogOrHuman_Human
-                                  );
-                                },
+                                  name: {
+                                    let value =
+                                      Yojson.Basic.member(\"name\", value);
+                                    Yojson.Basic.to_string(value);
+                                  },
+                                }: t_mutationForVariant_dogOrHuman_Human,
                               )
                             | _ =>
                               `FutureAddedValue(Obj.magic(value): Js.Json.t)
@@ -231,15 +220,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let mutationForVariant = {
-          let value = (value: t).mutationForVariant;
-          Obj.magic(Js.Json.null);
-        };
-        {mutationForVariant: mutationForVariant};
-      }: Raw.t
-    );
+    value => {
+      let mutationForVariant = {
+        let value = (value: t).mutationForVariant;
+        `Null;
+      };
+      {mutationForVariant: mutationForVariant};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

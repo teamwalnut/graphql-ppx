@@ -43,9 +43,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput;
+    t_variables_VariousScalarsInput => Yojson.Basic.json;
   let makeVariables:
     (~arg: t_variables_VariousScalarsInput, unit) => t_variables;
   let makeInputObjectVariousScalarsInput:
@@ -97,16 +97,14 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let scalarsInput = {
-          let value = (value: t).scalarsInput;
-          value;
-        };
-        {scalarsInput: scalarsInput};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let scalarsInput = {
+        let value = (value: t).scalarsInput;
+        value;
+      };
+      {scalarsInput: scalarsInput};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg:
         (a => serializeInputObjectVariousScalarsInput(a))(
@@ -114,63 +112,65 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
+    t_variables_VariousScalarsInput => Yojson.Basic.json =
     inp => {
       nullableString:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_VariousScalarsInput).nullableString,
         ),
-      string: (a => a)((inp: t_variables_VariousScalarsInput).string),
+      string:
+        (a => `String(a))((inp: t_variables_VariousScalarsInput).string),
       nullableInt:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Int(a))(b)
             }
         )(
           (inp: t_variables_VariousScalarsInput).nullableInt,
         ),
-      int: (a => a)((inp: t_variables_VariousScalarsInput).int),
+      int: (a => `Int(a))((inp: t_variables_VariousScalarsInput).int),
       nullableFloat:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Float(a))(b)
             }
         )(
           (inp: t_variables_VariousScalarsInput).nullableFloat,
         ),
-      float: (a => a)((inp: t_variables_VariousScalarsInput).float),
+      float: (a => `Float(a))((inp: t_variables_VariousScalarsInput).float),
       nullableBoolean:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `Bool(a))(b)
             }
         )(
           (inp: t_variables_VariousScalarsInput).nullableBoolean,
         ),
-      boolean: (a => a)((inp: t_variables_VariousScalarsInput).boolean),
+      boolean:
+        (a => `Bool(a))((inp: t_variables_VariousScalarsInput).boolean),
       nullableID:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_VariousScalarsInput).nullableID,
         ),
-      id: (a => a)((inp: t_variables_VariousScalarsInput).id),
+      id: (a => `String(a))((inp: t_variables_VariousScalarsInput).id),
     };
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectVariousScalarsInput =

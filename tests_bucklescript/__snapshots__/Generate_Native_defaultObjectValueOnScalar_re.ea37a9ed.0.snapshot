@@ -57,15 +57,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let defaultObjectValueOnScalar = {
-          let value = (value: t).defaultObjectValueOnScalar;
-          value;
-        };
-        {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
-      }: Raw.t
-    );
+    value => {
+      let defaultObjectValueOnScalar = {
+        let value = (value: t).defaultObjectValueOnScalar;
+        value;
+      };
+      {defaultObjectValueOnScalar: defaultObjectValueOnScalar};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

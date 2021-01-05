@@ -40,11 +40,11 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput;
+    t_variables_NonrecursiveInput => Yojson.Basic.json;
   let serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput;
+    t_variables_EmbeddedInput => Yojson.Basic.json;
   let makeVariables:
     (~arg: t_variables_NonrecursiveInput, unit) => t_variables;
   let makeInputObjectNonrecursiveInput:
@@ -91,16 +91,14 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nonrecursiveInput = {
-          let value = (value: t).nonrecursiveInput;
-          value;
-        };
-        {nonrecursiveInput: nonrecursiveInput};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let nonrecursiveInput = {
+        let value = (value: t).nonrecursiveInput;
+        value;
+      };
+      {nonrecursiveInput: nonrecursiveInput};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg:
         (a => serializeInputObjectNonrecursiveInput(a))(
@@ -108,35 +106,38 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    t_variables_NonrecursiveInput => Yojson.Basic.json =
     inp => {
       nonNullableField:
-        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+        (a => `String(a))(
+          (inp: t_variables_NonrecursiveInput).nonNullableField,
+        ),
       nullableArray:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    Js.Array.map(
+              (
+                a =>
+                  `List(
+                    Array.map(
                       b =>
                         (
                           a =>
                             switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            | None => `Null
+                            | Some(b) => (a => `String(a))(b)
                             }
                         )(
                           b,
                         ),
                       a,
                     )
-                )(
-                  b,
-                ),
+                    |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -146,8 +147,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_NonrecursiveInput).field,
@@ -156,19 +157,17 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    switch (a) {
-                    | `FIRST => \"FIRST\"
-                    | `SECOND => \"SECOND\"
-                    | `THIRD => \"THIRD\"
-                    }
-                )(
-                  b,
-                ),
+              (
+                a =>
+                  switch (a) {
+                  | `FIRST => \"FIRST\"
+                  | `SECOND => \"SECOND\"
+                  | `THIRD => \"THIRD\"
+                  }
+              )(
+                b,
               )
             }
         )(
@@ -178,32 +177,29 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    Js.Array.map(
+              (
+                a =>
+                  `List(
+                    Array.map(
                       b =>
                         (
                           a =>
                             switch (a) {
-                            | None => Js.Nullable.undefined
+                            | None => `Null
                             | Some(b) =>
-                              Js.Nullable.return(
-                                (a => serializeInputObjectEmbeddedInput(a))(
-                                  b,
-                                ),
-                              )
+                              (a => serializeInputObjectEmbeddedInput(a))(b)
                             }
                         )(
                           b,
                         ),
                       a,
                     )
-                )(
-                  b,
-                ),
+                    |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -213,22 +209,22 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => a)(b)
             }
         )(
           (inp: t_variables_NonrecursiveInput).custom,
         ),
     }
   and serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    t_variables_EmbeddedInput => Yojson.Basic.json =
     inp => {
       field:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_EmbeddedInput).field,
@@ -289,11 +285,11 @@ module MyQuery2: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput;
+    t_variables_NonrecursiveInput => Yojson.Basic.json;
   let serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput;
+    t_variables_EmbeddedInput => Yojson.Basic.json;
   let makeVariables:
     (
       ~arg: t_variables_NonrecursiveInput,
@@ -355,20 +351,18 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let more = {
-          let value = (value: t).more;
-          value;
-        }
-        and scalarsInput = {
-          let value = (value: t).scalarsInput;
-          value;
-        };
-        {scalarsInput, more};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let more = {
+        let value = (value: t).more;
+        value;
+      }
+      and scalarsInput = {
+        let value = (value: t).scalarsInput;
+        value;
+      };
+      {scalarsInput, more};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg:
         (a => serializeInputObjectNonrecursiveInput(a))(
@@ -380,35 +374,38 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    t_variables_NonrecursiveInput => Yojson.Basic.json =
     inp => {
       nonNullableField:
-        (a => a)((inp: t_variables_NonrecursiveInput).nonNullableField),
+        (a => `String(a))(
+          (inp: t_variables_NonrecursiveInput).nonNullableField,
+        ),
       nullableArray:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    Js.Array.map(
+              (
+                a =>
+                  `List(
+                    Array.map(
                       b =>
                         (
                           a =>
                             switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            | None => `Null
+                            | Some(b) => (a => `String(a))(b)
                             }
                         )(
                           b,
                         ),
                       a,
                     )
-                )(
-                  b,
-                ),
+                    |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -418,8 +415,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_NonrecursiveInput).field,
@@ -428,19 +425,17 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    switch (a) {
-                    | `FIRST => \"FIRST\"
-                    | `SECOND => \"SECOND\"
-                    | `THIRD => \"THIRD\"
-                    }
-                )(
-                  b,
-                ),
+              (
+                a =>
+                  switch (a) {
+                  | `FIRST => \"FIRST\"
+                  | `SECOND => \"SECOND\"
+                  | `THIRD => \"THIRD\"
+                  }
+              )(
+                b,
               )
             }
         )(
@@ -450,32 +445,29 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    Js.Array.map(
+              (
+                a =>
+                  `List(
+                    Array.map(
                       b =>
                         (
                           a =>
                             switch (a) {
-                            | None => Js.Nullable.undefined
+                            | None => `Null
                             | Some(b) =>
-                              Js.Nullable.return(
-                                (a => serializeInputObjectEmbeddedInput(a))(
-                                  b,
-                                ),
-                              )
+                              (a => serializeInputObjectEmbeddedInput(a))(b)
                             }
                         )(
                           b,
                         ),
                       a,
                     )
-                )(
-                  b,
-                ),
+                    |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -485,22 +477,22 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => a)(b)
             }
         )(
           (inp: t_variables_NonrecursiveInput).custom,
         ),
     }
   and serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    t_variables_EmbeddedInput => Yojson.Basic.json =
     inp => {
       field:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_EmbeddedInput).field,

@@ -36,9 +36,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectRecursiveInput:
-    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput;
+    t_variables_RecursiveInput => Yojson.Basic.json;
   let makeVariables: (~arg: t_variables_RecursiveInput, unit) => t_variables;
   let makeInputObjectRecursiveInput:
     (
@@ -75,29 +75,27 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let recursiveInput = {
-          let value = (value: t).recursiveInput;
-          value;
-        };
-        {recursiveInput: recursiveInput};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let recursiveInput = {
+        let value = (value: t).recursiveInput;
+        value;
+      };
+      {recursiveInput: recursiveInput};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg:
         (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
     }
   and serializeInputObjectRecursiveInput:
-    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
+    t_variables_RecursiveInput => Yojson.Basic.json =
     inp => {
       otherField:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables_RecursiveInput).otherField,
@@ -106,11 +104,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) =>
-              Js.Nullable.return(
-                (a => serializeInputObjectRecursiveInput(a))(b),
-              )
+            | None => `Null
+            | Some(b) => (a => serializeInputObjectRecursiveInput(a))(b)
             }
         )(
           (inp: t_variables_RecursiveInput).inner,
@@ -119,19 +114,17 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    switch (a) {
-                    | `FIRST => \"FIRST\"
-                    | `SECOND => \"SECOND\"
-                    | `THIRD => \"THIRD\"
-                    }
-                )(
-                  b,
-                ),
+              (
+                a =>
+                  switch (a) {
+                  | `FIRST => \"FIRST\"
+                  | `SECOND => \"SECOND\"
+                  | `THIRD => \"THIRD\"
+                  }
+              )(
+                b,
               )
             }
         )(
@@ -171,14 +164,13 @@ module Test: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectproblem_input:
-    t_variables_problem_input => Raw.t_variables_problem_input;
+    t_variables_problem_input => Yojson.Basic.json;
   let serializeInputObjectthis_will_be_duplicated:
-    t_variables_this_will_be_duplicated =>
-    Raw.t_variables_this_will_be_duplicated;
+    t_variables_this_will_be_duplicated => Yojson.Basic.json;
   let serializeInputObjectnested_type:
-    t_variables_nested_type => Raw.t_variables_nested_type;
+    t_variables_nested_type => Yojson.Basic.json;
   let makeVariables: (~input: t_variables_problem_input, unit) => t_variables;
   let makeInputObjectproblem_input:
     (
@@ -222,16 +214,14 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let recursiveRepro = {
-          let value = (value: t).recursiveRepro;
-          value;
-        };
-        {recursiveRepro: recursiveRepro};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let recursiveRepro = {
+        let value = (value: t).recursiveRepro;
+        value;
+      };
+      {recursiveRepro: recursiveRepro};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       input:
         (a => serializeInputObjectproblem_input(a))(
@@ -239,17 +229,15 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectproblem_input:
-    t_variables_problem_input => Raw.t_variables_problem_input =
+    t_variables_problem_input => Yojson.Basic.json =
     inp => {
       the_problem:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (a => serializeInputObjectthis_will_be_duplicated(a))(b),
-              )
+              (a => serializeInputObjectthis_will_be_duplicated(a))(b)
             }
         )(
           (inp: t_variables_problem_input).the_problem,
@@ -258,32 +246,28 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) =>
-              Js.Nullable.return(
-                (a => serializeInputObjectnested_type(a))(b),
-              )
+            | None => `Null
+            | Some(b) => (a => serializeInputObjectnested_type(a))(b)
             }
         )(
           (inp: t_variables_problem_input).b,
         ),
     }
   and serializeInputObjectthis_will_be_duplicated:
-    t_variables_this_will_be_duplicated =>
-    Raw.t_variables_this_will_be_duplicated =
-    inp => {id: (a => a)((inp: t_variables_this_will_be_duplicated).id)}
+    t_variables_this_will_be_duplicated => Yojson.Basic.json =
+    inp => {
+      id: (a => `String(a))((inp: t_variables_this_will_be_duplicated).id),
+    }
   and serializeInputObjectnested_type:
-    t_variables_nested_type => Raw.t_variables_nested_type =
+    t_variables_nested_type => Yojson.Basic.json =
     inp => {
       the_problem:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (a => serializeInputObjectthis_will_be_duplicated(a))(b),
-              )
+              (a => serializeInputObjectthis_will_be_duplicated(a))(b)
             }
         )(
           (inp: t_variables_nested_type).the_problem,

@@ -1,5 +1,5 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
+open Migrate_parsetree;
 open Source_pos;
 open Schema;
 
@@ -51,10 +51,14 @@ let raw_opaque_object = (interface_fragments, fields) => {
 let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Int"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Float"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Boolean"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "String"})) =>
+    Ppx_config.native() ? [%expr (a => `String(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Int"})) =>
+    Ppx_config.native() ? [%expr (a => `Int(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Float"})) =>
+    Ppx_config.native() ? [%expr (a => `Float(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Boolean"})) =>
+    Ppx_config.native() ? [%expr (a => `Bool(a))] : [%expr (a => a)]
   | Type(Scalar({sm_name: _})) => [%expr (a => a)]
   | Type(InputObject({iom_name})) => [%expr
       (a => [%e ident_from_string("serializeInputObject" ++ iom_name)](a))
@@ -78,20 +82,42 @@ let rec serialize_type =
       %expr
       (a => [%e case_exp]);
     }
-  | Nullable(inner) => [%expr
-      (
-        a =>
-          switch (a) {
-          | None => Js.Nullable.undefined
-          | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
-          }
-      )
-    ]
+  | Nullable(inner) =>
+    Ppx_config.native()
+      ? [%expr
+        (
+          a =>
+            switch (a) {
+            // to be fixed (actually we need to drop the value here)
+            | None => `Null
+            | Some(b) => [%e serialize_type(inner)](b)
+            }
+        )
+      ]
+      : [%expr
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
+            }
+        )
+      ]
+
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
-  | List(inner) => [%expr
-      (a => Js.Array.map(b => {[%e serialize_type(inner)](b)}, a))
-    ]
+  | List(inner) =>
+    Ppx_config.native()
+      ? [%expr
+        (
+          a =>
+            `List(
+              Array.map(b => {[%e serialize_type(inner)](b)}, a)
+              |> Array.to_list,
+            )
+        )
+      ]
+      : [%expr (a => Js.Array.map(b => {[%e serialize_type(inner)](b)}, a))]
   | Type(Object(_)) => [%expr (v => None)]
   | Type(Union(_)) => [%expr (v => None)]
   | Type(Interface(_)) => [%expr (v => None)]
@@ -198,7 +224,9 @@ let generate_serialize_variable_signatures =
                  ~loc=conv_loc(loc),
                  Nolabel,
                  base_type_name(type_name),
-                 base_type_name("Raw." ++ type_name),
+                 Ppx_config.native()
+                   ? base_type_name("Yojson.Basic.json")
+                   : base_type_name("Raw." ++ type_name),
                ),
              ),
            );
@@ -242,7 +270,9 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
                    ~loc=conv_loc(loc),
                    Nolabel,
                    base_type_name(type_name),
-                   base_type_name("Raw." ++ type_name),
+                   Ppx_config.native()
+                     ? base_type_name("Yojson.Basic.json")
+                     : base_type_name("Raw." ++ type_name),
                  ),
                ),
                serialize_fun(fields, type_name),
@@ -449,25 +479,47 @@ let get_field = (key, existing_record, path) => {
 };
 
 let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  (
-    switch%expr (value) {
-    | Some(value) =>
-      Js.Nullable.return(
-        [%e generate_serializer(config, path, definition, None, inner)],
+  Ppx_config.native()
+    ? [@metaloc loc]
+      (
+        switch%expr (value) {
+        | Some(value) =>
+          %e
+          generate_serializer(config, path, definition, None, inner)
+        | None => `Null
+        }
       )
-    | None => Js.Nullable.null
-    }
-  )
+    : [@metaloc loc]
+      (
+        switch%expr (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            [%e generate_serializer(config, path, definition, None, inner)],
+          )
+        | None => Js.Nullable.null
+        }
+      )
 and generate_array_encoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  [%expr
-    value
-    |> Js.Array.map(value => {
-         %e
-         generate_serializer(config, path, definition, None, inner)
-       })
-  ]
+  Ppx_config.native()
+    ? [@metaloc loc]
+      [%expr
+        `List(
+          value
+          |> Array.map(value => {
+               %e
+               generate_serializer(config, path, definition, None, inner)
+             })
+          |> Array.to_list,
+        )
+      ]
+    : [@metaloc loc]
+      [%expr
+        value
+        |> Js.Array.map(value => {
+             %e
+             generate_serializer(config, path, definition, None, inner)
+           })
+      ]
 and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
   open Ast_helper;
   let enum_match_arms =
@@ -524,9 +576,7 @@ and generate_object_encoder =
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
-    | [] =>
-      %expr
-      Js.Dict.empty
+    | [] => Ppx_config.native() ? [%expr `Assoc([])] : [%expr Js.Dict.empty]
     | fields =>
       let record =
         Exp.record(
@@ -605,13 +655,15 @@ and generate_object_encoder =
     };
 
   let do_obj_constructor_records = () =>
-    [@metaloc conv_loc(loc)]
-    {
-      Exp.constraint_(
-        do_obj_constructor_base(false),
-        base_type_name("Raw." ++ generate_type_name(path)),
-      );
-    };
+    Ppx_config.native()
+      ? do_obj_constructor_base(false)
+      : [@metaloc conv_loc(loc)]
+        {
+          Exp.constraint_(
+            do_obj_constructor_base(false),
+            base_type_name("Raw." ++ generate_type_name(path)),
+          );
+        };
 
   // the fields and fragments needs to be deeply merged, the fragments in the
   // reason types are separate fields (separated out from the raw output of
@@ -638,15 +690,21 @@ and generate_object_encoder =
              fun
              | Fr_named_field(_) => acc
              | Fr_fragment_spread({key, name}) => [
-                 [%expr
-                   (
-                     Obj.magic(
-                       [%e ident_from_string(name ++ ".serialize")](
-                         [%e get_field(key, existing_record, path)],
-                       ),
-                     ): Js.Json.t
-                   )
-                 ],
+                 Ppx_config.native()
+                   ? [%expr
+                     [%e ident_from_string(name ++ ".serialize")](
+                       [%e get_field(key, existing_record, path)],
+                     )
+                   ]
+                   : [%expr
+                     (
+                       Obj.magic(
+                         [%e ident_from_string(name ++ ".serialize")](
+                           [%e get_field(key, existing_record, path)],
+                         ),
+                       ): Js.Json.t
+                     )
+                   ],
                  ...acc,
                ],
            [],
@@ -657,44 +715,70 @@ and generate_object_encoder =
       | None
       | Some((_, [])) => fields
       | Some((interface_name, fragments)) => [
-          {
-            let%expr value = [%e get_field("fragment", None, path)];
-            (
-              Obj.magic(
-                [%e
-                  generate_poly_variant_interface_encoder(
-                    config,
-                    loc,
-                    interface_name,
-                    fragments,
-                    path,
-                    definition,
-                  )
-                ],
-              ): Js.Json.t
-            );
-          },
+          Ppx_config.native()
+            ? {
+              let%expr value = [%e get_field("fragment", None, path)];
+              %e
+              generate_poly_variant_interface_encoder(
+                config,
+                loc,
+                interface_name,
+                fragments,
+                path,
+                definition,
+              );
+            }
+            : {
+              let%expr value = [%e get_field("fragment", None, path)];
+              (
+                Obj.magic(
+                  [%e
+                    generate_poly_variant_interface_encoder(
+                      config,
+                      loc,
+                      interface_name,
+                      fragments,
+                      path,
+                      definition,
+                    )
+                  ],
+                ): Js.Json.t
+              );
+            },
           ...fields,
         ]
       };
 
-    %expr
-    (
-      Obj.magic(
-        Js.Array.reduce(
-          GraphQL_PPX.deepMerge,
-          Obj.magic(
-            {
-              %e
-              do_obj_constructor();
-            },
-          ): Js.Json.t,
+    Ppx_config.native()
+      // no deepmerge for native, just get the last one
+      ? [%expr
+        Array.fold_left(
+          (_, b) => b,
+          {
+            %e
+            do_obj_constructor();
+          },
           [%e fields |> Ast_helper.Exp.array],
-        ),
-      ): [%t
-        base_type_name("Raw." ++ generate_type_name(path))
+        )
       ]
-    );
+      : [%expr
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  %e
+                  do_obj_constructor();
+                },
+              ): Js.Json.t,
+              [%e fields |> Ast_helper.Exp.array],
+            ),
+          ): [%t
+            base_type_name("Raw." ++ generate_type_name(path))
+          ]
+        )
+      ];
   };
 
   is_opaque ? merge_into_opaque() : do_obj_constructor_records();
@@ -720,23 +804,31 @@ and generate_poly_variant_union_encoder =
                type_name,
                Some(Pat.var({txt: "value", loc: Location.none})),
              ),
-             [%expr
-               (
-                 Obj.magic(
-                   [%e
-                     generate_serializer(
-                       config,
-                       [type_name, ...path],
-                       definition,
-                       Some(type_name),
-                       inner,
-                     )
-                   ],
-                 ): [%t
-                   base_type_name("Raw." ++ generate_type_name(path))
-                 ]
-               )
-             ],
+             Ppx_config.native()
+               ? generate_serializer(
+                   config,
+                   [type_name, ...path],
+                   definition,
+                   Some(type_name),
+                   inner,
+                 )
+               : [%expr
+                 (
+                   Obj.magic(
+                     [%e
+                       generate_serializer(
+                         config,
+                         [type_name, ...path],
+                         definition,
+                         Some(type_name),
+                         inner,
+                       )
+                     ],
+                   ): [%t
+                     base_type_name("Raw." ++ generate_type_name(path))
+                   ]
+                 )
+               ],
            )
          )
        });
@@ -747,13 +839,15 @@ and generate_poly_variant_union_encoder =
         "FutureAddedValue",
         Some(Pat.var({txt: "value", loc: Location.none})),
       ),
-      [%expr
-        (
-          Obj.magic(value): [%t
-            base_type_name("Raw." ++ generate_type_name(path))
-          ]
-        )
-      ],
+      Ppx_config.native()
+        ? [%expr value]
+        : [%expr
+          (
+            Obj.magic(value): [%t
+              base_type_name("Raw." ++ generate_type_name(path))
+            ]
+          )
+        ],
     );
 
   let typename_matcher =
@@ -769,9 +863,8 @@ and generate_poly_variant_union_encoder =
   [%e typename_matcher];
 }
 and generate_poly_variant_selection_set_encoder =
-    (_config, _loc, _name, _fields, _path, _definition) => [%expr
-  Obj.magic(Js.Json.null)
-]
+    (_config, _loc, _name, _fields, _path, _definition) =>
+  Ppx_config.native() ? [%expr `Null] : [%expr Obj.magic(Js.Json.null)]
 and generate_poly_variant_interface_encoder =
     (config, _loc, name, fragments, path, definition) => {
   open Ast_helper;
@@ -784,25 +877,33 @@ and generate_poly_variant_interface_encoder =
                type_name,
                Some(Pat.var({txt: "value", loc: Location.none})),
              ),
-             [%expr
-               (
-                 Obj.magic(
-                   [%e
-                     generate_serializer(
-                       config,
-                       [type_name, name, ...path],
-                       definition,
-                       Some(type_name),
-                       inner,
+             Ppx_config.native()
+               ? generate_serializer(
+                   config,
+                   [type_name, name, ...path],
+                   definition,
+                   Some(type_name),
+                   inner,
+                 )
+               : [%expr
+                 (
+                   Obj.magic(
+                     [%e
+                       generate_serializer(
+                         config,
+                         [type_name, name, ...path],
+                         definition,
+                         Some(type_name),
+                         inner,
+                       )
+                     ],
+                   ): [%t
+                     base_type_name(
+                       "Raw." ++ generate_type_name([name, ...path]),
                      )
-                   ],
-                 ): [%t
-                   base_type_name(
-                     "Raw." ++ generate_type_name([name, ...path]),
-                   )
-                 ]
-               )
-             ],
+                   ]
+                 )
+               ],
            )
          )
        });
@@ -810,13 +911,15 @@ and generate_poly_variant_interface_encoder =
   let fallback_case =
     Exp.case(
       Pat.variant("UnspecifiedFragment", Some(Pat.any())),
-      [%expr
-        (
-          Obj.magic(Js.Dict.empty()): [%t
-            base_type_name("Raw." ++ generate_type_name([name, ...path]))
-          ]
-        )
-      ],
+      Ppx_config.native()
+        ? [%expr `Assoc([])]
+        : [%expr
+          (
+            Obj.magic(Js.Dict.empty()): [%t
+              base_type_name("Raw." ++ generate_type_name([name, ...path]))
+            ]
+          )
+        ],
     );
 
   let typename_matcher =

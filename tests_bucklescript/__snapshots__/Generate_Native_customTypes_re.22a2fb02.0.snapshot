@@ -125,47 +125,37 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let customFields = {
-          let value = (value: t).customFields;
-          (
-            {
-              let nullableColor = {
-                let value = (value: t_customFields).nullableColor;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let value = Color.serialize(value);
-                      value;
-                    },
-                  )
-                | None => Js.Nullable.null
-                };
-              }
-              and futureTime = {
-                let value = (value: t_customFields).futureTime;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and favoriteColor = {
-                let value = (value: t_customFields).favoriteColor;
-                value;
-              }
-              and currentTime = {
-                let value = (value: t_customFields).currentTime;
-                value;
-              };
-              {currentTime, favoriteColor, futureTime, nullableColor};
-            }: Raw.t_customFields
-          );
+    value => {
+      let customFields = {
+        let value = (value: t).customFields;
+        let nullableColor = {
+          let value = (value: t_customFields).nullableColor;
+          switch (value) {
+          | Some(value) =>
+            let value = Color.serialize(value);
+            value;
+          | None => `Null
+          };
+        }
+        and futureTime = {
+          let value = (value: t_customFields).futureTime;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and favoriteColor = {
+          let value = (value: t_customFields).favoriteColor;
+          value;
+        }
+        and currentTime = {
+          let value = (value: t_customFields).currentTime;
+          value;
         };
-        {customFields: customFields};
-      }: Raw.t
-    );
+        {currentTime, favoriteColor, futureTime, nullableColor};
+      };
+      {customFields: customFields};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

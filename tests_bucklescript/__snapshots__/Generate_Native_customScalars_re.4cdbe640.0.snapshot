@@ -38,7 +38,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables:
     (~opt: Yojson.Basic.t=?, ~req: Yojson.Basic.t, unit) => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -84,38 +84,32 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let customScalarField = {
-          let value = (value: t).customScalarField;
-          (
-            {
-              let nonNullable = {
-                let value = (value: t_customScalarField).nonNullable;
-                value;
-              }
-              and nullable = {
-                let value = (value: t_customScalarField).nullable;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {nullable, nonNullable};
-            }: Raw.t_customScalarField
-          );
+    value => {
+      let customScalarField = {
+        let value = (value: t).customScalarField;
+        let nonNullable = {
+          let value = (value: t_customScalarField).nonNullable;
+          value;
+        }
+        and nullable = {
+          let value = (value: t_customScalarField).nullable;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {customScalarField: customScalarField};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+        {nullable, nonNullable};
+      };
+      {customScalarField: customScalarField};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       opt:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => a)(b)
             }
         )(
           (inp: t_variables).opt,

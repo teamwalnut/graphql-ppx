@@ -72,30 +72,20 @@ function back to the original JSON compatible data */
             | \"Dog\" =>
               `Dog(
                 {
-                  let value: Raw.t_simpleSubscription_Dog = Obj.magic(value);
-                  (
-                    {
-                      name: {
-                        let value = Yojson.Basic.member(\"name\", value);
-                        Yojson.Basic.to_string(value);
-                      },
-                    }: t_simpleSubscription_Dog
-                  );
-                },
+                  name: {
+                    let value = Yojson.Basic.member(\"name\", value);
+                    Yojson.Basic.to_string(value);
+                  },
+                }: t_simpleSubscription_Dog,
               )
             | \"Human\" =>
               `Human(
                 {
-                  let value: Raw.t_simpleSubscription_Human = Obj.magic(value);
-                  (
-                    {
-                      name: {
-                        let value = Yojson.Basic.member(\"name\", value);
-                        Yojson.Basic.to_string(value);
-                      },
-                    }: t_simpleSubscription_Human
-                  );
-                },
+                  name: {
+                    let value = Yojson.Basic.member(\"name\", value);
+                    Yojson.Basic.to_string(value);
+                  },
+                }: t_simpleSubscription_Human,
               )
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_simpleSubscription
@@ -104,41 +94,27 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let simpleSubscription = {
-          let value = (value: t).simpleSubscription;
-          switch (value) {
-          | `Dog(value) => (
-              Obj.magic(
-                {
-                  let name = {
-                    let value = (value: t_simpleSubscription_Dog).name;
-                    value;
-                  };
-                  {__typename: \"Dog\", name};
-                }: Raw.t_simpleSubscription_Dog,
-              ): Raw.t_simpleSubscription
-            )
-          | `Human(value) => (
-              Obj.magic(
-                {
-                  let name = {
-                    let value = (value: t_simpleSubscription_Human).name;
-                    value;
-                  };
-                  {__typename: \"Human\", name};
-                }: Raw.t_simpleSubscription_Human,
-              ): Raw.t_simpleSubscription
-            )
-          | `FutureAddedValue(value) => (
-              Obj.magic(value): Raw.t_simpleSubscription
-            )
+    value => {
+      let simpleSubscription = {
+        let value = (value: t).simpleSubscription;
+        switch (value) {
+        | `Dog(value) =>
+          let name = {
+            let value = (value: t_simpleSubscription_Dog).name;
+            value;
           };
+          {__typename: \"Dog\", name};
+        | `Human(value) =>
+          let name = {
+            let value = (value: t_simpleSubscription_Human).name;
+            value;
+          };
+          {__typename: \"Human\", name};
+        | `FutureAddedValue(value) => value
         };
-        {simpleSubscription: simpleSubscription};
-      }: Raw.t
-    );
+      };
+      {simpleSubscription: simpleSubscription};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

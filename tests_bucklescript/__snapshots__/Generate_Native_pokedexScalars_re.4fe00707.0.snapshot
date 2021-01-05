@@ -38,7 +38,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables: (~id: string=?, ~name: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -88,42 +88,36 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let pokemon = {
-          let value = (value: t).pokemon;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              {
-                let name = {
-                  let value = (value: t_pokemon).name;
-                  switch (value) {
-                  | Some(value) => Js.Nullable.return(value)
-                  | None => Js.Nullable.null
-                  };
-                }
-                and id = {
-                  let value = (value: t_pokemon).id;
-                  value;
-                };
-                {id, name};
-              }: Raw.t_pokemon,
-            )
-          | None => Js.Nullable.null
+    value => {
+      let pokemon = {
+        let value = (value: t).pokemon;
+        switch (value) {
+        | Some(value) =>
+          let name = {
+            let value = (value: t_pokemon).name;
+            switch (value) {
+            | Some(value) => value
+            | None => `Null
+            };
+          }
+          and id = {
+            let value = (value: t_pokemon).id;
+            value;
           };
+          {id, name};
+        | None => `Null
         };
-        {pokemon: pokemon};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+      };
+      {pokemon: pokemon};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       id:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).id,
@@ -132,8 +126,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).name,
@@ -166,7 +160,7 @@ module MyQueryDirectives: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables: (~id: string=?, ~name: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -216,42 +210,36 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let pokemon = {
-          let value = (value: t).pokemon;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              {
-                let name = {
-                  let value = (value: t_pokemon).name;
-                  switch (value) {
-                  | Some(value) => Js.Nullable.return(value)
-                  | None => Js.Nullable.null
-                  };
-                }
-                and id = {
-                  let value = (value: t_pokemon).id;
-                  value;
-                };
-                {id, name};
-              }: Raw.t_pokemon,
-            )
-          | None => Js.Nullable.null
+    value => {
+      let pokemon = {
+        let value = (value: t).pokemon;
+        switch (value) {
+        | Some(value) =>
+          let name = {
+            let value = (value: t_pokemon).name;
+            switch (value) {
+            | Some(value) => value
+            | None => `Null
+            };
+          }
+          and id = {
+            let value = (value: t_pokemon).id;
+            value;
           };
+          {id, name};
+        | None => `Null
         };
-        {pokemon: pokemon};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+      };
+      {pokemon: pokemon};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       id:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).id,
@@ -260,8 +248,8 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).name,

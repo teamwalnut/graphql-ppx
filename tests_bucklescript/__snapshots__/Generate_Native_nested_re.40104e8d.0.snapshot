@@ -195,123 +195,85 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let let_ = {
-          let value = (value: t).let_;
-          (
-            {
-              let inner = {
-                let value = (value: t_let).inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let inner = {
-                        let value = (value: t_let_inner).inner;
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-                              let field = {
-                                let value = (value: t_let_inner_inner).field;
-                                value;
-                              };
-                              {field: field};
-                            }: Raw.t_let_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      };
-                      {inner: inner};
-                    }: Raw.t_let_inner,
-                  )
-                | None => Js.Nullable.null
+    value => {
+      let let_ = {
+        let value = (value: t).let_;
+        let inner = {
+          let value = (value: t_let).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_let_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_let_inner_inner).field;
+                  value;
                 };
+                {field: field};
+              | None => `Null
               };
-              {inner: inner};
-            }: Raw.t_let
-          );
-        }
-        and second = {
-          let value = (value: t).second;
-          (
-            {
-              let inner = {
-                let value = (value: t_second).inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let inner = {
-                        let value = (value: t_second_inner).inner;
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-                              let f2 = {
-                                let value = (value: t_second_inner_inner).f2;
-                                value;
-                              }
-                              and f1 = {
-                                let value = (value: t_second_inner_inner).f1;
-                                value;
-                              };
-                              {f1, f2};
-                            }: Raw.t_second_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      };
-                      {inner: inner};
-                    }: Raw.t_second_inner,
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {inner: inner};
-            }: Raw.t_second
-          );
-        }
-        and first = {
-          let value = (value: t).first;
-          (
-            {
-              let inner = {
-                let value = (value: t_first).inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let inner = {
-                        let value = (value: t_first_inner).inner;
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-                              let field = {
-                                let value = (value: t_first_inner_inner).field;
-                                value;
-                              };
-                              {field: field};
-                            }: Raw.t_first_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      };
-                      {inner: inner};
-                    }: Raw.t_first_inner,
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {inner: inner};
-            }: Raw.t_first
-          );
+            };
+            {inner: inner};
+          | None => `Null
+          };
         };
-        {first, second, let_};
-      }: Raw.t
-    );
+        {inner: inner};
+      }
+      and second = {
+        let value = (value: t).second;
+        let inner = {
+          let value = (value: t_second).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_second_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let f2 = {
+                  let value = (value: t_second_inner_inner).f2;
+                  value;
+                }
+                and f1 = {
+                  let value = (value: t_second_inner_inner).f1;
+                  value;
+                };
+                {f1, f2};
+              | None => `Null
+              };
+            };
+            {inner: inner};
+          | None => `Null
+          };
+        };
+        {inner: inner};
+      }
+      and first = {
+        let value = (value: t).first;
+        let inner = {
+          let value = (value: t_first).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_first_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_first_inner_inner).field;
+                  value;
+                };
+                {field: field};
+              | None => `Null
+              };
+            };
+            {inner: inner};
+          | None => `Null
+          };
+        };
+        {inner: inner};
+      };
+      {first, second, let_};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -421,48 +383,33 @@ function back to the original JSON compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let nestedObject = {
-            let value = (value: t).nestedObject;
-            (
-              {
-                let inner = {
-                  let value = (value: t_nestedObject).inner;
-                  switch (value) {
-                  | Some(value) =>
-                    Js.Nullable.return(
-                      {
-                        let inner = {
-                          let value = (value: t_nestedObject_inner).inner;
-                          switch (value) {
-                          | Some(value) =>
-                            Js.Nullable.return(
-                              {
-                                let field = {
-                                  let value =
-                                    (value: t_nestedObject_inner_inner).field;
-                                  value;
-                                };
-                                {field: field};
-                              }: Raw.t_nestedObject_inner_inner,
-                            )
-                          | None => Js.Nullable.null
-                          };
-                        };
-                        {inner: inner};
-                      }: Raw.t_nestedObject_inner,
-                    )
-                  | None => Js.Nullable.null
+      value => {
+        let nestedObject = {
+          let value = (value: t).nestedObject;
+          let inner = {
+            let value = (value: t_nestedObject).inner;
+            switch (value) {
+            | Some(value) =>
+              let inner = {
+                let value = (value: t_nestedObject_inner).inner;
+                switch (value) {
+                | Some(value) =>
+                  let field = {
+                    let value = (value: t_nestedObject_inner_inner).field;
+                    value;
                   };
+                  {field: field};
+                | None => `Null
                 };
-                {inner: inner};
-              }: Raw.t_nestedObject
-            );
+              };
+              {inner: inner};
+            | None => `Null
+            };
           };
-          {nestedObject: nestedObject};
-        }: Raw.t
-      );
+          {inner: inner};
+        };
+        {nestedObject: nestedObject};
+      };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
@@ -546,48 +493,33 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nestedObject = {
-          let value = (value: t).nestedObject;
-          (
-            {
-              let inner = {
-                let value = (value: t_nestedObject).inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let inner = {
-                        let value = (value: t_nestedObject_inner).inner;
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-                              let field = {
-                                let value =
-                                  (value: t_nestedObject_inner_inner).field;
-                                value;
-                              };
-                              {field: field};
-                            }: Raw.t_nestedObject_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      };
-                      {inner: inner};
-                    }: Raw.t_nestedObject_inner,
-                  )
-                | None => Js.Nullable.null
+    value => {
+      let nestedObject = {
+        let value = (value: t).nestedObject;
+        let inner = {
+          let value = (value: t_nestedObject).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_nestedObject_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_nestedObject_inner_inner).field;
+                  value;
                 };
+                {field: field};
+              | None => `Null
               };
-              {inner: inner};
-            }: Raw.t_nestedObject
-          );
+            };
+            {inner: inner};
+          | None => `Null
+          };
         };
-        {nestedObject: nestedObject};
-      }: Raw.t
-    );
+        {inner: inner};
+      };
+      {nestedObject: nestedObject};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

@@ -86,7 +86,7 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map((json_list) =>
+                      List.map((json_list) =>
                         (
                           {
                             message: {
@@ -106,6 +106,7 @@ function back to the original JSON compatible data */
                           }: t_mutationWithError_errors
                         )
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
@@ -118,51 +119,40 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let mutationWithError = {
-          let value = (value: t).mutationWithError;
-          (
-            {
-              let errors = {
-                let value = (value: t_mutationWithError).errors;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => \"FIRST\"
-                               | `SECOND => \"SECOND\"
-                               | `THIRD => \"THIRD\"
-                               | `FutureAddedValue(other) => other
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             };
-                             {message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {errors: errors};
-            }: Raw.t_mutationWithError
-          );
+    value => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError;
+        let errors = {
+          let value = (value: t_mutationWithError).errors;
+          switch (value) {
+          | Some(value) =>
+            `List(
+              value
+              |> Array.map(value =>
+                   let field = {
+                     let value = (value: t_mutationWithError_errors).field;
+                     switch (value) {
+                     | `FIRST => \"FIRST\"
+                     | `SECOND => \"SECOND\"
+                     | `THIRD => \"THIRD\"
+                     | `FutureAddedValue(other) => other
+                     };
+                   }
+                   and message = {
+                     let value = (value: t_mutationWithError_errors).message;
+                     value;
+                   };
+                   {message, field};
+                 )
+              |> Array.to_list,
+            )
+          | None => `Null
+          };
         };
-        {mutationWithError: mutationWithError};
-      }: Raw.t
-    );
+        {errors: errors};
+      };
+      {mutationWithError: mutationWithError};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -229,7 +219,7 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map((json_list) =>
+                      List.map((json_list) =>
                         (
                           {
                             message: {
@@ -249,6 +239,7 @@ function back to the original JSON compatible data */
                           }: t_mutationWithError_errors
                         )
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
@@ -261,50 +252,39 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let mutationWithError = {
-          let value = (value: t).mutationWithError;
-          (
-            {
-              let errors = {
-                let value = (value: t_mutationWithError).errors;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => \"FIRST\"
-                               | `SECOND => \"SECOND\"
-                               | `THIRD => \"THIRD\"
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             };
-                             {message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {errors: errors};
-            }: Raw.t_mutationWithError
-          );
+    value => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError;
+        let errors = {
+          let value = (value: t_mutationWithError).errors;
+          switch (value) {
+          | Some(value) =>
+            `List(
+              value
+              |> Array.map(value =>
+                   let field = {
+                     let value = (value: t_mutationWithError_errors).field;
+                     switch (value) {
+                     | `FIRST => \"FIRST\"
+                     | `SECOND => \"SECOND\"
+                     | `THIRD => \"THIRD\"
+                     };
+                   }
+                   and message = {
+                     let value = (value: t_mutationWithError_errors).message;
+                     value;
+                   };
+                   {message, field};
+                 )
+              |> Array.to_list,
+            )
+          | None => `Null
+          };
         };
-        {mutationWithError: mutationWithError};
-      }: Raw.t
-    );
+        {errors: errors};
+      };
+      {mutationWithError: mutationWithError};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -371,7 +351,7 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map((json_list) =>
+                      List.map((json_list) =>
                         (
                           {
                             message: {
@@ -391,6 +371,7 @@ function back to the original JSON compatible data */
                           }: t_mutationWithError_errors
                         )
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
@@ -403,50 +384,39 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let mutationWithError = {
-          let value = (value: t).mutationWithError;
-          (
-            {
-              let errors = {
-                let value = (value: t_mutationWithError).errors;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => \"FIRST\"
-                               | `SECOND => \"SECOND\"
-                               | `THIRD => \"THIRD\"
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             };
-                             {message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {errors: errors};
-            }: Raw.t_mutationWithError
-          );
+    value => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError;
+        let errors = {
+          let value = (value: t_mutationWithError).errors;
+          switch (value) {
+          | Some(value) =>
+            `List(
+              value
+              |> Array.map(value =>
+                   let field = {
+                     let value = (value: t_mutationWithError_errors).field;
+                     switch (value) {
+                     | `FIRST => \"FIRST\"
+                     | `SECOND => \"SECOND\"
+                     | `THIRD => \"THIRD\"
+                     };
+                   }
+                   and message = {
+                     let value = (value: t_mutationWithError_errors).message;
+                     value;
+                   };
+                   {message, field};
+                 )
+              |> Array.to_list,
+            )
+          | None => `Null
+          };
         };
-        {mutationWithError: mutationWithError};
-      }: Raw.t
-    );
+        {errors: errors};
+      };
+      {mutationWithError: mutationWithError};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

@@ -84,31 +84,25 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let int = {
-                let value = (value: scalars).int;
-                value;
-              }
-              and string = {
-                let value = (value: scalars).string;
-                value;
-              }
-              and __typename = {
-                let value = (value: scalars).__typename;
-                value;
-              };
-              {__typename, string, int};
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let int = {
+          let value = (value: scalars).int;
+          value;
+        }
+        and string = {
+          let value = (value: scalars).string;
+          value;
+        }
+        and __typename = {
+          let value = (value: scalars).__typename;
+          value;
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {__typename, string, int};
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -167,26 +161,20 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {nullableString: nullableString};
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {nullableString: nullableString};
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -255,30 +243,24 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let nullableString = {
-                let value = (value: t_variousScalars).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and __typename = {
-                let value = (value: t_variousScalars).__typename;
-                value;
-              };
-              {__typename, nullableString};
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let nullableString = {
+          let value = (value: t_variousScalars).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and __typename = {
+          let value = (value: t_variousScalars).__typename;
+          value;
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {__typename, nullableString};
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -331,19 +313,17 @@ function back to the original JSON-compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let int = {
-            let value = (value: t).int;
-            value;
-          }
-          and string = {
-            let value = (value: t).string;
-            value;
-          };
-          {string, int};
-        }: Raw.t
-      );
+      value => {
+        let int = {
+          let value = (value: t).int;
+          value;
+        }
+        and string = {
+          let value = (value: t).string;
+          value;
+        };
+        {string, int};
+      };
     let verifyArgsAndParse =
         (~fragmentName as _Fragment: [ | `Fragment], value: Raw.t) =>
       parse(value);
@@ -395,15 +375,13 @@ function back to the original JSON compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let variousScalars = {
-            let value = (value: t).variousScalars;
-            Fragment.serialize(value);
-          };
-          {variousScalars: variousScalars};
-        }: Raw.t
-      );
+      value => {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          Fragment.serialize(value);
+        };
+        {variousScalars: variousScalars};
+      };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
@@ -471,24 +449,19 @@ function back to the original JSON compatible data */
             | \"Dog\" =>
               `Dog(
                 {
-                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                  (
-                    {
-                      __typename: {
-                        let value = Yojson.Basic.member(\"__typename\", value);
-                        Yojson.Basic.to_string(value);
-                      },
-                      name: {
-                        let value = Yojson.Basic.member(\"name\", value);
-                        Yojson.Basic.to_string(value);
-                      },
-                      barkVolume: {
-                        let value = Yojson.Basic.member(\"barkVolume\", value);
-                        Yojson.Basic.to_float(value);
-                      },
-                    }: t_dogOrHuman_Dog
-                  );
-                },
+                  __typename: {
+                    let value = Yojson.Basic.member(\"__typename\", value);
+                    Yojson.Basic.to_string(value);
+                  },
+                  name: {
+                    let value = Yojson.Basic.member(\"name\", value);
+                    Yojson.Basic.to_string(value);
+                  },
+                  barkVolume: {
+                    let value = Yojson.Basic.member(\"barkVolume\", value);
+                    Yojson.Basic.to_float(value);
+                  },
+                }: t_dogOrHuman_Dog,
               )
             | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
             }: t_dogOrHuman
@@ -497,36 +470,29 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let dogOrHuman = {
-          let value = (value: t).dogOrHuman;
-          switch (value) {
-          | `Dog(value) => (
-              Obj.magic(
-                {
-                  let barkVolume = {
-                    let value = (value: t_dogOrHuman_Dog).barkVolume;
-                    value;
-                  }
-                  and name = {
-                    let value = (value: t_dogOrHuman_Dog).name;
-                    value;
-                  }
-                  and __typename = {
-                    let value = (value: t_dogOrHuman_Dog).__typename;
-                    value;
-                  };
-                  {__typename: \"Dog\", name, barkVolume};
-                }: Raw.t_dogOrHuman_Dog,
-              ): Raw.t_dogOrHuman
-            )
-          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+    value => {
+      let dogOrHuman = {
+        let value = (value: t).dogOrHuman;
+        switch (value) {
+        | `Dog(value) =>
+          let barkVolume = {
+            let value = (value: t_dogOrHuman_Dog).barkVolume;
+            value;
+          }
+          and name = {
+            let value = (value: t_dogOrHuman_Dog).name;
+            value;
+          }
+          and __typename = {
+            let value = (value: t_dogOrHuman_Dog).__typename;
+            value;
           };
+          {__typename: \"Dog\", name, barkVolume};
+        | `FutureAddedValue(value) => value
         };
-        {dogOrHuman: dogOrHuman};
-      }: Raw.t
-    );
+      };
+      {dogOrHuman: dogOrHuman};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -585,23 +551,21 @@ function back to the original JSON-compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let barkVolume = {
-            let value = (value: t).barkVolume;
-            value;
-          }
-          and name = {
-            let value = (value: t).name;
-            value;
-          }
-          and __typename = {
-            let value = (value: t).__typename;
-            value;
-          };
-          {__typename, name, barkVolume};
-        }: Raw.t
-      );
+      value => {
+        let barkVolume = {
+          let value = (value: t).barkVolume;
+          value;
+        }
+        and name = {
+          let value = (value: t).name;
+          value;
+        }
+        and __typename = {
+          let value = (value: t).__typename;
+          value;
+        };
+        {__typename, name, barkVolume};
+      };
     let verifyArgsAndParse =
         (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
       parse(value);
@@ -661,14 +625,10 @@ function back to the original JSON compatible data */
               switch (typename) {
               | \"Dog\" =>
                 `Dog(
-                  {
-                    let value: DogFragment.Raw.t = Obj.magic(value);
-
-                    DogFragment.verifyArgsAndParse(
-                      ~fragmentName=`DogFragment,
-                      value,
-                    );
-                  },
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=`DogFragment,
+                    value,
+                  ),
                 )
               | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
               }: t_dogOrHuman
@@ -677,22 +637,16 @@ function back to the original JSON compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let dogOrHuman = {
-            let value = (value: t).dogOrHuman;
-            switch (value) {
-            | `Dog(value) => (
-                Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
-              )
-            | `FutureAddedValue(value) => (
-                Obj.magic(value): Raw.t_dogOrHuman
-              )
-            };
+      value => {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => DogFragment.serialize(value)
+          | `FutureAddedValue(value) => value
           };
-          {dogOrHuman: dogOrHuman};
-        }: Raw.t
-      );
+        };
+        {dogOrHuman: dogOrHuman};
+      };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();

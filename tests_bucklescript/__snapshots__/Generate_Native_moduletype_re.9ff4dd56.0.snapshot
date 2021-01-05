@@ -44,23 +44,17 @@ module MyQuery: {type t;} = {
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              };
-              {string: string};
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let string = {
+          let value = (value: t_variousScalars).string;
+          value;
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {string: string};
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -98,23 +92,17 @@ module MyQuery2: {
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let variousScalars = {
-          let value = (value: t).variousScalars;
-          (
-            {
-              let string = {
-                let value = (value: t_variousScalars).string;
-                value;
-              };
-              {string: string};
-            }: Raw.t_variousScalars
-          );
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let string = {
+          let value = (value: t_variousScalars).string;
+          value;
         };
-        {variousScalars: variousScalars};
-      }: Raw.t
-    );
+        {string: string};
+      };
+      {variousScalars: variousScalars};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -198,49 +186,34 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nestedObject = {
-          let value = (value: t).nestedObject;
-          let value = VariousScalars.serialize(value);
-          (
-            {
-              let inner = {
-                let value = (value: t_nestedObject).inner;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    {
-                      let inner = {
-                        let value = (value: t_nestedObject_inner).inner;
-                        switch (value) {
-                        | Some(value) =>
-                          Js.Nullable.return(
-                            {
-                              let field = {
-                                let value =
-                                  (value: t_nestedObject_inner_inner).field;
-                                value;
-                              };
-                              {field: field};
-                            }: Raw.t_nestedObject_inner_inner,
-                          )
-                        | None => Js.Nullable.null
-                        };
-                      };
-                      {inner: inner};
-                    }: Raw.t_nestedObject_inner,
-                  )
-                | None => Js.Nullable.null
+    value => {
+      let nestedObject = {
+        let value = (value: t).nestedObject;
+        let value = VariousScalars.serialize(value);
+        let inner = {
+          let value = (value: t_nestedObject).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_nestedObject_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_nestedObject_inner_inner).field;
+                  value;
                 };
+                {field: field};
+              | None => `Null
               };
-              {inner: inner};
-            }: Raw.t_nestedObject
-          );
+            };
+            {inner: inner};
+          | None => `Null
+          };
         };
-        {nestedObject: nestedObject};
-      }: Raw.t
-    );
+        {inner: inner};
+      };
+      {nestedObject: nestedObject};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

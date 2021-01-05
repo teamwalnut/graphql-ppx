@@ -82,7 +82,7 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            Array.map(json_list =>
+            List.map(json_list =>
               let typename: string =
                 value |> Yojson.Basic.member(\"__typename\") |> Yojson.to_string;
               (
@@ -90,98 +90,75 @@ function back to the original JSON compatible data */
                 | \"AnonymousUser\" =>
                   `AnonymousUser(
                     {
-                      let value: Raw.t_users_User_AnonymousUser =
-                        Obj.magic(value);
-                      (
-                        {
-                          id: {
-                            let value = Yojson.Basic.member(\"id\", value);
-                            Yojson.Basic.to_string(value);
-                          },
-                          anonymousId: {
-                            let value =
-                              Yojson.Basic.member(\"anonymousId\", value);
-                            Yojson.Basic.to_int(value);
-                          },
-                        }: t_users_User_AnonymousUser
-                      );
-                    },
+                      id: {
+                        let value = Yojson.Basic.member(\"id\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                      anonymousId: {
+                        let value = Yojson.Basic.member(\"anonymousId\", value);
+                        Yojson.Basic.to_int(value);
+                      },
+                    }: t_users_User_AnonymousUser,
                   )
                 | \"AdminUser\" =>
                   `AdminUser(
                     {
-                      let value: Raw.t_users_User_AdminUser = Obj.magic(value);
-                      (
-                        {
-                          id: {
-                            let value = Yojson.Basic.member(\"id\", value);
-                            Yojson.Basic.to_string(value);
-                          },
-                          name: {
-                            let value = Yojson.Basic.member(\"name\", value);
-                            Yojson.Basic.to_string(value);
-                          },
-                        }: t_users_User_AdminUser
-                      );
-                    },
+                      id: {
+                        let value = Yojson.Basic.member(\"id\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                      name: {
+                        let value = Yojson.Basic.member(\"name\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                    }: t_users_User_AdminUser,
                   )
                 | _ => `UnspecifiedFragment(typename)
                 }: t_users_User
               );
             )
+            |> Array.of_list
           | _ => []
           };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let users = {
-          let value = (value: t).users;
+    value => {
+      let users = {
+        let value = (value: t).users;
+        `List(
           value
-          |> Js.Array.map(value =>
+          |> Array.map(value =>
                switch (value) {
-               | `AnonymousUser(value) => (
-                   Obj.magic(
-                     {
-                       let anonymousId = {
-                         let value =
-                           (value: t_users_User_AnonymousUser).anonymousId;
-                         value;
-                       }
-                       and id = {
-                         let value = (value: t_users_User_AnonymousUser).id;
-                         value;
-                       };
-                       {__typename: \"AnonymousUser\", id, anonymousId};
-                     }: Raw.t_users_User_AnonymousUser,
-                   ): Raw.t_users_User
-                 )
-               | `AdminUser(value) => (
-                   Obj.magic(
-                     {
-                       let name = {
-                         let value = (value: t_users_User_AdminUser).name;
-                         value;
-                       }
-                       and id = {
-                         let value = (value: t_users_User_AdminUser).id;
-                         value;
-                       };
-                       {__typename: \"AdminUser\", id, name};
-                     }: Raw.t_users_User_AdminUser,
-                   ): Raw.t_users_User
-                 )
-               | `UnspecifiedFragment(_) => (
-                   Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                 )
+               | `AnonymousUser(value) =>
+                 let anonymousId = {
+                   let value = (value: t_users_User_AnonymousUser).anonymousId;
+                   value;
+                 }
+                 and id = {
+                   let value = (value: t_users_User_AnonymousUser).id;
+                   value;
+                 };
+                 {__typename: \"AnonymousUser\", id, anonymousId};
+               | `AdminUser(value) =>
+                 let name = {
+                   let value = (value: t_users_User_AdminUser).name;
+                   value;
+                 }
+                 and id = {
+                   let value = (value: t_users_User_AdminUser).id;
+                   value;
+                 };
+                 {__typename: \"AdminUser\", id, name};
+               | `UnspecifiedFragment(_) => `Assoc([])
                }
-             );
-        };
-        {users: users};
-      }: Raw.t
-    );
+             )
+          |> Array.to_list,
+        );
+      };
+      {users: users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -241,7 +218,7 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            Array.map(json_list =>
+            List.map(json_list =>
               let typename: string =
                 value |> Yojson.Basic.member(\"__typename\") |> Yojson.to_string;
               (
@@ -249,64 +226,52 @@ function back to the original JSON compatible data */
                 | \"AdminUser\" =>
                   `AdminUser(
                     {
-                      let value: Raw.t_users_User_AdminUser = Obj.magic(value);
-                      (
-                        {
-                          __typename: {
-                            let value =
-                              Yojson.Basic.member(\"__typename\", value);
-                            Yojson.Basic.to_string(value);
-                          },
-                          id: {
-                            let value = Yojson.Basic.member(\"id\", value);
-                            Yojson.Basic.to_string(value);
-                          },
-                        }: t_users_User_AdminUser
-                      );
-                    },
+                      __typename: {
+                        let value = Yojson.Basic.member(\"__typename\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                      id: {
+                        let value = Yojson.Basic.member(\"id\", value);
+                        Yojson.Basic.to_string(value);
+                      },
+                    }: t_users_User_AdminUser,
                   )
                 | _ => `UnspecifiedFragment(typename)
                 }: t_users_User
               );
             )
+            |> Array.of_list
           | _ => []
           };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let users = {
-          let value = (value: t).users;
+    value => {
+      let users = {
+        let value = (value: t).users;
+        `List(
           value
-          |> Js.Array.map(value =>
+          |> Array.map(value =>
                switch (value) {
-               | `AdminUser(value) => (
-                   Obj.magic(
-                     {
-                       let id = {
-                         let value = (value: t_users_User_AdminUser).id;
-                         value;
-                       }
-                       and __typename = {
-                         let value =
-                           (value: t_users_User_AdminUser).__typename;
-                         value;
-                       };
-                       {__typename: \"AdminUser\", id};
-                     }: Raw.t_users_User_AdminUser,
-                   ): Raw.t_users_User
-                 )
-               | `UnspecifiedFragment(_) => (
-                   Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                 )
+               | `AdminUser(value) =>
+                 let id = {
+                   let value = (value: t_users_User_AdminUser).id;
+                   value;
+                 }
+                 and __typename = {
+                   let value = (value: t_users_User_AdminUser).__typename;
+                   value;
+                 };
+                 {__typename: \"AdminUser\", id};
+               | `UnspecifiedFragment(_) => `Assoc([])
                }
-             );
-        };
-        {users: users};
-      }: Raw.t
-    );
+             )
+          |> Array.to_list,
+        );
+      };
+      {users: users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -372,7 +337,7 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            Array.map((json_list) =>
+            List.map((json_list) =>
               (
                 {
                   fragment: {
@@ -385,34 +350,21 @@ function back to the original JSON compatible data */
                       | \"AnonymousUser\" =>
                         `AnonymousUser(
                           {
-                            let value: Raw.t_users_User_AnonymousUser =
-                              Obj.magic(value);
-                            (
-                              {
-                                anonymousId: {
-                                  let value =
-                                    Yojson.Basic.member(\"anonymousId\", value);
-                                  Yojson.Basic.to_int(value);
-                                },
-                              }: t_users_User_AnonymousUser
-                            );
-                          },
+                            anonymousId: {
+                              let value =
+                                Yojson.Basic.member(\"anonymousId\", value);
+                              Yojson.Basic.to_int(value);
+                            },
+                          }: t_users_User_AnonymousUser,
                         )
                       | \"AdminUser\" =>
                         `AdminUser(
                           {
-                            let value: Raw.t_users_User_AdminUser =
-                              Obj.magic(value);
-                            (
-                              {
-                                name: {
-                                  let value =
-                                    Yojson.Basic.member(\"name\", value);
-                                  Yojson.Basic.to_string(value);
-                                },
-                              }: t_users_User_AdminUser
-                            );
-                          },
+                            name: {
+                              let value = Yojson.Basic.member(\"name\", value);
+                              Yojson.Basic.to_string(value);
+                            },
+                          }: t_users_User_AdminUser,
                         )
                       | _ => `UnspecifiedFragment(typename)
                       }: t_users_User
@@ -425,81 +377,56 @@ function back to the original JSON compatible data */
                 }: t_users
               )
             )
+            |> Array.of_list
           | _ => []
           };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let users = {
-          let value = (value: t).users;
+    value => {
+      let users = {
+        let value = (value: t).users;
+        `List(
           value
-          |> Js.Array.map((value) =>
-               (
-                 Obj.magic(
-                   Js.Array.reduce(
-                     GraphQL_PPX.deepMerge,
-                     Obj.magic(
-                       {
-                         let id = {
-                           let value = (value: t_users).id;
-                           value;
-                         };
-                         {\"id\": id};
-                       },
-                     ): Js.Json.t,
-                     [|
-                       {
-                         let value = (value: t_users).fragment;
-                         (
-                           Obj.magic(
-                             switch (value) {
-                             | `AnonymousUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let anonymousId = {
-                                       let value =
-                                         (value: t_users_User_AnonymousUser).
-                                           anonymousId;
-                                       value;
-                                     };
-                                     {
-                                       __typename: \"AnonymousUser\",
-                                       anonymousId,
-                                     };
-                                   }: Raw.t_users_User_AnonymousUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `AdminUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let name = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).name;
-                                       value;
-                                     };
-                                     {__typename: \"AdminUser\", name};
-                                   }: Raw.t_users_User_AdminUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `UnspecifiedFragment(_) => (
-                                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                               )
-                             },
-                           ): Js.Json.t
-                         );
-                       },
-                     |],
-                   ),
-                 ): Raw.t_users
+          |> Array.map(value =>
+               Array.fold_left(
+                 (_, b) => b,
+                 {
+                   let id = {
+                     let value = (value: t_users).id;
+                     value;
+                   };
+                   {\"id\": id};
+                 },
+                 [|
+                   {
+                     let value = (value: t_users).fragment;
+                     switch (value) {
+                     | `AnonymousUser(value) =>
+                       let anonymousId = {
+                         let value =
+                           (value: t_users_User_AnonymousUser).anonymousId;
+                         value;
+                       };
+                       {__typename: \"AnonymousUser\", anonymousId};
+                     | `AdminUser(value) =>
+                       let name = {
+                         let value = (value: t_users_User_AdminUser).name;
+                         value;
+                       };
+                       {__typename: \"AdminUser\", name};
+                     | `UnspecifiedFragment(_) => `Assoc([])
+                     };
+                   },
+                 |],
                )
-             );
-        };
-        {users: users};
-      }: Raw.t
-    );
+             )
+          |> Array.to_list,
+        );
+      };
+      {users: users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -569,7 +496,7 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            Array.map((json_list) =>
+            List.map((json_list) =>
               (
                 {
                   fragment: {
@@ -582,23 +509,16 @@ function back to the original JSON compatible data */
                       | \"AdminUser\" =>
                         `AdminUser(
                           {
-                            let value: Raw.t_users_User_AdminUser =
-                              Obj.magic(value);
-                            (
-                              {
-                                __typename: {
-                                  let value =
-                                    Yojson.Basic.member(\"__typename\", value);
-                                  Yojson.Basic.to_string(value);
-                                },
-                                id: {
-                                  let value =
-                                    Yojson.Basic.member(\"id\", value);
-                                  Yojson.Basic.to_string(value);
-                                },
-                              }: t_users_User_AdminUser
-                            );
-                          },
+                            __typename: {
+                              let value =
+                                Yojson.Basic.member(\"__typename\", value);
+                              Yojson.Basic.to_string(value);
+                            },
+                            id: {
+                              let value = Yojson.Basic.member(\"id\", value);
+                              Yojson.Basic.to_string(value);
+                            },
+                          }: t_users_User_AdminUser,
                         )
                       | _ => `UnspecifiedFragment(typename)
                       }: t_users_User
@@ -615,75 +535,58 @@ function back to the original JSON compatible data */
                 }: t_users
               )
             )
+            |> Array.of_list
           | _ => []
           };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let users = {
-          let value = (value: t).users;
+    value => {
+      let users = {
+        let value = (value: t).users;
+        `List(
           value
-          |> Js.Array.map((value) =>
-               (
-                 Obj.magic(
-                   Js.Array.reduce(
-                     GraphQL_PPX.deepMerge,
-                     Obj.magic(
-                       {
-                         let id = {
-                           let value = (value: t_users).id;
-                           value;
-                         }
-                         and __typename = {
-                           let value = (value: t_users).__typename;
-                           value;
-                         };
-                         {\"__typename\": __typename, \"id\": id};
-                       },
-                     ): Js.Json.t,
-                     [|
-                       {
-                         let value = (value: t_users).fragment;
-                         (
-                           Obj.magic(
-                             switch (value) {
-                             | `AdminUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let id = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).id;
-                                       value;
-                                     }
-                                     and __typename = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).
-                                           __typename;
-                                       value;
-                                     };
-                                     {__typename: \"AdminUser\", id};
-                                   }: Raw.t_users_User_AdminUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `UnspecifiedFragment(_) => (
-                                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                               )
-                             },
-                           ): Js.Json.t
-                         );
-                       },
-                     |],
-                   ),
-                 ): Raw.t_users
+          |> Array.map(value =>
+               Array.fold_left(
+                 (_, b) => b,
+                 {
+                   let id = {
+                     let value = (value: t_users).id;
+                     value;
+                   }
+                   and __typename = {
+                     let value = (value: t_users).__typename;
+                     value;
+                   };
+                   {\"__typename\": __typename, \"id\": id};
+                 },
+                 [|
+                   {
+                     let value = (value: t_users).fragment;
+                     switch (value) {
+                     | `AdminUser(value) =>
+                       let id = {
+                         let value = (value: t_users_User_AdminUser).id;
+                         value;
+                       }
+                       and __typename = {
+                         let value =
+                           (value: t_users_User_AdminUser).__typename;
+                         value;
+                       };
+                       {__typename: \"AdminUser\", id};
+                     | `UnspecifiedFragment(_) => `Assoc([])
+                     };
+                   },
+                 |],
                )
-             );
-        };
-        {users: users};
-      }: Raw.t
-    );
+             )
+          |> Array.to_list,
+        );
+      };
+      {users: users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
@@ -729,7 +632,7 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            Array.map((json_list) =>
+            List.map((json_list) =>
               (
                 {
                   id: {
@@ -739,32 +642,30 @@ function back to the original JSON compatible data */
                 }: t_users
               )
             )
+            |> Array.of_list
           | _ => []
           };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let users = {
-          let value = (value: t).users;
+    value => {
+      let users = {
+        let value = (value: t).users;
+        `List(
           value
-          |> Js.Array.map((value) =>
-               (
-                 {
-                   let id = {
-                     let value = (value: t_users).id;
-                     value;
-                   };
-                   {id: id};
-                 }: Raw.t_users
-               )
-             );
-        };
-        {users: users};
-      }: Raw.t
-    );
+          |> Array.map(value =>
+               let id = {
+                 let value = (value: t_users).id;
+                 value;
+               };
+               {id: id};
+             )
+          |> Array.to_list,
+        );
+      };
+      {users: users};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

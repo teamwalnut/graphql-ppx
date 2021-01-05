@@ -239,10 +239,11 @@ and generate_array_decoder = (config, loc, inner, path, definition) =>
       (
         switch%expr (value) {
         | `List(json_list) =>
-          Array.map(json_list => {
+          List.map(json_list => {
             %e
             generate_parser(config, path, definition, inner)
           })
+          |> Array.of_list
         | _ => []
         }
       )
@@ -306,19 +307,13 @@ and generate_object_decoder =
                   )
 
                 | false =>
-                  %expr
-                  [%e
-                    Ast_helper.Exp.field(
-                      Exp.constraint_(
-                        ident_from_string("value"),
-                        object_type,
-                      ),
-                      {
-                        loc: Location.none,
-                        Location.txt: Longident.parse(to_valid_ident(key)),
-                      },
-                    )
-                  ]
+                  Ast_helper.Exp.field(
+                    Exp.constraint_(ident_from_string("value"), object_type),
+                    {
+                      loc: Location.none,
+                      Location.txt: Longident.parse(to_valid_ident(key)),
+                    },
+                  )
                 };
 
               %e
@@ -326,24 +321,32 @@ and generate_object_decoder =
             }
 
       | Fr_fragment_spread({loc, name, arguments}) =>
-        [@metaloc conv_loc(loc)]
-        {
-          let%expr value: [%t
-            base_type_name(
-              ~loc=Output_bucklescript_utils.conv_loc(loc),
-              name ++ ".Raw.t",
+        Ppx_config.native()
+          ? generate_fragment_parse_fun(
+              config,
+              loc,
+              name,
+              arguments,
+              definition,
             )
-          ] =
-            Obj.magic(value);
-          %e
-          generate_fragment_parse_fun(
-            config,
-            loc,
-            name,
-            arguments,
-            definition,
-          );
-        };
+          : [@metaloc conv_loc(loc)]
+            {
+              let%expr value: [%t
+                base_type_name(
+                  ~loc=Output_bucklescript_utils.conv_loc(loc),
+                  name ++ ".Raw.t",
+                )
+              ] =
+                Obj.magic(value);
+              %e
+              generate_fragment_parse_fun(
+                config,
+                loc,
+                name,
+                arguments,
+                definition,
+              );
+            };
 
     let get_record_contents_inline =
       fun
@@ -505,21 +508,28 @@ and generate_poly_variant_interface_decoder =
         Exp.variant(
           type_name,
           Some(
-            {
-              let%expr value: [%t
-                base_type_name(
-                  "Raw." ++ generate_type_name([type_name, ...path]),
+            config.native
+              ? generate_parser(
+                  config,
+                  [type_name, ...path],
+                  definition,
+                  inner,
                 )
-              ] =
-                Obj.magic(value);
-              %e
-              generate_parser(
-                config,
-                [type_name, ...path],
-                definition,
-                inner,
-              );
-            },
+              : {
+                let%expr value: [%t
+                  base_type_name(
+                    "Raw." ++ generate_type_name([type_name, ...path]),
+                  )
+                ] =
+                  Obj.magic(value);
+                %e
+                generate_parser(
+                  config,
+                  [type_name, ...path],
+                  definition,
+                  inner,
+                );
+              },
           ),
         )
         |> Exp.case(name_pattern);
@@ -573,26 +583,33 @@ and generate_poly_variant_union_decoder =
              Exp.variant(
                type_name,
                Some(
-                 {
-                   let%expr value: [%t
-                     switch (inner) {
-                     | Res_solo_fragment_spread({name}) =>
-                       base_type_name(name ++ ".Raw.t")
-                     | _ =>
-                       base_type_name(
-                         "Raw." ++ generate_type_name([type_name, ...path]),
-                       )
-                     }
-                   ] =
-                     Obj.magic(value);
-                   %e
-                   generate_parser(
-                     config,
-                     [type_name, ...path],
-                     definition,
-                     inner,
-                   );
-                 },
+                 config.native
+                   ? generate_parser(
+                       config,
+                       [type_name, ...path],
+                       definition,
+                       inner,
+                     )
+                   : {
+                     let%expr value: [%t
+                       switch (inner) {
+                       | Res_solo_fragment_spread({name}) =>
+                         base_type_name(name ++ ".Raw.t")
+                       | _ =>
+                         base_type_name(
+                           "Raw." ++ generate_type_name([type_name, ...path]),
+                         )
+                       }
+                     ] =
+                       Obj.magic(value);
+                     %e
+                     generate_parser(
+                       config,
+                       [type_name, ...path],
+                       definition,
+                       inner,
+                     );
+                   },
                ),
              ),
            )

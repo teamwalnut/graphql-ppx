@@ -37,9 +37,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let serializeInputObjectListsInput:
-    t_variables_ListsInput => Raw.t_variables_ListsInput;
+    t_variables_ListsInput => Yojson.Basic.json;
   let makeVariables: (~arg: t_variables_ListsInput, unit) => t_variables;
   let makeInputObjectListsInput:
     (
@@ -78,47 +78,46 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let listsInput = {
-          let value = (value: t).listsInput;
-          value;
-        };
-        {listsInput: listsInput};
-      }: Raw.t
-    );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let listsInput = {
+        let value = (value: t).listsInput;
+        value;
+      };
+      {listsInput: listsInput};
+    };
+  let rec serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
     }
   and serializeInputObjectListsInput:
-    t_variables_ListsInput => Raw.t_variables_ListsInput =
+    t_variables_ListsInput => Yojson.Basic.json =
     inp => {
       nullableOfNullable:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (
-                  a =>
-                    Js.Array.map(
+              (
+                a =>
+                  `List(
+                    Array.map(
                       b =>
                         (
                           a =>
                             switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            | None => `Null
+                            | Some(b) => (a => `String(a))(b)
                             }
                         )(
                           b,
                         ),
                       a,
                     )
-                )(
-                  b,
-                ),
+                    |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -128,10 +127,15 @@ function back to the original JSON compatible data */
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
+            | None => `Null
             | Some(b) =>
-              Js.Nullable.return(
-                (a => Js.Array.map(b => (a => a)(b), a))(b),
+              (
+                a =>
+                  `List(
+                    Array.map(b => (a => `String(a))(b), a) |> Array.to_list,
+                  )
+              )(
+                b,
               )
             }
         )(
@@ -140,24 +144,30 @@ function back to the original JSON compatible data */
       nonNullableOfNullable:
         (
           a =>
-            Js.Array.map(
-              b =>
-                (
-                  a =>
-                    switch (a) {
-                    | None => Js.Nullable.undefined
-                    | Some(b) => Js.Nullable.return((a => a)(b))
-                    }
-                )(
-                  b,
-                ),
-              a,
+            `List(
+              Array.map(
+                b =>
+                  (
+                    a =>
+                      switch (a) {
+                      | None => `Null
+                      | Some(b) => (a => `String(a))(b)
+                      }
+                  )(
+                    b,
+                  ),
+                a,
+              )
+              |> Array.to_list,
             )
         )(
           (inp: t_variables_ListsInput).nonNullableOfNullable,
         ),
       nonNullableOfNonNullable:
-        (a => Js.Array.map(b => (a => a)(b), a))(
+        (
+          a =>
+            `List(Array.map(b => (a => `String(a))(b), a) |> Array.to_list)
+        )(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
     };

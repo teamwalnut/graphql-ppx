@@ -126,12 +126,13 @@ function back to the original JSON compatible data */
                     Some(
                       switch (value) {
                       | `List(json_list) =>
-                        Array.map(json_list =>
+                        List.map(json_list =>
                           switch (value) {
                           | value => Some(Yojson.Basic.to_string(value))
                           | `Null => None
                           }
                         )
+                        |> Array.of_list
                       | _ => []
                       },
                     )
@@ -146,7 +147,8 @@ function back to the original JSON compatible data */
                     Some(
                       switch (value) {
                       | `List(json_list) =>
-                        Array.map(json_list => Yojson.Basic.to_string(value))
+                        List.map(json_list => Yojson.Basic.to_string(value))
+                        |> Array.of_list
                       | _ => []
                       },
                     )
@@ -158,12 +160,13 @@ function back to the original JSON compatible data */
                     Yojson.Basic.member(\"nonNullableOfNullable\", value);
                   switch (value) {
                   | `List(json_list) =>
-                    Array.map(json_list =>
+                    List.map(json_list =>
                       switch (value) {
                       | value => Some(Yojson.Basic.to_string(value))
                       | `Null => None
                       }
                     )
+                    |> Array.of_list
                   | _ => []
                   };
                 },
@@ -172,7 +175,8 @@ function back to the original JSON compatible data */
                     Yojson.Basic.member(\"nonNullableOfNonNullable\", value);
                   switch (value) {
                   | `List(json_list) =>
-                    Array.map(json_list => Yojson.Basic.to_string(value))
+                    List.map(json_list => Yojson.Basic.to_string(value))
+                    |> Array.of_list
                   | _ => []
                   };
                 },
@@ -182,62 +186,60 @@ function back to the original JSON compatible data */
         }: t
       );
     let serialize: t => Raw.t =
-      (value) => (
-        {
-          let lists = {
-            let value = (value: t).lists;
-            (
-              {
-                let nonNullableOfNonNullable = {
-                  let value = (value: t_lists).nonNullableOfNonNullable;
-                  value |> Js.Array.map(value => value);
-                }
-                and nonNullableOfNullable = {
-                  let value = (value: t_lists).nonNullableOfNullable;
-                  value
-                  |> Js.Array.map(value =>
-                       switch (value) {
-                       | Some(value) => Js.Nullable.return(value)
-                       | None => Js.Nullable.null
-                       }
-                     );
-                }
-                and nullableOfNonNullable = {
-                  let value = (value: t_lists).nullableOfNonNullable;
-                  switch (value) {
-                  | Some(value) =>
-                    Js.Nullable.return(value |> Js.Array.map(value => value))
-                  | None => Js.Nullable.null
-                  };
-                }
-                and nullableOfNullable = {
-                  let value = (value: t_lists).nullableOfNullable;
-                  switch (value) {
-                  | Some(value) =>
-                    Js.Nullable.return(
-                      value
-                      |> Js.Array.map(value =>
-                           switch (value) {
-                           | Some(value) => Js.Nullable.return(value)
-                           | None => Js.Nullable.null
-                           }
-                         ),
-                    )
-                  | None => Js.Nullable.null
-                  };
-                };
-                {
-                  nullableOfNullable,
-                  nullableOfNonNullable,
-                  nonNullableOfNullable,
-                  nonNullableOfNonNullable,
-                };
-              }: Raw.t_lists
+      value => {
+        let lists = {
+          let value = (value: t).lists;
+          let nonNullableOfNonNullable = {
+            let value = (value: t_lists).nonNullableOfNonNullable;
+            `List(value |> Array.map(value => value) |> Array.to_list);
+          }
+          and nonNullableOfNullable = {
+            let value = (value: t_lists).nonNullableOfNullable;
+            `List(
+              value
+              |> Array.map(value =>
+                   switch (value) {
+                   | Some(value) => value
+                   | None => `Null
+                   }
+                 )
+              |> Array.to_list,
             );
+          }
+          and nullableOfNonNullable = {
+            let value = (value: t_lists).nullableOfNonNullable;
+            switch (value) {
+            | Some(value) =>
+              `List(value |> Array.map(value => value) |> Array.to_list)
+            | None => `Null
+            };
+          }
+          and nullableOfNullable = {
+            let value = (value: t_lists).nullableOfNullable;
+            switch (value) {
+            | Some(value) =>
+              `List(
+                value
+                |> Array.map(value =>
+                     switch (value) {
+                     | Some(value) => value
+                     | None => `Null
+                     }
+                   )
+                |> Array.to_list,
+              )
+            | None => `Null
+            };
           };
-          {lists: lists};
-        }: Raw.t
-      );
+          {
+            nullableOfNullable,
+            nullableOfNonNullable,
+            nonNullableOfNullable,
+            nonNullableOfNonNullable,
+          };
+        };
+        {lists: lists};
+      };
     let serializeVariables = () => ();
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
@@ -303,12 +305,13 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map(json_list =>
+                      List.map(json_list =>
                         switch (value) {
                         | value => Some(Yojson.Basic.to_string(value))
                         | `Null => None
                         }
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
@@ -323,7 +326,8 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map(json_list => Yojson.Basic.to_string(value))
+                      List.map(json_list => Yojson.Basic.to_string(value))
+                      |> Array.of_list
                     | _ => []
                     },
                   )
@@ -335,12 +339,13 @@ function back to the original JSON compatible data */
                   Yojson.Basic.member(\"nonNullableOfNullable\", value);
                 switch (value) {
                 | `List(json_list) =>
-                  Array.map(json_list =>
+                  List.map(json_list =>
                     switch (value) {
                     | value => Some(Yojson.Basic.to_string(value))
                     | `Null => None
                     }
                   )
+                  |> Array.of_list
                 | _ => []
                 };
               },
@@ -349,7 +354,8 @@ function back to the original JSON compatible data */
                   Yojson.Basic.member(\"nonNullableOfNonNullable\", value);
                 switch (value) {
                 | `List(json_list) =>
-                  Array.map(json_list => Yojson.Basic.to_string(value))
+                  List.map(json_list => Yojson.Basic.to_string(value))
+                  |> Array.of_list
                 | _ => []
                 };
               },
@@ -359,62 +365,60 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          (
-            {
-              let nonNullableOfNonNullable = {
-                let value = (value: t_lists).nonNullableOfNonNullable;
-                value |> Js.Array.map(value => value);
-              }
-              and nonNullableOfNullable = {
-                let value = (value: t_lists).nonNullableOfNullable;
-                value
-                |> Js.Array.map(value =>
-                     switch (value) {
-                     | Some(value) => Js.Nullable.return(value)
-                     | None => Js.Nullable.null
-                     }
-                   );
-              }
-              and nullableOfNonNullable = {
-                let value = (value: t_lists).nullableOfNonNullable;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(value |> Js.Array.map(value => value))
-                | None => Js.Nullable.null
-                };
-              }
-              and nullableOfNullable = {
-                let value = (value: t_lists).nullableOfNullable;
-                switch (value) {
-                | Some(value) =>
-                  Js.Nullable.return(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (value) {
-                         | Some(value) => Js.Nullable.return(value)
-                         | None => Js.Nullable.null
-                         }
-                       ),
-                  )
-                | None => Js.Nullable.null
-                };
-              };
-              {
-                nullableOfNullable,
-                nullableOfNonNullable,
-                nonNullableOfNullable,
-                nonNullableOfNonNullable,
-              };
-            }: Raw.t_lists
+    value => {
+      let lists = {
+        let value = (value: t).lists;
+        let nonNullableOfNonNullable = {
+          let value = (value: t_lists).nonNullableOfNonNullable;
+          `List(value |> Array.map(value => value) |> Array.to_list);
+        }
+        and nonNullableOfNullable = {
+          let value = (value: t_lists).nonNullableOfNullable;
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => value
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
           );
+        }
+        and nullableOfNonNullable = {
+          let value = (value: t_lists).nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            `List(value |> Array.map(value => value) |> Array.to_list)
+          | None => `Null
+          };
+        }
+        and nullableOfNullable = {
+          let value = (value: t_lists).nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            `List(
+              value
+              |> Array.map(value =>
+                   switch (value) {
+                   | Some(value) => value
+                   | None => `Null
+                   }
+                 )
+              |> Array.to_list,
+            )
+          | None => `Null
+          };
         };
-        {lists: lists};
-      }: Raw.t
-    );
+        {
+          nullableOfNullable,
+          nullableOfNonNullable,
+          nonNullableOfNullable,
+          nonNullableOfNonNullable,
+        };
+      };
+      {lists: lists};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();

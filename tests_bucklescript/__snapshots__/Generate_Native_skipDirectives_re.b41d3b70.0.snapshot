@@ -42,7 +42,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables: (~var: bool, unit) => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -115,57 +115,47 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let v2 = {
-          let value = (value: t).v2;
-          (
-            {
-              let string = {
-                let value = (value: t_v2).string;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and nullableString = {
-                let value = (value: t_v2).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {nullableString, string};
-            }: Raw.t_v2
-          );
+    value => {
+      let v2 = {
+        let value = (value: t).v2;
+        let string = {
+          let value = (value: t_v2).string;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         }
-        and v1 = {
-          let value = (value: t).v1;
-          (
-            {
-              let string = {
-                let value = (value: t_v1).string;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              }
-              and nullableString = {
-                let value = (value: t_v1).nullableString;
-                switch (value) {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                };
-              };
-              {nullableString, string};
-            }: Raw.t_v1
-          );
+        and nullableString = {
+          let value = (value: t_v2).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
         };
-        {v1, v2};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
-    inp => {var: (a => a)((inp: t_variables).var)};
+        {nullableString, string};
+      }
+      and v1 = {
+        let value = (value: t).v1;
+        let string = {
+          let value = (value: t_v1).string;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        }
+        and nullableString = {
+          let value = (value: t_v1).nullableString;
+          switch (value) {
+          | Some(value) => value
+          | None => `Null
+          };
+        };
+        {nullableString, string};
+      };
+      {v1, v2};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
+    inp => {var: (a => `Bool(a))((inp: t_variables).var)};
   let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

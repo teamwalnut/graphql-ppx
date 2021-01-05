@@ -60,12 +60,13 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list =>
+                List.map(json_list =>
                   switch (value) {
                   | value => Some(Yojson.Basic.to_string(value))
                   | `Null => None
                   }
                 )
+                |> Array.of_list
               | _ => []
               },
             )
@@ -79,7 +80,8 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list => Yojson.Basic.to_string(value))
+                List.map(json_list => Yojson.Basic.to_string(value))
+                |> Array.of_list
               | _ => []
               },
             )
@@ -89,35 +91,34 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableOfNullable = {
-          let value = (value: t).nullableOfNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
+    value => {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(value |> Array.map(value => value) |> Array.to_list)
+        | None => `Null
         };
-        {nullableOfNullable, nullableOfNonNullable};
-      }: Raw.t
-    );
+      }
+      and nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => value
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
+        };
+      };
+      {nullableOfNullable, nullableOfNonNullable};
+    };
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
     parse(value);
@@ -161,7 +162,8 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list => Yojson.Basic.to_string(value))
+                List.map(json_list => Yojson.Basic.to_string(value))
+                |> Array.of_list
               | _ => []
               },
             )
@@ -171,19 +173,17 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
+    value => {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(value |> Array.map(value => value) |> Array.to_list)
+        | None => `Null
         };
-        {nullableOfNonNullable: nullableOfNonNullable};
-      }: Raw.t
-    );
+      };
+      {nullableOfNonNullable: nullableOfNonNullable};
+    };
   let verifyArgsAndParse =
       (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
     parse(value);
@@ -228,12 +228,13 @@ function back to the original JSON-compatible data */
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list =>
+                List.map(json_list =>
                   switch (value) {
                   | value => Some(Yojson.Basic.to_string(value))
                   | `Null => None
                   }
                 )
+                |> Array.of_list
               | _ => []
               },
             )
@@ -243,27 +244,26 @@ function back to the original JSON-compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let listWithArg = {
-          let value = (value: t).listWithArg;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
+    value => {
+      let listWithArg = {
+        let value = (value: t).listWithArg;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => value
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
         };
-        {listWithArg: listWithArg};
-      }: Raw.t
-    );
+      };
+      {listWithArg: listWithArg};
+    };
   let verifyArgsAndParse =
       (
         ~arg1 as _arg1: [ | `String],
@@ -299,12 +299,13 @@ module InlineListFragment = {
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list =>
+                List.map(json_list =>
                   switch (value) {
                   | value => Some(Yojson.Basic.to_string(value))
                   | `Null => None
                   }
                 )
+                |> Array.of_list
               | _ => []
               },
             )
@@ -318,7 +319,8 @@ module InlineListFragment = {
             Some(
               switch (value) {
               | `List(json_list) =>
-                Array.map(json_list => Yojson.Basic.to_string(value))
+                List.map(json_list => Yojson.Basic.to_string(value))
+                |> Array.of_list
               | _ => []
               },
             )
@@ -328,35 +330,34 @@ module InlineListFragment = {
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let nullableOfNonNullable = {
-          let value = (value: t).nullableOfNonNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
-          | None => Js.Nullable.null
-          };
-        }
-        and nullableOfNullable = {
-          let value = (value: t).nullableOfNullable;
-          switch (value) {
-          | Some(value) =>
-            Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
-            )
-          | None => Js.Nullable.null
-          };
+    value => {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(value |> Array.map(value => value) |> Array.to_list)
+        | None => `Null
         };
-        {nullableOfNullable, nullableOfNonNullable};
-      }: Raw.t
-    );
+      }
+      and nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => value
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
+        };
+      };
+      {nullableOfNullable, nullableOfNonNullable};
+    };
   let verifyArgsAndParse =
       (
         ~fragmentName as _InlineListFragment: [ | `InlineListFragment],
@@ -402,7 +403,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeVariables: t_variables => Yojson.Basic.json;
   let makeVariables: (~arg1: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -456,22 +457,16 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.member(\"l2\", value);
           (
             {
-              frag1: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-
+              frag1:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
                   value,
-                );
-              },
-              frag2: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-
+                ),
+              frag2:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
                   value,
-                );
-              },
+                ),
             }: t_l2
           );
         },
@@ -486,34 +481,29 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map(json_list =>
+                      List.map(json_list =>
                         switch (value) {
                         | value => Some(Yojson.Basic.to_string(value))
                         | `Null => None
                         }
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
                 | `Null => None
                 };
               },
-              frag1: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-
+              frag1:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
                   value,
-                );
-              },
-              frag2: {
-                let value: ListFragment.Raw.t = Obj.magic(value);
-
+                ),
+              frag2:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
                   value,
-                );
-              },
+                ),
             }: t_l3
           );
         },
@@ -528,26 +518,24 @@ function back to the original JSON compatible data */
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      Array.map(json_list =>
+                      List.map(json_list =>
                         switch (value) {
                         | value => Some(Yojson.Basic.to_string(value))
                         | `Null => None
                         }
                       )
+                      |> Array.of_list
                     | _ => []
                     },
                   )
                 | `Null => None
                 };
               },
-              inlineListFragment: {
-                let value: InlineListFragment.Raw.t = Obj.magic(value);
-
+              inlineListFragment:
                 InlineListFragment.verifyArgsAndParse(
                   ~fragmentName=`InlineListFragment,
                   value,
-                );
-              },
+                ),
             }: t_l4
           );
         },
@@ -563,125 +551,93 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let l5 = {
-          let value = (value: t).l5;
-          FragmentWithArgs.serialize(value);
-        }
-        and l4 = {
-          let value = (value: t).l4;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
-                Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l4).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    };
-                    {\"nullableOfNullable\": nullableOfNullable};
-                  },
-                ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(
-                      InlineListFragment.serialize(
-                        (value: t_l4).inlineListFragment,
-                      ),
-                    ): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l4
-          );
-        }
-        and l3 = {
-          let value = (value: t).l3;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
-                Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l3).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    };
-                    {\"nullableOfNullable\": nullableOfNullable};
-                  },
-                ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l3
-          );
-        }
-        and l2 = {
-          let value = (value: t).l2;
-          (
-            Obj.magic(
-              Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
-                Obj.magic(Js.Dict.empty): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
-                  ),
-                |],
-              ),
-            ): Raw.t_l2
-          );
-        }
-        and l1 = {
-          let value = (value: t).l1;
-          ListFragment.serialize(value);
-        };
-        {l1, l2, l3, l4, l5};
-      }: Raw.t
-    );
-  let serializeVariables: t_variables => Raw.t_variables =
+    value => {
+      let l5 = {
+        let value = (value: t).l5;
+        FragmentWithArgs.serialize(value);
+      }
+      and l4 = {
+        let value = (value: t).l4;
+        Array.fold_left(
+          (_, b) => b,
+          {
+            let nullableOfNullable = {
+              let value = (value: t_l4).nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                `List(
+                  value
+                  |> Array.map(value =>
+                       switch (value) {
+                       | Some(value) => value
+                       | None => `Null
+                       }
+                     )
+                  |> Array.to_list,
+                )
+              | None => `Null
+              };
+            };
+            {\"nullableOfNullable\": nullableOfNullable};
+          },
+          [|InlineListFragment.serialize((value: t_l4).inlineListFragment)|],
+        );
+      }
+      and l3 = {
+        let value = (value: t).l3;
+        Array.fold_left(
+          (_, b) => b,
+          {
+            let nullableOfNullable = {
+              let value = (value: t_l3).nullableOfNullable;
+              switch (value) {
+              | Some(value) =>
+                `List(
+                  value
+                  |> Array.map(value =>
+                       switch (value) {
+                       | Some(value) => value
+                       | None => `Null
+                       }
+                     )
+                  |> Array.to_list,
+                )
+              | None => `Null
+              };
+            };
+            {\"nullableOfNullable\": nullableOfNullable};
+          },
+          [|
+            ListFragment.serialize((value: t_l3).frag1),
+            ListFragment.serialize((value: t_l3).frag2),
+          |],
+        );
+      }
+      and l2 = {
+        let value = (value: t).l2;
+        Array.fold_left(
+          (_, b) => b,
+          `Assoc([]),
+          [|
+            ListFragment.serialize((value: t_l2).frag1),
+            ListFragment.serialize((value: t_l2).frag2),
+          |],
+        );
+      }
+      and l1 = {
+        let value = (value: t).l1;
+        ListFragment.serialize(value);
+      };
+      {l1, l2, l3, l4, l5};
+    };
+  let serializeVariables: t_variables => Yojson.Basic.json =
     inp => {
       arg1:
         (
           a =>
             switch (a) {
-            | None => Js.Nullable.undefined
-            | Some(b) => Js.Nullable.return((a => a)(b))
+            | None => `Null
+            | Some(b) => (a => `String(a))(b)
             }
         )(
           (inp: t_variables).arg1,
@@ -734,15 +690,13 @@ function back to the original JSON compatible data */
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let lists = {
-          let value = (value: t).lists;
-          ListFragment.serialize(value);
-        };
-        {lists: lists};
-      }: Raw.t
-    );
+    value => {
+      let lists = {
+        let value = (value: t).lists;
+        ListFragment.serialize(value);
+      };
+      {lists: lists};
+    };
   let serializeVariables = () => ();
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
