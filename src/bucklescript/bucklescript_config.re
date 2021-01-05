@@ -73,7 +73,7 @@ let defaultConfig =
     extend_subscription_no_required_variables: None,
     extend_fragment: None,
     fragment_in_query: Include,
-    native: false,
+    native: true,
   };
 
 module JsonHelper = {

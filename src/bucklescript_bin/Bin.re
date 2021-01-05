@@ -14,4 +14,8 @@ let argv =
   | _ => Sys.argv
   };
 
+Graphql_ppx_base.Ppx_config.update_config(current =>
+  {...current, native: false}
+);
+
 let () = Migrate_parsetree.Driver.run_main(~argv, ());
