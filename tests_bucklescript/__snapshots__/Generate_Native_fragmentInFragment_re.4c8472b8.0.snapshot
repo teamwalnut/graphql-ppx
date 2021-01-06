@@ -48,7 +48,7 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         nullableOfNullable: {
-          let value = Yojson.Basic.member(\"nullableOfNullable\", value);
+          let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
           switch (value) {
           | value =>
             Some(
@@ -56,7 +56,7 @@ function back to the original JSON-compatible data */
               | `List(json_list) =>
                 List.map(json_list =>
                   switch (value) {
-                  | value => Some(Yojson.Basic.to_string(value))
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
                   }
                 )
@@ -88,7 +88,7 @@ function back to the original JSON-compatible data */
         | None => `Null
         };
       };
-      {nullableOfNullable: nullableOfNullable};
+      `Assoc([(\"nullableOfNullable\", nullableOfNullable)]);
     };
   let verifyArgsAndParse =
       (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
@@ -135,7 +135,7 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         nullableOfNullable: {
-          let value = Yojson.Basic.member(\"nullableOfNullable\", value);
+          let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
           switch (value) {
           | value =>
             Some(
@@ -143,7 +143,7 @@ function back to the original JSON-compatible data */
               | `List(json_list) =>
                 List.map(json_list =>
                   switch (value) {
-                  | value => Some(Yojson.Basic.to_string(value))
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
                   }
                 )

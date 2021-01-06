@@ -44,7 +44,7 @@ module MyQuery: {
     [@bs.as \"let\"]
     let_: t_let,
   };
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -52,8 +52,8 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -61,8 +61,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_first_inner_inner = {field: string};
   type t_first_inner = {inner: option(t_first_inner_inner)};
@@ -82,31 +82,31 @@ function back to the original JSON compatible data */
     [@bs.as \"let\"]
     let_: t_let,
   };
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         first: {
-          let value = Yojson.Basic.member(\"first\", value);
+          let value = Yojson.Basic.Util.member(\"first\", value);
           (
             {
               inner: {
-                let value = Yojson.Basic.member(\"inner\", value);
+                let value = Yojson.Basic.Util.member(\"inner\", value);
                 switch (value) {
                 | value =>
                   Some(
                     {
                       inner: {
-                        let value = Yojson.Basic.member(\"inner\", value);
+                        let value = Yojson.Basic.Util.member(\"inner\", value);
                         switch (value) {
                         | value =>
                           Some(
                             {
                               field: {
                                 let value =
-                                  Yojson.Basic.member(\"field\", value);
-                                Yojson.Basic.to_string(value);
+                                  Yojson.Basic.Util.member(\"field\", value);
+                                Yojson.Basic.Util.to_string(value);
                               },
                             }: t_first_inner_inner,
                           )
@@ -122,28 +122,30 @@ function back to the original JSON compatible data */
           );
         },
         second: {
-          let value = Yojson.Basic.member(\"second\", value);
+          let value = Yojson.Basic.Util.member(\"second\", value);
           (
             {
               inner: {
-                let value = Yojson.Basic.member(\"inner\", value);
+                let value = Yojson.Basic.Util.member(\"inner\", value);
                 switch (value) {
                 | value =>
                   Some(
                     {
                       inner: {
-                        let value = Yojson.Basic.member(\"inner\", value);
+                        let value = Yojson.Basic.Util.member(\"inner\", value);
                         switch (value) {
                         | value =>
                           Some(
                             {
                               f1: {
-                                let value = Yojson.Basic.member(\"f1\", value);
-                                Yojson.Basic.to_string(value);
+                                let value =
+                                  Yojson.Basic.Util.member(\"f1\", value);
+                                Yojson.Basic.Util.to_string(value);
                               },
                               f2: {
-                                let value = Yojson.Basic.member(\"f2\", value);
-                                Yojson.Basic.to_string(value);
+                                let value =
+                                  Yojson.Basic.Util.member(\"f2\", value);
+                                Yojson.Basic.Util.to_string(value);
                               },
                             }: t_second_inner_inner,
                           )
@@ -159,25 +161,25 @@ function back to the original JSON compatible data */
           );
         },
         let_: {
-          let value = Yojson.Basic.member(\"let\", value);
+          let value = Yojson.Basic.Util.member(\"let\", value);
           (
             {
               inner: {
-                let value = Yojson.Basic.member(\"inner\", value);
+                let value = Yojson.Basic.Util.member(\"inner\", value);
                 switch (value) {
                 | value =>
                   Some(
                     {
                       inner: {
-                        let value = Yojson.Basic.member(\"inner\", value);
+                        let value = Yojson.Basic.Util.member(\"inner\", value);
                         switch (value) {
                         | value =>
                           Some(
                             {
                               field: {
                                 let value =
-                                  Yojson.Basic.member(\"field\", value);
-                                Yojson.Basic.to_string(value);
+                                  Yojson.Basic.Util.member(\"field\", value);
+                                Yojson.Basic.Util.to_string(value);
                               },
                             }: t_let_inner_inner,
                           )
@@ -210,15 +212,15 @@ function back to the original JSON compatible data */
                   let value = (value: t_let_inner_inner).field;
                   value;
                 };
-                {field: field};
+                `Assoc([(\"field\", field)]);
               | None => `Null
               };
             };
-            {inner: inner};
+            `Assoc([(\"inner\", inner)]);
           | None => `Null
           };
         };
-        {inner: inner};
+        `Assoc([(\"inner\", inner)]);
       }
       and second = {
         let value = (value: t).second;
@@ -238,15 +240,15 @@ function back to the original JSON compatible data */
                   let value = (value: t_second_inner_inner).f1;
                   value;
                 };
-                {f1, f2};
+                `Assoc([(\"f1\", f1), (\"f2\", f2)]);
               | None => `Null
               };
             };
-            {inner: inner};
+            `Assoc([(\"inner\", inner)]);
           | None => `Null
           };
         };
-        {inner: inner};
+        `Assoc([(\"inner\", inner)]);
       }
       and first = {
         let value = (value: t).first;
@@ -262,20 +264,20 @@ function back to the original JSON compatible data */
                   let value = (value: t_first_inner_inner).field;
                   value;
                 };
-                {field: field};
+                `Assoc([(\"field\", field)]);
               | None => `Null
               };
             };
-            {inner: inner};
+            `Assoc([(\"inner\", inner)]);
           | None => `Null
           };
         };
-        {inner: inner};
+        `Assoc([(\"inner\", inner)]);
       };
-      {first, second, let_};
+      `Assoc([(\"first\", first), (\"second\", second), (\"let\", let_)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -292,7 +294,7 @@ module Test: {
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables = unit;
+    type t_variables;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -300,8 +302,8 @@ module Test: {
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -317,7 +319,7 @@ function back to the original JSON compatible data */
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables = unit;
+    type t_variables;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -325,8 +327,8 @@ function back to the original JSON compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -334,38 +336,39 @@ function back to the original JSON compatible data */
   } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
-      type t = Yojson.Basic.json;
-      type t_variables = Yojson.Basic.json;
+      type t = Yojson.Basic.t;
+      type t_variables = Yojson.Basic.t;
     };
     type t_nestedObject_inner_inner = {field: string};
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables = unit;
+    type t_variables = Yojson.Basic.t;
     let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
     let parse: Raw.t => t =
       (value) => (
         {
           nestedObject: {
-            let value = Yojson.Basic.member(\"nestedObject\", value);
+            let value = Yojson.Basic.Util.member(\"nestedObject\", value);
             (
               {
                 inner: {
-                  let value = Yojson.Basic.member(\"inner\", value);
+                  let value = Yojson.Basic.Util.member(\"inner\", value);
                   switch (value) {
                   | value =>
                     Some(
                       {
                         inner: {
-                          let value = Yojson.Basic.member(\"inner\", value);
+                          let value =
+                            Yojson.Basic.Util.member(\"inner\", value);
                           switch (value) {
                           | value =>
                             Some(
                               {
                                 field: {
                                   let value =
-                                    Yojson.Basic.member(\"field\", value);
-                                  Yojson.Basic.to_string(value);
+                                    Yojson.Basic.Util.member(\"field\", value);
+                                  Yojson.Basic.Util.to_string(value);
                                 },
                               }: t_nestedObject_inner_inner,
                             )
@@ -398,20 +401,20 @@ function back to the original JSON compatible data */
                     let value = (value: t_nestedObject_inner_inner).field;
                     value;
                   };
-                  {field: field};
+                  `Assoc([(\"field\", field)]);
                 | None => `Null
                 };
               };
-              {inner: inner};
+              `Assoc([(\"inner\", inner)]);
             | None => `Null
             };
           };
-          {inner: inner};
+          `Assoc([(\"inner\", inner)]);
         };
-        {nestedObject: nestedObject};
+        `Assoc([(\"nestedObject\", nestedObject)]);
       };
-    let serializeVariables = () => ();
-    let makeVariables = () => ();
+    let serializeVariables = () => `Null;
+    let makeVariables = () => `Null;
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -427,7 +430,7 @@ module MyQueryWithSigDirect: {
   type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
   type t_nestedObject = {inner: option(t_nestedObject_inner)};
   type t = {nestedObject: t_nestedObject};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -435,8 +438,8 @@ module MyQueryWithSigDirect: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -444,38 +447,38 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_nestedObject_inner_inner = {field: string};
   type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
   type t_nestedObject = {inner: option(t_nestedObject_inner)};
   type t = {nestedObject: t_nestedObject};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         nestedObject: {
-          let value = Yojson.Basic.member(\"nestedObject\", value);
+          let value = Yojson.Basic.Util.member(\"nestedObject\", value);
           (
             {
               inner: {
-                let value = Yojson.Basic.member(\"inner\", value);
+                let value = Yojson.Basic.Util.member(\"inner\", value);
                 switch (value) {
                 | value =>
                   Some(
                     {
                       inner: {
-                        let value = Yojson.Basic.member(\"inner\", value);
+                        let value = Yojson.Basic.Util.member(\"inner\", value);
                         switch (value) {
                         | value =>
                           Some(
                             {
                               field: {
                                 let value =
-                                  Yojson.Basic.member(\"field\", value);
-                                Yojson.Basic.to_string(value);
+                                  Yojson.Basic.Util.member(\"field\", value);
+                                Yojson.Basic.Util.to_string(value);
                               },
                             }: t_nestedObject_inner_inner,
                           )
@@ -508,20 +511,20 @@ function back to the original JSON compatible data */
                   let value = (value: t_nestedObject_inner_inner).field;
                   value;
                 };
-                {field: field};
+                `Assoc([(\"field\", field)]);
               | None => `Null
               };
             };
-            {inner: inner};
+            `Assoc([(\"inner\", inner)]);
           | None => `Null
           };
         };
-        {inner: inner};
+        `Assoc([(\"inner\", inner)]);
       };
-      {nestedObject: nestedObject};
+      `Assoc([(\"nestedObject\", nestedObject)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

@@ -20,7 +20,8 @@ Generate Native › listsInput.re › output
 module MyQuery: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_ListsInput;
   };
   type t = {listsInput: string};
   type t_variables = {arg: t_variables_ListsInput}
@@ -37,9 +38,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectListsInput:
-    t_variables_ListsInput => Yojson.Basic.json;
+    t_variables_ListsInput => Raw.t_variables_ListsInput;
   let makeVariables: (~arg: t_variables_ListsInput, unit) => t_variables;
   let makeInputObjectListsInput:
     (
@@ -56,8 +57,9 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_ListsInput = Yojson.Basic.t;
   };
   type t = {listsInput: string};
   type t_variables = {arg: t_variables_ListsInput}
@@ -72,8 +74,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         listsInput: {
-          let value = Yojson.Basic.member(\"listsInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"listsInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -83,14 +85,14 @@ function back to the original JSON compatible data */
         let value = (value: t).listsInput;
         value;
       };
-      {listsInput: listsInput};
+      `Assoc([(\"listsInput\", listsInput)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
     }
   and serializeInputObjectListsInput:
-    t_variables_ListsInput => Yojson.Basic.json =
+    t_variables_ListsInput => Raw.t_variables_ListsInput =
     inp => {
       nullableOfNullable:
         (

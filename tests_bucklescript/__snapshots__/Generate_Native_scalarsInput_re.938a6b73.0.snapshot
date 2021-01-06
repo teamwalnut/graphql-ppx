@@ -20,7 +20,8 @@ Generate Native › scalarsInput.re › output
 module MyQuery: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_VariousScalarsInput;
   };
   type t = {scalarsInput: string};
   type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -43,9 +44,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Yojson.Basic.json;
+    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput;
   let makeVariables:
     (~arg: t_variables_VariousScalarsInput, unit) => t_variables;
   let makeInputObjectVariousScalarsInput:
@@ -69,8 +70,9 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_VariousScalarsInput = Yojson.Basic.t;
   };
   type t = {scalarsInput: string};
   type t_variables = {arg: t_variables_VariousScalarsInput}
@@ -91,8 +93,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         scalarsInput: {
-          let value = Yojson.Basic.member(\"scalarsInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"scalarsInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -102,9 +104,9 @@ function back to the original JSON compatible data */
         let value = (value: t).scalarsInput;
         value;
       };
-      {scalarsInput: scalarsInput};
+      `Assoc([(\"scalarsInput\", scalarsInput)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
         (a => serializeInputObjectVariousScalarsInput(a))(
@@ -112,7 +114,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Yojson.Basic.json =
+    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
     inp => {
       nullableString:
         (

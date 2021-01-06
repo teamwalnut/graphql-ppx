@@ -31,7 +31,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~required: string, unit) => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -39,8 +39,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t = {optionalInputArgs: string};
   type t_variables = {required: string};
@@ -49,8 +49,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         optionalInputArgs: {
-          let value = Yojson.Basic.member(\"optionalInputArgs\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"optionalInputArgs\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -60,9 +60,9 @@ function back to the original JSON compatible data */
         let value = (value: t).optionalInputArgs;
         value;
       };
-      {optionalInputArgs: optionalInputArgs};
+      `Assoc([(\"optionalInputArgs\", optionalInputArgs)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {required: (a => `String(a))((inp: t_variables).required)};
   let makeVariables = (~required, ()): t_variables => {required: required};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";

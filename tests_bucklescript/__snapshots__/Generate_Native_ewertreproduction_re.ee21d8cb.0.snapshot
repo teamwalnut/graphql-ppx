@@ -56,23 +56,23 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         user: {
-          let value = Yojson.Basic.member(\"user\", value);
+          let value = Yojson.Basic.Util.member(\"user\", value);
           (
             {
               id: {
-                let value = Yojson.Basic.member(\"id\", value);
-                Yojson.Basic.to_string(value);
+                let value = Yojson.Basic.Util.member(\"id\", value);
+                Yojson.Basic.Util.to_string(value);
               },
               firstname: {
-                let value = Yojson.Basic.member(\"firstname\", value);
+                let value = Yojson.Basic.Util.member(\"firstname\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.to_string(value))
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
                 };
               },
               lastname: {
-                let value = Yojson.Basic.member(\"lastname\", value);
-                Yojson.Basic.to_string(value);
+                let value = Yojson.Basic.Util.member(\"lastname\", value);
+                Yojson.Basic.Util.to_string(value);
               },
             }: t_user
           );
@@ -98,9 +98,13 @@ function back to the original JSON-compatible data */
           let value = (value: t_user).id;
           value;
         };
-        {id, firstname, lastname};
+        `Assoc([
+          (\"id\", id),
+          (\"firstname\", firstname),
+          (\"lastname\", lastname),
+        ]);
       };
-      {user: user};
+      `Assoc([(\"user\", user)]);
     };
   let verifyArgsAndParse =
       (

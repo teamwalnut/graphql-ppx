@@ -39,7 +39,7 @@ module QueryWithOnlyFragments: {
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -47,8 +47,8 @@ module QueryWithOnlyFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -56,8 +56,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_users_User_AnonymousUser = {
     id: string,
@@ -73,30 +73,33 @@ function back to the original JSON compatible data */
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\nid  \\nname  \\n}\\n\\n...on AnonymousUser   {\\nid  \\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.member(\"users\", value);
+          let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
             List.map(json_list =>
               let typename: string =
-                value |> Yojson.Basic.member(\"__typename\") |> Yojson.to_string;
+                value
+                |> Yojson.Basic.Util.member(\"__typename\")
+                |> Yojson.to_string;
               (
                 switch (typename) {
                 | \"AnonymousUser\" =>
                   `AnonymousUser(
                     {
                       id: {
-                        let value = Yojson.Basic.member(\"id\", value);
-                        Yojson.Basic.to_string(value);
+                        let value = Yojson.Basic.Util.member(\"id\", value);
+                        Yojson.Basic.Util.to_string(value);
                       },
                       anonymousId: {
-                        let value = Yojson.Basic.member(\"anonymousId\", value);
-                        Yojson.Basic.to_int(value);
+                        let value =
+                          Yojson.Basic.Util.member(\"anonymousId\", value);
+                        Yojson.Basic.Util.to_int(value);
                       },
                     }: t_users_User_AnonymousUser,
                   )
@@ -104,12 +107,12 @@ function back to the original JSON compatible data */
                   `AdminUser(
                     {
                       id: {
-                        let value = Yojson.Basic.member(\"id\", value);
-                        Yojson.Basic.to_string(value);
+                        let value = Yojson.Basic.Util.member(\"id\", value);
+                        Yojson.Basic.Util.to_string(value);
                       },
                       name: {
-                        let value = Yojson.Basic.member(\"name\", value);
-                        Yojson.Basic.to_string(value);
+                        let value = Yojson.Basic.Util.member(\"name\", value);
+                        Yojson.Basic.Util.to_string(value);
                       },
                     }: t_users_User_AdminUser,
                   )
@@ -139,8 +142,16 @@ function back to the original JSON compatible data */
                  and id = {
                    let value = (value: t_users_User_AnonymousUser).id;
                    value;
+                 }
+                 and __typename = {
+                   let value = (value: t_users_User_AnonymousUser).__typename;
+                   value;
                  };
-                 {__typename: \"AnonymousUser\", id, anonymousId};
+                 `Assoc([
+                   (\"__typename\", `String(\"AnonymousUser\")),
+                   (\"id\", id),
+                   (\"anonymousId\", anonymousId),
+                 ]);
                | `AdminUser(value) =>
                  let name = {
                    let value = (value: t_users_User_AdminUser).name;
@@ -149,18 +160,26 @@ function back to the original JSON compatible data */
                  and id = {
                    let value = (value: t_users_User_AdminUser).id;
                    value;
+                 }
+                 and __typename = {
+                   let value = (value: t_users_User_AdminUser).__typename;
+                   value;
                  };
-                 {__typename: \"AdminUser\", id, name};
+                 `Assoc([
+                   (\"__typename\", `String(\"AdminUser\")),
+                   (\"id\", id),
+                   (\"name\", name),
+                 ]);
                | `UnspecifiedFragment(_) => `Assoc([])
                }
              )
           |> Array.to_list,
         );
       };
-      {users: users};
+      `Assoc([(\"users\", users)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -180,7 +199,7 @@ module QueryWithTypename: {
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -188,8 +207,8 @@ module QueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -197,8 +216,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_users_User_AdminUser = {
     __typename: string,
@@ -209,30 +228,33 @@ function back to the original JSON compatible data */
     | `AdminUser(t_users_User_AdminUser)
   ];
   type t = {users: array(t_users_User)};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nusers  {\\n__typename\\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.member(\"users\", value);
+          let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
             List.map(json_list =>
               let typename: string =
-                value |> Yojson.Basic.member(\"__typename\") |> Yojson.to_string;
+                value
+                |> Yojson.Basic.Util.member(\"__typename\")
+                |> Yojson.to_string;
               (
                 switch (typename) {
                 | \"AdminUser\" =>
                   `AdminUser(
                     {
                       __typename: {
-                        let value = Yojson.Basic.member(\"__typename\", value);
-                        Yojson.Basic.to_string(value);
+                        let value =
+                          Yojson.Basic.Util.member(\"__typename\", value);
+                        Yojson.Basic.Util.to_string(value);
                       },
                       id: {
-                        let value = Yojson.Basic.member(\"id\", value);
-                        Yojson.Basic.to_string(value);
+                        let value = Yojson.Basic.Util.member(\"id\", value);
+                        Yojson.Basic.Util.to_string(value);
                       },
                     }: t_users_User_AdminUser,
                   )
@@ -263,17 +285,20 @@ function back to the original JSON compatible data */
                    let value = (value: t_users_User_AdminUser).__typename;
                    value;
                  };
-                 {__typename: \"AdminUser\", id};
+                 `Assoc([
+                   (\"__typename\", `String(\"AdminUser\")),
+                   (\"id\", id),
+                 ]);
                | `UnspecifiedFragment(_) => `Assoc([])
                }
              )
           |> Array.to_list,
         );
       };
-      {users: users};
+      `Assoc([(\"users\", users)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -296,7 +321,7 @@ module QueryWithMixedFragments: {
     id: string,
   };
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -304,8 +329,8 @@ module QueryWithMixedFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -313,8 +338,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_users_User_AnonymousUser = {anonymousId: int};
   type t_users_User_AdminUser = {name: string};
@@ -328,13 +353,13 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n...on AdminUser   {\\nname  \\n}\\n\\n...on AnonymousUser   {\\nanonymousId  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.member(\"users\", value);
+          let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
             List.map((json_list) =>
@@ -343,7 +368,7 @@ function back to the original JSON compatible data */
                   fragment: {
                     let typename: string =
                       value
-                      |> Yojson.Basic.member(\"__typename\")
+                      |> Yojson.Basic.Util.member(\"__typename\")
                       |> Yojson.to_string;
                     (
                       switch (typename) {
@@ -352,8 +377,11 @@ function back to the original JSON compatible data */
                           {
                             anonymousId: {
                               let value =
-                                Yojson.Basic.member(\"anonymousId\", value);
-                              Yojson.Basic.to_int(value);
+                                Yojson.Basic.Util.member(
+                                  \"anonymousId\",
+                                  value,
+                                );
+                              Yojson.Basic.Util.to_int(value);
                             },
                           }: t_users_User_AnonymousUser,
                         )
@@ -361,8 +389,9 @@ function back to the original JSON compatible data */
                         `AdminUser(
                           {
                             name: {
-                              let value = Yojson.Basic.member(\"name\", value);
-                              Yojson.Basic.to_string(value);
+                              let value =
+                                Yojson.Basic.Util.member(\"name\", value);
+                              Yojson.Basic.Util.to_string(value);
                             },
                           }: t_users_User_AdminUser,
                         )
@@ -371,8 +400,8 @@ function back to the original JSON compatible data */
                     );
                   },
                   id: {
-                    let value = Yojson.Basic.member(\"id\", value);
-                    Yojson.Basic.to_string(value);
+                    let value = Yojson.Basic.Util.member(\"id\", value);
+                    Yojson.Basic.Util.to_string(value);
                   },
                 }: t_users
               )
@@ -408,14 +437,30 @@ function back to the original JSON compatible data */
                          let value =
                            (value: t_users_User_AnonymousUser).anonymousId;
                          value;
+                       }
+                       and __typename = {
+                         let value =
+                           (value: t_users_User_AnonymousUser).__typename;
+                         value;
                        };
-                       {__typename: \"AnonymousUser\", anonymousId};
+                       `Assoc([
+                         (\"__typename\", `String(\"AnonymousUser\")),
+                         (\"anonymousId\", anonymousId),
+                       ]);
                      | `AdminUser(value) =>
                        let name = {
                          let value = (value: t_users_User_AdminUser).name;
                          value;
+                       }
+                       and __typename = {
+                         let value =
+                           (value: t_users_User_AdminUser).__typename;
+                         value;
                        };
-                       {__typename: \"AdminUser\", name};
+                       `Assoc([
+                         (\"__typename\", `String(\"AdminUser\")),
+                         (\"name\", name),
+                       ]);
                      | `UnspecifiedFragment(_) => `Assoc([])
                      };
                    },
@@ -425,10 +470,10 @@ function back to the original JSON compatible data */
           |> Array.to_list,
         );
       };
-      {users: users};
+      `Assoc([(\"users\", users)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -453,7 +498,7 @@ module MixedQueryWithTypename: {
     id: string,
   };
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -461,8 +506,8 @@ module MixedQueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -470,8 +515,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_users_User_AdminUser = {
     __typename: string,
@@ -487,13 +532,13 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n__typename  \\n...on AdminUser   {\\n__typename  \\nid  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.member(\"users\", value);
+          let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
             List.map((json_list) =>
@@ -502,7 +547,7 @@ function back to the original JSON compatible data */
                   fragment: {
                     let typename: string =
                       value
-                      |> Yojson.Basic.member(\"__typename\")
+                      |> Yojson.Basic.Util.member(\"__typename\")
                       |> Yojson.to_string;
                     (
                       switch (typename) {
@@ -511,12 +556,13 @@ function back to the original JSON compatible data */
                           {
                             __typename: {
                               let value =
-                                Yojson.Basic.member(\"__typename\", value);
-                              Yojson.Basic.to_string(value);
+                                Yojson.Basic.Util.member(\"__typename\", value);
+                              Yojson.Basic.Util.to_string(value);
                             },
                             id: {
-                              let value = Yojson.Basic.member(\"id\", value);
-                              Yojson.Basic.to_string(value);
+                              let value =
+                                Yojson.Basic.Util.member(\"id\", value);
+                              Yojson.Basic.Util.to_string(value);
                             },
                           }: t_users_User_AdminUser,
                         )
@@ -525,12 +571,12 @@ function back to the original JSON compatible data */
                     );
                   },
                   __typename: {
-                    let value = Yojson.Basic.member(\"__typename\", value);
-                    Yojson.Basic.to_string(value);
+                    let value = Yojson.Basic.Util.member(\"__typename\", value);
+                    Yojson.Basic.Util.to_string(value);
                   },
                   id: {
-                    let value = Yojson.Basic.member(\"id\", value);
-                    Yojson.Basic.to_string(value);
+                    let value = Yojson.Basic.Util.member(\"id\", value);
+                    Yojson.Basic.Util.to_string(value);
                   },
                 }: t_users
               )
@@ -575,7 +621,10 @@ function back to the original JSON compatible data */
                            (value: t_users_User_AdminUser).__typename;
                          value;
                        };
-                       {__typename: \"AdminUser\", id};
+                       `Assoc([
+                         (\"__typename\", `String(\"AdminUser\")),
+                         (\"id\", id),
+                       ]);
                      | `UnspecifiedFragment(_) => `Assoc([])
                      };
                    },
@@ -585,10 +634,10 @@ function back to the original JSON compatible data */
           |> Array.to_list,
         );
       };
-      {users: users};
+      `Assoc([(\"users\", users)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -601,7 +650,7 @@ module QueryWithoutFragments: {
   };
   type t_users = {id: string};
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -609,8 +658,8 @@ module QueryWithoutFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -618,26 +667,26 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_users = {id: string};
   type t = {users: array(t_users)};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query   {\\nusers  {\\n__typename\\nid  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.member(\"users\", value);
+          let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
             List.map((json_list) =>
               (
                 {
                   id: {
-                    let value = Yojson.Basic.member(\"id\", value);
-                    Yojson.Basic.to_string(value);
+                    let value = Yojson.Basic.Util.member(\"id\", value);
+                    Yojson.Basic.Util.to_string(value);
                   },
                 }: t_users
               )
@@ -659,15 +708,15 @@ function back to the original JSON compatible data */
                  let value = (value: t_users).id;
                  value;
                };
-               {id: id};
+               `Assoc([(\"id\", id)]);
              )
           |> Array.to_list,
         );
       };
-      {users: users};
+      `Assoc([(\"users\", users)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

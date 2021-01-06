@@ -8,7 +8,7 @@ module MyQuery = [%graphql
     $nonNullableOfNullable: [String]!,
     $nonNullableOfNonNullable: [String!]!,
   ) {
-    listsInput(arg: {
+    lists: listsInput(arg: {
       nullableOfNullable: $nullableOfNullable,
       nullableOfNonNullable: $nullableOfNonNullable,
       nonNullableOfNullable: $nonNullableOfNullable,
@@ -18,7 +18,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {. lists: string};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -26,19 +26,20 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
      type t = qt;
 
      let pp = (formatter, obj: qt) =>
-       Format.fprintf(formatter, "< lists = @[%s@] >", obj#lists);
+       Format.fprintf(formatter, "< lists = @[%s@] >", obj.lists);
 
-     let equal = (a: qt, b: qt) => a#lists == b#lists;
+     let equal = (a: qt, b: qt) => a.lists == b.lists;
    });
 
 let omit_nullable_args = () =>
   test_json(
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~nonNullableOfNullable=[||],
       ~nonNullableOfNonNullable=[||],
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "nullableOfNullable": null,
@@ -51,13 +52,14 @@ let omit_nullable_args = () =>
 
 let allows_none_in_lists = () =>
   test_json(
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~nullableOfNullable=[|Some("x"), None, Some("y")|],
       ~nonNullableOfNullable=[|Some("a"), None, Some("b")|],
       ~nonNullableOfNonNullable=[|"1", "2", "3"|],
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "nullableOfNullable": ["x", null, "y"],

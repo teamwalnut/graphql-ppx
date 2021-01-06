@@ -38,7 +38,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~id: string=?, ~name: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -47,8 +47,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_pokemon = {
     id: string,
@@ -64,19 +64,19 @@ function back to the original JSON compatible data */
     (value) => (
       {
         pokemon: {
-          let value = Yojson.Basic.member(\"pokemon\", value);
+          let value = Yojson.Basic.Util.member(\"pokemon\", value);
           switch (value) {
           | value =>
             Some(
               {
                 id: {
-                  let value = Yojson.Basic.member(\"id\", value);
-                  Yojson.Basic.to_string(value);
+                  let value = Yojson.Basic.Util.member(\"id\", value);
+                  Yojson.Basic.Util.to_string(value);
                 },
                 name: {
-                  let value = Yojson.Basic.member(\"name\", value);
+                  let value = Yojson.Basic.Util.member(\"name\", value);
                   switch (value) {
-                  | value => Some(Yojson.Basic.to_string(value))
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
                   };
                 },
@@ -104,13 +104,13 @@ function back to the original JSON compatible data */
             let value = (value: t_pokemon).id;
             value;
           };
-          {id, name};
+          `Assoc([(\"id\", id), (\"name\", name)]);
         | None => `Null
         };
       };
-      {pokemon: pokemon};
+      `Assoc([(\"pokemon\", pokemon)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       id:
         (
@@ -160,7 +160,7 @@ module MyQueryDirectives: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~id: string=?, ~name: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -169,8 +169,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_pokemon = {
     id: string,
@@ -186,19 +186,19 @@ function back to the original JSON compatible data */
     (value) => (
       {
         pokemon: {
-          let value = Yojson.Basic.member(\"pokemon\", value);
+          let value = Yojson.Basic.Util.member(\"pokemon\", value);
           switch (value) {
           | value =>
             Some(
               {
                 id: {
-                  let value = Yojson.Basic.member(\"id\", value);
-                  Yojson.Basic.to_string(value);
+                  let value = Yojson.Basic.Util.member(\"id\", value);
+                  Yojson.Basic.Util.to_string(value);
                 },
                 name: {
-                  let value = Yojson.Basic.member(\"name\", value);
+                  let value = Yojson.Basic.Util.member(\"name\", value);
                   switch (value) {
-                  | value => Some(Yojson.Basic.to_string(value))
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
                   };
                 },
@@ -226,13 +226,13 @@ function back to the original JSON compatible data */
             let value = (value: t_pokemon).id;
             value;
           };
-          {id, name};
+          `Assoc([(\"id\", id), (\"name\", name)]);
         | None => `Null
         };
       };
-      {pokemon: pokemon};
+      `Assoc([(\"pokemon\", pokemon)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       id:
         (

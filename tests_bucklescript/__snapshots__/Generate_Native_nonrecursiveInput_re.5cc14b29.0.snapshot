@@ -20,7 +20,9 @@ Generate Native › nonrecursiveInput.re › output
 module MyQuery: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_NonrecursiveInput
+    and t_variables_EmbeddedInput;
   };
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -40,11 +42,11 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Yojson.Basic.json;
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput;
   let serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Yojson.Basic.json;
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput;
   let makeVariables:
     (~arg: t_variables_NonrecursiveInput, unit) => t_variables;
   let makeInputObjectNonrecursiveInput:
@@ -66,8 +68,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_NonrecursiveInput = Yojson.Basic.t
+    and t_variables_EmbeddedInput = Yojson.Basic.t;
   };
   type t = {nonrecursiveInput: string};
   type t_variables = {arg: t_variables_NonrecursiveInput}
@@ -85,8 +89,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         nonrecursiveInput: {
-          let value = Yojson.Basic.member(\"nonrecursiveInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"nonrecursiveInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -96,9 +100,9 @@ function back to the original JSON compatible data */
         let value = (value: t).nonrecursiveInput;
         value;
       };
-      {nonrecursiveInput: nonrecursiveInput};
+      `Assoc([(\"nonrecursiveInput\", nonrecursiveInput)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
         (a => serializeInputObjectNonrecursiveInput(a))(
@@ -106,7 +110,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Yojson.Basic.json =
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
       nonNullableField:
         (a => `String(a))(
@@ -217,7 +221,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Yojson.Basic.json =
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
       field:
         (
@@ -259,7 +263,9 @@ function back to the original JSON compatible data */
 module MyQuery2: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_NonrecursiveInput
+    and t_variables_EmbeddedInput;
   };
   type t = {
     scalarsInput: string,
@@ -285,11 +291,11 @@ module MyQuery2: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Yojson.Basic.json;
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput;
   let serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Yojson.Basic.json;
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput;
   let makeVariables:
     (
       ~arg: t_variables_NonrecursiveInput,
@@ -316,8 +322,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_NonrecursiveInput = Yojson.Basic.t
+    and t_variables_EmbeddedInput = Yojson.Basic.t;
   };
   type t = {
     scalarsInput: string,
@@ -341,12 +349,12 @@ function back to the original JSON compatible data */
     (value) => (
       {
         scalarsInput: {
-          let value = Yojson.Basic.member(\"scalarsInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"scalarsInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
         more: {
-          let value = Yojson.Basic.member(\"more\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"more\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -360,9 +368,9 @@ function back to the original JSON compatible data */
         let value = (value: t).scalarsInput;
         value;
       };
-      {scalarsInput, more};
+      `Assoc([(\"scalarsInput\", scalarsInput), (\"more\", more)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
         (a => serializeInputObjectNonrecursiveInput(a))(
@@ -374,7 +382,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Yojson.Basic.json =
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
     inp => {
       nonNullableField:
         (a => `String(a))(
@@ -485,7 +493,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Yojson.Basic.json =
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
     inp => {
       field:
         (

@@ -45,8 +45,8 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         name: {
-          let value = Yojson.Basic.member(\"name\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"name\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -56,7 +56,7 @@ function back to the original JSON-compatible data */
         let value = (value: t).name;
         value;
       };
-      {name: name};
+      `Assoc([(\"name\", name)]);
     };
   let verifyArgsAndParse = (~fragmentName as _Dog: [ | `Dog], value: Raw.t) =>
     parse(value);
@@ -83,7 +83,7 @@ module HasuraRepro: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
     (~blockNumber: int=?, ~type_: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
@@ -93,8 +93,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t = {hasuraRepro: Dog.t};
   type t_variables = {
@@ -108,7 +108,7 @@ function back to the original JSON compatible data */
     (value) => (
       {
         hasuraRepro: {
-          let value = Yojson.Basic.member(\"hasuraRepro\", value);
+          let value = Yojson.Basic.Util.member(\"hasuraRepro\", value);
 
           Dog.verifyArgsAndParse(~fragmentName=`Dog, value);
         },
@@ -120,9 +120,9 @@ function back to the original JSON compatible data */
         let value = (value: t).hasuraRepro;
         Dog.serialize(value);
       };
-      {hasuraRepro: hasuraRepro};
+      `Assoc([(\"hasuraRepro\", hasuraRepro)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       blockNumber:
         (

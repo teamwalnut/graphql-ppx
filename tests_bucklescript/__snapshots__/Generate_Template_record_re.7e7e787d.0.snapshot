@@ -49,8 +49,8 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -144,8 +144,8 @@ module OneFieldQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -232,8 +232,8 @@ module OneFieldQueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -405,8 +405,8 @@ function back to the original JSON-compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -482,8 +482,8 @@ module InlineFragmentQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -699,8 +699,8 @@ function back to the original JSON-compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";

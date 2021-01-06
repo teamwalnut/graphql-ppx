@@ -36,7 +36,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
     (
       ~nullableOfNullable: array(option(string))=?,
@@ -52,8 +52,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t = {listsInput: string};
   type t_variables = {
@@ -67,8 +67,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         listsInput: {
-          let value = Yojson.Basic.member(\"listsInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"listsInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -78,9 +78,9 @@ function back to the original JSON compatible data */
         let value = (value: t).listsInput;
         value;
       };
-      {listsInput: listsInput};
+      `Assoc([(\"listsInput\", listsInput)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       nullableOfNullable:
         (

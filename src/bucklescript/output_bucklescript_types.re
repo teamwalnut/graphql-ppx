@@ -1041,11 +1041,22 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
     );
 };
 
-let generate_empty_input_object = () => {
-  Ast_helper.Type.mk(
-    ~manifest=base_type_name("unit"),
-    {loc: Location.none, txt: generate_type_name(~prefix="t_variables", [])},
-  );
+let generate_empty_input_object = impl => {
+  Ppx_config.native()
+    ? Ast_helper.Type.mk(
+        ~manifest=?!impl ? None : Some(base_type_name("Yojson.Basic.t")),
+        {
+          loc: Location.none,
+          txt: generate_type_name(~prefix="t_variables", []),
+        },
+      )
+    : Ast_helper.Type.mk(
+        ~manifest=base_type_name("unit"),
+        {
+          loc: Location.none,
+          txt: generate_type_name(~prefix="t_variables", []),
+        },
+      );
 };
 
 let generate_record_input_object = (raw, input_obj_name, fields) => {
@@ -1107,8 +1118,38 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
   );
 };
 
-let generate_input_object = (raw, _, input_obj_name, fields) => {
-  generate_record_input_object(raw, input_obj_name, fields);
+let generate_native_raw_input_object = (impl, input_obj_name) => {
+  Ast_helper.(
+    Type.mk(
+      ~kind=?impl ? None : Some(Ptype_abstract),
+      ~manifest=?
+        impl
+          ? Some(
+              Typ.constr(
+                Location.mknoloc(Longident.parse("Yojson.Basic.t")),
+                [],
+              ),
+            )
+          : None,
+      {
+        loc: Location.none,
+        txt:
+          generate_type_name(
+            ~prefix="t_variables",
+            switch (input_obj_name) {
+            | None => []
+            | Some(name) => [name]
+            },
+          ),
+      },
+    )
+  );
+};
+
+let generate_input_object = (impl, raw, _, input_obj_name, fields) => {
+  Ppx_config.native() && raw
+    ? generate_native_raw_input_object(impl, input_obj_name)
+    : generate_record_input_object(raw, input_obj_name, fields);
 };
 
 let generate_arg_type_structure_items = (raw, config, variable_defs) => {
@@ -1117,9 +1158,9 @@ let generate_arg_type_structure_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object()
+         | NoVariables => generate_empty_input_object(true)
          | InputObject({name, fields}) => {
-             generate_input_object(raw, config, name, fields);
+             generate_input_object(true, raw, config, name, fields);
            },
        )
     |> Ast_helper.Str.type_(Recursive),
@@ -1131,9 +1172,9 @@ let generate_arg_type_signature_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object()
+         | NoVariables => generate_empty_input_object(false)
          | InputObject({name, fields}) => {
-             generate_input_object(raw, config, name, fields);
+             generate_input_object(false, raw, config, name, fields);
            },
        )
     |> Ast_helper.Sig.type_(Recursive),

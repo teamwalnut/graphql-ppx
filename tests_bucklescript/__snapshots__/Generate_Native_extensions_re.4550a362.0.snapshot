@@ -48,7 +48,7 @@ module Bla: {
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
-    type t_variables = unit;
+    type t_variables;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -56,8 +56,8 @@ module Bla: {
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -82,7 +82,7 @@ function back to the original JSON compatible data */
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
-    type t_variables = unit;
+    type t_variables;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -90,8 +90,8 @@ function back to the original JSON compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -99,8 +99,8 @@ function back to the original JSON compatible data */
   } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
-      type t = Yojson.Basic.json;
-      type t_variables = Yojson.Basic.json;
+      type t = Yojson.Basic.t;
+      type t_variables = Yojson.Basic.t;
     };
     type t_lists = {
       nullableOfNullable: option(array(option(string))),
@@ -109,18 +109,18 @@ function back to the original JSON compatible data */
       nonNullableOfNonNullable: array(string),
     };
     type t = {lists: t_lists};
-    type t_variables = unit;
+    type t_variables = Yojson.Basic.t;
     let query = \"query Bla  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
     let parse: Raw.t => t =
       (value) => (
         {
           lists: {
-            let value = Yojson.Basic.member(\"lists\", value);
+            let value = Yojson.Basic.Util.member(\"lists\", value);
             (
               {
                 nullableOfNullable: {
                   let value =
-                    Yojson.Basic.member(\"nullableOfNullable\", value);
+                    Yojson.Basic.Util.member(\"nullableOfNullable\", value);
                   switch (value) {
                   | value =>
                     Some(
@@ -128,7 +128,7 @@ function back to the original JSON compatible data */
                       | `List(json_list) =>
                         List.map(json_list =>
                           switch (value) {
-                          | value => Some(Yojson.Basic.to_string(value))
+                          | value => Some(Yojson.Basic.Util.to_string(value))
                           | `Null => None
                           }
                         )
@@ -141,13 +141,15 @@ function back to the original JSON compatible data */
                 },
                 nullableOfNonNullable: {
                   let value =
-                    Yojson.Basic.member(\"nullableOfNonNullable\", value);
+                    Yojson.Basic.Util.member(\"nullableOfNonNullable\", value);
                   switch (value) {
                   | value =>
                     Some(
                       switch (value) {
                       | `List(json_list) =>
-                        List.map(json_list => Yojson.Basic.to_string(value))
+                        List.map(json_list =>
+                          Yojson.Basic.Util.to_string(value)
+                        )
                         |> Array.of_list
                       | _ => []
                       },
@@ -157,12 +159,12 @@ function back to the original JSON compatible data */
                 },
                 nonNullableOfNullable: {
                   let value =
-                    Yojson.Basic.member(\"nonNullableOfNullable\", value);
+                    Yojson.Basic.Util.member(\"nonNullableOfNullable\", value);
                   switch (value) {
                   | `List(json_list) =>
                     List.map(json_list =>
                       switch (value) {
-                      | value => Some(Yojson.Basic.to_string(value))
+                      | value => Some(Yojson.Basic.Util.to_string(value))
                       | `Null => None
                       }
                     )
@@ -172,10 +174,13 @@ function back to the original JSON compatible data */
                 },
                 nonNullableOfNonNullable: {
                   let value =
-                    Yojson.Basic.member(\"nonNullableOfNonNullable\", value);
+                    Yojson.Basic.Util.member(
+                      \"nonNullableOfNonNullable\",
+                      value,
+                    );
                   switch (value) {
                   | `List(json_list) =>
-                    List.map(json_list => Yojson.Basic.to_string(value))
+                    List.map(json_list => Yojson.Basic.Util.to_string(value))
                     |> Array.of_list
                   | _ => []
                   };
@@ -231,17 +236,17 @@ function back to the original JSON compatible data */
             | None => `Null
             };
           };
-          {
-            nullableOfNullable,
-            nullableOfNonNullable,
-            nonNullableOfNullable,
-            nonNullableOfNonNullable,
-          };
+          `Assoc([
+            (\"nullableOfNullable\", nullableOfNullable),
+            (\"nullableOfNonNullable\", nullableOfNonNullable),
+            (\"nonNullableOfNullable\", nonNullableOfNullable),
+            (\"nonNullableOfNonNullable\", nonNullableOfNonNullable),
+          ]);
         };
-        {lists: lists};
+        `Assoc([(\"lists\", lists)]);
       };
-    let serializeVariables = () => ();
-    let makeVariables = () => ();
+    let serializeVariables = () => `Null;
+    let makeVariables = () => `Null;
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -262,7 +267,7 @@ module Inner: {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type t_variables = unit;
+  type t_variables;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -270,8 +275,8 @@ module Inner: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -279,8 +284,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_lists = {
     nullableOfNullable: option(array(option(string))),
@@ -289,17 +294,18 @@ function back to the original JSON compatible data */
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type t_variables = unit;
+  type t_variables = Yojson.Basic.t;
   let query = \"query Bla2  {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
         lists: {
-          let value = Yojson.Basic.member(\"lists\", value);
+          let value = Yojson.Basic.Util.member(\"lists\", value);
           (
             {
               nullableOfNullable: {
-                let value = Yojson.Basic.member(\"nullableOfNullable\", value);
+                let value =
+                  Yojson.Basic.Util.member(\"nullableOfNullable\", value);
                 switch (value) {
                 | value =>
                   Some(
@@ -307,7 +313,7 @@ function back to the original JSON compatible data */
                     | `List(json_list) =>
                       List.map(json_list =>
                         switch (value) {
-                        | value => Some(Yojson.Basic.to_string(value))
+                        | value => Some(Yojson.Basic.Util.to_string(value))
                         | `Null => None
                         }
                       )
@@ -320,13 +326,15 @@ function back to the original JSON compatible data */
               },
               nullableOfNonNullable: {
                 let value =
-                  Yojson.Basic.member(\"nullableOfNonNullable\", value);
+                  Yojson.Basic.Util.member(\"nullableOfNonNullable\", value);
                 switch (value) {
                 | value =>
                   Some(
                     switch (value) {
                     | `List(json_list) =>
-                      List.map(json_list => Yojson.Basic.to_string(value))
+                      List.map(json_list =>
+                        Yojson.Basic.Util.to_string(value)
+                      )
                       |> Array.of_list
                     | _ => []
                     },
@@ -336,12 +344,12 @@ function back to the original JSON compatible data */
               },
               nonNullableOfNullable: {
                 let value =
-                  Yojson.Basic.member(\"nonNullableOfNullable\", value);
+                  Yojson.Basic.Util.member(\"nonNullableOfNullable\", value);
                 switch (value) {
                 | `List(json_list) =>
                   List.map(json_list =>
                     switch (value) {
-                    | value => Some(Yojson.Basic.to_string(value))
+                    | value => Some(Yojson.Basic.Util.to_string(value))
                     | `Null => None
                     }
                   )
@@ -351,10 +359,10 @@ function back to the original JSON compatible data */
               },
               nonNullableOfNonNullable: {
                 let value =
-                  Yojson.Basic.member(\"nonNullableOfNonNullable\", value);
+                  Yojson.Basic.Util.member(\"nonNullableOfNonNullable\", value);
                 switch (value) {
                 | `List(json_list) =>
-                  List.map(json_list => Yojson.Basic.to_string(value))
+                  List.map(json_list => Yojson.Basic.Util.to_string(value))
                   |> Array.of_list
                 | _ => []
                 };
@@ -410,17 +418,17 @@ function back to the original JSON compatible data */
           | None => `Null
           };
         };
-        {
-          nullableOfNullable,
-          nullableOfNonNullable,
-          nonNullableOfNullable,
-          nonNullableOfNonNullable,
-        };
+        `Assoc([
+          (\"nullableOfNullable\", nullableOfNullable),
+          (\"nullableOfNonNullable\", nullableOfNonNullable),
+          (\"nonNullableOfNullable\", nonNullableOfNullable),
+          (\"nonNullableOfNonNullable\", nonNullableOfNonNullable),
+        ]);
       };
-      {lists: lists};
+      `Assoc([(\"lists\", lists)]);
     };
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
+  let serializeVariables = () => `Null;
+  let makeVariables = () => `Null;
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

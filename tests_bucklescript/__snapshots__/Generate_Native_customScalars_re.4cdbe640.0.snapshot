@@ -38,7 +38,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables:
     (~opt: Yojson.Basic.t=?, ~req: Yojson.Basic.t, unit) => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -47,8 +47,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_customScalarField = {
     nullable: option(Yojson.Basic.t),
@@ -64,18 +64,18 @@ function back to the original JSON compatible data */
     (value) => (
       {
         customScalarField: {
-          let value = Yojson.Basic.member(\"customScalarField\", value);
+          let value = Yojson.Basic.Util.member(\"customScalarField\", value);
           (
             {
               nullable: {
-                let value = Yojson.Basic.member(\"nullable\", value);
+                let value = Yojson.Basic.Util.member(\"nullable\", value);
                 switch (value) {
                 | value => Some(value)
                 | `Null => None
                 };
               },
               nonNullable: {
-                let value = Yojson.Basic.member(\"nonNullable\", value);
+                let value = Yojson.Basic.Util.member(\"nonNullable\", value);
                 value;
               },
             }: t_customScalarField
@@ -98,11 +98,11 @@ function back to the original JSON compatible data */
           | None => `Null
           };
         };
-        {nullable, nonNullable};
+        `Assoc([(\"nullable\", nullable), (\"nonNullable\", nonNullable)]);
       };
-      {customScalarField: customScalarField};
+      `Assoc([(\"customScalarField\", customScalarField)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {
       opt:
         (

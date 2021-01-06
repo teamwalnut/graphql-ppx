@@ -194,7 +194,7 @@ let filter_map = f => {
 let generate_serialize_variable_signatures =
     (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => [%sig: let serializeVariables: unit => unit]
+  | [NoVariables] => [%sig: let serializeVariables: unit => t_variables]
   | arg_type_defs =>
     Ast_helper.(
       arg_type_defs
@@ -224,9 +224,7 @@ let generate_serialize_variable_signatures =
                  ~loc=conv_loc(loc),
                  Nolabel,
                  base_type_name(type_name),
-                 Ppx_config.native()
-                   ? base_type_name("Yojson.Basic.t")
-                   : base_type_name("Raw." ++ type_name),
+                 base_type_name("Raw." ++ type_name),
                ),
              ),
            );
@@ -235,7 +233,10 @@ let generate_serialize_variable_signatures =
   };
 let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => [%stri let serializeVariables = () => ()]
+  | [NoVariables] =>
+    Ppx_config.native()
+      ? [%stri let serializeVariables = () => `Null]
+      : [%stri let serializeVariables = () => ()]
   | arg_type_defs =>
     Ast_helper.(
       Str.value(
@@ -270,9 +271,7 @@ let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
                    ~loc=conv_loc(loc),
                    Nolabel,
                    base_type_name(type_name),
-                   Ppx_config.native()
-                     ? base_type_name("Yojson.Basic.t")
-                     : base_type_name("Raw." ++ type_name),
+                   base_type_name("Raw." ++ type_name),
                  ),
                ),
                serialize_fun(fields, type_name),
@@ -576,7 +575,9 @@ and generate_object_encoder =
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
-    | [] => Ppx_config.native() ? [%expr `Assoc([])] : [%expr Js.Dict.empty]
+    | [] =>
+      %expr
+      Js.Dict.empty
     | fields =>
       let record =
         Exp.record(
@@ -647,6 +648,96 @@ and generate_object_encoder =
       Exp.let_(Nonrecursive, bindings, record);
     };
   };
+  let rec list_literal =
+    fun
+    | [] =>
+      Exp.construct({txt: Longident.Lident("[]"), loc: Location.none}, None)
+    | [value, ...values] => {
+        Ast_helper.(
+          Exp.construct(
+            {txt: Longident.Lident("::"), loc: Location.none},
+            Some(Exp.tuple([value, list_literal(values)])),
+          )
+        );
+      };
+
+  let do_json_encoder = () => {
+    switch (
+      fields
+      |> filter_map(
+           fun
+           | Fr_fragment_spread(_) => None
+           | Fr_named_field({name, type_}) => Some((name, type_)),
+         )
+    ) {
+    | [] =>
+      %expr
+      `Assoc([])
+    | fields =>
+      let fields =
+        // if the object is part of a union, it gets passed a typename
+        // the typename needs to exist on the raw type, because it is used
+        // to parse it into a union type. So if this is supplied, and
+        // typename is not already explicitly in the fields, add this.
+        if (typename != None
+            && !(
+                 fields
+                 |> List.exists(
+                      fun
+                      | ("__typename", _) => true
+                      | _ => false,
+                    )
+               )) {
+          [
+            ("__typename", Res_string({loc: conv_loc_from_ast(loc)})),
+            ...fields,
+          ];
+        } else {
+          fields;
+        };
+
+      let assoc_fields =
+        fields
+        |> List.map(((key, _inner)) => {
+             switch (key, typename) {
+             | ("__typename", Some(typename)) =>
+               %expr
+               ("__typename", `String([%e const_str_expr(typename)]))
+             | (key, _) =>
+               %expr
+               (
+                 [%e const_str_expr(key)],
+                 [%e ident_from_string(to_valid_ident(key))],
+               )
+             }
+           });
+
+      let assoc = [%expr `Assoc([%e list_literal(assoc_fields)])];
+
+      let bindings =
+        fields
+        |> List.map(((key, inner)) =>
+             Vb.mk(
+               Pat.var({txt: to_valid_ident(key), loc}),
+               {
+                 // TODO: would be nice to pass the input instead of relying
+                 // on a static identifier called `value`
+                 let%expr value = [%e get_field(key, existing_record, path)];
+                 %e
+                 generate_serializer(
+                   config,
+                   [key, ...path],
+                   definition,
+                   None,
+                   inner,
+                 );
+               },
+             )
+           )
+        |> List.rev;
+      Exp.let_(Nonrecursive, bindings, assoc);
+    };
+  };
 
   let do_obj_constructor = () =>
     [@metaloc conv_loc(loc)]
@@ -656,7 +747,7 @@ and generate_object_encoder =
 
   let do_obj_constructor_records = () =>
     Ppx_config.native()
-      ? do_obj_constructor_base(false)
+      ? do_json_encoder()
       : [@metaloc conv_loc(loc)]
         {
           Exp.constraint_(

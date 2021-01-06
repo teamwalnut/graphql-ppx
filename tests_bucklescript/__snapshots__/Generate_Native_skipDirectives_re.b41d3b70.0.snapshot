@@ -42,7 +42,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~var: bool, unit) => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -50,8 +50,8 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
   };
   type t_v1 = {
     nullableString: option(string),
@@ -71,20 +71,20 @@ function back to the original JSON compatible data */
     (value) => (
       {
         v1: {
-          let value = Yojson.Basic.member(\"v1\", value);
+          let value = Yojson.Basic.Util.member(\"v1\", value);
           (
             {
               nullableString: {
-                let value = Yojson.Basic.member(\"nullableString\", value);
+                let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.to_string(value))
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
                 };
               },
               string: {
-                let value = Yojson.Basic.member(\"string\", value);
+                let value = Yojson.Basic.Util.member(\"string\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.to_string(value))
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
                 };
               },
@@ -92,20 +92,20 @@ function back to the original JSON compatible data */
           );
         },
         v2: {
-          let value = Yojson.Basic.member(\"v2\", value);
+          let value = Yojson.Basic.Util.member(\"v2\", value);
           (
             {
               nullableString: {
-                let value = Yojson.Basic.member(\"nullableString\", value);
+                let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.to_string(value))
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
                 };
               },
               string: {
-                let value = Yojson.Basic.member(\"string\", value);
+                let value = Yojson.Basic.Util.member(\"string\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.to_string(value))
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
                 };
               },
@@ -132,7 +132,7 @@ function back to the original JSON compatible data */
           | None => `Null
           };
         };
-        {nullableString, string};
+        `Assoc([(\"nullableString\", nullableString), (\"string\", string)]);
       }
       and v1 = {
         let value = (value: t).v1;
@@ -150,11 +150,11 @@ function back to the original JSON compatible data */
           | None => `Null
           };
         };
-        {nullableString, string};
+        `Assoc([(\"nullableString\", nullableString), (\"string\", string)]);
       };
-      {v1, v2};
+      `Assoc([(\"v1\", v1), (\"v2\", v2)]);
     };
-  let serializeVariables: t_variables => Yojson.Basic.json =
+  let serializeVariables: t_variables => Raw.t_variables =
     inp => {var: (a => `Bool(a))((inp: t_variables).var)};
   let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";

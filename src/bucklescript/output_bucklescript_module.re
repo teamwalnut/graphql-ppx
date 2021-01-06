@@ -592,13 +592,11 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
       None,
     );
   let raw_arg_types =
-    config.native
-      ? [[%sigi: type t_variables]]
-      : Output_bucklescript_types.generate_arg_type_signature_items(
-          true,
-          config,
-          variable_defs,
-        );
+    Output_bucklescript_types.generate_arg_type_signature_items(
+      true,
+      config,
+      variable_defs,
+    );
   let arg_types =
     Output_bucklescript_types.generate_arg_type_signature_items(
       false,
@@ -647,7 +645,7 @@ function back to the original JSON compatible data */
     ],
     serialize_variable_signatures,
     switch (variable_constructor_signatures) {
-    | [] => [[%sigi: let makeVariables: unit => unit]]
+    | [] => [[%sigi: let makeVariables: unit => t_variables]]
     | signatures => signatures
     },
     has_required_variables
@@ -754,13 +752,11 @@ let generate_operation_implementation =
       variable_defs,
     );
   let raw_arg_types =
-    config.native
-      ? [[%stri type t_variables = Yojson.Basic.t]]
-      : Output_bucklescript_types.generate_arg_type_structure_items(
-          true,
-          config,
-          variable_defs,
-        );
+    Output_bucklescript_types.generate_arg_type_structure_items(
+      true,
+      config,
+      variable_defs,
+    );
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
@@ -796,7 +792,10 @@ let generate_operation_implementation =
         ],
         [serialize_variable_functions],
         switch (variable_constructors) {
-        | None => [[%stri let makeVariables = () => ()]]
+        | None =>
+          config.native
+            ? [[%stri let makeVariables = () => `Null]]
+            : [[%stri let makeVariables = () => ()]]
         | Some(c) => [c]
         },
         has_required_variables

@@ -20,7 +20,8 @@ Generate Native › recursiveInput.re › output
 module MyQuery: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_RecursiveInput;
   };
   type t = {recursiveInput: string};
   type t_variables = {arg: t_variables_RecursiveInput}
@@ -36,9 +37,9 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectRecursiveInput:
-    t_variables_RecursiveInput => Yojson.Basic.json;
+    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput;
   let makeVariables: (~arg: t_variables_RecursiveInput, unit) => t_variables;
   let makeInputObjectRecursiveInput:
     (
@@ -54,8 +55,9 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_RecursiveInput = Yojson.Basic.t;
   };
   type t = {recursiveInput: string};
   type t_variables = {arg: t_variables_RecursiveInput}
@@ -69,8 +71,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         recursiveInput: {
-          let value = Yojson.Basic.member(\"recursiveInput\", value);
-          Yojson.Basic.to_string(value);
+          let value = Yojson.Basic.Util.member(\"recursiveInput\", value);
+          Yojson.Basic.Util.to_string(value);
         },
       }: t
     );
@@ -80,15 +82,15 @@ function back to the original JSON compatible data */
         let value = (value: t).recursiveInput;
         value;
       };
-      {recursiveInput: recursiveInput};
+      `Assoc([(\"recursiveInput\", recursiveInput)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       arg:
         (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
     }
   and serializeInputObjectRecursiveInput:
-    t_variables_RecursiveInput => Yojson.Basic.json =
+    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
     inp => {
       otherField:
         (
@@ -145,7 +147,10 @@ function back to the original JSON compatible data */
 module Test: {
   module Raw: {
     type t;
-    type t_variables;
+    type t_variables
+    and t_variables_problem_input
+    and t_variables_this_will_be_duplicated
+    and t_variables_nested_type;
   };
   type t = {recursiveRepro: bool};
   type t_variables = {input: t_variables_problem_input}
@@ -164,13 +169,14 @@ module Test: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: t_variables => Yojson.Basic.json;
+  let serializeVariables: t_variables => Raw.t_variables;
   let serializeInputObjectproblem_input:
-    t_variables_problem_input => Yojson.Basic.json;
+    t_variables_problem_input => Raw.t_variables_problem_input;
   let serializeInputObjectthis_will_be_duplicated:
-    t_variables_this_will_be_duplicated => Yojson.Basic.json;
+    t_variables_this_will_be_duplicated =>
+    Raw.t_variables_this_will_be_duplicated;
   let serializeInputObjectnested_type:
-    t_variables_nested_type => Yojson.Basic.json;
+    t_variables_nested_type => Raw.t_variables_nested_type;
   let makeVariables: (~input: t_variables_problem_input, unit) => t_variables;
   let makeInputObjectproblem_input:
     (
@@ -190,8 +196,11 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t = Yojson.Basic.json;
-    type t_variables = Yojson.Basic.json;
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_problem_input = Yojson.Basic.t
+    and t_variables_this_will_be_duplicated = Yojson.Basic.t
+    and t_variables_nested_type = Yojson.Basic.t;
   };
   type t = {recursiveRepro: bool};
   type t_variables = {input: t_variables_problem_input}
@@ -208,8 +217,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         recursiveRepro: {
-          let value = Yojson.Basic.member(\"recursiveRepro\", value);
-          Yojson.Basic.to_bool(value);
+          let value = Yojson.Basic.Util.member(\"recursiveRepro\", value);
+          Yojson.Basic.Util.to_bool(value);
         },
       }: t
     );
@@ -219,9 +228,9 @@ function back to the original JSON compatible data */
         let value = (value: t).recursiveRepro;
         value;
       };
-      {recursiveRepro: recursiveRepro};
+      `Assoc([(\"recursiveRepro\", recursiveRepro)]);
     };
-  let rec serializeVariables: t_variables => Yojson.Basic.json =
+  let rec serializeVariables: t_variables => Raw.t_variables =
     inp => {
       input:
         (a => serializeInputObjectproblem_input(a))(
@@ -229,7 +238,7 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectproblem_input:
-    t_variables_problem_input => Yojson.Basic.json =
+    t_variables_problem_input => Raw.t_variables_problem_input =
     inp => {
       the_problem:
         (
@@ -254,12 +263,13 @@ function back to the original JSON compatible data */
         ),
     }
   and serializeInputObjectthis_will_be_duplicated:
-    t_variables_this_will_be_duplicated => Yojson.Basic.json =
+    t_variables_this_will_be_duplicated =>
+    Raw.t_variables_this_will_be_duplicated =
     inp => {
       id: (a => `String(a))((inp: t_variables_this_will_be_duplicated).id),
     }
   and serializeInputObjectnested_type:
-    t_variables_nested_type => Yojson.Basic.json =
+    t_variables_nested_type => Raw.t_variables_nested_type =
     inp => {
       the_problem:
         (
