@@ -44,7 +44,7 @@ module MyQuery: {
     [@bs.as \"let\"]
     let_: t_let,
   };
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -82,7 +82,7 @@ function back to the original JSON compatible data */
     [@bs.as \"let\"]
     let_: t_let,
   };
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\nfirst: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\nsecond: nestedObject  {\\ninner  {\\ninner  {\\nf1: field  \\nf2: field  \\n}\\n\\n}\\n\\n}\\n\\nlet: nestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -277,7 +277,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"first\", first), (\"second\", second), (\"let\", let_)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -294,7 +294,7 @@ module Test: {
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables;
+    type t_variables = unit;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -319,7 +319,7 @@ function back to the original JSON compatible data */
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables;
+    type t_variables = unit;
     /** The GraphQL query */
     let query: string;
     /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -343,7 +343,7 @@ function back to the original JSON compatible data */
     type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
     type t_nestedObject = {inner: option(t_nestedObject_inner)};
     type t = {nestedObject: t_nestedObject};
-    type t_variables = Yojson.Basic.t;
+    type t_variables = unit;
     let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
     let parse: Raw.t => t =
       (value) => (
@@ -414,7 +414,7 @@ function back to the original JSON compatible data */
         `Assoc([(\"nestedObject\", nestedObject)]);
       };
     let serializeVariables = () => `Null;
-    let makeVariables = () => `Null;
+    let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -430,7 +430,7 @@ module MyQueryWithSigDirect: {
   type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
   type t_nestedObject = {inner: option(t_nestedObject_inner)};
   type t = {nestedObject: t_nestedObject};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -454,7 +454,7 @@ function back to the original JSON compatible data */
   type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
   type t_nestedObject = {inner: option(t_nestedObject_inner)};
   type t = {nestedObject: t_nestedObject};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\nnestedObject  {\\ninner  {\\ninner  {\\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -524,7 +524,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"nestedObject\", nestedObject)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

@@ -792,10 +792,7 @@ let generate_operation_implementation =
         ],
         [serialize_variable_functions],
         switch (variable_constructors) {
-        | None =>
-          config.native
-            ? [[%stri let makeVariables = () => `Null]]
-            : [[%stri let makeVariables = () => ()]]
+        | None => [[%stri let makeVariables = () => ()]]
         | Some(c) => [c]
         },
         has_required_variables

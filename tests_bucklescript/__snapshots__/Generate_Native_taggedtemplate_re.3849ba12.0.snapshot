@@ -38,7 +38,7 @@ module MyQuery: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -71,7 +71,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -218,7 +218,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -246,7 +246,7 @@ module MyQuery1a: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: MyTypes.query;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -279,7 +279,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: MyTypes.query = [%raw
     \"graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -426,7 +426,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -450,7 +450,7 @@ module MyQuery1b: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -483,7 +483,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -630,7 +630,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -654,7 +654,7 @@ module MyQuery2: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -687,7 +687,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\").graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -834,7 +834,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -858,7 +858,7 @@ module MyQuery3: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -891,7 +891,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\").graphql`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -1038,7 +1038,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -1062,7 +1062,7 @@ module MyQuery4: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -1095,7 +1095,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query   {\\n    variousScalars  {\\n      nullableString\\n      string\\n      nullableInt\\n      int\\n      nullableFloat\\n      float\\n      nullableBoolean\\n      boolean\\n      nullableID\\n      id\\n    }\\n  }\\n`\"
   ];
@@ -1242,7 +1242,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -1368,7 +1368,7 @@ module MyQuery5: {
     type t_variables;
   };
   type t = {lists: ListFragment.t};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -1389,7 +1389,7 @@ function back to the original JSON compatible data */
     type t_variables = Yojson.Basic.t;
   };
   type t = {lists: ListFragment.t};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query MyQuery5  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
   ];
@@ -1412,7 +1412,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"lists\", lists)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -1424,7 +1424,7 @@ module MyQuery6: {
     type t_variables;
   };
   type t = {lists: ListFragment.t};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -1445,7 +1445,7 @@ function back to the original JSON compatible data */
     type t_variables = Yojson.Basic.t;
   };
   type t = {lists: ListFragment.t};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string =
     [%raw
       \"(frag_0) => require(\\\"gatsby\\\")`\\n  query MyQuery6  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n  ${frag_0}\\n`\"
@@ -1471,7 +1471,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"lists\", lists)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -1483,7 +1483,7 @@ module MyQuery7: {
     type t_variables;
   };
   type t = {lists: ListFragment.t};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -1504,7 +1504,7 @@ function back to the original JSON compatible data */
     type t_variables = Yojson.Basic.t;
   };
   type t = {lists: ListFragment.t};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query: string = [%raw
     \"graphql`\\n  query MyQuery7  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
   ];
@@ -1527,7 +1527,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"lists\", lists)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -1551,7 +1551,7 @@ module MyQuery8: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -1584,7 +1584,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   [@bs.module \"apollo-client\"] external graphql: string => string = \"gql\";
   let query =
     graphql(
@@ -1733,7 +1733,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

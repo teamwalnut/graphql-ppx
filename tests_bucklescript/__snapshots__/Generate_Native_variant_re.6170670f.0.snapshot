@@ -45,7 +45,7 @@ module MyQuery: {
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -88,7 +88,7 @@ function back to the original JSON compatible data */
     | `DogOrHuman(t_mutationForVariant_dogOrHuman)
   ];
   type t = {mutationForVariant: t_mutationForVariant};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"mutation   {\\nmutationForVariant  {\\nbaseType  \\nbaseTypeList  \\ndog  {\\nname  \\nbarkVolume  \\n}\\n\\nhuman  {\\nname  \\n}\\n\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -229,7 +229,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"mutationForVariant\", mutationForVariant)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

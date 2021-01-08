@@ -1,4 +1,4 @@
-Generate Native › unionPartial.re › output
+Generate Native › inlineFragmentQuery.re › output
 [@ocaml.ppx.context
   {
     tool_name: \"migrate_driver\",
@@ -17,7 +17,7 @@ Generate Native › unionPartial.re › output
     cookies: [],
   }
 ];
-module MyQuery: {
+module InlineFragmentQuery: {
   module Raw: {
     type t;
     type t_variables;

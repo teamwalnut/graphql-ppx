@@ -1041,8 +1041,8 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
     );
 };
 
-let generate_empty_input_object = impl => {
-  Ppx_config.native()
+let generate_empty_input_object = (impl, raw) => {
+  Ppx_config.native() && raw
     ? Ast_helper.Type.mk(
         ~manifest=?!impl ? None : Some(base_type_name("Yojson.Basic.t")),
         {
@@ -1158,7 +1158,7 @@ let generate_arg_type_structure_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object(true)
+         | NoVariables => generate_empty_input_object(true, raw)
          | InputObject({name, fields}) => {
              generate_input_object(true, raw, config, name, fields);
            },
@@ -1172,7 +1172,7 @@ let generate_arg_type_signature_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object(false)
+         | NoVariables => generate_empty_input_object(false, raw)
          | InputObject({name, fields}) => {
              generate_input_object(false, raw, config, name, fields);
            },

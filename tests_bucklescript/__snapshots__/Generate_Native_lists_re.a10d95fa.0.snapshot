@@ -29,7 +29,7 @@ module MyQuery: {
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -56,7 +56,7 @@ function back to the original JSON compatible data */
     nonNullableOfNonNullable: array(string),
   };
   type t = {lists: t_lists};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\nlists  {\\nnullableOfNullable  \\nnullableOfNonNullable  \\nnonNullableOfNullable  \\nnonNullableOfNonNullable  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -190,7 +190,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"lists\", lists)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

@@ -35,7 +35,7 @@ module MyQuery: {
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -68,7 +68,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {variousScalars: t_variousScalars};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\nvariousScalars  {\\nnullableString  \\nstring  \\nnullableInt  \\nint  \\nnullableFloat  \\nfloat  \\nnullableBoolean  \\nboolean  \\nnullableID  \\nid  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -213,7 +213,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"variousScalars\", variousScalars)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

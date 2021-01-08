@@ -49,7 +49,7 @@ let dog: module Alcotest.TESTABLE with type t = dog =
 module MyQuery = [%graphql
   {|
   {
-    variousScalars @bsRecord {
+    variousScalars @ppxAs(type: "scalars") {
       string
       int
     }
@@ -57,7 +57,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {. variousScalars: scalars};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -69,16 +69,16 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< variousScalars = @[%a@] >",
          Alcotest.pp(scalars),
-         obj#variousScalars,
+         obj.variousScalars,
        );
 
      let equal = (a: qt, b: qt) =>
-       Alcotest.equal(scalars, a#variousScalars, b#variousScalars);
+       Alcotest.equal(scalars, a.variousScalars, b.variousScalars);
    });
 
 module ExternalFragmentQuery = [%graphql
   {|
-  fragment Fragment on VariousScalars @bsRecord {
+  fragment Fragment on VariousScalars @ppxAs(type: "scalars") {
     string
     int
   }
@@ -95,7 +95,7 @@ module InlineFragmentQuery = [%graphql
   {|
   {
     dogOrHuman {
-      ...on Dog @bsRecord {
+      ...on Dog {
         name
         barkVolume
       }
@@ -104,7 +104,7 @@ module InlineFragmentQuery = [%graphql
 |}
 ];
 
-type if_qt = {. dogOrHuman: [ | `Dog(dog) | `Nonexhaustive]};
+type if_qt = InlineFragmentQuery.t_dogOrHuman;
 
 let inline_fragment_query: module Alcotest.TESTABLE with type t = if_qt =
   (module

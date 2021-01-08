@@ -33,7 +33,7 @@ module Normal: {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -64,7 +64,7 @@ function back to the original JSON compatible data */
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -144,7 +144,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"dogOrHuman\", dogOrHuman)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -165,7 +165,7 @@ module ByConfig: {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -195,7 +195,7 @@ function back to the original JSON compatible data */
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -274,7 +274,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"dogOrHuman\", dogOrHuman)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -295,7 +295,7 @@ module ByDirective: {
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables;
+  type t_variables = unit;
   /** The GraphQL query */
   let query: string;
   /** Parse the JSON-compatible GraphQL data to ReasonML data types */
@@ -325,7 +325,7 @@ function back to the original JSON compatible data */
     | `Human(t_dogOrHuman_Human)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = Yojson.Basic.t;
+  type t_variables = unit;
   let query = \"query   {\\ndogOrHuman  {\\n__typename\\n...on Dog   {\\nname  \\nbarkVolume  \\n}\\n\\n...on Human   {\\nname  \\n}\\n\\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
@@ -404,7 +404,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"dogOrHuman\", dogOrHuman)]);
     };
   let serializeVariables = () => `Null;
-  let makeVariables = () => `Null;
+  let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

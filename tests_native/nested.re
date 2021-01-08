@@ -18,7 +18,7 @@ module MyQuery = [%graphql
 
     second: nestedObject {
       inner {
-        inner @bsRecord {
+        inner @ppxAs(type: record) {
           f1: field
           f2: field
         }
@@ -28,11 +28,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  first: {. inner: option({. inner: option({. field: string})})},
-  second: {. inner: option({. inner: option(record)})},
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -44,32 +40,32 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< first = < inner = @[%a@] > ; second = < inner = @[%a@] > >",
          (
-           (formatter, v) =>
+           (formatter, v: MyQuery.t_first_inner) =>
              Format.fprintf(
                formatter,
                "< inner = @[%a@] >",
                (
-                 (formatter, v) =>
+                 (formatter, v: MyQuery.t_first_inner_inner) =>
                    Format.fprintf(
                      formatter,
                      "< field = %a >",
                      Format.pp_print_string,
-                     v#field,
+                     v.field,
                    )
                )
                |> print_option,
-               v#inner,
+               v.inner,
              )
          )
          |> print_option,
-         obj#first#inner,
+         obj.first.inner,
          (
-           (formatter, v) =>
+           (formatter, v: MyQuery.t_second_inner) =>
              Format.fprintf(
                formatter,
                "< inner = @[%a@] >",
                (
-                 (formatter, v) =>
+                 (formatter, v: MyQuery.t_second_inner_inner) =>
                    Format.fprintf(
                      formatter,
                      "{ f1 = %a ; f2 = %a }",
@@ -80,28 +76,38 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
                    )
                )
                |> print_option,
-               v#inner,
+               v.inner,
              )
          )
          |> print_option,
-         obj#second#inner,
+         obj.second.inner,
        );
 
      let equal = (a: qt, b: qt) =>
        opt_eq(
-         (a, b) => opt_eq((a, b) => a#field == b#field, a#inner, b#inner),
-         a#first#inner,
-         b#first#inner,
+         (a: MyQuery.t_first_inner, b: MyQuery.t_first_inner) =>
+           opt_eq(
+             (a: MyQuery.t_first_inner_inner, b: MyQuery.t_first_inner_inner) =>
+               a.field == b.field,
+             a.inner,
+             b.inner,
+           ),
+         a.first.inner,
+         b.first.inner,
        )
        && opt_eq(
-            (a, b) =>
+            (a: MyQuery.t_second_inner, b: MyQuery.t_second_inner) =>
               opt_eq(
-                (a, b) => a.f1 == b.f1 && a.f2 == b.f2,
-                a#inner,
-                b#inner,
+                (
+                  a: MyQuery.t_second_inner_inner,
+                  b: MyQuery.t_second_inner_inner,
+                ) =>
+                  a.f1 == b.f1 && a.f2 == b.f2,
+                a.inner,
+                b.inner,
               ),
-            a#second#inner,
-            b#second#inner,
+            a.second.inner,
+            b.second.inner,
           );
    });
 
@@ -109,22 +115,21 @@ let decodes_recursively = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    Yojson.Basic.from_string(
+      {| {
       "first": {"inner": {"inner": {"field": "second"}}},
       "second": {"inner": null}
     } |},
-      ),
-    ),
+    )
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub first = {
-        as _;
-        pub inner =
-          Some({as _; pub inner = Some({as _; pub field = "second"})})
-      };
-      pub second = {as _; pub inner = None}
+      first: {
+        inner: Some({inner: Some({field: "second"})}),
+      },
+      second: {
+        inner: None,
+      },
     },
   );
 

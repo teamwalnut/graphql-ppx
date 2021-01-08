@@ -23,17 +23,17 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
 
 let allows_none_in_lists_of_nullable = () =>
   test_json(
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~arg={
-        as _;
-        pub nullableOfNullable = Some([|Some("x"), None, Some("y")|]);
-        pub nullableOfNonNullable = None;
-        pub nonNullableOfNullable = [|Some("a"), None, Some("b")|];
-        pub nonNullableOfNonNullable = [|"1", "2", "3"|]
+        nullableOfNullable: Some([|Some("x"), None, Some("y")|]),
+        nullableOfNonNullable: None,
+        nonNullableOfNullable: [|Some("a"), None, Some("b")|],
+        nonNullableOfNonNullable: [|"1", "2", "3"|],
       },
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "arg": {
