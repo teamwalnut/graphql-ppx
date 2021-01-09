@@ -33,6 +33,21 @@ let raw_opaque_object = (interface_fragments, fields) => {
   | _ => false
   };
 };
+let rec list_literal =
+  fun
+  | [] =>
+    Ast_helper.Exp.construct(
+      {txt: Longident.Lident("[]"), loc: Location.none},
+      None,
+    )
+  | [value, ...values] => {
+      Ast_helper.(
+        Exp.construct(
+          {txt: Longident.Lident("::"), loc: Location.none},
+          Some(Exp.tuple([value, list_literal(values)])),
+        )
+      );
+    };
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -135,41 +150,71 @@ let record_to_object = (loc, record) => {
 let serialize_fun = (fields, type_name) => {
   let arg = "inp";
   open Ast_helper;
-  let record =
-    Exp.record(
-      fields
-      |> List.map((InputField({name, type_, loc})) => {
-           (
-             {
-               txt: Longident.parse(to_valid_ident(name)),
-               loc: conv_loc(loc),
-             },
-             [%expr
-               [%e serialize_type(type_)](
-                 [%e
-                   Exp.field(
-                     Exp.constraint_(
-                       ident_from_string(arg),
-                       base_type_name(type_name),
-                     ),
-                     {
-                       loc: Location.none,
-                       Location.txt: Longident.parse(to_valid_ident(name)),
-                     },
+  let object_ =
+    Ppx_config.native()
+      ? {
+        let assoc_fields =
+          List.map(
+            (InputField({name, type_})) => {
+              %expr
+              (
+                [%e const_str_expr(name)],
+                [%e serialize_type(type_)](
+                  [%e
+                    Exp.field(
+                      Exp.constraint_(
+                        ident_from_string(arg),
+                        base_type_name(type_name),
+                      ),
+                      {
+                        loc: Location.none,
+                        Location.txt: Longident.parse(to_valid_ident(name)),
+                      },
+                    )
+                  ],
+                ),
+              )
+            },
+            fields,
+          );
+        %expr
+        `Assoc([%e list_literal(assoc_fields)]);
+      }
+      : Exp.record(
+          fields
+          |> List.map((InputField({name, type_, loc})) => {
+               (
+                 {
+                   txt: Longident.parse(to_valid_ident(name)),
+                   loc: conv_loc(loc),
+                 },
+                 [%expr
+                   [%e serialize_type(type_)](
+                     [%e
+                       Exp.field(
+                         Exp.constraint_(
+                           ident_from_string(arg),
+                           base_type_name(type_name),
+                         ),
+                         {
+                           loc: Location.none,
+                           Location.txt:
+                             Longident.parse(to_valid_ident(name)),
+                         },
+                       )
+                     ],
                    )
                  ],
                )
-             ],
-           )
-         }),
-      None,
-    );
+             }),
+          None,
+        );
   Ast_helper.(
     Exp.fun_(
       Nolabel,
       None,
       Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
-      record,
+      object_,
     )
   );
 };
@@ -194,7 +239,7 @@ let filter_map = f => {
 let generate_serialize_variable_signatures =
     (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => [%sig: let serializeVariables: unit => t_variables]
+  | [NoVariables] => [%sig: let serializeVariables: unit => Raw.t_variables]
   | arg_type_defs =>
     Ast_helper.(
       arg_type_defs
@@ -329,7 +374,23 @@ let generate_variable_constructors = (arg_type_defs: list(arg_type_def)) => {
                      );
                    };
 
-               let record =
+               let object_ =
+                 //  Ppx_config.native()
+                 //    ? {
+                 //      let assoc_fields =
+                 //        List.map(
+                 //          (InputField({name})) => {
+                 //            %expr
+                 //            (
+                 //              [%e const_str_expr(name)],
+                 //              [%e ident_from_string(to_valid_ident(name))],
+                 //            )
+                 //          },
+                 //          fields,
+                 //        );
+                 //      %expr
+                 //      `Assoc([%e list_literal(assoc_fields)]);
+                 //    }
                  Ast_helper.(
                    Exp.record(
                      ~loc=loc |> conv_loc,
@@ -352,7 +413,7 @@ let generate_variable_constructors = (arg_type_defs: list(arg_type_def)) => {
                  Ast_helper.(
                    Exp.constraint_(
                      ~loc=conv_loc(loc),
-                     record,
+                     object_,
                      base_type_name(
                        switch (name) {
                        | None => "t_variables"
@@ -648,18 +709,6 @@ and generate_object_encoder =
       Exp.let_(Nonrecursive, bindings, record);
     };
   };
-  let rec list_literal =
-    fun
-    | [] =>
-      Exp.construct({txt: Longident.Lident("[]"), loc: Location.none}, None)
-    | [value, ...values] => {
-        Ast_helper.(
-          Exp.construct(
-            {txt: Longident.Lident("::"), loc: Location.none},
-            Some(Exp.tuple([value, list_literal(values)])),
-          )
-        );
-      };
 
   let do_json_encoder = () => {
     switch (
@@ -674,30 +723,29 @@ and generate_object_encoder =
       %expr
       `Assoc([])
     | fields =>
-      let fields =
+      let assoc_fields =
         // if the object is part of a union, it gets passed a typename
         // the typename needs to exist on the raw type, because it is used
         // to parse it into a union type. So if this is supplied, and
         // typename is not already explicitly in the fields, add this.
-        if (typename != None
-            && !(
-                 fields
-                 |> List.exists(
-                      fun
-                      | ("__typename", _) => true
-                      | _ => false,
-                    )
-               )) {
-          [
-            ("__typename", Res_string({loc: conv_loc_from_ast(loc)})),
-            ...fields,
-          ];
-        } else {
-          fields;
-        };
-
-      let assoc_fields =
-        fields
+        (
+          if (typename != None
+              && !(
+                   fields
+                   |> List.exists(
+                        fun
+                        | ("__typename", _) => true
+                        | _ => false,
+                      )
+                 )) {
+            [
+              ("__typename", Res_string({loc: conv_loc_from_ast(loc)})),
+              ...fields,
+            ];
+          } else {
+            fields;
+          }
+        )
         |> List.map(((key, _inner)) => {
              switch (key, typename) {
              | ("__typename", Some(typename)) =>
@@ -1043,11 +1091,26 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
   | Res_array({loc, inner}) =>
     generate_array_encoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id({loc}) => raw_value(conv_loc(loc))
-  | Res_string({loc}) => raw_value(conv_loc(loc))
-  | Res_int({loc}) => raw_value(conv_loc(loc))
-  | Res_float({loc}) => raw_value(conv_loc(loc))
-  | Res_boolean({loc}) => raw_value(conv_loc(loc))
+  | Res_id({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
+      : raw_value(conv_loc(loc))
+  | Res_string({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
+      : raw_value(conv_loc(loc))
+  | Res_int({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Int(value)]
+      : raw_value(conv_loc(loc))
+  | Res_float({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Float(value)]
+      : raw_value(conv_loc(loc))
+  | Res_boolean({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Bool(value)]
+      : raw_value(conv_loc(loc))
   | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)

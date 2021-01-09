@@ -58,12 +58,15 @@ function back to the original JSON compatible data */
     value => {
       let optionalInputArgs = {
         let value = (value: t).optionalInputArgs;
-        value;
+        `String(value);
       };
       `Assoc([(\"optionalInputArgs\", optionalInputArgs)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {required: (a => `String(a))((inp: t_variables).required)};
+    inp =>
+      `Assoc([
+        (\"required\", (a => `String(a))((inp: t_variables).required)),
+      ]);
   let makeVariables = (~required, ()): t_variables => {required: required};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

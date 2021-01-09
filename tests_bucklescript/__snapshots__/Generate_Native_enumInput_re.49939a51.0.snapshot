@@ -59,24 +59,27 @@ function back to the original JSON compatible data */
     value => {
       let enumInput = {
         let value = (value: t).enumInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"enumInput\", enumInput)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      arg:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | `FIRST => \"FIRST\"
-            | `SECOND => \"SECOND\"
-            | `THIRD => \"THIRD\"
-            }
-        )(
-          (inp: t_variables).arg,
+          \"arg\",
+          (
+            a =>
+              switch (a) {
+              | `FIRST => \"FIRST\"
+              | `SECOND => \"SECOND\"
+              | `THIRD => \"THIRD\"
+              }
+          )(
+            (inp: t_variables).arg,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~arg, ()): t_variables => {arg: arg};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

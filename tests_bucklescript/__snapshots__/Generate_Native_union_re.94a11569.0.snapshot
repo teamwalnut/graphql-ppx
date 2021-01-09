@@ -41,7 +41,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -74,7 +74,7 @@ function back to the original JSON compatible data */
           let typename: string =
             value
             |> Yojson.Basic.Util.member(\"__typename\")
-            |> Yojson.to_string;
+            |> Yojson.Basic.to_string;
           (
             switch (typename) {
             | \"Dog\" =>
@@ -113,15 +113,11 @@ function back to the original JSON compatible data */
         | `Dog(value) =>
           let barkVolume = {
             let value = (value: t_dogOrHuman_Dog).barkVolume;
-            value;
+            `Float(value);
           }
           and name = {
             let value = (value: t_dogOrHuman_Dog).name;
-            value;
-          }
-          and __typename = {
-            let value = (value: t_dogOrHuman_Dog).__typename;
-            value;
+            `String(value);
           };
           `Assoc([
             (\"__typename\", `String(\"Dog\")),
@@ -131,11 +127,7 @@ function back to the original JSON compatible data */
         | `Human(value) =>
           let name = {
             let value = (value: t_dogOrHuman_Human).name;
-            value;
-          }
-          and __typename = {
-            let value = (value: t_dogOrHuman_Human).__typename;
-            value;
+            `String(value);
           };
           `Assoc([(\"__typename\", `String(\"Human\")), (\"name\", name)]);
         | `FutureAddedValue(value) => value
@@ -174,7 +166,7 @@ module MyQueryNoError: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -207,7 +199,7 @@ function back to the original JSON compatible data */
           let typename: string =
             value
             |> Yojson.Basic.Util.member(\"__typename\")
-            |> Yojson.to_string;
+            |> Yojson.Basic.to_string;
           (
             switch (typename) {
             | \"Dog\" =>
@@ -246,15 +238,11 @@ function back to the original JSON compatible data */
         | `Dog(value) =>
           let barkVolume = {
             let value = (value: t_dogOrHuman_Dog).barkVolume;
-            value;
+            `Float(value);
           }
           and name = {
             let value = (value: t_dogOrHuman_Dog).name;
-            value;
-          }
-          and __typename = {
-            let value = (value: t_dogOrHuman_Dog).__typename;
-            value;
+            `String(value);
           };
           `Assoc([
             (\"__typename\", `String(\"Dog\")),
@@ -264,11 +252,7 @@ function back to the original JSON compatible data */
         | `Human(value) =>
           let name = {
             let value = (value: t_dogOrHuman_Human).name;
-            value;
-          }
-          and __typename = {
-            let value = (value: t_dogOrHuman_Human).__typename;
-            value;
+            `String(value);
           };
           `Assoc([(\"__typename\", `String(\"Human\")), (\"name\", name)]);
         | `FutureAddedValue(value) => value
@@ -307,7 +291,7 @@ module NamedQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -335,7 +319,7 @@ function back to the original JSON compatible data */
           let typename: string =
             value
             |> Yojson.Basic.Util.member(\"__typename\")
-            |> Yojson.to_string;
+            |> Yojson.Basic.to_string;
           (
             switch (typename) {
             | \"Dog\" =>
@@ -378,21 +362,21 @@ function back to the original JSON compatible data */
         | `Dog(value) =>
           let __typename = {
             let value = (value: named).__typename;
-            value;
+            `String(value);
           }
           and name = {
             let value = (value: named).name;
-            value;
+            `String(value);
           };
           `Assoc([(\"name\", name), (\"__typename\", `String(\"Dog\"))]);
         | `Human(value) =>
           let __typename = {
             let value = (value: named).__typename;
-            value;
+            `String(value);
           }
           and name = {
             let value = (value: named).name;
-            value;
+            `String(value);
           };
           `Assoc([(\"name\", name), (\"__typename\", `String(\"Human\"))]);
         | `FutureAddedValue(value) => value
@@ -427,7 +411,7 @@ function back to the original JSON-compatible data */
   } = {
     [@ocaml.warning \"-32\"];
     module Raw = {
-      type t;
+      type t = Yojson.Basic.t;
     };
     type t = named;
     type nonrec t_Dog = named;
@@ -449,11 +433,11 @@ function back to the original JSON-compatible data */
       value => {
         let __typename = {
           let value = (value: named).__typename;
-          value;
+          `String(value);
         }
         and name = {
           let value = (value: named).name;
-          value;
+          `String(value);
         };
         `Assoc([(\"name\", name), (\"__typename\", __typename)]);
       };
@@ -484,7 +468,7 @@ function back to the original JSON-compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => t_variables;
+    let serializeVariables: unit => Raw.t_variables;
     let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -513,7 +497,7 @@ function back to the original JSON compatible data */
             let typename: string =
               value
               |> Yojson.Basic.Util.member(\"__typename\")
-              |> Yojson.to_string;
+              |> Yojson.Basic.to_string;
             (
               switch (typename) {
               | \"Dog\" =>

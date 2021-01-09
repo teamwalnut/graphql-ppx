@@ -19,22 +19,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  variousScalars: {
-    .
-    nullableString: option(string),
-    string: string,
-    nullableInt: option(int),
-    int: int,
-    nullableFloat: option(float),
-    float: float,
-    nullableBoolean: option(bool),
-    boolean: bool,
-    nullableID: option(string),
-    id: string,
-  },
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -46,47 +31,45 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< variousScalars = @[<>< nullablleString = %a ; string = %a ; nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]",
          Format.pp_print_string |> print_option,
-         obj#variousScalars#nullableString,
+         obj.variousScalars.nullableString,
          Format.pp_print_string,
-         obj#variousScalars#string,
+         obj.variousScalars.string,
          Format.pp_print_int |> print_option,
-         obj#variousScalars#nullableInt,
+         obj.variousScalars.nullableInt,
          Format.pp_print_int,
-         obj#variousScalars#int,
+         obj.variousScalars.int,
          Format.pp_print_float |> print_option,
-         obj#variousScalars#nullableFloat,
+         obj.variousScalars.nullableFloat,
          Format.pp_print_float,
-         obj#variousScalars#float,
+         obj.variousScalars.float,
          Format.pp_print_bool |> print_option,
-         obj#variousScalars#nullableBoolean,
+         obj.variousScalars.nullableBoolean,
          Format.pp_print_bool,
-         obj#variousScalars#boolean,
+         obj.variousScalars.boolean,
          Format.pp_print_string |> print_option,
-         obj#variousScalars#nullableID,
+         obj.variousScalars.nullableID,
          Format.pp_print_string,
-         obj#variousScalars#id,
+         obj.variousScalars.id,
        );
 
      let equal = (a: qt, b: qt) =>
-       a#variousScalars#nullableString == b#variousScalars#nullableString
-       && a#variousScalars#string == b#variousScalars#string
-       && a#variousScalars#nullableInt == b#variousScalars#nullableInt
-       && a#variousScalars#int == b#variousScalars#int
-       && a#variousScalars#nullableFloat == b#variousScalars#nullableFloat
-       && a#variousScalars#float == b#variousScalars#float
-       && a#variousScalars#nullableBoolean == b#variousScalars#nullableBoolean
-       && a#variousScalars#boolean == b#variousScalars#boolean
-       && a#variousScalars#nullableID == b#variousScalars#nullableID
-       && a#variousScalars#id == b#variousScalars#id;
+       a.variousScalars.nullableString == b.variousScalars.nullableString
+       && a.variousScalars.string == b.variousScalars.string
+       && a.variousScalars.nullableInt == b.variousScalars.nullableInt
+       && a.variousScalars.int == b.variousScalars.int
+       && a.variousScalars.nullableFloat == b.variousScalars.nullableFloat
+       && a.variousScalars.float == b.variousScalars.float
+       && a.variousScalars.nullableBoolean == b.variousScalars.nullableBoolean
+       && a.variousScalars.boolean == b.variousScalars.boolean
+       && a.variousScalars.nullableID == b.variousScalars.nullableID
+       && a.variousScalars.id == b.variousScalars.id;
    });
 
 let decodes_non_null_scalars = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    {| {
       "variousScalars": {
         "nullableString": "a nullable string",
         "string": "a string",
@@ -99,24 +82,23 @@ let decodes_non_null_scalars = () =>
         "nullableID": "a nullable ID",
         "id": "an ID"
       }
-    } |},
-      ),
-    ),
+    } |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub variousScalars = {
-        as _;
-        pub nullableString = Some("a nullable string");
-        pub string = "a string";
-        pub nullableInt = Some(456);
-        pub int = 123;
-        pub nullableFloat = Some(678.5);
-        pub float = 1234.5;
-        pub nullableBoolean = Some(false);
-        pub boolean = true;
-        pub nullableID = Some("a nullable ID");
-        pub id = "an ID"
-      }
+      variousScalars: {
+        nullableString: Some("a nullable string"),
+        string: "a string",
+        nullableInt: Some(456),
+        int: 123,
+        nullableFloat: Some(678.5),
+        float: 1234.5,
+        nullableBoolean: Some(false),
+        boolean: true,
+        nullableID: Some("a nullable ID"),
+        id: "an ID",
+      },
     },
   );
 
@@ -124,9 +106,7 @@ let decodes_null_scalars = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    {| {
       "variousScalars": {
         "nullableString": null,
         "string": "a string",
@@ -139,24 +119,23 @@ let decodes_null_scalars = () =>
         "nullableID": null,
         "id": "an ID"
       }
-    } |},
-      ),
-    ),
+    } |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub variousScalars = {
-        as _;
-        pub nullableString = None;
-        pub string = "a string";
-        pub nullableInt = None;
-        pub int = 123;
-        pub nullableFloat = None;
-        pub float = 1234.5;
-        pub nullableBoolean = None;
-        pub boolean = true;
-        pub nullableID = None;
-        pub id = "an ID"
-      }
+      variousScalars: {
+        nullableString: None,
+        string: "a string",
+        nullableInt: None,
+        int: 123,
+        nullableFloat: None,
+        float: 1234.5,
+        nullableBoolean: None,
+        boolean: true,
+        nullableID: None,
+        id: "an ID",
+      },
     },
   );
 
@@ -164,9 +143,7 @@ let decodes_omitted_scalars = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    {| {
       "variousScalars": {
         "string": "a string",
         "int": 123,
@@ -174,24 +151,23 @@ let decodes_omitted_scalars = () =>
         "boolean": true,
         "id": "an ID"
       }
-    } |},
-      ),
-    ),
+    } |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub variousScalars = {
-        as _;
-        pub nullableString = None;
-        pub string = "a string";
-        pub nullableInt = None;
-        pub int = 123;
-        pub nullableFloat = None;
-        pub float = 1234.5;
-        pub nullableBoolean = None;
-        pub boolean = true;
-        pub nullableID = None;
-        pub id = "an ID"
-      }
+      variousScalars: {
+        nullableString: None,
+        string: "a string",
+        nullableInt: None,
+        int: 123,
+        nullableFloat: None,
+        float: 1234.5,
+        nullableBoolean: None,
+        boolean: true,
+        nullableID: None,
+        id: "an ID",
+      },
     },
   );
 

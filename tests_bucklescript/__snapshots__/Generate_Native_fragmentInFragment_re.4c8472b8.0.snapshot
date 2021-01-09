@@ -39,7 +39,7 @@ function back to the original JSON-compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t;
+    type t = Yojson.Basic.t;
   };
   type t = {nullableOfNullable: option(array(option(string)))};
   type nonrec t_Lists = t;
@@ -50,21 +50,23 @@ function back to the original JSON-compatible data */
         nullableOfNullable: {
           let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               switch (value) {
               | `List(json_list) =>
-                List.map(json_list =>
-                  switch (value) {
-                  | value => Some(Yojson.Basic.Util.to_string(value))
-                  | `Null => None
-                  }
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value => Some(Yojson.Basic.Util.to_string(value))
+                    },
+                  json_list,
                 )
                 |> Array.of_list
-              | _ => []
+              | _ => [||]
               },
             )
-          | `Null => None
           };
         },
       }: t
@@ -79,7 +81,7 @@ function back to the original JSON-compatible data */
             value
             |> Array.map(value =>
                  switch (value) {
-                 | Some(value) => value
+                 | Some(value) => `String(value)
                  | None => `Null
                  }
                )
@@ -121,7 +123,7 @@ function back to the original JSON-compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t;
+    type t = Yojson.Basic.t;
   };
   type t = {
     nullableOfNullable: option(array(option(string))),
@@ -137,21 +139,23 @@ function back to the original JSON-compatible data */
         nullableOfNullable: {
           let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               switch (value) {
               | `List(json_list) =>
-                List.map(json_list =>
-                  switch (value) {
-                  | value => Some(Yojson.Basic.Util.to_string(value))
-                  | `Null => None
-                  }
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value => Some(Yojson.Basic.Util.to_string(value))
+                    },
+                  json_list,
                 )
                 |> Array.of_list
-              | _ => []
+              | _ => [||]
               },
             )
-          | `Null => None
           };
         },
         listFragment:
@@ -171,7 +175,7 @@ function back to the original JSON-compatible data */
                 value
                 |> Array.map(value =>
                      switch (value) {
-                     | Some(value) => value
+                     | Some(value) => `String(value)
                      | None => `Null
                      }
                    )

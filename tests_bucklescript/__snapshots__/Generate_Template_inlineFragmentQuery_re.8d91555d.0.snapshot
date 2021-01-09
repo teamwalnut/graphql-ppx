@@ -17,130 +17,113 @@ Generate Template › inlineFragmentQuery.re › output
     cookies: [],
   }
 ];
-module InlineFragmentQuery: {
+module ListFragment: {
+  [@ocaml.warning \"-32\"];
   module Raw: {
-    type t_dogOrHuman_Dog = {
-      __typename: string,
-      name: string,
-      barkVolume: float,
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
     };
-    type t_dogOrHuman;
-    type t = {dogOrHuman: t_dogOrHuman};
-    type t_variables = unit;
+    type nonrec t_Lists = t;
   };
-  type t_dogOrHuman_Dog = {
-    name: string,
-    barkVolume: float,
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
   };
-  type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ];
-  type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = unit;
-  /** The GraphQL query */
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
   let query: string;
-  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
   let parse: Raw.t => t;
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
-function back to the original JSON compatible data */
+function back to the original JSON-compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
-  let makeVariables: unit => t_variables;
-  let makeDefaultVariables: unit => t_variables;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
-  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t_dogOrHuman_Dog = {
-      __typename: string,
-      name: string,
-      barkVolume: float,
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
     };
-    type t_dogOrHuman;
-    type t = {dogOrHuman: t_dogOrHuman};
-    type t_variables = unit;
+    type nonrec t_Lists = t;
   };
-  type t_dogOrHuman_Dog = {
-    name: string,
-    barkVolume: float,
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
   };
-  type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
-    | `Dog(t_dogOrHuman_Dog)
-  ];
-  type t = {dogOrHuman: t_dogOrHuman};
-  type t_variables = unit;
+  type nonrec t_Lists = t;
   let query: string = [%raw
-    \"require(\\\"gql\\\")`\\n  query   {\\n    dogOrHuman  {\\n      __typename\\n      ...on Dog   {\\n        name\\n        barkVolume\\n      }\\n    }\\n  }\\n`\"
+    \"require(\\\"gql\\\")`\\n  fragment ListFragment on Lists   {\\n    nullableOfNullable\\n    nullableOfNonNullable\\n  }\\n`\"
   ];
   let parse: Raw.t => t =
     (value) => (
       {
-        dogOrHuman: {
-          let value = (value: Raw.t).dogOrHuman;
-          let typename: string =
-            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), \"__typename\"));
-          (
-            switch (typename) {
-            | \"Dog\" =>
-              `Dog(
-                {
-                  let value: Raw.t_dogOrHuman_Dog = Obj.magic(value);
-                  (
-                    {
-                      name: {
-                        let value = (value: Raw.t_dogOrHuman_Dog).name;
-                        value;
-                      },
-                      barkVolume: {
-                        let value = (value: Raw.t_dogOrHuman_Dog).barkVolume;
-                        value;
-                      },
-                    }: t_dogOrHuman_Dog
-                  );
-                },
-              )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
-            }: t_dogOrHuman
-          );
+        nullableOfNullable: {
+          let value = (value: Raw.t).nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        },
+        nullableOfNonNullable: {
+          let value = (value: Raw.t).nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
         },
       }: t
     );
   let serialize: t => Raw.t =
     (value) => (
       {
-        let dogOrHuman = {
-          let value = (value: t).dogOrHuman;
+        let nullableOfNonNullable = {
+          let value = (value: t).nullableOfNonNullable;
           switch (value) {
-          | `Dog(value) => (
-              Obj.magic(
-                {
-                  let barkVolume = {
-                    let value = (value: t_dogOrHuman_Dog).barkVolume;
-                    value;
-                  }
-                  and name = {
-                    let value = (value: t_dogOrHuman_Dog).name;
-                    value;
-                  };
-                  {__typename: \"Dog\", name, barkVolume};
-                }: Raw.t_dogOrHuman_Dog,
-              ): Raw.t_dogOrHuman
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = (value: t).nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
             )
-          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          | None => Js.Nullable.null
           };
         };
-        {dogOrHuman: dogOrHuman};
+        {nullableOfNullable, nullableOfNonNullable};
       }: Raw.t
     );
-  let serializeVariables = () => ();
-  let makeVariables = () => ();
-  let makeDefaultVariables = () => makeVariables();
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `ListFragment => ();
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
-  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 

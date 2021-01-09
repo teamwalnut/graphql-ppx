@@ -17,24 +17,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  first: {
-    .
-    __typename: string,
-    inner:
-      option({
-        .
-        __typename: string,
-        inner:
-          option({
-            .
-            __typename: string,
-            field: string,
-          }),
-      }),
-  },
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -46,46 +29,49 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< first = @[<>< __typename = %a ; inner = %a >@] >",
          Format.pp_print_string,
-         obj#first#__typename,
+         obj.first.__typename,
          formatter =>
            fun
-           | Some(v) =>
+           | Some(v: MyQuery.t_first_inner) =>
              Format.fprintf(
                formatter,
                "Some @[<>< __typename = %a ; inner = %a >@]",
                Format.pp_print_string,
-               v#__typename,
+               v.__typename,
                formatter =>
                  fun
-                 | Some(v) =>
+                 | Some(v: MyQuery.t_first_inner_inner) =>
                    Format.fprintf(
                      formatter,
                      "Some @[<>< __typename = %a ; field = %a >@]",
                      Format.pp_print_string,
-                     v#__typename,
+                     v.__typename,
                      Format.pp_print_string,
-                     v#field,
+                     v.field,
                    )
                  | None => Format.fprintf(formatter, "None"),
-               v#inner,
+               v.inner,
              )
            | None => Format.fprintf(formatter, "None"),
-         obj#first#inner,
+         obj.first.inner,
        );
 
      let equal = (a: qt, b: qt) =>
-       a#first#__typename == b#first#__typename
+       a.first.__typename == b.first.__typename
        && opt_eq(
-            (a, b) =>
-              a#__typename == b#__typename
+            (a: MyQuery.t_first_inner, b: MyQuery.t_first_inner) =>
+              a.__typename == b.__typename
               && opt_eq(
-                   (a, b) =>
-                     a#__typename == b#__typename && a#field == b#field,
-                   a#inner,
-                   b#inner,
+                   (
+                     a: MyQuery.t_first_inner_inner,
+                     b: MyQuery.t_first_inner_inner,
+                   ) =>
+                     a.__typename == b.__typename && a.field == b.field,
+                   a.inner,
+                   b.inner,
                  ),
-            a#first#inner,
-            b#first#inner,
+            a.first.inner,
+            b.first.inner,
           );
    });
 
@@ -93,16 +79,17 @@ let decodes_typename = () =>
   Alcotest.check(
     my_query,
     "result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {|
+    {|
       {"first": {"__typename": "NestedObject", "inner": null}}
-    |},
-      ),
-    ),
+    |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub first = {as _; pub __typename = "NestedObject"; pub inner = None}
+      first: {
+        __typename: "NestedObject",
+        inner: None,
+      },
     },
   );
 

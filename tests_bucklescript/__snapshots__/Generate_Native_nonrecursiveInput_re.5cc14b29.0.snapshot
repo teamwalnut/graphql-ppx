@@ -98,142 +98,163 @@ function back to the original JSON compatible data */
     value => {
       let nonrecursiveInput = {
         let value = (value: t).nonrecursiveInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"nonrecursiveInput\", nonrecursiveInput)]);
     };
   let rec serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      arg:
-        (a => serializeInputObjectNonrecursiveInput(a))(
-          (inp: t_variables).arg,
+    inp =>
+      `Assoc([
+        (
+          \"arg\",
+          (a => serializeInputObjectNonrecursiveInput(a))(
+            (inp: t_variables).arg,
+          ),
         ),
-    }
+      ])
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
-    inp => {
-      nonNullableField:
-        (a => `String(a))(
-          (inp: t_variables_NonrecursiveInput).nonNullableField,
-        ),
-      nullableArray:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => `Null
-                            | Some(b) => (a => `String(a))(b)
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+          \"nonNullableField\",
+          (a => `String(a))(
+            (inp: t_variables_NonrecursiveInput).nonNullableField,
+          ),
+        ),
+        (
+          \"nullableArray\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) => (a => `String(a))(b)
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
                     )
-                    |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).nullableArray,
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).nullableArray,
+          ),
         ),
-      field:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).field,
+          \"field\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).field,
+          ),
         ),
-      enum:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  switch (a) {
-                  | `FIRST => \"FIRST\"
-                  | `SECOND => \"SECOND\"
-                  | `THIRD => \"THIRD\"
-                  }
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).enum,
+          \"enum\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    switch (a) {
+                    | `FIRST => \"FIRST\"
+                    | `SECOND => \"SECOND\"
+                    | `THIRD => \"THIRD\"
+                    }
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).enum,
+          ),
         ),
-      embeddedInput:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => `Null
-                            | Some(b) =>
-                              (a => serializeInputObjectEmbeddedInput(a))(b)
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+          \"embeddedInput\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) =>
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                )
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
                     )
-                    |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).embeddedInput,
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).embeddedInput,
+          ),
         ),
-      custom:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => a)(b)
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).custom,
+          \"custom\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => a)(b)
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).custom,
+          ),
         ),
-    }
+      ])
   and serializeInputObjectEmbeddedInput:
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
-    inp => {
-      field:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_EmbeddedInput).field,
+          \"field\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_EmbeddedInput).field,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectNonrecursiveInput =
       (
@@ -362,150 +383,173 @@ function back to the original JSON compatible data */
     value => {
       let more = {
         let value = (value: t).more;
-        value;
+        `String(value);
       }
       and scalarsInput = {
         let value = (value: t).scalarsInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"scalarsInput\", scalarsInput), (\"more\", more)]);
     };
   let rec serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      arg:
-        (a => serializeInputObjectNonrecursiveInput(a))(
-          (inp: t_variables).arg,
+    inp =>
+      `Assoc([
+        (
+          \"arg\",
+          (a => serializeInputObjectNonrecursiveInput(a))(
+            (inp: t_variables).arg,
+          ),
         ),
-      arg2:
-        (a => serializeInputObjectNonrecursiveInput(a))(
-          (inp: t_variables).arg2,
+        (
+          \"arg2\",
+          (a => serializeInputObjectNonrecursiveInput(a))(
+            (inp: t_variables).arg2,
+          ),
         ),
-    }
+      ])
   and serializeInputObjectNonrecursiveInput:
     t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
-    inp => {
-      nonNullableField:
-        (a => `String(a))(
-          (inp: t_variables_NonrecursiveInput).nonNullableField,
-        ),
-      nullableArray:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => `Null
-                            | Some(b) => (a => `String(a))(b)
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+          \"nonNullableField\",
+          (a => `String(a))(
+            (inp: t_variables_NonrecursiveInput).nonNullableField,
+          ),
+        ),
+        (
+          \"nullableArray\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) => (a => `String(a))(b)
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
                     )
-                    |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).nullableArray,
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).nullableArray,
+          ),
         ),
-      field:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).field,
+          \"field\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).field,
+          ),
         ),
-      enum:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  switch (a) {
-                  | `FIRST => \"FIRST\"
-                  | `SECOND => \"SECOND\"
-                  | `THIRD => \"THIRD\"
-                  }
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).enum,
+          \"enum\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    switch (a) {
+                    | `FIRST => \"FIRST\"
+                    | `SECOND => \"SECOND\"
+                    | `THIRD => \"THIRD\"
+                    }
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).enum,
+          ),
         ),
-      embeddedInput:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => `Null
-                            | Some(b) =>
-                              (a => serializeInputObjectEmbeddedInput(a))(b)
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+          \"embeddedInput\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) =>
+                                (a => serializeInputObjectEmbeddedInput(a))(
+                                  b,
+                                )
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
                     )
-                    |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).embeddedInput,
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).embeddedInput,
+          ),
         ),
-      custom:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => a)(b)
-            }
-        )(
-          (inp: t_variables_NonrecursiveInput).custom,
+          \"custom\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => a)(b)
+              }
+          )(
+            (inp: t_variables_NonrecursiveInput).custom,
+          ),
         ),
-    }
+      ])
   and serializeInputObjectEmbeddedInput:
     t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
-    inp => {
-      field:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_EmbeddedInput).field,
+          \"field\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_EmbeddedInput).field,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~arg, ~arg2, ()): t_variables => {arg, arg2}
   and makeInputObjectNonrecursiveInput =
       (

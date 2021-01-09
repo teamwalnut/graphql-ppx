@@ -43,7 +43,7 @@ module RecordsQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -211,7 +211,7 @@ module ObjectsQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";

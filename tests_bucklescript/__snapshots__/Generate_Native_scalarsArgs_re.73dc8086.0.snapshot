@@ -94,68 +94,79 @@ function back to the original JSON compatible data */
     value => {
       let scalarsInput = {
         let value = (value: t).scalarsInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"scalarsInput\", scalarsInput)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      nullableString:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).nullableString,
+          \"nullableString\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableString,
+          ),
         ),
-      string: (a => `String(a))((inp: t_variables).string),
-      nullableInt:
+        (\"string\", (a => `String(a))((inp: t_variables).string)),
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Int(a))(b)
-            }
-        )(
-          (inp: t_variables).nullableInt,
+          \"nullableInt\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Int(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableInt,
+          ),
         ),
-      int: (a => `Int(a))((inp: t_variables).int),
-      nullableFloat:
+        (\"int\", (a => `Int(a))((inp: t_variables).int)),
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Float(a))(b)
-            }
-        )(
-          (inp: t_variables).nullableFloat,
+          \"nullableFloat\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Float(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableFloat,
+          ),
         ),
-      float: (a => `Float(a))((inp: t_variables).float),
-      nullableBoolean:
+        (\"float\", (a => `Float(a))((inp: t_variables).float)),
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Bool(a))(b)
-            }
-        )(
-          (inp: t_variables).nullableBoolean,
+          \"nullableBoolean\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Bool(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableBoolean,
+          ),
         ),
-      boolean: (a => `Bool(a))((inp: t_variables).boolean),
-      nullableID:
+        (\"boolean\", (a => `Bool(a))((inp: t_variables).boolean)),
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).nullableID,
+          \"nullableID\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableID,
+          ),
         ),
-      id: (a => `String(a))((inp: t_variables).id),
-    };
+        (\"id\", (a => `String(a))((inp: t_variables).id)),
+      ]);
   let makeVariables =
       (
         ~nullableString=?,

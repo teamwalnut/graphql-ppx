@@ -34,15 +34,16 @@ let allows_you_to_omit_nullable_arguments = () =>
   Alcotest.check(
     yojson,
     "json equality",
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~string="a string",
       ~int=123,
       ~float=1234.5,
       ~boolean=true,
       ~id="an ID",
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "nullableString": null,
@@ -63,7 +64,7 @@ let includes_non_nulled_arguments = () =>
   Alcotest.check(
     yojson,
     "json equality",
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~nullableString="a nullable string",
       ~string="a string",
       ~nullableInt=456,
@@ -75,8 +76,9 @@ let includes_non_nulled_arguments = () =>
       ~nullableID="a nullable ID",
       ~id="an ID",
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "nullableString": "a nullable string",

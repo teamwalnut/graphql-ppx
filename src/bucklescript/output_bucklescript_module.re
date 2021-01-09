@@ -1030,7 +1030,7 @@ let generate_fragment_implementation =
     );
   let raw_types =
     config.native
-      ? [[%stri type t]]
+      ? [[%stri type t = Yojson.Basic.t]]
       : Output_bucklescript_types.generate_type_structure_items(
           config,
           res_structure,

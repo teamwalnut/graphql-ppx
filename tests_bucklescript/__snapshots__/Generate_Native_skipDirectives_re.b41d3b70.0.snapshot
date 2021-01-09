@@ -77,15 +77,15 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
                 let value = Yojson.Basic.Util.member(\"string\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
             }: t_v1
@@ -98,15 +98,15 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
                 let value = Yojson.Basic.Util.member(\"string\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
             }: t_v2
@@ -121,14 +121,14 @@ function back to the original JSON compatible data */
         let string = {
           let value = (value: t_v2).string;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and nullableString = {
           let value = (value: t_v2).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -139,14 +139,14 @@ function back to the original JSON compatible data */
         let string = {
           let value = (value: t_v1).string;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and nullableString = {
           let value = (value: t_v1).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -155,7 +155,7 @@ function back to the original JSON compatible data */
       `Assoc([(\"v1\", v1), (\"v2\", v2)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {var: (a => `Bool(a))((inp: t_variables).var)};
+    inp => `Assoc([(\"var\", (a => `Bool(a))((inp: t_variables).var))]);
   let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

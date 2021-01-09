@@ -15,19 +15,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  dogOrHuman: [
-    | `Dog(
-        {
-          .
-          name: string,
-          barkVolume: float,
-        },
-      )
-    | `Human({. name: string})
-  ],
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -40,30 +28,30 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          "< dogOrHuman = %a >",
          formatter =>
            fun
-           | `Dog(dog) =>
+           | `Dog(dog: MyQuery.t_dogOrHuman_Dog) =>
              Format.fprintf(
                formatter,
                "`Dog @[<>< name = %a ; barkVolume = %a >@]",
                Format.pp_print_string,
-               dog#name,
+               dog.name,
                Format.pp_print_float,
-               dog#barkVolume,
+               dog.barkVolume,
              )
-           | `Human(human) =>
+           | `Human(human: MyQuery.t_dogOrHuman_Human) =>
              Format.fprintf(
                formatter,
                "`Human @[<>< name = %a >@]",
                Format.pp_print_string,
-               human#name,
+               human.name,
              ),
-         obj#dogOrHuman,
+         obj.dogOrHuman,
        );
 
      let equal = (a: qt, b: qt) =>
-       switch (a#dogOrHuman, b#dogOrHuman) {
+       switch (a.dogOrHuman, b.dogOrHuman) {
        | (`Dog(a), `Dog(b)) =>
-         a#name == b#name && a#barkVolume == b#barkVolume
-       | (`Human(a), `Human(b)) => a#name == b#name
+         a.name == b.name && a.barkVolume == b.barkVolume
+       | (`Human(a), `Human(b)) => a.name == b.name
        | _ => false
        };
    });
@@ -72,21 +60,17 @@ let decodes_exhaustive_query = () =>
   Alcotest.check(
     my_query,
     "result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    {| {
       "dogOrHuman": {
         "__typename": "Dog",
         "name": "Fido",
         "barkVolume": 123
       }
-    } |},
-      ),
-    ),
-    {
-      as _;
-      pub dogOrHuman = `Dog({as _; pub name = "Fido"; pub barkVolume = 123.0})
-    },
+    } |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
+    {dogOrHuman: `Dog({name: "Fido", barkVolume: 123.0})},
   );
 
 let tests = [("Decodes exhaustive query", `Quick, decodes_exhaustive_query)];

@@ -42,7 +42,7 @@ function back to the original JSON-compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t;
+    type t = Yojson.Basic.t;
   };
   type t_user = {
     id: string,
@@ -66,8 +66,8 @@ function back to the original JSON-compatible data */
               firstname: {
                 let value = Yojson.Basic.Util.member(\"firstname\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               lastname: {
@@ -85,18 +85,18 @@ function back to the original JSON-compatible data */
         let value = (value: t).user;
         let lastname = {
           let value = (value: t_user).lastname;
-          value;
+          `String(value);
         }
         and firstname = {
           let value = (value: t_user).firstname;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and id = {
           let value = (value: t_user).id;
-          value;
+          `String(value);
         };
         `Assoc([
           (\"id\", id),

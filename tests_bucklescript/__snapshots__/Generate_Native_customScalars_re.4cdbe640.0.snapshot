@@ -70,8 +70,8 @@ function back to the original JSON compatible data */
               nullable: {
                 let value = Yojson.Basic.Util.member(\"nullable\", value);
                 switch (value) {
-                | value => Some(value)
                 | `Null => None
+                | value => Some(value)
                 };
               },
               nonNullable: {
@@ -103,19 +103,22 @@ function back to the original JSON compatible data */
       `Assoc([(\"customScalarField\", customScalarField)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      opt:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => a)(b)
-            }
-        )(
-          (inp: t_variables).opt,
+          \"opt\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => a)(b)
+              }
+          )(
+            (inp: t_variables).opt,
+          ),
         ),
-      req: (a => a)((inp: t_variables).req),
-    };
+        (\"req\", (a => a)((inp: t_variables).req)),
+      ]);
   let makeVariables = (~opt=?, ~req, ()): t_variables => {opt, req};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

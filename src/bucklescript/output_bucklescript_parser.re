@@ -221,9 +221,9 @@ let rec generate_nullable_decoder = (config, loc, inner, path, definition) =>
     ? [@metaloc loc]
       (
         switch%expr (value) {
+        | `Null => None
         | value =>
           Some([%e generate_parser(config, path, definition, inner)])
-        | `Null => None
         }
       )
     : [@metaloc loc]
@@ -240,12 +240,15 @@ and generate_array_decoder = (config, loc, inner, path, definition) =>
       (
         switch%expr (value) {
         | `List(json_list) =>
-          List.map(json_list => {
-            %e
-            generate_parser(config, path, definition, inner)
-          })
+          List.map(
+            value => {
+              %e
+              generate_parser(config, path, definition, inner)
+            },
+            json_list,
+          )
           |> Array.of_list
-        | _ => []
+        | _ => [||]
         }
       )
     : [@metaloc loc]
@@ -550,7 +553,9 @@ and generate_poly_variant_interface_decoder =
     ? [@metaloc loc]
       {
         let%expr typename: string =
-          value |> Yojson.Basic.Util.member("__typename") |> Yojson.to_string;
+          value
+          |> Yojson.Basic.Util.member("__typename")
+          |> Yojson.Basic.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );
@@ -670,7 +675,9 @@ and generate_poly_variant_union_decoder =
     ? [@metaloc loc]
       {
         let%expr typename: string =
-          value |> Yojson.Basic.Util.member("__typename") |> Yojson.to_string;
+          value
+          |> Yojson.Basic.Util.member("__typename")
+          |> Yojson.Basic.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );

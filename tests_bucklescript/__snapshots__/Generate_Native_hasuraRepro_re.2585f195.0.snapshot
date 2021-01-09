@@ -36,7 +36,7 @@ function back to the original JSON-compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t;
+    type t = Yojson.Basic.t;
   };
   type t = {name: string};
   type nonrec t_Dog = t;
@@ -54,7 +54,7 @@ function back to the original JSON-compatible data */
     value => {
       let name = {
         let value = (value: t).name;
-        value;
+        `String(value);
       };
       `Assoc([(\"name\", name)]);
     };
@@ -123,28 +123,33 @@ function back to the original JSON compatible data */
       `Assoc([(\"hasuraRepro\", hasuraRepro)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      blockNumber:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Int(a))(b)
-            }
-        )(
-          (inp: t_variables).blockNumber,
+          \"blockNumber\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Int(a))(b)
+              }
+          )(
+            (inp: t_variables).blockNumber,
+          ),
         ),
-      type_:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).type_,
+          \"type\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).type_,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {
     blockNumber,
     type_,

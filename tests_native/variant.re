@@ -17,19 +17,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  mutationWithError: [
-    | `Value({. stringField: string})
-    | `Errors(
-        array({
-          .
-          field: [ | `FIRST | `SECOND | `THIRD],
-          message: string,
-        }),
-      )
-  ],
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -42,42 +30,48 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          "< mutationWithError = %a >",
          formatter =>
            fun
-           | `Value(v) =>
+           | `Value(v: MyQuery.t_mutationWithError_value) =>
              Format.fprintf(
                formatter,
                "`Value @[<>< stringField = %a >@]",
                Format.pp_print_string,
-               v#stringField,
+               v.stringField,
              )
-           | `Errors(v) =>
+           | `Errors(v: MyQuery.t_mutationWithError_errors) =>
              Format.fprintf(
                formatter,
                "`Errors %a",
-               print_array((formatter, v) =>
+               print_array((formatter, v: MyQuery.t_mutationWithError_errors) =>
                  Format.fprintf(
                    formatter,
                    "< field = %a ; message = %a >",
                    Format.pp_print_string,
-                   switch (v#field) {
+                   switch (v.field) {
                    | `FIRST => "FIRST"
                    | `SECOND => "SECOND"
                    | `THIRD => "THIRD"
+                   | `FutureAddedValue(_) => "THIRD"
                    },
                    Format.pp_print_string,
-                   v#message,
+                   v.message,
                  )
                ),
                v,
-             ),
-         obj#mutationWithError,
+             )
+           | `FutureAddedValue(_) => (),
+         obj.mutationWithError,
        );
 
      let equal = (a: qt, b: qt) =>
-       switch (a#mutationWithError, b#mutationWithError) {
-       | (`Value(a), `Value(b)) => a#stringField == b#stringField
+       switch (a.mutationWithError, b.mutationWithError) {
+       | (`Value(a), `Value(b)) => a.stringField == b.stringField
        | (`Errors(a), `Errors(b)) =>
          array_zipmap(
-           (a, b) => a#field == b#field && a#message == b#message,
+           (
+             a: MyQuery.t_mutationWithError_errors,
+             b: MyQuery.t_mutationWithError_errors,
+           ) =>
+             a.field == b.field && a.message == b.message,
            a,
            b,
          )
@@ -91,21 +85,17 @@ let converts_into_variant = () =>
   Alcotest.check(
     my_query,
     "result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {
+    {| {
     "mutationWithError": {
       "value": {
         "stringField": "a string"
       }
     }
-  } |},
-      ),
-    ),
-    {
-      as _;
-      pub mutationWithError = `Value({as _; pub stringField = "a string"})
-    },
+  } |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
+    {mutationWithError: `Value({stringField: "a string"})},
   );
 
 let tests = [

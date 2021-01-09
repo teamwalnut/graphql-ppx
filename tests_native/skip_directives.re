@@ -15,19 +15,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  v1: {
-    .
-    nullableString: option(string),
-    string: option(string),
-  },
-  v2: {
-    .
-    nullableString: option(string),
-    string: option(string),
-  },
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -39,35 +27,39 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< v1 = @[<>< nullableString = %a ; string = %a >@] ; @[<>< nullableString = %a ; string = %a >@] >",
          Format.pp_print_string |> print_option,
-         obj#v1#nullableString,
+         obj.v1.nullableString,
          Format.pp_print_string |> print_option,
-         obj#v1#string,
+         obj.v1.string,
          Format.pp_print_string |> print_option,
-         obj#v2#nullableString,
+         obj.v2.nullableString,
          Format.pp_print_string |> print_option,
-         obj#v2#string,
+         obj.v2.string,
        );
 
      let equal = (a: qt, b: qt) =>
-       a#v1#nullableString == b#v1#nullableString
-       && a#v1#string == b#v1#string
-       && a#v2#nullableString == b#v2#nullableString
-       && a#v2#string == b#v2#string;
+       a.v1.nullableString == b.v1.nullableString
+       && a.v1.string == b.v1.string
+       && a.v2.nullableString == b.v2.nullableString
+       && a.v2.string == b.v2.string;
    });
 
 let responds_with_none_to_nulled_fields = () =>
   Alcotest.check(
     my_query,
     "query equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|},
-      ),
-    ),
+    {|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub v1 = {as _; pub nullableString = None; pub string = None};
-      pub v2 = {as _; pub nullableString = None; pub string = None}
+      v1: {
+        nullableString: None,
+        string: None,
+      },
+      v2: {
+        nullableString: None,
+        string: None,
+      },
     },
   );
 
@@ -75,11 +67,19 @@ let responds_with_none_to_omitted_fields = () =>
   Alcotest.check(
     my_query,
     "query equality",
-    MyQuery.parse(Yojson.Basic.from_string({|{"v1": {}, "v2": {}}|})),
+    {|{"v1": {}, "v2": {}}|}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
     {
-      as _;
-      pub v1 = {as _; pub nullableString = None; pub string = None};
-      pub v2 = {as _; pub nullableString = None; pub string = None}
+      v1: {
+        nullableString: None,
+        string: None,
+      },
+      v2: {
+        nullableString: None,
+        string: None,
+      },
     },
   );
 

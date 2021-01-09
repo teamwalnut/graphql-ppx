@@ -66,6 +66,7 @@ function back to the original JSON compatible data */
         pokemon: {
           let value = Yojson.Basic.Util.member(\"pokemon\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               {
@@ -76,13 +77,12 @@ function back to the original JSON compatible data */
                 name: {
                   let value = Yojson.Basic.Util.member(\"name\", value);
                   switch (value) {
-                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   };
                 },
               }: t_pokemon,
             )
-          | `Null => None
           };
         },
       }: t
@@ -96,13 +96,13 @@ function back to the original JSON compatible data */
           let name = {
             let value = (value: t_pokemon).name;
             switch (value) {
-            | Some(value) => value
+            | Some(value) => `String(value)
             | None => `Null
             };
           }
           and id = {
             let value = (value: t_pokemon).id;
-            value;
+            `String(value);
           };
           `Assoc([(\"id\", id), (\"name\", name)]);
         | None => `Null
@@ -111,28 +111,33 @@ function back to the original JSON compatible data */
       `Assoc([(\"pokemon\", pokemon)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      id:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).id,
+          \"id\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).id,
+          ),
         ),
-      name:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).name,
+          \"name\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).name,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~id=?, ~name=?, ()): t_variables => {id, name};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -188,6 +193,7 @@ function back to the original JSON compatible data */
         pokemon: {
           let value = Yojson.Basic.Util.member(\"pokemon\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               {
@@ -198,13 +204,12 @@ function back to the original JSON compatible data */
                 name: {
                   let value = Yojson.Basic.Util.member(\"name\", value);
                   switch (value) {
-                  | value => Some(Yojson.Basic.Util.to_string(value))
                   | `Null => None
+                  | value => Some(Yojson.Basic.Util.to_string(value))
                   };
                 },
               }: t_pokemon,
             )
-          | `Null => None
           };
         },
       }: t
@@ -218,13 +223,13 @@ function back to the original JSON compatible data */
           let name = {
             let value = (value: t_pokemon).name;
             switch (value) {
-            | Some(value) => value
+            | Some(value) => `String(value)
             | None => `Null
             };
           }
           and id = {
             let value = (value: t_pokemon).id;
-            value;
+            `String(value);
           };
           `Assoc([(\"id\", id), (\"name\", name)]);
         | None => `Null
@@ -233,28 +238,33 @@ function back to the original JSON compatible data */
       `Assoc([(\"pokemon\", pokemon)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      id:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).id,
+          \"id\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).id,
+          ),
         ),
-      name:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables).name,
+          \"name\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).name,
+          ),
         ),
-    };
+      ]);
   let makeVariables = (~id=?, ~name=?, ()): t_variables => {id, name};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";

@@ -58,7 +58,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -295,7 +295,7 @@ module MyQuery1a: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -528,7 +528,7 @@ module MyQuery1b: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -761,7 +761,7 @@ module MyQuery2: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -994,7 +994,7 @@ module MyQuery3: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -1227,7 +1227,7 @@ module MyQuery4: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -1545,7 +1545,7 @@ module MyQuery5: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -1603,7 +1603,7 @@ module MyQuery6: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -1664,7 +1664,7 @@ module MyQuery7: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
@@ -1746,7 +1746,7 @@ module MyQuery8: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";

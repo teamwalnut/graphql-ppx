@@ -47,7 +47,7 @@ module QueryWithOnlyFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -82,46 +82,49 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            List.map(json_list =>
-              let typename: string =
-                value
-                |> Yojson.Basic.Util.member(\"__typename\")
-                |> Yojson.to_string;
-              (
-                switch (typename) {
-                | \"AnonymousUser\" =>
-                  `AnonymousUser(
-                    {
-                      id: {
-                        let value = Yojson.Basic.Util.member(\"id\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                      anonymousId: {
-                        let value =
-                          Yojson.Basic.Util.member(\"anonymousId\", value);
-                        Yojson.Basic.Util.to_int(value);
-                      },
-                    }: t_users_User_AnonymousUser,
-                  )
-                | \"AdminUser\" =>
-                  `AdminUser(
-                    {
-                      id: {
-                        let value = Yojson.Basic.Util.member(\"id\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                      name: {
-                        let value = Yojson.Basic.Util.member(\"name\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                    }: t_users_User_AdminUser,
-                  )
-                | _ => `UnspecifiedFragment(typename)
-                }: t_users_User
-              );
+            List.map(
+              value => {
+                let typename: string =
+                  value
+                  |> Yojson.Basic.Util.member(\"__typename\")
+                  |> Yojson.Basic.to_string;
+                (
+                  switch (typename) {
+                  | \"AnonymousUser\" =>
+                    `AnonymousUser(
+                      {
+                        id: {
+                          let value = Yojson.Basic.Util.member(\"id\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                        anonymousId: {
+                          let value =
+                            Yojson.Basic.Util.member(\"anonymousId\", value);
+                          Yojson.Basic.Util.to_int(value);
+                        },
+                      }: t_users_User_AnonymousUser,
+                    )
+                  | \"AdminUser\" =>
+                    `AdminUser(
+                      {
+                        id: {
+                          let value = Yojson.Basic.Util.member(\"id\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                        name: {
+                          let value = Yojson.Basic.Util.member(\"name\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                      }: t_users_User_AdminUser,
+                    )
+                  | _ => `UnspecifiedFragment(typename)
+                  }: t_users_User
+                );
+              },
+              json_list,
             )
             |> Array.of_list
-          | _ => []
+          | _ => [||]
           };
         },
       }: t
@@ -137,15 +140,11 @@ function back to the original JSON compatible data */
                | `AnonymousUser(value) =>
                  let anonymousId = {
                    let value = (value: t_users_User_AnonymousUser).anonymousId;
-                   value;
+                   `Int(value);
                  }
                  and id = {
                    let value = (value: t_users_User_AnonymousUser).id;
-                   value;
-                 }
-                 and __typename = {
-                   let value = (value: t_users_User_AnonymousUser).__typename;
-                   value;
+                   `String(value);
                  };
                  `Assoc([
                    (\"__typename\", `String(\"AnonymousUser\")),
@@ -155,15 +154,11 @@ function back to the original JSON compatible data */
                | `AdminUser(value) =>
                  let name = {
                    let value = (value: t_users_User_AdminUser).name;
-                   value;
+                   `String(value);
                  }
                  and id = {
                    let value = (value: t_users_User_AdminUser).id;
-                   value;
-                 }
-                 and __typename = {
-                   let value = (value: t_users_User_AdminUser).__typename;
-                   value;
+                   `String(value);
                  };
                  `Assoc([
                    (\"__typename\", `String(\"AdminUser\")),
@@ -207,7 +202,7 @@ module QueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -237,33 +232,36 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            List.map(json_list =>
-              let typename: string =
-                value
-                |> Yojson.Basic.Util.member(\"__typename\")
-                |> Yojson.to_string;
-              (
-                switch (typename) {
-                | \"AdminUser\" =>
-                  `AdminUser(
-                    {
-                      __typename: {
-                        let value =
-                          Yojson.Basic.Util.member(\"__typename\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                      id: {
-                        let value = Yojson.Basic.Util.member(\"id\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                    }: t_users_User_AdminUser,
-                  )
-                | _ => `UnspecifiedFragment(typename)
-                }: t_users_User
-              );
+            List.map(
+              value => {
+                let typename: string =
+                  value
+                  |> Yojson.Basic.Util.member(\"__typename\")
+                  |> Yojson.Basic.to_string;
+                (
+                  switch (typename) {
+                  | \"AdminUser\" =>
+                    `AdminUser(
+                      {
+                        __typename: {
+                          let value =
+                            Yojson.Basic.Util.member(\"__typename\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                        id: {
+                          let value = Yojson.Basic.Util.member(\"id\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                      }: t_users_User_AdminUser,
+                    )
+                  | _ => `UnspecifiedFragment(typename)
+                  }: t_users_User
+                );
+              },
+              json_list,
             )
             |> Array.of_list
-          | _ => []
+          | _ => [||]
           };
         },
       }: t
@@ -279,11 +277,11 @@ function back to the original JSON compatible data */
                | `AdminUser(value) =>
                  let id = {
                    let value = (value: t_users_User_AdminUser).id;
-                   value;
+                   `String(value);
                  }
                  and __typename = {
                    let value = (value: t_users_User_AdminUser).__typename;
-                   value;
+                   `String(value);
                  };
                  `Assoc([
                    (\"__typename\", `String(\"AdminUser\")),
@@ -329,7 +327,7 @@ module QueryWithMixedFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -362,14 +360,14 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            List.map((json_list) =>
-              (
+            List.map(
+              (value): t_users =>
                 {
                   fragment: {
                     let typename: string =
                       value
                       |> Yojson.Basic.Util.member(\"__typename\")
-                      |> Yojson.to_string;
+                      |> Yojson.Basic.to_string;
                     (
                       switch (typename) {
                       | \"AnonymousUser\" =>
@@ -403,11 +401,11 @@ function back to the original JSON compatible data */
                     let value = Yojson.Basic.Util.member(\"id\", value);
                     Yojson.Basic.Util.to_string(value);
                   },
-                }: t_users
-              )
+                },
+              json_list,
             )
             |> Array.of_list
-          | _ => []
+          | _ => [||]
           };
         },
       }: t
@@ -424,7 +422,7 @@ function back to the original JSON compatible data */
                  {
                    let id = {
                      let value = (value: t_users).id;
-                     value;
+                     `String(value);
                    };
                    {\"id\": id};
                  },
@@ -436,12 +434,7 @@ function back to the original JSON compatible data */
                        let anonymousId = {
                          let value =
                            (value: t_users_User_AnonymousUser).anonymousId;
-                         value;
-                       }
-                       and __typename = {
-                         let value =
-                           (value: t_users_User_AnonymousUser).__typename;
-                         value;
+                         `Int(value);
                        };
                        `Assoc([
                          (\"__typename\", `String(\"AnonymousUser\")),
@@ -450,12 +443,7 @@ function back to the original JSON compatible data */
                      | `AdminUser(value) =>
                        let name = {
                          let value = (value: t_users_User_AdminUser).name;
-                         value;
-                       }
-                       and __typename = {
-                         let value =
-                           (value: t_users_User_AdminUser).__typename;
-                         value;
+                         `String(value);
                        };
                        `Assoc([
                          (\"__typename\", `String(\"AdminUser\")),
@@ -506,7 +494,7 @@ module MixedQueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -541,14 +529,14 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            List.map((json_list) =>
-              (
+            List.map(
+              (value): t_users =>
                 {
                   fragment: {
                     let typename: string =
                       value
                       |> Yojson.Basic.Util.member(\"__typename\")
-                      |> Yojson.to_string;
+                      |> Yojson.Basic.to_string;
                     (
                       switch (typename) {
                       | \"AdminUser\" =>
@@ -578,11 +566,11 @@ function back to the original JSON compatible data */
                     let value = Yojson.Basic.Util.member(\"id\", value);
                     Yojson.Basic.Util.to_string(value);
                   },
-                }: t_users
-              )
+                },
+              json_list,
             )
             |> Array.of_list
-          | _ => []
+          | _ => [||]
           };
         },
       }: t
@@ -599,11 +587,11 @@ function back to the original JSON compatible data */
                  {
                    let id = {
                      let value = (value: t_users).id;
-                     value;
+                     `String(value);
                    }
                    and __typename = {
                      let value = (value: t_users).__typename;
-                     value;
+                     `String(value);
                    };
                    {\"__typename\": __typename, \"id\": id};
                  },
@@ -614,12 +602,12 @@ function back to the original JSON compatible data */
                      | `AdminUser(value) =>
                        let id = {
                          let value = (value: t_users_User_AdminUser).id;
-                         value;
+                         `String(value);
                        }
                        and __typename = {
                          let value =
                            (value: t_users_User_AdminUser).__typename;
-                         value;
+                         `String(value);
                        };
                        `Assoc([
                          (\"__typename\", `String(\"AdminUser\")),
@@ -658,7 +646,7 @@ module QueryWithoutFragments: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -681,18 +669,18 @@ function back to the original JSON compatible data */
           let value = Yojson.Basic.Util.member(\"users\", value);
           switch (value) {
           | `List(json_list) =>
-            List.map((json_list) =>
-              (
+            List.map(
+              (value): t_users =>
                 {
                   id: {
                     let value = Yojson.Basic.Util.member(\"id\", value);
                     Yojson.Basic.Util.to_string(value);
                   },
-                }: t_users
-              )
+                },
+              json_list,
             )
             |> Array.of_list
-          | _ => []
+          | _ => [||]
           };
         },
       }: t
@@ -706,7 +694,7 @@ function back to the original JSON compatible data */
           |> Array.map(value =>
                let id = {
                  let value = (value: t_users).id;
-                 value;
+                 `String(value);
                };
                `Assoc([(\"id\", id)]);
              )

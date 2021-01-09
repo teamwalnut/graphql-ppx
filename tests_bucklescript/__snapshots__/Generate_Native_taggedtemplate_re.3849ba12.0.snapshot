@@ -46,7 +46,7 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -85,8 +85,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -96,8 +96,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -107,8 +107,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -119,8 +119,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -130,8 +130,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -149,56 +149,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -254,7 +254,7 @@ module MyQuery1a: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -293,8 +293,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -304,8 +304,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -315,8 +315,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -327,8 +327,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -338,8 +338,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -357,56 +357,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -458,7 +458,7 @@ module MyQuery1b: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -497,8 +497,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -508,8 +508,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -519,8 +519,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -531,8 +531,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -542,8 +542,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -561,56 +561,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -662,7 +662,7 @@ module MyQuery2: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -701,8 +701,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -712,8 +712,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -723,8 +723,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -735,8 +735,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -746,8 +746,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -765,56 +765,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -866,7 +866,7 @@ module MyQuery3: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -905,8 +905,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -916,8 +916,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -927,8 +927,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -939,8 +939,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -950,8 +950,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -969,56 +969,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -1070,7 +1070,7 @@ module MyQuery4: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -1109,8 +1109,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -1120,8 +1120,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -1131,8 +1131,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -1143,8 +1143,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -1154,8 +1154,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -1173,56 +1173,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };
@@ -1270,7 +1270,7 @@ function back to the original JSON-compatible data */
 } = {
   [@ocaml.warning \"-32\"];
   module Raw = {
-    type t;
+    type t = Yojson.Basic.t;
   };
   type t = {
     nullableOfNullable: option(array(option(string))),
@@ -1286,37 +1286,42 @@ function back to the original JSON-compatible data */
         nullableOfNullable: {
           let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               switch (value) {
               | `List(json_list) =>
-                List.map(json_list =>
-                  switch (value) {
-                  | value => Some(Yojson.Basic.Util.to_string(value))
-                  | `Null => None
-                  }
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value => Some(Yojson.Basic.Util.to_string(value))
+                    },
+                  json_list,
                 )
                 |> Array.of_list
-              | _ => []
+              | _ => [||]
               },
             )
-          | `Null => None
           };
         },
         nullableOfNonNullable: {
           let value =
             Yojson.Basic.Util.member(\"nullableOfNonNullable\", value);
           switch (value) {
+          | `Null => None
           | value =>
             Some(
               switch (value) {
               | `List(json_list) =>
-                List.map(json_list => Yojson.Basic.Util.to_string(value))
+                List.map(
+                  value => Yojson.Basic.Util.to_string(value),
+                  json_list,
+                )
                 |> Array.of_list
-              | _ => []
+              | _ => [||]
               },
             )
-          | `Null => None
           };
         },
       }: t
@@ -1327,7 +1332,7 @@ function back to the original JSON-compatible data */
         let value = (value: t).nullableOfNonNullable;
         switch (value) {
         | Some(value) =>
-          `List(value |> Array.map(value => value) |> Array.to_list)
+          `List(value |> Array.map(value => `String(value)) |> Array.to_list)
         | None => `Null
         };
       }
@@ -1339,7 +1344,7 @@ function back to the original JSON-compatible data */
             value
             |> Array.map(value =>
                  switch (value) {
-                 | Some(value) => value
+                 | Some(value) => `String(value)
                  | None => `Null
                  }
                )
@@ -1376,7 +1381,7 @@ module MyQuery5: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -1432,7 +1437,7 @@ module MyQuery6: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -1491,7 +1496,7 @@ module MyQuery7: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -1559,7 +1564,7 @@ module MyQuery8: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => t_variables;
+  let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
@@ -1600,8 +1605,8 @@ function back to the original JSON compatible data */
               nullableString: {
                 let value = Yojson.Basic.Util.member(\"nullableString\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               string: {
@@ -1611,8 +1616,8 @@ function back to the original JSON compatible data */
               nullableInt: {
                 let value = Yojson.Basic.Util.member(\"nullableInt\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_int(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_int(value))
                 };
               },
               int: {
@@ -1622,8 +1627,8 @@ function back to the original JSON compatible data */
               nullableFloat: {
                 let value = Yojson.Basic.Util.member(\"nullableFloat\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_float(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_float(value))
                 };
               },
               float: {
@@ -1634,8 +1639,8 @@ function back to the original JSON compatible data */
                 let value =
                   Yojson.Basic.Util.member(\"nullableBoolean\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_bool(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_bool(value))
                 };
               },
               boolean: {
@@ -1645,8 +1650,8 @@ function back to the original JSON compatible data */
               nullableID: {
                 let value = Yojson.Basic.Util.member(\"nullableID\", value);
                 switch (value) {
-                | value => Some(Yojson.Basic.Util.to_string(value))
                 | `Null => None
+                | value => Some(Yojson.Basic.Util.to_string(value))
                 };
               },
               id: {
@@ -1664,56 +1669,56 @@ function back to the original JSON compatible data */
         let value = (value: t).variousScalars;
         let id = {
           let value = (value: t_variousScalars).id;
-          value;
+          `String(value);
         }
         and nullableID = {
           let value = (value: t_variousScalars).nullableID;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         }
         and boolean = {
           let value = (value: t_variousScalars).boolean;
-          value;
+          `Bool(value);
         }
         and nullableBoolean = {
           let value = (value: t_variousScalars).nullableBoolean;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Bool(value)
           | None => `Null
           };
         }
         and float = {
           let value = (value: t_variousScalars).float;
-          value;
+          `Float(value);
         }
         and nullableFloat = {
           let value = (value: t_variousScalars).nullableFloat;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Float(value)
           | None => `Null
           };
         }
         and int = {
           let value = (value: t_variousScalars).int;
-          value;
+          `Int(value);
         }
         and nullableInt = {
           let value = (value: t_variousScalars).nullableInt;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `Int(value)
           | None => `Null
           };
         }
         and string = {
           let value = (value: t_variousScalars).string;
-          value;
+          `String(value);
         }
         and nullableString = {
           let value = (value: t_variousScalars).nullableString;
           switch (value) {
-          | Some(value) => value
+          | Some(value) => `String(value)
           | None => `Null
           };
         };

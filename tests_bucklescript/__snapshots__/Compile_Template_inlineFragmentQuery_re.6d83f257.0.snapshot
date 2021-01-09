@@ -6,77 +6,64 @@ Compile Template › inlineFragmentQuery.re › output
 var Raw = {};
 
 var query = (require(\"gql\")`
-  query   {
-    dogOrHuman  {
-      __typename
-      ...on Dog   {
-        name
-        barkVolume
-      }
-    }
+  fragment ListFragment on Lists   {
+    nullableOfNullable
+    nullableOfNonNullable
   }
 `);
 
 function parse(value) {
-  var value$1 = value.dogOrHuman;
-  var typename = value$1[\"__typename\"];
-  var tmp = typename === \"Dog\" ? ({
-        HASH: /* Dog */3406428,
-        VAL: {
-          name: value$1.name,
-          barkVolume: value$1.barkVolume
-        }
-      }) : ({
-        HASH: /* FutureAddedValue */-31101740,
-        VAL: value$1
-      });
+  var value$1 = value.nullableOfNullable;
+  var value$2 = value.nullableOfNonNullable;
   return {
-          dogOrHuman: tmp
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map(function (value) {
+                  return value;
+                }) : undefined
         };
 }
 
 function serialize(value) {
-  var value$1 = value.dogOrHuman;
-  var dogOrHuman;
-  if (value$1.HASH >= 3406428) {
-    var value$2 = value$1.VAL;
-    var value$3 = value$2.barkVolume;
-    var value$4 = value$2.name;
-    dogOrHuman = {
-      __typename: \"Dog\",
-      name: value$4,
-      barkVolume: value$3
-    };
-  } else {
-    dogOrHuman = value$1.VAL;
-  }
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
   return {
-          dogOrHuman: dogOrHuman
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
         };
 }
 
-function serializeVariables(param) {
+function verifyArgsAndParse(_ListFragment, value) {
+  return parse(value);
+}
+
+function verifyName(param) {
   
 }
 
-function makeVariables(param) {
-  
-}
-
-function makeDefaultVariables(param) {
-  
-}
-
-var InlineFragmentQuery = {
+var ListFragment = {
   Raw: Raw,
   query: query,
   parse: parse,
   serialize: serialize,
-  serializeVariables: serializeVariables,
-  makeVariables: makeVariables,
-  makeDefaultVariables: makeDefaultVariables
+  verifyArgsAndParse: verifyArgsAndParse,
+  verifyName: verifyName
 };
 
-exports.InlineFragmentQuery = InlineFragmentQuery;
+exports.ListFragment = ListFragment;
 /* query Not a pure module */
 

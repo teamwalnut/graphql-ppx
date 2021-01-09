@@ -58,12 +58,12 @@ function back to the original JSON compatible data */
     value => {
       let argNamedQuery = {
         let value = (value: t).argNamedQuery;
-        value;
+        `Int(value);
       };
       `Assoc([(\"argNamedQuery\", argNamedQuery)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {query: (a => `Int(a))((inp: t_variables).query)};
+    inp => `Assoc([(\"query\", (a => `Int(a))((inp: t_variables).query))]);
   let makeVariables = (~query, ()): t_variables => {query: query};
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -111,12 +111,12 @@ function back to the original JSON compatible data */
       value => {
         let argNamedQuery = {
           let value = (value: t).argNamedQuery;
-          value;
+          `Int(value);
         };
         `Assoc([(\"argNamedQuery\", argNamedQuery)]);
       };
     let serializeVariables: t_variables => Raw.t_variables =
-      inp => {query: (a => `Int(a))((inp: t_variables).query)};
+      inp => `Assoc([(\"query\", (a => `Int(a))((inp: t_variables).query))]);
     let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
@@ -163,12 +163,12 @@ function back to the original JSON compatible data */
       value => {
         let argNamedQuery = {
           let value = (value: t).argNamedQuery;
-          value;
+          `Int(value);
         };
         `Assoc([(\"argNamedQuery\", argNamedQuery)]);
       };
     let serializeVariables: t_variables => Raw.t_variables =
-      inp => {query: (a => `Int(a))((inp: t_variables).query)};
+      inp => `Assoc([(\"query\", (a => `Int(a))((inp: t_variables).query))]);
     let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";

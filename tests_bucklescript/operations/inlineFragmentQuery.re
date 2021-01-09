@@ -1,12 +1,8 @@
-module InlineFragmentQuery = [%graphql
+[%graphql
   {|
-  {
-    dogOrHuman {
-      ...on Dog {
-        name
-        barkVolume
-      }
-    }
+  fragment ListFragment on Lists {
+    nullableOfNullable
+    nullableOfNonNullable
   }
 |}
 ];

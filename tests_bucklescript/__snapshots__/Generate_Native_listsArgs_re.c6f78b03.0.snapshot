@@ -76,91 +76,103 @@ function back to the original JSON compatible data */
     value => {
       let listsInput = {
         let value = (value: t).listsInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"listsInput\", listsInput)]);
     };
   let serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      nullableOfNullable:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => `Null
-                            | Some(b) => (a => `String(a))(b)
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+          \"nullableOfNullable\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) => (a => `String(a))(b)
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
                     )
-                    |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables).nullableOfNullable,
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables).nullableOfNullable,
+          ),
         ),
-      nullableOfNonNullable:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) =>
-              (
-                a =>
-                  `List(
-                    Array.map(b => (a => `String(a))(b), a) |> Array.to_list,
-                  )
-              )(
-                b,
-              )
-            }
-        )(
-          (inp: t_variables).nullableOfNonNullable,
+          \"nullableOfNonNullable\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(b => (a => `String(a))(b), a)
+                      |> Array.to_list,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables).nullableOfNonNullable,
+          ),
         ),
-      nonNullableOfNullable:
         (
-          a =>
-            `List(
-              Array.map(
-                b =>
-                  (
-                    a =>
-                      switch (a) {
-                      | None => `Null
-                      | Some(b) => (a => `String(a))(b)
-                      }
-                  )(
-                    b,
-                  ),
-                a,
+          \"nonNullableOfNullable\",
+          (
+            a =>
+              `List(
+                Array.map(
+                  b =>
+                    (
+                      a =>
+                        switch (a) {
+                        | None => `Null
+                        | Some(b) => (a => `String(a))(b)
+                        }
+                    )(
+                      b,
+                    ),
+                  a,
+                )
+                |> Array.to_list,
               )
-              |> Array.to_list,
-            )
-        )(
-          (inp: t_variables).nonNullableOfNullable,
+          )(
+            (inp: t_variables).nonNullableOfNullable,
+          ),
         ),
-      nonNullableOfNonNullable:
         (
-          a =>
-            `List(Array.map(b => (a => `String(a))(b), a) |> Array.to_list)
-        )(
-          (inp: t_variables).nonNullableOfNonNullable,
+          \"nonNullableOfNonNullable\",
+          (
+            a =>
+              `List(
+                Array.map(b => (a => `String(a))(b), a) |> Array.to_list,
+              )
+          )(
+            (inp: t_variables).nonNullableOfNonNullable,
+          ),
         ),
-    };
+      ]);
   let makeVariables =
       (
         ~nullableOfNullable=?,

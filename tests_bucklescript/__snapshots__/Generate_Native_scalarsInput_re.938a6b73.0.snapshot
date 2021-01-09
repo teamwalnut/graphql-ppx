@@ -102,78 +102,102 @@ function back to the original JSON compatible data */
     value => {
       let scalarsInput = {
         let value = (value: t).scalarsInput;
-        value;
+        `String(value);
       };
       `Assoc([(\"scalarsInput\", scalarsInput)]);
     };
   let rec serializeVariables: t_variables => Raw.t_variables =
-    inp => {
-      arg:
-        (a => serializeInputObjectVariousScalarsInput(a))(
-          (inp: t_variables).arg,
+    inp =>
+      `Assoc([
+        (
+          \"arg\",
+          (a => serializeInputObjectVariousScalarsInput(a))(
+            (inp: t_variables).arg,
+          ),
         ),
-    }
+      ])
   and serializeInputObjectVariousScalarsInput:
     t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
-    inp => {
-      nullableString:
+    inp =>
+      `Assoc([
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_VariousScalarsInput).nullableString,
+          \"nullableString\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_VariousScalarsInput).nullableString,
+          ),
         ),
-      string:
-        (a => `String(a))((inp: t_variables_VariousScalarsInput).string),
-      nullableInt:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Int(a))(b)
-            }
-        )(
-          (inp: t_variables_VariousScalarsInput).nullableInt,
+          \"string\",
+          (a => `String(a))((inp: t_variables_VariousScalarsInput).string),
         ),
-      int: (a => `Int(a))((inp: t_variables_VariousScalarsInput).int),
-      nullableFloat:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Float(a))(b)
-            }
-        )(
-          (inp: t_variables_VariousScalarsInput).nullableFloat,
+          \"nullableInt\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Int(a))(b)
+              }
+          )(
+            (inp: t_variables_VariousScalarsInput).nullableInt,
+          ),
         ),
-      float: (a => `Float(a))((inp: t_variables_VariousScalarsInput).float),
-      nullableBoolean:
+        (\"int\", (a => `Int(a))((inp: t_variables_VariousScalarsInput).int)),
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `Bool(a))(b)
-            }
-        )(
-          (inp: t_variables_VariousScalarsInput).nullableBoolean,
+          \"nullableFloat\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Float(a))(b)
+              }
+          )(
+            (inp: t_variables_VariousScalarsInput).nullableFloat,
+          ),
         ),
-      boolean:
-        (a => `Bool(a))((inp: t_variables_VariousScalarsInput).boolean),
-      nullableID:
         (
-          a =>
-            switch (a) {
-            | None => `Null
-            | Some(b) => (a => `String(a))(b)
-            }
-        )(
-          (inp: t_variables_VariousScalarsInput).nullableID,
+          \"float\",
+          (a => `Float(a))((inp: t_variables_VariousScalarsInput).float),
         ),
-      id: (a => `String(a))((inp: t_variables_VariousScalarsInput).id),
-    };
+        (
+          \"nullableBoolean\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Bool(a))(b)
+              }
+          )(
+            (inp: t_variables_VariousScalarsInput).nullableBoolean,
+          ),
+        ),
+        (
+          \"boolean\",
+          (a => `Bool(a))((inp: t_variables_VariousScalarsInput).boolean),
+        ),
+        (
+          \"nullableID\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables_VariousScalarsInput).nullableID,
+          ),
+        ),
+        (
+          \"id\",
+          (a => `String(a))((inp: t_variables_VariousScalarsInput).id),
+        ),
+      ]);
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectVariousScalarsInput =
       (

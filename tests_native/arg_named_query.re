@@ -10,7 +10,9 @@ module My_query = [%graphql
 
 let serializes_variables = () =>
   test_json(
-    My_query.makeVariables(~query=2, ()),
+    My_query.makeVariables(~query=2, ())
+    |> My_query.serializeVariables
+    |> My_query.variablesToJson,
     Yojson.Basic.from_string({|{"query": 2}|}),
   );
 

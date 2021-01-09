@@ -25,7 +25,7 @@ module QueryWithoutFragments = [%graphql
 |}
 ];
 
-type user = QueryWithFragments.t_users;
+type user = QueryWithFragments.t_users_User;
 type only_user = QueryWithoutFragments.t_users;
 
 let json = {|{
@@ -43,14 +43,14 @@ let user: module Alcotest.TESTABLE with type t = user =
        fun
        | `UnspecifiedFragment(s) =>
          Format.fprintf(formatter, "`UnspecifiedFragment < @[%s@] >", s)
-       | `AdminUser(u) =>
+       | `AdminUser(u: QueryWithFragments.t_users_User_AdminUser) =>
          Format.fprintf(
            formatter,
            "`AdminUser < id = @[%s@]; name = @[%s@] >",
            u.id,
            u.name,
          )
-       | `AnonymousUser(u) =>
+       | `AnonymousUser(u: QueryWithFragments.t_users_User_AnonymousUser) =>
          Format.fprintf(
            formatter,
            "`AnonymousUser < id = @[%s@]; anonymousId = @[%i@] >",
@@ -74,9 +74,8 @@ let only_user: module Alcotest.TESTABLE with type t = only_user =
    {
      type t = only_user;
 
-     let pp = formatter =>
-       fun
-       | u => Format.fprintf(formatter, "`User < id = @[%s@] >", u.id);
+     let pp = (formatter, u: QueryWithoutFragments.t_users) =>
+       Format.fprintf(formatter, "`User < id = @[%s@] >", u.id);
 
      let equal = (a: only_user, b: only_user) =>
        switch (a, b) {
