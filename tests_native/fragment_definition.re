@@ -76,13 +76,12 @@ let decodes_the_fragment = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    Yojson.Basic.from_string(
-      {|
-      {
+    {|{
         "l1": {"nullableOfNullable": ["a", null, "b"]},
-        "l2": {"nullableOfNullable": ["a", null, "b"]},
-      }|},
-    )
+        "l2": {"nullableOfNullable": ["a", null, "b"]}
+      }
+    |}
+    |> Yojson.Basic.from_string
     |> MyQuery.unsafe_fromJson
     |> MyQuery.parse,
     {

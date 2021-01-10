@@ -222,7 +222,7 @@ let decodes_record_in_inline_fragment = () =>
   Alcotest.check(
     inline_fragment_query,
     "query result equality",
-    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}} |}
+    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
     |> Yojson.Basic.from_string
     |> InlineFragmentQuery.unsafe_fromJson
     |> InlineFragmentQuery.parse,
@@ -233,7 +233,7 @@ let decodes_record_in_external_fragment_on_union_selections = () =>
   Alcotest.check(
     union_external_fragment_query,
     "query result equality",
-    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}} |}
+    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
     |> Yojson.Basic.from_string
     |> UnionExternalFragmentQuery.unsafe_fromJson
     |> UnionExternalFragmentQuery.parse,

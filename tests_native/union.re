@@ -66,7 +66,7 @@ let decodes_exhaustive_query = () =>
       "dogOrHuman": {
         "__typename": "Dog",
         "name": "Fido",
-        "barkVolume": 123
+        "barkVolume": 123.0
       }
     } |}
     |> Yojson.Basic.from_string

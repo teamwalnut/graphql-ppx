@@ -34,7 +34,7 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
                dog.barkVolume,
              )
            | `FutureAddedValue(_) =>
-             Format.fprintf(formatter, "`Nonexhaustive"),
+             Format.fprintf(formatter, "`FutureAddedValue"),
          obj.dogOrHuman,
        );
 
@@ -60,7 +60,15 @@ let decodes_non_exhaustive_query = () =>
     |> Yojson.Basic.from_string
     |> MyQuery.unsafe_fromJson
     |> MyQuery.parse,
-    {dogOrHuman: `FutureAddedValue(`Null)},
+    {
+      dogOrHuman:
+        `FutureAddedValue(
+          `Assoc([
+            ("__typename", `String("Human")),
+            ("name", `String("Max")),
+          ]),
+        ),
+    },
   );
 
 let tests = [

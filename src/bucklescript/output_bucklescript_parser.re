@@ -432,12 +432,12 @@ and generate_poly_variant_selection_set_decoder =
 
               switch (temp) {
               | `Null =>
+                %e
+                generator_loop(next)
+              | _ =>
                 let value = temp;
                 %e
                 variant_decoder;
-              | _ =>
-                %e
-                generator_loop(next)
               };
             }
           : [@metaloc loc]
@@ -566,7 +566,7 @@ and generate_poly_variant_interface_decoder =
         let%expr typename: string =
           value
           |> Yojson.Basic.Util.member("__typename")
-          |> Yojson.Basic.to_string;
+          |> Yojson.Basic.Util.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );
@@ -707,7 +707,7 @@ and generate_poly_variant_union_decoder =
         let%expr typename: string =
           value
           |> Yojson.Basic.Util.member("__typename")
-          |> Yojson.Basic.to_string;
+          |> Yojson.Basic.Util.to_string;
         (
           [%e typename_matcher]: [%t base_type_name(generate_type_name(path))]
         );

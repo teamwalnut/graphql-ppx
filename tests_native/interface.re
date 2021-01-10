@@ -95,8 +95,8 @@ let decode_with_fragments = () =>
     [|
       `AdminUser({id: "1", name: "bob"}),
       `AnonymousUser({id: "2", anonymousId: 1}),
-      `UnspecifiedFragment("otherVariant"),
-    |],
+      `UnspecifiedFragment("OtherUser"),
+    |]: array(QueryWithFragments.t_users_User),
   );
 
 let decode_without_fragments = () =>

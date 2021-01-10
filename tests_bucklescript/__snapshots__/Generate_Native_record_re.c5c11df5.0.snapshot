@@ -460,7 +460,7 @@ function back to the original JSON compatible data */
           let typename: string =
             value
             |> Yojson.Basic.Util.member(\"__typename\")
-            |> Yojson.Basic.to_string;
+            |> Yojson.Basic.Util.to_string;
           (
             switch (typename) {
             | \"Dog\" =>
@@ -648,7 +648,7 @@ function back to the original JSON compatible data */
             let typename: string =
               value
               |> Yojson.Basic.Util.member(\"__typename\")
-              |> Yojson.Basic.to_string;
+              |> Yojson.Basic.Util.to_string;
             (
               switch (typename) {
               | \"Dog\" =>

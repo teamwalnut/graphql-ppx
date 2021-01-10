@@ -110,66 +110,34 @@ function back to the original JSON compatible data */
             let temp = Yojson.Basic.Util.member(\"baseType\", value);
             switch (temp) {
             | `Null =>
-              let value = temp;
-              `BaseType(Yojson.Basic.Util.to_string(value));
-            | _ =>
               let temp = Yojson.Basic.Util.member(\"baseTypeList\", value);
               switch (temp) {
               | `Null =>
-                let value = temp;
-                `BaseTypeList(
-                  switch (value) {
-                  | `List(json_list) =>
-                    List.map(
-                      value => Yojson.Basic.Util.to_string(value),
-                      json_list,
-                    )
-                    |> Array.of_list
-                  | _ => [||]
-                  },
-                );
-              | _ =>
                 let temp = Yojson.Basic.Util.member(\"dog\", value);
                 switch (temp) {
                 | `Null =>
-                  let value = temp;
-                  `Dog(
-                    {
-                      name: {
-                        let value = Yojson.Basic.Util.member(\"name\", value);
-                        Yojson.Basic.Util.to_string(value);
-                      },
-                      barkVolume: {
-                        let value =
-                          Yojson.Basic.Util.member(\"barkVolume\", value);
-                        Yojson.Basic.Util.to_float(value);
-                      },
-                    }: t_mutationForVariant_dog,
-                  );
-                | _ =>
                   let temp = Yojson.Basic.Util.member(\"human\", value);
                   switch (temp) {
                   | `Null =>
-                    let value = temp;
-                    `Human(
-                      {
-                        name: {
-                          let value = Yojson.Basic.Util.member(\"name\", value);
-                          Yojson.Basic.Util.to_string(value);
-                        },
-                      }: t_mutationForVariant_human,
-                    );
-                  | _ =>
                     let temp = Yojson.Basic.Util.member(\"dogOrHuman\", value);
                     switch (temp) {
                     | `Null =>
+                      raise(
+                        Failure(
+                          \"graphql-ppx: \"
+                          ++ \"All fields on variant selection set on type \"
+                          ++ \"VariantTestResult\"
+                          ++ \" were null\",
+                        ),
+                      )
+                    | _ =>
                       let value = temp;
                       `DogOrHuman(
                         {
                           let typename: string =
                             value
                             |> Yojson.Basic.Util.member(\"__typename\")
-                            |> Yojson.Basic.to_string;
+                            |> Yojson.Basic.Util.to_string;
                           (
                             switch (typename) {
                             | \"Dog\" =>
@@ -205,19 +173,51 @@ function back to the original JSON compatible data */
                           );
                         },
                       );
-                    | _ =>
-                      raise(
-                        Failure(
-                          \"graphql-ppx: \"
-                          ++ \"All fields on variant selection set on type \"
-                          ++ \"VariantTestResult\"
-                          ++ \" were null\",
-                        ),
-                      )
                     };
+                  | _ =>
+                    let value = temp;
+                    `Human(
+                      {
+                        name: {
+                          let value = Yojson.Basic.Util.member(\"name\", value);
+                          Yojson.Basic.Util.to_string(value);
+                        },
+                      }: t_mutationForVariant_human,
+                    );
                   };
+                | _ =>
+                  let value = temp;
+                  `Dog(
+                    {
+                      name: {
+                        let value = Yojson.Basic.Util.member(\"name\", value);
+                        Yojson.Basic.Util.to_string(value);
+                      },
+                      barkVolume: {
+                        let value =
+                          Yojson.Basic.Util.member(\"barkVolume\", value);
+                        Yojson.Basic.Util.to_float(value);
+                      },
+                    }: t_mutationForVariant_dog,
+                  );
                 };
+              | _ =>
+                let value = temp;
+                `BaseTypeList(
+                  switch (value) {
+                  | `List(json_list) =>
+                    List.map(
+                      value => Yojson.Basic.Util.to_string(value),
+                      json_list,
+                    )
+                    |> Array.of_list
+                  | _ => [||]
+                  },
+                );
               };
+            | _ =>
+              let value = temp;
+              `BaseType(Yojson.Basic.Util.to_string(value));
             };
           };
         },
