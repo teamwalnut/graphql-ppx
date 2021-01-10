@@ -50,6 +50,7 @@ module DateTime = {
   let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
 };
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -76,7 +77,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;

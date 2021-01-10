@@ -37,7 +37,6 @@ let encodes_json_objects = () =>
   test_json(
     My_query.makeVariables(~opt=`Int(123), ~req=`Int(456), ())
     |> My_query.serializeVariables
-
     |> My_query.variablesToJson,
     Yojson.Basic.from_string({| { "opt": 123, "req": 456 } |}),
   );

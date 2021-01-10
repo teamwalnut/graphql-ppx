@@ -87,9 +87,19 @@ let rec serialize_type =
             |> List.map(value => {
                  Exp.case(
                    Pat.variant(value.evm_name, None),
-                   Ast_helper.Exp.constant(
-                     Parsetree.Pconst_string(value.evm_name, None),
-                   ),
+                   Ppx_config.native()
+                     ? [%expr
+                       `String(
+                         [%e
+                           Ast_helper.Exp.constant(
+                             Parsetree.Pconst_string(value.evm_name, None),
+                           )
+                         ],
+                       )
+                     ]
+                     : Ast_helper.Exp.constant(
+                         Parsetree.Pconst_string(value.evm_name, None),
+                       ),
                  )
                }),
           )
@@ -585,13 +595,20 @@ and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
   let enum_match_arms =
     enum_meta.em_values
     |> List.map(({evm_name, _}) =>
-         Exp.case(Pat.variant(evm_name, None), const_str_expr(evm_name))
+         Exp.case(
+           Pat.variant(evm_name, None),
+           Ppx_config.native()
+             ? [%expr `String([%e const_str_expr(evm_name)])]
+             : const_str_expr(evm_name),
+         )
        );
 
   let fallback_arm =
     Exp.case(
       Pat.variant("FutureAddedValue", Some(Pat.var({loc, txt: "other"}))),
-      ident_from_string("other"),
+      Ppx_config.native()
+        ? [%expr `String([%e ident_from_string("other")])]
+        : ident_from_string("other"),
     );
 
   let match_expr =
@@ -636,9 +653,7 @@ and generate_object_encoder =
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
-    | [] =>
-      %expr
-      Js.Dict.empty
+    | [] => Ppx_config.native() ? [%expr `Assoc([])] : [%expr Js.Dict.empty]
     | fields =>
       let record =
         Exp.record(
@@ -831,8 +846,10 @@ and generate_object_encoder =
              | Fr_fragment_spread({key, name}) => [
                  Ppx_config.native()
                    ? [%expr
-                     [%e ident_from_string(name ++ ".serialize")](
-                       [%e get_field(key, existing_record, path)],
+                     [%e ident_from_string(name ++ ".toJson")](
+                       [%e ident_from_string(name ++ ".serialize")](
+                         [%e get_field(key, existing_record, path)],
+                       ),
                      )
                    ]
                    : [%expr
@@ -1072,11 +1089,20 @@ and generate_poly_variant_interface_encoder =
 }
 
 and generate_solo_fragment_spread_encorder =
-    (_config, _loc, name, _arguments, _definition) => [%expr
-  [%e ident_from_string(name ++ ".serialize")](
-    [%e ident_from_string("value")],
-  )
-]
+    (_config, _loc, name, _arguments, _definition) =>
+  Ppx_config.native()
+    ? [%expr
+      [%e ident_from_string(name ++ ".toJson")](
+        [%e ident_from_string(name ++ ".serialize")](
+          [%e ident_from_string("value")],
+        ),
+      )
+    ]
+    : [%expr
+      [%e ident_from_string(name ++ ".serialize")](
+        [%e ident_from_string("value")],
+      )
+    ]
 
 and generate_error = (loc, message) => {
   let loc = Output_bucklescript_utils.conv_loc(loc);

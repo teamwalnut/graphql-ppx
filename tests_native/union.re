@@ -28,6 +28,8 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          "< dogOrHuman = %a >",
          formatter =>
            fun
+           | `FutureAddedValue(_) =>
+             Format.fprintf(formatter, "`FutureAddedValue")
            | `Dog(dog: MyQuery.t_dogOrHuman_Dog) =>
              Format.fprintf(
                formatter,

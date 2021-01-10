@@ -18,6 +18,7 @@ Generate Native › omitFutureValueUnion.re › output
   }
 ];
 module Normal: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -28,7 +29,7 @@ module Normal: {
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -48,7 +49,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -59,7 +60,7 @@ function back to the original JSON compatible data */
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -99,7 +100,7 @@ function back to the original JSON compatible data */
                   },
                 }: t_dogOrHuman_Human,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },
@@ -143,6 +144,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module ByConfig: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -172,7 +174,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -265,6 +267,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module ByDirective: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -294,7 +297,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;

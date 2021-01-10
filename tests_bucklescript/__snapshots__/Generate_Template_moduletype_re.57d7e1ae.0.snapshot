@@ -18,7 +18,7 @@ Generate Template › module_type.re › output
   }
 ];
 module MyQuery: {type t;} = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {string};
     type t = {variousScalars: t_variousScalars};
@@ -75,7 +75,7 @@ module MyQuery2: {
   type t_variousScalars;
   type t = {variousScalars: t_variousScalars};
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {string};
     type t = {variousScalars: t_variousScalars};
@@ -130,6 +130,7 @@ module MyQuery2: {
 };
 
 module rec MyQueryRecursive: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_nestedObject_inner_inner = {field: string};
     type t_nestedObject_inner = {
@@ -158,7 +159,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_nestedObject_inner_inner = {field: string};
     type t_nestedObject_inner = {

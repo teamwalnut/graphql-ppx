@@ -18,7 +18,7 @@ Generate Native › hasuraRepro.re › output
   }
 ];
 module Dog: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t = {name: string};
   type nonrec t_Dog = t;
@@ -34,7 +34,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -67,6 +67,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 module HasuraRepro: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -91,7 +92,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -110,7 +111,10 @@ function back to the original JSON compatible data */
         hasuraRepro: {
           let value = Yojson.Basic.Util.member(\"hasuraRepro\", value);
 
-          Dog.verifyArgsAndParse(~fragmentName=`Dog, value);
+          Dog.verifyArgsAndParse(
+            ~fragmentName=`Dog,
+            Dog.unsafe_fromJson(value),
+          );
         },
       }: t
     );
@@ -118,7 +122,7 @@ function back to the original JSON compatible data */
     value => {
       let hasuraRepro = {
         let value = (value: t).hasuraRepro;
-        Dog.serialize(value);
+        Dog.toJson(Dog.serialize(value));
       };
       `Assoc([(\"hasuraRepro\", hasuraRepro)]);
     };

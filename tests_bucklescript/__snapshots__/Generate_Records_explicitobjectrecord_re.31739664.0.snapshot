@@ -18,6 +18,7 @@ Generate Records › explicit_object_record.re › output
   }
 ];
 module RecordsQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -50,7 +51,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -184,6 +185,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module ObjectsQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -216,7 +218,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_lists = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),

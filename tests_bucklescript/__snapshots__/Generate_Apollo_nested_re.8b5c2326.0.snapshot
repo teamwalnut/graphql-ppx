@@ -22,6 +22,7 @@ type record = {
   f2: string,
 };
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_first_inner_inner = {
       __typename: string,
@@ -126,7 +127,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_first_inner_inner = {
       __typename: string,
@@ -536,6 +537,7 @@ function back to the original JSON compatible data */
 
 module Test: {
   module MyQueryWithSig: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t_nestedObject_inner_inner = {
         __typename: string,
@@ -582,6 +584,7 @@ function back to the original JSON compatible data */
   };
 } = {
   module MyQueryWithSig: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t_nestedObject_inner_inner = {
         __typename: string,
@@ -626,7 +629,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t_nestedObject_inner_inner = {
         __typename: string,
@@ -779,6 +782,7 @@ function back to the original JSON compatible data */
   };
 };
 module MyQueryWithSigDirect: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_nestedObject_inner_inner = {
       __typename: string,
@@ -823,7 +827,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_nestedObject_inner_inner = {
       __typename: string,

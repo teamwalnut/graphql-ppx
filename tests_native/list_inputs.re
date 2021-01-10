@@ -8,7 +8,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {. listsInput: string};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -16,9 +16,9 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
      type t = qt;
 
      let pp = (formatter, obj: qt) =>
-       Format.fprintf(formatter, "< listsInput = @[%s@] >", obj#listsInput);
+       Format.fprintf(formatter, "< listsInput = @[%s@] >", obj.listsInput);
 
-     let equal = (a: qt, b: qt) => a#listsInput == b#listsInput;
+     let equal = (a: qt, b: qt) => a.listsInput == b.listsInput;
    });
 
 let allows_none_in_lists_of_nullable = () =>

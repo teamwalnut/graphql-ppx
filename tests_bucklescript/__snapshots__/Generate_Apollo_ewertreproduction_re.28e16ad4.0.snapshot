@@ -18,7 +18,7 @@ Generate Apollo › ewert_reproduction.re › output
   }
 ];
 module UserData: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_user = {
       __typename: string,
@@ -56,7 +56,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_user = {
       __typename: string,

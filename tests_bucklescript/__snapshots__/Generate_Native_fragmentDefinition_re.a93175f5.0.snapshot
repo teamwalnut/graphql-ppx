@@ -21,7 +21,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t = {
     nullableOfNullable: option(array(option(string))),
@@ -40,7 +40,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -138,7 +138,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 module Another: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t = {nullableOfNonNullable: option(array(string))};
   type nonrec t_Lists = t;
@@ -154,7 +154,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -207,7 +207,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 module FragmentWithArgs: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t = {listWithArg: option(array(option(string)))};
   type nonrec t_Lists = t;
@@ -224,7 +224,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -294,7 +294,7 @@ function back to the original JSON-compatible data */
 };
 
 module InlineListFragment = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -395,6 +395,7 @@ module InlineListFragment = {
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -434,7 +435,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -475,7 +476,10 @@ function back to the original JSON compatible data */
         l1: {
           let value = Yojson.Basic.Util.member(\"l1\", value);
 
-          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          );
         },
         l2: {
           let value = Yojson.Basic.Util.member(\"l2\", value);
@@ -484,12 +488,12 @@ function back to the original JSON compatible data */
               frag1:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
-                  value,
+                  ListFragment.unsafe_fromJson(value),
                 ),
               frag2:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
-                  value,
+                  ListFragment.unsafe_fromJson(value),
                 ),
             }: t_l2
           );
@@ -524,12 +528,12 @@ function back to the original JSON compatible data */
               frag1:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
-                  value,
+                  ListFragment.unsafe_fromJson(value),
                 ),
               frag2:
                 ListFragment.verifyArgsAndParse(
                   ~fragmentName=`ListFragment,
-                  value,
+                  ListFragment.unsafe_fromJson(value),
                 ),
             }: t_l3
           );
@@ -564,7 +568,7 @@ function back to the original JSON compatible data */
               inlineListFragment:
                 InlineListFragment.verifyArgsAndParse(
                   ~fragmentName=`InlineListFragment,
-                  value,
+                  InlineListFragment.unsafe_fromJson(value),
                 ),
             }: t_l4
           );
@@ -575,7 +579,7 @@ function back to the original JSON compatible data */
           FragmentWithArgs.verifyArgsAndParse(
             ~arg1=`String,
             ~fragmentName=`FragmentWithArgs,
-            value,
+            FragmentWithArgs.unsafe_fromJson(value),
           );
         },
       }: t
@@ -584,7 +588,7 @@ function back to the original JSON compatible data */
     value => {
       let l5 = {
         let value = (value: t).l5;
-        FragmentWithArgs.serialize(value);
+        FragmentWithArgs.toJson(FragmentWithArgs.serialize(value));
       }
       and l4 = {
         let value = (value: t).l4;
@@ -610,7 +614,11 @@ function back to the original JSON compatible data */
             };
             {\"nullableOfNullable\": nullableOfNullable};
           },
-          [|InlineListFragment.serialize((value: t_l4).inlineListFragment)|],
+          [|
+            InlineListFragment.toJson(
+              InlineListFragment.serialize((value: t_l4).inlineListFragment),
+            ),
+          |],
         );
       }
       and l3 = {
@@ -638,8 +646,8 @@ function back to the original JSON compatible data */
             {\"nullableOfNullable\": nullableOfNullable};
           },
           [|
-            ListFragment.serialize((value: t_l3).frag1),
-            ListFragment.serialize((value: t_l3).frag2),
+            ListFragment.toJson(ListFragment.serialize((value: t_l3).frag1)),
+            ListFragment.toJson(ListFragment.serialize((value: t_l3).frag2)),
           |],
         );
       }
@@ -647,16 +655,16 @@ function back to the original JSON compatible data */
         let value = (value: t).l2;
         Array.fold_left(
           (_, b) => b,
-          Js.Dict.empty,
+          `Assoc([]),
           [|
-            ListFragment.serialize((value: t_l2).frag1),
-            ListFragment.serialize((value: t_l2).frag2),
+            ListFragment.toJson(ListFragment.serialize((value: t_l2).frag1)),
+            ListFragment.toJson(ListFragment.serialize((value: t_l2).frag2)),
           |],
         );
       }
       and l1 = {
         let value = (value: t).l1;
-        ListFragment.serialize(value);
+        ListFragment.toJson(ListFragment.serialize(value));
       };
       `Assoc([
         (\"l1\", l1),
@@ -689,6 +697,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery2: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -709,7 +718,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -724,7 +733,10 @@ function back to the original JSON compatible data */
         lists: {
           let value = Yojson.Basic.Util.member(\"lists\", value);
 
-          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          );
         },
       }: t
     );
@@ -732,7 +744,7 @@ function back to the original JSON compatible data */
     value => {
       let lists = {
         let value = (value: t).lists;
-        ListFragment.serialize(value);
+        ListFragment.toJson(ListFragment.serialize(value));
       };
       `Assoc([(\"lists\", lists)]);
     };

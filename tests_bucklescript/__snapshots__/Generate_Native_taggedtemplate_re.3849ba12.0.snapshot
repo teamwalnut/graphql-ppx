@@ -21,6 +21,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -53,7 +54,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -229,6 +230,7 @@ module MyTypes = {
   type query;
 };
 module MyQuery1a: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -261,7 +263,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -433,6 +435,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery1b: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -465,7 +468,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -637,6 +640,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery2: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -669,7 +673,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -841,6 +845,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery3: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -873,7 +878,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -1045,6 +1050,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery4: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -1077,7 +1083,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -1249,7 +1255,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module ListFragment: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t = {
     nullableOfNullable: option(array(option(string))),
@@ -1268,7 +1274,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };
@@ -1368,6 +1374,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery5: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -1388,7 +1395,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -1404,7 +1411,10 @@ function back to the original JSON compatible data */
         lists: {
           let value = Yojson.Basic.Util.member(\"lists\", value);
 
-          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          );
         },
       }: t
     );
@@ -1412,7 +1422,7 @@ function back to the original JSON compatible data */
     value => {
       let lists = {
         let value = (value: t).lists;
-        ListFragment.serialize(value);
+        ListFragment.toJson(ListFragment.serialize(value));
       };
       `Assoc([(\"lists\", lists)]);
     };
@@ -1424,6 +1434,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery6: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -1444,7 +1455,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -1463,7 +1474,10 @@ function back to the original JSON compatible data */
         lists: {
           let value = Yojson.Basic.Util.member(\"lists\", value);
 
-          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          );
         },
       }: t
     );
@@ -1471,7 +1485,7 @@ function back to the original JSON compatible data */
     value => {
       let lists = {
         let value = (value: t).lists;
-        ListFragment.serialize(value);
+        ListFragment.toJson(ListFragment.serialize(value));
       };
       `Assoc([(\"lists\", lists)]);
     };
@@ -1483,6 +1497,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery7: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -1503,7 +1518,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -1519,7 +1534,10 @@ function back to the original JSON compatible data */
         lists: {
           let value = Yojson.Basic.Util.member(\"lists\", value);
 
-          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          );
         },
       }: t
     );
@@ -1527,7 +1545,7 @@ function back to the original JSON compatible data */
     value => {
       let lists = {
         let value = (value: t).lists;
-        ListFragment.serialize(value);
+        ListFragment.toJson(ListFragment.serialize(value));
       };
       `Assoc([(\"lists\", lists)]);
     };
@@ -1539,6 +1557,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQuery8: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -1571,7 +1590,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;

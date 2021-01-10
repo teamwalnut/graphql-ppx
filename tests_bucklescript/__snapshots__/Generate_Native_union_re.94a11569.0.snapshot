@@ -18,6 +18,7 @@ Generate Native › union.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -28,7 +29,7 @@ module MyQuery: {
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -48,7 +49,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -59,7 +60,7 @@ function back to the original JSON compatible data */
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -99,7 +100,7 @@ function back to the original JSON compatible data */
                   },
                 }: t_dogOrHuman_Human,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },
@@ -143,6 +144,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module MyQueryNoError: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -153,7 +155,7 @@ module MyQueryNoError: {
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -173,7 +175,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -184,7 +186,7 @@ function back to the original JSON compatible data */
   };
   type t_dogOrHuman_Human = {name: string};
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
     | `Human(t_dogOrHuman_Human)
   ];
@@ -224,7 +226,7 @@ function back to the original JSON compatible data */
                   },
                 }: t_dogOrHuman_Human,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },
@@ -273,12 +275,13 @@ type named = {
   __typename: string,
 };
 module NamedQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(named)
     | `Human(named)
   ];
@@ -298,13 +301,13 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(named)
     | `Human(named)
   ];
@@ -348,7 +351,7 @@ function back to the original JSON compatible data */
                   },
                 }: named,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },
@@ -393,7 +396,7 @@ function back to the original JSON compatible data */
 };
 module NamedSpread = {
   module DogFields: {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw: {type t;};
     type t = named;
     type nonrec t_Dog = named;
@@ -409,7 +412,7 @@ function back to the original JSON-compatible data */
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
     };
@@ -451,12 +454,13 @@ function back to the original JSON-compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   };
   module DogOrHuman: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t;
       type t_variables;
     };
     type t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
+      | `FutureAddedValue(Yojson.Basic.t)
       | `Dog(DogFields.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
@@ -475,13 +479,13 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;
     };
     type t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
+      | `FutureAddedValue(Yojson.Basic.t)
       | `Dog(DogFields.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
@@ -504,10 +508,10 @@ function back to the original JSON compatible data */
                 `Dog(
                   DogFields.verifyArgsAndParse(
                     ~fragmentName=`DogFields,
-                    value,
+                    DogFields.unsafe_fromJson(value),
                   ),
                 )
-              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+              | _ => `FutureAddedValue(value)
               }: t_dogOrHuman
             );
           },
@@ -518,7 +522,7 @@ function back to the original JSON compatible data */
         let dogOrHuman = {
           let value = (value: t).dogOrHuman;
           switch (value) {
-          | `Dog(value) => DogFields.serialize(value)
+          | `Dog(value) => DogFields.toJson(DogFields.serialize(value))
           | `FutureAddedValue(value) => value
           };
         };

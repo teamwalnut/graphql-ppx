@@ -37,7 +37,7 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
                Format.pp_print_string,
                v.stringField,
              )
-           | `Errors(v: MyQuery.t_mutationWithError_errors) =>
+           | `Errors(v: array(MyQuery.t_mutationWithError_errors)) =>
              Format.fprintf(
                formatter,
                "`Errors %a",
@@ -57,8 +57,7 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
                  )
                ),
                v,
-             )
-           | `FutureAddedValue(_) => (),
+             ),
          obj.mutationWithError,
        );
 

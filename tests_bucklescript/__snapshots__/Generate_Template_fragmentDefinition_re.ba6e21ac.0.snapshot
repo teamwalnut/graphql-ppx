@@ -21,7 +21,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -46,7 +46,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -130,7 +130,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
 module Another: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
@@ -149,7 +149,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {nullableOfNonNullable: Js.Nullable.t(array(string))};
     type nonrec t_Lists = t;
@@ -195,7 +195,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
 module FragmentWithArgs: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
     type nonrec t_Lists = t;
@@ -215,7 +215,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {listWithArg: Js.Nullable.t(array(Js.Nullable.t(string)))};
     type nonrec t_Lists = t;
@@ -283,7 +283,7 @@ function back to the original JSON-compatible data */
 };
 
 module InlineListFragment = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -370,6 +370,7 @@ module InlineListFragment = {
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_l2;
     type t_l3;
@@ -418,7 +419,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_l2;
     type t_l3;
@@ -717,6 +718,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module MyQuery2: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;
@@ -737,7 +739,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {lists: ListFragment.Raw.t};
     type t_variables = unit;

@@ -18,6 +18,7 @@ Generate Records › argNamedQuery.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -37,7 +38,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -73,6 +74,7 @@ function back to the original JSON compatible data */
 };
 module MultipleQueryWithSameVarName = {
   module Query1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};
@@ -92,7 +94,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};
@@ -127,6 +129,7 @@ function back to the original JSON compatible data */
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   };
   module Query2: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};
@@ -146,7 +149,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = {argNamedQuery: int};
       type t_variables = {query: int};

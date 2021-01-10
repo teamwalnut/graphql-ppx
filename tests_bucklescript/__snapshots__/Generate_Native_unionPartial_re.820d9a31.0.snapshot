@@ -18,6 +18,7 @@ Generate Native › unionPartial.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -27,7 +28,7 @@ module MyQuery: {
     barkVolume: float,
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
@@ -46,7 +47,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -56,7 +57,7 @@ function back to the original JSON compatible data */
     barkVolume: float,
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
@@ -86,7 +87,7 @@ function back to the original JSON compatible data */
                   },
                 }: t_dogOrHuman_Dog,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },

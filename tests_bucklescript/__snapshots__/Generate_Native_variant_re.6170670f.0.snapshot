@@ -18,6 +18,7 @@ Generate Native › variant.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -33,7 +34,7 @@ module MyQuery: {
   };
   type t_mutationForVariant_dogOrHuman_Human = {name: string};
   type t_mutationForVariant_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_mutationForVariant_dogOrHuman_Dog)
     | `Human(t_mutationForVariant_dogOrHuman_Human)
   ];
@@ -60,7 +61,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -76,7 +77,7 @@ function back to the original JSON compatible data */
   };
   type t_mutationForVariant_dogOrHuman_Human = {name: string};
   type t_mutationForVariant_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_mutationForVariant_dogOrHuman_Dog)
     | `Human(t_mutationForVariant_dogOrHuman_Human)
   ];
@@ -95,8 +96,8 @@ function back to the original JSON compatible data */
       {
         mutationForVariant: {
           let value = Yojson.Basic.Util.member(\"mutationForVariant\", value);
-          switch (Yojson.Basic.Util.to_option(value)) {
-          | None =>
+          switch (value) {
+          | `Null =>
             raise(
               Failure(
                 \"graphql-ppx: \"
@@ -105,16 +106,16 @@ function back to the original JSON compatible data */
                 ++ \" to be an object\",
               ),
             )
-          | Some(value) =>
+          | value =>
             let temp = Yojson.Basic.Util.member(\"baseType\", value);
-            switch (Yojson.Basic.Util.to_option(temp)) {
-            | None =>
+            switch (temp) {
+            | `Null =>
               let value = temp;
               `BaseType(Yojson.Basic.Util.to_string(value));
-            | Some(_) =>
+            | _ =>
               let temp = Yojson.Basic.Util.member(\"baseTypeList\", value);
-              switch (Yojson.Basic.Util.to_option(temp)) {
-              | None =>
+              switch (temp) {
+              | `Null =>
                 let value = temp;
                 `BaseTypeList(
                   switch (value) {
@@ -127,10 +128,10 @@ function back to the original JSON compatible data */
                   | _ => [||]
                   },
                 );
-              | Some(_) =>
+              | _ =>
                 let temp = Yojson.Basic.Util.member(\"dog\", value);
-                switch (Yojson.Basic.Util.to_option(temp)) {
-                | None =>
+                switch (temp) {
+                | `Null =>
                   let value = temp;
                   `Dog(
                     {
@@ -145,10 +146,10 @@ function back to the original JSON compatible data */
                       },
                     }: t_mutationForVariant_dog,
                   );
-                | Some(_) =>
+                | _ =>
                   let temp = Yojson.Basic.Util.member(\"human\", value);
-                  switch (Yojson.Basic.Util.to_option(temp)) {
-                  | None =>
+                  switch (temp) {
+                  | `Null =>
                     let value = temp;
                     `Human(
                       {
@@ -158,10 +159,10 @@ function back to the original JSON compatible data */
                         },
                       }: t_mutationForVariant_human,
                     );
-                  | Some(_) =>
+                  | _ =>
                     let temp = Yojson.Basic.Util.member(\"dogOrHuman\", value);
-                    switch (Yojson.Basic.Util.to_option(temp)) {
-                    | None =>
+                    switch (temp) {
+                    | `Null =>
                       let value = temp;
                       `DogOrHuman(
                         {
@@ -199,13 +200,12 @@ function back to the original JSON compatible data */
                                   },
                                 }: t_mutationForVariant_dogOrHuman_Human,
                               )
-                            | _ =>
-                              `FutureAddedValue(Obj.magic(value): Js.Json.t)
+                            | _ => `FutureAddedValue(value)
                             }: t_mutationForVariant_dogOrHuman
                           );
                         },
                       );
-                    | Some(_) =>
+                    | _ =>
                       raise(
                         Failure(
                           \"graphql-ppx: \"

@@ -197,7 +197,18 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
             None,
           ),
         ),
-        (Nolabel, ident_from_string(~loc=loc |> conv_loc, "value")),
+        (
+          Nolabel,
+          config.native
+            ? Ast_helper.Exp.apply(
+                Ast_helper.Exp.ident({
+                  loc: Location.none,
+                  txt: Longident.parse(name ++ ".unsafe_fromJson"),
+                }),
+                [(Nolabel, ident_from_string("value"))],
+              )
+            : ident_from_string(~loc=loc |> conv_loc, "value"),
+        ),
       ],
     ),
   );
@@ -419,12 +430,12 @@ and generate_poly_variant_selection_set_decoder =
               let%expr temp =
                 Yojson.Basic.Util.member([%e const_str_expr(field)], value);
 
-              switch (Yojson.Basic.Util.to_option(temp)) {
-              | None =>
+              switch (temp) {
+              | `Null =>
                 let value = temp;
                 %e
                 variant_decoder;
-              | Some(_) =>
+              | _ =>
                 %e
                 generator_loop(next)
               };
@@ -460,8 +471,8 @@ and generate_poly_variant_selection_set_decoder =
   config.native
     ? [@metaloc loc]
       (
-        switch%expr (Yojson.Basic.Util.to_option(value)) {
-        | None =>
+        switch%expr (value) {
+        | `Null =>
           %e
           make_error_raiser(
             [%expr
@@ -470,7 +481,7 @@ and generate_poly_variant_selection_set_decoder =
               ++ " to be an object"
             ],
           )
-        | Some(value) =>
+        | value =>
           %e
           generator_loop(fields)
         }
@@ -640,28 +651,47 @@ and generate_poly_variant_union_decoder =
             ),
           )
         )
-      : Ast_helper.(
-          Exp.case(
-            Pat.any(),
-            Exp.variant(
-              "FutureAddedValue",
-              Some(
-                [%expr
-                  (
-                    Obj.magic(
+      : Ppx_config.native()
+          ? Ast_helper.(
+              Exp.case(
+                Pat.any(),
+                Exp.variant(
+                  "FutureAddedValue",
+                  Some(
+                    [%expr
                       [%e
                         Exp.ident({
                           Location.txt: Longident.parse("value"),
                           loc: Location.none,
                         })
-                      ],
-                    ): Js.Json.t
-                  )
-                ],
-              ),
-            ),
-          )
-        );
+                      ]
+                    ],
+                  ),
+                ),
+              )
+            )
+          : Ast_helper.(
+              Exp.case(
+                Pat.any(),
+                Exp.variant(
+                  "FutureAddedValue",
+                  Some(
+                    [%expr
+                      (
+                        Obj.magic(
+                          [%e
+                            Exp.ident({
+                              Location.txt: Longident.parse("value"),
+                              loc: Location.none,
+                            })
+                          ],
+                        ): Js.Json.t
+                      )
+                    ],
+                  ),
+                ),
+              )
+            );
 
   let typename_matcher =
     Ast_helper.(

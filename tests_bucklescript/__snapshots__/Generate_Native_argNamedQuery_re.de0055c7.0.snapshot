@@ -18,6 +18,7 @@ Generate Native › argNamedQuery.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -37,7 +38,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -71,6 +72,7 @@ function back to the original JSON compatible data */
 };
 module MultipleQueryWithSameVarName = {
   module Query1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t;
       type t_variables;
@@ -90,7 +92,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;
@@ -123,6 +125,7 @@ function back to the original JSON compatible data */
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   };
   module Query2: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t;
       type t_variables;
@@ -142,7 +145,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;

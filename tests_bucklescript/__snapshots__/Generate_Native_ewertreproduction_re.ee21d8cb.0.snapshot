@@ -18,7 +18,7 @@ Generate Native › ewert_reproduction.re › output
   }
 ];
 module UserData: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {type t;};
   type t_user = {
     id: string,
@@ -40,7 +40,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
   };

@@ -18,6 +18,7 @@ Generate Records › omitFutureValueEnum.re › output
   }
 ];
 module Normal: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -59,7 +60,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -186,6 +187,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module ByConfig: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -222,7 +224,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -343,6 +345,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module ByDirective: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -379,7 +382,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {

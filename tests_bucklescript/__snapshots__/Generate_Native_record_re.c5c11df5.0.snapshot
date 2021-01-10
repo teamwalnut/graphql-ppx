@@ -31,6 +31,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -51,7 +52,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -115,6 +116,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module OneFieldQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -136,7 +138,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -187,6 +189,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 };
 module OneFieldQueryWithTypename: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -211,7 +214,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -277,7 +280,7 @@ function back to the original JSON compatible data */
 };
 module ExternalFragmentQuery = {
   module Fragment: {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw: {type t;};
     type t = {
       string,
@@ -296,7 +299,7 @@ function back to the original JSON-compatible data */
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
     };
@@ -341,6 +344,7 @@ function back to the original JSON-compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   };
   module Untitled1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t;
       type t_variables;
@@ -361,7 +365,7 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;
@@ -377,7 +381,10 @@ function back to the original JSON compatible data */
           variousScalars: {
             let value = Yojson.Basic.Util.member(\"variousScalars\", value);
 
-            Fragment.verifyArgsAndParse(~fragmentName=`Fragment, value);
+            Fragment.verifyArgsAndParse(
+              ~fragmentName=`Fragment,
+              Fragment.unsafe_fromJson(value),
+            );
           },
         }: t
       );
@@ -385,7 +392,7 @@ function back to the original JSON compatible data */
       value => {
         let variousScalars = {
           let value = (value: t).variousScalars;
-          Fragment.serialize(value);
+          Fragment.toJson(Fragment.serialize(value));
         };
         `Assoc([(\"variousScalars\", variousScalars)]);
       };
@@ -398,6 +405,7 @@ function back to the original JSON compatible data */
   };
 };
 module InlineFragmentQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type t_variables;
@@ -408,7 +416,7 @@ module InlineFragmentQuery: {
     barkVolume: float,
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
@@ -427,7 +435,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
@@ -438,7 +446,7 @@ function back to the original JSON compatible data */
     barkVolume: float,
   };
   type t_dogOrHuman = [
-    | `FutureAddedValue(Js.Json.t)
+    | `FutureAddedValue(Yojson.Basic.t)
     | `Dog(t_dogOrHuman_Dog)
   ];
   type t = {dogOrHuman: t_dogOrHuman};
@@ -472,7 +480,7 @@ function back to the original JSON compatible data */
                   },
                 }: t_dogOrHuman_Dog,
               )
-            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            | _ => `FutureAddedValue(value)
             }: t_dogOrHuman
           );
         },
@@ -515,7 +523,7 @@ function back to the original JSON compatible data */
 };
 module UnionExternalFragmentQuery = {
   module DogFragment: {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw: {type t;};
     type t = {
       __typename: string,
@@ -535,7 +543,7 @@ function back to the original JSON-compatible data */
     external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
     };
@@ -593,12 +601,13 @@ function back to the original JSON-compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
   };
   module Untitled1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t;
       type t_variables;
     };
     type t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
+      | `FutureAddedValue(Yojson.Basic.t)
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
@@ -617,13 +626,13 @@ function back to the original JSON compatible data */
     external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;
     };
     type t_dogOrHuman = [
-      | `FutureAddedValue(Js.Json.t)
+      | `FutureAddedValue(Yojson.Basic.t)
       | `Dog(DogFragment.t)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
@@ -646,10 +655,10 @@ function back to the original JSON compatible data */
                 `Dog(
                   DogFragment.verifyArgsAndParse(
                     ~fragmentName=`DogFragment,
-                    value,
+                    DogFragment.unsafe_fromJson(value),
                   ),
                 )
-              | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+              | _ => `FutureAddedValue(value)
               }: t_dogOrHuman
             );
           },
@@ -660,7 +669,7 @@ function back to the original JSON compatible data */
         let dogOrHuman = {
           let value = (value: t).dogOrHuman;
           switch (value) {
-          | `Dog(value) => DogFragment.serialize(value)
+          | `Dog(value) => DogFragment.toJson(DogFragment.serialize(value))
           | `FutureAddedValue(value) => value
           };
         };

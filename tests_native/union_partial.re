@@ -33,7 +33,8 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
                Format.pp_print_float,
                dog.barkVolume,
              )
-           | `Nonexhaustive => Format.fprintf(formatter, "`Nonexhaustive"),
+           | `FutureAddedValue(_) =>
+             Format.fprintf(formatter, "`Nonexhaustive"),
          obj.dogOrHuman,
        );
 
@@ -41,7 +42,7 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
        switch (a.dogOrHuman, b.dogOrHuman) {
        | (`Dog(a), `Dog(b)) =>
          a.name == b.name && a.barkVolume == b.barkVolume
-       | (`Nonexhaustive, `Nonexhaustive) => true
+       | (`FutureAddedValue(a), `FutureAddedValue(b)) => a == b
        | _ => false
        };
    });
@@ -59,7 +60,7 @@ let decodes_non_exhaustive_query = () =>
     |> Yojson.Basic.from_string
     |> MyQuery.unsafe_fromJson
     |> MyQuery.parse,
-    {dogOrHuman: `Nonexhaustive},
+    {dogOrHuman: `FutureAddedValue(`Null)},
   );
 
 let tests = [

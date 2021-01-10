@@ -21,6 +21,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module QueryWithOnlyFragments: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_users_User_AnonymousUser = {
       __typename: string,
@@ -65,7 +66,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_users_User_AnonymousUser = {
       __typename: string,
@@ -216,6 +217,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module QueryWithTypename: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_users_User_AdminUser = {
       __typename: string,
@@ -249,7 +251,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_users_User_AdminUser = {
       __typename: string,
@@ -352,6 +354,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module QueryWithMixedFragments: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_users_User_AnonymousUser = {
       __typename: string,
@@ -393,7 +396,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_users_User_AnonymousUser = {
       __typename: string,
@@ -564,6 +567,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module MixedQueryWithTypename: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_users_User_AdminUser = {
       __typename: string,
@@ -603,7 +607,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_users_User_AdminUser = {
       __typename: string,
@@ -762,6 +766,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module QueryWithoutFragments: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_users = {id: string};
     type t = {users: array(t_users)};
@@ -784,7 +789,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_users = {id: string};
     type t = {users: array(t_users)};

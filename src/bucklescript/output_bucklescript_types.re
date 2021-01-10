@@ -486,7 +486,11 @@ let generate_variant_union =
                   loc: emit_locations ? conv_loc(loc) : Location.none,
                 },
                 false,
-                [base_type("Js.Json.t")],
+                [
+                  base_type(
+                    Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t",
+                  ),
+                ],
               ),
             prf_loc: emit_locations ? conv_loc(loc) : Location.none,
             prf_attributes: [],

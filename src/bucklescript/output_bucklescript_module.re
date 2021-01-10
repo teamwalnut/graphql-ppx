@@ -615,6 +615,7 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
   let has_required_variables = has_required_variables(extracted_args);
 
   [
+    [[%sigi: [@ocaml.warning "-32-30"]]],
     [signature_module("Raw", List.append(raw_types, raw_arg_types))],
     types,
     arg_types,
@@ -774,7 +775,7 @@ let generate_operation_implementation =
 
     List.concat([
       List.concat([
-        [[%stri [@ocaml.warning "-32"]]],
+        [[%stri [@ocaml.warning "-32-30"]]],
         [
           wrap_module(
             ~loc=Location.none,
@@ -949,7 +950,7 @@ let generate_fragment_signature =
   let type_name = base_type_name(Option.get_or_else("t", type_name));
 
   [
-    [[%sigi: [@ocaml.warning "-32"]]],
+    [[%sigi: [@ocaml.warning "-32-30"]]],
     [signature_module("Raw", raw_types)],
     types,
     [
@@ -1127,7 +1128,7 @@ let generate_fragment_implementation =
   let type_name = base_type_name(Option.get_or_else("t", type_name));
   let contents =
     [
-      [[%stri [@ocaml.warning "-32"]]],
+      [[%stri [@ocaml.warning "-32-30"]]],
       [wrap_module(~loc=Location.none, "Raw", raw_types)],
       types,
       graphql_external(config),
