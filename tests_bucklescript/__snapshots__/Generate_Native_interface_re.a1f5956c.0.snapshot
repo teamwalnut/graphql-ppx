@@ -421,7 +421,7 @@ function back to the original JSON compatible data */
           value
           |> Array.map(value =>
                Array.fold_left(
-                 (_, b) => b,
+                 (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
                  {
                    let id = {
                      let value = (value: t_users).id;
@@ -587,7 +587,7 @@ function back to the original JSON compatible data */
           value
           |> Array.map(value =>
                Array.fold_left(
-                 (_, b) => b,
+                 (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
                  {
                    let id = {
                      let value = (value: t_users).id;

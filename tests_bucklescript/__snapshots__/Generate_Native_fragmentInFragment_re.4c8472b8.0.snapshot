@@ -168,7 +168,7 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     value =>
       Array.fold_left(
-        (_, b) => b,
+        (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
         {
           let nullableOfNullable = {
             let value = (value: t).nullableOfNullable;

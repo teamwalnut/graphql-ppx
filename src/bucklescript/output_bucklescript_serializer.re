@@ -909,7 +909,7 @@ and generate_object_encoder =
       // no deepmerge for native, just get the last one
       ? [%expr
         Array.fold_left(
-          (_, b) => b,
+          (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
           {
             %e
             do_obj_constructor();

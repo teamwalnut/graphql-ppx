@@ -593,7 +593,7 @@ function back to the original JSON compatible data */
       and l4 = {
         let value = (value: t).l4;
         Array.fold_left(
-          (_, b) => b,
+          (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
           {
             let nullableOfNullable = {
               let value = (value: t_l4).nullableOfNullable;
@@ -624,7 +624,7 @@ function back to the original JSON compatible data */
       and l3 = {
         let value = (value: t).l3;
         Array.fold_left(
-          (_, b) => b,
+          (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
           {
             let nullableOfNullable = {
               let value = (value: t_l3).nullableOfNullable;
@@ -654,7 +654,7 @@ function back to the original JSON compatible data */
       and l2 = {
         let value = (value: t).l2;
         Array.fold_left(
-          (_, b) => b,
+          (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
           `Assoc([]),
           [|
             ListFragment.toJson(ListFragment.serialize((value: t_l2).frag1)),
