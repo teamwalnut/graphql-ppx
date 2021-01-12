@@ -13,6 +13,11 @@ if (platform === "win32") {
   platform = "win";
 }
 
+// Workaround for darwin arm64 to use Rosetta for now
+if (platform === "darwin" && arch === "arm64") {
+  arch = "x64";
+}
+
 copyBinary("bin/graphql-ppx-" + platform + "-" + arch + ".exe", "ppx");
 
 function copyBinary(filename, destFilename) {
