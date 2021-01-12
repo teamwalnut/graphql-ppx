@@ -411,11 +411,14 @@ let rec read_marshaled_schema = json_schema => {
   | file =>
     let data =
       switch (Marshal.from_channel(file)) {
-      | data => data
-      | exception _ => recovery_build(json_schema)
+      | data =>
+        close_in(file);
+        data;
+      | exception _ =>
+        close_in(file);
+        recovery_build(json_schema);
       };
 
-    close_in(file);
     data;
   };
 }
