@@ -334,12 +334,16 @@ let read_config = () => {
     ppxConfig |> read_custom_fields;
   };
 
-  switch (Paths.getBsConfigFile()) {
-  | Some(bsConfigFile) =>
-    try(bsConfigFile |> Yojson.Basic.from_file |> parseConfig) {
-    | Config_error(_) as e => raise(e)
-    | _ => ()
-    }
-  | None => ()
+  if (Ppx_config.native()) {
+    ();
+  } else {
+    switch (Paths.getBsConfigFile()) {
+    | Some(bsConfigFile) =>
+      try(bsConfigFile |> Yojson.Basic.from_file |> parseConfig) {
+      | Config_error(_) as e => raise(e)
+      | _ => ()
+      }
+    | None => ()
+    };
   };
 };
