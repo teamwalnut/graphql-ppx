@@ -472,8 +472,7 @@ let rewrite_definition =
   };
 };
 
-// Default configuration
-let () = Bucklescript_config.read_config();
+Bucklescript_config.read_config();
 
 let get_module_bindings = structure => {
   Ast_408.(

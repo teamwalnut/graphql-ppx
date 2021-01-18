@@ -11,10 +11,14 @@ module Paths = {
     } else {
       let parent = dir |> Filename.dirname;
       if (parent == dir) {
-        prerr_endline(
-          "Error: cannot find project root containing " ++ bsconfig ++ ".",
-        );
-        assert(false);
+        if (!Ppx_config.native()) {
+          prerr_endline(
+            "Error: cannot find project root containing " ++ bsconfig ++ ".",
+          );
+          assert(false);
+        } else {
+          dir;
+        };
       } else {
         findProjectRoot(~dir=parent);
       };
@@ -334,16 +338,12 @@ let read_config = () => {
     ppxConfig |> read_custom_fields;
   };
 
-  if (Ppx_config.native()) {
-    ();
-  } else {
-    switch (Paths.getBsConfigFile()) {
-    | Some(bsConfigFile) =>
-      try(bsConfigFile |> Yojson.Basic.from_file |> parseConfig) {
-      | Config_error(_) as e => raise(e)
-      | _ => ()
-      }
-    | None => ()
-    };
+  switch (Paths.getBsConfigFile()) {
+  | Some(bsConfigFile) =>
+    try(bsConfigFile |> Yojson.Basic.from_file |> parseConfig) {
+    | Config_error(_) as e => raise(e)
+    | _ => ()
+    }
+  | None => ()
   };
 };
