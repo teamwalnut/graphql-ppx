@@ -9,6 +9,8 @@ open Ast_helper;
 open Extract_type_definitions;
 open Output_bucklescript_utils;
 
+exception Cant_find_fragment_type_with_loc(Source_pos.ast_location, string);
+
 type operation_type = Graphql_ast.operation_type;
 type operation_options = {has_required_variables: bool};
 
@@ -1189,7 +1191,8 @@ let generate_definition = config =>
       fragment,
       type_name,
       inner: structure,
-    }) => (
+    }) =>
+    try((
       generate_fragment_implementation(
         config,
         name,
@@ -1208,7 +1211,17 @@ let generate_definition = config =>
         type_name,
         structure,
       ),
-    );
+    )) {
+    | Graphql_printer.Cant_find_fragment_type(
+        fragment_type: Source_pos.spanning(string),
+      ) =>
+      raise(
+        Cant_find_fragment_type_with_loc(
+          config.map_loc(fragment_type.span),
+          fragment_type.item,
+        ),
+      )
+    };
 
 let generate_modules = (module_name, module_type, operations) => {
   switch (operations) {

@@ -1,3 +1,5 @@
+exception Cant_find_fragment_type(Source_pos.spanning(string));
+
 type t =
   | String(string)
   | FragmentNameRef(string)

@@ -11,9 +11,8 @@ let get_parent_span =
   | Definition(Graphql_ast.Operation({span})) => span
   | Definition(Graphql_ast.Fragment({span})) => span;
 
-
 // get's the type of a field name
-let rec safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
+let safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
   let ty_fields =
     switch (ty) {
     | Interface({im_fields, _}) => im_fields
@@ -26,9 +25,6 @@ let rec safe_get_field_type = (schema, ty: Schema.type_meta, name) => {
     |> Option.map(Graphql_printer.type_ref_name)
     |> Option.flat_map(Schema.lookup_type(schema))
   );
-}
-and _unsafe_get_field_type = (schema, ty: Schema.type_meta, name) => {
-  safe_get_field_type(schema, ty, name) |> Option.unsafe_unwrap;
 };
 
 let traverse_selection_set = (schema, ty, selection_set, fn) => {
@@ -204,9 +200,16 @@ let traverse_document_selections = (fn, schema: Schema.t, definitions) => {
            let ty_name =
              switch (op.o_type) {
              | Query => schema.meta.sm_query_type
-             | Mutation => Option.unsafe_unwrap(schema.meta.sm_mutation_type)
+             | Mutation =>
+               Option.unsafe_unwrap(
+                 ~reason="Cannot find mutation type",
+                 schema.meta.sm_mutation_type,
+               )
              | Subscription =>
-               Option.unsafe_unwrap(schema.meta.sm_subscription_type)
+               Option.unsafe_unwrap(
+                 ~reason="Cannot find subscription type",
+                 schema.meta.sm_subscription_type,
+               )
              };
            let ty = Schema.lookup_type(schema, ty_name);
            switch (ty) {

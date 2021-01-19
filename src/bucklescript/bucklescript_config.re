@@ -132,9 +132,9 @@ let read_custom_fields = json => {
 };
 
 let read_config = () => {
-  Paths.setProjectRoot();
-
   Ppx_config.set_config(defaultConfig);
+
+  Paths.setProjectRoot();
   open Yojson.Basic.Util;
 
   let parseConfig = (json: Yojson.Basic.t) => {

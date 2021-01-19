@@ -13,6 +13,8 @@ open Schema;
    of validation logic :/
  */
 
+exception Cant_find_fragment_type(spanning(string));
+
 type t =
   | String(string)
   | FragmentNameRef(string)
@@ -169,11 +171,16 @@ and print_field = (schema, ty, f) => {
     | _ => []
     };
 
-  let field_ty =
+  let field_type_name =
     List.find(fm => fm.fm_name == f.fd_name.item, ty_fields).fm_field_type
-    |> type_ref_name
+    |> type_ref_name;
+
+  let field_ty =
+    field_type_name
     |> lookup_type(schema)
-    |> Option.unsafe_unwrap;
+    |> Option.unsafe_unwrap(
+         ~reason="Cannot find field type: " ++ field_type_name,
+       );
 
   Array.append(
     [
@@ -206,7 +213,11 @@ and print_field = (schema, ty, f) => {
 and print_inline_fragment = (schema, ty, f) => {
   let inner_ty =
     switch (f.if_type_condition) {
-    | Some({item, _}) => lookup_type(schema, item) |> Option.unsafe_unwrap
+    | Some({item, _}) =>
+      lookup_type(schema, item)
+      |> Option.unsafe_unwrap(
+           ~reason="Can't find inline fragment type: " ++ item,
+         )
     | None => ty
     };
   Array.append(
@@ -244,8 +255,16 @@ let print_operation = (schema, op) => {
   let ty_name =
     switch (op.o_type) {
     | Query => schema.meta.sm_query_type
-    | Mutation => Option.unsafe_unwrap(schema.meta.sm_mutation_type)
-    | Subscription => Option.unsafe_unwrap(schema.meta.sm_subscription_type)
+    | Mutation =>
+      Option.unsafe_unwrap(
+        ~reason="Can't find mutation type",
+        schema.meta.sm_mutation_type,
+      )
+    | Subscription =>
+      Option.unsafe_unwrap(
+        ~reason="Can't find subscription type",
+        schema.meta.sm_subscription_type,
+      )
     };
   Array.append(
     [
@@ -279,7 +298,8 @@ let print_operation = (schema, op) => {
     |> Array.of_list,
     print_selection_set(
       schema,
-      lookup_type(schema, ty_name) |> Option.unsafe_unwrap,
+      lookup_type(schema, ty_name)
+      |> Option.unsafe_unwrap(~reason="Can't find type: " ++ ty_name),
       op.o_selection_set.item,
     ),
   );
@@ -299,7 +319,10 @@ let print_fragment = (schema, f) =>
     |],
     print_selection_set(
       schema,
-      lookup_type(schema, f.fg_type_condition.item) |> Option.unsafe_unwrap,
+      switch (lookup_type(schema, f.fg_type_condition.item)) {
+      | Some(fragment_type) => fragment_type
+      | None => raise(Cant_find_fragment_type(f.fg_type_condition))
+      },
       f.fg_selection_set.item,
     ),
   );

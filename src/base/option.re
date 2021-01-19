@@ -1,4 +1,4 @@
-exception Option_unwrap_error;
+exception Option_unwrap_error(string);
 
 let map = f =>
   fun
@@ -10,9 +10,9 @@ let flat_map = f =>
   | None => None
   | Some(v) => f(v);
 
-let unsafe_unwrap =
+let unsafe_unwrap = (~reason) =>
   fun
-  | None => raise(Option_unwrap_error)
+  | None => raise(Option_unwrap_error(reason))
   | Some(v) => v;
 
 let get_or_else = default =>

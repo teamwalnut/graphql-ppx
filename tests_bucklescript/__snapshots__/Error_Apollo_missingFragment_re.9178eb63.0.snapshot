@@ -1,7 +1,11 @@
 Error Apollo › missingFragment.re › output
-Fatal error: exception Graphql_ppx_base__Option.Option_unwrap_error
-
-  We've found a bug for you!
-  missingFragment.re
+We've found a bug for you!
+  missingFragment.re 3:28-42
   
-  Error while running external preprocessor
+  1 \226\148\130 module Fragment = [%graphql
+  2 \226\148\130   {|
+  3 \226\148\130   fragment ListFragment on UnknownFragment {
+  4 \226\148\130     nullableOfNullable
+  5 \226\148\130     nullableOfNonNullable
+  
+  Can't find fragment type: UnknownFragment
