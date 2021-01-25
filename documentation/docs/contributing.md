@@ -8,6 +8,7 @@ title: Contributing
 npm install -g esy@latest
 esy install
 esy build
+npm install
 ```
 
 ## Running tests
