@@ -1,10 +1,7 @@
 open Graphql_ppx_base;
-open Migrate_parsetree;
 open Source_pos;
 open Schema;
-
-open Ast_408;
-open Asttypes;
+open Ppxlib;
 
 // open Generator_utils;
 open Output_bucklescript_utils;
@@ -92,13 +89,21 @@ let rec serialize_type =
                        `String(
                          [%e
                            Ast_helper.Exp.constant(
-                             Parsetree.Pconst_string(value.evm_name, None),
+                             Parsetree.Pconst_string(
+                               value.evm_name,
+                               Location.none,
+                               None,
+                             ),
                            )
                          ],
                        )
                      ]
                      : Ast_helper.Exp.constant(
-                         Parsetree.Pconst_string(value.evm_name, None),
+                         Parsetree.Pconst_string(
+                           value.evm_name,
+                           Location.none,
+                           None,
+                         ),
                        ),
                  )
                }),
@@ -193,11 +198,9 @@ let serialize_fun = (fields, type_name) => {
       : Exp.record(
           fields
           |> List.map((InputField({name, type_, loc})) => {
+               let loc = conv_loc(loc);
                (
-                 {
-                   txt: Longident.parse(to_valid_ident(name)),
-                   loc: conv_loc(loc),
-                 },
+                 {txt: Longident.parse(to_valid_ident(name)), loc},
                  [%expr
                    [%e serialize_type(type_)](
                      [%e
@@ -215,7 +218,7 @@ let serialize_fun = (fields, type_name) => {
                      ],
                    )
                  ],
-               )
+               );
              }),
           None,
         );
@@ -361,9 +364,10 @@ let generate_variable_constructors = (arg_type_defs: list(arg_type_def)) => {
                | NoVariables => None,
              )
           |> List.map(((name, fields, loc)) => {
+               let loc = conv_loc(loc);
                let rec make_labeled_fun = body =>
                  fun
-                 | [] => [@metaloc loc |> conv_loc] [%expr (() => [%e body])]
+                 | [] => [@metaloc loc] [%expr (() => [%e body])]
                  | [InputField({name, loc, type_}), ...tl] => {
                      let name_loc = loc |> conv_loc;
                      Ast_helper.(
@@ -1019,8 +1023,14 @@ and generate_poly_variant_union_encoder =
   [%e typename_matcher];
 }
 and generate_poly_variant_selection_set_encoder =
-    (_config, _loc, _name, _fields, _path, _definition) =>
-  Ppx_config.native() ? [%expr `Null] : [%expr Obj.magic(Js.Json.null)]
+    (_config, _loc, _name, _fields, _path, _definition) => {
+  let e =
+    Ppx_config.native() ? [%expr `Null] : [%expr Obj.magic(Js.Json.null)];
+
+  let%expr _temp = value;
+  %e
+  e;
+}
 and generate_poly_variant_interface_encoder =
     (config, _loc, name, fragments, path, definition) => {
   open Ast_helper;
@@ -1106,10 +1116,14 @@ and generate_solo_fragment_spread_encorder =
 
 and generate_error = (loc, message) => {
   let loc = Output_bucklescript_utils.conv_loc(loc);
-  let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
+  let ext =
+    Ocaml_common.Ast_mapper.extension_of_error(
+      Ocaml_common.Location.error(~loc, message),
+    );
+  let extension = Ocaml_common.Ast_helper.Exp.extension(~loc, ext);
   let%expr _value = value;
   %e
-  Ast_helper.Exp.extension(~loc, ext);
+  To_ppxlib.copy_expression(extension);
 }
 and generate_serializer = (config, path: list(string), definition, typename) =>
   fun
@@ -1117,26 +1131,31 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
   | Res_array({loc, inner}) =>
     generate_array_encoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id({loc}) =>
-    Ppx_config.native()
-      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
-      : raw_value(conv_loc(loc))
-  | Res_string({loc}) =>
-    Ppx_config.native()
-      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
-      : raw_value(conv_loc(loc))
-  | Res_int({loc}) =>
-    Ppx_config.native()
-      ? [@metaloc conv_loc(loc)] [%expr `Int(value)]
-      : raw_value(conv_loc(loc))
-  | Res_float({loc}) =>
-    Ppx_config.native()
-      ? [@metaloc conv_loc(loc)] [%expr `Float(value)]
-      : raw_value(conv_loc(loc))
-  | Res_boolean({loc}) =>
-    Ppx_config.native()
-      ? [@metaloc conv_loc(loc)] [%expr `Bool(value)]
-      : raw_value(conv_loc(loc))
+  | Res_id({loc}) => {
+      let loc = conv_loc(loc);
+      Ppx_config.native()
+        ? [@metaloc loc] [%expr `String(value)] : raw_value(loc);
+    }
+  | Res_string({loc}) => {
+      let loc = conv_loc(loc);
+      Ppx_config.native()
+        ? [@metaloc loc] [%expr `String(value)] : raw_value(loc);
+    }
+  | Res_int({loc}) => {
+      let loc = conv_loc(loc);
+      Ppx_config.native()
+        ? [@metaloc loc] [%expr `Int(value)] : raw_value(loc);
+    }
+  | Res_float({loc}) => {
+      let loc = conv_loc(loc);
+      Ppx_config.native()
+        ? [@metaloc loc] [%expr `Float(value)] : raw_value(loc);
+    }
+  | Res_boolean({loc}) => {
+      let loc = conv_loc(loc);
+      Ppx_config.native()
+        ? [@metaloc loc] [%expr `Bool(value)] : raw_value(loc);
+    }
   | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)

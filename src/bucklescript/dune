@@ -3,8 +3,8 @@
  (public_name graphql_ppx)
  (kind ppx_rewriter)
  (ppx_runtime_libraries graphql_ppx.graphql_ppx_runtime)
- (libraries reason ocaml-migrate-parsetree graphql_ppx.base)
+ (libraries reason graphql_ppx.base ppxlib)
  (flags
   (:standard -w -9))
  (preprocess
-  (pps ppx_tools_versioned.metaquot_408)))
+  (pps ppxlib.metaquot)))
