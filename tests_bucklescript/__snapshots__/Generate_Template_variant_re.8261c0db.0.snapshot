@@ -1,7 +1,7 @@
 Generate Template › variant.re › output
 [@ocaml.ppx.context
   {
-    tool_name: \"migrate_driver\",
+    tool_name: \"ppx_driver\",
     include_dirs: [],
     load_path: [],
     open_modules: [],
@@ -280,6 +280,7 @@ function back to the original JSON compatible data */
       {
         let mutationForVariant = {
           let value = (value: t).mutationForVariant;
+          let _temp = value;
           Obj.magic(Js.Json.null);
         };
         {mutationForVariant: mutationForVariant};
