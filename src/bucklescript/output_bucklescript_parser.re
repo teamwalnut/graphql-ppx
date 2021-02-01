@@ -1,11 +1,8 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Schema;
 
-open Ast_408;
-open Asttypes;
-open Parsetree;
+open Ppxlib;
 
 open Generator_utils;
 open Output_bucklescript_utils;
@@ -114,12 +111,12 @@ let generate_poly_enum_decoder = (loc, enum_meta, omit_future_value) => {
           Exp.case(
             Pat.any(),
             Exp.apply(
-              Exp.ident(Location.mknoloc(Longident.parse("raise"))),
+              Exp.ident(mknoloc(Longident.parse("raise"))),
               [
                 (
                   Nolabel,
                   Exp.construct(
-                    Location.mknoloc(Longident.parse("Not_found")),
+                    mknoloc(Longident.parse("Not_found")),
                     None,
                   ),
                 ),
@@ -207,7 +204,7 @@ let generate_fragment_parse_fun = (config, loc, name, arguments, definition) => 
                 }),
                 [(Nolabel, ident_from_string("value"))],
               )
-            : ident_from_string(~loc=loc |> conv_loc, "value"),
+            : ident_from_string(~loc, "value"),
         ),
       ],
     ),
@@ -220,11 +217,13 @@ let generate_solo_fragment_spread_decoder =
 };
 
 let generate_error = (loc, message) => {
-  let loc = Output_bucklescript_utils.conv_loc(loc);
-  let ext = Ast_mapper.extension_of_error(Location.error(~loc, message));
+  let loc = conv_loc(loc);
+  let error = Ocaml_common.Location.error(~loc, message);
+  let ext = Ocaml_common.Ast_mapper.extension_of_error(error);
+  let extension = Ocaml_common.Ast_helper.Exp.extension(~loc, ext);
   let%expr _value = value;
   %e
-  Ast_helper.Exp.extension(~loc, ext);
+  To_ppxlib.copy_expression(extension);
 };
 
 let rec generate_nullable_decoder = (config, loc, inner, path, definition) =>
@@ -344,24 +343,23 @@ and generate_object_decoder =
               arguments,
               definition,
             )
-          : [@metaloc conv_loc(loc)]
+          : {
+            let our_loc = loc;
+            let loc = conv_loc(loc);
+            [@metaloc loc]
             {
-              let%expr value: [%t
-                base_type_name(
-                  ~loc=Output_bucklescript_utils.conv_loc(loc),
-                  name ++ ".Raw.t",
-                )
-              ] =
+              let%expr value: [%t base_type_name(~loc, name ++ ".Raw.t")] =
                 Obj.magic(value);
               %e
               generate_fragment_parse_fun(
                 config,
-                loc,
+                our_loc,
                 name,
                 arguments,
                 definition,
               );
             };
+          };
 
     let get_record_contents_inline =
       fun
@@ -638,12 +636,12 @@ and generate_poly_variant_union_decoder =
           Exp.case(
             Pat.any(),
             Exp.apply(
-              Exp.ident(Location.mknoloc(Longident.parse("raise"))),
+              Exp.ident(mknoloc(Longident.parse("raise"))),
               [
                 (
                   Nolabel,
                   Exp.construct(
-                    Location.mknoloc(Longident.parse("Not_found")),
+                    mknoloc(Longident.parse("Not_found")),
                     None,
                   ),
                 ),
@@ -727,29 +725,42 @@ and generate_parser = (config, path: list(string), definition) =>
     generate_nullable_decoder(config, conv_loc(loc), inner, path, definition)
   | Res_array({loc, inner}) =>
     generate_array_decoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id({loc}) =>
-    config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_string(value)]
-      : [@metaloc conv_loc(loc)] [%expr value]
-  | Res_string({loc}) =>
-    config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_string(value)]
-      : [@metaloc conv_loc(loc)] [%expr value]
-  | Res_int({loc}) =>
-    config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_int(value)]
-      : [@metaloc conv_loc(loc)] [%expr value]
-  | Res_float({loc}) =>
-    config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_float(value)]
-      : [@metaloc conv_loc(loc)] [%expr value]
-  | Res_boolean({loc}) =>
-    config.native
-      ? [@metaloc conv_loc(loc)] [%expr Yojson.Basic.Util.to_bool(value)]
-      : [@metaloc conv_loc(loc)] [%expr value]
-  | Res_raw_scalar({loc}) => [@metaloc conv_loc(loc)] [%expr value]
+  | Res_id({loc}) => {
+      let loc = conv_loc(loc);
+      config.native
+        ? [@metaloc loc] [%expr Yojson.Basic.Util.to_string(value)]
+        : [@metaloc loc] [%expr value];
+    }
+  | Res_string({loc}) => {
+      let loc = conv_loc(loc);
+      config.native
+        ? [@metaloc loc] [%expr Yojson.Basic.Util.to_string(value)]
+        : [@metaloc loc] [%expr value];
+    }
+  | Res_int({loc}) => {
+      let loc = conv_loc(loc);
+      config.native
+        ? [@metaloc loc] [%expr Yojson.Basic.Util.to_int(value)]
+        : [@metaloc loc] [%expr value];
+    }
+  | Res_float({loc}) => {
+      let loc = conv_loc(loc);
+      config.native
+        ? [@metaloc loc] [%expr Yojson.Basic.Util.to_float(value)]
+        : [@metaloc loc] [%expr value];
+    }
+  | Res_boolean({loc}) => {
+      let loc = conv_loc(loc);
+      config.native
+        ? [@metaloc loc] [%expr Yojson.Basic.Util.to_bool(value)]
+        : [@metaloc loc] [%expr value];
+    }
+  | Res_raw_scalar({loc}) => {
+      let loc = conv_loc(loc);
+      [@metaloc loc] [%expr value];
+    }
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
-    generate_poly_enum_decoder(loc, enum_meta, omit_future_value)
+    generate_poly_enum_decoder(conv_loc(loc), enum_meta, omit_future_value)
   | Res_custom_decoder({loc, ident, inner}) =>
     generate_custom_decoder(
       config,
@@ -768,7 +779,7 @@ and generate_parser = (config, path: list(string), definition) =>
     }) =>
     generate_object_decoder(
       ~config,
-      ~loc,
+      ~loc=conv_loc(loc),
       ~name,
       ~path,
       ~definition,
@@ -785,7 +796,7 @@ and generate_parser = (config, path: list(string), definition) =>
     }) =>
     generate_object_decoder(
       ~config,
-      ~loc,
+      ~loc=conv_loc(loc),
       ~name,
       ~path,
       ~definition,

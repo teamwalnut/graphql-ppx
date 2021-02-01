@@ -18,4 +18,7 @@ Graphql_ppx_base.Ppx_config.update_config(current =>
   {...current, native: false}
 );
 
-let () = Migrate_parsetree.Driver.run_main(~argv, ());
+let () =
+  /* TODO(anmonteiro): args??!*/
+  Ppxlib.Driver.standalone();
+/* Migrate_parsetree.Driver.run_main(~argv, ()); */

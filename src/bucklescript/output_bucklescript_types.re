@@ -1,11 +1,11 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Extract_type_definitions;
 open Source_pos;
 open Output_bucklescript_utils;
-open Ast_408;
-open Parsetree;
+open Ppxlib;
+
+let loc = Location.none;
 
 // duplicate of ouput_bucklescript_decoder
 let make_error_raiser = message =>
@@ -25,7 +25,8 @@ let make_error_raiser = message =>
     Js.Exn.raiseError("Unexpected GraphQL query response");
   };
 // duplicate of ouput_bucklescript_decoder
-let const_str_expr = s => Ast_helper.(Exp.constant(Pconst_string(s, None)));
+let const_str_expr = s =>
+  Ast_helper.(Exp.constant(Pconst_string(s, loc, None)));
 
 let base_type = (~inner=[], ~loc=?, name) => {
   Ast_helper.Typ.constr(
@@ -101,7 +102,7 @@ let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
       base_type(~loc=conv_loc(loc), module_name ++ ".t");
     }
   | Res_error({loc, message: error}) =>
-    raise(Location.Error(Location.error(~loc=conv_loc(loc), error)))
+    Location.raise_errorf(~loc=conv_loc(loc), "%s", error)
   | Res_poly_enum(_) => base_type(~loc=?atLoc, generate_type_name(path));
 
 let wrap_type_declaration = (~loc as _=?, ~manifest=?, inner, path) => {
@@ -142,7 +143,7 @@ let already_has__typename = fields =>
 
 let variant_interface_type =
     (
-      ~name as interface_name=?,
+      ~name as interface_name,
       ~config,
       ~fragments,
       ~path,
@@ -164,11 +165,7 @@ let variant_interface_type =
         [
           generate_type(
             ~config,
-            ~path=
-              switch (interface_name) {
-              | Some(interface_name) => [name, interface_name, ...path]
-              | None => [name, ...path]
-              },
+            ~path=[name, interface_name, ...path],
             ~raw,
             res,
           ),
@@ -362,11 +359,7 @@ let generate_record_type =
            | Field({path: [], loc}) =>
              // I don't think this should ever happen but we need to
              // cover this case, perhaps we can constrain the type
-             raise(
-               Location.Error(
-                 Location.error(~loc=loc |> conv_loc, "No path"),
-               ),
-             ),
+             Location.raise_errorf(~loc=loc |> conv_loc, "No path"),
          [],
        )
     |> List.rev;
@@ -679,11 +672,7 @@ let generate_object_type =
            | Field({path: [], loc}) =>
              // I don't think this should ever happen but we need to
              // cover this case, perhaps we can constrain the type
-             raise(
-               Location.Error(
-                 Location.error(~loc=loc |> conv_loc, "No path"),
-               ),
-             ),
+             Location.raise_errorf(~loc=loc |> conv_loc, "No path"),
          [],
        )
     |> List.rev;
@@ -859,8 +848,8 @@ let make_fragment_type =
       ~manifest=
         Typ.constr(
           raw
-            ? Location.mknoloc(Longident.Lident("t"))
-            : Location.mkloc(
+            ? mknoloc(Longident.Lident("t"))
+            : mkloc(
                 switch (type_name) {
                 | Some(type_name) => Longident.parse(type_name)
                 | None => Longident.Lident("t")
@@ -873,7 +862,7 @@ let make_fragment_type =
               ),
           [],
         ),
-      Location.mknoloc("t_" ++ fragment_name),
+      mknoloc("t_" ++ fragment_name),
     )
   );
 };
@@ -990,31 +979,19 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
   | Type(InputObject({iom_name})) =>
     base_type(~loc?, generate_type_name(~prefix="t_variables", [iom_name]))
   | Type(Object(_)) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=originalLoc |> conv_loc,
-          "Object not allowed in args",
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=originalLoc |> conv_loc,
+      "Object not allowed in args",
     )
   | Type(Union(_)) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=originalLoc |> conv_loc,
-          "Union not allowed in args",
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=originalLoc |> conv_loc,
+      "Union not allowed in args",
     )
   | Type(Interface(_)) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=originalLoc |> conv_loc,
-          "Interface not allowed in args",
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=originalLoc |> conv_loc,
+      "Interface not allowed in args",
     )
   | Nullable(inner) =>
     nulls
@@ -1035,13 +1012,10 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
       "array",
     )
   | TypeNotFound(name) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=originalLoc |> conv_loc,
-          "Type " ++ name ++ " not found!",
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=originalLoc |> conv_loc,
+      "Type %s not found!",
+      name,
     );
 };
 
@@ -1129,10 +1103,7 @@ let generate_native_raw_input_object = (impl, input_obj_name) => {
       ~manifest=?
         impl
           ? Some(
-              Typ.constr(
-                Location.mknoloc(Longident.parse("Yojson.Basic.t")),
-                [],
-              ),
+              Typ.constr(mknoloc(Longident.parse("Yojson.Basic.t")), []),
             )
           : None,
       {

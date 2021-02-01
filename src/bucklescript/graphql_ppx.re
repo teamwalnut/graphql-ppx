@@ -1,8 +1,7 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
 open Source_pos;
 open Output_bucklescript_utils;
-open Ast_408;
+open Ppxlib;
 
 // not available in all supported versions of OCaml so inlining here
 let filter_map = f => {
@@ -19,7 +18,7 @@ let filter_map = f => {
 };
 
 let add_loc = (delimLength, base, span) => {
-  let (_, _, col) = Location.get_pos_info(conv_pos(base.loc_start));
+  let (_, _, col) = Ocaml_common.Location.get_pos_info(base.loc_start);
   let pos_bol_start =
     base.loc_start.pos_bol
     + col
@@ -78,8 +77,11 @@ let fmt_parse_err = err =>
   );
 
 let make_error_expr = (loc, message) => {
-  Ast_mapper.extension_of_error(Location.error(~loc, message))
-  |> Ast_helper.Exp.extension(~loc);
+  let error = Ocaml_common.Location.error(~loc, message);
+  let ext = Ocaml_common.Ast_mapper.extension_of_error(error);
+  let extension = Ocaml_common.Ast_helper.Exp.extension(~loc, ext);
+
+  To_ppxlib.copy_expression(extension);
 };
 
 let extract_schema_from_config = config_fields => {
@@ -94,7 +96,7 @@ let extract_schema_from_config = config_fields => {
             switch (config_field) {
             | (
                 {txt: Longident.Lident("schema"), _},
-                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _, _)), _},
               ) =>
               true
             | _ => false
@@ -107,7 +109,10 @@ let extract_schema_from_config = config_fields => {
     };
 
   switch (maybe_schema_field) {
-  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(schema_name, _)), _})) =>
+  | Some((
+      _,
+      {pexp_desc: Pexp_constant(Pconst_string(schema_name, _, _)), _},
+    )) =>
     Some(schema_name)
   | _ => None
   };
@@ -125,7 +130,7 @@ let extract_template_tag_from_config = config_fields => {
             switch (config_field) {
             | (
                 {txt: Longident.Lident("templateTag"), _},
-                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _, _)), _},
               )
             | (
                 {txt: Longident.Lident("templateTag"), _},
@@ -142,11 +147,14 @@ let extract_template_tag_from_config = config_fields => {
     };
 
   switch (maybe_template_tag_field) {
-  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(template_tag, _))})) =>
+  | Some((
+      _,
+      {pexp_desc: Pexp_constant(Pconst_string(template_tag, _, _))},
+    )) =>
     Some(template_tag)
   | Some((_, {pexp_desc: Pexp_ident({txt: lident})})) =>
     Some(
-      Longident.flatten(lident)
+      Ocaml_common.Longident.flatten(lident)
       |> List.fold_left(
            (acc, elem) =>
              if (acc == "") {
@@ -216,7 +224,7 @@ let extract_string_from_config = (name, config_fields) => {
             switch (config_field) {
             | (
                 {txt: Longident.Lident(matched_name), _},
-                {pexp_desc: Pexp_constant(Pconst_string(_, _)), _},
+                {pexp_desc: Pexp_constant(Pconst_string(_, _, _)), _},
               )
                 when matched_name == name =>
               true
@@ -230,7 +238,7 @@ let extract_string_from_config = (name, config_fields) => {
     };
 
   switch (maybe_string_field) {
-  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(value, _)), _})) =>
+  | Some((_, {pexp_desc: Pexp_constant(Pconst_string(value, _, _)), _})) =>
     Some(value)
   | _ => None
   };
@@ -331,10 +339,10 @@ let run_validations = (config, definition) => {
     warnings
     |> List.iter(((loc, message)) => {
          let loc = conv_loc(loc);
-         Location.print_warning(
+         Ocaml_common.Location.print_warning(
            loc,
-           Location.formatter_for_warnings^,
-           Warnings.Preprocessor(message),
+           Ocaml_common.Location.formatter_for_warnings^,
+           Ocaml_common.Warnings.Preprocessor(message),
          );
        });
     None;
@@ -352,26 +360,22 @@ let rewrite_definition_interface =
 
   switch (Graphql_lexer.consume(lexer)) {
   | Result.Error(e) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-          fmt_lex_err(e.item),
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=add_loc(delimLength, loc, e.span),
+      "%s",
+      fmt_lex_err(e.item),
     )
+
   | Result.Ok(tokens) =>
     let parser = Graphql_parser.make(tokens);
     switch (Graphql_parser_document.parse_document(parser)) {
     | Result.Error(e) =>
-      raise(
-        Location.Error(
-          Location.error(
-            ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-            fmt_parse_err(e.item),
-          ),
-        ),
+      Location.raise_errorf(
+        ~loc=add_loc(delimLength, loc, e.span),
+        "%s",
+        fmt_parse_err(e.item),
       )
+
     | Result.Ok(document) =>
       let document_with_config =
         Result_decoder.generate_config(
@@ -407,25 +411,19 @@ let rewrite_definition =
 
   switch (Graphql_lexer.consume(lexer)) {
   | Result.Error(e) =>
-    raise(
-      Location.Error(
-        Location.error(
-          ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-          fmt_lex_err(e.item),
-        ),
-      ),
+    Location.raise_errorf(
+      ~loc=add_loc(delimLength, loc, e.span),
+      "%s",
+      fmt_lex_err(e.item),
     )
   | Result.Ok(tokens) =>
     let parser = Graphql_parser.make(tokens);
     switch (Graphql_parser_document.parse_document(parser)) {
     | Result.Error(e) =>
-      raise(
-        Location.Error(
-          Location.error(
-            ~loc=add_loc(delimLength, loc, e.span) |> conv_loc,
-            fmt_parse_err(e.item),
-          ),
-        ),
+      Location.raise_errorf(
+        ~loc=add_loc(delimLength, loc, e.span),
+        "%s",
+        fmt_parse_err(e.item),
       )
     | Result.Ok(document) =>
       let document_with_config =
@@ -501,16 +499,14 @@ let get_module_declarations = signature => {
      );
 };
 
-let mapper = (_config, _cookies) => {
-  open Ast_mapper;
-  open Parsetree;
-  open Asttypes;
-
-  let signature_mapper = (mapper, sign) =>
+class mapper = {
+  as self;
+  inherit class Ast_traverse.map as super;
+  pub! signature = sign => {
     sign
     |> List.fold_left(
-         acc =>
-           fun
+         (acc, item) =>
+           switch (item) {
            | {
                psig_desc:
                  Psig_module({
@@ -520,45 +516,40 @@ let mapper = (_config, _cookies) => {
                        Pmty_extension(({txt: "graphql", loc}, pstr)),
                    },
                  }),
-             } => {
-               switch (pstr) {
-               | PStr([
-                   {
-                     pstr_desc:
-                       Pstr_eval(
-                         {
-                           pexp_loc: loc,
-                           pexp_desc:
-                             Pexp_constant(Pconst_string(query, delim)),
-                           _,
-                         },
+             } =>
+             switch (pstr) {
+             | PStr([
+                 {
+                   pstr_desc:
+                     Pstr_eval(
+                       {
+                         pexp_loc: loc,
+                         pexp_desc:
+                           Pexp_constant(Pconst_string(query, _, delim)),
                          _,
-                       ),
-                     _,
-                   },
-                 ]) =>
-                 List.append(
-                   rewrite_definition_interface(
-                     ~query_config=empty_query_config,
-                     ~loc=conv_loc_from_ast(loc),
-                     ~delim,
-                     ~query,
-                     ~module_name=Some(module_name),
-                     (),
-                   )
-                   |> List.rev,
-                   acc,
-                 )
-               | _ =>
-                 raise(
-                   Location.Error(
-                     Location.error(
-                       ~loc,
-                       "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
+                       },
+                       _,
                      ),
-                   ),
+                   _,
+                 },
+               ]) =>
+               List.append(
+                 rewrite_definition_interface(
+                   ~query_config=empty_query_config,
+                   ~loc=conv_loc_from_ast(loc),
+                   ~delim,
+                   ~query,
+                   ~module_name,
+                   (),
                  )
-               };
+                 |> List.rev,
+                 acc,
+               )
+             | _ =>
+               Location.raise_errorf(
+                 ~loc,
+                 "[%%graphql] accepts a string, e.g. [%%graphql {| { query |}]",
+               )
              }
            | {psig_desc: Psig_recmodule(module_declarations)} as pstr => [
                {
@@ -588,7 +579,11 @@ let mapper = (_config, _cookies) => {
                                             pexp_loc: loc,
                                             pexp_desc:
                                               Pexp_constant(
-                                                Pconst_string(query, delim),
+                                                Pconst_string(
+                                                  query,
+                                                  _,
+                                                  delim,
+                                                ),
                                               ),
                                             _,
                                           },
@@ -604,7 +599,7 @@ let mapper = (_config, _cookies) => {
                                         ~loc=conv_loc_from_ast(loc),
                                         ~delim,
                                         ~query,
-                                        ~module_name=Some(name),
+                                        ~module_name=name,
                                         (),
                                       ),
                                     )
@@ -612,13 +607,9 @@ let mapper = (_config, _cookies) => {
                                     acc,
                                   )
                                 | _ =>
-                                  raise(
-                                    Location.Error(
-                                      Location.error(
-                                        ~loc,
-                                        "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-                                      ),
-                                    ),
+                                  Location.raise_errorf(
+                                    ~loc,
+                                    "[%%graphql] accepts a string, e.g. [%%graphql {| { query |}]",
                                   )
                                 };
                               }
@@ -630,12 +621,13 @@ let mapper = (_config, _cookies) => {
                },
                ...acc,
              ]
-           | other => [default_mapper.signature_item(mapper, other), ...acc],
+           | other => [super#signature_item(other), ...acc]
+           },
          [],
        )
     |> List.rev;
-
-  let structure_mapper = (mapper, struc) =>
+  };
+  pub! structure = struc => {
     struc
     |> List.fold_left(
          acc =>
@@ -708,8 +700,7 @@ let mapper = (_config, _cookies) => {
 
                let module_name =
                  switch (item) {
-                 | {pstr_desc: Pstr_module({pmb_name: {txt: name}})} =>
-                   Some(name)
+                 | {pstr_desc: Pstr_module({pmb_name: {txt: name}})} => name
                  | _ => None
                  };
 
@@ -744,6 +735,7 @@ let mapper = (_config, _cookies) => {
                                                  Pexp_constant(
                                                    Pconst_string(
                                                      query,
+                                                     _,
                                                      delim,
                                                    ),
                                                  ),
@@ -796,7 +788,7 @@ let mapper = (_config, _cookies) => {
                          {
                            pexp_loc: loc,
                            pexp_desc:
-                             Pexp_constant(Pconst_string(query, delim)),
+                             Pexp_constant(Pconst_string(query, _, delim)),
                            _,
                          },
                          _,
@@ -841,7 +833,7 @@ let mapper = (_config, _cookies) => {
                          {
                            pexp_loc: loc,
                            pexp_desc:
-                             Pexp_constant(Pconst_string(query, delim)),
+                             Pexp_constant(Pconst_string(query, _, delim)),
                            _,
                          },
                          _,
@@ -863,13 +855,9 @@ let mapper = (_config, _cookies) => {
                    acc,
                  )
                | _ =>
-                 raise(
-                   Location.Error(
-                     Location.error(
-                       ~loc,
-                       "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-                     ),
-                   ),
+                 Location.raise_errorf(
+                   ~loc,
+                   "[%%graphql] accepts a string, e.g. [%%graphql {| { query |}]",
                  )
                };
              }
@@ -911,7 +899,7 @@ let mapper = (_config, _cookies) => {
                                       )),
                                   } as module_expr,
                               } => {
-                                let module_name = Some(name);
+                                let module_name = name;
                                 let module_type =
                                   switch (module_expr) {
                                   | {
@@ -929,7 +917,7 @@ let mapper = (_config, _cookies) => {
                                     Some({
                                       pmty_desc:
                                         Pmty_signature(
-                                          mapper.signature(mapper, signature),
+                                          self#signature(signature),
                                         ),
                                       pmty_loc,
                                       pmty_attributes,
@@ -950,7 +938,11 @@ let mapper = (_config, _cookies) => {
                                             pexp_loc: loc,
                                             pexp_desc:
                                               Pexp_constant(
-                                                Pconst_string(query, delim),
+                                                Pconst_string(
+                                                  query,
+                                                  _,
+                                                  delim,
+                                                ),
                                               ),
                                             _,
                                           },
@@ -997,7 +989,11 @@ let mapper = (_config, _cookies) => {
                                             pexp_loc: loc,
                                             pexp_desc:
                                               Pexp_constant(
-                                                Pconst_string(query, delim),
+                                                Pconst_string(
+                                                  query,
+                                                  _,
+                                                  delim,
+                                                ),
                                               ),
                                             _,
                                           },
@@ -1022,13 +1018,9 @@ let mapper = (_config, _cookies) => {
                                     acc,
                                   )
                                 | _ =>
-                                  raise(
-                                    Location.Error(
-                                      Location.error(
-                                        ~loc,
-                                        "[%graphql] accepts a string, e.g. [%graphql {| { query |}]",
-                                      ),
-                                    ),
+                                  Location.raise_errorf(
+                                    ~loc,
+                                    "[%%graphql] accepts a string, e.g. [%%graphql {| { query |}]",
                                   )
                                 };
                               }
@@ -1041,17 +1033,15 @@ let mapper = (_config, _cookies) => {
                ...acc,
              ]
 
-           | other => [default_mapper.structure_item(mapper, other), ...acc],
+           | other => [super#structure_item(other), ...acc],
          [],
        )
     |> List.rev;
-
-  {
-    ...default_mapper,
-    structure: structure_mapper,
-    signature: signature_mapper,
   };
 };
+
+let structure_mapper = s => (new mapper)#structure(s);
+let signature_mapper = s => (new mapper)#signature(s);
 
 let argKey = ref("");
 let args = [
@@ -1273,7 +1263,14 @@ let args = [
   ),
 ];
 
-let () =
-  Migrate_parsetree.(
-    Driver.register(~name="graphql", ~args, Versions.ocaml_408, mapper)
+let () = {
+  List.iter(
+    ((k, spec, doc)) => Ppxlib.Driver.add_arg(k, spec, ~doc),
+    args,
   );
+  Ppxlib.Driver.register_transformation(
+    ~preprocess_impl=structure_mapper,
+    ~preprocess_intf=signature_mapper,
+    "graphql",
+  );
+};
