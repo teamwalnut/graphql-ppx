@@ -1,10 +1,11 @@
 Error Apollo › missingField1.re › output
-File \"tests_bucklescript/operations/errors/missingField1.re\", line 6, characters 6-27:
-6 |       thisFieldDoesNotExist
-          ^^^^^^^^^^^^^^^^^^^^^
-Error: Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject
-
-  We've found a bug for you!
-  missingField1.re
+We've found a bug for you!
+  missingField1.re 6:7-27
   
-  Error while running external preprocessor
+  4 \226\148\134 customScalarField(argOptional: $opt, argRequired: $req) {
+  5 \226\148\134   nullable
+  6 \226\148\134   thisFieldDoesNotExist
+  7 \226\148\134   nonNullable
+  8 \226\148\134 }
+  
+  Unknown field 'thisFieldDoesNotExist' on type CustomScalarObject

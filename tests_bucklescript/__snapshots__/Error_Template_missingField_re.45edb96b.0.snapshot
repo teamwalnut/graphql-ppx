@@ -1,10 +1,11 @@
 Error Template › missingField2.re › output
-File \"tests_bucklescript/operations/errors/missingField2.re\", line 13, characters 8-28:
-13 |     l1: thisTypeDoesNotExist {
-             ^^^^^^^^^^^^^^^^^^^^
-Error: Unknown field 'thisTypeDoesNotExist' on type Query
-
-  We've found a bug for you!
-  missingField2.re
+We've found a bug for you!
+  missingField2.re 13:9-28
   
-  Error while running external preprocessor
+  11 \226\148\134 {|
+  12 \226\148\134 query {
+  13 \226\148\134   l1: thisTypeDoesNotExist {
+  14 \226\148\134     ...Fragments
+  15 \226\148\134   }
+  
+  Unknown field 'thisTypeDoesNotExist' on type Query

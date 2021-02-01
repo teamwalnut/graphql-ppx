@@ -1,10 +1,11 @@
 Error Records › missingField3.re › output
-File \"tests_bucklescript/operations/errors/missingField3.re\", line 15, characters 6-18:
-15 |       doesNotExist
-           ^^^^^^^^^^^^
-Error: Unknown field 'doesNotExist' on type Lists
-
-  We've found a bug for you!
-  missingField3.re
+We've found a bug for you!
+  missingField3.re 15:7-18
   
-  Error while running external preprocessor
+  13 \226\148\134   l1: lists {
+  14 \226\148\134     ...Fragments
+  15 \226\148\134     doesNotExist
+  16 \226\148\134   }
+  17 \226\148\134 }
+  
+  Unknown field 'doesNotExist' on type Lists
