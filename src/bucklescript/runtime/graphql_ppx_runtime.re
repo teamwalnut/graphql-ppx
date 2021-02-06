@@ -1,3 +1,9 @@
+let option_map = (f, o) => {
+  switch (o) {
+  | Some(x) => Some(f(x))
+  | None => None
+  };
+};
 let rec merge_pairs =
         (
           pairs1: list((string, Yojson.Basic.t)),
@@ -24,9 +30,9 @@ let rec merge_pairs =
          key,
          switch (
            List.find_opt(((assoc_key, _)) => key == assoc_key, pairs1)
-           |> Option.map(pair => snd(pair)),
+           |> option_map(pair => snd(pair)),
            List.find_opt(((assoc_key, _)) => key == assoc_key, pairs2)
-           |> Option.map(pair => snd(pair)),
+           |> option_map(pair => snd(pair)),
          ) {
          | (Some(`Assoc(pairs1)), Some(`Assoc(pairs2))) =>
            `Assoc(merge_pairs(pairs1, pairs2))
