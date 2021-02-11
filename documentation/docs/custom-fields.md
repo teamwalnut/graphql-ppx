@@ -29,5 +29,5 @@ result. Using the `module` argument, you can specify any decoder module with the
 functions `parse`, `serialize` and type `t`.
 
 If you have custom scalars that you'd always would like to conver to a specific
-type. You can do that in the `custom-fields` part of the `bsconfig.json`
+type. You can do that in the `customFields` part of the `bsconfig.json`
 configuration.

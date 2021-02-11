@@ -40,6 +40,7 @@ module Color = {
     )
     |> Js.Json.string;
 };
+
 module DateTime = {
   type t = Js.Date.t;
   let parse = json =>
@@ -63,9 +64,9 @@ module MyQuery: {
   };
   type t_customFields = {
     .
-    \"currentTime\": Js.Json.t,
-    \"favoriteColor\": Js.Json.t,
-    \"futureTime\": option(Js.Json.t),
+    \"currentTime\": DateTime.t,
+    \"favoriteColor\": Color.t,
+    \"futureTime\": option(DateTime.t),
     \"nullableColor\": option(Color.t),
   };
   type t = {. \"customFields\": t_customFields};
@@ -98,9 +99,9 @@ function back to the original JSON compatible data */
   };
   type t_customFields = {
     .
-    \"currentTime\": Js.Json.t,
-    \"favoriteColor\": Js.Json.t,
-    \"futureTime\": option(Js.Json.t),
+    \"currentTime\": DateTime.t,
+    \"favoriteColor\": Color.t,
+    \"futureTime\": option(DateTime.t),
     \"nullableColor\": option(Color.t),
   };
   type t = {. \"customFields\": t_customFields};
@@ -120,17 +121,17 @@ function back to the original JSON compatible data */
         and futureTime = {
           let value = value##futureTime;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value)
+          | Some(value) => Some(DateTime.parse(value))
           | None => None
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
-          value;
+          Color.parse(value);
         }
         and currentTime = {
           let value = value##currentTime;
-          value;
+          DateTime.parse(value);
         };
         {
           \"currentTime\": currentTime,
@@ -161,16 +162,24 @@ function back to the original JSON compatible data */
         and futureTime = {
           let value = value##futureTime;
           switch (value) {
-          | Some(value) => Js.Nullable.return(value)
+          | Some(value) =>
+            Js.Nullable.return(
+              {
+                let value = DateTime.serialize(value);
+                value;
+              },
+            )
           | None => Js.Nullable.null
           };
         }
         and favoriteColor = {
           let value = value##favoriteColor;
+          let value = Color.serialize(value);
           value;
         }
         and currentTime = {
           let value = value##currentTime;
+          let value = DateTime.serialize(value);
           value;
         };
         {

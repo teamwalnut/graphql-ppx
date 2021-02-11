@@ -10,10 +10,13 @@
   ],
   "license": "MIT",
   "scripts": {
-    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+    "postinstall": "node ./copyPlatformBinaryInPlace.js",
+    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ./graphql_schema.json ./schema.graphql"
   },
   "devDependencies": {
-    "bs-platform": "^8.1.0"
+    "bs-platform": "^8.1.0",
+    "gql-tools": "^0.0.15",
+    "graphql": "^0.13.2"
   },
   "peerDependencies": {
     "bs-platform": "^8.1.0"

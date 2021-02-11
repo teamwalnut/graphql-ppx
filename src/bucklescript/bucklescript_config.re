@@ -354,7 +354,7 @@ let read_config = () => {
     configBool("template-tag-is-function", handleTemplateTagIsFunction);
     configBool("templateTagIsFunction", handleTemplateTagIsFunction);
 
-    ppxConfig |> read_custom_fields;
+    read_custom_fields(ppxConfig);
   };
 
   switch (Paths.getBsConfigFile()) {

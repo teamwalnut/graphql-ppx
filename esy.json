@@ -3,8 +3,7 @@
   "description": "Used for native Reason/OCaml using latest version of OCaml",
   "scripts": {
     "format": "esy dune build @fmt --auto-promote",
-    "release-static":
-      "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
+    "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
     "test": "dune exec tests_bucklescript/tests/RunTests.exe --"
   },
   "dependencies": {
