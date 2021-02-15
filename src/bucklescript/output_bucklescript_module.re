@@ -1,13 +1,10 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
 open Result_structure;
 open Generator_utils;
-open Ast_408;
-open Asttypes;
-open Parsetree;
-open Ast_helper;
 open Extract_type_definitions;
 open Output_bucklescript_utils;
+open Ppxlib;
+open Ast_helper;
 
 exception Cant_find_fragment_type_with_loc(Source_pos.ast_location, string);
 
@@ -134,7 +131,7 @@ let emit_printed_template_query = (parts: array(Graphql_printer.t), config) => {
 let emit_printed_query = (parts, config) => {
   open Graphql_printer;
   let make_string = s => {
-    Exp.constant(Parsetree.Pconst_string(s, None));
+    Exp.constant(Parsetree.Pconst_string(s, Location.none, None));
   };
   let join = (part1, part2) => {
     Ast_helper.(
@@ -189,6 +186,7 @@ let rec list_literal =
       );
     };
 
+let loc = Location.none;
 let rec emit_json = config =>
   fun
   | `Assoc(vs) => {
@@ -198,7 +196,7 @@ let rec emit_json = config =>
             vs
             |> List.map(((key, value)) =>
                  Exp.tuple([
-                   Exp.constant(Pconst_string(key, None)),
+                   Exp.constant(Pconst_string(key, Location.none, None)),
                    emit_json(config, value),
                  ])
                ),
@@ -216,7 +214,9 @@ let rec emit_json = config =>
   | `Bool(false) => [%expr Js.Json.boolean(false)]
   | `Null => [%expr Obj.magic(Js.Undefined.empty)]
   | `String(s) => [%expr
-      Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
+      Js.Json.string(
+        [%e Ast_helper.Exp.constant(Pconst_string(s, Location.none, None))],
+      )
     ]
   | `Int(i) => [%expr
       Js.Json.number(
@@ -246,7 +246,9 @@ let wrap_structure_raw = contents => {
       {
         pstr_desc:
           Pstr_eval(
-            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            Exp.constant(
+              Parsetree.Pconst_string(contents, Location.none, None),
+            ),
             [],
           ),
         pstr_loc: Location.none,
@@ -274,7 +276,9 @@ let wrap_raw = contents => {
       {
         pstr_desc:
           Pstr_eval(
-            Exp.constant(Parsetree.Pconst_string(contents, None)),
+            Exp.constant(
+              Parsetree.Pconst_string(contents, Location.none, None),
+            ),
             [],
           ),
         pstr_loc: Location.none,
@@ -357,7 +361,7 @@ let signature_module = (name, signature) => {
       Psig_module({
         pmd_loc: Location.none,
         pmd_name: {
-          txt: Generator_utils.capitalize_ascii(name),
+          txt: Some(Generator_utils.capitalize_ascii(name)),
           loc: Location.none,
         },
         pmd_type: Mty.signature(signature),
@@ -372,7 +376,7 @@ let wrap_module = (~loc as _, ~module_type=?, name: string, contents) => {
     pstr_desc:
       Pstr_module({
         pmb_name: {
-          txt: Generator_utils.capitalize_ascii(name),
+          txt: Some(Generator_utils.capitalize_ascii(name)),
           loc,
         },
         pmb_expr: {

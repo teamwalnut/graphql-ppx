@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@opam/dune": "*",
-    "@opam/ocaml-migrate-parsetree": ">=1.6.0",
-    "@opam/ppx_tools_versioned": "5.2.3",
+    "@opam/ppxlib": ">=0.21.0",
     "@opam/reason": ">=3.6.0",
     "@opam/yojson": "*"
   },

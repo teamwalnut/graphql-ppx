@@ -1,7 +1,7 @@
 Generate Apollo › extensions.re › output
 [@ocaml.ppx.context
   {
-    tool_name: \"migrate_driver\",
+    tool_name: \"ppx_driver\",
     include_dirs: [],
     load_path: [],
     open_modules: [],
