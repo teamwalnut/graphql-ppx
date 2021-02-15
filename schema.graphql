@@ -43,12 +43,18 @@ type AnonymousUser implements User & Anonymous {
 type OtherUser implements User {
   id: ID!
 }
-
+type Repost {
+  id: Int!
+}
+type Post {
+  reposts(arg: JsonInput): [Repost]!
+}
 type Query {
   stringField: String!
   variousScalars: VariousScalars!
   lists: Lists!
   users: [User!]!
+  post: Post!
   recursiveRepro(input: problem_input!): Boolean!
   hasuraRepro(orderBy: [hasuraObj], block: blockObj): Dog!
   scalarsInput(arg: VariousScalarsInput!): String!
@@ -252,7 +258,9 @@ type VariantTestResult {
 scalar DateTime
 scalar Color
 scalar JsonScalar
-
+input JsonInput {
+  name: String!
+}
 type customFieldsResult {
   currentTime: DateTime!
   favoriteColor: Color!

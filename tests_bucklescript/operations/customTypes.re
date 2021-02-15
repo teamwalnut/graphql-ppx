@@ -21,6 +21,7 @@ module Color = {
     )
     |> Js.Json.string;
 };
+
 module DateTime = {
   type t = Js.Date.t;
   let parse = json =>

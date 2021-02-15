@@ -670,6 +670,15 @@ class mapper = {
              } as item
            | {
                pstr_desc:
+                 Pstr_include({
+                   pincl_mod: {
+                     pmod_desc:
+                       Pmod_extension(({txt: "graphql", loc}, pstr)),
+                   },
+                 }),
+             } as item
+           | {
+               pstr_desc:
                  Pstr_value(
                    _,
                    [
@@ -683,6 +692,12 @@ class mapper = {
                    ],
                  ),
              } as item => {
+               let inline =
+                 switch (item) {
+                 | {pstr_desc: Pstr_include(_)} => Some(true)
+                 | _ => None
+                 };
+
                let module_name =
                  switch (item) {
                  | {pstr_desc: Pstr_module({pmb_name: {txt: name}})} => name
@@ -789,10 +804,18 @@ class mapper = {
                      _,
                    },
                  ]) =>
+                 let query_config =
+                   get_query_config_from_trailing_record(fields);
                  List.append(
                    rewrite_definition(
-                     ~query_config=
-                       get_query_config_from_trailing_record(fields),
+                     ~query_config={
+                       ...query_config,
+                       inline:
+                         switch (inline) {
+                         | None => query_config.inline
+                         | Some(inline) => Some(inline)
+                         },
+                     },
                      ~loc=conv_loc_from_ast(loc),
                      ~delim,
                      ~query,
@@ -802,7 +825,7 @@ class mapper = {
                    )
                    |> List.rev,
                    acc,
-                 )
+                 );
                | PStr([
                    {
                      pstr_desc:
@@ -820,7 +843,7 @@ class mapper = {
                  ]) =>
                  List.append(
                    rewrite_definition(
-                     ~query_config=empty_query_config,
+                     ~query_config={...empty_query_config, inline},
                      ~loc=conv_loc_from_ast(loc),
                      ~delim,
                      ~query,

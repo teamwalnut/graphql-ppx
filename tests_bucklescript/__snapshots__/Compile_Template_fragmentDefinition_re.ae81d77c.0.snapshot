@@ -230,7 +230,68 @@ var InlineListFragment = {
 
 var Raw$4 = {};
 
-var query$4 = ((frag_0, frag_1, frag_2) => require(\"gql\")`
+var query$4 = (require(\"gql\")`
+  fragment InlineListFragment on Lists   {
+    nullableOfNullable
+    nullableOfNonNullable
+  }
+`);
+
+function parse$4(value) {
+  var value$1 = value.nullableOfNullable;
+  var value$2 = value.nullableOfNonNullable;
+  return {
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map(function (value) {
+                  return value;
+                }) : undefined
+        };
+}
+
+function serialize$4(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
+  return {
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function verifyArgsAndParse$4(_InlineListFragment, value) {
+  return parse$4(value);
+}
+
+function verifyName$4(param) {
+  
+}
+
+var Wrapper = {
+  Raw: Raw$4,
+  query: query$4,
+  parse: parse$4,
+  serialize: serialize$4,
+  verifyArgsAndParse: verifyArgsAndParse$4,
+  verifyName: verifyName$4
+};
+
+var Raw$5 = {};
+
+var query$5 = ((frag_0, frag_1, frag_2) => require(\"gql\")`
   query MyQuery($arg1: String)  {
     l1: lists  {
       ...ListFragment
@@ -257,7 +318,7 @@ var query$4 = ((frag_0, frag_1, frag_2) => require(\"gql\")`
   ${frag_2}
 `)(query$2, query$3, query);
 
-function parse$4(value) {
+function parse$5(value) {
   var value$1 = value.l2;
   var value$2 = value.l3;
   var value$3 = value$2[\"nullableOfNullable\"];
@@ -292,7 +353,7 @@ function parse$4(value) {
         };
 }
 
-function serialize$4(value) {
+function serialize$5(value) {
   var value$1 = value.l5;
   var l5 = serialize$2(value$1);
   var value$2 = value.l4;
@@ -358,18 +419,18 @@ function makeDefaultVariables(param) {
 }
 
 var MyQuery = {
-  Raw: Raw$4,
-  query: query$4,
-  parse: parse$4,
-  serialize: serialize$4,
+  Raw: Raw$5,
+  query: query$5,
+  parse: parse$5,
+  serialize: serialize$5,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables
 };
 
-var Raw$5 = {};
+var Raw$6 = {};
 
-var query$5 = ((frag_0) => require(\"gql\")`
+var query$6 = ((frag_0) => require(\"gql\")`
   query   {
     lists  {
       ...ListFragment
@@ -378,13 +439,13 @@ var query$5 = ((frag_0) => require(\"gql\")`
   ${frag_0}
 `)(query);
 
-function parse$5(value) {
+function parse$6(value) {
   return {
           lists: parse(value.lists)
         };
 }
 
-function serialize$5(value) {
+function serialize$6(value) {
   var value$1 = value.lists;
   var lists = serialize(value$1);
   return {
@@ -405,10 +466,10 @@ function makeDefaultVariables$1(param) {
 }
 
 var MyQuery2 = {
-  Raw: Raw$5,
-  query: query$5,
-  parse: parse$5,
-  serialize: serialize$5,
+  Raw: Raw$6,
+  query: query$6,
+  parse: parse$6,
+  serialize: serialize$6,
   serializeVariables: serializeVariables$1,
   makeVariables: makeVariables$1,
   makeDefaultVariables: makeDefaultVariables$1
@@ -419,6 +480,7 @@ exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;
 exports.InlineListFragment = InlineListFragment;
+exports.Wrapper = Wrapper;
 exports.MyQuery = MyQuery;
 exports.MyQuery2 = MyQuery2;
 /* query Not a pure module */

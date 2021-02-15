@@ -14,6 +14,33 @@ title: Changelog
 (_Tags are copied from
 [babel](https://github.com/babel/babel/blob/master/CHANGELOG.md)_)
 
+## [1.0.2](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.1...v1.0.2) (2021-01-05)
+
+- :rocket: add `templateTagIsFunction` configuration. This will call the
+  configured template tag not as a template tag, but as a function. This solves
+  use cases where `require` is not allowed (which we need to inject to support
+  template tags)
+  ([5d92a6b](https://github.com/reasonml-community/graphql_ppx/commit/5d92a6b))
+
+- :rocket: add include syntax for extension points
+  ([f5d5187](https://github.com/reasonml-community/graphql_ppx/commit/f5d5187))
+
+You can now do the following to inline the query (as an alternative to the
+`@ppxConfig(inline: true)` decorator):
+
+```
+include [%graphql {|
+...
+|}]
+```
+
+- :bug: Fix postinstall (it wouldn't trigger when updating the `ppx`)
+  ([b5c3318](https://github.com/reasonml-community/graphql_ppx/commit/b5c3318))
+
+- :bug: Only set the type of a query using `templateTagReturnType` if there is a
+  template tag defined:
+  ([5b2b3d8](https://github.com/reasonml-community/graphql_ppx/commit/5b2b3d8))
+
 ## [1.0.1](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.0...v1.0.1) (2020-09-07)
 
 - :bug: remove `@ppxConfig` directive from query output

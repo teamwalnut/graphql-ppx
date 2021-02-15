@@ -1,7 +1,7 @@
 {
   "name": "@reasonml-community/graphql-ppx",
-  "version": "1.0.1",
-  "description": "graphql-ppx rewriter for Bucklescript/ReasonML",
+  "version": "1.0.2",
+  "description": "graphql-ppx rewriter for ReScript/ReasonML",
   "repository": "https://github.com/reasonml-community/graphql-ppx",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
   "contributors": [
@@ -10,10 +10,13 @@
   ],
   "license": "MIT",
   "scripts": {
-    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+    "postinstall": "node ./copyPlatformBinaryInPlace.js",
+    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ./graphql_schema.json ./schema.graphql"
   },
   "devDependencies": {
-    "bs-platform": "^8.1.0"
+    "bs-platform": "^8.1.0",
+    "gql-tools": "^0.0.15",
+    "graphql": "^0.13.2"
   },
   "peerDependencies": {
     "bs-platform": "^8.1.0"

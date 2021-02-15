@@ -26,6 +26,23 @@ module Visitor: Traversal_utils.VisitorSig = {
     };
   };
 
+  let enter_fragment_definition = (self, ctx, def: spanning(fragment)) => {
+    let () = Hashtbl.clear(self.variable_types);
+    switch (def.item.fg_variable_definitions) {
+    | None => ()
+    | Some({item, _}) =>
+      List.iter(
+        ((name, {vd_type: {item: type_}})) =>
+          Hashtbl.add(
+            self.variable_types,
+            name.item,
+            type_ |> from_graphql_ast_tr(~schema=ctx.schema),
+          ),
+        item,
+      )
+    };
+  };
+
   let rec parse_input_object =
           (
             self,

@@ -11,5 +11,11 @@
       "dir": "bucklescript",
       "subdirs": true
     }
-  ]
+  ],
+  "graphql": {
+    "customFields": {
+      "DateTime": "DateTime",
+      "Color": "Color"
+    }
+  }
 }
