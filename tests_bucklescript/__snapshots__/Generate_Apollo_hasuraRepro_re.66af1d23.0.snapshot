@@ -194,5 +194,5 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 
-HasuraRepro.makeVariables(~blockNumber=1, ~type_=\"1\", ());
+let _ = HasuraRepro.makeVariables(~blockNumber=1, ~type_=\"1\", ());
 

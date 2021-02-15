@@ -1,11 +1,11 @@
 Error Template › invalidDefaultValue2.re › output
-We've found a bug for you!
-  invalidDefaultValue2.re 8:14-26
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/invalidDefaultValue2.re\027[0m:\027[2m8:14-26\027[0m
   
-   6 \226\148\134 query invalidDefaultValues {
-   7 \226\148\134   invalidDefaultValues(
-   8 \226\148\134       int: {test: \"xxx\"}
-   9 \226\148\134   )
-  10 \226\148\134 }
+   6 \027[2m\226\148\134\027[0m query invalidDefaultValues {
+   7 \027[2m\226\148\134\027[0m   invalidDefaultValues(
+  \027[1;31m 8\027[0m \027[2m\226\148\134\027[0m       int: \027[1;31m{test: \"xxx\"}\027[0m
+   9 \027[2m\226\148\134\027[0m   )
+  10 \027[2m\226\148\134\027[0m }
   
   Invalid argument. Expected \"Int\" but received \"InputObject!\".

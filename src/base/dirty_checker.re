@@ -10,11 +10,14 @@ let hash = file => {
 let read_hash = src => {
   let () = Log.log("[read hash from] " ++ src);
   switch (open_in_bin(src)) {
-  | hash_file =>
-    let hash = Digest.input(hash_file);
-    close_in(hash_file);
-    Some(hash);
   | exception _ => None
+  | hash_file =>
+    switch (Digest.input(hash_file)) {
+    | hash =>
+      close_in(hash_file);
+      Some(hash);
+    | exception End_of_file => None
+    }
   };
 };
 

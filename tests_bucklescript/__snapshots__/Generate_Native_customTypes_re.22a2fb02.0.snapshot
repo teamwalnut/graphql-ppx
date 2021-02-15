@@ -40,6 +40,7 @@ module Color = {
     )
     |> Js.Json.string;
 };
+
 module DateTime = {
   type t = Js.Date.t;
   let parse = json =>
@@ -56,9 +57,9 @@ module MyQuery: {
     type t_variables;
   };
   type t_customFields = {
-    currentTime: Yojson.Basic.t,
-    favoriteColor: Yojson.Basic.t,
-    futureTime: option(Yojson.Basic.t),
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
@@ -83,9 +84,9 @@ function back to the original JSON compatible data */
     type t_variables = Yojson.Basic.t;
   };
   type t_customFields = {
-    currentTime: Yojson.Basic.t,
-    favoriteColor: Yojson.Basic.t,
-    futureTime: option(Yojson.Basic.t),
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
   };
   type t = {customFields: t_customFields};
@@ -100,17 +101,17 @@ function back to the original JSON compatible data */
             {
               currentTime: {
                 let value = Yojson.Basic.Util.member(\"currentTime\", value);
-                value;
+                DateTime.parse(value);
               },
               favoriteColor: {
                 let value = Yojson.Basic.Util.member(\"favoriteColor\", value);
-                value;
+                Color.parse(value);
               },
               futureTime: {
                 let value = Yojson.Basic.Util.member(\"futureTime\", value);
                 switch (value) {
                 | `Null => None
-                | value => Some(value)
+                | value => Some(DateTime.parse(value))
                 };
               },
               nullableColor: {
@@ -141,16 +142,20 @@ function back to the original JSON compatible data */
         and futureTime = {
           let value = (value: t_customFields).futureTime;
           switch (value) {
-          | Some(value) => value
+          | Some(value) =>
+            let value = DateTime.serialize(value);
+            value;
           | None => `Null
           };
         }
         and favoriteColor = {
           let value = (value: t_customFields).favoriteColor;
+          let value = Color.serialize(value);
           value;
         }
         and currentTime = {
           let value = (value: t_customFields).currentTime;
+          let value = DateTime.serialize(value);
           value;
         };
         `Assoc([

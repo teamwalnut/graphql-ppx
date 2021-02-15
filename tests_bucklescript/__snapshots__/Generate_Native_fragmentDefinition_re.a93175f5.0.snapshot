@@ -394,6 +394,108 @@ module InlineListFragment = {
   external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
+
+module Wrapper = {
+  [@ocaml.warning \"-32-30\"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  let query = \"fragment InlineListFragment on Lists   {\\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value = Yojson.Basic.Util.member(\"nullableOfNullable\", value);
+          switch (value) {
+          | `Null => None
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value => Some(Yojson.Basic.Util.to_string(value))
+                    },
+                  json_list,
+                )
+                |> Array.of_list
+              | _ => [||]
+              },
+            )
+          };
+        },
+        nullableOfNonNullable: {
+          let value =
+            Yojson.Basic.Util.member(\"nullableOfNonNullable\", value);
+          switch (value) {
+          | `Null => None
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                List.map(
+                  value => Yojson.Basic.Util.to_string(value),
+                  json_list,
+                )
+                |> Array.of_list
+              | _ => [||]
+              },
+            )
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let nullableOfNonNullable = {
+        let value = (value: t).nullableOfNonNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(value |> Array.map(value => `String(value)) |> Array.to_list)
+        | None => `Null
+        };
+      }
+      and nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => `String(value)
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
+        };
+      };
+      `Assoc([
+        (\"nullableOfNullable\", nullableOfNullable),
+        (\"nullableOfNonNullable\", nullableOfNonNullable),
+      ]);
+    };
+  let verifyArgsAndParse =
+      (
+        ~fragmentName as _InlineListFragment: [ | `InlineListFragment],
+        value: Raw.t,
+      ) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `InlineListFragment => ();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+};
 module MyQuery: {
   [@ocaml.warning \"-32-30\"];
   module Raw: {
