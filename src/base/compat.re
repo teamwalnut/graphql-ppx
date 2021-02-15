@@ -1,2 +1,2 @@
-let capitalize_ascii = Build_config.capitalize_ascii;
-let uncapitalize_ascii = Build_config.uncapitalize_ascii;
+let capitalize_ascii = String.capitalize_ascii;
+let uncapitalize_ascii = String.uncapitalize_ascii;

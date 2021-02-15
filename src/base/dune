@@ -6,12 +6,3 @@
   (:standard -w -9))
  (preprocess
   (pps ppxlib.metaquot)))
-
-(rule
- (targets build_config.ml)
- (deps
-  (:first-dep build_config.cppo.ml))
- (action
-  (chdir
-   ${ROOT}
-   (run %{bin:cppo} -V OCAML:%{ocaml_version} %{first-dep} -o %{targets}))))
