@@ -1,11 +1,11 @@
 Error Records › InvalidObjectValues4.re › output
-We've found a bug for you!
-  InvalidObjectValues4.re 10:32-34
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/InvalidObjectValues4.re\027[0m:\027[2m10:32-34\027[0m
   
-   8 \226\148\134 nonRec: {
-   9 \226\148\134     nonNullableField: \"!\"
-  10 \226\148\134     nullableArray: [2]
-  11 \226\148\134     field: \"\"
-  12 \226\148\134     enum: FIRST
+   8 \027[2m\226\148\134\027[0m nonRec: {
+   9 \027[2m\226\148\134\027[0m     nonNullableField: \"!\"
+  \027[1;31m10\027[0m \027[2m\226\148\134\027[0m     nullableArray: \027[1;31m[2]\027[0m
+  11 \027[2m\226\148\134\027[0m     field: \"\"
+  12 \027[2m\226\148\134\027[0m     enum: FIRST
   
   Invalid argument. Expected \"[String]\" but received \"[Int!]!\".

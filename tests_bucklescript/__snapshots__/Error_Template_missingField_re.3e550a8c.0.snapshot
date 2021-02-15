@@ -1,11 +1,11 @@
 Error Template › missingField3.re › output
-We've found a bug for you!
-  missingField3.re 15:7-18
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/missingField3.re\027[0m:\027[2m15:7-18\027[0m
   
-  13 \226\148\134   l1: lists {
-  14 \226\148\134     ...Fragments
-  15 \226\148\134     doesNotExist
-  16 \226\148\134   }
-  17 \226\148\134 }
+  13 \027[2m\226\148\134\027[0m   l1: lists {
+  14 \027[2m\226\148\134\027[0m     ...Fragments
+  \027[1;31m15\027[0m \027[2m\226\148\134\027[0m     \027[1;31mdoesNotExist\027[0m
+  16 \027[2m\226\148\134\027[0m   }
+  17 \027[2m\226\148\134\027[0m }
   
   Unknown field 'doesNotExist' on type Lists

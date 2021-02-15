@@ -1,7 +1,7 @@
 Generate Template › fragmentvariableinput.re › output
 [@ocaml.ppx.context
   {
-    tool_name: \"migrate_driver\",
+    tool_name: \"ppx_driver\",
     include_dirs: [],
     load_path: [],
     open_modules: [],
@@ -18,7 +18,7 @@ Generate Template › fragmentvariableinput.re › output
   }
 ];
 module Test: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_reposts = {id: int};
     type t = {reposts: array(Js.Nullable.t(t_reposts))};
@@ -40,7 +40,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_reposts = {id: int};
     type t = {reposts: array(Js.Nullable.t(t_reposts))};

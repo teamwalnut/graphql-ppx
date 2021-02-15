@@ -1,4 +1,4 @@
-Generate Records › fragmentvariableinput.re › output
+Generate Native › fragmentvariableinput.re › output
 [@ocaml.ppx.context
   {
     tool_name: \"ppx_driver\",
@@ -19,11 +19,7 @@ Generate Records › fragmentvariableinput.re › output
 ];
 module Test: {
   [@ocaml.warning \"-32-30\"];
-  module Raw: {
-    type t_reposts = {id: int};
-    type t = {reposts: array(Js.Nullable.t(t_reposts))};
-    type nonrec t_Post = t;
-  };
+  module Raw: {type t;};
   type t_reposts = {id: int};
   type t = {reposts: array(option(t_reposts))};
   type nonrec t_Post = t;
@@ -37,14 +33,12 @@ function back to the original JSON-compatible data */
   let verifyArgsAndParse:
     (~name: [ | `NonNull_String], ~fragmentName: [ | `test], Raw.t) => t;
   let verifyName: [ | `test] => unit;
-  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
-  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 } = {
   [@ocaml.warning \"-32-30\"];
   module Raw = {
-    type t_reposts = {id: int};
-    type t = {reposts: array(Js.Nullable.t(t_reposts))};
-    type nonrec t_Post = t;
+    type t = Yojson.Basic.t;
   };
   type t_reposts = {id: int};
   type t = {reposts: array(option(t_reposts))};
@@ -54,50 +48,53 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         reposts: {
-          let value = (value: Raw.t).reposts;
-          value
-          |> Js.Array.map(value =>
-               switch (Js.toOption(value)) {
-               | Some(value) =>
-                 Some(
-                   {
-                     id: {
-                       let value = (value: Raw.t_reposts).id;
-                       value;
-                     },
-                   }: t_reposts,
-                 )
-               | None => None
-               }
-             );
+          let value = Yojson.Basic.Util.member(\"reposts\", value);
+          switch (value) {
+          | `List(json_list) =>
+            List.map(
+              value =>
+                switch (value) {
+                | `Null => None
+                | value =>
+                  Some(
+                    {
+                      id: {
+                        let value = Yojson.Basic.Util.member(\"id\", value);
+                        Yojson.Basic.Util.to_int(value);
+                      },
+                    }: t_reposts,
+                  )
+                },
+              json_list,
+            )
+            |> Array.of_list
+          | _ => [||]
+          };
         },
       }: t
     );
   let serialize: t => Raw.t =
-    (value) => (
-      {
-        let reposts = {
-          let value = (value: t).reposts;
+    value => {
+      let reposts = {
+        let value = (value: t).reposts;
+        `List(
           value
-          |> Js.Array.map(value =>
+          |> Array.map(value =>
                switch (value) {
                | Some(value) =>
-                 Js.Nullable.return(
-                   {
-                     let id = {
-                       let value = (value: t_reposts).id;
-                       value;
-                     };
-                     {id: id};
-                   }: Raw.t_reposts,
-                 )
-               | None => Js.Nullable.null
+                 let id = {
+                   let value = (value: t_reposts).id;
+                   `Int(value);
+                 };
+                 `Assoc([(\"id\", id)]);
+               | None => `Null
                }
-             );
-        };
-        {reposts: reposts};
-      }: Raw.t
-    );
+             )
+          |> Array.to_list,
+        );
+      };
+      `Assoc([(\"reposts\", reposts)]);
+    };
   let verifyArgsAndParse =
       (
         ~name as _name: [ | `NonNull_String],
@@ -108,7 +105,7 @@ function back to the original JSON-compatible data */
   let verifyName =
     fun
     | `test => ();
-  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
-  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
 };
 

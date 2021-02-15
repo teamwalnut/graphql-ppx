@@ -425,7 +425,7 @@ module InlineListFragment = {
 };
 
 module Wrapper = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {
       __typename: string,

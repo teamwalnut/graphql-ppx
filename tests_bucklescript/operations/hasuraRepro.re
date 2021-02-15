@@ -11,4 +11,4 @@
   |}
 ];
 
-HasuraRepro.makeVariables(~blockNumber=1, ~type_="1", ());
+let _ = HasuraRepro.makeVariables(~blockNumber=1, ~type_="1", ());

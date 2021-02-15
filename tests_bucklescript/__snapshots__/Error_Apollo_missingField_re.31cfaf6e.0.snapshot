@@ -1,11 +1,11 @@
 Error Apollo › missingField2.re › output
-We've found a bug for you!
-  missingField2.re 13:9-28
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/missingField2.re\027[0m:\027[2m13:9-28\027[0m
   
-  11 \226\148\134 {|
-  12 \226\148\134 query {
-  13 \226\148\134   l1: thisTypeDoesNotExist {
-  14 \226\148\134     ...Fragments
-  15 \226\148\134   }
+  11 \027[2m\226\148\134\027[0m {|
+  12 \027[2m\226\148\134\027[0m query {
+  \027[1;31m13\027[0m \027[2m\226\148\134\027[0m   l1: \027[1;31mthisTypeDoesNotExist\027[0m {
+  14 \027[2m\226\148\134\027[0m     ...Fragments
+  15 \027[2m\226\148\134\027[0m   }
   
   Unknown field 'thisTypeDoesNotExist' on type Query

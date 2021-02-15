@@ -1,11 +1,11 @@
 Error Template › InvalidObjectValues2.re › output
-We've found a bug for you!
-  InvalidObjectValues2.re 8:13-18
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/InvalidObjectValues2.re\027[0m:\027[2m8:13-18\027[0m
   
-   6 \226\148\134 query {
-   7 \226\148\134     invalidObjectValues(
-   8 \226\148\134         nonRec: {
-   9 \226\148\134             nullableArray: [\"\"]
-  10 \226\148\134             field: \"\"
+   6 \027[2m\226\148\134\027[0m query {
+   7 \027[2m\226\148\134\027[0m     invalidObjectValues(
+  \027[1;31m 8\027[0m \027[2m\226\148\134\027[0m         \027[1;31mnonRec\027[0m: {
+   9 \027[2m\226\148\134\027[0m             nullableArray: [\"\"]
+  10 \027[2m\226\148\134\027[0m             field: \"\"
   
   Invalid argument. The field \"nonNullableField\" on argument \"nonRec\" is missing.
