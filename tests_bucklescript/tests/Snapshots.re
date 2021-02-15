@@ -268,13 +268,18 @@ let error_filenames =
 type ppx_config = {
   name: string,
   options: array(string),
+  native: bool,
 };
 
 let ppx_configs = [
-  {name: "Records", options: [||]},
-  {name: "Objects", options: [|"-objects"|]},
-  {name: "Template", options: [|"-template-tag-location=gql"|]},
-  {name: "Apollo", options: [|"-apollo-mode"|]},
+  {name: "Records", options: [||], native: false},
+  {
+    name: "Template",
+    options: [|"-template-tag-location=gql"|],
+    native: false,
+  },
+  {name: "Apollo", options: [|"-apollo-mode"|], native: false},
+  {name: "Native", options: [|"-native"|], native: true},
 ];
 
 type test_type =
@@ -309,27 +314,35 @@ let tests =
             switch (test_type) {
             | Generate
             | Compile =>
-              filenames
-              |> List.map(filename =>
-                   {
-                     id: get_id(),
-                     test_type,
-                     ppx_config,
-                     filename,
-                     descriptors: None,
-                   }
-                 )
+              if (ppx_config.native && test_type == Compile) {
+                [];
+              } else {
+                filenames
+                |> List.map(filename =>
+                     {
+                       id: get_id(),
+                       test_type,
+                       ppx_config,
+                       filename,
+                       descriptors: None,
+                     }
+                   );
+              }
             | Error =>
-              error_filenames
-              |> List.map(filename =>
-                   {
-                     id: get_id(),
-                     test_type,
-                     ppx_config,
-                     filename,
-                     descriptors: None,
-                   }
-                 )
+              if (!ppx_config.native) {
+                error_filenames
+                |> List.map(filename =>
+                     {
+                       id: get_id(),
+                       test_type,
+                       ppx_config,
+                       filename,
+                       descriptors: None,
+                     }
+                   );
+              } else {
+                [];
+              }
             }
           )
      );
@@ -413,44 +426,49 @@ tests
 |> List.iter(tests_by_type => {
      tests_by_type
      |> List.iter(tests_by_config => {
-          let (test_type, ppx_config) = get_type_and_config(tests_by_config);
-          let typeName =
-            switch (test_type) {
-            | Generate => "Generate"
-            | Compile => "Compile"
-            | Error => "Error"
-            };
+          switch (tests_by_config) {
+          | [] => ()
+          | _ =>
+            let (test_type, ppx_config) =
+              get_type_and_config(tests_by_config);
+            let typeName =
+              switch (test_type) {
+              | Generate => "Generate"
+              | Compile => "Compile"
+              | Error => "Error"
+              };
 
-          describe(typeName ++ " " ++ ppx_config.name, ({describe, _}) => {
-            tests_by_config
-            |> List.iter(({filename, id, _}) => {
-                 describe(filename, ({test, _}) => {
-                   test("output", ({expect, _}) => {
-                     fill_inflight();
-                     switch (test_type) {
-                     | Generate =>
-                       let descriptors =
-                         id |> get_descriptors |> get_ppx_descriptors;
-                       let (output, error) = continue_ppx(descriptors);
-                       expect.string(output).toMatchSnapshot();
-                       expect.string(error).toEqual("");
+            describe(typeName ++ " " ++ ppx_config.name, ({describe, _}) => {
+              tests_by_config
+              |> List.iter(({filename, id, _}) => {
+                   describe(filename, ({test, _}) => {
+                     test("output", ({expect, _}) => {
+                       fill_inflight();
+                       switch (test_type) {
+                       | Generate =>
+                         let descriptors =
+                           id |> get_descriptors |> get_ppx_descriptors;
+                         let (output, error) = continue_ppx(descriptors);
+                         expect.string(output).toMatchSnapshot();
+                         expect.string(error).toEqual("");
 
-                     | Compile =>
-                       let descriptors =
-                         id |> get_descriptors |> get_bsb_descriptors;
-                       let (output, error) = descriptors |> continue_bsb;
-                       expect.string(output).toMatchSnapshot();
-                       expect.string(error).toEqual("");
+                       | Compile =>
+                         let descriptors =
+                           id |> get_descriptors |> get_bsb_descriptors;
+                         let (output, error) = descriptors |> continue_bsb;
+                         expect.string(output).toMatchSnapshot();
+                         expect.string(error).toEqual("");
 
-                     | Error =>
-                       let descriptors =
-                         id |> get_descriptors |> get_bsb_descriptors;
-                       let (_, error) = descriptors |> continue_bsb;
-                       expect.string(error).toMatchSnapshot();
-                     };
+                       | Error =>
+                         let descriptors =
+                           id |> get_descriptors |> get_bsb_descriptors;
+                         let (_, error) = descriptors |> continue_bsb;
+                         expect.string(error).toMatchSnapshot();
+                       };
+                     })
                    })
                  })
-               })
-          });
+            });
+          }
         })
    });

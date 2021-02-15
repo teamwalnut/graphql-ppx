@@ -8,7 +8,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {. nonrecursiveInput: string};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -20,27 +20,27 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< nonrecursiveInput = %a >",
          Format.pp_print_string,
-         t#nonrecursiveInput,
+         t.nonrecursiveInput,
        );
 
-     let equal = (a: qt, b: qt) => a#nonrecursiveInput == b#nonrecursiveInput;
+     let equal = (a: qt, b: qt) => a.nonrecursiveInput == b.nonrecursiveInput;
    });
 
 let construct_recursive_input_type = () =>
   test_json(
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~arg={
-        as _;
-        pub field = Some("test");
-        pub embeddedInput = Some([|Some({as _; pub field = Some("test")})|]);
-        pub enum = Some(`SECOND);
-        pub custom = Some(`Int(1));
-        pub nonNullableField = "Not null";
-        pub nullableArray = None
+        field: Some("test"),
+        embeddedInput: Some([|Some({field: Some("test")})|]),
+        enum: Some(`SECOND),
+        custom: Some(`Int(1)),
+        nonNullableField: "Not null",
+        nullableArray: None,
       },
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
             "arg":

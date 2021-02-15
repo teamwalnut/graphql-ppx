@@ -31,6 +31,7 @@ type dog = {
 
 type oneFieldQuery = {nullableString: option(string)};
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_variousScalars = {
       __typename: string,
@@ -49,14 +50,14 @@ module MyQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -127,6 +128,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module OneFieldQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
@@ -142,14 +144,14 @@ module OneFieldQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {nullableString: Js.Nullable.t(string)};
     type t = {variousScalars: t_variousScalars};
@@ -207,6 +209,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module OneFieldQueryWithTypename: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_variousScalars = {
       __typename: string,
@@ -228,14 +231,14 @@ module OneFieldQueryWithTypename: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {
       __typename: string,
@@ -308,7 +311,7 @@ function back to the original JSON compatible data */
 };
 module ExternalFragmentQuery = {
   module Fragment: {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t = {
         string,
@@ -333,7 +336,7 @@ function back to the original JSON-compatible data */
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = {
         string,
@@ -384,6 +387,7 @@ function back to the original JSON-compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
   };
   module Untitled1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
@@ -397,14 +401,14 @@ function back to the original JSON-compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => Raw.t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = {variousScalars: Fragment.Raw.t};
       type t_variables = unit;
@@ -443,6 +447,7 @@ function back to the original JSON compatible data */
   };
 };
 module InlineFragmentQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -471,14 +476,14 @@ module InlineFragmentQuery: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_dogOrHuman_Dog = {
       __typename: string,
@@ -578,7 +583,7 @@ function back to the original JSON compatible data */
 };
 module UnionExternalFragmentQuery = {
   module DogFragment: {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t = {
         __typename: string,
@@ -605,7 +610,7 @@ function back to the original JSON-compatible data */
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t = {
         __typename: string,
@@ -666,6 +671,7 @@ function back to the original JSON-compatible data */
     external toJson: Raw.t => Js.Json.t = \"%identity\";
   };
   module Untitled1: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};
@@ -684,14 +690,14 @@ function back to the original JSON-compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => Raw.t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t_dogOrHuman;
       type t = {dogOrHuman: t_dogOrHuman};

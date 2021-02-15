@@ -18,6 +18,7 @@ Generate Apollo › omitFutureValueEnum.re › output
   }
 ];
 module Normal: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -56,14 +57,14 @@ module Normal: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -131,7 +132,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD
@@ -214,6 +215,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module ByConfig: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -247,14 +249,14 @@ module ByConfig: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -317,7 +319,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD
@@ -399,6 +401,7 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 module ByDirective: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -432,14 +435,14 @@ module ByDirective: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_mutationWithError_errors_field = string;
     type t_mutationWithError_errors = {
@@ -502,7 +505,7 @@ function back to the original JSON compatible data */
                              field: {
                                let value =
                                  (value: Raw.t_mutationWithError_errors).field;
-                               switch (Obj.magic(value: string)) {
+                               switch ((Obj.magic(value): string)) {
                                | \"FIRST\" => `FIRST
                                | \"SECOND\" => `SECOND
                                | \"THIRD\" => `THIRD

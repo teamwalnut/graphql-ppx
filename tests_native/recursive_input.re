@@ -12,22 +12,21 @@ let construct_recursive_input_type = () =>
   Alcotest.check(
     yojson,
     "json equality",
-    MyQuery.make(
+    MyQuery.makeVariables(
       ~arg={
-        as _;
-        pub otherField = Some("test");
-        pub enum = None;
-        pub inner =
+        otherField: Some("test"),
+        enum: None,
+        inner:
           Some({
-            as _;
-            pub otherField = Some("inner");
-            pub enum = Some(`SECOND);
-            pub inner = None
-          })
+            otherField: Some("inner"),
+            enum: Some(`SECOND),
+            inner: None,
+          }),
       },
       (),
-    )#
-      variables,
+    )
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string(
       {| {
       "arg": {

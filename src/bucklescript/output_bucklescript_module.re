@@ -9,6 +9,8 @@ open Ast_helper;
 open Extract_type_definitions;
 open Output_bucklescript_utils;
 
+exception Cant_find_fragment_type_with_loc(Source_pos.ast_location, string);
+
 type operation_type = Graphql_ast.operation_type;
 type operation_options = {has_required_variables: bool};
 
@@ -174,47 +176,56 @@ let emit_printed_query = (parts, config) => {
   |> List.fold_left((acc, el) => join(acc, el), make_string(query));
 };
 
-let rec emit_json = config =>
-  Ast_408.(
-    fun
-    | `Assoc(vs) => {
-        let pairs =
-          Ast_helper.(
-            Exp.array(
-              vs
-              |> List.map(((key, value)) =>
-                   Exp.tuple([
-                     Exp.constant(Pconst_string(key, None)),
-                     emit_json(config, value),
-                   ])
-                 ),
-            )
-          );
-        %expr
-        Js.Json.object_(Js.Dict.fromArray([%e pairs]));
-      }
-    | `List(ls) => {
-        let values = Ast_helper.Exp.array(List.map(emit_json(config), ls));
-        %expr
-        Js.Json.array([%e values]);
-      }
-    | `Bool(true) => [%expr Js.Json.boolean(true)]
-    | `Bool(false) => [%expr Js.Json.boolean(false)]
-    | `Null => [%expr Obj.magic(Js.Undefined.empty)]
-    | `String(s) => [%expr
-        Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
-      ]
-    | `Int(i) => [%expr
-        Js.Json.number(
-          [%e
-            Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))
-          ],
+let rec list_literal =
+  fun
+  | [] =>
+    Exp.construct({txt: Longident.Lident("[]"), loc: Location.none}, None)
+  | [value, ...values] => {
+      Ast_helper.(
+        Exp.construct(
+          {txt: Longident.Lident("::"), loc: Location.none},
+          Some(Exp.tuple([value, list_literal(values)])),
         )
-      ]
-    | `StringExpr(parts) => [%expr
-        Js.Json.string([%e emit_printed_query(parts, config)])
-      ]
-  );
+      );
+    };
+
+let rec emit_json = config =>
+  fun
+  | `Assoc(vs) => {
+      let pairs =
+        Ast_helper.(
+          Exp.array(
+            vs
+            |> List.map(((key, value)) =>
+                 Exp.tuple([
+                   Exp.constant(Pconst_string(key, None)),
+                   emit_json(config, value),
+                 ])
+               ),
+          )
+        );
+      %expr
+      Js.Json.object_(Js.Dict.fromArray([%e pairs]));
+    }
+  | `List(ls) => {
+      let values = Ast_helper.Exp.array(List.map(emit_json(config), ls));
+      %expr
+      Js.Json.array([%e values]);
+    }
+  | `Bool(true) => [%expr Js.Json.boolean(true)]
+  | `Bool(false) => [%expr Js.Json.boolean(false)]
+  | `Null => [%expr Obj.magic(Js.Undefined.empty)]
+  | `String(s) => [%expr
+      Js.Json.string([%e Ast_helper.Exp.constant(Pconst_string(s, None))])
+    ]
+  | `Int(i) => [%expr
+      Js.Json.number(
+        [%e Ast_helper.Exp.constant(Pconst_float(string_of_int(i), None))],
+      )
+    ]
+  | `StringExpr(parts) => [%expr
+      Js.Json.string([%e emit_printed_query(parts, config)])
+    ];
 
 let wrap_template_tag = (~import=?, ~location=?, ~template_tag=?, source) => {
   switch (import, location, template_tag) {
@@ -565,13 +576,15 @@ let wrap_query_module_signature = (~signature, definition, name, config) => {
 
 let generate_operation_signature = (config, variable_defs, res_structure) => {
   let raw_types =
-    Output_bucklescript_types.generate_type_signature_items(
-      config,
-      res_structure,
-      true,
-      None,
-      None,
-    );
+    config.native
+      ? [[%sigi: type t]]
+      : Output_bucklescript_types.generate_type_signature_items(
+          config,
+          res_structure,
+          true,
+          None,
+          None,
+        );
   let types =
     Output_bucklescript_types.generate_type_signature_items(
       config,
@@ -604,6 +617,7 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
   let has_required_variables = has_required_variables(extracted_args);
 
   [
+    [[%sigi: [@ocaml.warning "-32-30"]]],
     [signature_module("Raw", List.append(raw_types, raw_arg_types))],
     types,
     arg_types,
@@ -620,6 +634,8 @@ let generate_operation_signature = (config, variable_defs, res_structure) => {
           )
         ]
       ],
+    ],
+    [
       [%sigi:
         /** Parse the JSON-compatible GraphQL data to ReasonML data types */
         let parse: Raw.t => t
@@ -632,18 +648,29 @@ function back to the original JSON compatible data */
     ],
     serialize_variable_signatures,
     switch (variable_constructor_signatures) {
-    | [] => [[%sigi: let makeVariables: unit => unit]]
+    | [] => [[%sigi: let makeVariables: unit => t_variables]]
     | signatures => signatures
     },
     has_required_variables
       ? [] : [[%sigi: let makeDefaultVariables: unit => t_variables]],
-    [
-      [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
-      [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
-      [%sigi:
-        external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+    config.native
+      ? [
+        [%sigi:
+          external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity"
+        ],
+        [%sigi: external toJson: Raw.t => Yojson.Basic.t = "%identity"],
+        [%sigi:
+          external variablesToJson: Raw.t_variables => Yojson.Basic.t =
+            "%identity"
+        ],
+      ]
+      : [
+        [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+        [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
+        [%sigi:
+          external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+        ],
       ],
-    ],
   ]
   |> List.concat;
 };
@@ -712,13 +739,15 @@ let generate_operation_implementation =
       None,
     );
   let raw_types =
-    Output_bucklescript_types.generate_type_structure_items(
-      config,
-      res_structure,
-      true,
-      None,
-      None,
-    );
+    config.native
+      ? [[%stri type t = Yojson.Basic.t]]
+      : Output_bucklescript_types.generate_type_structure_items(
+          config,
+          res_structure,
+          true,
+          None,
+          None,
+        );
   let arg_types =
     Output_bucklescript_types.generate_arg_type_structure_items(
       false,
@@ -734,12 +763,10 @@ let generate_operation_implementation =
   let extracted_args = extract_args(config, variable_defs);
   let serialize_variable_functions =
     Output_bucklescript_serializer.generate_serialize_variables(
-      config,
       extracted_args,
     );
   let variable_constructors =
     Output_bucklescript_serializer.generate_variable_constructors(
-      config,
       extracted_args,
     );
   let has_required_variables = has_required_variables(extracted_args);
@@ -750,7 +777,7 @@ let generate_operation_implementation =
 
     List.concat([
       List.concat([
-        [[%stri [@ocaml.warning "-32"]]],
+        [[%stri [@ocaml.warning "-32-30"]]],
         [
           wrap_module(
             ~loc=Location.none,
@@ -773,14 +800,25 @@ let generate_operation_implementation =
         },
         has_required_variables
           ? [] : [[%stri let makeDefaultVariables = () => makeVariables()]],
-        [[%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"]],
-        [[%stri external toJson: Raw.t => Js.Json.t = "%identity"]],
-        [
-          [%stri
-            external variablesToJson: Raw.t_variables => Js.Json.t =
-              "%identity"
+        config.native
+          ? [
+            [%stri
+              external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity"
+            ],
+            [%stri external toJson: Raw.t => Yojson.Basic.t = "%identity"],
+            [%stri
+              external variablesToJson: Raw.t_variables => Yojson.Basic.t =
+                "%identity"
+            ],
+          ]
+          : [
+            [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+            [%stri external toJson: Raw.t => Js.Json.t = "%identity"],
+            [%stri
+              external variablesToJson: Raw.t_variables => Js.Json.t =
+                "%identity"
+            ],
           ],
-        ],
       ]),
     ]);
   };
@@ -824,16 +862,18 @@ let generate_fragment_signature =
     );
 
   let raw_types =
-    Output_bucklescript_types.generate_type_signature_items(
-      config,
-      res_structure,
-      true,
-      None,
-      Some((
-        fragment.item.fg_type_condition.item,
-        fragment.item.fg_name.span,
-      )),
-    );
+    config.native
+      ? [[%sigi: type t]]
+      : Output_bucklescript_types.generate_type_signature_items(
+          config,
+          res_structure,
+          true,
+          None,
+          Some((
+            fragment.item.fg_type_condition.item,
+            fragment.item.fg_name.span,
+          )),
+        );
 
   let rec make_labeled_fun_sig = final_type =>
     fun
@@ -912,7 +952,7 @@ let generate_fragment_signature =
   let type_name = base_type_name(Option.get_or_else("t", type_name));
 
   [
-    [[%sigi: [@ocaml.warning "-32"]]],
+    [[%sigi: [@ocaml.warning "-32-30"]]],
     [signature_module("Raw", raw_types)],
     types,
     [
@@ -939,9 +979,18 @@ function back to the original JSON-compatible data */
       ],
       [%sigi: let verifyArgsAndParse: [%t verify_parse]],
       [%sigi: let verifyName: [%t verify_name]],
-      [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
-      [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
     ],
+    config.native
+      ? [
+        [%sigi:
+          external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity"
+        ],
+        [%sigi: external toJson: Raw.t => Yojson.Basic.t = "%identity"],
+      ]
+      : [
+        [%sigi: external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+        [%sigi: external toJson: Raw.t => Js.Json.t = "%identity"],
+      ],
   ]
   |> List.concat;
 };
@@ -983,16 +1032,18 @@ let generate_fragment_implementation =
       )),
     );
   let raw_types =
-    Output_bucklescript_types.generate_type_structure_items(
-      config,
-      res_structure,
-      true,
-      None,
-      Some((
-        fragment.item.fg_type_condition.item,
-        fragment.item.fg_name.span,
-      )),
-    );
+    config.native
+      ? [[%stri type t = Yojson.Basic.t]]
+      : Output_bucklescript_types.generate_type_structure_items(
+          config,
+          res_structure,
+          true,
+          None,
+          Some((
+            fragment.item.fg_type_condition.item,
+            fragment.item.fg_name.span,
+          )),
+        );
 
   let rec make_labeled_fun = body =>
     fun
@@ -1079,7 +1130,7 @@ let generate_fragment_implementation =
   let type_name = base_type_name(Option.get_or_else("t", type_name));
   let contents =
     [
-      [[%stri [@ocaml.warning "-32"]]],
+      [[%stri [@ocaml.warning "-32-30"]]],
       [wrap_module(~loc=Location.none, "Raw", raw_types)],
       types,
       graphql_external(config),
@@ -1093,9 +1144,18 @@ let generate_fragment_implementation =
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]],
         [%stri let verifyName = [%e verifyName]],
-        [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
-        [%stri external toJson: Raw.t => Js.Json.t = "%identity"],
       ],
+      config.native
+        ? [
+          [%stri
+            external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity"
+          ],
+          [%stri external toJson: Raw.t => Yojson.Basic.t = "%identity"],
+        ]
+        : [
+          [%stri external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"],
+          [%stri external toJson: Raw.t => Js.Json.t = "%identity"],
+        ],
     ]
     |> List.concat;
 
@@ -1131,7 +1191,8 @@ let generate_definition = config =>
       fragment,
       type_name,
       inner: structure,
-    }) => (
+    }) =>
+    try((
       generate_fragment_implementation(
         config,
         name,
@@ -1150,7 +1211,17 @@ let generate_definition = config =>
         type_name,
         structure,
       ),
-    );
+    )) {
+    | Graphql_printer.Cant_find_fragment_type(
+        fragment_type: Source_pos.spanning(string),
+      ) =>
+      raise(
+        Cant_find_fragment_type_with_loc(
+          config.map_loc(fragment_type.span),
+          fragment_type.item,
+        ),
+      )
+    };
 
 let generate_modules = (module_name, module_type, operations) => {
   switch (operations) {

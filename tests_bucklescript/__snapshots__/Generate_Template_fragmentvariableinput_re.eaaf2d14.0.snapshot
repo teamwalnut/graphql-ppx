@@ -18,7 +18,7 @@ Generate Template › fragmentvariableinput.re › output
   }
 ];
 module Test: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_reposts = {id: int};
     type t = {reposts: array(Js.Nullable.t(t_reposts))};
@@ -40,7 +40,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_reposts = {id: int};
     type t = {reposts: array(Js.Nullable.t(t_reposts))};

@@ -993,13 +993,6 @@ let to_output_config =
       Generator_utils.map_loc,
       delimiter,
       full_document: document,
-      records:
-        switch (query_config.records, query_config.objects) {
-        | (Some(value), _) => value
-        | (_, Some(true)) => false
-        | (_, Some(false)) => true
-        | (None, None) => Ppx_config.records()
-        },
       inline:
         switch (query_config.inline) {
         | Some(value) => value
@@ -1029,6 +1022,7 @@ let to_output_config =
         | Some(value) => value
         | None => Ppx_config.fragment_in_query()
         },
+      native: Ppx_config.native(),
     },
   );
 };
@@ -1042,6 +1036,7 @@ let rec generate_config =
       directives
       |> get_config_arguments
       |> config_arguments_to_config(initial_query_config);
+
     [
       to_output_config(
         ~document,

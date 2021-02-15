@@ -1,12 +1,12 @@
-open Migrate_parsetree;
 open Graphql_ppx_base;
+open Migrate_parsetree;
 open Source_pos;
 open Schema;
 
 open Ast_408;
 open Asttypes;
 
-open Generator_utils;
+// open Generator_utils;
 open Output_bucklescript_utils;
 open Extract_type_definitions;
 open Result_structure;
@@ -33,6 +33,21 @@ let raw_opaque_object = (interface_fragments, fields) => {
   | _ => false
   };
 };
+let rec list_literal =
+  fun
+  | [] =>
+    Ast_helper.Exp.construct(
+      {txt: Longident.Lident("[]"), loc: Location.none},
+      None,
+    )
+  | [value, ...values] => {
+      Ast_helper.(
+        Exp.construct(
+          {txt: Longident.Lident("::"), loc: Location.none},
+          Some(Exp.tuple([value, list_literal(values)])),
+        )
+      );
+    };
 /*
   * This serializes a variable type to an option type with a JSON value
   * the reason that it generates an option type is that we don't want the values
@@ -51,10 +66,14 @@ let raw_opaque_object = (interface_fragments, fields) => {
 let rec serialize_type =
   fun
   | Type(Scalar({sm_name: "ID"}))
-  | Type(Scalar({sm_name: "String"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Int"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Float"})) => [%expr (a => a)]
-  | Type(Scalar({sm_name: "Boolean"})) => [%expr (a => a)]
+  | Type(Scalar({sm_name: "String"})) =>
+    Ppx_config.native() ? [%expr (a => `String(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Int"})) =>
+    Ppx_config.native() ? [%expr (a => `Int(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Float"})) =>
+    Ppx_config.native() ? [%expr (a => `Float(a))] : [%expr (a => a)]
+  | Type(Scalar({sm_name: "Boolean"})) =>
+    Ppx_config.native() ? [%expr (a => `Bool(a))] : [%expr (a => a)]
   | Type(Scalar({sm_name: _})) => [%expr (a => a)]
   | Type(InputObject({iom_name})) => [%expr
       (a => [%e ident_from_string("serializeInputObject" ++ iom_name)](a))
@@ -68,9 +87,19 @@ let rec serialize_type =
             |> List.map(value => {
                  Exp.case(
                    Pat.variant(value.evm_name, None),
-                   Ast_helper.Exp.constant(
-                     Parsetree.Pconst_string(value.evm_name, None),
-                   ),
+                   Ppx_config.native()
+                     ? [%expr
+                       `String(
+                         [%e
+                           Ast_helper.Exp.constant(
+                             Parsetree.Pconst_string(value.evm_name, None),
+                           )
+                         ],
+                       )
+                     ]
+                     : Ast_helper.Exp.constant(
+                         Parsetree.Pconst_string(value.evm_name, None),
+                       ),
                  )
                }),
           )
@@ -78,20 +107,42 @@ let rec serialize_type =
       %expr
       (a => [%e case_exp]);
     }
-  | Nullable(inner) => [%expr
-      (
-        a =>
-          switch (a) {
-          | None => Js.Nullable.undefined
-          | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
-          }
-      )
-    ]
+  | Nullable(inner) =>
+    Ppx_config.native()
+      ? [%expr
+        (
+          a =>
+            switch (a) {
+            // to be fixed (actually we need to drop the value here)
+            | None => `Null
+            | Some(b) => [%e serialize_type(inner)](b)
+            }
+        )
+      ]
+      : [%expr
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) => Js.Nullable.return([%e serialize_type(inner)](b))
+            }
+        )
+      ]
+
   // in this case if there are null values in the list actually convert them to
   // JSON nulls
-  | List(inner) => [%expr
-      (a => Js.Array.map(b => {[%e serialize_type(inner)](b)}, a))
-    ]
+  | List(inner) =>
+    Ppx_config.native()
+      ? [%expr
+        (
+          a =>
+            `List(
+              Array.map(b => {[%e serialize_type(inner)](b)}, a)
+              |> Array.to_list,
+            )
+        )
+      ]
+      : [%expr (a => Js.Array.map(b => {[%e serialize_type(inner)](b)}, a))]
   | Type(Object(_)) => [%expr (v => None)]
   | Type(Union(_)) => [%expr (v => None)]
   | Type(Interface(_)) => [%expr (v => None)]
@@ -106,52 +157,74 @@ let record_to_object = (loc, record) => {
   );
 };
 
-let serialize_fun = (config, loc, fields, type_name) => {
+let serialize_fun = (fields, type_name) => {
   let arg = "inp";
   open Ast_helper;
-  let record =
-    Exp.record(
-      fields
-      |> List.map((InputField({name, type_, loc})) => {
-           (
-             {
-               txt: Longident.parse(to_valid_ident(name)),
-               loc: conv_loc(loc),
-             },
-             [%expr
-               [%e serialize_type(type_)](
-                 if%e (config.records) {
-                   Exp.field(
-                     Exp.constraint_(
-                       ident_from_string(arg),
-                       base_type_name(type_name),
-                     ),
-                     {
-                       loc: Location.none,
-                       Location.txt: Longident.parse(to_valid_ident(name)),
-                     },
-                   );
-                 } else {
-                   %expr
-                   [%e ident_from_string(arg)]##[%e
-                                                   ident_from_string(
-                                                     to_valid_ident(name),
-                                                   )
-                                                 ];
+  let object_ =
+    Ppx_config.native()
+      ? {
+        let assoc_fields =
+          List.map(
+            (InputField({name, type_})) => {
+              %expr
+              (
+                [%e const_str_expr(name)],
+                [%e serialize_type(type_)](
+                  [%e
+                    Exp.field(
+                      Exp.constraint_(
+                        ident_from_string(arg),
+                        base_type_name(type_name),
+                      ),
+                      {
+                        loc: Location.none,
+                        Location.txt: Longident.parse(to_valid_ident(name)),
+                      },
+                    )
+                  ],
+                ),
+              )
+            },
+            fields,
+          );
+        %expr
+        `Assoc([%e list_literal(assoc_fields)]);
+      }
+      : Exp.record(
+          fields
+          |> List.map((InputField({name, type_, loc})) => {
+               (
+                 {
+                   txt: Longident.parse(to_valid_ident(name)),
+                   loc: conv_loc(loc),
                  },
+                 [%expr
+                   [%e serialize_type(type_)](
+                     [%e
+                       Exp.field(
+                         Exp.constraint_(
+                           ident_from_string(arg),
+                           base_type_name(type_name),
+                         ),
+                         {
+                           loc: Location.none,
+                           Location.txt:
+                             Longident.parse(to_valid_ident(name)),
+                         },
+                       )
+                     ],
+                   )
+                 ],
                )
-             ],
-           )
-         }),
-      None,
-    );
-  let record = !config.records ? record_to_object(loc, record) : record;
+             }),
+          None,
+        );
   Ast_helper.(
     Exp.fun_(
       Nolabel,
       None,
       Pat.var(~loc=Location.none, {txt: arg, loc: Location.none}),
-      record,
+      object_,
     )
   );
 };
@@ -176,7 +249,7 @@ let filter_map = f => {
 let generate_serialize_variable_signatures =
     (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => [%sig: let serializeVariables: unit => unit]
+  | [NoVariables] => [%sig: let serializeVariables: unit => Raw.t_variables]
   | arg_type_defs =>
     Ast_helper.(
       arg_type_defs
@@ -213,10 +286,12 @@ let generate_serialize_variable_signatures =
          })
     )
   };
-let generate_serialize_variables =
-    (config, arg_type_defs: list(arg_type_def)) =>
+let generate_serialize_variables = (arg_type_defs: list(arg_type_def)) =>
   switch (arg_type_defs) {
-  | [NoVariables] => [%stri let serializeVariables = () => ()]
+  | [NoVariables] =>
+    Ppx_config.native()
+      ? [%stri let serializeVariables = () => `Null]
+      : [%stri let serializeVariables = () => ()]
   | arg_type_defs =>
     Ast_helper.(
       Str.value(
@@ -254,7 +329,7 @@ let generate_serialize_variables =
                    base_type_name("Raw." ++ type_name),
                  ),
                ),
-               serialize_fun(config, loc, fields, type_name),
+               serialize_fun(fields, type_name),
              );
            }),
       )
@@ -270,8 +345,7 @@ let generate_serialize_variables =
   * This also helps if you don't want the build to break if a optional variable
   * is added.
  */
-let generate_variable_constructors =
-    (config, arg_type_defs: list(arg_type_def)) => {
+let generate_variable_constructors = (arg_type_defs: list(arg_type_def)) => {
   switch (arg_type_defs) {
   | [NoVariables] => None
   | _ =>
@@ -310,7 +384,23 @@ let generate_variable_constructors =
                      );
                    };
 
-               let record =
+               let object_ =
+                 //  Ppx_config.native()
+                 //    ? {
+                 //      let assoc_fields =
+                 //        List.map(
+                 //          (InputField({name})) => {
+                 //            %expr
+                 //            (
+                 //              [%e const_str_expr(name)],
+                 //              [%e ident_from_string(to_valid_ident(name))],
+                 //            )
+                 //          },
+                 //          fields,
+                 //        );
+                 //      %expr
+                 //      `Assoc([%e list_literal(assoc_fields)]);
+                 //    }
                  Ast_helper.(
                    Exp.record(
                      ~loc=loc |> conv_loc,
@@ -329,13 +419,11 @@ let generate_variable_constructors =
                    )
                  );
 
-               let object_ = record_to_object(loc, record);
-
                let body =
                  Ast_helper.(
                    Exp.constraint_(
                      ~loc=conv_loc(loc),
-                     config.records ? record : object_,
+                     object_,
                      base_type_name(
                        switch (name) {
                        | None => "t_variables"
@@ -440,61 +528,87 @@ let generate_variable_constructor_signatures =
   };
 };
 
-let get_field = (is_object, key, existing_record, path) => {
-  is_object
-    ? [%expr value##[%e ident_from_string(to_valid_ident(key))]]
-    : [%expr
-      [%e
-        Ast_helper.(
-          Exp.field(
-            Exp.constraint_(
-              ident_from_string("value"),
-              base_type_name(
-                switch (existing_record) {
-                | None => generate_type_name(path)
-                | Some(existing) => existing
-                },
-              ),
-            ),
-            {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
-          )
-        )
-      ]
-    ];
+let get_field = (key, existing_record, path) => {
+  %expr
+  [%e
+    Ast_helper.(
+      Exp.field(
+        Exp.constraint_(
+          ident_from_string("value"),
+          base_type_name(
+            switch (existing_record) {
+            | None => generate_type_name(path)
+            | Some(existing) => existing
+            },
+          ),
+        ),
+        {loc: Location.none, txt: Longident.parse(to_valid_ident(key))},
+      )
+    )
+  ];
 };
 
 let rec generate_nullable_encoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  (
-    switch%expr (value) {
-    | Some(value) =>
-      Js.Nullable.return(
-        [%e generate_serializer(config, path, definition, None, inner)],
+  Ppx_config.native()
+    ? [@metaloc loc]
+      (
+        switch%expr (value) {
+        | Some(value) =>
+          %e
+          generate_serializer(config, path, definition, None, inner)
+        | None => `Null
+        }
       )
-    | None => Js.Nullable.null
-    }
-  )
+    : [@metaloc loc]
+      (
+        switch%expr (value) {
+        | Some(value) =>
+          Js.Nullable.return(
+            [%e generate_serializer(config, path, definition, None, inner)],
+          )
+        | None => Js.Nullable.null
+        }
+      )
 and generate_array_encoder = (config, loc, inner, path, definition) =>
-  [@metaloc loc]
-  [%expr
-    value
-    |> Js.Array.map(value => {
-         %e
-         generate_serializer(config, path, definition, None, inner)
-       })
-  ]
+  Ppx_config.native()
+    ? [@metaloc loc]
+      [%expr
+        `List(
+          value
+          |> Array.map(value => {
+               %e
+               generate_serializer(config, path, definition, None, inner)
+             })
+          |> Array.to_list,
+        )
+      ]
+    : [@metaloc loc]
+      [%expr
+        value
+        |> Js.Array.map(value => {
+             %e
+             generate_serializer(config, path, definition, None, inner)
+           })
+      ]
 and generate_poly_enum_encoder = (loc, enum_meta, omit_future_value) => {
   open Ast_helper;
   let enum_match_arms =
     enum_meta.em_values
     |> List.map(({evm_name, _}) =>
-         Exp.case(Pat.variant(evm_name, None), const_str_expr(evm_name))
+         Exp.case(
+           Pat.variant(evm_name, None),
+           Ppx_config.native()
+             ? [%expr `String([%e const_str_expr(evm_name)])]
+             : const_str_expr(evm_name),
+         )
        );
 
   let fallback_arm =
     Exp.case(
       Pat.variant("FutureAddedValue", Some(Pat.var({loc, txt: "other"}))),
-      ident_from_string("other"),
+      Ppx_config.native()
+        ? [%expr `String([%e ident_from_string("other")])]
+        : ident_from_string("other"),
     );
 
   let match_expr =
@@ -526,12 +640,11 @@ and generate_object_encoder =
       definition,
       existing_record,
       typename,
-      force_record,
       interface_fragments,
     ) => {
   open Ast_helper;
   let is_opaque = raw_opaque_object(interface_fragments, fields);
-  let do_obj_constructor_base = (is_object, wrap) => {
+  let do_obj_constructor_base = wrap => {
     switch (
       fields
       |> filter_map(
@@ -540,9 +653,7 @@ and generate_object_encoder =
            | Fr_named_field({name, type_}) => Some((name, type_)),
          )
     ) {
-    | [] =>
-      %expr
-      Js.Dict.empty
+    | [] => Ppx_config.native() ? [%expr `Assoc([])] : [%expr Js.Dict.empty]
     | fields =>
       let record =
         Exp.record(
@@ -597,9 +708,7 @@ and generate_object_encoder =
                {
                  // TODO: would be nice to pass the input instead of relying
                  // on a static identifier called `value`
-                 let%expr value = [%e
-                   get_field(is_object, key, existing_record, path)
-                 ];
+                 let%expr value = [%e get_field(key, existing_record, path)];
                  %e
                  generate_serializer(
                    config,
@@ -616,20 +725,99 @@ and generate_object_encoder =
     };
   };
 
-  let do_obj_constructor = with_objects =>
+  let do_json_encoder = () => {
+    switch (
+      fields
+      |> filter_map(
+           fun
+           | Fr_fragment_spread(_) => None
+           | Fr_named_field({name, type_}) => Some((name, type_)),
+         )
+    ) {
+    | [] =>
+      %expr
+      `Assoc([])
+    | fields =>
+      let assoc_fields =
+        // if the object is part of a union, it gets passed a typename
+        // the typename needs to exist on the raw type, because it is used
+        // to parse it into a union type. So if this is supplied, and
+        // typename is not already explicitly in the fields, add this.
+        (
+          if (typename != None
+              && !(
+                   fields
+                   |> List.exists(
+                        fun
+                        | ("__typename", _) => true
+                        | _ => false,
+                      )
+                 )) {
+            [
+              ("__typename", Res_string({loc: conv_loc_from_ast(loc)})),
+              ...fields,
+            ];
+          } else {
+            fields;
+          }
+        )
+        |> List.map(((key, _inner)) => {
+             switch (key, typename) {
+             | ("__typename", Some(typename)) =>
+               %expr
+               ("__typename", `String([%e const_str_expr(typename)]))
+             | (key, _) =>
+               %expr
+               (
+                 [%e const_str_expr(key)],
+                 [%e ident_from_string(to_valid_ident(key))],
+               )
+             }
+           });
+
+      let assoc = [%expr `Assoc([%e list_literal(assoc_fields)])];
+
+      let bindings =
+        fields
+        |> List.map(((key, inner)) =>
+             Vb.mk(
+               Pat.var({txt: to_valid_ident(key), loc}),
+               {
+                 // TODO: would be nice to pass the input instead of relying
+                 // on a static identifier called `value`
+                 let%expr value = [%e get_field(key, existing_record, path)];
+                 %e
+                 generate_serializer(
+                   config,
+                   [key, ...path],
+                   definition,
+                   None,
+                   inner,
+                 );
+               },
+             )
+           )
+        |> List.rev;
+      Exp.let_(Nonrecursive, bindings, assoc);
+    };
+  };
+
+  let do_obj_constructor = () =>
     [@metaloc conv_loc(loc)]
     {
-      do_obj_constructor_base(with_objects, true);
+      do_obj_constructor_base(true);
     };
 
   let do_obj_constructor_records = () =>
-    [@metaloc conv_loc(loc)]
-    {
-      Exp.constraint_(
-        do_obj_constructor_base(false, false),
-        base_type_name("Raw." ++ generate_type_name(path)),
-      );
-    };
+    Ppx_config.native()
+      ? do_json_encoder()
+      : [@metaloc conv_loc(loc)]
+        {
+          Exp.constraint_(
+            do_obj_constructor_base(false),
+            base_type_name("Raw." ++ generate_type_name(path)),
+          );
+        };
 
   // the fields and fragments needs to be deeply merged, the fragments in the
   // reason types are separate fields (separated out from the raw output of
@@ -648,7 +836,7 @@ and generate_object_encoder =
   // in the raw representation if it is merged last. Unfortunately there is not
   // really anything that we can do about this.
 
-  let merge_into_opaque = is_object => {
+  let merge_into_opaque = () => {
     let fields =
       fields
       |> List.fold_left(
@@ -656,17 +844,23 @@ and generate_object_encoder =
              fun
              | Fr_named_field(_) => acc
              | Fr_fragment_spread({key, name}) => [
-                 [%expr
-                   (
-                     Obj.magic(
+                 Ppx_config.native()
+                   ? [%expr
+                     [%e ident_from_string(name ++ ".toJson")](
                        [%e ident_from_string(name ++ ".serialize")](
-                         [%e
-                           get_field(is_object, key, existing_record, path)
-                         ],
+                         [%e get_field(key, existing_record, path)],
                        ),
-                     ): Js.Json.t
-                   )
-                 ],
+                     )
+                   ]
+                   : [%expr
+                     (
+                       Obj.magic(
+                         [%e ident_from_string(name ++ ".serialize")](
+                           [%e get_field(key, existing_record, path)],
+                         ),
+                       ): Js.Json.t
+                     )
+                   ],
                  ...acc,
                ],
            [],
@@ -677,53 +871,73 @@ and generate_object_encoder =
       | None
       | Some((_, [])) => fields
       | Some((interface_name, fragments)) => [
-          {
-            let%expr value = [%e get_field(is_object, "fragment", None, path)];
-            (
-              Obj.magic(
-                [%e
-                  generate_poly_variant_interface_encoder(
-                    config,
-                    loc,
-                    interface_name,
-                    fragments,
-                    path,
-                    definition,
-                  )
-                ],
-              ): Js.Json.t
-            );
-          },
+          Ppx_config.native()
+            ? {
+              let%expr value = [%e get_field("fragment", None, path)];
+              %e
+              generate_poly_variant_interface_encoder(
+                config,
+                loc,
+                interface_name,
+                fragments,
+                path,
+                definition,
+              );
+            }
+            : {
+              let%expr value = [%e get_field("fragment", None, path)];
+              (
+                Obj.magic(
+                  [%e
+                    generate_poly_variant_interface_encoder(
+                      config,
+                      loc,
+                      interface_name,
+                      fragments,
+                      path,
+                      definition,
+                    )
+                  ],
+                ): Js.Json.t
+              );
+            },
           ...fields,
         ]
       };
 
-    %expr
-    (
-      Obj.magic(
-        Js.Array.reduce(
-          GraphQL_PPX.deepMerge,
-          Obj.magic(
-            {
-              %e
-              do_obj_constructor(is_object);
-            },
-          ): Js.Json.t,
+    Ppx_config.native()
+      // no deepmerge for native, just get the last one
+      ? [%expr
+        Array.fold_left(
+          (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+          {
+            %e
+            do_obj_constructor();
+          },
           [%e fields |> Ast_helper.Exp.array],
-        ),
-      ): [%t
-        base_type_name("Raw." ++ generate_type_name(path))
+        )
       ]
-    );
+      : [%expr
+        (
+          Obj.magic(
+            Js.Array.reduce(
+              GraphQL_PPX.deepMerge,
+              Obj.magic(
+                {
+                  %e
+                  do_obj_constructor();
+                },
+              ): Js.Json.t,
+              [%e fields |> Ast_helper.Exp.array],
+            ),
+          ): [%t
+            base_type_name("Raw." ++ generate_type_name(path))
+          ]
+        )
+      ];
   };
 
-  switch (is_opaque, config.records, existing_record, force_record) {
-  | (true, records, _, _) => merge_into_opaque(!records)
-  | (false, true, _, _) => do_obj_constructor_records()
-  | (false, false, _, true) => do_obj_constructor(false)
-  | (false, false, Some(_), _) => do_obj_constructor(false)
-  | (false, false, _, _) => do_obj_constructor(true)
-  };
+  is_opaque ? merge_into_opaque() : do_obj_constructor_records();
 }
 and generate_poly_variant_union_encoder =
     (
@@ -746,23 +960,31 @@ and generate_poly_variant_union_encoder =
                type_name,
                Some(Pat.var({txt: "value", loc: Location.none})),
              ),
-             [%expr
-               (
-                 Obj.magic(
-                   [%e
-                     generate_serializer(
-                       config,
-                       [type_name, ...path],
-                       definition,
-                       Some(type_name),
-                       inner,
-                     )
-                   ],
-                 ): [%t
-                   base_type_name("Raw." ++ generate_type_name(path))
-                 ]
-               )
-             ],
+             Ppx_config.native()
+               ? generate_serializer(
+                   config,
+                   [type_name, ...path],
+                   definition,
+                   Some(type_name),
+                   inner,
+                 )
+               : [%expr
+                 (
+                   Obj.magic(
+                     [%e
+                       generate_serializer(
+                         config,
+                         [type_name, ...path],
+                         definition,
+                         Some(type_name),
+                         inner,
+                       )
+                     ],
+                   ): [%t
+                     base_type_name("Raw." ++ generate_type_name(path))
+                   ]
+                 )
+               ],
            )
          )
        });
@@ -773,13 +995,15 @@ and generate_poly_variant_union_encoder =
         "FutureAddedValue",
         Some(Pat.var({txt: "value", loc: Location.none})),
       ),
-      [%expr
-        (
-          Obj.magic(value): [%t
-            base_type_name("Raw." ++ generate_type_name(path))
-          ]
-        )
-      ],
+      Ppx_config.native()
+        ? [%expr value]
+        : [%expr
+          (
+            Obj.magic(value): [%t
+              base_type_name("Raw." ++ generate_type_name(path))
+            ]
+          )
+        ],
     );
 
   let typename_matcher =
@@ -795,9 +1019,8 @@ and generate_poly_variant_union_encoder =
   [%e typename_matcher];
 }
 and generate_poly_variant_selection_set_encoder =
-    (_config, _loc, _name, _fields, _path, _definition) => [%expr
-  Obj.magic(Js.Json.null)
-]
+    (_config, _loc, _name, _fields, _path, _definition) =>
+  Ppx_config.native() ? [%expr `Null] : [%expr Obj.magic(Js.Json.null)]
 and generate_poly_variant_interface_encoder =
     (config, _loc, name, fragments, path, definition) => {
   open Ast_helper;
@@ -810,25 +1033,33 @@ and generate_poly_variant_interface_encoder =
                type_name,
                Some(Pat.var({txt: "value", loc: Location.none})),
              ),
-             [%expr
-               (
-                 Obj.magic(
-                   [%e
-                     generate_serializer(
-                       config,
-                       [type_name, name, ...path],
-                       definition,
-                       Some(type_name),
-                       inner,
+             Ppx_config.native()
+               ? generate_serializer(
+                   config,
+                   [type_name, name, ...path],
+                   definition,
+                   Some(type_name),
+                   inner,
+                 )
+               : [%expr
+                 (
+                   Obj.magic(
+                     [%e
+                       generate_serializer(
+                         config,
+                         [type_name, name, ...path],
+                         definition,
+                         Some(type_name),
+                         inner,
+                       )
+                     ],
+                   ): [%t
+                     base_type_name(
+                       "Raw." ++ generate_type_name([name, ...path]),
                      )
-                   ],
-                 ): [%t
-                   base_type_name(
-                     "Raw." ++ generate_type_name([name, ...path]),
-                   )
-                 ]
-               )
-             ],
+                   ]
+                 )
+               ],
            )
          )
        });
@@ -836,13 +1067,15 @@ and generate_poly_variant_interface_encoder =
   let fallback_case =
     Exp.case(
       Pat.variant("UnspecifiedFragment", Some(Pat.any())),
-      [%expr
-        (
-          Obj.magic(Js.Dict.empty()): [%t
-            base_type_name("Raw." ++ generate_type_name([name, ...path]))
-          ]
-        )
-      ],
+      Ppx_config.native()
+        ? [%expr `Assoc([])]
+        : [%expr
+          (
+            Obj.magic(Js.Dict.empty()): [%t
+              base_type_name("Raw." ++ generate_type_name([name, ...path]))
+            ]
+          )
+        ],
     );
 
   let typename_matcher =
@@ -856,11 +1089,20 @@ and generate_poly_variant_interface_encoder =
 }
 
 and generate_solo_fragment_spread_encorder =
-    (_config, _loc, name, _arguments, _definition) => [%expr
-  [%e ident_from_string(name ++ ".serialize")](
-    [%e ident_from_string("value")],
-  )
-]
+    (_config, _loc, name, _arguments, _definition) =>
+  Ppx_config.native()
+    ? [%expr
+      [%e ident_from_string(name ++ ".toJson")](
+        [%e ident_from_string(name ++ ".serialize")](
+          [%e ident_from_string("value")],
+        ),
+      )
+    ]
+    : [%expr
+      [%e ident_from_string(name ++ ".serialize")](
+        [%e ident_from_string("value")],
+      )
+    ]
 
 and generate_error = (loc, message) => {
   let loc = Output_bucklescript_utils.conv_loc(loc);
@@ -875,11 +1117,26 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
     generate_nullable_encoder(config, conv_loc(loc), inner, path, definition)
   | Res_array({loc, inner}) =>
     generate_array_encoder(config, conv_loc(loc), inner, path, definition)
-  | Res_id({loc}) => raw_value(conv_loc(loc))
-  | Res_string({loc}) => raw_value(conv_loc(loc))
-  | Res_int({loc}) => raw_value(conv_loc(loc))
-  | Res_float({loc}) => raw_value(conv_loc(loc))
-  | Res_boolean({loc}) => raw_value(conv_loc(loc))
+  | Res_id({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
+      : raw_value(conv_loc(loc))
+  | Res_string({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `String(value)]
+      : raw_value(conv_loc(loc))
+  | Res_int({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Int(value)]
+      : raw_value(conv_loc(loc))
+  | Res_float({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Float(value)]
+      : raw_value(conv_loc(loc))
+  | Res_boolean({loc}) =>
+    Ppx_config.native()
+      ? [@metaloc conv_loc(loc)] [%expr `Bool(value)]
+      : raw_value(conv_loc(loc))
   | Res_raw_scalar({loc}) => raw_value(conv_loc(loc))
   | Res_poly_enum({loc, enum_meta, omit_future_value}) =>
     generate_poly_enum_encoder(conv_loc(loc), enum_meta, omit_future_value)
@@ -908,7 +1165,6 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
-      true,
       interface_fragments,
     )
   | Res_object({
@@ -927,7 +1183,6 @@ and generate_serializer = (config, path: list(string), definition, typename) =>
       definition,
       existing_record,
       typename,
-      false,
       interface_fragments,
     )
   | Res_poly_variant_union({

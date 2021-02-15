@@ -1,0 +1,177 @@
+Generate Native › typename.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"migrate_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_first_inner_inner = {
+    __typename: string,
+    field: string,
+  };
+  type t_first_inner = {
+    __typename: string,
+    inner: option(t_first_inner_inner),
+  };
+  type t_first = {
+    __typename: string,
+    inner: option(t_first_inner),
+  };
+  type t = {first: t_first};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32-30\"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_first_inner_inner = {
+    __typename: string,
+    field: string,
+  };
+  type t_first_inner = {
+    __typename: string,
+    inner: option(t_first_inner_inner),
+  };
+  type t_first = {
+    __typename: string,
+    inner: option(t_first_inner),
+  };
+  type t = {first: t_first};
+  type t_variables = unit;
+  let query = \"query   {\\nfirst: nestedObject  {\\n__typename  \\ninner  {\\n__typename  \\ninner  {\\n__typename  \\nfield  \\n}\\n\\n}\\n\\n}\\n\\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        first: {
+          let value = Yojson.Basic.Util.member(\"first\", value);
+          (
+            {
+              __typename: {
+                let value = Yojson.Basic.Util.member(\"__typename\", value);
+                Yojson.Basic.Util.to_string(value);
+              },
+              inner: {
+                let value = Yojson.Basic.Util.member(\"inner\", value);
+                switch (value) {
+                | `Null => None
+                | value =>
+                  Some(
+                    {
+                      __typename: {
+                        let value =
+                          Yojson.Basic.Util.member(\"__typename\", value);
+                        Yojson.Basic.Util.to_string(value);
+                      },
+                      inner: {
+                        let value = Yojson.Basic.Util.member(\"inner\", value);
+                        switch (value) {
+                        | `Null => None
+                        | value =>
+                          Some(
+                            {
+                              __typename: {
+                                let value =
+                                  Yojson.Basic.Util.member(
+                                    \"__typename\",
+                                    value,
+                                  );
+                                Yojson.Basic.Util.to_string(value);
+                              },
+                              field: {
+                                let value =
+                                  Yojson.Basic.Util.member(\"field\", value);
+                                Yojson.Basic.Util.to_string(value);
+                              },
+                            }: t_first_inner_inner,
+                          )
+                        };
+                      },
+                    }: t_first_inner,
+                  )
+                };
+              },
+            }: t_first
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let first = {
+        let value = (value: t).first;
+        let inner = {
+          let value = (value: t_first).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_first_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_first_inner_inner).field;
+                  `String(value);
+                }
+                and __typename = {
+                  let value = (value: t_first_inner_inner).__typename;
+                  `String(value);
+                };
+                `Assoc([(\"__typename\", __typename), (\"field\", field)]);
+              | None => `Null
+              };
+            }
+            and __typename = {
+              let value = (value: t_first_inner).__typename;
+              `String(value);
+            };
+            `Assoc([(\"__typename\", __typename), (\"inner\", inner)]);
+          | None => `Null
+          };
+        }
+        and __typename = {
+          let value = (value: t_first).__typename;
+          `String(value);
+        };
+        `Assoc([(\"__typename\", __typename), (\"inner\", inner)]);
+      };
+      `Assoc([(\"first\", first)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+

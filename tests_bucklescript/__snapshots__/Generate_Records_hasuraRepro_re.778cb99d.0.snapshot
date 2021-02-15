@@ -18,7 +18,7 @@ Generate Records › hasuraRepro.re › output
   }
 ];
 module Dog: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {name: string};
     type nonrec t_Dog = t;
@@ -37,7 +37,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {name: string};
     type nonrec t_Dog = t;
@@ -73,6 +73,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
 module HasuraRepro: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {hasuraRepro: Dog.Raw.t};
     type t_variables = {
@@ -102,7 +103,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {hasuraRepro: Dog.Raw.t};
     type t_variables = {
@@ -173,5 +174,5 @@ function back to the original JSON compatible data */
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 };
 
-HasuraRepro.makeVariables(~blockNumber=1, ~type_=\"1\", ());
+let _ = HasuraRepro.makeVariables(~blockNumber=1, ~type_=\"1\", ());
 

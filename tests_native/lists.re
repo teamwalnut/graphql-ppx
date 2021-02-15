@@ -13,16 +13,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {
-  .
-  lists: {
-    .
-    nullableOfNullable: option(array(option(string))),
-    nullableOfNonNullable: option(array(string)),
-    nonNullableOfNullable: array(option(string)),
-    nonNullableOfNonNullable: array(string),
-  },
-};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -34,20 +25,20 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@]; nonNullableOfNullable = @[%a@]; nonNullableOfNonNullable = @[%a@] >",
          Format.pp_print_string |> print_option |> print_array |> print_option,
-         obj#lists#nullableOfNullable,
+         obj.lists.nullableOfNullable,
          Format.pp_print_string |> print_array |> print_option,
-         obj#lists#nullableOfNonNullable,
+         obj.lists.nullableOfNonNullable,
          Format.pp_print_string |> print_option |> print_array,
-         obj#lists#nonNullableOfNullable,
+         obj.lists.nonNullableOfNullable,
          Format.pp_print_string |> print_array,
-         obj#lists#nonNullableOfNonNullable,
+         obj.lists.nonNullableOfNonNullable,
        );
 
      let equal = (a: qt, b: qt) =>
-       a#lists#nullableOfNullable == b#lists#nullableOfNullable
-       && a#lists#nullableOfNonNullable == b#lists#nullableOfNonNullable
-       && a#lists#nonNullableOfNullable == b#lists#nonNullableOfNullable
-       && a#lists#nonNullableOfNonNullable == b#lists#nonNullableOfNonNullable;
+       a.lists.nullableOfNullable == b.lists.nullableOfNullable
+       && a.lists.nullableOfNonNullable == b.lists.nullableOfNonNullable
+       && a.lists.nonNullableOfNullable == b.lists.nonNullableOfNullable
+       && a.lists.nonNullableOfNonNullable == b.lists.nonNullableOfNonNullable;
    });
 
 let null_in_lists = () =>
@@ -57,17 +48,16 @@ let null_in_lists = () =>
     MyQuery.parse(
       Yojson.Basic.from_string(
         {|{"lists": {"nullableOfNullable": [null, "123"], "nonNullableOfNullable": [null, "123"], "nonNullableOfNonNullable": ["a", "b"]}}|},
-      ),
+      )
+      |> MyQuery.unsafe_fromJson,
     ),
     {
-      as _;
-      pub lists = {
-        as _;
-        pub nullableOfNullable = Some([|None, Some("123")|]);
-        pub nullableOfNonNullable = None;
-        pub nonNullableOfNullable = [|None, Some("123")|];
-        pub nonNullableOfNonNullable = [|"a", "b"|]
-      }
+      lists: {
+        nullableOfNullable: Some([|None, Some("123")|]),
+        nullableOfNonNullable: None,
+        nonNullableOfNullable: [|None, Some("123")|],
+        nonNullableOfNonNullable: [|"a", "b"|],
+      },
     },
   );
 

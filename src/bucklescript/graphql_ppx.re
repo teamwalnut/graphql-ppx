@@ -2,6 +2,7 @@ open Migrate_parsetree;
 open Graphql_ppx_base;
 open Source_pos;
 open Output_bucklescript_utils;
+open Ast_408;
 
 // not available in all supported versions of OCaml so inlining here
 let filter_map = f => {
@@ -77,14 +78,11 @@ let fmt_parse_err = err =>
   );
 
 let make_error_expr = (loc, message) => {
-  Ast_408.(
-    Ast_mapper.extension_of_error(Location.error(~loc, message))
-    |> Ast_helper.Exp.extension(~loc)
-  );
+  Ast_mapper.extension_of_error(Location.error(~loc, message))
+  |> Ast_helper.Exp.extension(~loc);
 };
 
 let extract_schema_from_config = config_fields => {
-  open Ast_408;
   open Asttypes;
   open Parsetree;
 
@@ -116,7 +114,6 @@ let extract_schema_from_config = config_fields => {
 };
 
 let extract_template_tag_from_config = config_fields => {
-  open Ast_408;
   open Asttypes;
   open Parsetree;
 
@@ -165,7 +162,6 @@ let extract_template_tag_from_config = config_fields => {
 };
 
 let extract_bool_from_config = (name, config_fields) => {
-  open Ast_408;
   open Asttypes;
   open Parsetree;
 
@@ -209,7 +205,6 @@ let extract_bool_from_config = (name, config_fields) => {
 };
 
 let extract_string_from_config = (name, config_fields) => {
-  open Ast_408;
   open Asttypes;
   open Parsetree;
 
@@ -348,8 +343,6 @@ let run_validations = (config, definition) => {
 
 let rewrite_definition_interface =
     (~query_config: query_config, ~loc, ~delim, ~query, ~module_name, ()) => {
-  open Ast_408;
-
   let lexer = Graphql_lexer.make(query);
   let delimLength =
     switch (delim) {
@@ -405,8 +398,6 @@ let rewrite_definition =
       ~module_type,
       (),
     ) => {
-  open Ast_408;
-
   let lexer = Graphql_lexer.make(query);
   let delimLength =
     switch (delim) {
@@ -460,47 +451,57 @@ let rewrite_definition =
 
       switch (errors) {
       | [] =>
-        document_with_config
-        |> Result_decoder.unify_document_schema
-        |> Output_bucklescript_module.generate_modules(
-             module_name,
-             module_type,
-           )
+        try(
+          document_with_config
+          |> Result_decoder.unify_document_schema
+          |> Output_bucklescript_module.generate_modules(
+               module_name,
+               module_type,
+             )
+        ) {
+        | Output_bucklescript_module.Cant_find_fragment_type_with_loc(
+            location,
+            fragment_type,
+          ) => [
+            [%stri
+              [%e
+                make_error_expr(
+                  Output_bucklescript_utils.conv_loc(location),
+                  "Can't find fragment type: " ++ fragment_type,
+                )
+              ]
+            ],
+          ]
+        }
       | errors => errors |> List.concat
       };
     };
   };
 };
 
-// Default configuration
-let () = Bucklescript_config.read_config();
+Bucklescript_config.read_config();
 
 let get_module_bindings = structure => {
-  Ast_408.(
-    structure
-    |> filter_map(
-         fun
-         | {Parsetree.pstr_desc: Pstr_module(module_binding)} =>
-           Some(module_binding)
-         | _ => None,
-       )
-  );
+  structure
+  |> filter_map(
+       fun
+       | {Parsetree.pstr_desc: Pstr_module(module_binding)} =>
+         Some(module_binding)
+       | _ => None,
+     );
 };
 
 let get_module_declarations = signature => {
-  Ast_408.(
-    signature
-    |> filter_map(
-         fun
-         | {Parsetree.psig_desc: Psig_module(module_declaration)} =>
-           Some(module_declaration)
-         | _ => None,
-       )
-  );
+  signature
+  |> filter_map(
+       fun
+       | {Parsetree.psig_desc: Psig_module(module_declaration)} =>
+         Some(module_declaration)
+       | _ => None,
+     );
 };
 
 let mapper = (_config, _cookies) => {
-  open Ast_408;
   open Ast_mapper;
   open Parsetree;
   open Asttypes;
@@ -1124,20 +1125,6 @@ let args = [
     "Verbose error handling. If not defined NODE_ENV will be used",
   ),
   (
-    "-objects",
-    Arg.Unit(
-      () => Ppx_config.update_config(current => {...current, records: false}),
-    ),
-    "Compile to objects instead of records by default (legacy)",
-  ),
-  (
-    "-records",
-    Arg.Unit(
-      () => Ppx_config.update_config(current => {...current, records: true}),
-    ),
-    "Compile to records by default",
-  ),
-  (
     "-template-tag",
     Arg.String(
       template_tag =>
@@ -1276,6 +1263,13 @@ let args = [
         ),
     ),
     "extend fragments with the following functor",
+  ),
+  (
+    "-native",
+    Arg.Unit(
+      () => Ppx_config.update_config(current => {...current, native: true}),
+    ),
+    "native mode (non-ReScript)",
   ),
 ];
 

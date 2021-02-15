@@ -18,7 +18,7 @@ Generate Records › module_type.re › output
   }
 ];
 module MyQuery: {type t;} = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {string};
     type t = {variousScalars: t_variousScalars};
@@ -73,7 +73,7 @@ module MyQuery2: {
   type t_variousScalars;
   type t = {variousScalars: t_variousScalars};
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_variousScalars = {string};
     type t = {variousScalars: t_variousScalars};
@@ -126,6 +126,7 @@ module MyQuery2: {
 };
 
 module rec MyQueryRecursive: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_nestedObject_inner_inner = {field: string};
     type t_nestedObject_inner = {
@@ -147,14 +148,14 @@ module rec MyQueryRecursive: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_nestedObject_inner_inner = {field: string};
     type t_nestedObject_inner = {

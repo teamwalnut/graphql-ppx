@@ -18,7 +18,7 @@ Generate Apollo › fragmentvariableinput.re › output
   }
 ];
 module Test: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_reposts = {
       __typename: string,
@@ -52,7 +52,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_reposts = {
       __typename: string,

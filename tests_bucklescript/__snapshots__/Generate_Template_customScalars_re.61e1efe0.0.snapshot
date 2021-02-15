@@ -18,6 +18,7 @@ Generate Template › customScalars.re › output
   }
 ];
 module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),
@@ -51,7 +52,7 @@ function back to the original JSON compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_customScalarField = {
       nullable: Js.Nullable.t(Js.Json.t),

@@ -1,6 +1,8 @@
 (library
- (name graphql_ppx_bucklescript)
- (public_name graphql_ppx.graphql-ppx-bucklescript.lib)
+ (name graphql_ppx)
+ (public_name graphql_ppx)
+ (kind ppx_rewriter)
+ (ppx_runtime_libraries graphql_ppx.graphql_ppx_runtime)
  (libraries reason ocaml-migrate-parsetree graphql_ppx.base)
  (flags
   (:standard -w -9))

@@ -11,10 +11,14 @@ module Paths = {
     } else {
       let parent = dir |> Filename.dirname;
       if (parent == dir) {
-        prerr_endline(
-          "Error: cannot find project root containing " ++ bsconfig ++ ".",
-        );
-        assert(false);
+        if (!Ppx_config.native()) {
+          prerr_endline(
+            "Error: cannot find project root containing " ++ bsconfig ++ ".",
+          );
+          assert(false);
+        } else {
+          dir;
+        };
       } else {
         findProjectRoot(~dir=parent);
       };
@@ -58,7 +62,6 @@ let defaultConfig =
       let loc = Output_bucklescript_utils.conv_loc(loc);
       raise(Location.Error(Location.error(~loc, message)));
     },
-    records: true,
     template_tag: None,
     template_tag_location: None,
     template_tag_import: None,
@@ -74,6 +77,7 @@ let defaultConfig =
     extend_subscription_no_required_variables: None,
     extend_fragment: None,
     fragment_in_query: Include,
+    native: true,
   };
 
 module JsonHelper = {
@@ -128,9 +132,9 @@ let read_custom_fields = json => {
 };
 
 let read_config = () => {
-  Paths.setProjectRoot();
-
   Ppx_config.set_config(defaultConfig);
+
+  Paths.setProjectRoot();
   open Yojson.Basic.Util;
 
   let parseConfig = (json: Yojson.Basic.t) => {
@@ -173,27 +177,6 @@ let read_config = () => {
             },
         }
       );
-    };
-    let handleMode = mode => {
-      switch (mode) {
-      | "objects" =>
-        Ppx_config.update_config(current => {...current, records: false})
-      | "records" =>
-        Ppx_config.update_config(current => {...current, records: true})
-      | other =>
-        raise(
-          Config_error(
-            "Error in graphql-ppx configuration: mode \""
-            ++ other
-            ++ "\" is not supported. Choose either records or objects.",
-          ),
-        )
-      };
-    };
-    let handleObjects = objects => {
-      objects
-        ? Ppx_config.update_config(current => {...current, records: false})
-        : Ppx_config.update_config(current => {...current, records: true});
     };
     let handleFragmentInQuery = mode => {
       switch (mode) {
@@ -306,8 +289,6 @@ let read_config = () => {
     configString("schema", handleSchema);
     configString("ast-out", handleAstOut);
     configString("astOut", handleAstOut);
-    configString("mode", handleMode);
-    configBool("objects", handleObjects);
     configString("fragment-in-query", handleFragmentInQuery);
     configString("fragmentInQuery", handleFragmentInQuery);
     configString("extend-query", handleExtendQuery);

@@ -9,7 +9,15 @@ open Parsetree;
 
 // duplicate of ouput_bucklescript_decoder
 let make_error_raiser = message =>
-  if (Ppx_config.verbose_error_handling()) {
+  if (Ppx_config.native()) {
+    if (Ppx_config.verbose_error_handling()) {
+      %expr
+      raise(Failure("graphql-ppx: " ++ [%e message]));
+    } else {
+      %expr
+      raise(Failure("Unexpected GraphQL query response"));
+    };
+  } else if (Ppx_config.verbose_error_handling()) {
     %expr
     Js.Exn.raiseError("graphql-ppx: " ++ [%e message]);
   } else {
@@ -68,7 +76,11 @@ let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
     }
   | Res_float(_) => base_type(~loc=?atLoc, "float")
   | Res_boolean(_) => base_type(~loc=?atLoc, "bool")
-  | Res_raw_scalar(_) => base_type(~loc=?atLoc, "Js.Json.t")
+  | Res_raw_scalar(_) =>
+    base_type(
+      ~loc=?atLoc,
+      Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t",
+    )
   | Res_object({type_name})
   | Res_record({type_name}) =>
     switch (type_name, raw) {
@@ -474,7 +486,11 @@ let generate_variant_union =
                   loc: emit_locations ? conv_loc(loc) : Location.none,
                 },
                 false,
-                [base_type("Js.Json.t")],
+                [
+                  base_type(
+                    Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t",
+                  ),
+                ],
               ),
             prf_loc: emit_locations ? conv_loc(loc) : Location.none,
             prf_attributes: [],
@@ -731,7 +747,6 @@ let generate_graphql_object =
     (
       ~config: Generator_utils.output_config,
       ~obj_path,
-      ~force_record,
       ~raw,
       ~emit_locations,
       ~loc,
@@ -750,29 +765,17 @@ let generate_graphql_object =
       },
       obj_path,
     )
-
   | None =>
-    config.records || force_record
-      ? generate_record_type(
-          ~emit_locations,
-          ~config,
-          ~obj_path,
-          ~raw,
-          ~loc,
-          ~is_variant,
-          ~interface_fragments,
-          fields,
-        )
-      : generate_object_type(
-          ~emit_locations,
-          config,
-          fields,
-          obj_path,
-          raw,
-          loc,
-          is_variant,
-          interface_fragments,
-        )
+    generate_record_type(
+      ~emit_locations,
+      ~config,
+      ~obj_path,
+      ~raw,
+      ~loc,
+      ~is_variant,
+      ~interface_fragments,
+      fields,
+    )
   };
 };
 
@@ -791,7 +794,6 @@ let generate_types =
        | Object({
            fields,
            path: obj_path,
-           force_record,
            loc,
            variant_parent,
            interface_fragments,
@@ -799,7 +801,6 @@ let generate_types =
          generate_graphql_object(
            ~config,
            ~obj_path,
-           ~force_record,
            ~raw,
            ~loc,
            ~emit_locations,
@@ -961,7 +962,8 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
   | Type(Scalar({sm_name: "Int"})) => base_type(~loc?, "int")
   | Type(Scalar({sm_name: "Float"})) => base_type(~loc?, "float")
   | Type(Scalar({sm_name: "Boolean"})) => base_type(~loc?, "bool")
-  | Type(Scalar({sm_name: _})) => base_type(~loc?, "Js.Json.t")
+  | Type(Scalar({sm_name: _})) =>
+    base_type(~loc?, Ppx_config.native() ? "Yojson.Basic.t" : "Js.Json.t")
   | Type(Enum(enum_meta)) =>
     if (raw) {
       base_type("string");
@@ -1043,11 +1045,22 @@ let rec generate_arg_type = (~nulls=true, raw, originalLoc) => {
     );
 };
 
-let generate_empty_input_object = () => {
-  Ast_helper.Type.mk(
-    ~manifest=base_type_name("unit"),
-    {loc: Location.none, txt: generate_type_name(~prefix="t_variables", [])},
-  );
+let generate_empty_input_object = (impl, raw) => {
+  Ppx_config.native() && raw
+    ? Ast_helper.Type.mk(
+        ~manifest=?!impl ? None : Some(base_type_name("Yojson.Basic.t")),
+        {
+          loc: Location.none,
+          txt: generate_type_name(~prefix="t_variables", []),
+        },
+      )
+    : Ast_helper.Type.mk(
+        ~manifest=base_type_name("unit"),
+        {
+          loc: Location.none,
+          txt: generate_type_name(~prefix="t_variables", []),
+        },
+      );
 };
 
 let generate_record_input_object = (raw, input_obj_name, fields) => {
@@ -1065,12 +1078,14 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
                        if (valid_name == name) {
                          [];
                        } else {
-                         [
-                           Ast_helper.Attr.mk(
-                             {txt: "bs.as", loc: Location.none},
-                             PStr([Str.eval(const_str_expr(name))]),
-                           ),
-                         ];
+                         Ppx_config.native()
+                           ? []
+                           : [
+                             Ast_helper.Attr.mk(
+                               {txt: "bs.as", loc: Location.none},
+                               PStr([Str.eval(const_str_expr(name))]),
+                             ),
+                           ];
                        },
                      {
                        Location.txt: valid_name,
@@ -1107,31 +1122,19 @@ let generate_record_input_object = (raw, input_obj_name, fields) => {
   );
 };
 
-let generate_object_input_object = (raw, input_obj_name, fields) => {
+let generate_native_raw_input_object = (impl, input_obj_name) => {
   Ast_helper.(
     Type.mk(
-      ~kind=Ptype_abstract,
-      ~manifest=
-        Typ.constr(
-          {Location.txt: Longident.parse("Js.t"), loc: Location.none},
-          [
-            Ast_helper.Typ.object_(
-              fields
-              |> List.map((InputField({name, type_, loc})) =>
-                   {
-                     pof_desc:
-                       Otag(
-                         {txt: to_valid_ident(name), loc: Location.none},
-                         generate_arg_type(raw, loc, type_),
-                       ),
-                     pof_loc: Location.none,
-                     pof_attributes: [],
-                   }
-                 ),
-              Closed,
-            ),
-          ],
-        ),
+      ~kind=?impl ? None : Some(Ptype_abstract),
+      ~manifest=?
+        impl
+          ? Some(
+              Typ.constr(
+                Location.mknoloc(Longident.parse("Yojson.Basic.t")),
+                [],
+              ),
+            )
+          : None,
       {
         loc: Location.none,
         txt:
@@ -1147,11 +1150,10 @@ let generate_object_input_object = (raw, input_obj_name, fields) => {
   );
 };
 
-let generate_input_object =
-    (raw, config: Generator_utils.output_config, input_obj_name, fields) => {
-  config.records
-    ? generate_record_input_object(raw, input_obj_name, fields)
-    : generate_object_input_object(raw, input_obj_name, fields);
+let generate_input_object = (impl, raw, _, input_obj_name, fields) => {
+  Ppx_config.native() && raw
+    ? generate_native_raw_input_object(impl, input_obj_name)
+    : generate_record_input_object(raw, input_obj_name, fields);
 };
 
 let generate_arg_type_structure_items = (raw, config, variable_defs) => {
@@ -1160,9 +1162,9 @@ let generate_arg_type_structure_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object()
+         | NoVariables => generate_empty_input_object(true, raw)
          | InputObject({name, fields}) => {
-             generate_input_object(raw, config, name, fields);
+             generate_input_object(true, raw, config, name, fields);
            },
        )
     |> Ast_helper.Str.type_(Recursive),
@@ -1174,9 +1176,9 @@ let generate_arg_type_signature_items = (raw, config, variable_defs) => {
     input_objects
     |> List.map(
          fun
-         | NoVariables => generate_empty_input_object()
+         | NoVariables => generate_empty_input_object(false, raw)
          | InputObject({name, fields}) => {
-             generate_input_object(raw, config, name, fields);
+             generate_input_object(false, raw, config, name, fields);
            },
        )
     |> Ast_helper.Sig.type_(Recursive),

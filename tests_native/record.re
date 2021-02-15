@@ -22,34 +22,10 @@ let scalars: module Alcotest.TESTABLE with type t = scalars =
        a.string == b.string && a.int == b.int;
    });
 
-type dog = {
-  name: string,
-  barkVolume: float,
-};
-
-let dog: module Alcotest.TESTABLE with type t = dog =
-  (module
-   {
-     type t = dog;
-
-     let pp = (formatter, obj: dog) =>
-       Format.fprintf(
-         formatter,
-         "{ name = %a ; barkVolume = %a }",
-         Format.pp_print_string,
-         obj.name,
-         Format.pp_print_float,
-         obj.barkVolume,
-       );
-
-     let equal = (a: dog, b: dog) =>
-       a.name == b.name && a.barkVolume == b.barkVolume;
-   });
-
 module MyQuery = [%graphql
   {|
   {
-    variousScalars @bsRecord {
+    variousScalars @ppxAs(type: "scalars") {
       string
       int
     }
@@ -57,7 +33,7 @@ module MyQuery = [%graphql
 |}
 ];
 
-type qt = {. variousScalars: scalars};
+type qt = MyQuery.t;
 
 let my_query: module Alcotest.TESTABLE with type t = qt =
   (module
@@ -69,33 +45,51 @@ let my_query: module Alcotest.TESTABLE with type t = qt =
          formatter,
          "< variousScalars = @[%a@] >",
          Alcotest.pp(scalars),
-         obj#variousScalars,
+         obj.variousScalars,
        );
 
      let equal = (a: qt, b: qt) =>
-       Alcotest.equal(scalars, a#variousScalars, b#variousScalars);
+       Alcotest.equal(scalars, a.variousScalars, b.variousScalars);
    });
 
-module ExternalFragmentQuery = [%graphql
+[%graphql
   {|
-  fragment Fragment on VariousScalars @bsRecord {
+  fragment ExternalFragment on VariousScalars @ppxAs(type: "scalars") {
     string
     int
   }
 
-  {
+  query ExternalFragmentQuery{
     variousScalars {
-      ...Fragment
+      ...ExternalFragment
     }
   }
 |}
 ];
 
+let external_fragment_query:
+  module Alcotest.TESTABLE with type t = ExternalFragmentQuery.t =
+  (module
+   {
+     type t = ExternalFragmentQuery.t;
+
+     let pp = (formatter, obj: ExternalFragmentQuery.t) =>
+       Format.fprintf(
+         formatter,
+         "< variousScalars = @[%a@] >",
+         Alcotest.pp(scalars),
+         obj.variousScalars,
+       );
+
+     let equal = (a: ExternalFragmentQuery.t, b: ExternalFragmentQuery.t) =>
+       Alcotest.equal(scalars, a.variousScalars, b.variousScalars);
+   });
+
 module InlineFragmentQuery = [%graphql
   {|
   {
     dogOrHuman {
-      ...on Dog @bsRecord {
+      ...on Dog {
         name
         barkVolume
       }
@@ -104,7 +98,7 @@ module InlineFragmentQuery = [%graphql
 |}
 ];
 
-type if_qt = {. dogOrHuman: [ | `Dog(dog) | `Nonexhaustive]};
+type if_qt = InlineFragmentQuery.t;
 
 let inline_fragment_query: module Alcotest.TESTABLE with type t = if_qt =
   (module
@@ -117,29 +111,37 @@ let inline_fragment_query: module Alcotest.TESTABLE with type t = if_qt =
          "< dogOrHuman = @[%a@] >",
          (formatter, v) =>
            switch (v) {
-           | `Dog(d) =>
-             Format.fprintf(formatter, "`Dog %a", Alcotest.pp(dog), d)
-           | `Nonexhaustive => Format.fprintf(formatter, "`Nonexhaustive")
+           | `FutureAddedValue(_) =>
+             Format.fprintf(formatter, "`FutureAddedValue")
+           | `Dog(dog: InlineFragmentQuery.t_dogOrHuman_Dog) =>
+             Format.fprintf(
+               formatter,
+               "`Dog @[<>< name = %a ; barkVolume = %a >@]",
+               Format.pp_print_string,
+               dog.name,
+               Format.pp_print_float,
+               dog.barkVolume,
+             )
            },
-         obj#dogOrHuman,
+         obj.dogOrHuman,
        );
 
      let equal = (a: if_qt, b: if_qt) =>
-       switch (a#dogOrHuman, b#dogOrHuman) {
-       | (`Dog(a), `Dog(b)) => Alcotest.equal(dog, a, b)
-       | (`Nonexhaustive, `Nonexhaustive) => true
+       switch (a.dogOrHuman, b.dogOrHuman) {
+       | (`Dog(a), `Dog(b)) => a.name == b.name
+       | (`FutureAddedValue(a), `FutureAddedValue(b)) => a == b
        | _ => false
        };
    });
 
-module UnionExternalFragmentQuery = [%graphql
+[%graphql
   {|
   fragment DogFragment on Dog @bsRecord {
     name
     barkVolume
   }
 
-  {
+  query UnionExternalFragmentQuery {
     dogOrHuman {
       ...on Dog {
         ...DogFragment
@@ -148,53 +150,94 @@ module UnionExternalFragmentQuery = [%graphql
   }
 |}
 ];
+let union_external_fragment_query:
+  module Alcotest.TESTABLE with type t = UnionExternalFragmentQuery.t =
+  (module
+   {
+     type t = UnionExternalFragmentQuery.t;
+
+     let pp = (formatter, obj: UnionExternalFragmentQuery.t) =>
+       Format.fprintf(
+         formatter,
+         "< dogOrHuman = @[%a@] >",
+         (formatter, v) =>
+           switch (v) {
+           | `FutureAddedValue(_) =>
+             Format.fprintf(formatter, "`FutureAddedValue")
+           | `Dog(dog: DogFragment.t) =>
+             Format.fprintf(
+               formatter,
+               "`Dog @[<>< name = %a ; barkVolume = %a >@]",
+               Format.pp_print_string,
+               dog.name,
+               Format.pp_print_float,
+               dog.barkVolume,
+             )
+           },
+         obj.dogOrHuman,
+       );
+
+     let equal =
+         (a: UnionExternalFragmentQuery.t, b: UnionExternalFragmentQuery.t) =>
+       switch (a.dogOrHuman, b.dogOrHuman) {
+       | (`Dog(a), `Dog(b)) => a.name == b.name
+       | (`FutureAddedValue(a), `FutureAddedValue(b)) => a == b
+       | _ => false
+       };
+   });
 
 let decodes_record_in_selection = () =>
   Alcotest.check(
     my_query,
     "query result equality",
-    MyQuery.parse(
-      Yojson.Basic.from_string(
-        {| {"variousScalars": {"string": "a string", "int": 123}} |},
-      ),
-    ),
-    {as _; pub variousScalars = {string: "a string", int: 123}},
+    {| {"variousScalars": {"string": "a string", "int": 123}} |}
+    |> Yojson.Basic.from_string
+    |> MyQuery.unsafe_fromJson
+    |> MyQuery.parse,
+    {
+      variousScalars: {
+        string: "a string",
+        int: 123,
+      },
+    },
   );
 
 let decodes_record_in_external_fragment = () =>
   Alcotest.check(
-    my_query,
+    external_fragment_query,
     "query result equality",
-    ExternalFragmentQuery.parse(
-      Yojson.Basic.from_string(
-        {| {"variousScalars": {"string": "a string", "int": 123}} |},
-      ),
-    ),
-    {as _; pub variousScalars = {string: "a string", int: 123}},
+    {| {"variousScalars": {"string": "a string", "int": 123}} |}
+    |> Yojson.Basic.from_string
+    |> ExternalFragmentQuery.unsafe_fromJson
+    |> ExternalFragmentQuery.parse,
+    {
+      variousScalars: {
+        string: "a string",
+        int: 123,
+      },
+    },
   );
 
 let decodes_record_in_inline_fragment = () =>
   Alcotest.check(
     inline_fragment_query,
     "query result equality",
-    InlineFragmentQuery.parse(
-      Yojson.Basic.from_string(
-        {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}} |},
-      ),
-    ),
-    {as _; pub dogOrHuman = `Dog({name: "name", barkVolume: 123.0})},
+    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
+    |> Yojson.Basic.from_string
+    |> InlineFragmentQuery.unsafe_fromJson
+    |> InlineFragmentQuery.parse,
+    {dogOrHuman: `Dog({name: "name", barkVolume: 123.0})},
   );
 
 let decodes_record_in_external_fragment_on_union_selections = () =>
   Alcotest.check(
-    inline_fragment_query,
+    union_external_fragment_query,
     "query result equality",
-    UnionExternalFragmentQuery.parse(
-      Yojson.Basic.from_string(
-        {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123}} |},
-      ),
-    ),
-    {as _; pub dogOrHuman = `Dog({name: "name", barkVolume: 123.0})},
+    {| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
+    |> Yojson.Basic.from_string
+    |> UnionExternalFragmentQuery.unsafe_fromJson
+    |> UnionExternalFragmentQuery.parse,
+    {dogOrHuman: `Dog({name: "name", barkVolume: 123.0})},
   );
 
 let tests = [

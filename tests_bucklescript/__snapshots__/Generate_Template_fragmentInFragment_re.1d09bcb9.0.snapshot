@@ -21,7 +21,7 @@ module GraphQL_PPX = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -42,7 +42,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t = {
       nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
@@ -107,7 +107,7 @@ function back to the original JSON-compatible data */
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 };
 module Another: {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t;
     type nonrec t_Lists = t;
@@ -129,7 +129,7 @@ function back to the original JSON-compatible data */
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t;
     type nonrec t_Lists = t;

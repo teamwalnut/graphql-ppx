@@ -157,7 +157,10 @@ module Visitor: Traversal_utils.VisitorSig = {
         self,
         ctx,
         name,
-        arg_type |> Option.unsafe_unwrap,
+        arg_type
+        |> Option.unsafe_unwrap(
+             ~reason="Can't fidn argument name: " ++ name.item,
+           ),
         value,
       )
     | _ => ()

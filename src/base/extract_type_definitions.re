@@ -30,7 +30,6 @@ and type_def =
   | Object({
       loc: Source_pos.ast_location,
       variant_parent: bool,
-      force_record: bool,
       path,
       existing_type: option(string),
       fields: list(object_field),
@@ -123,7 +122,6 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
       create_object(
         ~path,
         ~raw,
-        ~force_record=true,
         ~loc,
         ~variant_parent=variant,
         ~existing_type=type_name,
@@ -134,7 +132,6 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
       create_object(
         ~path,
         ~raw,
-        ~force_record=true,
         ~loc,
         ~variant_parent=variant,
         ~existing_type=None,
@@ -145,7 +142,6 @@ let rec extract = (~fragment_def=false, ~variant=false, ~path, ~raw) =>
       create_object(
         ~path,
         ~raw,
-        ~force_record=false,
         ~loc,
         ~variant_parent=variant,
         ~existing_type=None,
@@ -223,7 +219,6 @@ and create_object =
     (
       ~path,
       ~raw,
-      ~force_record,
       ~loc,
       ~variant_parent,
       ~existing_type,
@@ -246,7 +241,6 @@ and create_object =
       Object({
         variant_parent,
         loc,
-        force_record,
         path,
         existing_type,
         fields: object_fields,

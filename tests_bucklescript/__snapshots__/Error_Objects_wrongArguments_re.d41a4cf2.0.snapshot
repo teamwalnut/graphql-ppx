@@ -1,5 +1,0 @@
-Error Objects › wrongArguments.re › output
-We've found a bug for you!
-  (No file name)
-  
-  \027[1;33mThis call is missing an argument\027[0m of type (~arg1: [ `String ])

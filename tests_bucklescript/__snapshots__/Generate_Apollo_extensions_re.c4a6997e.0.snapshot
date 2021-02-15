@@ -37,6 +37,7 @@ module Parent = {
 };
 module Bla: {
   module Bla_inner: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t_lists = {
         __typename: string,
@@ -64,8 +65,8 @@ module Bla: {
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => Raw.t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
@@ -79,6 +80,7 @@ function back to the original JSON compatible data */
   });
 } = {
   module Bla_inner: {
+    [@ocaml.warning \"-32-30\"];
     module Raw: {
       type t_lists = {
         __typename: string,
@@ -106,14 +108,14 @@ function back to the original JSON compatible data */
     /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
     let serialize: t => Raw.t;
-    let serializeVariables: unit => unit;
-    let makeVariables: unit => unit;
+    let serializeVariables: unit => Raw.t_variables;
+    let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
     external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
     external toJson: Raw.t => Js.Json.t = \"%identity\";
     external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
   } = {
-    [@ocaml.warning \"-32\"];
+    [@ocaml.warning \"-32-30\"];
     module Raw = {
       type t_lists = {
         __typename: string,
@@ -262,6 +264,7 @@ function back to the original JSON compatible data */
   include Parent.ExtendQuery(Bla_inner);
 };
 module Inner: {
+  [@ocaml.warning \"-32-30\"];
   module Raw: {
     type t_lists = {
       __typename: string,
@@ -289,14 +292,14 @@ module Inner: {
   /** Serialize the ReasonML GraphQL data that was parsed using the parse
 function back to the original JSON compatible data */
   let serialize: t => Raw.t;
-  let serializeVariables: unit => unit;
-  let makeVariables: unit => unit;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
   external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
   external toJson: Raw.t => Js.Json.t = \"%identity\";
   external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
 } = {
-  [@ocaml.warning \"-32\"];
+  [@ocaml.warning \"-32-30\"];
   module Raw = {
     type t_lists = {
       __typename: string,

@@ -1,0 +1,201 @@
+Generate Native › scalarsArgs.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"migrate_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t = {scalarsInput: string};
+  type t_variables = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables:
+    (
+      ~nullableString: string=?,
+      ~string: string,
+      ~nullableInt: int=?,
+      ~int: int,
+      ~nullableFloat: float=?,
+      ~float: float,
+      ~nullableBoolean: bool=?,
+      ~boolean: bool,
+      ~nullableID: string=?,
+      ~id: string,
+      unit
+    ) =>
+    t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32-30\"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t = {scalarsInput: string};
+  type t_variables = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  let query = \"query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        scalarsInput: {
+          let value = Yojson.Basic.Util.member(\"scalarsInput\", value);
+          Yojson.Basic.Util.to_string(value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let scalarsInput = {
+        let value = (value: t).scalarsInput;
+        `String(value);
+      };
+      `Assoc([(\"scalarsInput\", scalarsInput)]);
+    };
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp =>
+      `Assoc([
+        (
+          \"nullableString\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableString,
+          ),
+        ),
+        (\"string\", (a => `String(a))((inp: t_variables).string)),
+        (
+          \"nullableInt\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Int(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableInt,
+          ),
+        ),
+        (\"int\", (a => `Int(a))((inp: t_variables).int)),
+        (
+          \"nullableFloat\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Float(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableFloat,
+          ),
+        ),
+        (\"float\", (a => `Float(a))((inp: t_variables).float)),
+        (
+          \"nullableBoolean\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `Bool(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableBoolean,
+          ),
+        ),
+        (\"boolean\", (a => `Bool(a))((inp: t_variables).boolean)),
+        (
+          \"nullableID\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) => (a => `String(a))(b)
+              }
+          )(
+            (inp: t_variables).nullableID,
+          ),
+        ),
+        (\"id\", (a => `String(a))((inp: t_variables).id)),
+      ]);
+  let makeVariables =
+      (
+        ~nullableString=?,
+        ~string,
+        ~nullableInt=?,
+        ~int,
+        ~nullableFloat=?,
+        ~float,
+        ~nullableBoolean=?,
+        ~boolean,
+        ~nullableID=?,
+        ~id,
+        (),
+      )
+      : t_variables => {
+    nullableString,
+    string,
+    nullableInt,
+    int,
+    nullableFloat,
+    float,
+    nullableBoolean,
+    boolean,
+    nullableID,
+    id,
+  };
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+

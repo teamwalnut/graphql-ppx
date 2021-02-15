@@ -10,19 +10,14 @@ module My_query = [%graphql
 
 let serializes_variables = () =>
   test_json(
-    My_query.make(~query=2, ())#variables,
+    My_query.makeVariables(~query=2, ())
+    |> My_query.serializeVariables
+    |> My_query.variablesToJson,
     Yojson.Basic.from_string({|{"query": 2}|}),
   );
 
 let no_name_clash = () =>
-  Alcotest.(
-    check(
-      neg(string),
-      "strings",
-      My_query.make(~query=1, ())#query,
-      "a query",
-    )
-  );
+  Alcotest.(check(neg(string), "strings", My_query.query, "a query"));
 
 let tests = [
   ("Serializes variables", `Quick, serializes_variables),

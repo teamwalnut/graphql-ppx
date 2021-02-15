@@ -15,26 +15,6 @@ module QueryWithFragments = [%graphql
 |}
 ];
 
-type user = [
-  | `UnspecifiedFragment(string)
-  | `AdminUser(
-      {
-        .
-        id: string,
-        name: string,
-      },
-    )
-  | `AnonymousUser(
-      {
-        .
-        id: string,
-        anonymousId: int,
-      },
-    )
-];
-
-type only_user = {. id: string};
-
 module QueryWithoutFragments = [%graphql
   {|
    query {
@@ -44,6 +24,9 @@ module QueryWithoutFragments = [%graphql
   }
 |}
 ];
+
+type user = QueryWithFragments.t_users_User;
+type only_user = QueryWithoutFragments.t_users;
 
 let json = {|{
              "users": [
@@ -56,33 +39,32 @@ let user: module Alcotest.TESTABLE with type t = user =
   (module
    {
      type t = user;
-
      let pp = formatter =>
        fun
        | `UnspecifiedFragment(s) =>
          Format.fprintf(formatter, "`UnspecifiedFragment < @[%s@] >", s)
-       | `AdminUser(u) =>
+       | `AdminUser(u: QueryWithFragments.t_users_User_AdminUser) =>
          Format.fprintf(
            formatter,
            "`AdminUser < id = @[%s@]; name = @[%s@] >",
-           u#id,
-           u#name,
+           u.id,
+           u.name,
          )
-       | `AnonymousUser(u) =>
+       | `AnonymousUser(u: QueryWithFragments.t_users_User_AnonymousUser) =>
          Format.fprintf(
            formatter,
            "`AnonymousUser < id = @[%s@]; anonymousId = @[%i@] >",
-           u#id,
-           u#anonymousId,
+           u.id,
+           u.anonymousId,
          );
 
      let equal = (a: user, b: user) =>
        switch (a, b) {
        | (`UnspecifiedFragment(u1), `UnspecifiedFragment(u2)) => u1 == u2
        | (`AdminUser(u1), `AdminUser(u2)) =>
-         u1#id == u2#id && u1#name == u2#name
+         u1.id == u2.id && u1.name == u2.name
        | (`AnonymousUser(u1), `AnonymousUser(u2)) =>
-         u1#id == u2#id && u1#anonymousId == u2#anonymousId
+         u1.id == u2.id && u1.anonymousId == u2.anonymousId
        | _ => false
        };
    });
@@ -92,32 +74,41 @@ let only_user: module Alcotest.TESTABLE with type t = only_user =
    {
      type t = only_user;
 
-     let pp = formatter =>
-       fun
-       | u => Format.fprintf(formatter, "`User < id = @[%s@] >", u#id);
+     let pp = (formatter, u: QueryWithoutFragments.t_users) =>
+       Format.fprintf(formatter, "`User < id = @[%s@] >", u.id);
 
      let equal = (a: only_user, b: only_user) =>
        switch (a, b) {
-       | (u1, u2) => u1#id == u2#id
+       | (u1, u2) => u1.id == u2.id
        };
    });
 
 let decode_with_fragments = () =>
   Alcotest.(check(array(user)))(
     "query result equality",
-    QueryWithFragments.parse(Yojson.Basic.from_string(json))#users,
+    (
+      Yojson.Basic.from_string(json)
+      |> QueryWithFragments.unsafe_fromJson
+      |> QueryWithFragments.parse
+    ).
+      users,
     [|
-      `AdminUser({as _; pub id = "1"; pub name = "bob"}),
-      `AnonymousUser({as _; pub id = "2"; pub anonymousId = 1}),
-      `UnspecifiedFragment("otherVariant"),
-    |],
+      `AdminUser({id: "1", name: "bob"}),
+      `AnonymousUser({id: "2", anonymousId: 1}),
+      `UnspecifiedFragment("OtherUser"),
+    |]: array(QueryWithFragments.t_users_User),
   );
 
 let decode_without_fragments = () =>
   Alcotest.(check(array(only_user)))(
     "query result equality",
-    QueryWithoutFragments.parse(Yojson.Basic.from_string(json))#users,
-    [|{as _; pub id = "1"}, {as _; pub id = "2"}, {as _; pub id = "3"}|],
+    (
+      Yojson.Basic.from_string(json)
+      |> QueryWithoutFragments.unsafe_fromJson
+      |> QueryWithoutFragments.parse
+    ).
+      users,
+    [|{id: "1"}, {id: "2"}, {id: "3"}|],
   );
 
 let tests = [

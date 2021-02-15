@@ -447,11 +447,11 @@ module Visitor = (V: VisitorSig) => {
             Schema.query_type(ctx.schema) |> Schema.type_name
           | Operation({item: {o_type: Mutation, _}, _}) =>
             Schema.mutation_type(ctx.schema)
-            |> Option.unsafe_unwrap
+            |> Option.unsafe_unwrap(~reason="Can't find mutation type")
             |> Schema.type_name
           | Operation({item: {o_type: Subscription, _}, _}) =>
             Schema.subscription_type(ctx.schema)
-            |> Option.unsafe_unwrap
+            |> Option.unsafe_unwrap(~reason="Can't find subscription type")
             |> Schema.type_name
           | Fragment({item: {fg_type_condition: {item, _}, _}, _}) => item
           },

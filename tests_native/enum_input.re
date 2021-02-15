@@ -12,7 +12,9 @@ let encodes_arguments = () =>
   Alcotest.check(
     yojson,
     "json",
-    MyQuery.make(~arg=`FIRST, ())#variables,
+    MyQuery.makeVariables(~arg=`FIRST, ())
+    |> MyQuery.serializeVariables
+    |> MyQuery.variablesToJson,
     Yojson.Basic.from_string({| { "arg": "FIRST" } |}),
   );
 
