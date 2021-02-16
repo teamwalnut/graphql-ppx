@@ -11,12 +11,11 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "node ./copyPlatformBinaryInPlace.js",
-    "generate-schema": "node ./node_modules/gql-tools/cli/gqlschema.js -o ./graphql_schema.json ./schema.graphql"
+    "generate-schema": "node ./dslToJson.js > graphql_schema.json"
   },
   "devDependencies": {
     "bs-platform": "9.0.0",
-    "gql-tools": "^0.0.15",
-    "graphql": "^0.13.2"
+    "graphql": "^15.5.0"
   },
   "peerDependencies": {
     "bs-platform": "^8.1.0"
