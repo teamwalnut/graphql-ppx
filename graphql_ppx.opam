@@ -10,11 +10,9 @@ build: [
 
 depends: [
   "alcotest" {with-test}
-  "cppo"
   "dune" {>= "2.5"}
-  "ocaml" {>= "4.06.0"}
-  "ocaml-migrate-parsetree" {>= "1.6.0"}
-  "ppx_tools_versioned" {>= "5.2.3"}
+  "ocaml" {>= "4.06"}
+  "ppxlib" {>= "0.21.0"}
   "reason"
   "yojson"
 ]
