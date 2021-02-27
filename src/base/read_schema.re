@@ -282,17 +282,25 @@ let make_schema_meta = v =>
     }
   );
 
-let rec find_file_towards_root = (dir, file) => {
-  let here_file = Filename.concat(dir, file);
-  Log.log("[read_schema][here_file] " ++ here_file);
+let find_file_towards_root = (dir, file) => {
+  let rec inner = (dir, file) => {
+    let here_file = Filename.concat(dir, file);
+    Log.log("[read_schema][here_file] " ++ here_file);
 
-  if (Sys.file_exists(here_file)) {
-    let () = Log.log("[read_schema][found] " ++ here_file);
-    Some(here_file);
-  } else if (Filename.dirname(dir) == dir) {
-    None;
+    if (Sys.file_exists(here_file)) {
+      let () = Log.log("[read_schema][found] " ++ here_file);
+      Some(here_file);
+    } else if (Filename.dirname(dir) == dir) {
+      None;
+    } else {
+      inner(Filename.dirname(dir), file);
+    };
+  };
+
+  if (!Filename.is_relative(file)) {
+    Some(file);
   } else {
-    find_file_towards_root(Filename.dirname(dir), file);
+    inner(dir, file);
   };
 };
 
