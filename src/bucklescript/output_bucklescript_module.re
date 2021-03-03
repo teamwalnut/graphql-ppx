@@ -297,6 +297,7 @@ let make_printed_query = (config, document) => {
   | Ppx_config.String =>
     switch (config.template_tag_is_function, config.template_tag) {
     | (Some(true), (_, location, _)) when location != None =>
+      let source_list = source |> Array.to_list;
       Exp.apply(
         Exp.ident({
           Location.txt: Longident.Lident("graphql"),
@@ -307,8 +308,7 @@ let make_printed_query = (config, document) => {
             Nolabel,
             Exp.array([
               emit_printed_query(
-                source
-                |> Array.to_list
+                source_list
                 |> List.filter(
                      fun
                      | Graphql_printer.FragmentQueryRef(_) => false
@@ -317,8 +317,7 @@ let make_printed_query = (config, document) => {
                 |> Array.of_list,
                 config,
               ),
-              ...source
-                 |> Array.to_list
+              ...source_list
                  |> filter_map(
                       fun
                       | Graphql_printer.FragmentQueryRef(_) =>
@@ -327,8 +326,7 @@ let make_printed_query = (config, document) => {
                     ),
             ]),
           ),
-          ...source
-             |> Array.to_list
+          ...source_list
              |> filter_map(
                   fun
                   | Graphql_printer.FragmentQueryRef(x) =>
@@ -336,7 +334,7 @@ let make_printed_query = (config, document) => {
                   | _ => None,
                 ),
         ],
-      )
+      );
     | (_, (template_tag, location, import))
         when template_tag != None || location != None =>
       open Graphql_printer;
@@ -744,8 +742,7 @@ let graphql_external = (config: output_config, document) => {
 
     let arity =
       Graphql_printer.print_document(config.schema, document)
-      |> Array.to_list
-      |> List.fold_left(
+      |> Array.fold_left(
            (arity, el) =>
              switch (el) {
              | Graphql_printer.FragmentQueryRef(_) => arity + 1
