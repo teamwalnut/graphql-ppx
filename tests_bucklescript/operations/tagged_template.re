@@ -178,13 +178,26 @@ module MyQuery4 = [%graphql
   {templateTag: graphql, fragmentInQuery: "exclude"}
 ];
 
-module MyQuery8 = [%graphql
+[%graphql
   {|
-  query MyQuery6 @ppxConfig(
+  fragment ListFragment8 on Lists  @ppxConfig(
     templateTagImport: "gql",
     templateTagLocation: "apollo-client",
+    templateTagReturnType: "int",
     templateTagIsFunction: true
   ) {
+    nullableOfNullable
+    nullableOfNonNullable
+  }
+  query MyQuery8 @ppxConfig(
+    templateTagImport: "gql",
+    templateTagLocation: "apollo-client",
+    templateTagReturnType: "int",
+    templateTagIsFunction: true
+  ) {
+    lists {
+      ...ListFragment8
+    }
     variousScalars {
       nullableString
       string

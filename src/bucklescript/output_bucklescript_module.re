@@ -28,6 +28,18 @@ module VariableFinderImpl = {
   let from_self = (self: t): StringSet.t => self^;
 };
 
+let constraint_on_type = (exp, type_name) => {
+  Exp.constraint_(
+    exp,
+    base_type_name(
+      switch (type_name) {
+      | None => "string"
+      | Some(type_name) => type_name
+      },
+    ),
+  );
+};
+
 module VariableFinder = Traversal_utils.Visitor(VariableFinderImpl);
 
 let find_variables = (config, document) => {
@@ -257,18 +269,6 @@ let wrap_structure_raw = contents => {
   ));
 };
 
-let constraint_on_type = (exp, type_name) => {
-  Exp.constraint_(
-    exp,
-    base_type_name(
-      switch (type_name) {
-      | None => "string"
-      | Some(type_name) => type_name
-      },
-    ),
-  );
-};
-
 let wrap_raw = contents => {
   Exp.extension((
     {txt: "raw", loc: Location.none},
@@ -297,8 +297,46 @@ let make_printed_query = (config, document) => {
   | Ppx_config.String =>
     switch (config.template_tag_is_function, config.template_tag) {
     | (Some(true), (_, location, _)) when location != None =>
-      %expr
-      graphql([%e emit_printed_query(source, config)])
+      Exp.apply(
+        Exp.ident({
+          Location.txt: Longident.Lident("graphql"),
+          loc: Location.none,
+        }),
+        [
+          (
+            Nolabel,
+            Exp.array([
+              emit_printed_query(
+                source
+                |> Array.to_list
+                |> List.filter(
+                     fun
+                     | Graphql_printer.FragmentQueryRef(_) => false
+                     | _ => true,
+                   )
+                |> Array.of_list,
+                config,
+              ),
+              ...source
+                 |> Array.to_list
+                 |> filter_map(
+                      fun
+                      | Graphql_printer.FragmentQueryRef(_) =>
+                        Some([%expr ""])
+                      | _ => None,
+                    ),
+            ]),
+          ),
+          ...source
+             |> Array.to_list
+             |> filter_map(
+                  fun
+                  | Graphql_printer.FragmentQueryRef(x) =>
+                    Some((Nolabel, make_fragment_query(x)))
+                  | _ => None,
+                ),
+        ],
+      )
     | (_, (template_tag, location, import))
         when template_tag != None || location != None =>
       open Graphql_printer;
@@ -679,7 +717,14 @@ function back to the original JSON compatible data */
   |> List.concat;
 };
 
-let graphql_external = (config: output_config) => {
+let rec create_arity_fn = (arity, typ) => {
+  switch (arity) {
+  | 0 => typ
+  | arity => Typ.arrow(Nolabel, typ, create_arity_fn(arity - 1, typ))
+  };
+};
+
+let graphql_external = (config: output_config, document) => {
   switch (config) {
   | {
       template_tag: (import, Some(location), _),
@@ -696,6 +741,19 @@ let graphql_external = (config: output_config) => {
       | None => "default"
       | Some(import) => import
       };
+
+    let arity =
+      Graphql_printer.print_document(config.schema, document)
+      |> Array.to_list
+      |> List.fold_left(
+           (arity, el) =>
+             switch (el) {
+             | Graphql_printer.FragmentQueryRef(_) => arity + 1
+             | _ => arity
+             },
+           0,
+         );
+
     [
       Ast_helper.(
         Str.primitive(
@@ -708,7 +766,11 @@ let graphql_external = (config: output_config) => {
             ],
             ~prim=[import],
             {txt: "graphql", loc: Location.none},
-            [%type: string => [%t base_type_name(return_type)]],
+            Typ.arrow(
+              Nolabel,
+              [%type: array(string)],
+              create_arity_fn(arity, base_type_name(return_type)),
+            ),
           ),
         )
       ),
@@ -775,9 +837,9 @@ let generate_operation_implementation =
     );
   let has_required_variables = has_required_variables(extracted_args);
 
+  let document = [Graphql_ast.Operation(operation)];
   let contents = {
-    let printed_query =
-      make_printed_query(config, [Graphql_ast.Operation(operation)]);
+    let printed_query = make_printed_query(config, document);
 
     List.concat([
       List.concat([
@@ -791,7 +853,7 @@ let generate_operation_implementation =
         ],
         types,
         arg_types,
-        graphql_external(config),
+        graphql_external(config, document),
         [
           [%stri let query = [%e printed_query]],
           [%stri let parse: Raw.t => t = value => [%e parse_fn]],
@@ -1090,8 +1152,8 @@ let generate_fragment_implementation =
         );
       };
 
-  let printed_query =
-    make_printed_query(config, [Graphql_ast.Fragment(fragment)]);
+  let document = [Graphql_ast.Fragment(fragment)];
+  let printed_query = make_printed_query(config, document);
   let verify_parse =
     make_labeled_fun(
       Exp.fun_(
@@ -1137,7 +1199,7 @@ let generate_fragment_implementation =
       [[%stri [@ocaml.warning "-32-30"]]],
       [wrap_module(~loc=Location.none, "Raw", raw_types)],
       types,
-      graphql_external(config),
+      graphql_external(config, document),
       [
         [%stri let query = [%e printed_query]],
         [%stri let parse: Raw.t => [%t type_name] = value => [%e parse_fn]],

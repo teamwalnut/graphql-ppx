@@ -832,9 +832,71 @@ var MyQuery7 = {
 
 var Raw$10 = {};
 
-var query$10 = ApolloClient.gql(\"query MyQuery6  {\\nvariousScalars  {\\n__typename  \\nnullableString  \\nstring  \\nnullableInt  \\nint  \\nnullableFloat  \\nfloat  \\nnullableBoolean  \\nboolean  \\nnullableID  \\nid  \\n}\\n\\n}\\n\");
+var query$10 = ApolloClient.gql([\"fragment ListFragment8 on Lists   {\\n__typename  \\nnullableOfNullable  \\nnullableOfNonNullable  \\n}\\n\"]);
 
 function parse$10(value) {
+  var value$1 = value.nullableOfNullable;
+  var value$2 = value.nullableOfNonNullable;
+  return {
+          __typename: value.__typename,
+          nullableOfNullable: !(value$1 == null) ? value$1.map(function (value) {
+                  if (!(value == null)) {
+                    return value;
+                  }
+                  
+                }) : undefined,
+          nullableOfNonNullable: !(value$2 == null) ? value$2.map(function (value) {
+                  return value;
+                }) : undefined
+        };
+}
+
+function serialize$10(value) {
+  var value$1 = value.nullableOfNonNullable;
+  var nullableOfNonNullable = value$1 !== undefined ? value$1.map(function (value) {
+          return value;
+        }) : null;
+  var value$2 = value.nullableOfNullable;
+  var nullableOfNullable = value$2 !== undefined ? value$2.map(function (value) {
+          if (value !== undefined) {
+            return value;
+          } else {
+            return null;
+          }
+        }) : null;
+  var value$3 = value.__typename;
+  return {
+          __typename: value$3,
+          nullableOfNullable: nullableOfNullable,
+          nullableOfNonNullable: nullableOfNonNullable
+        };
+}
+
+function verifyArgsAndParse$1(_ListFragment8, value) {
+  return parse$10(value);
+}
+
+function verifyName$1(param) {
+  
+}
+
+var ListFragment8 = {
+  Raw: Raw$10,
+  query: query$10,
+  parse: parse$10,
+  serialize: serialize$10,
+  verifyArgsAndParse: verifyArgsAndParse$1,
+  verifyName: verifyName$1
+};
+
+var Raw$11 = {};
+
+var query$11 = ApolloClient.gql([
+      \"query MyQuery8  {\\nlists  {\\n...ListFragment8   \\n}\\n\\nvariousScalars  {\\n__typename  \\nnullableString  \\nstring  \\nnullableInt  \\nint  \\nnullableFloat  \\nfloat  \\nnullableBoolean  \\nboolean  \\nnullableID  \\nid  \\n}\\n\\n}\\n\",
+      \"\"
+    ], query$10);
+
+function parse$11(value) {
   var value$1 = value.variousScalars;
   var value$2 = value$1.nullableString;
   var value$3 = value$1.nullableInt;
@@ -842,6 +904,7 @@ function parse$10(value) {
   var value$5 = value$1.nullableBoolean;
   var value$6 = value$1.nullableID;
   return {
+          lists: parse$10(value.lists),
           variousScalars: {
             __typename: value$1.__typename,
             nullableString: !(value$2 == null) ? value$2 : undefined,
@@ -858,7 +921,7 @@ function parse$10(value) {
         };
 }
 
-function serialize$10(value) {
+function serialize$11(value) {
   var value$1 = value.variousScalars;
   var value$2 = value$1.id;
   var value$3 = value$1.nullableID;
@@ -889,7 +952,10 @@ function serialize$10(value) {
     nullableID: nullableID,
     id: value$2
   };
+  var value$13 = value.lists;
+  var lists = serialize$10(value$13);
   return {
+          lists: lists,
           variousScalars: variousScalars
         };
 }
@@ -907,10 +973,10 @@ function makeDefaultVariables$9(param) {
 }
 
 var MyQuery8 = {
-  Raw: Raw$10,
-  query: query$10,
-  parse: parse$10,
-  serialize: serialize$10,
+  Raw: Raw$11,
+  query: query$11,
+  parse: parse$11,
+  serialize: serialize$11,
   serializeVariables: serializeVariables$9,
   makeVariables: makeVariables$9,
   makeDefaultVariables: makeDefaultVariables$9
@@ -928,6 +994,7 @@ exports.ListFragment = ListFragment;
 exports.MyQuery5 = MyQuery5;
 exports.MyQuery6 = MyQuery6;
 exports.MyQuery7 = MyQuery7;
+exports.ListFragment8 = ListFragment8;
 exports.MyQuery8 = MyQuery8;
 /* query Not a pure module */
 
