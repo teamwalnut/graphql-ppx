@@ -23,9 +23,6 @@ jobs:
 
       - name: Add tar
         run: apk add --no-cache tar
-      - name: Install
-        run: esy install
-
 
       - uses: esy/github-action@master
         if: ${{ matrix.system != 'macos-arm64' }}
