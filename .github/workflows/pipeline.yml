@@ -8,16 +8,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
         os: [ubuntu-latest]
 
     container:
       image: cichocinski/docker-esy:alpine3.8
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -26,21 +26,15 @@ jobs:
       - name: Install
         run: esy install
 
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
+      - name: Install esy
+        run: |
+          arch
+          npm install -g esy
 
-      - name: Try to restore dependencies cache
-        uses: actions/cache@v2
-        id: deps-cache
+      - uses: esy/github-action@master
+        if: ${{ matrix.system != 'macos-arm64' }}
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}---${{ hashFiles('**/index.json') }}
-          restore-keys: |
-            ${{ matrix.os }}---
-
-      - name: build
-        run: esy b
+          cache-key: ${{ hashFiles('esy.lock/index.json') }}
 
       - name: test-native
         run: |
@@ -67,37 +61,34 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
-        os: [windows-latest, macOS-latest]
+        node-version: [14.x]
+        os: [windows-latest, macOS-latest, macos-arm64]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        if: ${{ matrix.system != 'macos-arm64' }}
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Use Node.js ${{ matrix.node-version }}
+        if: ${{ matrix.system == 'macos-arm64' }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          arch: "arm64"
+
       - name: Install esy
         run: |
-          npm install -g esy@0.6.0
+          arch
+          npm install -g esy
 
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v2
+      - uses: esy/github-action@master
+        if: ${{ matrix.system != 'macos-arm64' }}
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-
-      - name: build
-        run: esy b
+          cache-key: ${{ hashFiles('esy.lock/index.json') }}
 
       - name: test-native
         run: |
@@ -144,6 +135,13 @@ jobs:
           name: macOS-latest
           path: binaries/darwin
 
+      - name: Download Apple Silicon macOS artifacts
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-arm64
+          path: binaries/darwin-arm64
+
       - name: Download windows artifacts
         if: success()
         uses: actions/download-artifact@master
@@ -156,12 +154,13 @@ jobs:
         run: |
           mkdir -p bin
           mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
+          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
           mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 
       - name: Publish
         if: success() && github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        run: npm publish 
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN_JAAP }}
 
