@@ -1,0 +1,19 @@
+{
+  "name": "generate",
+  "license": "MIT",
+  "esy": {
+    "build": "dune build -p generate-installer",
+    "install": "esy-installer generate-installer.install"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "^3.6.2",
+    "@opam/dune": "2.7.1",
+    "@opam/dune-configurator": "2.7.1",
+    "@opam/lwt": "5.3.0",
+    "@opam/re": "1.9.0",
+    "ocaml": "4.10.x"
+  },
+  "devDependencies": {
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam"
+  }
+}

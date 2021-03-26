@@ -1,0 +1,76 @@
+{
+  "name": "@_linux.musl.x86_64/sysroot",
+  "dependencies": {
+    "sysroot.tools": "*",
+    "@_linux.musl/cc": "*"
+  },
+  "esy": {
+    "build": "sh setup.sh",
+    "exportedEnv": {
+      "ESY_TOOLCHAIN": {
+        "val": "linux.musl.x86_64",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_SYSTEM": {
+        "val": "linux",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_PROCESSOR": {
+        "val": "x86_64",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_SYSROOT": {
+        "val": "/",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CMAKE": {
+        "val": "-DCMAKE_TOOLCHAIN_FILE=#{self.install}/toolchain.cmake",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_BUILD": {
+        "val": "x86_64-pc-linux-gnu",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_HOST": {
+        "val": "x86_64-unknown-linux-musl",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_FULL_HOST": {
+        "val": "x86_64-unknown-linux-musl",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CC": {
+        "val": "x86_64-unknown-linux-musl-gcc",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CXX": {
+        "val": "x86_64-unknown-linux-musl-g++",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_AS": {
+        "val": "x86_64-unknown-linux-musl-as",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_AR": {
+        "val": "x86_64-unknown-linux-musl-ar",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_RANLIB": {
+        "val": "x86_64-unknown-linux-musl-ranlib",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_ASPP": {
+        "val": "x86_64-unknown-linux-musl-gcc -c",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_LD": {
+        "val": "x86_64-unknown-linux-musl-ld",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_PARTIALLD": {
+        "val": "x86_64-unknown-linux-musl-ld -r",
+        "scope": "global"
+      }
+    }
+  }
+}

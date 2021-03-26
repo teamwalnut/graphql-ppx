@@ -1,0 +1,55 @@
+{
+  "name": "@_macos.arm64/_opam_alcotest",
+  "dependencies": {
+    "@_macos.arm64/_esy_ocaml_substs": "*",
+    "@_macos.arm64/_opam_astring": "*",
+    "@_macos.arm64/_opam_cmdliner": "*",
+    "@_macos.arm64/_opam_dune": "*",
+    "@_macos.arm64/_opam_fmt": "*",
+    "@_macos.arm64/_opam_re": "*",
+    "@_macos.arm64/_opam_stdlib_shims": "*",
+    "@_macos.arm64/_opam_uuidm": "*",
+    "@_macos.arm64/_opam_uutf": "*",
+    "@_macos.arm64/ocaml": "*",
+    "@_macos.arm64/sysroot": "*",
+    "@opam/alcotest": "*",
+    "generate-installer": "*"
+  },
+  "esy": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "cur__etc": "#{self.install}/macos.arm64-sysroot/etc",
+      "cur__share": "#{self.install}/macos.arm64-sysroot/share",
+      "cur__toplevel": "#{self.install}/macos.arm64-sysroot/toplevel",
+      "cur__stublibs": "#{self.install}/macos.arm64-sysroot/stublibs",
+      "cur__doc": "#{self.install}/macos.arm64-sysroot/doc",
+      "cur__man": "#{self.install}/macos.arm64-sysroot/man",
+      "cur__lib": "#{self.install}/macos.arm64-sysroot/lib",
+      "cur__sbin": "#{self.install}/macos.arm64-sysroot/sbin",
+      "cur__bin": "#{self.install}/macos.arm64-sysroot/bin",
+      "cur__install": "#{self.install}/macos.arm64-sysroot",
+      "cur__original_root": "#{self.original_root}",
+      "OCAMLFIND_CONF": "%{store}%/findlib/#{self.id}/findlib.conf",
+      "OCAMLFIND_DESTDIR": "#{self.install}/macos.arm64-sysroot/lib",
+      "TOPKG_CONF_TOOLCHAIN": "macos.arm64",
+      "OCAMLLIB": null,
+      "OCAMLPATH": null
+    },
+    "exportedEnv": {},
+    "build": [
+      [
+        "cp", "-r", "-p",
+        "/Users/Jaap/.esy/source/i/opam__s__alcotest__opam__c__1.3.0__84e1f97a/.",
+        "#{self.root}"
+      ],
+      [ "mv", "#{self.install}", "_____install_____" ],
+      [ "mkdir", "-p", "#{self.install}/_esy" ],
+      [ "mv", "_____install_____", "#{self.install}/macos.arm64-sysroot" ],
+      [
+        "dune", "build", "-p", "alcotest", "-j", "4", "@install", "-x",
+        "macos.arm64", "@install"
+      ]
+    ],
+    "install": [ [ "generate-installer", "macos.arm64" ] ]
+  }
+}

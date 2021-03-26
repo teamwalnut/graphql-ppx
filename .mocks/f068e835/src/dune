@@ -1,0 +1,4 @@
+(executable
+ (name installer)
+ (public_name generate-installer)
+ (libraries lwt lwt.unix re))

@@ -1,0 +1,58 @@
+{
+  "name": "@_macos.arm64/graphql_ppx",
+  "dependencies": {
+    "@_macos.arm64/_opam_alcotest": "*",
+    "@_macos.arm64/_opam_dune": "*",
+    "@_macos.arm64/_opam_merlin": "*",
+    "@_macos.arm64/_opam_ocaml_lsp_server": "*",
+    "@_macos.arm64/_opam_ppxlib": "*",
+    "@_macos.arm64/_opam_reason": "*",
+    "@_macos.arm64/_opam_yojson": "*",
+    "@_macos.arm64/_reason_native_rely": "*",
+    "@_macos.arm64/generate": "*",
+    "@_macos.arm64/ocaml": "*",
+    "@_macos.arm64/refmterr": "*",
+    "@_macos.arm64/sysroot": "*",
+    "generate-installer": "*",
+    "graphql_ppx": "*"
+  },
+  "esy": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "cur__etc":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/etc",
+      "cur__share":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/share",
+      "cur__toplevel":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/toplevel",
+      "cur__stublibs":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/stublibs",
+      "cur__doc":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/doc",
+      "cur__man":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/man",
+      "cur__lib":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/lib",
+      "cur__sbin":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/sbin",
+      "cur__bin":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc/bin",
+      "cur__install":
+        "#{self.original_root}/_esy/default/store/s/graphql__ppx-86bf44cc",
+      "cur__original_root": "#{self.original_root}",
+      "OCAMLFIND_CONF": "%{store}%/findlib/#{self.id}/findlib.conf",
+      "OCAMLFIND_DESTDIR": "#{self.install}/macos.arm64-sysroot/lib",
+      "TOPKG_CONF_TOOLCHAIN": "macos.arm64",
+      "OCAMLLIB": null,
+      "OCAMLPATH": null
+    },
+    "exportedEnv": {},
+    "build": [
+      [
+        "refmterr", "dune", "build", "--promote-install-files", "--root",
+        ".", "-x", "macos.arm64", "@install"
+      ]
+    ],
+    "install": [ [ "generate-installer", "macos.arm64" ] ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "@_linux.musl.x86_64/_opam_ocamlfind",
+  "dependencies": {
+    "@_linux.musl.x86_64/_esy_ocaml_substs": "*",
+    "@_linux.musl.x86_64/ocaml": "*",
+    "@_linux.musl.x86_64/sysroot": "*",
+    "@opam/ocamlfind": "*",
+    "generate-installer": "*"
+  },
+  "esy": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "cur__etc": "#{self.install}/linux.musl.x86_64-sysroot/etc",
+      "cur__share": "#{self.install}/linux.musl.x86_64-sysroot/share",
+      "cur__toplevel": "#{self.install}/linux.musl.x86_64-sysroot/toplevel",
+      "cur__stublibs": "#{self.install}/linux.musl.x86_64-sysroot/stublibs",
+      "cur__doc": "#{self.install}/linux.musl.x86_64-sysroot/doc",
+      "cur__man": "#{self.install}/linux.musl.x86_64-sysroot/man",
+      "cur__lib": "#{self.install}/linux.musl.x86_64-sysroot/lib",
+      "cur__sbin": "#{self.install}/linux.musl.x86_64-sysroot/sbin",
+      "cur__bin": "#{self.install}/linux.musl.x86_64-sysroot/bin",
+      "cur__install": "#{self.install}/linux.musl.x86_64-sysroot",
+      "cur__original_root": "#{self.original_root}",
+      "OCAMLFIND_CONF": "%{store}%/findlib/#{self.id}/findlib.conf",
+      "OCAMLFIND_DESTDIR": "#{self.install}/linux.musl.x86_64-sysroot/lib",
+      "TOPKG_CONF_TOOLCHAIN": "linux.musl.x86_64",
+      "PATH": "$ESY_TOOLCHAIN_OCAML/bin:$PATH",
+      "OCAMLLIB": null,
+      "OCAMLPATH": null
+    },
+    "exportedEnv": {
+      "OCAML_TOPLEVEL_PATH": {
+        "scope": "global",
+        "val": "#{self.install}/linux.musl.x86_64-sysroot/toplevel"
+      },
+      "OCAML_TOPLEVEL_PATH": {
+        "scope": "global",
+        "val": "#{@opam/ocamlfind.install}/toplevel"
+      }
+    },
+    "build": [
+      [
+        "cp", "-r", "-p",
+        "/Users/Jaap/.esy/source/i/opam__s__ocamlfind__opam__c__1.9.1__492060b0/.",
+        "#{self.root}"
+      ],
+      [ "mv", "#{self.install}", "_____install_____" ],
+      [ "mkdir", "-p", "#{self.install}/_esy" ],
+      [
+        "mv", "_____install_____",
+        "#{self.install}/linux.musl.x86_64-sysroot"
+      ],
+      [
+        "./configure", "-bindir", "$cur__install/bin", "-sitelib",
+        "$cur__install/lib", "-mandir", "$cur__install/man", "-config",
+        "$cur__install/lib/findlib.conf", "-no-custom", "-no-topfind"
+      ],
+      [ "make", "all" ],
+      [ "make", "opt" ]
+    ],
+    "install": [
+      [ "make", "install" ],
+      [ "install", "-m", "0755", "ocaml-stub", "${cur__bin}/ocaml" ],
+      [ "mkdir", "-p", "${cur__install}/toplevel" ],
+      [
+        "install", "-m", "0644", "src/findlib/topfind",
+        "${cur__install}/toplevel/topfind"
+      ],
+      [ "generate-installer", "linux.musl.x86_64" ]
+    ]
+  }
+}

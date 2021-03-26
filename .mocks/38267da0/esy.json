@@ -1,0 +1,62 @@
+{
+  "name": "@_linux.x86_64/ocaml",
+  "dependencies": {
+    "@_linux.x86_64/sysroot": "*",
+    "@opam/ocamlfind": "*",
+    "generate-installer": "*",
+    "ocaml": "*"
+  },
+  "esy": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "cur__etc": "#{self.install}/linux.x86_64-sysroot/etc",
+      "cur__share": "#{self.install}/linux.x86_64-sysroot/share",
+      "cur__toplevel": "#{self.install}/linux.x86_64-sysroot/toplevel",
+      "cur__stublibs": "#{self.install}/linux.x86_64-sysroot/stublibs",
+      "cur__doc": "#{self.install}/linux.x86_64-sysroot/doc",
+      "cur__man": "#{self.install}/linux.x86_64-sysroot/man",
+      "cur__lib": "#{self.install}/linux.x86_64-sysroot/lib",
+      "cur__sbin": "#{self.install}/linux.x86_64-sysroot/sbin",
+      "cur__bin": "#{self.install}/linux.x86_64-sysroot/bin",
+      "cur__install": "#{self.install}/linux.x86_64-sysroot",
+      "cur__original_root": "#{self.original_root}",
+      "OCAMLFIND_CONF": "%{store}%/findlib/#{self.id}/findlib.conf",
+      "OCAMLFIND_DESTDIR": "#{self.install}/linux.x86_64-sysroot/lib",
+      "TOPKG_CONF_TOOLCHAIN": "linux.x86_64",
+      "OCAMLLIB": null,
+      "OCAMLPATH": null
+    },
+    "exportedEnv": {
+      "OCAML_TOPLEVEL_PATH": {
+        "scope": "global",
+        "val": "#{self.install}/linux.x86_64-sysroot/lib/ocaml"
+      },
+      "ESY_TOOLCHAIN_OCAML": {
+        "scope": "global",
+        "val": "#{self.install}/linux.x86_64-sysroot"
+      },
+      "OCAML_TOPLEVEL_PATH": {
+        "scope": "global",
+        "val": "#{@opam/ocamlfind.install}/toplevel"
+      }
+    },
+    "build": [
+      [ "sh", "#{self.original_root}/files/git.clone.sh" ],
+      [ "cp", "-aR", "ocaml/.", "." ],
+      [ "mv", "ocaml", "__ocaml" ],
+      [ "cp", "-r", "#{self.original_root}/files/.", "#{self.root}" ],
+      [ "mv", "#{self.install}", "_____install_____" ],
+      [ "mkdir", "-p", "#{self.install}/_esy" ],
+      [ "mv", "_____install_____", "#{self.install}/linux.x86_64-sysroot" ],
+      [
+        "./configure", "--prefix=$cur__install",
+        "--build=$ESY_TOOLCHAIN_BUILD", "--host=$ESY_TOOLCHAIN_FULL_HOST",
+        "--disable-ocamldoc", "CC=$ESY_TOOLCHAIN_CC", "AS=$ESY_TOOLCHAIN_AS",
+        "AR=$ESY_TOOLCHAIN_AR", "RANLIB=$ESY_TOOLCHAIN_RANLIB",
+        "ASPP=$ESY_TOOLCHAIN_ASPP", "PARTIALLD=$ESY_TOOLCHAIN_PARTIALLD"
+      ],
+      [ "sh", "make.cross.sh" ]
+    ],
+    "install": [ [ "generate-installer", "linux.x86_64" ] ]
+  }
+}

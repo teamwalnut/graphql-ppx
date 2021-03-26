@@ -1,0 +1,161 @@
+diff --git a/Makefile.config.in b/Makefile.config.in
+index 6d3732392..95d8d2f85 100644
+--- a/Makefile.config.in
++++ b/Makefile.config.in
+@@ -206,6 +206,7 @@ CMXS=@cmxs@
+ # or OCAML_FLEXLINK overriding will not work (see utils/config.mlp)
+ 
+ MKEXE=@mkexe@
++MKEXE_OPT=$(MKEXE)
+ MKDLL=@mksharedlib@
+ MKMAINDLL=@mkmaindll@
+ 
+diff --git a/asmcomp/asmlink.ml b/asmcomp/asmlink.ml
+index d08793396..15ee72882 100644
+--- a/asmcomp/asmlink.ml
++++ b/asmcomp/asmlink.ml
+@@ -323,7 +323,7 @@ let call_linker file_list startup_file output_name =
+   let mode =
+     if main_dll then Ccomp.MainDll
+     else if !Clflags.output_c_object then Ccomp.Partial
+-    else Ccomp.Exe
++    else Ccomp.Complete_exe
+   in
+   if not (Ccomp.call_linker mode output_name files c_lib)
+   then raise(Error Linking_error)
+diff --git a/bytecomp/bytelink.ml b/bytecomp/bytelink.ml
+index d980054ce..37637313b 100644
+--- a/bytecomp/bytelink.ml
++++ b/bytecomp/bytelink.ml
+@@ -572,7 +572,7 @@ let build_custom_runtime prim_name exec_name =
+       [Printf.sprintf "-fdebug-prefix-map=%s=camlprim.c" prim_name]
+     else
+       [] in
+-  Ccomp.call_linker Ccomp.Exe exec_name
++  Ccomp.call_linker Ccomp.Complete_exe exec_name
+     (debug_prefix_map @ [prim_name] @ List.rev !Clflags.ccobjs @ [runtime_lib])
+     (Clflags.std_include_flag "-I" ^ " " ^ Config.bytecomp_c_libraries)
+ 
+diff --git a/ocamltest/Makefile b/ocamltest/Makefile
+index 4218e6a91..2627ce327 100644
+--- a/ocamltest/Makefile
++++ b/ocamltest/Makefile
+@@ -250,6 +250,7 @@ ocamltest_config.ml: ocamltest_config.ml.in Makefile ../Makefile.config
+ 	  -e 's|@@CSCFLAGS@@|$(CSCFLAGS)|' \
+ 	  -e 's|@@MKDLL@@|$(MKDLL)|' \
+ 	  -e 's|@@MKEXE@@|$(mkexe)|' \
++    -e 's|@@MKEXE_OPT@@|$(mkexe_opt)|' \
+ 	  -e 's|@@BYTECCLIBS@@|$(BYTECCLIBS)|' \
+ 	  -e 's|@@NATIVECCLIBS@@|$(NATIVECCLIBS)|' \
+ 	  -e 's|@@ASM@@|$(ASM)|' \
+diff --git a/ocamltest/ocamltest_config.ml.in b/ocamltest/ocamltest_config.ml.in
+index 2f7fb6d40..220222ec8 100644
+--- a/ocamltest/ocamltest_config.ml.in
++++ b/ocamltest/ocamltest_config.ml.in
+@@ -70,6 +70,7 @@ let csc_flags = "@@CSCFLAGS@@"
+ 
+ let mkdll = "@@MKDLL@@"
+ let mkexe = "@@MKEXE@@"
++let mkexe_opt = "@@MKEXE_OPT@@"
+ 
+ let bytecc_libs = "@@BYTECCLIBS@@"
+ 
+diff --git a/ocamltest/ocamltest_config.mli b/ocamltest/ocamltest_config.mli
+index 919779293..1629a0379 100644
+--- a/ocamltest/ocamltest_config.mli
++++ b/ocamltest/ocamltest_config.mli
+@@ -99,6 +99,7 @@ val csc_flags : string
+ 
+ val mkdll : string
+ val mkexe : string
++val mkexe_opt : string
+ 
+ val bytecc_libs : string
+ 
+diff --git a/utils/Makefile b/utils/Makefile
+index 6b7febe47..7536a41b6 100644
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -87,6 +87,7 @@ config.ml: config.mlp $(ROOTDIR)/Makefile.config Makefile
+ 	    $(call SUBST,LIBUNWIND_LINK_FLAGS) \
+ 	    $(call SUBST_STRING,MKDLL) \
+ 	    $(call SUBST_STRING,MKEXE) \
++			$(call SUBST_STRING,MKEXE_OPT) \
+ 	    $(call SUBST_STRING,FLEXLINK_LDFLAGS) \
+ 	    $(call SUBST_STRING,MKMAINDLL) \
+ 	    $(call SUBST,MODEL) \
+diff --git a/utils/ccomp.ml b/utils/ccomp.ml
+index 9eecbb2ed..8d72edacd 100644
+--- a/utils/ccomp.ml
++++ b/utils/ccomp.ml
+@@ -168,6 +168,7 @@ let expand_libname name =
+ 
+ type link_mode =
+   | Exe
++  | Complete_exe
+   | Dll
+   | MainDll
+   | Partial
+@@ -200,6 +201,7 @@ let call_linker mode output_name files extra =
+           (match !Clflags.c_compiler, mode with
+           | Some cc, _ -> cc
+           | None, Exe -> Config.mkexe
++          | None, Complete_exe -> Config.mkexe_opt
+           | None, Dll -> Config.mkdll
+           | None, MainDll -> Config.mkmaindll
+           | None, Partial -> assert false
+diff --git a/utils/ccomp.mli b/utils/ccomp.mli
+index cf67f24e7..79c06cc59 100644
+--- a/utils/ccomp.mli
++++ b/utils/ccomp.mli
+@@ -32,6 +32,7 @@ val quote_optfile: string option -> string
+ 
+ type link_mode =
+   | Exe
++  | Complete_exe
+   | Dll
+   | MainDll
+   | Partial
+diff --git a/utils/config.mli b/utils/config.mli
+index 560283f22..f137544f7 100644
+--- a/utils/config.mli
++++ b/utils/config.mli
+@@ -72,6 +72,9 @@ val mkdll: string
+ val mkexe: string
+ (** The linker command line to build executables. *)
+ 
++val mkexe_opt: string
++(** The linker command line to build native executables. *)
++
+ val mkmaindll: string
+ (** The linker command line to build main programs as dlls. *)
+ 
+diff --git a/utils/config.mlp b/utils/config.mlp
+index 4a3bea236..8732d7911 100644
+--- a/utils/config.mlp
++++ b/utils/config.mlp
+@@ -52,7 +52,8 @@ let native_c_libraries = "%%NATIVECCLIBS%%"
+ let native_pack_linker = "%%PACKLD%%"
+ let ranlib = "%%RANLIBCMD%%"
+ let ar = "%%ARCMD%%"
+-let mkdll, mkexe, mkmaindll =
++
++let mkdll, mkexe, mkexe_opt, mkmaindll =
+   (* @@DRA Cygwin - but only if shared libraries are enabled, which we
+      should be able to detect? *)
+   if Sys.os_type = "Win32" then
+@@ -65,11 +66,12 @@ let mkdll, mkexe, mkmaindll =
+         (String.init (String.length flexlink) f) ^ " %%FLEXLINK_FLAGS%%" in
+       flexlink,
+       flexlink ^ " -exe%%FLEXLINK_LDFLAGS%%",
++      flexlink ^ " -exe%%FLEXLINK_LDFLAGS%%",
+       flexlink ^ " -maindll"
+     with Not_found ->
+-      "%%MKDLL%%", "%%MKEXE%%", "%%MKMAINDLL%%"
++      "%%MKDLL%%", "%%MKEXE%%", "%%MKEXE_OPT%%", "%%MKMAINDLL%%"
+   else
+-    "%%MKDLL%%", "%%MKEXE%%", "%%MKMAINDLL%%"
++    "%%MKDLL%%", "%%MKEXE%%", "%%MKEXE_OPT%%", "%%MKMAINDLL%%"
+ 
+ let flambda = %%FLAMBDA%%
+ let with_flambda_invariants = %%WITH_FLAMBDA_INVARIANTS%%

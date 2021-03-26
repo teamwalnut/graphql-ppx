@@ -1,0 +1,79 @@
+{
+  "name": "@_macos.arm64/sysroot",
+  "dependencies": {
+    "sysroot.tools": "*"
+  },
+  "esy": {
+    "build": "sh setup.sh",
+    "exportedEnv": {
+      "ESY_TOOLCHAIN": {
+        "val": "macos.arm64",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_SYSTEM": {
+        "val": "macos",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_PROCESSOR": {
+        "val": "arm64",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_SYSROOT": {
+        "val": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CMAKE": {
+        "val": "-DCMAKE_TOOLCHAIN_FILE=#{self.install}/toolchain.cmake",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_BUILD": {
+        "val": "x86_64-pc-linux-gnu",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_DARWIN_KERNEL": {
+        "val": "20.1.0",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_HOST": {
+        "val": "aarch64-apple-darwin20.1.0",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_FULL_HOST": {
+        "val": "aarch64-apple-darwin20.1.0",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CC": {
+        "val": "aarch64-apple-darwin20.1.0-clang",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_CXX": {
+        "val": "aarch64-apple-darwin20.1.0-clang++",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_AS": {
+        "val": "aarch64-apple-darwin20.1.0-as",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_AR": {
+        "val": "aarch64-apple-darwin20.1.0-ar",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_RANLIB": {
+        "val": "aarch64-apple-darwin20.1.0-ranlib",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_ASPP": {
+        "val": "aarch64-apple-darwin20.1.0-clang -c",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_LD": {
+        "val": "aarch64-apple-darwin20.1.0-ld",
+        "scope": "global"
+      },
+      "ESY_TOOLCHAIN_PARTIALLD": {
+        "val": "aarch64-apple-darwin20.1.0-ld -r",
+        "scope": "global"
+      }
+    }
+  }
+}

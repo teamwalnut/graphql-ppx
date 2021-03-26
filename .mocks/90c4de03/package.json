@@ -1,0 +1,19 @@
+{
+  "name": "@_android/ndk",
+  "dependencies": {
+    "sysroot.tools": "*"
+  },
+  "esy": {
+    "build": "sh setup.sh",
+    "exportedEnv": {
+      "NDK_ROOT": {
+        "val": "#{self.install}/ndk",
+        "scope": "global"
+      },
+      "NDK_PREBUILT": {
+        "val": "#{self.install}/ndk/toolchains/llvm/prebuilt/#{os}-x86_64",
+        "scope": "global"
+      }
+    }
+  }
+}

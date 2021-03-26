@@ -1,0 +1,43 @@
+{
+  "name": "@_linux.x86_64/_esy_ocaml_substs",
+  "dependencies": {
+    "@_linux.x86_64/sysroot": "*",
+    "@esy-ocaml/substs": "*",
+    "generate-installer": "*"
+  },
+  "esy": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "DUNE_BUILD_DIR": "#{self.target_dir}",
+      "cur__etc": "#{self.install}/linux.x86_64-sysroot/etc",
+      "cur__share": "#{self.install}/linux.x86_64-sysroot/share",
+      "cur__toplevel": "#{self.install}/linux.x86_64-sysroot/toplevel",
+      "cur__stublibs": "#{self.install}/linux.x86_64-sysroot/stublibs",
+      "cur__doc": "#{self.install}/linux.x86_64-sysroot/doc",
+      "cur__man": "#{self.install}/linux.x86_64-sysroot/man",
+      "cur__lib": "#{self.install}/linux.x86_64-sysroot/lib",
+      "cur__sbin": "#{self.install}/linux.x86_64-sysroot/sbin",
+      "cur__bin": "#{self.install}/linux.x86_64-sysroot/bin",
+      "cur__install": "#{self.install}/linux.x86_64-sysroot",
+      "cur__original_root": "#{self.original_root}",
+      "OCAMLFIND_CONF": "%{store}%/findlib/#{self.id}/findlib.conf",
+      "OCAMLFIND_DESTDIR": "#{self.install}/linux.x86_64-sysroot/lib",
+      "TOPKG_CONF_TOOLCHAIN": "linux.x86_64",
+      "OCAMLLIB": null,
+      "OCAMLPATH": null
+    },
+    "exportedEnv": {},
+    "build": [
+      [
+        "cp", "-r", "-p",
+        "/Users/Jaap/.esy/source/i/esy_ocaml__s__substs__0.0.1__19de1ee1/.",
+        "#{self.root}"
+      ],
+      [ "mv", "#{self.install}", "_____install_____" ],
+      [ "mkdir", "-p", "#{self.install}/_esy" ],
+      [ "mv", "_____install_____", "#{self.install}/linux.x86_64-sysroot" ],
+      [ "cp", "./substs", "${cur__bin}/substs" ]
+    ],
+    "install": [ [ "generate-installer", "linux.x86_64" ] ]
+  }
+}

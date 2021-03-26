@@ -1,0 +1,9 @@
+{
+  "name": "@_linux.musl/cc",
+  "dependencies": {
+    "sysroot.tools": "*"
+  },
+  "esy": {
+    "build": "sh setup.sh"
+  }
+}
