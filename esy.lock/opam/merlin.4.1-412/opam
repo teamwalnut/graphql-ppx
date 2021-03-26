@@ -7,17 +7,19 @@ dev-repo: "git+https://github.com/ocaml/merlin.git"
 build: [
   ["dune" "subst"] {pinned}
   ["dune" "build" "-p" name "-j" jobs]
-  ["dune" "runtest" "-p" name "-j" "1"] {with-test & ocaml:version >= "4.03"}
+  ["dune" "runtest" "-p" "merlin,dot-merlin-reader" "-j" "1"] {with-test}
 ]
 depends: [
-  "ocaml" {>= "4.02.3" & < "4.12"}
-  "dune" {>= "1.8.0"}
-  "dot-merlin-reader" {= version}
+  "ocaml" {>= "4.12" & < "4.13"}
+  "dune" {>= "2.7.0"}
+  "dot-merlin-reader" {>= "4.0"}
   "yojson" {>= "1.6.0"}
-  "mdx" {with-test & >= "1.3.0"}
   "conf-jq" {with-test}
   "csexp" {>= "1.2.3"}
   "result" {>= "1.5"}
+  "menhir" {dev}
+  "menhirLib" {dev}
+  "menhirSdk" {dev}
 ]
 synopsis:
   "Editor helper, provides completion, typing and source browsing in Vim and Emacs"
@@ -29,7 +31,7 @@ post-messages: [
 Quick setup for VIM
 -------------------
 Append this to your .vimrc to add merlin to vim's runtime-path:
-  let g:opamshare = substitute(system('opam config var share'),'\\n$','','''')
+  let g:opamshare = substitute(system('opam var share'),'\\n$','','''')
   execute \"set rtp+=\" . g:opamshare . \"/merlin/vim\"
 
 Also run the following line in vim to index the documentation:
@@ -63,12 +65,12 @@ See https://github.com/OCamlPro/opam-user-setup
 "
   {success & !user-setup:installed}
 ]
-x-commit-hash: "c9761a552380838e9f530b5c47c0ea3c47c33565"
+x-commit-hash: "35c3ad0fb4a1de53f6afb028961800e63b9363bd"
 url {
   src:
-    "https://github.com/ocaml/merlin/releases/download/v3.4.2/merlin-v3.4.2.tbz"
+    "https://github.com/ocaml/merlin/releases/download/v4.1-412/merlin-v4.1-412.tbz"
   checksum: [
-    "sha256=e1b7b897b11119d92995c558530149fd07bd67a4aaf140f55f3c4ffb5e882a81"
-    "sha512=7c39c70fc923971c4eca9432061077941498574c0b804efc20af244c1c9ab34c9178d7eb50ab750feaac30696e7ff911a0ccd5fb86341b68485bedae472aa15f"
+    "sha256=fb4caede73bdb8393bd60e31792af74b901ae2d319ac2f2a2252c694d2069d8d"
+    "sha512=ec301e0f97e11c1c331478030372d373d381a0ddbb7f72c83f7baa4c2c6d4f26094c3398f56bcf3d40c1242044391369fd06e8cd2ccfe1f5d78467eb3e9d33be"
   ]
 }
