@@ -17,12 +17,12 @@ jobs:
         with:
           node-version: 14
 
-      - uses: EduardoRFS/github-action@c3a9f3f
+      - uses: EduardoRFS/github-action@c3a9f3f27738e42003b90a228b183b486d06b6fb
         with:
           cache-key: ${{ hashFiles('esy.lock/index.json') }}
           manifest: "macos.arm64"
 
-      - uses: EduardoRFS/github-action@c3a9f3f
+      - uses: EduardoRFS/github-action@c3a9f3f27738e42003b90a228b183b486d06b6fb
         with:
           cache-key: ${{ hashFiles('esy.lock/index.json') }}
           manifest: "linux.musl.x86_64"
