@@ -26,10 +26,6 @@ jobs:
       - name: Install
         run: esy install
 
-      - name: Install esy
-        run: |
-          arch
-          npm install -g esy
 
       - uses: esy/github-action@master
         if: ${{ matrix.system != 'macos-arm64' }}
