@@ -49,27 +49,26 @@ jobs:
           path: _build/default/src/bucklescript_bin/bin.exe
 
   test_and_build:
-    name: ${{ matrix.os }}/node-${{ matrix.node-version }}
+    name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [14.x]
-        os: [windows-latest, macOS-latest]
+        os: [windows-latest, macOS-latest, macos-arm64-latest]
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         if: ${{ matrix.os != 'macos-arm64-latest' }}
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js (arm)
         if: ${{ matrix.os == 'macos-arm64-latest' }}
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14
           arch: "arm64"
 
       - name: Install esy
@@ -106,10 +105,10 @@ jobs:
     name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: "12.x"
+          node-version: 14
           registry-url: "https://registry.npmjs.org"
 
       - name: Download linux artifacts
