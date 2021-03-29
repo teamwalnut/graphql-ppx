@@ -14,6 +14,30 @@ title: Changelog
 (_Tags are copied from
 [babel](https://github.com/babel/babel/blob/master/CHANGELOG.md)_)
 
+## [1.1.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.2...v1.0.3) (2021-03-29)
+
+- :rocket: Support calling the template tag as function (when `require` is not
+  available in tools like `esbuild`)!
+  ([52b8f783](https://github.com/reasonml-community/graphql_ppx/commit/52b8f783))
+
+- :nail_care: Use `ppxlib`, thanks [@anmonteiro](http://github.com/anmonteiro)!
+  ([a09a18fa](https://github.com/reasonml-community/graphql_ppx/commit/a09a18fa))
+
+- :rocket: Support for ReasonML/OCaml native in the new 1.0 ppx!
+  ([72513262](https://github.com/reasonml-community/graphql_ppx/commit/72513262))
+
+- :bug: Support variables in JSON arguments, thanks
+  ([A C SREEDHAR REDDY](https://github.com/a-c-sreedhar-reddy))
+  ([da52c7d8](https://github.com/reasonml-community/graphql_ppx/commit/da52c7d8))
+
+- :bug: fix recovery build (missed catching a possible exception)
+  ([a81e58f6](https://github.com/reasonml-community/graphql_ppx/commit/a81e58f6))
+  ([9e212f0c6](https://github.com/reasonml-community/graphql_ppx/commit/9e212f0c6))
+
+- :rocket: add apple silicon support (based on rosetta for now until we got
+  cross-compile to work on the CI
+  ([39ff6ab2](https://github.com/reasonml-community/graphql_ppx/commit/39ff6ab2))
+
 ## [1.0.2](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.1...v1.0.2) (2021-01-05)
 
 - :rocket: add `templateTagIsFunction` configuration. This will call the
