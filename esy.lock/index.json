@@ -1,5 +1,5 @@
 {
-  "checksum": "e96eee7b78aa54be39482ce1b32a2a23",
+  "checksum": "e8450bc5c68915716240223727cf62ca",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "refmterr@github:jfrolich/reason-native:refmterr.json#08085a4048974b06aaf3aab918b677b39dea3d18@d41d8cd9": {
@@ -54,22 +54,22 @@
       "devDependencies": [
         "refmterr@github:jfrolich/reason-native:refmterr.json#08085a4048974b06aaf3aab918b677b39dea3d18@d41d8cd9",
         "ocaml@4.12.0@d41d8cd9",
-        "@reason-native/rely@github:jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148@d41d8cd9",
+        "@reason-native/rely@github:jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18@d41d8cd9",
         "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#e5ceb3b67d87d23bb43d05b186ef20cd00ac14c9@d41d8cd9",
         "@opam/merlin@opam:4.1-412@a9da5f4b",
         "@opam/alcotest@opam:1.3.0@41168bef"
       ]
     },
-    "@reason-native/rely@github:jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148@d41d8cd9": {
+    "@reason-native/rely@github:jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18@d41d8cd9": {
       "id":
-        "@reason-native/rely@github:jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148@d41d8cd9",
+        "@reason-native/rely@github:jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18@d41d8cd9",
       "name": "@reason-native/rely",
       "version":
-        "github:jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148",
+        "github:jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18",
       "source": {
         "type": "install",
         "source": [
-          "github:jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148"
+          "github:jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18"
         ]
       },
       "overrides": [],

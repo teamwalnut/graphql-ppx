@@ -18,8 +18,8 @@
     "@opam/merlin": "*",
     "@opam/alcotest": "*",
     "ocaml": "~4.12.0",
-    "@reason-native/rely": "jfrolich/reason-native:rely.json#c3d0c53f46176ea9e1da30dbf6403cd480f6a148",
-    "refmterr": "jfrolich/reason-native:refmterr.json"
+    "@reason-native/rely": "jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18",
+    "refmterr": "jfrolich/reason-native:refmterr.json#08085a4048974b06aaf3aab918b677b39dea3d18"
   },
   "esy": {
     "build": "dune build -p #{self.name}",
