@@ -95,7 +95,7 @@ function back to the original JSON compatible data */
                   a =>
                     `List(
                       Array.map(
-                        b =>
+                        b => {
                           (
                             a =>
                               switch (a) {
@@ -104,7 +104,8 @@ function back to the original JSON compatible data */
                               }
                           )(
                             b,
-                          ),
+                          )
+                        },
                         a,
                       )
                       |> Array.to_list,
@@ -127,7 +128,7 @@ function back to the original JSON compatible data */
                 (
                   a =>
                     `List(
-                      Array.map(b => (a => `String(a))(b), a)
+                      Array.map(b => {(a => `String(a))(b)}, a)
                       |> Array.to_list,
                     )
                 )(
@@ -144,7 +145,7 @@ function back to the original JSON compatible data */
             a =>
               `List(
                 Array.map(
-                  b =>
+                  b => {
                     (
                       a =>
                         switch (a) {
@@ -153,7 +154,8 @@ function back to the original JSON compatible data */
                         }
                     )(
                       b,
-                    ),
+                    )
+                  },
                   a,
                 )
                 |> Array.to_list,
@@ -167,7 +169,7 @@ function back to the original JSON compatible data */
           (
             a =>
               `List(
-                Array.map(b => (a => `String(a))(b), a) |> Array.to_list,
+                Array.map(b => {(a => `String(a))(b)}, a) |> Array.to_list,
               )
           )(
             (inp: t_variables).nonNullableOfNonNullable,

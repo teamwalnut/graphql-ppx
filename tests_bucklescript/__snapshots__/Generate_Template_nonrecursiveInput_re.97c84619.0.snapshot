@@ -145,7 +145,7 @@ function back to the original JSON compatible data */
                 (
                   a =>
                     Js.Array.map(
-                      b =>
+                      b => {
                         (
                           a =>
                             switch (a) {
@@ -154,7 +154,8 @@ function back to the original JSON compatible data */
                             }
                         )(
                           b,
-                        ),
+                        )
+                      },
                       a,
                     )
                 )(
@@ -207,7 +208,7 @@ function back to the original JSON compatible data */
                 (
                   a =>
                     Js.Array.map(
-                      b =>
+                      b => {
                         (
                           a =>
                             switch (a) {
@@ -221,7 +222,8 @@ function back to the original JSON compatible data */
                             }
                         )(
                           b,
-                        ),
+                        )
+                      },
                       a,
                     )
                 )(
@@ -452,7 +454,7 @@ function back to the original JSON compatible data */
                 (
                   a =>
                     Js.Array.map(
-                      b =>
+                      b => {
                         (
                           a =>
                             switch (a) {
@@ -461,7 +463,8 @@ function back to the original JSON compatible data */
                             }
                         )(
                           b,
-                        ),
+                        )
+                      },
                       a,
                     )
                 )(
@@ -514,7 +517,7 @@ function back to the original JSON compatible data */
                 (
                   a =>
                     Js.Array.map(
-                      b =>
+                      b => {
                         (
                           a =>
                             switch (a) {
@@ -528,7 +531,8 @@ function back to the original JSON compatible data */
                             }
                         )(
                           b,
-                        ),
+                        )
+                      },
                       a,
                     )
                 )(
