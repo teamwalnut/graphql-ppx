@@ -14,7 +14,12 @@ title: Changelog
 (_Tags are copied from
 [babel](https://github.com/babel/babel/blob/master/CHANGELOG.md)_)
 
-## [1.1.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.2...v1.0.3) (2021-03-29)
+## [1.2.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.1.0...v1.1.1) (2021-03-30)
+
+- :bug: Fix issue with the ppx when @deriving attribute is used in ReScript
+  ([b7aff4e2](https://github.com/reasonml-community/graphql_ppx/commit/b7aff4e2))
+
+## [1.1.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.2...v1.1.0) (2021-03-29)
 
 - :rocket: Support calling the template tag as function (when `require` is not
   available in tools like `esbuild`)!
