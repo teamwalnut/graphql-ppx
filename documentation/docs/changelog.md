@@ -14,10 +14,14 @@ title: Changelog
 (_Tags are copied from
 [babel](https://github.com/babel/babel/blob/master/CHANGELOG.md)_)
 
-## [1.2.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.1.0...v1.1.1) (2021-03-30)
+## [1.2.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.1.0...v1.2.0) (2021-03-30)
 
 - :bug: Fix issue with the ppx when @deriving attribute is used in ReScript
   ([b7aff4e2](https://github.com/reasonml-community/graphql_ppx/commit/b7aff4e2))
+
+  Note: the version number was accidentilly updated to 1.2.0 instead of 1.1.1,
+  we cannot fix this, but there was no change other than fixing the compiler
+  error when using `@deriving(abstract)`
 
 ## [1.1.0](https://github.com/reasonml-community/graphql_ppx/compare/v1.0.2...v1.1.0) (2021-03-29)
 
