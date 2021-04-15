@@ -1,6 +1,9 @@
 opam-version: "2.0"
 maintainer: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
 authors: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
+synopsis: "GraphQL PPX rewriter for ReScript/ReasonML"
+description: "GraphQL language primitives for ReScript/ReasonML written in ReasonML"
+license: "MIT"
 homepage: "https://github.com/reasonml-community/graphql-ppx"
 bug-reports: "https://github.com/reasonml-community/graphql-ppx/issues"
 build: [
@@ -16,6 +19,3 @@ depends: [
   "reason"
   "yojson"
 ]
-
-synopsis: "GraphQL PPX rewriter for Bucklescript/ReasonML"
-description: ""

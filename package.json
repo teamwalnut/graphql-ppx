@@ -10,8 +10,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "postinstall": "node ./copyPlatformBinaryInPlace.js",
-    "generate-schema": "node ./dslToJson.js > graphql_schema.json"
+    "generate-schema": "node ./dslToJson.js > graphql_schema.json",
+    "postinstall": "node ./copyPlatformBinaryInPlace.js"
   },
   "devDependencies": {
     "bs-platform": "9.0.0",
