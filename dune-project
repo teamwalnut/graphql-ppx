@@ -1,3 +1,3 @@
 (lang dune 2.0)
 
-(name "graphql_ppx")
+(name graphql_ppx)
