@@ -9,6 +9,10 @@ if (arch === "ia32") {
   arch = "x86";
 }
 
+if (arch === "arm64") {
+  arch = "x64";
+}
+
 if (platform === "win32") {
   platform = "win";
 }
