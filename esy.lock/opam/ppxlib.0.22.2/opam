@@ -20,11 +20,11 @@ doc: "https://ocaml-ppx.github.io/ppxlib/"
 bug-reports: "https://github.com/ocaml-ppx/ppxlib/issues"
 depends: [
   "dune" {>= "2.7"}
-  "ocaml" {>= "4.04.1" & < "4.13"}
+  "ocaml" {>= "4.04.1" & < "4.14"}
   "ocaml-compiler-libs" {>= "v0.11.0"}
-  "ocaml-migrate-parsetree" {>= "2.1.0"}
+  "ocaml-migrate-parsetree" {>= "2.2.0"}
   "ppx_derivers" {>= "1.0"}
-  "sexplib0"
+  "sexplib0" {>= "v0.12"}
   "stdlib-shims"
   "ocamlfind" {with-test}
   "re" {with-test & >= "1.9.0"}
@@ -48,12 +48,12 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/ocaml-ppx/ppxlib.git"
-x-commit-hash: "06a2c9bdad8c1d3361a3d9430e9bf58476b08590"
+x-commit-hash: "3cf57772fef4666a2992041cf3a670dd2be98603"
 url {
   src:
-    "https://github.com/ocaml-ppx/ppxlib/releases/download/0.22.0/ppxlib-0.22.0.tbz"
+    "https://github.com/ocaml-ppx/ppxlib/releases/download/0.22.2/ppxlib-0.22.2.tbz"
   checksum: [
-    "sha256=3eeb91e03966662284a3222e612dee7f4fa2b7637c53d9572d2a74134bb96d7a"
-    "sha512=425051dff9df53579a6edd17369d66c10f87a78daeddf1691e50997990ed643e874fcc6a30112a4dacbfd2d0097a19445354e04cd920d9522f76c51cdbc7f1db"
+    "sha256=d0e8a1ebdc6220b1574d7a926f008460c5118ccef79bf9a0ce0242f34cff225a"
+    "sha512=6010a59be6af873eaf193670f9cc8c9a7f091cfd89ec6c5b68d1f0c72d7c6015eec6371c009fc473cf2cb37d24f0934d04d0eacefa567a4945234197c3b31741"
   ]
 }

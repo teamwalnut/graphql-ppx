@@ -14,7 +14,7 @@
     "@opam/yojson": "*"
   },
   "devDependencies": {
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
+    "@opam/ocaml-lsp-server": "*",
     "@opam/merlin": "*",
     "@opam/alcotest": "*",
     "ocaml": "~4.12.0",
