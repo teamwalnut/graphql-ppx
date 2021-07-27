@@ -569,6 +569,16 @@ class mapper = {
                                       pstr,
                                     )),
                                 },
+                              }
+                            | {
+                                pmd_name: {txt: name},
+                                pmd_type: {
+                                  pmty_desc:
+                                    Pmty_extension((
+                                      {txt: "gql", loc},
+                                      pstr,
+                                    )),
+                                },
                               } => {
                                 switch (pstr) {
                                 | PStr([
@@ -647,11 +657,37 @@ class mapper = {
                  Pstr_module({
                    pmb_name: {txt: _},
                    pmb_expr: {
+                     pmod_desc: Pmod_extension(({txt: "gql", loc}, pstr)),
+                   },
+                 }),
+             } as item
+           | {
+               pstr_desc:
+                 Pstr_module({
+                   pmb_name: {txt: _},
+                   pmb_expr: {
                      pmod_desc:
                        Pmod_constraint(
                          {
                            pmod_desc:
                              Pmod_extension(({txt: "graphql", loc}, pstr)),
+                           _,
+                         },
+                         _,
+                       ),
+                   },
+                 }),
+             } as item
+           | {
+               pstr_desc:
+                 Pstr_module({
+                   pmb_name: {txt: _},
+                   pmb_expr: {
+                     pmod_desc:
+                       Pmod_constraint(
+                         {
+                           pmod_desc:
+                             Pmod_extension(({txt: "gql", loc}, pstr)),
                            _,
                          },
                          _,
@@ -670,10 +706,25 @@ class mapper = {
              } as item
            | {
                pstr_desc:
+                 Pstr_eval(
+                   {pexp_desc: Pexp_extension(({txt: "gql", loc}, pstr))},
+                   _,
+                 ),
+             } as item
+           | {
+               pstr_desc:
                  Pstr_include({
                    pincl_mod: {
                      pmod_desc:
                        Pmod_extension(({txt: "graphql", loc}, pstr)),
+                   },
+                 }),
+             } as item
+           | {
+               pstr_desc:
+                 Pstr_include({
+                   pincl_mod: {
+                     pmod_desc: Pmod_extension(({txt: "gql", loc}, pstr)),
                    },
                  }),
              } as item
@@ -687,6 +738,21 @@ class mapper = {
                        pvb_expr: {
                          pexp_desc:
                            Pexp_extension(({txt: "graphql", loc}, pstr)),
+                       },
+                     },
+                   ],
+                 ),
+             } as item
+           | {
+               pstr_desc:
+                 Pstr_value(
+                   _,
+                   [
+                     {
+                       pvb_pat: {ppat_desc: _},
+                       pvb_expr: {
+                         pexp_desc:
+                           Pexp_extension(({txt: "gql", loc}, pstr)),
                        },
                      },
                    ],
@@ -725,6 +791,47 @@ class mapper = {
                                  pmty_desc:
                                    Pmty_extension((
                                      {txt: "graphql", _},
+                                     PStr([
+                                       {
+                                         pstr_desc:
+                                           Pstr_eval(
+                                             {
+                                               pexp_loc: loc,
+                                               pexp_desc:
+                                                 Pexp_constant(
+                                                   Pconst_string(
+                                                     query,
+                                                     _,
+                                                     delim,
+                                                   ),
+                                                 ),
+                                               _,
+                                             },
+                                             _,
+                                           ),
+                                         _,
+                                       },
+                                     ]),
+                                   )),
+                               },
+                             ),
+                         },
+                         _,
+                       }),
+                   }
+                 | {
+                     pstr_desc:
+                       Pstr_module({
+                         pmb_expr: {
+                           pmod_desc:
+                             Pmod_constraint(
+                               _,
+                               {
+                                 pmty_loc,
+                                 pmty_attributes,
+                                 pmty_desc:
+                                   Pmty_extension((
+                                     {txt: "gql", _},
                                      PStr([
                                        {
                                          pstr_desc:
@@ -893,8 +1000,37 @@ class mapper = {
                                 pmb_expr:
                                   {
                                     pmod_desc:
+                                      Pmod_constraint(
+                                        {
+                                          pmod_desc:
+                                            Pmod_extension((
+                                              {txt: "gql", loc},
+                                              pstr,
+                                            )),
+                                          _,
+                                        },
+                                        _,
+                                      ),
+                                  } as module_expr,
+                              }
+                            | {
+                                pmb_name: {txt: name},
+                                pmb_expr:
+                                  {
+                                    pmod_desc:
                                       Pmod_extension((
                                         {txt: "graphql", loc},
+                                        pstr,
+                                      )),
+                                  } as module_expr,
+                              }
+                            | {
+                                pmb_name: {txt: name},
+                                pmb_expr:
+                                  {
+                                    pmod_desc:
+                                      Pmod_extension((
+                                        {txt: "gql", loc},
                                         pstr,
                                       )),
                                   } as module_expr,
