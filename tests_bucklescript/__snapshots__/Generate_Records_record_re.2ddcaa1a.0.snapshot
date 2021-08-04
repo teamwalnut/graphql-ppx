@@ -389,10 +389,10 @@ function back to the original JSON-compatible data */
   module Untitled1: {
     [@ocaml.warning \"-32-30\"];
     module Raw: {
-      type t = {variousScalars: Fragment.Raw.t};
+      type t = {variousScalars: Fragment.Raw.t_VariousScalars};
       type t_variables = unit;
     };
-    type t = {variousScalars: Fragment.t};
+    type t = {variousScalars: Fragment.t_VariousScalars};
     type t_variables = unit;
     /** The GraphQL query */
     let query: string;
@@ -410,10 +410,10 @@ function back to the original JSON compatible data */
   } = {
     [@ocaml.warning \"-32-30\"];
     module Raw = {
-      type t = {variousScalars: Fragment.Raw.t};
+      type t = {variousScalars: Fragment.Raw.t_VariousScalars};
       type t_variables = unit;
     };
-    type t = {variousScalars: Fragment.t};
+    type t = {variousScalars: Fragment.t_VariousScalars};
     type t_variables = unit;
     let query =
       \"query   {\\nvariousScalars  {\\n...Fragment   \\n}\\n\\n}\\n\"
@@ -679,7 +679,7 @@ function back to the original JSON-compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
-      | `Dog(DogFragment.t)
+      | `Dog(DogFragment.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
@@ -705,7 +705,7 @@ function back to the original JSON compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
-      | `Dog(DogFragment.t)
+      | `Dog(DogFragment.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;

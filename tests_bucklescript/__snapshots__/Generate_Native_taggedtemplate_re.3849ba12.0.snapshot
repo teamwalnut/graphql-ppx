@@ -1379,7 +1379,7 @@ module MyQuery5: {
     type t;
     type t_variables;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1400,7 +1400,7 @@ function back to the original JSON compatible data */
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query MyQuery5  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
@@ -1439,7 +1439,7 @@ module MyQuery6: {
     type t;
     type t_variables;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1460,7 +1460,7 @@ function back to the original JSON compatible data */
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string =
     [%raw
@@ -1502,7 +1502,7 @@ module MyQuery7: {
     type t;
     type t_variables;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1523,7 +1523,7 @@ function back to the original JSON compatible data */
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string = [%raw
     \"graphql`\\n  query MyQuery7  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
@@ -1696,7 +1696,7 @@ module MyQuery8: {
     id: string,
   };
   type t = {
-    lists: ListFragment8.t,
+    lists: ListFragment8.t_Lists,
     variousScalars: t_variousScalars,
   };
   type t_variables = unit;
@@ -1732,7 +1732,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {
-    lists: ListFragment8.t,
+    lists: ListFragment8.t_Lists,
     variousScalars: t_variousScalars,
   };
   type t_variables = unit;

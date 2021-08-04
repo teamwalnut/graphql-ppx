@@ -95,11 +95,11 @@ let rec generate_type = (~atLoc=?, ~config, ~path, ~raw) =>
   | Res_poly_variant_interface({name}) => {
       base_type(~loc=?atLoc, generate_type_name([name, ...path]));
     }
-  | Res_solo_fragment_spread({loc, name: module_name}) =>
+  | Res_solo_fragment_spread({loc, name: module_name, type_name}) =>
     if (raw) {
-      base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t");
+      base_type(~loc=conv_loc(loc), module_name ++ ".Raw.t_" ++ type_name);
     } else {
-      base_type(~loc=conv_loc(loc), module_name ++ ".t");
+      base_type(~loc=conv_loc(loc), module_name ++ ".t_" ++ type_name);
     }
   | Res_error({loc, message: error}) =>
     Location.raise_errorf(~loc=conv_loc(loc), "%s", error)
@@ -882,19 +882,73 @@ let generate_type_structure_items =
 
   switch (fragment_name) {
   | Some((fragment_name, _fragment_name_loc)) =>
-    List.append(
-      types,
-      [
-        Ast_helper.(
-          Str.type_(
-            Nonrecursive,
-            [
-              make_fragment_type(config, raw, type_name, fragment_name, None),
-            ],
-          )
-        ),
-      ],
-    )
+    switch (Schema.lookup_type(config.schema, fragment_name)) {
+    | Some(Interface(interface_meta)) =>
+      List.append(
+        types,
+        [
+          Ast_helper.(
+            Str.type_(
+              Nonrecursive,
+              [
+                make_fragment_type(
+                  config,
+                  raw,
+                  type_name,
+                  interface_meta.im_name,
+                  None,
+                ),
+              ],
+            )
+          ),
+          ...Schema.lookup_implementations(config.schema, interface_meta)
+             |> List.filter_map((type_meta: Schema.type_meta) =>
+                  switch (type_meta) {
+                  | Object({om_name}) =>
+                    Some(
+                      Ast_helper.(
+                        Str.type_(
+                          Nonrecursive,
+                          [
+                            make_fragment_type(
+                              config,
+                              raw,
+                              type_name,
+                              om_name,
+                              None,
+                            ),
+                          ],
+                        )
+                      ),
+                    )
+                  | _ => None
+                  }
+                ),
+        ],
+      )
+
+    | Some(Object(_)) =>
+      List.append(
+        types,
+        [
+          Ast_helper.(
+            Str.type_(
+              Nonrecursive,
+              [
+                make_fragment_type(
+                  config,
+                  raw,
+                  type_name,
+                  fragment_name,
+                  None,
+                ),
+              ],
+            )
+          ),
+        ],
+      )
+    | _ => types
+    }
   | None => types
   };
 };
@@ -920,25 +974,73 @@ let generate_type_signature_items =
 
   switch (fragment_name) {
   | Some((fragment_name, fragment_name_loc)) =>
-    List.append(
-      types,
-      [
-        Ast_helper.(
-          Sig.type_(
-            Nonrecursive,
-            [
-              make_fragment_type(
-                config,
-                raw,
-                type_name,
-                fragment_name,
-                emit_locations ? Some(fragment_name_loc) : None,
-              ),
-            ],
-          )
-        ),
-      ],
-    )
+    switch (Schema.lookup_type(config.schema, fragment_name)) {
+    | Some(Interface(interface_meta)) =>
+      List.append(
+        types,
+        [
+          Ast_helper.(
+            Sig.type_(
+              Nonrecursive,
+              [
+                make_fragment_type(
+                  config,
+                  raw,
+                  type_name,
+                  interface_meta.im_name,
+                  None,
+                ),
+              ],
+            )
+          ),
+          ...Schema.lookup_implementations(config.schema, interface_meta)
+             |> List.filter_map((type_meta: Schema.type_meta) =>
+                  switch (type_meta) {
+                  | Object({om_name}) =>
+                    Some(
+                      Ast_helper.(
+                        Sig.type_(
+                          Nonrecursive,
+                          [
+                            make_fragment_type(
+                              config,
+                              raw,
+                              type_name,
+                              om_name,
+                              None,
+                            ),
+                          ],
+                        )
+                      ),
+                    )
+                  | _ => None
+                  }
+                ),
+        ],
+      )
+
+    | Some(Object(_)) =>
+      List.append(
+        types,
+        [
+          Ast_helper.(
+            Sig.type_(
+              Nonrecursive,
+              [
+                make_fragment_type(
+                  config,
+                  raw,
+                  type_name,
+                  fragment_name,
+                  emit_locations ? Some(fragment_name_loc) : None,
+                ),
+              ],
+            )
+          ),
+        ],
+      )
+    | _ => types
+    }
   | None => types
   };
 };

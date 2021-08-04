@@ -1,0 +1,13 @@
+Error Apollo › fragmentIssue.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36mtests_bucklescript/operations/errors/fragmentIssue.re\027[0m:\027[2m8:5-10:5\027[0m
+  
+   6 \027[2m\226\148\130\027[0m 
+   7 \027[2m\226\148\130\027[0m   fragment DemoVersion_Model on DemoVersion {
+  \027[1;31m 8\027[0m \027[2m\226\148\130\027[0m     \027[1;31mscreens {\027[0m
+  \027[1;31m 9\027[0m \027[2m\226\148\130\027[0m \027[1;31m      ...Screen_Model\027[0m
+  \027[1;31m10\027[0m \027[2m\226\148\130\027[0m \027[1;31m    }\027[0m
+  11 \027[2m\226\148\130\027[0m   }
+  12 \027[2m\226\148\130\027[0m |}
+  
+  This type constructor, `Screen_Model.Raw.t_DemoScreen`, can't be found.

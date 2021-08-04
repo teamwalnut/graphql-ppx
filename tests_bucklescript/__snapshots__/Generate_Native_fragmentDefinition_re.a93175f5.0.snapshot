@@ -516,11 +516,11 @@ module MyQuery: {
     inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
-    l1: ListFragment.t,
+    l1: ListFragment.t_Lists,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
-    l5: FragmentWithArgs.t,
+    l5: FragmentWithArgs.t_Lists,
   };
   type t_variables = {arg1: option(string)};
   /** The GraphQL query */
@@ -556,11 +556,11 @@ function back to the original JSON compatible data */
     inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
-    l1: ListFragment.t,
+    l1: ListFragment.t_Lists,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
-    l5: FragmentWithArgs.t,
+    l5: FragmentWithArgs.t_Lists,
   };
   type t_variables = {arg1: option(string)};
   let query =
@@ -804,7 +804,7 @@ module MyQuery2: {
     type t;
     type t_variables;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -825,7 +825,7 @@ function back to the original JSON compatible data */
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query =
     \"query   {\\nlists  {\\n...ListFragment   \\n}\\n\\n}\\n\" ++ ListFragment.query;

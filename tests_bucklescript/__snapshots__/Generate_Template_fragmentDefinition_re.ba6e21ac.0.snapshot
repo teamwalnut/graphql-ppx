@@ -464,11 +464,11 @@ module MyQuery: {
     type t_l3;
     type t_l4;
     type t = {
-      l1: ListFragment.Raw.t,
+      l1: ListFragment.Raw.t_Lists,
       l2: t_l2,
       l3: t_l3,
       l4: t_l4,
-      l5: FragmentWithArgs.Raw.t,
+      l5: FragmentWithArgs.Raw.t_Lists,
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
@@ -486,11 +486,11 @@ module MyQuery: {
     inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
-    l1: ListFragment.t,
+    l1: ListFragment.t_Lists,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
-    l5: FragmentWithArgs.t,
+    l5: FragmentWithArgs.t_Lists,
   };
   type t_variables = {arg1: option(string)};
   /** The GraphQL query */
@@ -513,11 +513,11 @@ function back to the original JSON compatible data */
     type t_l3;
     type t_l4;
     type t = {
-      l1: ListFragment.Raw.t,
+      l1: ListFragment.Raw.t_Lists,
       l2: t_l2,
       l3: t_l3,
       l4: t_l4,
-      l5: FragmentWithArgs.Raw.t,
+      l5: FragmentWithArgs.Raw.t_Lists,
     };
     type t_variables = {arg1: Js.Nullable.t(string)};
   };
@@ -535,11 +535,11 @@ function back to the original JSON compatible data */
     inlineListFragment: InlineListFragment.t_Lists,
   };
   type t = {
-    l1: ListFragment.t,
+    l1: ListFragment.t_Lists,
     l2: t_l2,
     l3: t_l3,
     l4: t_l4,
-    l5: FragmentWithArgs.t,
+    l5: FragmentWithArgs.t_Lists,
   };
   type t_variables = {arg1: option(string)};
   let query: string =
@@ -808,10 +808,10 @@ function back to the original JSON compatible data */
 module MyQuery2: {
   [@ocaml.warning \"-32-30\"];
   module Raw: {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -829,10 +829,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32-30\"];
   module Raw = {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string =
     [%raw

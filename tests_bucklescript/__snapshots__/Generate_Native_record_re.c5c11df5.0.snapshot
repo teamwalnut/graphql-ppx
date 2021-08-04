@@ -349,7 +349,7 @@ function back to the original JSON-compatible data */
       type t;
       type t_variables;
     };
-    type t = {variousScalars: Fragment.t};
+    type t = {variousScalars: Fragment.t_VariousScalars};
     type t_variables = unit;
     /** The GraphQL query */
     let query: string;
@@ -370,7 +370,7 @@ function back to the original JSON compatible data */
       type t = Yojson.Basic.t;
       type t_variables = Yojson.Basic.t;
     };
-    type t = {variousScalars: Fragment.t};
+    type t = {variousScalars: Fragment.t_VariousScalars};
     type t_variables = unit;
     let query =
       \"query   {\\nvariousScalars  {\\n...Fragment   \\n}\\n\\n}\\n\"
@@ -608,7 +608,7 @@ function back to the original JSON-compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Yojson.Basic.t)
-      | `Dog(DogFragment.t)
+      | `Dog(DogFragment.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
@@ -633,7 +633,7 @@ function back to the original JSON compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Yojson.Basic.t)
-      | `Dog(DogFragment.t)
+      | `Dog(DogFragment.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;

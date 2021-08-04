@@ -592,7 +592,7 @@ function back to the original JSON-compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
-      | `Dog(DogFields.t)
+      | `Dog(DogFields.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;
@@ -618,7 +618,7 @@ function back to the original JSON compatible data */
     };
     type t_dogOrHuman = [
       | `FutureAddedValue(Js.Json.t)
-      | `Dog(DogFields.t)
+      | `Dog(DogFields.t_Dog)
     ];
     type t = {dogOrHuman: t_dogOrHuman};
     type t_variables = unit;

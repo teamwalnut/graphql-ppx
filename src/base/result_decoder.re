@@ -239,7 +239,15 @@ and unify_interface =
         loc: config.map_loc(span),
         name,
         fields:
-          List.map(unify_selection(error_marker, config, ty), selection),
+          List.map(
+            unify_selection(
+              ~base_type=interface_meta.im_name,
+              error_marker,
+              config,
+              ty,
+            ),
+            selection,
+          ),
         type_name: None,
         interface_fragments: None,
       }),
@@ -278,7 +286,12 @@ and unify_interface =
         name: interface_meta.im_name,
         fields:
           List.map(
-            unify_selection(error_marker, config, ty),
+            unify_selection(
+              ~base_type=interface_meta.im_name,
+              error_marker,
+              config,
+              ty,
+            ),
             base_selection_set,
           ),
         type_name: existing_record,
@@ -642,7 +655,8 @@ and unify_field = (error_marker, config, field_span, ty) => {
     }
   };
 }
-and unify_selection = (error_marker, config, ty, selection) =>
+and unify_selection =
+    (~base_type: string, error_marker, config, ty, selection) =>
   switch (selection) {
   | Field(field_span) => unify_field(error_marker, config, field_span, ty)
   | FragmentSpread({item: {fs_directives, fs_name}, span}) =>
@@ -659,11 +673,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
         key,
         loc: config.map_loc(span),
         name: fs_name.item,
-        type_name:
-          switch (ty) {
-          | Object({om_name, _}) => Some(om_name)
-          | _ => None
-          },
+        type_name: Some(base_type),
         arguments,
       });
     | Some({item: {d_arguments, _}, span}) =>
@@ -679,11 +689,7 @@ and unify_selection = (error_marker, config, ty, selection) =>
           key,
           loc: config.map_loc(span),
           name: fs_name.item,
-          type_name:
-            switch (ty) {
-            | Object({om_name, _}) => Some(om_name)
-            | _ => None
-            },
+          type_name: Some(base_type),
           arguments,
         })
       | Some(_) =>
@@ -731,6 +737,7 @@ and unify_selection_set =
       );
     } else {
       Res_solo_fragment_spread({
+        type_name: type_name(ty),
         loc: config.map_loc(span),
         name: fs_name.item,
         arguments,
@@ -740,7 +747,16 @@ and unify_selection_set =
     Res_record({
       loc: config.map_loc(span),
       name: type_name(ty),
-      fields: List.map(unify_selection(error_marker, config, ty), item),
+      fields:
+        List.map(
+          unify_selection(
+            ~base_type=type_name(ty),
+            error_marker,
+            config,
+            ty,
+          ),
+          item,
+        ),
       type_name: existing_record,
       interface_fragments: None,
     })
@@ -748,7 +764,16 @@ and unify_selection_set =
     Res_object({
       loc: config.map_loc(span),
       name: type_name(ty),
-      fields: List.map(unify_selection(error_marker, config, ty), item),
+      fields:
+        List.map(
+          unify_selection(
+            ~base_type=type_name(ty),
+            error_marker,
+            config,
+            ty,
+          ),
+          item,
+        ),
       type_name: existing_record,
       interface_fragments: None,
     })

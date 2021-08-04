@@ -72,7 +72,7 @@ module HasuraRepro: {
     type t;
     type t_variables;
   };
-  type t = {hasuraRepro: Dog.t};
+  type t = {hasuraRepro: Dog.t_Dog};
   type t_variables = {
     blockNumber: option(int),
     type_: option(string),
@@ -97,7 +97,7 @@ function back to the original JSON compatible data */
     type t = Yojson.Basic.t;
     type t_variables = Yojson.Basic.t;
   };
-  type t = {hasuraRepro: Dog.t};
+  type t = {hasuraRepro: Dog.t_Dog};
   type t_variables = {
     blockNumber: option(int),
     type_: option(string),

@@ -79,6 +79,7 @@ and t =
   | Res_solo_fragment_spread({
       loc,
       name: string,
+      type_name: string,
       arguments: list(string),
     })
   | Res_error({

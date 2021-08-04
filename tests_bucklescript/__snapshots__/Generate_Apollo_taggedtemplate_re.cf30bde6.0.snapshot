@@ -1630,10 +1630,10 @@ function back to the original JSON-compatible data */
 module MyQuery5: {
   [@ocaml.warning \"-32-30\"];
   module Raw: {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1651,10 +1651,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32-30\"];
   module Raw = {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string = [%raw
     \"require(\\\"gatsby\\\")`\\n  query MyQuery5  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
@@ -1689,10 +1689,10 @@ function back to the original JSON compatible data */
 module MyQuery6: {
   [@ocaml.warning \"-32-30\"];
   module Raw: {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1710,10 +1710,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32-30\"];
   module Raw = {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string =
     [%raw
@@ -1751,10 +1751,10 @@ function back to the original JSON compatible data */
 module MyQuery7: {
   [@ocaml.warning \"-32-30\"];
   module Raw: {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   /** The GraphQL query */
   let query: string;
@@ -1772,10 +1772,10 @@ function back to the original JSON compatible data */
 } = {
   [@ocaml.warning \"-32-30\"];
   module Raw = {
-    type t = {lists: ListFragment.Raw.t};
+    type t = {lists: ListFragment.Raw.t_Lists};
     type t_variables = unit;
   };
-  type t = {lists: ListFragment.t};
+  type t = {lists: ListFragment.t_Lists};
   type t_variables = unit;
   let query: string = [%raw
     \"graphql`\\n  query MyQuery7  {\\n    lists  {\\n      ...ListFragment\\n    }\\n  }\\n`\"
@@ -1947,7 +1947,7 @@ module MyQuery8: {
       id: string,
     };
     type t = {
-      lists: ListFragment8.Raw.t,
+      lists: ListFragment8.Raw.t_Lists,
       variousScalars: t_variousScalars,
     };
     type t_variables = unit;
@@ -1966,7 +1966,7 @@ module MyQuery8: {
     id: string,
   };
   type t = {
-    lists: ListFragment8.t,
+    lists: ListFragment8.t_Lists,
     variousScalars: t_variousScalars,
   };
   type t_variables = unit;
@@ -2000,7 +2000,7 @@ function back to the original JSON compatible data */
       id: string,
     };
     type t = {
-      lists: ListFragment8.Raw.t,
+      lists: ListFragment8.Raw.t_Lists,
       variousScalars: t_variousScalars,
     };
     type t_variables = unit;
@@ -2019,7 +2019,7 @@ function back to the original JSON compatible data */
     id: string,
   };
   type t = {
-    lists: ListFragment8.t,
+    lists: ListFragment8.t_Lists,
     variousScalars: t_variousScalars,
   };
   type t_variables = unit;

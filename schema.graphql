@@ -273,3 +273,16 @@ type deprecatedFieldsResult {
   field2: Int!
   deprecatedField: String! @deprecated(reason: "Use something else instead")
 }
+
+type Screen {
+  id: ID!
+}
+
+type DemoScreen {
+  id: ID!
+}
+
+type DemoVersion {
+  id: ID!
+  screens: [DemoScreen!]
+}
