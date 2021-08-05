@@ -869,6 +869,7 @@ let make_fragment_type =
 // generate all the types necessary types that we later refer to by name.
 let generate_type_structure_items =
     (config, res, raw, type_name, fragment_name) => {
+  let str_type = types => Ast_helper.(Str.type_(Nonrecursive, types));
   let types =
     generate_types(
       ~config,
@@ -887,39 +888,29 @@ let generate_type_structure_items =
       List.append(
         types,
         [
-          Ast_helper.(
-            Str.type_(
-              Nonrecursive,
-              [
-                make_fragment_type(
-                  config,
-                  raw,
-                  type_name,
-                  interface_meta.im_name,
-                  None,
-                ),
-              ],
-            )
-          ),
+          str_type([
+            make_fragment_type(
+              config,
+              raw,
+              type_name,
+              interface_meta.im_name,
+              None,
+            ),
+          ]),
           ...Schema.lookup_implementations(config.schema, interface_meta)
              |> List.filter_map((type_meta: Schema.type_meta) =>
                   switch (type_meta) {
                   | Object({om_name}) =>
                     Some(
-                      Ast_helper.(
-                        Str.type_(
-                          Nonrecursive,
-                          [
-                            make_fragment_type(
-                              config,
-                              raw,
-                              type_name,
-                              om_name,
-                              None,
-                            ),
-                          ],
-                        )
-                      ),
+                      str_type([
+                        make_fragment_type(
+                          config,
+                          raw,
+                          type_name,
+                          om_name,
+                          None,
+                        ),
+                      ]),
                     )
                   | _ => None
                   }
@@ -931,20 +922,9 @@ let generate_type_structure_items =
       List.append(
         types,
         [
-          Ast_helper.(
-            Str.type_(
-              Nonrecursive,
-              [
-                make_fragment_type(
-                  config,
-                  raw,
-                  type_name,
-                  fragment_name,
-                  None,
-                ),
-              ],
-            )
-          ),
+          str_type([
+            make_fragment_type(config, raw, type_name, fragment_name, None),
+          ]),
         ],
       )
     | _ => types
@@ -952,6 +932,7 @@ let generate_type_structure_items =
   | None => types
   };
 };
+
 let generate_type_signature_items =
     (
       config: Generator_utils.output_config,
@@ -971,6 +952,7 @@ let generate_type_signature_items =
       res,
     )
     |> List.map(type_ => Ast_helper.Sig.type_(Recursive, [type_]));
+  let sig_type = types => Ast_helper.(Sig.type_(Nonrecursive, types));
 
   switch (fragment_name) {
   | Some((fragment_name, fragment_name_loc)) =>
@@ -979,39 +961,29 @@ let generate_type_signature_items =
       List.append(
         types,
         [
-          Ast_helper.(
-            Sig.type_(
-              Nonrecursive,
-              [
-                make_fragment_type(
-                  config,
-                  raw,
-                  type_name,
-                  interface_meta.im_name,
-                  None,
-                ),
-              ],
-            )
-          ),
+          sig_type([
+            make_fragment_type(
+              config,
+              raw,
+              type_name,
+              interface_meta.im_name,
+              None,
+            ),
+          ]),
           ...Schema.lookup_implementations(config.schema, interface_meta)
              |> List.filter_map((type_meta: Schema.type_meta) =>
                   switch (type_meta) {
                   | Object({om_name}) =>
                     Some(
-                      Ast_helper.(
-                        Sig.type_(
-                          Nonrecursive,
-                          [
-                            make_fragment_type(
-                              config,
-                              raw,
-                              type_name,
-                              om_name,
-                              None,
-                            ),
-                          ],
-                        )
-                      ),
+                      sig_type([
+                        make_fragment_type(
+                          config,
+                          raw,
+                          type_name,
+                          om_name,
+                          None,
+                        ),
+                      ]),
                     )
                   | _ => None
                   }
@@ -1023,20 +995,15 @@ let generate_type_signature_items =
       List.append(
         types,
         [
-          Ast_helper.(
-            Sig.type_(
-              Nonrecursive,
-              [
-                make_fragment_type(
-                  config,
-                  raw,
-                  type_name,
-                  fragment_name,
-                  emit_locations ? Some(fragment_name_loc) : None,
-                ),
-              ],
-            )
-          ),
+          sig_type([
+            make_fragment_type(
+              config,
+              raw,
+              type_name,
+              fragment_name,
+              emit_locations ? Some(fragment_name_loc) : None,
+            ),
+          ]),
         ],
       )
     | _ => types
