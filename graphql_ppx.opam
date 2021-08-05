@@ -6,6 +6,7 @@ description: "GraphQL language primitives for ReScript/ReasonML written in Reaso
 license: "MIT"
 homepage: "https://github.com/reasonml-community/graphql-ppx"
 bug-reports: "https://github.com/reasonml-community/graphql-ppx/issues"
+dev-repo: "git+https://github.com/reasonml-community/graphql-ppx.git"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
@@ -17,5 +18,5 @@ depends: [
   "ocaml" {>= "4.06"}
   "ppxlib" {>= "0.21.0"}
   "reason"
-  "yojson"
+  "yojson" {>= "1.6.0"}
 ]
