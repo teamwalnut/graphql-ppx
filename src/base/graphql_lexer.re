@@ -28,6 +28,7 @@ type token =
   | Equals
   | At
   | Pipe
+  | Ampersand
   | End_of_file;
 
 let string_of_token = t =>
@@ -50,6 +51,7 @@ let string_of_token = t =>
   | Equals => "="
   | At => "@"
   | Pipe => "|"
+  | Ampersand => "&"
   | End_of_file => "[EOF]"
   };
 
@@ -315,7 +317,7 @@ let scan_number = lexer => {
 
 let scan_string = lexer => {
   let start_pos = lexer.position;
-  switch (next_char(lexer)) {
+  switch (peek_char_only(lexer)) {
   | None => Error(zero_width(start_pos, Unexpected_end_of_file))
   | Some(_) =>
     let rec scan_loop = acc =>
@@ -375,6 +377,35 @@ let scan_string = lexer => {
     scan_loop("");
   };
 };
+let scan_block_string = (~start_pos, lexer) => {
+  let rec scan_loop = acc =>
+    switch (peek_char_only(lexer)) {
+    | None => Error(zero_width(lexer.position, Unterminated_string))
+    | Some('"') =>
+      let _ = next_char(lexer);
+      switch (peek_char_only(lexer)) {
+      | Some('"') =>
+        let _ = next_char(lexer);
+        switch (peek_char_only(lexer)) {
+        | Some('"') =>
+          let _ = next_char(lexer);
+          // TODO: format block string according to:
+          // https://spec.graphql.org/June2018/#BlockStringValue()
+          // acc = blockStringValue(acc)
+          Ok(start_end(start_pos, lexer.position, String(acc)));
+        | Some(_) => acc ++ "\"\"" |> scan_loop
+        | None => Error(zero_width(lexer.position, Unterminated_string))
+        };
+      | Some(_) => acc ++ "\"" |> scan_loop
+      | None => Error(zero_width(lexer.position, Unterminated_string))
+      };
+    | Some(ch) =>
+      let _ = next_char(lexer);
+      acc ++ String.make(1, ch) |> scan_loop;
+    };
+
+  scan_loop("");
+};
 
 let scan_single_token = lexer =>
   if (lexer.has_reached_eof) {
@@ -395,8 +426,24 @@ let scan_single_token = lexer =>
       | Some('=') => Ok(emit_single_char(lexer, Equals))
       | Some('@') => Ok(emit_single_char(lexer, At))
       | Some('|') => Ok(emit_single_char(lexer, Pipe))
+      | Some('&') => Ok(emit_single_char(lexer, Ampersand))
       | Some('.') => scan_ellipsis_or_dot(lexer)
-      | Some('"') => scan_string(lexer)
+      | Some('"') =>
+        let _ = next_char(lexer);
+        switch (peek_char_only(lexer)) {
+        | Some('"') =>
+          let start_pos = lexer.position;
+          let _ = next_char(lexer);
+          switch (peek_char_only(lexer)) {
+          | Some('"') =>
+            let _ = next_char(lexer);
+            scan_block_string(~start_pos, lexer);
+          | None
+          | Some(_) => Ok(start_end(start_pos, lexer.position, String("")))
+          };
+        | None
+        | Some(_) => scan_string(lexer)
+        };
       | Some(ch) when is_number_start(ch) => scan_number(lexer)
       | Some(ch) when is_name_start(ch) => scan_name(lexer)
       | Some(ch) =>
