@@ -85,6 +85,7 @@ type directive_location =
   | Dl_unknown;
 
 type directive_meta = {
+  // dm_description: option(string),
   dm_name: string,
   dm_locations: list(directive_location),
   dm_arguments: list(argument_meta),

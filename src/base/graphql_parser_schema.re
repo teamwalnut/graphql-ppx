@@ -53,20 +53,35 @@ let parse_default_value = parser => {
   | _ => Ok(None)
   };
 };
-let parse_type_argument = parser =>
-  Result_ext.(
-    expect_name(parser)
-    |> flat_map(name =>
-         expect(parser, Graphql_lexer.Colon) |> replace(name)
-       )
-    |> flat_map(name =>
-         parse_type_ref(parser) |> map(value => (name, value))
-       )
-    |> flat_map(((name, value)) => {
-         parse_default_value(parser)
-         |> map(default_value => (name, value, default_value))
-       })
-  );
+let get_description = parser => {
+  switch (peek(parser)) {
+  | {item: Graphql_lexer.String(s), span: _} =>
+    let _ = next(parser);
+    Some(s);
+  | _ => None
+  };
+};
+let parse_type_argument = parser => {
+  open Result_ext;
+  let description = get_description(parser);
+
+  expect_name(parser)
+  |> flat_map(name => expect(parser, Graphql_lexer.Colon) |> replace(name))
+  |> flat_map(name =>
+       parse_type_ref(parser) |> map(type_ref => (name, type_ref))
+     )
+  |> flat_map(((name, type_ref)) => {
+       parse_default_value(parser)
+       |> map(default_value =>
+            Schema.{
+              am_name: name.item,
+              am_arg_type: Type_utils.to_schema_type_ref(type_ref),
+              am_default_value: default_value,
+              am_description: description,
+            }
+          )
+     });
+};
 
 let parse_type_arguments = parser =>
   switch (peek(parser)) {
@@ -77,35 +92,9 @@ let parse_type_arguments = parser =>
       parse_type_argument,
       Graphql_lexer.Paren_close,
     )
-    |> Result_ext.map(args => Some(args))
-  | _ => Ok(None)
+    |> Result_ext.map(args => args.item)
+  | _ => Ok([])
   };
-
-let get_description_and_peek = parser => {
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.String(s), span: _} =>
-    let _ = next(_);
-    (Some(s), peek(parser));
-  | other => (None, other)
-  };
-};
-
-let get_description = parser => {
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.String(s), span: _} =>
-    let _ = next(_);
-    Some(s);
-  | _ => None
-  };
-};
-let get_description_and_expect_name = parser => {
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.String(description), span: _} =>
-    let _ = next(parser);
-    expect_name(parser) |> Result_ext.map(name => (Some(description), name));
-  | _ => expect_name(parser) |> Result_ext.map(name => (None, name))
-  };
-};
 
 type schema_element =
   | Type(Schema.type_meta)
@@ -170,7 +159,7 @@ let parse_enum = (~description, parser) => {
          switch (peek(parser)) {
          // enum with description
          | {item: Graphql_lexer.String(description)} =>
-           let _ = next(_);
+           let _ = next(parser);
 
            switch (parse_enum_value(~description=Some(description), parser)) {
            | Ok(value) => consume_enums([value, ...acc])
@@ -183,7 +172,7 @@ let parse_enum = (~description, parser) => {
            | Error(e) => Error(e)
            }
          | {item: Graphql_lexer.Curly_close} =>
-           let _ = next(_);
+           let _ = next(parser);
            // rev the list, because we been adding to the head
            Ok(List.rev(acc));
          | {item, span} => Error({span, item: Unexpected_token(item)})
@@ -212,39 +201,14 @@ let rec parse_implements = (parser, acc) => {
   };
 };
 
-let rec type_ref_to_schema = ast_type_ref => {
-  switch (ast_type_ref) {
-  | Graphql_ast.Tr_named({item: name}) => Schema.Named(name)
-  | Tr_list({item: type_ref}) => type_ref_to_schema(type_ref)
-  | Tr_non_null_named({item: name}) => NonNull(Named(name))
-  | Tr_non_null_list({item: type_ref}) =>
-    NonNull(type_ref_to_schema(type_ref))
-  };
-};
-
 let parse_field = parser => {
-  get_description_and_expect_name(parser)
-  |> Result_ext.flat_map(((description, {item: name})) => {
+  let description = get_description(parser);
+  expect_name(parser)
+  |> Result_ext.flat_map(({item: name}) => {
        parse_type_arguments(parser)
        |> Result_ext.flat_map(arguments => {
             expect(parser, Graphql_lexer.Colon)
-            |> Result_ext.map(_ => {
-                 switch (arguments) {
-                 | Some({item: arguments, _}) =>
-                   arguments
-                   |> List.map(
-                        (({item: am_name, _}, type_ref, default_value)) => {
-                        let am_arg_type = type_ref_to_schema(type_ref);
-                        Schema.{
-                          am_name,
-                          am_description: None,
-                          am_arg_type,
-                          am_default_value: default_value,
-                        };
-                      })
-                 | None => []
-                 }
-               })
+            |> Result_ext.map(_ => arguments)
           })
        |> Result_ext.flat_map(arguments => {
             parse_type(parser)
@@ -257,7 +221,8 @@ let parse_field = parser => {
                      fm_name: name,
                      fm_description: description,
                      fm_arguments: arguments,
-                     fm_field_type: type_ref_to_schema(field_type.item),
+                     fm_field_type:
+                       Type_utils.to_schema_type_ref(field_type.item),
                      fm_deprecation_reason: deprecation_reason,
                    },
                  );
@@ -268,7 +233,7 @@ let parse_field = parser => {
 
 let rec parse_fields = (parser, acc) => {
   switch (peek(parser)) {
-  | {item: Graphql_lexer.Bracket_close, _} =>
+  | {item: Graphql_lexer.Curly_close, _} =>
     let _ = next(parser);
     Ok(List.rev(acc));
   | _ =>
@@ -281,21 +246,12 @@ let rec parse_fields = (parser, acc) => {
 };
 
 let parse_input_field = parser => {
-  let description = get_description(parser);
-  parse_type_argument(parser)
-  |> Result_ext.map((({item: name}, type_ref, default_value)) => {
-       Schema.{
-         am_name: name,
-         am_description: description,
-         am_arg_type: type_ref_to_schema(type_ref),
-         am_default_value: default_value,
-       }
-     });
+  parse_type_argument(parser);
 };
 
 let rec parse_input_fields = (parser, acc) => {
   switch (peek(parser)) {
-  | {item: Graphql_lexer.Bracket_close, _} =>
+  | {item: Graphql_lexer.Curly_close, _} =>
     let _ = next(parser);
     Ok(List.rev(acc));
   | _ =>
@@ -459,10 +415,75 @@ let parse_input_object = (~description, parser) => {
      });
 };
 
+let parse_directive_locations = parser => {
+  let rec scanner = acc => {
+    Schema.(
+      switch (peek(parser)) {
+      | {item: Graphql_lexer.Pipe} => scanner(acc)
+      | {item: Graphql_lexer.Name("MUTATION"), _} =>
+        let _ = next(parser);
+        scanner([Dl_mutation, ...acc]);
+      | {item: Graphql_lexer.Name("SUBSCRIPTION"), _} =>
+        let _ = next(parser);
+        scanner([Dl_subscription, ...acc]);
+      | {item: Graphql_lexer.Name("FIELD"), _} =>
+        let _ = next(parser);
+        scanner([Dl_field, ...acc]);
+      | {item: Graphql_lexer.Name("FRAGMENT_DEFINITION"), _} =>
+        let _ = next(parser);
+        scanner([Dl_fragment_definition, ...acc]);
+      | {item: Graphql_lexer.Name("FRAGMENT_SPREAD"), _} =>
+        let _ = next(parser);
+        scanner([Dl_fragment_spread, ...acc]);
+      | {item: Graphql_lexer.Name("INLINE_FRAGMENT"), _} =>
+        let _ = next(parser);
+        scanner([Dl_inline_fragment, ...acc]);
+      | _ when List.length(acc) > 0 => Ok(List.rev(acc))
+      | {item, span} => Error({span, item: Unexpected_token(item)})
+      }
+    );
+  };
+  // first token can be a pipe
+  switch (skip(parser, Graphql_lexer.Pipe)) {
+  | Ok(_) => scanner([])
+  | Error(e) => Error(e)
+  };
+};
+
+let parse_directive =
+    (~description as _, parser): result(Schema.directive_meta, _) => {
+  expect_name(parser)
+  |> Result_ext.flat_map(_ => expect(parser, Graphql_lexer.At))
+  |> Result_ext.flat_map(_ => expect_name(parser))
+  |> Result_ext.flat_map(({item: name}) => {
+       parse_type_arguments(parser)
+       |> Result_ext.map(arguments => (name, arguments))
+     })
+  |> Result_ext.flat_map(((name, arguments)) => {
+       expect(parser, Graphql_lexer.Name("on"))
+       |> Result_ext.flat_map(_ => {
+            (
+              parse_directive_locations(parser):
+                result(list(Schema.directive_location), _)
+            )
+            |> Result_ext.map((locations) => {
+                 (
+                   Schema.{
+                     dm_name: name,
+                     //  dm_description: description,
+                     dm_locations: locations,
+                     dm_arguments: arguments,
+                   }: Schema.directive_meta
+                 )
+               })
+          })
+     });
+};
+
 let parse_element: parser => result(schema_element, spanning(parseError)) =
   parser => {
-    let (description, token) = get_description_and_peek(parser);
-    switch (token) {
+    let description = get_description(parser);
+    switch (peek(parser)) {
     | {item: Graphql_lexer.Name("scalar"), _} =>
       parse_scalar(~description, parser)
       |> Result_ext.map(scalar => Type(Scalar(scalar)))
@@ -483,6 +504,9 @@ let parse_element: parser => result(schema_element, spanning(parseError)) =
       |> Result_ext.map(input_object => Type(InputObject(input_object)))
     | {item: Graphql_lexer.Name("schema"), _} =>
       parse_schema(parser) |> Result_ext.map(schema => Schema(schema))
+    | {item: Graphql_lexer.Name("directive"), _} =>
+      parse_directive(~description, parser)
+      |> Result_ext.map(directive => Directive(directive))
     | {item, span} => Error({span, item: Unexpected_token(item)})
     };
   };
@@ -496,7 +520,56 @@ let add_to_schema = (schema: Schema.t, element) => {
   | Directive(_) => schema
   };
 };
-let parse_elements = parser => {
+
+let add_built_in_scalars = type_map => {
+  ["Int", "Float", "String", "ID", "Boolean"]
+  |> List.iter(scalar =>
+       Hashtbl.add(
+         type_map,
+         scalar,
+         Schema.Scalar({sm_name: scalar, sm_description: None}),
+       )
+     );
+  type_map;
+};
+let add_built_in_directives = directive_map => {
+  open Schema;
+  let directives = [
+    {
+      dm_name: "include",
+      // dm_description: None,
+      dm_locations: [Dl_field, Dl_fragment_spread, Dl_inline_fragment],
+      dm_arguments: [
+        {
+          am_name: "if",
+          am_description: None,
+          am_arg_type: NonNull(Named("Boolean")),
+          am_default_value: None,
+        },
+      ],
+    },
+    {
+      dm_name: "skip",
+      // dm_description: None,
+      dm_locations: [Dl_field, Dl_fragment_spread, Dl_inline_fragment],
+      dm_arguments: [
+        {
+          am_name: "if",
+          am_description: None,
+          am_arg_type: NonNull(Named("Boolean")),
+          am_default_value: None,
+        },
+      ],
+    },
+  ];
+  directives
+  |> List.iter(directive =>
+       Hashtbl.add(directive_map, directive.dm_name, directive)
+     );
+  directive_map;
+};
+
+let parse = parser => {
   let schema =
     Schema.{
       meta: {
@@ -504,8 +577,8 @@ let parse_elements = parser => {
         sm_mutation_type: None,
         sm_subscription_type: None,
       },
-      type_map: Hashtbl.create(100),
-      directive_map: Hashtbl.create(10),
+      type_map: add_built_in_scalars(Hashtbl.create(100)),
+      directive_map: add_built_in_directives(Hashtbl.create(10)),
     };
   let rec scanner = schema =>
     switch (parse_element(parser)) {
