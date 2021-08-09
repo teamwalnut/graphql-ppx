@@ -4,41 +4,34 @@ open Source_pos;
 open Graphql_parser_shared;
 
 let rec parse_type_ref = parser => {
-  switch (next(parser)) {
-  | Ok({item: Graphql_lexer.Name(name), span}) =>
-    switch (peek(parser)) {
-    | {item: Graphql_lexer.Exclamation_mark, span: excl_span} =>
-      let _ = next(parser);
-      Ok(
-        Graphql_ast.Tr_non_null_named(
-          Source_pos.start_end(fst(span), snd(excl_span), name),
-        ),
-      );
-    | _ => Ok(Graphql_ast.Tr_named({item: name, span}))
+  Schema.(
+    switch (next(parser)) {
+    | Ok({item: Graphql_lexer.Name(name), _}) =>
+      switch (peek(parser)) {
+      | {item: Graphql_lexer.Exclamation_mark, _} =>
+        let _ = next(parser);
+        Ok(NonNull(Named(name)));
+      | _ => Ok(Named(name))
+      }
+    | Ok({item: Graphql_lexer.Bracket_open, _}) =>
+      parse_type_ref(parser)
+      |> Result_ext.flat_map(type_ref => {
+           expect(parser, Graphql_lexer.Bracket_close)
+           |> Result_ext.map(_ => type_ref)
+         })
+      |> Result_ext.flat_map(type_ref => {
+           switch (peek(parser)) {
+           | {item: Graphql_lexer.Exclamation_mark, span: _} =>
+             let _ = next(parser);
+             Ok(NonNull(List(type_ref)));
+           | _ => Ok(List(type_ref))
+           }
+         })
+
+    | Ok({item, span}) => Error({span, item: Unexpected_token(item)})
+    | Error(e) => Error(e)
     }
-  | Ok({item: Graphql_lexer.Bracket_open, span}) =>
-    parse_type_ref(parser)
-    |> Result_ext.flat_map(type_ref => {
-         expect(parser, Graphql_lexer.Bracket_close)
-         |> Result_ext.map(_ => type_ref)
-       })
-    |> Result_ext.flat_map(type_ref => {
-         switch (peek(parser)) {
-         | {item: Graphql_lexer.Exclamation_mark, span: excl_span} =>
-           let _ = next(parser);
-
-           Ok(
-             Graphql_ast.Tr_non_null_list(
-               Source_pos.start_end(fst(span), snd(excl_span), type_ref),
-             ),
-           );
-         | _ => Ok(Graphql_ast.Tr_list({span, item: type_ref}))
-         }
-       })
-
-  | Ok({item, span}) => Error({span, item: Unexpected_token(item)})
-  | Error(e) => Error(e)
-  };
+  );
 };
 
 let parse_default_value = parser => {
@@ -75,7 +68,7 @@ let parse_type_argument = parser => {
        |> map(default_value =>
             Schema.{
               am_name: name.item,
-              am_arg_type: Type_utils.to_schema_type_ref(type_ref),
+              am_arg_type: type_ref,
               am_default_value: default_value,
               am_description: description,
             }
