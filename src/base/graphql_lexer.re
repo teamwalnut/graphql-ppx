@@ -335,6 +335,8 @@ let scan_string = lexer => {
         | None => Error(zero_width(lexer.position, Unterminated_string))
         | Some('"') =>
           let _ = next_char(lexer);
+          // string concat here maybe not optimal, but strings do not occur
+          // super frequently - and are short - and a Buffer also has some overhead
           acc ++ "\"" |> scan_loop;
         | Some('\\') =>
           let _ = next_char(lexer);
