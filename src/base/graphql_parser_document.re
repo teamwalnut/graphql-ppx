@@ -2,7 +2,7 @@ open Result;
 open Graphql_ast;
 open Graphql_parser;
 open Source_pos;
-open Graphql_parser_shared;
+open Graphql_parser_directives;
 
 let last = l =>
   switch (List.length(l)) {

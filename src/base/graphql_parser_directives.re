@@ -2,6 +2,12 @@ open Graphql_ast;
 open Graphql_parser;
 open Source_pos;
 
+// This is shared between document and schema parsing.
+// This should be rewritten for schema, but now it's only really
+// used for the @deprecated directive on types.
+// In the latest spec more directives are possible, so it needs separate
+// AST as part of Schema.t
+
 let parse_argument = parser =>
   Result_ext.(
     expect_name(parser)
@@ -73,58 +79,3 @@ let parse_directives = parser =>
     scanner([]);
   | _ => Ok([])
   };
-
-let rec parse_type = parser =>
-  Result_ext.(
-    skip(parser, Graphql_lexer.Bracket_open)
-    |> flat_map(
-         fun
-         | Some({span: (start_pos, _), _}) =>
-           parse_type(parser)
-           |> flat_map(inner_type =>
-                expect(parser, Graphql_lexer.Bracket_close)
-                |> map(make_t2(inner_type))
-              )
-           |> flat_map(
-                ((inner_type, {span: (_, _ as bracket_end_pos), _})) =>
-                switch (peek(parser)) {
-                | {item: Graphql_lexer.Exclamation_mark, span: (_, end_pos)} =>
-                  next(parser)
-                  |> replace(
-                       start_end(
-                         start_pos,
-                         end_pos,
-                         Tr_non_null_list(inner_type),
-                       ),
-                     )
-
-                | _ =>
-                  Ok(
-                    start_end(
-                      start_pos,
-                      bracket_end_pos,
-                      Tr_list(inner_type),
-                    ),
-                  )
-                }
-              )
-
-         | None =>
-           expect_name(parser)
-           |> flat_map(name =>
-                switch (peek(parser)) {
-                | {item: Graphql_lexer.Exclamation_mark, span: (_, end_pos)} =>
-                  next(parser)
-                  |> replace(
-                       start_end(
-                         start_pos(name),
-                         end_pos,
-                         Tr_non_null_named(name),
-                       ),
-                     )
-
-                | _ => Ok(Source_pos.replace(name, Tr_named(name)))
-                }
-              ),
-       )
-  );

@@ -1,7 +1,7 @@
 open Result;
 open Graphql_parser;
 open Source_pos;
-open Graphql_parser_shared;
+open Graphql_parser_directives;
 
 let rec parse_type_ref = parser => {
   Schema.(
@@ -204,9 +204,8 @@ let parse_field = parser => {
             |> Result_ext.map(_ => arguments)
           })
        |> Result_ext.flat_map(arguments => {
-            parse_type(parser)
-            |> Result_ext.flat_map(
-                 (field_type: spanning(Graphql_ast.type_ref)) => {
+            parse_type_ref(parser)
+            |> Result_ext.flat_map(field_type => {
                  let deprecation_reason = parse_deprecated_directive(parser);
 
                  Ok(
@@ -214,8 +213,7 @@ let parse_field = parser => {
                      fm_name: name,
                      fm_description: description,
                      fm_arguments: arguments,
-                     fm_field_type:
-                       Type_utils.to_schema_type_ref(field_type.item),
+                     fm_field_type: field_type,
                      fm_deprecation_reason: deprecation_reason,
                    },
                  );
