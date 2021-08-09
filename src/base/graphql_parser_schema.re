@@ -308,43 +308,25 @@ let parse_interface = (~description, parser) => {
      });
 };
 
-let rec parse_schema_fields = (parser, acc) => {
+let rec add_to_schema = (parser, callback: string => Schema.schema_meta) => {
+  let schema =
+    expect(parser, Graphql_lexer.Colon)
+    |> Result_ext.flat_map(_ => expect_name(parser))
+    |> Result_ext.map(name => callback(name.item));
+
+  switch (schema) {
+  | Ok(schema) => parse_schema_fields(parser, schema)
+  | Error(e) => Error(e)
+  };
+}
+and parse_schema_fields = (parser, acc) => {
   switch (next(parser)) {
   | Ok({item: Graphql_lexer.Name("query")}) =>
-    let schema =
-      expect(parser, Graphql_lexer.Colon)
-      |> Result_ext.flat_map(_ => expect_name(parser))
-      |> Result_ext.map(name => Schema.{...acc, sm_query_type: name.item});
-
-    switch (schema) {
-    | Ok(schema) => parse_schema_fields(parser, schema)
-    | Error(e) => Error(e)
-    };
-
+    add_to_schema(parser, name => {...acc, sm_query_type: name})
   | Ok({item: Graphql_lexer.Name("mutation")}) =>
-    let schema =
-      expect(parser, Graphql_lexer.Colon)
-      |> Result_ext.flat_map(_ => expect_name(parser))
-      |> Result_ext.map(name =>
-           Schema.{...acc, sm_mutation_type: Some(name.item)}
-         );
-
-    switch (schema) {
-    | Ok(schema) => parse_schema_fields(parser, schema)
-    | Error(e) => Error(e)
-    };
+    add_to_schema(parser, name => {...acc, sm_mutation_type: Some(name)})
   | Ok({item: Graphql_lexer.Name("subscription")}) =>
-    let schema =
-      expect(parser, Graphql_lexer.Colon)
-      |> Result_ext.flat_map(_ => expect_name(parser))
-      |> Result_ext.map(name =>
-           Schema.{...acc, sm_subscription_type: Some(name.item)}
-         );
-
-    switch (schema) {
-    | Ok(schema) => parse_schema_fields(parser, schema)
-    | Error(e) => Error(e)
-    };
+    add_to_schema(parser, name => {...acc, sm_subscription_type: Some(name)})
   | Ok({item: Graphql_lexer.Curly_close}) => Ok(acc)
   | Ok({item, span}) => Error({span, item: Unexpected_token(item)})
   | Error(e) => Error(e)
