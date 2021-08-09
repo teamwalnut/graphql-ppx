@@ -366,15 +366,18 @@ let parse_schema = parser => {
      );
 };
 
-let rec parse_union_types = (parser, acc) => {
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.Pipe, _} =>
-    let _ = next(parser);
+[@tailcall]
+let rec parse_union_types = (~acc=[], parser) => {
+  let pipe = skip(parser, Graphql_lexer.Pipe);
+  switch (acc, pipe) {
+  | (_, Ok(Some(_)))
+  | ([], Ok(None)) =>
     switch (expect_name(parser)) {
-    | Ok(union) => parse_union_types(parser, [union.item, ...acc])
+    | Ok(union) => parse_union_types(~acc=[union.item, ...acc], parser)
     | Error(e) => Error(e)
-    };
-  | _ => Ok(List.rev(acc))
+    }
+  // (_, Error(_)) is EOF, which is valid (it's a peek)
+  | (_, _) => Ok(List.rev(acc))
   };
 };
 
@@ -385,10 +388,7 @@ let parse_union = (~description, parser) => {
        expect(parser, Graphql_lexer.Equals) |> Result_ext.map(_ => name.item)
      })
   |> Result_ext.flat_map(name =>
-       expect_name(parser)
-       |> Result_ext.flat_map(first_union => {
-            parse_union_types(parser, [first_union.item])
-          })
+       parse_union_types(parser)
        |> Result_ext.map(unions => {
             Schema.{
               um_name: name,
@@ -415,38 +415,36 @@ let parse_input_object = (~description, parser) => {
      });
 };
 
-let parse_directive_locations = parser => {
-  let rec scanner = acc => {
-    Schema.(
-      switch (peek(parser)) {
-      | {item: Graphql_lexer.Pipe} => scanner(acc)
-      | {item: Graphql_lexer.Name("MUTATION"), _} =>
-        let _ = next(parser);
-        scanner([Dl_mutation, ...acc]);
-      | {item: Graphql_lexer.Name("SUBSCRIPTION"), _} =>
-        let _ = next(parser);
-        scanner([Dl_subscription, ...acc]);
-      | {item: Graphql_lexer.Name("FIELD"), _} =>
-        let _ = next(parser);
-        scanner([Dl_field, ...acc]);
-      | {item: Graphql_lexer.Name("FRAGMENT_DEFINITION"), _} =>
-        let _ = next(parser);
-        scanner([Dl_fragment_definition, ...acc]);
-      | {item: Graphql_lexer.Name("FRAGMENT_SPREAD"), _} =>
-        let _ = next(parser);
-        scanner([Dl_fragment_spread, ...acc]);
-      | {item: Graphql_lexer.Name("INLINE_FRAGMENT"), _} =>
-        let _ = next(parser);
-        scanner([Dl_inline_fragment, ...acc]);
-      | _ when List.length(acc) > 0 => Ok(List.rev(acc))
-      | {item, span} => Error({span, item: Unexpected_token(item)})
-      }
-    );
-  };
-  // first token can be a pipe
-  switch (skip(parser, Graphql_lexer.Pipe)) {
-  | Ok(_) => scanner([])
-  | Error(e) => Error(e)
+let get_directive_location = str => {
+  Schema.(
+    switch (str) {
+    | "MUTATION" => Dl_mutation
+    | "SUBSCRIPTION" => Dl_subscription
+    | "FIELD" => Dl_field
+    | "FRAGMENT_DEFINITION" => Dl_fragment_definition
+    | "FRAGMENT_SPREAD" => Dl_fragment_spread
+    | "INLINE_FRAGMENT" => Dl_inline_fragment
+    | _ => Dl_unknown
+    }
+  );
+};
+
+let rec parse_directive_locations = (~acc=[], parser) => {
+  let pipe = skip(parser, Graphql_lexer.Pipe);
+  switch (acc, pipe) {
+  //  first directive can be without leading pipe
+  | ([], Ok(None))
+  | (_, Ok(Some(_))) =>
+    switch (expect_name(parser)) {
+    | Ok({item: name}) =>
+      parse_directive_locations(
+        ~acc=[get_directive_location(name), ...acc],
+        parser,
+      )
+    | Error(e) => Error(e)
+    }
+  // (_, Error(_)) is EOF, which is valid (it's a peek)
+  | _ => Ok(List.rev(acc))
   };
 };
 
