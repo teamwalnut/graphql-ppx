@@ -315,9 +315,9 @@ let scan_number = lexer => {
   };
 };
 
-let scan_string = lexer => {
-  let start_pos = lexer.position;
-  switch (peek_char_only(lexer)) {
+let scan_string = (~start_pos, lexer) => {
+  // let start_pos = lexer.position - 1;
+  switch (peek_char(lexer)) {
   | None => Error(zero_width(start_pos, Unexpected_end_of_file))
   | Some(_) =>
     let rec scan_loop = acc =>
@@ -431,10 +431,10 @@ let scan_single_token = lexer =>
       | Some('&') => Ok(emit_single_char(lexer, Ampersand))
       | Some('.') => scan_ellipsis_or_dot(lexer)
       | Some('"') =>
+        let start_pos = lexer.position;
         let _ = next_char(lexer);
         switch (peek_char_only(lexer)) {
         | Some('"') =>
-          let start_pos = lexer.position;
           let _ = next_char(lexer);
           switch (peek_char_only(lexer)) {
           | Some('"') =>
@@ -444,7 +444,7 @@ let scan_single_token = lexer =>
           | Some(_) => Ok(start_end(start_pos, lexer.position, String("")))
           };
         | None
-        | Some(_) => scan_string(lexer)
+        | Some(_) => scan_string(~start_pos, lexer)
         };
       | Some(ch) when is_number_start(ch) => scan_number(lexer)
       | Some(ch) when is_name_start(ch) => scan_name(lexer)
