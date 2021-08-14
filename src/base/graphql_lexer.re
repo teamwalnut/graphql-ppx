@@ -316,7 +316,6 @@ let scan_number = lexer => {
 };
 
 let scan_string = (~start_pos, lexer) => {
-  // let start_pos = lexer.position - 1;
   switch (peek_char(lexer)) {
   | None => Error(zero_width(start_pos, Unexpected_end_of_file))
   | Some(_) =>
