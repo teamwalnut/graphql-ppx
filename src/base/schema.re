@@ -85,6 +85,11 @@ type directive_location =
   | Dl_unknown;
 
 type directive_meta = {
+  // It would be great to add this to the schema,
+  // but when the schema changes, there will be a breaking change
+  // so the filename of the schema cache need to change as well,
+  // to avoid a crash
+  // dm_description: option(string),
   dm_name: string,
   dm_locations: list(directive_location),
   dm_arguments: list(argument_meta),

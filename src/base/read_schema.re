@@ -237,6 +237,7 @@ let make_directive_location = directive_location =>
 let make_directive_meta = (_, directive) =>
   Schema.(
     Yojson.Basic.Util.{
+      // dm_description: directive |> member("description") |> to_string_option,
       dm_name: directive |> member("name") |> to_string,
       dm_locations:
         directive
@@ -395,9 +396,51 @@ let create_marshaled_schema = (json_schema, data) => {
   };
 };
 
+let read_whole_file = filename => {
+  let ch = open_in(filename);
+  let s = really_input_string(ch, in_channel_length(ch));
+  close_in(ch);
+  s;
+};
+
+exception LexerError(string);
+exception ParserError(string, int, int);
+exception InvalidExtension(string);
+let parse_graphql_schema = schema_file => {
+  let schema_str = read_whole_file(schema_file);
+  switch (Graphql_lexer.make(schema_str) |> Graphql_lexer.consume) {
+  | Ok(tokens) =>
+    switch (Graphql_parser.make(tokens) |> Graphql_parser_schema.parse) {
+    | Ok(schema) => schema
+    | Error(parser_error) =>
+      raise(
+        ParserError(
+          switch (parser_error.item) {
+          | Unexpected_token(token) =>
+            "Unexpected token " ++ Graphql_lexer.string_of_token(token)
+          | Unexpected_end_of_file => "Unexpected end of file"
+          | Lexer_error(_) => "Lexer error"
+          },
+          fst(parser_error.span).line,
+          snd(parser_error.span).line,
+        ),
+      )
+    }
+  | Error(_lex_error) => raise(LexerError("lexer error!"))
+  };
+};
+
+let parse_schema = schema_file => {
+  switch (String.lowercase_ascii(Filename.extension(schema_file))) {
+  | ".graphql" => parse_graphql_schema(schema_file)
+  | ".json" => parse_json_schema(schema_file)
+  | extension => raise(InvalidExtension(extension))
+  };
+};
+
 /* build_schema: parse json schema and create marshaled schema */
-let build_schema = json_schema =>
-  json_schema |> parse_json_schema |> create_marshaled_schema(json_schema);
+let build_schema = schema_file =>
+  schema_file |> parse_schema |> create_marshaled_schema(schema_file);
 
 let build_schema_if_dirty = json_schema =>
   Dirty_checker.(

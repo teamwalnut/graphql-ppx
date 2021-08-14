@@ -8,3 +8,4 @@ type t =
 let type_ref_name: Schema.type_ref => string;
 let print_type: Graphql_ast.type_ref => string;
 let print_document: (Schema.t, Graphql_ast.document) => array(t);
+let print_input_value: Graphql_ast.input_value => string;

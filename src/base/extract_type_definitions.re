@@ -1,5 +1,4 @@
 open Result_structure;
-open Graphql_ppx_base__;
 open Generator_utils;
 open Schema;
 open Source_pos;

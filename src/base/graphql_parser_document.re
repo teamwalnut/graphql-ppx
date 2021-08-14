@@ -1,8 +1,8 @@
 open Result;
 open Graphql_ast;
-
 open Graphql_parser;
 open Source_pos;
+open Graphql_parser_directives;
 
 let last = l =>
   switch (List.length(l)) {
@@ -15,78 +15,6 @@ let selection_end_pos = s =>
   | Field({span: (_, end_pos), _}) => end_pos
   | FragmentSpread({span: (_, end_pos), _}) => end_pos
   | InlineFragment({span: (_, end_pos), _}) => end_pos
-  };
-
-let parse_argument = parser =>
-  Result_ext.(
-    expect_name(parser)
-    |> flat_map(name =>
-         expect(parser, Graphql_lexer.Colon) |> replace(name)
-       )
-    |> flat_map(name =>
-         Graphql_parser_value.parse_value_literal(false, parser)
-         |> map(value => (name, value))
-       )
-  );
-
-let parse_arguments = parser =>
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.Paren_open, _} =>
-    delimited_nonempty_list(
-      parser,
-      Graphql_lexer.Paren_open,
-      parse_argument,
-      Graphql_lexer.Paren_close,
-    )
-    |> Result_ext.map(args => Some(args))
-  | _ => Ok(None)
-  };
-
-let parse_directive = parser =>
-  Result_ext.(
-    expect(parser, Graphql_lexer.At)
-    |> flat_map(({span: (at_start, _), _}) =>
-         expect_name(parser) |> map(make_t2(at_start))
-       )
-    |> flat_map(((at_start, name)) =>
-         parse_arguments(parser) |> map(make_t3(at_start, name))
-       )
-    |> map(((at_start, name, arguments)) =>
-         switch (arguments) {
-         | None =>
-           start_end(
-             at_start,
-             end_pos(name),
-             {d_name: name, d_arguments: None},
-           )
-         | Some(arguments) =>
-           start_end(
-             at_start,
-             switch (arguments.item) {
-             | [hd, ..._] => hd |> snd |> end_pos
-             | [] => name |> end_pos
-             },
-             {d_name: name, d_arguments: Some(arguments)},
-           )
-         }
-       )
-  );
-
-let parse_directives = parser =>
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.At, _} =>
-    let rec scanner = acc =>
-      switch (peek(parser)) {
-      | {item: Graphql_lexer.At, _} =>
-        switch (parse_directive(parser)) {
-        | Error(e) => Error(e)
-        | Ok(directive) => scanner([directive, ...acc])
-        }
-      | _ => Ok(List.rev(acc))
-      };
-
-    scanner([]);
-  | _ => Ok([])
   };
 
 let rec parse_type = parser =>
