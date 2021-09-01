@@ -222,18 +222,21 @@ let parse_field = parser => {
      });
 };
 
-let rec parse_fields = (parser, acc) => {
-  switch (peek(parser)) {
-  | {item: Graphql_lexer.Curly_close, _} =>
-    let _ = next(parser);
-    Ok(List.rev(acc));
-  | _ =>
-    let field = parse_field(parser);
-    switch (field) {
-    | Ok(field) => parse_fields(parser, [field, ...acc])
-    | Error(e) => Error(e)
+let parse_fields = parser => {
+  let rec loop = acc => {
+    switch (peek(parser)) {
+    | {item: Graphql_lexer.Curly_close, _} =>
+      let _ = next(parser);
+      Ok(List.rev(acc));
+    | _ =>
+      let field = parse_field(parser);
+      switch (field) {
+      | Ok(field) => loop([field, ...acc])
+      | Error(e) => Error(e)
+      };
     };
   };
+  loop([]);
 };
 
 let parse_input_field = parser => {
@@ -270,7 +273,7 @@ let parse_object = (~description, parser) => {
        parse_implements(parser)
        |> Result_ext.flat_map(implements => {
             expect(parser, Graphql_lexer.Curly_open)
-            |> Result_ext.flat_map(_ => {parse_fields(parser, [])})
+            |> Result_ext.flat_map(_ => {parse_fields(parser)})
             |> Result_ext.map(fields => {
                  Schema.{
                    om_name: name,
@@ -288,7 +291,7 @@ let parse_interface = (~description, parser) => {
   |> Result_ext.flat_map(_ => expect_name(parser))
   |> Result_ext.flat_map(({item: name, _}) => {
        expect(parser, Graphql_lexer.Curly_open)
-       |> Result_ext.flat_map(_ => parse_fields(parser, []))
+       |> Result_ext.flat_map(_ => parse_fields(parser))
        |> Result_ext.map(fields => {
             Schema.{
               im_name: name,
