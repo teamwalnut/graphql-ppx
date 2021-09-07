@@ -89,6 +89,7 @@ let is_internal_directive = d =>
   | "ppxDecoder"
   | "bsCustom"
   | "ppxCustom"
+  | "ppxCustomOpt"
   | "bsAs"
   | "ppxAs"
   | "argumentDefinitions"

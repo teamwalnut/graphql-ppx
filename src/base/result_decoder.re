@@ -86,6 +86,7 @@ let get_ppx_as = directives => {
 let rec unify_type =
         (
           ~has_decoder,
+          // ^^ track if it already has an inline ppxConfig defined
           error_marker,
           as_record,
           existing_record,
@@ -140,7 +141,11 @@ let rec unify_type =
       Res_float({loc: config.map_loc(span)})
     | Some(Scalar({sm_name: "Boolean", _})) =>
       Res_boolean({loc: config.map_loc(span)})
-    | Some(Scalar({sm_name})) when !has_decoder =>
+    | Some(Scalar(_)) when has_decoder =>
+      Res_raw_scalar({loc: config.map_loc(span)})
+    | Some(Scalar({sm_name})) =>
+      // if there is no inline @ppxCustom defined, try look for custom fields
+      // in config
       try({
         let decoderModule = Hashtbl.find(Ppx_config.custom_fields(), sm_name);
         Res_custom_decoder({
@@ -152,7 +157,6 @@ let rec unify_type =
       | Not_found => Res_raw_scalar({loc: config.map_loc(span)})
       | other => raise(other)
       }
-    | Some(Scalar(_)) => Res_raw_scalar({loc: config.map_loc(span)})
     | Some(Object(_) as ty) =>
       unify_selection_set(
         error_marker,
@@ -504,8 +508,16 @@ and unify_field = (error_marker, config, field_span, ty) => {
     has_directive(~prepend=true, "OmitFutureValue", ast_field.fd_directives)
     || !config.future_added_value;
   let has_decoder =
-    has_directive(~prepend=true, "Decoder", ast_field.fd_directives)
-    || has_directive(~prepend=true, "Custom", ast_field.fd_directives);
+    switch (
+      has_directive(~prepend=true, "Decoder", ast_field.fd_directives),
+      has_directive(~prepend=true, "Custom", ast_field.fd_directives),
+      has_directive(~prepend=true, "CustomOpt", ast_field.fd_directives),
+    ) {
+    | (true, _, _)
+    | (_, true, _)
+    | (_, _, true) => true
+    | (false, false, false) => false
+    };
 
   let existing_record = get_ppx_as(ast_field.fd_directives);
 
@@ -564,15 +576,18 @@ and unify_field = (error_marker, config, field_span, ty) => {
     switch (
       ast_field.fd_directives |> find_directive(~prepend=true, "Decoder"),
       ast_field.fd_directives |> find_directive(~prepend=true, "Custom"),
+      ast_field.fd_directives |> find_directive(~prepend=true, "CustomOpt"),
     ) {
-    | (_, Some(decoder)) => Some(decoder)
-    | (Some(decoder), _) => Some(decoder)
-    | (None, None) => None
+    | (Some(decoder), _, _) => `Custom(decoder)
+    | (_, Some(decoder), _) => `Custom(decoder)
+    | (_, _, Some(decoder)) => `CustomOpt(decoder)
+    | (None, None, None) => `None
     }
   ) {
-  | None =>
+  | `None =>
     Fr_named_field({name: key, loc_key, loc, type_: parser_expr, arguments})
-  | Some({item: {d_arguments, _}, span}) =>
+  | `Custom({item: {d_arguments, _}, span}) as result
+  | `CustomOpt({item: {d_arguments, _}, span}) as result =>
     switch (find_argument("module", d_arguments)) {
     | None =>
       Fr_named_field({
@@ -589,8 +604,8 @@ and unify_field = (error_marker, config, field_span, ty) => {
         arguments,
       })
     | Some((_, {item: Iv_string(module_name), span})) =>
-      switch (parser_expr) {
-      | Res_nullable({loc, inner: t}) =>
+      switch (result, parser_expr) {
+      | (`Custom(_), Res_nullable({loc, inner: t})) =>
         Fr_named_field({
           name: key,
           loc_key,
@@ -607,7 +622,20 @@ and unify_field = (error_marker, config, field_span, ty) => {
             }),
           arguments,
         })
-      | Res_array({loc, inner: t}) =>
+      | (`CustomOpt(_), Res_nullable({loc, inner: t})) =>
+        Fr_named_field({
+          name: key,
+          loc_key,
+          loc,
+          type_:
+            Res_custom_decoder({
+              loc: config.map_loc(span),
+              ident: module_name,
+              inner: Res_nullable({loc, inner: t}),
+            }),
+          arguments,
+        })
+      | (_, Res_array({loc, inner: t})) =>
         Fr_named_field({
           name: key,
           loc_key,
@@ -1120,15 +1148,15 @@ let rec unify_document_schema = document => {
               fg_directives |> find_directive(~prepend=true, "Decoder"),
               fg_directives |> find_directive(~prepend=true, "Custom"),
             ) {
+            | (Some(decoder), _)
             | (_, Some(decoder)) => Some(decoder)
-            | (Some(decoder), _) => Some(decoder)
             | (None, None) => None
             }
           ) {
           | None => Ok(None)
-          | Some({item: {d_arguments, _}, span}) =>
-            switch (find_argument("module", d_arguments)) {
-            | None =>
+          | Some({item: {d_arguments, _}, span}) as result =>
+            switch (result, find_argument("module", d_arguments)) {
+            | (_, None) =>
               Error(
                 make_error(
                   error_marker,
@@ -1137,7 +1165,7 @@ let rec unify_document_schema = document => {
                   "ppxDecoder must be given 'module' argument",
                 ),
               )
-            | Some((_, {item: Iv_string(ident), span})) =>
+            | (_, Some((_, {item: Iv_string(ident), span}))) =>
               Ok(
                 Some(
                   structure =>
@@ -1148,7 +1176,7 @@ let rec unify_document_schema = document => {
                     }),
                 ),
               )
-            | Some((_, {span, _})) =>
+            | (_, Some((_, {span, _}))) =>
               Error(
                 make_error(
                   error_marker,

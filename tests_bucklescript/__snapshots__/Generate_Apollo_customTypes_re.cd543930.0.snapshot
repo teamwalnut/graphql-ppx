@@ -41,6 +41,29 @@ module Color = {
     |> Js.Json.string;
 };
 
+module NullableString = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse: option(string) => t =
+    color =>
+      switch (color) {
+      | Some(\"green\") => Green
+      | Some(\"blue\") => Blue
+      | Some(\"red\") => Red
+      | Some(_)
+      | None => Red
+      };
+  let serialize: t => option(string) =
+    color =>
+      switch (color) {
+      | Red => Some(\"red\")
+      | Green => Some(\"green\")
+      | Blue => Some(\"blue\")
+      };
+};
+
 module DateTime = {
   type t = Js.Date.t;
   let parse = json =>
@@ -59,6 +82,7 @@ module MyQuery: {
       favoriteColor: Js.Json.t,
       futureTime: Js.Nullable.t(Js.Json.t),
       nullableColor: Js.Nullable.t(Js.Json.t),
+      nullableString: Js.Nullable.t(string),
     };
     type t = {customFields: t_customFields};
     type t_variables = unit;
@@ -69,6 +93,7 @@ module MyQuery: {
     favoriteColor: Color.t,
     futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
+    nullableString: NullableString.t,
   };
   type t = {customFields: t_customFields};
   type t_variables = unit;
@@ -94,6 +119,7 @@ function back to the original JSON compatible data */
       favoriteColor: Js.Json.t,
       futureTime: Js.Nullable.t(Js.Json.t),
       nullableColor: Js.Nullable.t(Js.Json.t),
+      nullableString: Js.Nullable.t(string),
     };
     type t = {customFields: t_customFields};
     type t_variables = unit;
@@ -104,10 +130,11 @@ function back to the original JSON compatible data */
     favoriteColor: Color.t,
     futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
+    nullableString: NullableString.t,
   };
   type t = {customFields: t_customFields};
   type t_variables = unit;
-  let query = \"query   {\\ncustomFields  {\\n__typename  \\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\";
+  let query = \"query   {\\ncustomFields  {\\n__typename  \\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\nnullableString  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
@@ -141,6 +168,15 @@ function back to the original JSON compatible data */
                 | None => None
                 };
               },
+              nullableString: {
+                let value = (value: Raw.t_customFields).nullableString;
+                NullableString.parse(
+                  switch (Js.toOption(value)) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  },
+                );
+              },
             }: t_customFields
           );
         },
@@ -153,7 +189,15 @@ function back to the original JSON compatible data */
           let value = (value: t).customFields;
           (
             {
-              let nullableColor = {
+              let nullableString = {
+                let value = (value: t_customFields).nullableString;
+                let value = NullableString.serialize(value);
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableColor = {
                 let value = (value: t_customFields).nullableColor;
                 switch (value) {
                 | Some(value) =>
@@ -199,6 +243,7 @@ function back to the original JSON compatible data */
                 favoriteColor,
                 futureTime,
                 nullableColor,
+                nullableString,
               };
             }: Raw.t_customFields
           );

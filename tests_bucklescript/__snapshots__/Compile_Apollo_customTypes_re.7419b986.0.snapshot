@@ -39,7 +39,40 @@ var Color = {
   serialize: serialize
 };
 
-function parse$1(json) {
+function parse$1(color) {
+  if (color === undefined) {
+    return /* Red */0;
+  }
+  switch (color) {
+    case \"blue\" :
+        return /* Blue */2;
+    case \"green\" :
+        return /* Green */1;
+    case \"red\" :
+        return /* Red */0;
+    default:
+      return /* Red */0;
+  }
+}
+
+function serialize$1(color) {
+  switch (color) {
+    case /* Red */0 :
+        return \"red\";
+    case /* Green */1 :
+        return \"green\";
+    case /* Blue */2 :
+        return \"blue\";
+    
+  }
+}
+
+var NullableString = {
+  parse: parse$1,
+  serialize: serialize$1
+};
+
+function parse$2(json) {
   var str = Js_json.decodeString(json);
   if (str !== undefined) {
     return new Date(str);
@@ -48,49 +81,55 @@ function parse$1(json) {
   }
 }
 
-function serialize$1(date) {
+function serialize$2(date) {
   return date.toISOString();
 }
 
 var DateTime = {
-  parse: parse$1,
-  serialize: serialize$1
+  parse: parse$2,
+  serialize: serialize$2
 };
 
 var Raw = {};
 
-function parse$2(value) {
+function parse$3(value) {
   var value$1 = value.customFields;
   var value$2 = value$1.futureTime;
   var value$3 = value$1.nullableColor;
+  var value$4 = value$1.nullableString;
   return {
           customFields: {
             __typename: value$1.__typename,
-            currentTime: parse$1(value$1.currentTime),
+            currentTime: parse$2(value$1.currentTime),
             favoriteColor: parse(value$1.favoriteColor),
-            futureTime: !(value$2 == null) ? Caml_option.some(parse$1(value$2)) : undefined,
-            nullableColor: !(value$3 == null) ? parse(value$3) : undefined
+            futureTime: !(value$2 == null) ? Caml_option.some(parse$2(value$2)) : undefined,
+            nullableColor: !(value$3 == null) ? parse(value$3) : undefined,
+            nullableString: parse$1(!(value$4 == null) ? value$4 : undefined)
           }
         };
 }
 
-function serialize$2(value) {
+function serialize$3(value) {
   var value$1 = value.customFields;
-  var value$2 = value$1.nullableColor;
-  var nullableColor = value$2 !== undefined ? serialize(value$2) : null;
-  var value$3 = value$1.futureTime;
-  var futureTime = value$3 !== undefined ? Caml_option.valFromOption(value$3).toISOString() : null;
-  var value$4 = value$1.favoriteColor;
-  var value$5 = serialize(value$4);
-  var value$6 = value$1.currentTime;
-  var value$7 = value$6.toISOString();
-  var value$8 = value$1.__typename;
+  var value$2 = value$1.nullableString;
+  var value$3 = serialize$1(value$2);
+  var nullableString = value$3 !== undefined ? value$3 : null;
+  var value$4 = value$1.nullableColor;
+  var nullableColor = value$4 !== undefined ? serialize(value$4) : null;
+  var value$5 = value$1.futureTime;
+  var futureTime = value$5 !== undefined ? Caml_option.valFromOption(value$5).toISOString() : null;
+  var value$6 = value$1.favoriteColor;
+  var value$7 = serialize(value$6);
+  var value$8 = value$1.currentTime;
+  var value$9 = value$8.toISOString();
+  var value$10 = value$1.__typename;
   var customFields = {
-    __typename: value$8,
-    currentTime: value$7,
-    favoriteColor: value$5,
+    __typename: value$10,
+    currentTime: value$9,
+    favoriteColor: value$7,
     futureTime: futureTime,
-    nullableColor: nullableColor
+    nullableColor: nullableColor,
+    nullableString: nullableString
   };
   return {
           customFields: customFields
@@ -111,15 +150,16 @@ function makeDefaultVariables(param) {
 
 var MyQuery = {
   Raw: Raw,
-  query: \"query   {\\ncustomFields  {\\n__typename  \\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\",
-  parse: parse$2,
-  serialize: serialize$2,
+  query: \"query   {\\ncustomFields  {\\n__typename  \\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\nnullableString  \\n}\\n\\n}\\n\",
+  parse: parse$3,
+  serialize: serialize$3,
   serializeVariables: serializeVariables,
   makeVariables: makeVariables,
   makeDefaultVariables: makeDefaultVariables
 };
 
 exports.Color = Color;
+exports.NullableString = NullableString;
 exports.DateTime = DateTime;
 exports.MyQuery = MyQuery;
 /* No side effect */

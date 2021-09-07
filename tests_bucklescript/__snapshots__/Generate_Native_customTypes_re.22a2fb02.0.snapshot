@@ -41,6 +41,29 @@ module Color = {
     |> Js.Json.string;
 };
 
+module NullableString = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse: option(string) => t =
+    color =>
+      switch (color) {
+      | Some(\"green\") => Green
+      | Some(\"blue\") => Blue
+      | Some(\"red\") => Red
+      | Some(_)
+      | None => Red
+      };
+  let serialize: t => option(string) =
+    color =>
+      switch (color) {
+      | Red => Some(\"red\")
+      | Green => Some(\"green\")
+      | Blue => Some(\"blue\")
+      };
+};
+
 module DateTime = {
   type t = Js.Date.t;
   let parse = json =>
@@ -61,6 +84,7 @@ module MyQuery: {
     favoriteColor: Color.t,
     futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
+    nullableString: NullableString.t,
   };
   type t = {customFields: t_customFields};
   type t_variables = unit;
@@ -88,10 +112,11 @@ function back to the original JSON compatible data */
     favoriteColor: Color.t,
     futureTime: option(DateTime.t),
     nullableColor: option(Color.t),
+    nullableString: NullableString.t,
   };
   type t = {customFields: t_customFields};
   type t_variables = unit;
-  let query = \"query   {\\ncustomFields  {\\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\n}\\n\\n}\\n\";
+  let query = \"query   {\\ncustomFields  {\\ncurrentTime  \\nfavoriteColor  \\nfutureTime  \\nnullableColor  \\nnullableString  \\n}\\n\\n}\\n\";
   let parse: Raw.t => t =
     (value) => (
       {
@@ -121,6 +146,15 @@ function back to the original JSON compatible data */
                 | value => Some(Color.parse(value))
                 };
               },
+              nullableString: {
+                let value = Yojson.Basic.Util.member(\"nullableString\", value);
+                NullableString.parse(
+                  switch (value) {
+                  | `Null => None
+                  | value => Some(Yojson.Basic.Util.to_string(value))
+                  },
+                );
+              },
             }: t_customFields
           );
         },
@@ -130,7 +164,15 @@ function back to the original JSON compatible data */
     value => {
       let customFields = {
         let value = (value: t).customFields;
-        let nullableColor = {
+        let nullableString = {
+          let value = (value: t_customFields).nullableString;
+          let value = NullableString.serialize(value);
+          switch (value) {
+          | Some(value) => `String(value)
+          | None => `Null
+          };
+        }
+        and nullableColor = {
           let value = (value: t_customFields).nullableColor;
           switch (value) {
           | Some(value) =>
@@ -163,6 +205,7 @@ function back to the original JSON compatible data */
           (\"favoriteColor\", favoriteColor),
           (\"futureTime\", futureTime),
           (\"nullableColor\", nullableColor),
+          (\"nullableString\", nullableString),
         ]);
       };
       `Assoc([(\"customFields\", customFields)]);

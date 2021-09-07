@@ -266,6 +266,7 @@ type customFieldsResult {
   favoriteColor: Color!
   futureTime: DateTime
   nullableColor: Color
+  nullableString: String
 }
 
 type deprecatedFieldsResult {
