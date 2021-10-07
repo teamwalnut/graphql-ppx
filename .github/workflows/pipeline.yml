@@ -12,7 +12,7 @@ jobs:
         os: [ubuntu-latest]
 
     container:
-      image: cichocinski/docker-esy:alpine3.8
+      image: alexfedoseev/alpine-node-yarn-esy:0.0.4
 
     steps:
       - uses: actions/checkout@v1
@@ -161,7 +161,7 @@ jobs:
 
       - name: Publish
         if: success() && github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        run: npm publish 
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN_JAAP }}
 
