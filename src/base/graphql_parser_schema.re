@@ -181,19 +181,6 @@ let parse_enum = (~description, parser) => {
      });
 };
 
-let rec parse_implements = (parser, acc) => {
-  switch (expect_name(parser)) {
-  | Ok({item: name}) =>
-    let acc = [name, ...acc];
-    switch (peek(parser)) {
-    | {item: Graphql_lexer.Bracket_open} => Ok(List.rev(acc))
-    | {item: Graphql_lexer.Ampersand} => parse_implements(parser, acc)
-    | {item, span} => Error({span, item: Unexpected_token(item)})
-    };
-  | Error(e) => Error(e)
-  };
-};
-
 let parse_field = parser => {
   let description = get_description(parser);
   expect_name(parser)
@@ -258,10 +245,25 @@ let rec parse_input_fields = (parser, acc) => {
 };
 
 let parse_implements = parser => {
+  let rec parse_implementations = (parser, acc) => {
+    switch (expect_name(parser)) {
+    | Ok({item: name}) =>
+      let acc = [name, ...acc];
+      switch (peek(parser)) {
+      | {item: Graphql_lexer.Curly_open} => Ok(List.rev(acc))
+      | {item: Graphql_lexer.Ampersand} => parse_implementations(parser, acc)
+      | {item, span} =>
+        print_endline("HWOWWOOWO");
+        Error({span, item: Unexpected_token(item)});
+      };
+    | Error(e) => Error(e)
+    };
+  };
+
   switch (peek(parser)) {
   | {item: Graphql_lexer.Name("implements")} =>
     let _ = next(parser);
-    parse_implements(parser, []);
+    parse_implementations(parser, []);
   | _ => Ok([])
   };
 };
