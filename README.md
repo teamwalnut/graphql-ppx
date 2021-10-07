@@ -163,4 +163,3 @@ Thanks to everyone who [contributed](https://github.com/reasonml-community/graph
 
 This project builds upon [mhallin/graphql_ppx](https://github.com/mhallin/graphql_ppx). It wouldn't be possible without
 great work of [mhallin/graphql_ppx contributors](https://github.com/mhallin/graphql_ppx/graphs/contributors).
-1
