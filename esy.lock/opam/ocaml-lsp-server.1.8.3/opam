@@ -10,21 +10,24 @@ authors: [
   "Rudi Grinberg <me@rgrinberg.com>"
   "Sacha Ayoun <sachaayoun@gmail.com>"
   "cannorin <cannorin@gmail.com>"
+  "Ulugbek Abdullaev <ulugbekna@gmail.com>"
+  "Thibaut Mattio <thibaut.mattio@gmail.com>"
+  "Max Lantas <mnxndev@outlook.com>"
 ]
 license: "ISC"
 homepage: "https://github.com/ocaml/ocaml-lsp"
 bug-reports: "https://github.com/ocaml/ocaml-lsp/issues"
 depends: [
-  "dune" {>= "2.7"}
+  "dune" {>= "2.9"}
   "yojson"
-  "re"
+  "re" {>= "1.5.0"}
   "ppx_yojson_conv_lib" {>= "v0.14"}
   "dune-build-info"
   "dot-merlin-reader"
   "pp" {>= "1.1.2"}
-  "csexp" {>= "1.4"}
+  "csexp" {>= "1.5"}
   "result" {>= "1.5"}
-  "ocamlformat" {with-test}
+  "ocamlformat-rpc-lib" {>= "0.18.0" & < "0.19.0"}
   "odoc" {with-doc}
   "ocaml" {>= "4.12" & < "4.13"}
 ]
@@ -40,12 +43,12 @@ build: [
     "--release"
   ]
 ]
-x-commit-hash: "c728032b4717c265aa364314288d67bd722b9ce9"
 url {
   src:
-    "https://github.com/ocaml/ocaml-lsp/releases/download/1.7.0/jsonrpc-1.7.0.tbz"
+    "https://github.com/ocaml/ocaml-lsp/releases/download/1.8.3/jsonrpc-1.8.3.tbz"
   checksum: [
-    "sha256=ca43b6608366ddf891d7c1e1cc38de2c7f93a6da0511de164959db1f88fc42ed"
-    "sha512=43a00604f25bd1d3e93bfd43f1ef9c4cad9aa392c15a5db0c5ba0264f396e7ca6f60a0293467609402e87aeec441a05e7ee2990b37c98dc27b92a22afbebfd02"
+    "sha256=58ef5aa7bf176712428b4e0b1015feaf6d677cbd9474f8822d132b25223b14e9"
+    "sha512=a368e3bc25eb6608110bd84b87142b6829a32182b61c336ad5faad597932e3c3db806a8043f52b234f2a05cc6ee88230267121fda81fff35c552cbb47ba895ab"
   ]
 }
+x-commit-hash: "7bf6200c165b5959e49651c84093d61a64cf705d"
