@@ -2,6 +2,4 @@
  (package graphql_ppx)
  (name bin)
  (public_name graphql_ppx)
- (libraries graphql_ppx)
- (flags (:standard -ccopt -static -ccopt -Wl,--no-export-dynamic))
-)
+ (libraries graphql_ppx))
