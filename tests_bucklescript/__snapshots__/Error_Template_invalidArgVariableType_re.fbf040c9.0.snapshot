@@ -1,11 +1,11 @@
 Error Template › invalidArgVariableType2.re › output
 \027[1;31mWe've found a bug for you!\027[0m
   \027[36mtests_bucklescript/operations/errors/invalidArgVariableType2.re\027[0m:\027[2m8:25-28\027[0m
-  
+
    6 \027[2m\226\148\134\027[0m query invalidArgValues($arg: String) {
    7 \027[2m\226\148\134\027[0m   invalidArgValues(
-  \027[1;31m 8\027[0m \027[2m\226\148\134\027[0m       stringRequired: \027[1;31m$arg\027[0m
+   \027[1;31m8\027[0m \027[2m\226\148\134\027[0m       stringRequired: \027[1;31m$arg\027[0m
    9 \027[2m\226\148\134\027[0m   )
   10 \027[2m\226\148\134\027[0m }
-  
+
   Invalid argument. Trying to apply the nullable variable \"$arg\" to the required argument \"stringRequired\".

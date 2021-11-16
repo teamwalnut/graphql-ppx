@@ -1,13 +1,13 @@
 Error Template › fragmentSpreadMissingInFragment.re › output
 \027[1;31mWe've found a bug for you!\027[0m
   \027[36mtests_bucklescript/operations/errors/fragmentSpreadMissingInFragment.re\027[0m:\027[2m5:5-22\027[0m
-  
+
   3 \027[2m\226\148\130\027[0m   fragment ListFragment on Lists {
   4 \027[2m\226\148\130\027[0m     nullableOfNullable
   \027[1;31m5\027[0m \027[2m\226\148\130\027[0m     \027[1;31m...MissingFragment\027[0m
   6 \027[2m\226\148\130\027[0m   }
   7 \027[2m\226\148\130\027[0m |}
-  
+
   \027[1;33mThe module or file MissingFragment can't be found.\027[0m
   - If it's a third-party dependency:
     - Did you list it in bsconfig.json?

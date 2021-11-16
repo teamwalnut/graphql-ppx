@@ -54,11 +54,11 @@ function serialize(value) {
   var value$2 = value$1.errors;
   var errors = value$2 !== undefined ? value$2.map(function (value) {
           var value$1 = value.field;
-          var field = typeof value$1 === \"string\" ? (
+          var field = typeof value$1 === \"object\" ? value$1.VAL : (
               value$1 === \"THIRD\" ? \"THIRD\" : (
                   value$1 === \"SECOND\" ? \"SECOND\" : \"FIRST\"
                 )
-            ) : value$1.VAL;
+            );
           var value$2 = value.message;
           return {
                   message: value$2,

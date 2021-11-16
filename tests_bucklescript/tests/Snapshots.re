@@ -12,7 +12,7 @@ let detect_platform = () => {
   };
 };
 let platform = detect_platform();
-let refmt_path = "./node_modules/bs-platform/" ++ platform ++ "/refmt.exe";
+let refmt_path = "./node_modules/rescript/" ++ platform ++ "/refmt.exe";
 let ppx_path = "./_build/default/src/bucklescript_bin/bin.exe";
 
 let rec really_read = (fd, ~buf, ~start=0, ~length=1024, ()) =>
@@ -184,7 +184,7 @@ let process_error = error => {
   String.trim(Buffer.contents(buf));
 };
 
-let bsb_path = "./node_modules/bs-platform/" ++ platform ++ "/bsc.exe";
+let bsb_path = "./node_modules/rescript/" ++ platform ++ "/bsc.exe";
 let start_bsb = (~ppxOptions, ~filename, ~pathIn) => {
   let (out_read, out_write) = Unix.pipe(~cloexec=true, ());
   let (err_read, err_write) =

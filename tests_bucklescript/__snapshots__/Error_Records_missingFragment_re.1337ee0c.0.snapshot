@@ -1,11 +1,11 @@
 Error Records › missingFragment.re › output
 \027[1;31mWe've found a bug for you!\027[0m
   \027[36mtests_bucklescript/operations/errors/missingFragment.re\027[0m:\027[2m3:28-42\027[0m
-  
+
   1 \027[2m\226\148\130\027[0m module Fragment = [%graphql
   2 \027[2m\226\148\130\027[0m   {|
   \027[1;31m3\027[0m \027[2m\226\148\130\027[0m   fragment ListFragment on \027[1;31mUnknownFragment\027[0m {
   4 \027[2m\226\148\130\027[0m     nullableOfNullable
   5 \027[2m\226\148\130\027[0m     nullableOfNonNullable
-  
+
   Can't find fragment type: UnknownFragment
