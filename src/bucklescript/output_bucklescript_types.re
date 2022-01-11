@@ -418,7 +418,7 @@ let generate_variant_selection =
                    prf_desc:
                      Rtag(
                        {
-                         txt: Compat.capitalize_ascii(name.item),
+                         txt: String.capitalize_ascii(name.item),
                          loc: Location.none,
                        },
                        false,
