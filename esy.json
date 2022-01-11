@@ -8,18 +8,22 @@
     "test": "dune exec tests_bucklescript/tests/RunTests.exe --"
   },
   "dependencies": {
-    "@opam/dune": "*",
     "@opam/ppxlib": ">=0.21.0",
-    "@opam/reason": ">=3.6.0",
+    "@opam/reason": "reasonml/reason#ccc3472",
     "@opam/yojson": "*"
   },
   "devDependencies": {
-    "@opam/ocaml-lsp-server": "*",
+    "@opam/ocamlformat": "0.20.1",
+    "@opam/dune": "*",
+    "@opam/ocaml-lsp-server": "1.9.1",
     "@opam/merlin": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.12.0",
+    "ocaml": "~4.13.0",
     "@reason-native/rely": "jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18",
     "refmterr": "jfrolich/reason-native:refmterr.json#08085a4048974b06aaf3aab918b677b39dea3d18"
+  },
+  "resolutions": {
+    "@opam/reason": "reasonml/reason#ccc3472"
   },
   "esy": {
     "build": "dune build -p #{self.name}",
