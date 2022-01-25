@@ -68,7 +68,7 @@ module Generic = struct
   let eq (t1 : t) (t2 : t) =
     match (t1, t2) with
     | ID, String | String, ID | Object, InputObject | InputObject, Object ->
-        true
+      true
     | t1, t2 when t1 == t2 -> true
     | _ -> false
 
@@ -82,13 +82,13 @@ module Generic = struct
     | T CustomScalar, T _ -> Ok
     | T CustomScalar, NonNull _ -> Ok
     | NonNull t1, NonNull t2 | List t1, List t2 | List t1, NonNull (List t2) ->
-        can_apply t1 t2
+      can_apply t1 t2
     | T t1, T t2 | T t1, NonNull (T t2) -> (
-        match eq t1 t2 with true -> Ok | false -> Unequal)
+      match eq t1 t2 with true -> Ok | false -> Unequal)
     | List _, T EmptyList
     | List _, NonNull (T EmptyList)
     | NonNull (List _), T EmptyList ->
-        Ok
+      Ok
     | NonNull _, T _ | NonNull _, List _ -> RequiredMismatch
     | _ -> Unequal
 
@@ -109,27 +109,27 @@ module Generic = struct
   let rec from_schema_tr ~(schema : Schema.t) (tr : Schema.type_ref) =
     match tr with
     | Named name ->
-        T
-          (name |> Schema.lookup_type schema |> Option.map from_schema_tm
-         |> Option.get_or_else Null)
+      T
+        (name |> Schema.lookup_type schema |> Option.map from_schema_tm
+       |> Option.get_or_else Null)
     | NonNull tr -> NonNull (tr |> from_schema_tr ~schema)
     | List tr -> List (tr |> from_schema_tr ~schema)
 
   let rec from_graphql_ast_tr ~(schema : Schema.t) (tr : Graphql_ast.type_ref) =
     match tr with
     | Tr_named name ->
-        T
-          (name.item |> Schema.lookup_type schema |> Option.map from_schema_tm
-         |> Option.get_or_else Null)
+      T
+        (name.item |> Schema.lookup_type schema |> Option.map from_schema_tm
+       |> Option.get_or_else Null)
     | Tr_non_null_named name ->
-        NonNull (Tr_named name |> from_graphql_ast_tr ~schema)
+      NonNull (Tr_named name |> from_graphql_ast_tr ~schema)
     | Tr_non_null_list name ->
-        NonNull (Tr_list name |> from_graphql_ast_tr ~schema)
+      NonNull (Tr_list name |> from_graphql_ast_tr ~schema)
     | Tr_list t -> List (t.item |> from_graphql_ast_tr ~schema)
 
   let rec from_graphql_ast_iv
-      ?(arguments : (string, tree) Hashtbl.t = Hashtbl.create 0)
-      ~(schema : Schema.t) (iv : Graphql_ast.input_value) =
+    ?(arguments : (string, tree) Hashtbl.t = Hashtbl.create 0)
+    ~(schema : Schema.t) (iv : Graphql_ast.input_value) =
     match iv with
     | Iv_null -> NonNull (T Null)
     | Iv_int _ -> NonNull (T Int)
@@ -138,9 +138,9 @@ module Generic = struct
     | Iv_boolean _ -> NonNull (T Boolean)
     | Iv_enum _ -> NonNull (T Enum)
     | Iv_variable variable_name -> (
-        try Hashtbl.find arguments variable_name with Not_found -> T Null)
+      try Hashtbl.find arguments variable_name with Not_found -> T Null)
     | Iv_list (inner :: _) ->
-        NonNull (List (inner.item |> from_graphql_ast_iv ~arguments ~schema))
+      NonNull (List (inner.item |> from_graphql_ast_iv ~arguments ~schema))
     | Iv_list [] -> NonNull (T EmptyList)
     | Iv_object _ -> NonNull (T InputObject)
 
@@ -153,20 +153,19 @@ module Generic = struct
   let generate_error (error : error) =
     match error with
     | MismatchedTypes (expected, received) ->
-        Printf.sprintf "Invalid argument. Expected \"%s\" but received \"%s\"."
-          expected received
+      Printf.sprintf "Invalid argument. Expected \"%s\" but received \"%s\"."
+        expected received
     | MismatchedRequiredVar (arg_name, val_name) ->
-        Printf.sprintf
-          "Invalid argument. Trying to apply the nullable variable \"$%s\" to \
-           the required argument \"%s\"."
-          val_name arg_name
+      Printf.sprintf
+        "Invalid argument. Trying to apply the nullable variable \"$%s\" to \
+         the required argument \"%s\"."
+        val_name arg_name
     | RequiredFieldMissing (arg_name, key_name) ->
-        Printf.sprintf
-          "Invalid argument. The field \"%s\" on argument \"%s\" is missing."
-          key_name arg_name
+      Printf.sprintf
+        "Invalid argument. The field \"%s\" on argument \"%s\" is missing."
+        key_name arg_name
     | RequiredVariableMissing (arg_name, variable_name) ->
-        Printf.sprintf
-          "Invalid argument. The variable \"$%s\" on argument \"%s\" is \
-           missing."
-          variable_name arg_name
+      Printf.sprintf
+        "Invalid argument. The variable \"$%s\" on argument \"%s\" is missing."
+        variable_name arg_name
 end

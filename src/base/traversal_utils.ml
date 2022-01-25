@@ -169,7 +169,7 @@ let rec as_schema_type_ref = function
   | Tr_list { item; _ } -> Schema.List (as_schema_type_ref item)
   | Tr_non_null_named { item; _ } -> Schema.NonNull (Schema.Named item)
   | Tr_non_null_list { item; _ } ->
-      Schema.NonNull (Schema.List (as_schema_type_ref item))
+    Schema.NonNull (Schema.List (as_schema_type_ref item))
 
 module Visitor (V : VisitorSig) = struct
   let enter_input_value self ctx value =
@@ -181,7 +181,7 @@ module Visitor (V : VisitorSig) = struct
     | Iv_boolean b -> V.enter_bool_value self ctx (Source_pos.replace value b)
     | Iv_enum e -> V.enter_enum_value self ctx (Source_pos.replace value e)
     | Iv_variable v ->
-        V.enter_variable_value self ctx (Source_pos.replace value v)
+      V.enter_variable_value self ctx (Source_pos.replace value v)
     | Iv_list l -> V.enter_list_value self ctx (Source_pos.replace value l)
     | Iv_object o -> V.enter_object_value self ctx (Source_pos.replace value o)
 
@@ -194,7 +194,7 @@ module Visitor (V : VisitorSig) = struct
     | Iv_boolean b -> V.exit_bool_value self ctx (Source_pos.replace value b)
     | Iv_enum e -> V.exit_enum_value self ctx (Source_pos.replace value e)
     | Iv_variable v ->
-        V.exit_variable_value self ctx (Source_pos.replace value v)
+      V.exit_variable_value self ctx (Source_pos.replace value v)
     | Iv_list l -> V.exit_list_value self ctx (Source_pos.replace value l)
     | Iv_object o -> V.exit_object_value self ctx (Source_pos.replace value o)
 
@@ -208,39 +208,39 @@ module Visitor (V : VisitorSig) = struct
           value.item )
       with
       | Some (Scalar _ as ty), _ when ty |> Schema.is_type_default == false ->
-          ()
+        ()
       | _, Iv_object fields ->
-          List.iter
-            (fun (key, value) ->
-              let inner_type =
-                Context.current_input_type_literal ctx
-                |> Option.flat_map (function
-                     | Schema.Named name | Schema.NonNull (Schema.Named name) ->
-                         Schema.lookup_type ctx.schema name
-                     | _ -> None)
-                |> Option.flat_map (fun t ->
-                       try Schema.lookup_input_field t key.item with
-                       | Schema.Invalid_type msg ->
-                           Context.push_error ctx key.span msg;
-                           None
-                       | other -> raise other)
-                |> Option.map (fun am -> am.Schema.am_arg_type)
-              in
-              let ctx = Context.push_input_type ctx inner_type in
-              let () = V.enter_object_field self ctx (key, value) in
-              let () = visit_input_value self ctx inner_type value in
-              V.exit_object_field self ctx (key, value))
-            fields
+        List.iter
+          (fun (key, value) ->
+            let inner_type =
+              Context.current_input_type_literal ctx
+              |> Option.flat_map (function
+                   | Schema.Named name | Schema.NonNull (Schema.Named name) ->
+                     Schema.lookup_type ctx.schema name
+                   | _ -> None)
+              |> Option.flat_map (fun t ->
+                   try Schema.lookup_input_field t key.item with
+                   | Schema.Invalid_type msg ->
+                     Context.push_error ctx key.span msg;
+                     None
+                   | other -> raise other)
+              |> Option.map (fun am -> am.Schema.am_arg_type)
+            in
+            let ctx = Context.push_input_type ctx inner_type in
+            let () = V.enter_object_field self ctx (key, value) in
+            let () = visit_input_value self ctx inner_type value in
+            V.exit_object_field self ctx (key, value))
+          fields
       | _, Iv_list items ->
-          let inner_type =
-            Context.current_input_type_literal ctx
-            |> Option.flat_map (function
-                 | Schema.List inner | Schema.NonNull (Schema.List inner) ->
-                     Some inner
-                 | _ -> None)
-          in
-          let ctx = Context.push_input_type ctx inner_type in
-          List.iter (visit_input_value self ctx inner_type) items
+        let inner_type =
+          Context.current_input_type_literal ctx
+          |> Option.flat_map (function
+               | Schema.List inner | Schema.NonNull (Schema.List inner) ->
+                 Some inner
+               | _ -> None)
+        in
+        let ctx = Context.push_input_type ctx inner_type in
+        List.iter (visit_input_value self ctx inner_type) items
       | _ -> ()
     in
     exit_input_value self ctx value
@@ -250,7 +250,7 @@ module Visitor (V : VisitorSig) = struct
       match inline_fragment.item.if_type_condition with
       | None -> ctx
       | Some { item; _ } ->
-          Context.push_type ctx (Some (Schema.NonNull (Schema.Named item)))
+        Context.push_type ctx (Some (Schema.NonNull (Schema.Named item)))
     in
     let () = V.enter_inline_fragment self ctx inline_fragment in
     let () = visit_directives self ctx inline_fragment.item.if_directives in
@@ -268,7 +268,7 @@ module Visitor (V : VisitorSig) = struct
     let meta_field =
       Context.parent_type ctx
       |> Option.flat_map (fun t ->
-             Schema.lookup_field t field.item.fd_name.item)
+           Schema.lookup_field t field.item.fd_name.item)
     in
     let field_type =
       Option.map (fun fm -> fm.Schema.fm_field_type) meta_field
@@ -288,9 +288,9 @@ module Visitor (V : VisitorSig) = struct
   and visit_selection self ctx = function
     | Field field -> visit_field self ctx field
     | FragmentSpread fragment_spread ->
-        visit_fragment_spread self ctx fragment_spread
+      visit_fragment_spread self ctx fragment_spread
     | InlineFragment inline_fragment ->
-        visit_inline_fragment self ctx inline_fragment
+      visit_inline_fragment self ctx inline_fragment
 
   and visit_selection_set self ctx selection_set =
     let ctx = Context.push_parent_type ctx in
@@ -301,58 +301,54 @@ module Visitor (V : VisitorSig) = struct
   and visit_arguments self ctx meta_args = function
     | None -> ()
     | Some { item; _ } ->
-        List.iter
-          (fun (name, value) ->
-            let arg_type =
-              meta_args
-              |> Option.flat_map (fun meta_args ->
-                     match
-                       List.find
-                         (fun am -> am.Schema.am_name = name.item)
-                         meta_args
-                     with
-                     | am -> Some am
-                     | exception Not_found -> None)
-              |> Option.map (fun am -> am.Schema.am_arg_type)
-            in
-            let ctx = Context.push_input_type ctx arg_type in
-            let () = V.enter_argument self ctx (name, arg_type, value) in
-            let () = visit_input_value self ctx arg_type value in
-            V.exit_argument self ctx (name, value))
-          item
+      List.iter
+        (fun (name, value) ->
+          let arg_type =
+            meta_args
+            |> Option.flat_map (fun meta_args ->
+                 match
+                   List.find (fun am -> am.Schema.am_name = name.item) meta_args
+                 with
+                 | am -> Some am
+                 | exception Not_found -> None)
+            |> Option.map (fun am -> am.Schema.am_arg_type)
+          in
+          let ctx = Context.push_input_type ctx arg_type in
+          let () = V.enter_argument self ctx (name, arg_type, value) in
+          let () = visit_input_value self ctx arg_type value in
+          V.exit_argument self ctx (name, value))
+        item
 
   and visit_directives self ctx =
     List.iter (fun directive ->
-        let meta_args =
-          Schema.lookup_directive ctx.schema directive.item.d_name.item
-          |> Option.map (fun d -> d.Schema.dm_arguments)
-        in
-        let () = V.enter_directive self ctx directive in
-        let () =
-          visit_arguments self ctx meta_args directive.item.d_arguments
-        in
-        V.exit_directive self ctx directive)
+      let meta_args =
+        Schema.lookup_directive ctx.schema directive.item.d_name.item
+        |> Option.map (fun d -> d.Schema.dm_arguments)
+      in
+      let () = V.enter_directive self ctx directive in
+      let () = visit_arguments self ctx meta_args directive.item.d_arguments in
+      V.exit_directive self ctx directive)
 
   let visit_variable_definitions self ctx = function
     | None -> ()
     | Some { item; _ } ->
-        List.iter
-          (fun (name, def) ->
-            let ctx =
-              Context.push_input_type ctx
-                (Some (as_schema_type_ref def.vd_type.item))
-            in
-            let () = V.enter_variable_definition self ctx (name, def) in
-            let () =
-              match def.vd_default_value with
-              | None -> ()
-              | Some value ->
-                  visit_input_value self ctx
-                    (Some (def.vd_type.item |> Type_utils.to_schema_type_ref))
-                    value
-            in
-            V.exit_variable_definition self ctx (name, def))
-          item
+      List.iter
+        (fun (name, def) ->
+          let ctx =
+            Context.push_input_type ctx
+              (Some (as_schema_type_ref def.vd_type.item))
+          in
+          let () = V.enter_variable_definition self ctx (name, def) in
+          let () =
+            match def.vd_default_value with
+            | None -> ()
+            | Some value ->
+              visit_input_value self ctx
+                (Some (def.vd_type.item |> Type_utils.to_schema_type_ref))
+                value
+          in
+          V.exit_variable_definition self ctx (name, def))
+        item
 
   let visit_operation_definition self ctx operation =
     let () =
@@ -371,28 +367,28 @@ module Visitor (V : VisitorSig) = struct
         (Schema.Named
            (match def with
            | Operation { item = { o_type = Query; _ }; _ } ->
-               Schema.query_type ctx.schema |> Schema.type_name
+             Schema.query_type ctx.schema |> Schema.type_name
            | Operation { item = { o_type = Mutation; _ }; _ } ->
-               Schema.mutation_type ctx.schema
-               |> Option.unsafe_unwrap ~reason:"Can't find mutation type"
-               |> Schema.type_name
+             Schema.mutation_type ctx.schema
+             |> Option.unsafe_unwrap ~reason:"Can't find mutation type"
+             |> Schema.type_name
            | Operation { item = { o_type = Subscription; _ }; _ } ->
-               Schema.subscription_type ctx.schema
-               |> Option.unsafe_unwrap ~reason:"Can't find subscription type"
-               |> Schema.type_name
+             Schema.subscription_type ctx.schema
+             |> Option.unsafe_unwrap ~reason:"Can't find subscription type"
+             |> Schema.type_name
            | Fragment { item = { fg_type_condition = { item; _ }; _ }; _ } ->
-               item))
+             item))
     in
     let ctx = Context.push_type ctx (Some def_type) in
     match def with
     | Operation operation ->
-        let () = V.enter_operation_definition self ctx operation in
-        let () = visit_operation_definition self ctx operation.item in
-        V.exit_operation_definition self ctx operation
+      let () = V.enter_operation_definition self ctx operation in
+      let () = visit_operation_definition self ctx operation.item in
+      V.exit_operation_definition self ctx operation
     | Fragment fragment ->
-        let () = V.enter_fragment_definition self ctx fragment in
-        let () = visit_fragment_definition self ctx fragment.item in
-        V.exit_fragment_definition self ctx fragment
+      let () = V.enter_fragment_definition self ctx fragment in
+      let () = visit_fragment_definition self ctx fragment.item in
+      V.exit_fragment_definition self ctx fragment
 
   let visit_document ctx doc =
     let self = V.make_self () in
@@ -410,7 +406,7 @@ let find_fragments doc =
     List.iter
       (function
         | Fragment fragment ->
-            Hashtbl.add lookup fragment.item.fg_name.item fragment.item
+          Hashtbl.add lookup fragment.item.fg_name.item fragment.item
         | _ -> ())
       doc
   in

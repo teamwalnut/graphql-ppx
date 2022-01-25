@@ -24,18 +24,18 @@ let rec print_input_value iv =
   | Iv_enum s -> s
   | Iv_variable v -> "$" ^ v
   | Iv_list list ->
-      "["
-      ^ (list
-        |> List.map (fun { item; _ } -> print_input_value item)
-        |> String.concat ", ")
-      ^ "]"
+    "["
+    ^ (list
+      |> List.map (fun { item; _ } -> print_input_value item)
+      |> String.concat ", ")
+    ^ "]"
   | Iv_object obj ->
-      "{"
-      ^ (obj
-        |> List.map (fun ({ item = key; _ }, { item = value; _ }) ->
-               key ^ ": " ^ print_input_value value)
-        |> String.concat ", ")
-      ^ "}"
+    "{"
+    ^ (obj
+      |> List.map (fun ({ item = key; _ }, { item = value; _ }) ->
+           key ^ ": " ^ print_input_value value)
+      |> String.concat ", ")
+    ^ "}"
 
 let print_argument ({ item = key; _ }, { item = value; _ }) =
   key ^ ": " ^ print_input_value value
@@ -59,7 +59,7 @@ let is_internal_directive d =
   | "ppxDecoder" | "bsCustom" | "ppxCustom" | "ppxCustomOpt" | "bsAs" | "ppxAs"
   | "argumentDefinitions" | "arguments" | "bsField" | "ppxField" | "ppxConfig"
     ->
-      true
+    true
   | _ -> false
 
 let print_directives ds =
@@ -88,26 +88,26 @@ let rec print_selection_set schema ty selection_set =
   match selection_set with
   | [] -> [||]
   | selection ->
-      let add_typename =
-        match ty with Interface _ | Union _ -> true | _ -> false
-      in
-      let maybe_typename =
-        if add_typename then Some (String "__typename\n") else None
-      in
-      let selection =
-        selection
-        |> List.map (fun s ->
-               Array.append (print_selection schema ty s) [| String "\n" |])
-        |> Array.concat
-      in
-      Array.concat
-        [
-          (match maybe_typename with
-          | Some typename -> [| String "{\n"; typename |]
-          | None -> [| String "{\n" |]);
-          selection;
-          [| String "}\n" |];
-        ]
+    let add_typename =
+      match ty with Interface _ | Union _ -> true | _ -> false
+    in
+    let maybe_typename =
+      if add_typename then Some (String "__typename\n") else None
+    in
+    let selection =
+      selection
+      |> List.map (fun s ->
+           Array.append (print_selection schema ty s) [| String "\n" |])
+      |> Array.concat
+    in
+    Array.concat
+      [
+        (match maybe_typename with
+        | Some typename -> [| String "{\n"; typename |]
+        | None -> [| String "{\n" |]);
+        selection;
+        [| String "}\n" |];
+      ]
 
 and print_selection schema ty selection =
   match selection with
@@ -154,9 +154,9 @@ and print_inline_fragment schema ty f =
   let inner_ty =
     match f.if_type_condition with
     | Some { item; _ } ->
-        lookup_type schema item
-        |> Option.unsafe_unwrap
-             ~reason:("Can't find inline fragment type: " ^ item)
+      lookup_type schema item
+      |> Option.unsafe_unwrap
+           ~reason:("Can't find inline fragment type: " ^ item)
     | None -> ty
   in
   Array.append
@@ -185,11 +185,11 @@ let print_operation schema op =
     match op.o_type with
     | Query -> schema.meta.sm_query_type
     | Mutation ->
-        Option.unsafe_unwrap ~reason:"Can't find mutation type"
-          schema.meta.sm_mutation_type
+      Option.unsafe_unwrap ~reason:"Can't find mutation type"
+        schema.meta.sm_mutation_type
     | Subscription ->
-        Option.unsafe_unwrap ~reason:"Can't find subscription type"
-          schema.meta.sm_subscription_type
+      Option.unsafe_unwrap ~reason:"Can't find subscription type"
+        schema.meta.sm_subscription_type
   in
   Array.append
     ([

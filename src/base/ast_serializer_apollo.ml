@@ -16,56 +16,55 @@ let ser_name { item = name; _ } =
 
 let rec ser_type = function
   | { item = Tr_named name; _ } ->
-      `Assoc [ ("kind", `String "NamedType"); ("name", ser_name name) ]
+    `Assoc [ ("kind", `String "NamedType"); ("name", ser_name name) ]
   | { item = Tr_list inner; _ } ->
-      `Assoc [ ("kind", `String "ListType"); ("type", ser_type inner) ]
+    `Assoc [ ("kind", `String "ListType"); ("type", ser_type inner) ]
   | { item = Tr_non_null_named name; _ } ->
-      `Assoc
-        [
-          ("kind", `String "NonNullType");
-          ( "type",
-            `Assoc [ ("kind", `String "NamedType"); ("name", ser_name name) ] );
-        ]
+    `Assoc
+      [
+        ("kind", `String "NonNullType");
+        ( "type",
+          `Assoc [ ("kind", `String "NamedType"); ("name", ser_name name) ] );
+      ]
   | { item = Tr_non_null_list inner; _ } ->
-      `Assoc
-        [
-          ("kind", `String "NonNullType");
-          ( "type",
-            `Assoc [ ("kind", `String "ListType"); ("type", ser_type inner) ] );
-        ]
+    `Assoc
+      [
+        ("kind", `String "NonNullType");
+        ( "type",
+          `Assoc [ ("kind", `String "ListType"); ("type", ser_type inner) ] );
+      ]
 
 let rec ser_value = function
   | { item = Iv_null; _ } -> `Assoc [ ("kind", `String "NullValue") ]
   | { item = Iv_int i; _ } ->
-      `Assoc
-        [ ("kind", `String "IntValue"); ("value", `String (string_of_int i)) ]
+    `Assoc
+      [ ("kind", `String "IntValue"); ("value", `String (string_of_int i)) ]
   | { item = Iv_float f; _ } ->
-      `Assoc
-        [
-          ("kind", `String "FloatValue");
-          ("value", `String (Printf.sprintf "%.16g" f));
-        ]
+    `Assoc
+      [
+        ("kind", `String "FloatValue");
+        ("value", `String (Printf.sprintf "%.16g" f));
+      ]
   | { item = Iv_string s; _ } ->
-      `Assoc [ ("kind", `String "StringValue"); ("value", `String s) ]
+    `Assoc [ ("kind", `String "StringValue"); ("value", `String s) ]
   | { item = Iv_boolean b; _ } ->
-      `Assoc [ ("kind", `String "BooleanValue"); ("value", `Bool b) ]
+    `Assoc [ ("kind", `String "BooleanValue"); ("value", `Bool b) ]
   | { item = Iv_enum e; _ } ->
-      `Assoc [ ("kind", `String "EnumValue"); ("value", `String e) ]
+    `Assoc [ ("kind", `String "EnumValue"); ("value", `String e) ]
   | { item = Iv_variable v; span; _ } ->
-      `Assoc
-        [ ("kind", `String "Variable"); ("name", ser_name { item = v; span }) ]
+    `Assoc
+      [ ("kind", `String "Variable"); ("name", ser_name { item = v; span }) ]
   | { item = Iv_list l; _ } ->
-      `Assoc
-        [
-          ("kind", `String "ListValue");
-          ("values", ser_list_to_array ser_value l);
-        ]
+    `Assoc
+      [
+        ("kind", `String "ListValue"); ("values", ser_list_to_array ser_value l);
+      ]
   | { item = Iv_object o; _ } ->
-      `Assoc
-        [
-          ("kind", `String "ObjectValue");
-          ("fields", ser_list_to_array ser_object_field o);
-        ]
+    `Assoc
+      [
+        ("kind", `String "ObjectValue");
+        ("fields", ser_list_to_array ser_object_field o);
+      ]
 
 and ser_object_field (k, v) =
   `Assoc
@@ -118,57 +117,56 @@ let rec ser_selection_set sset =
 
 and ser_selection = function
   | Field { item; _ } ->
-      `Assoc
-        [
-          ("kind", `String "Field");
-          ("alias", ser_optional ser_name item.fd_alias);
-          ("name", ser_name item.fd_name);
-          ("arguments", ser_arguments item.fd_arguments);
-          ("directives", ser_directives item.fd_directives);
-          ("selectionSet", ser_optional ser_selection_set item.fd_selection_set);
-        ]
+    `Assoc
+      [
+        ("kind", `String "Field");
+        ("alias", ser_optional ser_name item.fd_alias);
+        ("name", ser_name item.fd_name);
+        ("arguments", ser_arguments item.fd_arguments);
+        ("directives", ser_directives item.fd_directives);
+        ("selectionSet", ser_optional ser_selection_set item.fd_selection_set);
+      ]
   | FragmentSpread { item; _ } ->
-      `Assoc
-        [
-          ("kind", `String "FragmentSpread");
-          ("name", ser_name item.fs_name);
-          ("directives", ser_directives item.fs_directives);
-        ]
+    `Assoc
+      [
+        ("kind", `String "FragmentSpread");
+        ("name", ser_name item.fs_name);
+        ("directives", ser_directives item.fs_directives);
+      ]
   | InlineFragment { item; _ } ->
-      `Assoc
-        [
-          ("kind", `String "InlineFragment");
-          ( "typeCondition",
-            ser_optional ser_type_condition item.if_type_condition );
-          ("directives", ser_directives item.if_directives);
-          ("selectionSet", ser_selection_set item.if_selection_set);
-        ]
+    `Assoc
+      [
+        ("kind", `String "InlineFragment");
+        ("typeCondition", ser_optional ser_type_condition item.if_type_condition);
+        ("directives", ser_directives item.if_directives);
+        ("selectionSet", ser_selection_set item.if_selection_set);
+      ]
 
 let ser_definition = function
   | Operation { item; _ } ->
-      `Assoc
-        [
-          ("kind", `String "OperationDefinition");
-          ("name", ser_optional ser_name item.o_name);
-          ( "operation",
-            match item.o_type with
-            | Query -> `String "query"
-            | Mutation -> `String "mutation"
-            | Subscription -> `String "subscription" );
-          ( "variableDefinitions",
-            ser_variable_definitions item.o_variable_definitions );
-          ("directives", ser_directives item.o_directives);
-          ("selectionSet", ser_selection_set item.o_selection_set);
-        ]
+    `Assoc
+      [
+        ("kind", `String "OperationDefinition");
+        ("name", ser_optional ser_name item.o_name);
+        ( "operation",
+          match item.o_type with
+          | Query -> `String "query"
+          | Mutation -> `String "mutation"
+          | Subscription -> `String "subscription" );
+        ( "variableDefinitions",
+          ser_variable_definitions item.o_variable_definitions );
+        ("directives", ser_directives item.o_directives);
+        ("selectionSet", ser_selection_set item.o_selection_set);
+      ]
   | Fragment { item; _ } ->
-      `Assoc
-        [
-          ("kind", `String "FragmentDefintion");
-          ("name", ser_name item.fg_name);
-          ("typeCondition", ser_type_condition item.fg_type_condition);
-          ("directives", ser_directives item.fg_directives);
-          ("selectionSet", ser_selection_set item.fg_selection_set);
-        ]
+    `Assoc
+      [
+        ("kind", `String "FragmentDefintion");
+        ("name", ser_name item.fg_name);
+        ("typeCondition", ser_type_condition item.fg_type_condition);
+        ("directives", ser_directives item.fg_directives);
+        ("selectionSet", ser_selection_set item.fg_selection_set);
+      ]
 
 let def_end = function
   | Operation { span = _, e; _ } | Fragment { span = _, e; _ } -> e.index

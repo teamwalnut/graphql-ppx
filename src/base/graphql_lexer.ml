@@ -100,36 +100,36 @@ let emit_single_char lexer token =
 let rec scan_over_whitespace lexer =
   match peek_char_only lexer with
   | Some '\t' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some ' ' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some '\n' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some '\r' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some ',' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some '#' ->
-      let _ = next_char lexer in
-      scan_to_end_of_line lexer
+    let _ = next_char lexer in
+    scan_to_end_of_line lexer
   | _ -> ()
 
 and scan_to_end_of_line lexer =
   match peek_char_only lexer with
   | Some '\n' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some '\r' ->
-      let _ = next_char lexer in
-      scan_over_whitespace lexer
+    let _ = next_char lexer in
+    scan_over_whitespace lexer
   | Some _ ->
-      let _ = next_char lexer in
-      scan_to_end_of_line lexer
+    let _ = next_char lexer in
+    scan_to_end_of_line lexer
   | None -> ()
 
 let is_name_start c = c = '_' || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
@@ -142,18 +142,18 @@ let scan_name lexer =
   match next_char lexer with
   | None -> Error (zero_width lexer.position Unexpected_end_of_file)
   | Some (start_idx, _) ->
-      let rec scan_loop end_idx =
-        match peek_char lexer with
-        | Some (idx, ch) when is_name_cont ch ->
-            let _ = next_char lexer in
-            scan_loop idx
-        | Some _ -> end_idx
-        | None -> end_idx
-      in
-      let endIdx = scan_loop start_idx in
-      Ok
-        (start_end start_pos lexer.position
-           (Name (String.sub lexer.source start_idx (endIdx - start_idx + 1))))
+    let rec scan_loop end_idx =
+      match peek_char lexer with
+      | Some (idx, ch) when is_name_cont ch ->
+        let _ = next_char lexer in
+        scan_loop idx
+      | Some _ -> end_idx
+      | None -> end_idx
+    in
+    let endIdx = scan_loop start_idx in
+    Ok
+      (start_end start_pos lexer.position
+         (Name (String.sub lexer.source start_idx (endIdx - start_idx + 1))))
 
 let scan_ellipsis_or_dot lexer =
   let start_pos = lexer.position in
@@ -162,12 +162,12 @@ let scan_ellipsis_or_dot lexer =
     else
       match peek_char lexer with
       | Some (_, '.') ->
-          let _ = next_char lexer in
-          scan_loop (i - 1)
+        let _ = next_char lexer in
+        scan_loop (i - 1)
       | Some (_, _) when i = 2 -> Ok (start_end start_pos lexer.position Dot)
       | Some (_, ch) ->
-          let _ = next_char lexer in
-          Error (single_width lexer.position (Unexpected_character ch))
+        let _ = next_char lexer in
+        Error (single_width lexer.position (Unexpected_character ch))
       | None -> Error (zero_width lexer.position Unexpected_end_of_file)
   in
 
@@ -178,27 +178,27 @@ let scan_digits lexer =
   match peek_char lexer with
   | None -> Error (zero_width start_pos Unexpected_end_of_file)
   | Some (start_idx, _) -> (
-      let rec scan_loop end_idx =
-        match peek_char lexer with
-        | Some (idx, ch) when is_digit ch ->
-            let _ = next_char lexer in
-            scan_loop idx
-        | Some _ | None -> end_idx
-      in
-      let end_idx = scan_loop start_idx in
-      try
-        Ok
-          (int_of_string
-             (String.sub lexer.source start_idx (end_idx - start_idx + 1)))
-      with Failure _ ->
-        Error (start_end start_pos lexer.position Invalid_number))
+    let rec scan_loop end_idx =
+      match peek_char lexer with
+      | Some (idx, ch) when is_digit ch ->
+        let _ = next_char lexer in
+        scan_loop idx
+      | Some _ | None -> end_idx
+    in
+    let end_idx = scan_loop start_idx in
+    try
+      Ok
+        (int_of_string
+           (String.sub lexer.source start_idx (end_idx - start_idx + 1)))
+    with Failure _ ->
+      Error (start_end start_pos lexer.position Invalid_number))
 
 let scan_integer_part lexer =
   let is_negative =
     match peek_char_only lexer with
     | Some '-' ->
-        let _ = next_char lexer in
-        Ok true
+      let _ = next_char lexer in
+      Ok true
     | Some _ -> Ok false
     | None -> Error (zero_width lexer.position Unexpected_end_of_file)
   in
@@ -206,9 +206,9 @@ let scan_integer_part lexer =
   match is_negative with
   | Error e -> Error e
   | Ok neg -> (
-      match scan_digits lexer with
-      | Error e -> Error e
-      | Ok num -> Ok (if neg then -1 * num else num))
+    match scan_digits lexer with
+    | Error e -> Error e
+    | Ok num -> Ok (if neg then -1 * num else num))
 
 let scan_number lexer =
   let start_pos = lexer.position in
@@ -216,8 +216,8 @@ let scan_number lexer =
     let mantissa =
       frac_part |> Option.map float_of_int
       |> Option.map (fun frac ->
-             if frac > 0.0 then frac /. (10.0 ** (frac |> log10 |> floor))
-             else 0.0)
+           if frac > 0.0 then frac /. (10.0 ** (frac |> log10 |> floor))
+           else 0.0)
       |> Option.map (fun m -> if int_part < 0 then -1.0 *. m else m)
     in
     let exp =
@@ -229,7 +229,7 @@ let scan_number lexer =
       | None, Some exp -> Float (float_of_int int_part *. exp)
       | Some mantissa, None -> Float (float_of_int int_part +. mantissa)
       | Some mantissa, Some exp ->
-          Float ((float_of_int int_part +. mantissa) ** exp)
+        Float ((float_of_int int_part +. mantissa) ** exp)
     in
     Ok (start_end start_pos lexer.position num_token)
   in
@@ -237,97 +237,96 @@ let scan_number lexer =
   let scan_exp_part int_part frac_part =
     match peek_char_only lexer with
     | Some 'e' | Some 'E' -> (
-        let _ = next_char lexer in
-        match scan_integer_part lexer with
-        | Error e -> Error e
-        | Ok exp_part -> build_number int_part frac_part (Some exp_part))
+      let _ = next_char lexer in
+      match scan_integer_part lexer with
+      | Error e -> Error e
+      | Ok exp_part -> build_number int_part frac_part (Some exp_part))
     | None | Some _ -> build_number int_part frac_part None
   in
   match scan_integer_part lexer with
   | Error e -> Error e
   | Ok int_part -> (
-      match peek_char_only lexer with
-      | Some '.' -> (
-          let _ = next_char lexer in
-          match scan_digits lexer with
-          | Error e -> Error e
-          | Ok digits -> scan_exp_part int_part (Some digits))
-      | Some _ | None -> scan_exp_part int_part None)
+    match peek_char_only lexer with
+    | Some '.' -> (
+      let _ = next_char lexer in
+      match scan_digits lexer with
+      | Error e -> Error e
+      | Ok digits -> scan_exp_part int_part (Some digits))
+    | Some _ | None -> scan_exp_part int_part None)
 
 let scan_string ~start_pos lexer =
   match peek_char lexer with
   | None -> Error (zero_width start_pos Unexpected_end_of_file)
   | Some _ ->
-      let rec scan_loop acc =
+    let rec scan_loop acc =
+      match peek_char_only lexer with
+      | None -> Error (zero_width lexer.position Unterminated_string)
+      | Some '\n' | Some '\r' ->
+        Error (single_width lexer.position Unterminated_string)
+      | Some '"' ->
+        let _ = next_char lexer in
+        Ok (start_end start_pos lexer.position (String acc))
+      | Some '\\' -> (
+        let _ = next_char lexer in
         match peek_char_only lexer with
         | None -> Error (zero_width lexer.position Unterminated_string)
-        | Some '\n' | Some '\r' ->
-            Error (single_width lexer.position Unterminated_string)
         | Some '"' ->
-            let _ = next_char lexer in
-            Ok (start_end start_pos lexer.position (String acc))
-        | Some '\\' -> (
-            let _ = next_char lexer in
-            match peek_char_only lexer with
-            | None -> Error (zero_width lexer.position Unterminated_string)
-            | Some '"' ->
-                let _ = next_char lexer in
-                acc ^ "\"" |> scan_loop
-            | Some '\\' ->
-                let _ = next_char lexer in
-                acc ^ "\\" |> scan_loop
-            | Some '/' ->
-                let _ = next_char lexer in
-                acc ^ "/" |> scan_loop
-            | Some 'b' ->
-                let _ = next_char lexer in
-                acc ^ "\n" |> scan_loop
-            | Some 'f' ->
-                let _ = next_char lexer in
-                acc ^ "\014" |> scan_loop
-            | Some 'n' ->
-                let _ = next_char lexer in
-                acc ^ "\n" |> scan_loop
-            | Some 'r' ->
-                let _ = next_char lexer in
-                acc ^ "\r" |> scan_loop
-            | Some 't' ->
-                let _ = next_char lexer in
-                acc ^ "\t" |> scan_loop
-            | Some 'u' ->
-                Error
-                  (single_width lexer.position
-                     (Unknown_escape_sequence "\\uXXXX"))
-            | Some ch ->
-                Error
-                  (single_width lexer.position
-                     (Unknown_escape_sequence ("\\" ^ String.make 1 ch))))
+          let _ = next_char lexer in
+          acc ^ "\"" |> scan_loop
+        | Some '\\' ->
+          let _ = next_char lexer in
+          acc ^ "\\" |> scan_loop
+        | Some '/' ->
+          let _ = next_char lexer in
+          acc ^ "/" |> scan_loop
+        | Some 'b' ->
+          let _ = next_char lexer in
+          acc ^ "\n" |> scan_loop
+        | Some 'f' ->
+          let _ = next_char lexer in
+          acc ^ "\014" |> scan_loop
+        | Some 'n' ->
+          let _ = next_char lexer in
+          acc ^ "\n" |> scan_loop
+        | Some 'r' ->
+          let _ = next_char lexer in
+          acc ^ "\r" |> scan_loop
+        | Some 't' ->
+          let _ = next_char lexer in
+          acc ^ "\t" |> scan_loop
+        | Some 'u' ->
+          Error
+            (single_width lexer.position (Unknown_escape_sequence "\\uXXXX"))
         | Some ch ->
-            let _ = next_char lexer in
-            acc ^ String.make 1 ch |> scan_loop
-      in
-      scan_loop ""
+          Error
+            (single_width lexer.position
+               (Unknown_escape_sequence ("\\" ^ String.make 1 ch))))
+      | Some ch ->
+        let _ = next_char lexer in
+        acc ^ String.make 1 ch |> scan_loop
+    in
+    scan_loop ""
 
 let scan_block_string ~start_pos lexer =
   let rec scan_loop acc =
     match peek_char_only lexer with
     | None -> Error (zero_width lexer.position Unterminated_string)
     | Some '"' -> (
+      let _ = next_char lexer in
+      match peek_char_only lexer with
+      | Some '"' -> (
         let _ = next_char lexer in
         match peek_char_only lexer with
-        | Some '"' -> (
-            let _ = next_char lexer in
-            match peek_char_only lexer with
-            | Some '"' ->
-                let _ = next_char lexer in
-                Ok (start_end start_pos lexer.position (String acc))
-            | Some _ -> acc ^ "\"\"" |> scan_loop
-            | None -> Error (zero_width lexer.position Unterminated_string))
-        | Some _ -> acc ^ "\"" |> scan_loop
+        | Some '"' ->
+          let _ = next_char lexer in
+          Ok (start_end start_pos lexer.position (String acc))
+        | Some _ -> acc ^ "\"\"" |> scan_loop
         | None -> Error (zero_width lexer.position Unterminated_string))
+      | Some _ -> acc ^ "\"" |> scan_loop
+      | None -> Error (zero_width lexer.position Unterminated_string))
     | Some ch ->
-        let _ = next_char lexer in
-        acc ^ String.make 1 ch |> scan_loop
+      let _ = next_char lexer in
+      acc ^ String.make 1 ch |> scan_loop
   in
   scan_loop ""
 
@@ -352,24 +351,24 @@ let scan_single_token lexer =
       | Some '&' -> Ok (emit_single_char lexer Ampersand)
       | Some '.' -> scan_ellipsis_or_dot lexer
       | Some '"' -> (
-          let start_pos = lexer.position in
+        let start_pos = lexer.position in
+        let _ = next_char lexer in
+        match peek_char_only lexer with
+        | Some '"' -> (
           let _ = next_char lexer in
           match peek_char_only lexer with
-          | Some '"' -> (
-              let _ = next_char lexer in
-              match peek_char_only lexer with
-              | Some '"' ->
-                  let _ = next_char lexer in
-                  scan_block_string ~start_pos lexer
-              | None | Some _ ->
-                  Ok (start_end start_pos lexer.position (String "")))
-          | None | Some _ -> scan_string ~start_pos lexer)
+          | Some '"' ->
+            let _ = next_char lexer in
+            scan_block_string ~start_pos lexer
+          | None | Some _ -> Ok (start_end start_pos lexer.position (String ""))
+          )
+        | None | Some _ -> scan_string ~start_pos lexer)
       | Some ch when is_number_start ch -> scan_number lexer
       | Some ch when is_name_start ch -> scan_name lexer
       | Some ch -> Error (single_width lexer.position (Unknown_character ch))
       | None ->
-          let () = lexer.has_reached_eof <- true in
-          Ok (zero_width lexer.position End_of_file))
+        let () = lexer.has_reached_eof <- true in
+        Ok (zero_width lexer.position End_of_file))
 
 let consume lexer =
   let rec consumer acc =

@@ -30,8 +30,6 @@ let filter_map f l =
   let rec loop acc = function
     | [] -> List.rev acc
     | head :: tail -> (
-        match f head with
-        | None -> loop acc tail
-        | Some v -> loop (v :: acc) tail)
+      match f head with None -> loop acc tail | Some v -> loop (v :: acc) tail)
   in
   loop [] l

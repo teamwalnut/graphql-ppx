@@ -15,7 +15,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
     match def.item.o_variable_definitions with
     | None -> ()
     | Some { item; _ } ->
-        List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
+      List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
 
   let exit_operation_definition (opts, _) _ _ = opts.active <- false
 
@@ -25,7 +25,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
     match def.item.fg_variable_definitions with
     | None -> ()
     | Some { item; _ } ->
-        List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
+      List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
 
   let exit_fragment_definition (opts, _) _ _ = opts.active <- false
 

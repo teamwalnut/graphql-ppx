@@ -21,22 +21,21 @@ module Visitor : Traversal_utils.VisitorSig = struct
       |> Option.map (fun fm -> fm.fm_arguments)
       |> Option.get_or_else []
       |> List.filter (fun arg ->
-             match (arg.am_arg_type, arg.am_default_value) with
-             | NonNull _, None -> true
-             | NonNull _, Some _ | _ -> false)
+           match (arg.am_arg_type, arg.am_default_value) with
+           | NonNull _, None -> true
+           | NonNull _, Some _ | _ -> false)
     in
     expected_args
     |> List.iter (fun arg ->
-           let provided =
-             provided_args
-             |> List.exists (fun arg_name -> arg_name = arg.am_name)
+         let provided =
+           provided_args |> List.exists (fun arg_name -> arg_name = arg.am_name)
+         in
+         if not provided then
+           let message =
+             Printf.sprintf "Argument \"%s\" on field \"%s\" not provided"
+               arg.am_name def.item.fd_name.item
            in
-           if not provided then
-             let message =
-               Printf.sprintf "Argument \"%s\" on field \"%s\" not provided"
-                 arg.am_name def.item.fd_name.item
-             in
-             Context.push_error ctx def.item.fd_name.span message)
+           Context.push_error ctx def.item.fd_name.span message)
 
   type t = unit
 

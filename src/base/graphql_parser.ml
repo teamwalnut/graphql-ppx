@@ -17,8 +17,8 @@ let next parser =
   match parser.tokens with
   | [ x ] -> Error (replace x Unexpected_end_of_file)
   | x :: _ ->
-      let () = parser.tokens <- List.tl parser.tokens in
-      Ok x
+    let () = parser.tokens <- List.tl parser.tokens in
+    Ok x
   | _ -> raise Internal_parse_error
 
 let expect parser token =
@@ -31,7 +31,7 @@ let expect_name parser =
   match next parser with
   | Ok ({ item = Graphql_lexer.Name name; _ } as span) -> Ok (replace span name)
   | Ok ({ item = Graphql_lexer.End_of_file; _ } as span) ->
-      Error (replace span Unexpected_end_of_file)
+    Error (replace span Unexpected_end_of_file)
   | Ok span -> Error (map (fun t -> Unexpected_token t) span)
   | Error e -> Error e
 
@@ -39,14 +39,14 @@ let expect_dotted_name parser =
   let rec loop start_pos _ acc =
     match next parser with
     | Ok { item = Graphql_lexer.Name name; span = _, end_pos } -> (
-        let acc = acc ^ name in
-        match peek parser with
-        | { item = Graphql_lexer.Dot; span = _, end_pos } ->
-            let _ = next parser in
-            loop start_pos end_pos (acc ^ ".")
-        | _ -> Ok (start_end start_pos end_pos acc))
+      let acc = acc ^ name in
+      match peek parser with
+      | { item = Graphql_lexer.Dot; span = _, end_pos } ->
+        let _ = next parser in
+        loop start_pos end_pos (acc ^ ".")
+      | _ -> Ok (start_end start_pos end_pos acc))
     | Ok ({ item = Graphql_lexer.End_of_file; _ } as span) ->
-        Error (replace span Unexpected_end_of_file)
+      Error (replace span Unexpected_end_of_file)
     | Ok span -> Error (map (fun t -> Unexpected_token t) span)
     | Error e -> Error e
   in
@@ -56,38 +56,38 @@ let expect_dotted_name parser =
 let skip parser token =
   match peek parser with
   | span when span.item = token ->
-      Result_ext.map (fun x -> Some x) (next parser)
+    Result_ext.map (fun x -> Some x) (next parser)
   | span when span.item = Graphql_lexer.End_of_file ->
-      Error (zero_width (start_pos span) Unexpected_end_of_file)
+    Error (zero_width (start_pos span) Unexpected_end_of_file)
   | _ -> Ok None
 
 let delimited_list parser opening sub_parser closing =
   match expect parser opening with
   | Error e -> Error e
   | Ok { span = start_pos, _; _ } ->
-      let rec scanner acc =
-        match skip parser closing with
-        | Ok (Some { span = _, end_pos; _ }) ->
-            Ok (start_end start_pos end_pos (List.rev acc))
-        | _ -> (
-            match sub_parser parser with
-            | Ok span -> scanner (span :: acc)
-            | Error e -> Error e)
-      in
-      scanner []
+    let rec scanner acc =
+      match skip parser closing with
+      | Ok (Some { span = _, end_pos; _ }) ->
+        Ok (start_end start_pos end_pos (List.rev acc))
+      | _ -> (
+        match sub_parser parser with
+        | Ok span -> scanner (span :: acc)
+        | Error e -> Error e)
+    in
+    scanner []
 
 let delimited_nonempty_list parser opening sub_parser closing =
   match expect parser opening with
   | Error e -> Error e
   | Ok { span = start_pos, _; _ } ->
-      let rec scanner acc =
-        match sub_parser parser with
+    let rec scanner acc =
+      match sub_parser parser with
+      | Error e -> Error e
+      | Ok span -> (
+        match skip parser closing with
         | Error e -> Error e
-        | Ok span -> (
-            match skip parser closing with
-            | Error e -> Error e
-            | Ok (Some { span = _, end_pos; _ }) ->
-                Ok (start_end start_pos end_pos (List.rev (span :: acc)))
-            | Ok None -> scanner (span :: acc))
-      in
-      scanner []
+        | Ok (Some { span = _, end_pos; _ }) ->
+          Ok (start_end start_pos end_pos (List.rev (span :: acc)))
+        | Ok None -> scanner (span :: acc))
+    in
+    scanner []

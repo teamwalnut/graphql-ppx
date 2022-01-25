@@ -108,6 +108,6 @@ let res_loc = function
   | Res_poly_variant_interface { loc }
   | Res_solo_fragment_spread { loc }
   | Res_error { loc } ->
-      loc
+    loc
 
 let can_be_absent_as_field = function Res_nullable _ -> true | _ -> false

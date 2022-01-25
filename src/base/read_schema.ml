@@ -255,11 +255,11 @@ let create_dir_if_not_exist abs_path =
     match Unix.mkdir abs_path 493 with
     | () -> ()
     | exception Unix.Unix_error (error, cmd, msg) -> (
-        match error with
-        | Unix.EEXIST -> ()
-        | error ->
-            Log.error_log (Unix.error_message error ^ " " ^ cmd ^ " " ^ msg);
-            raise (Unix.Unix_error (error, cmd, msg)))
+      match error with
+      | Unix.EEXIST -> ()
+      | error ->
+        Log.error_log (Unix.error_message error ^ " " ^ cmd ^ " " ^ msg);
+        raise (Unix.Unix_error (error, cmd, msg)))
 
 let ppx_cache_dir = ".graphql_ppx_cache/"
   [@@ocaml.doc
@@ -308,11 +308,11 @@ let create_marshaled_schema json_schema data =
   Log.log ("[write marshaled] " ^ marshaled_schema);
   match open_out_bin marshaled_schema with
   | exception Sys_error msg ->
-      Log.error_log ("[write marshaled][Sys_error]: " ^ msg);
-      raise (Sys_error msg)
+    Log.error_log ("[write marshaled][Sys_error]: " ^ msg);
+    raise (Sys_error msg)
   | outc ->
-      Marshal.to_channel outc data [];
-      close_out outc
+    Marshal.to_channel outc data [];
+    close_out outc
 
 let read_whole_file filename =
   let ch = open_in filename in
@@ -328,18 +328,18 @@ let parse_graphql_schema schema_file =
   let schema_str = read_whole_file schema_file in
   match Graphql_lexer.make schema_str |> Graphql_lexer.consume with
   | Ok tokens -> (
-      match Graphql_parser.make tokens |> Graphql_parser_schema.parse with
-      | Ok schema -> schema
-      | Error parser_error ->
-          raise
-            (ParserError
-               ( (match parser_error.item with
-                 | Unexpected_token token ->
-                     "Unexpected token " ^ Graphql_lexer.string_of_token token
-                 | Unexpected_end_of_file -> "Unexpected end of file"
-                 | Lexer_error _ -> "Lexer error"),
-                 (fst parser_error.span).line,
-                 (snd parser_error.span).line )))
+    match Graphql_parser.make tokens |> Graphql_parser_schema.parse with
+    | Ok schema -> schema
+    | Error parser_error ->
+      raise
+        (ParserError
+           ( (match parser_error.item with
+             | Unexpected_token token ->
+               "Unexpected token " ^ Graphql_lexer.string_of_token token
+             | Unexpected_end_of_file -> "Unexpected end of file"
+             | Lexer_error _ -> "Lexer error"),
+             (fst parser_error.span).line,
+             (snd parser_error.span).line )))
   | Error _lex_error -> raise (LexerError "lexer error!")
 
 let parse_schema schema_file =
@@ -365,19 +365,19 @@ let rec read_marshaled_schema json_schema =
   Log.log ("[read marshaled] " ^ marshaled_schema);
   match open_in_bin marshaled_schema with
   | exception Sys_error msg ->
-      Log.error_log ("[read marshaled][Sys_error]: " ^ msg);
-      raise (Sys_error msg)
+    Log.error_log ("[read marshaled][Sys_error]: " ^ msg);
+    raise (Sys_error msg)
   | file ->
-      let data =
-        match Marshal.from_channel file with
-        | data ->
-            close_in file;
-            data
-        | exception _ ->
-            close_in file;
-            recovery_build json_schema
-      in
-      data
+    let data =
+      match Marshal.from_channel file with
+      | data ->
+        close_in file;
+        data
+      | exception _ ->
+        close_in file;
+        recovery_build json_schema
+    in
+    data
 
 and recovery_build json_schema =
   let () = Log.error_log "Marshaled file is broken. Doing recovery build..." in
@@ -395,5 +395,5 @@ let get_schema maybe_schema =
      with
     | None -> raise Schema_file_not_found
     | Some json_schema ->
-        build_schema_if_dirty json_schema;
-        read_marshaled_schema json_schema)
+      build_schema_if_dirty json_schema;
+      read_marshaled_schema json_schema)

@@ -15,13 +15,13 @@ module Visitor : Traversal_utils.VisitorSig = struct
     in
     field_meta
     |> Option.map (fun (field : Schema.field_meta) ->
-           match field.fm_deprecation_reason with
-           | None -> ()
-           | Some reason ->
-               let message =
-                 Printf.sprintf "Field \"%s\" has been deprecated. Reason: %s"
-                   field.fm_name reason
-               in
-               Context.push_warning ctx def.span message)
+         match field.fm_deprecation_reason with
+         | None -> ()
+         | Some reason ->
+           let message =
+             Printf.sprintf "Field \"%s\" has been deprecated. Reason: %s"
+               field.fm_name reason
+           in
+           Context.push_warning ctx def.span message)
     |> ignore
 end

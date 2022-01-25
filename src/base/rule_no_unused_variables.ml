@@ -13,7 +13,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
     match def.item.fg_variable_definitions with
     | None -> ()
     | Some { item; _ } ->
-        List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
+      List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
 
   let exit_fragment_definition self ctx def =
     Hashtbl.iter
@@ -30,7 +30,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
     match def.item.o_variable_definitions with
     | None -> ()
     | Some { item; _ } ->
-        List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
+      List.iter (fun (name, _) -> Hashtbl.add self name.item name.span) item
 
   let exit_operation_definition self ctx def =
     Hashtbl.iter
@@ -40,9 +40,8 @@ module Visitor : Traversal_utils.VisitorSig = struct
             match def.item.o_name with
             | None -> Printf.sprintf "Variable \"$%s\" is never used." v
             | Some name ->
-                Printf.sprintf
-                  "Variable \"$%s\" is never used in operation \"%s\"" v
-                  name.item
+              Printf.sprintf
+                "Variable \"$%s\" is never used in operation \"%s\"" v name.item
           in
           Context.push_error ctx span message)
       self
