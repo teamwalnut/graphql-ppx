@@ -65,7 +65,9 @@ let start_ppx path opts =
           Unix.stdin in_write err_write
       in
       let output_opts =
-        if win then [| "-"; "-o"; "-" |] else [| "/dev/stdin"; "/dev/stdout" |]
+        match win with
+        | true -> [| "-"; "-o"; "-" |]
+        | false -> [| "/dev/stdin"; "/dev/stdout" |]
       in
       let _ =
         Unix.create_process ppx_path
@@ -170,10 +172,16 @@ let start_bsb ~ppxOptions ~filename ~pathIn =
             "-w";
             "-30";
             "-ppx";
-            ppx_path ^ " -schema=graphql_schema.json "
+            ppx_path
+            ^ (" -schema=graphql_schema.json "
+              [@reason.raw_literal " -schema=graphql_schema.json "])
             ^ Array.fold_left
-                (fun acc ppxOption -> if acc = "" then "" else " " ^ ppxOption)
-                "" ppxOptions;
+                (fun acc ppxOption ->
+                  (match acc = ("" [@reason.raw_literal ""]) with
+                  | true -> ("" [@reason.raw_literal ""])
+                  | false -> (" " [@reason.raw_literal " "]))
+                  ^ ppxOption)
+                ("" [@reason.raw_literal ""]) ppxOptions;
             pathIn ^ "/" ^ filename;
           |]
           Unix.stdin out_write err_write
@@ -250,60 +258,72 @@ let get_id () =
   !increm
 
 let tests =
-  ListLabels.map test_types ~f:(fun test_type ->
-    ListLabels.map ppx_configs ~f:(fun ppx_config ->
-      match test_type with
-      | Generate | Compile ->
-        if ppx_config.native && test_type = Compile then []
-        else
-          ListLabels.map filenames ~f:(fun filename ->
-            {
-              id = get_id ();
-              test_type;
-              ppx_config;
-              filename;
-              descriptors = None;
-            })
-      | Error ->
-        if not ppx_config.native then
-          ListLabels.map error_filenames ~f:(fun filename ->
-            {
-              id = get_id ();
-              test_type;
-              ppx_config;
-              filename;
-              descriptors = None;
-            })
-        else []))
+  test_types
+  |> List.map (fun test_type ->
+       ppx_configs
+       |> List.map (fun ppx_config ->
+            match test_type with
+            | Generate | Compile ->
+              if ppx_config.native && test_type = Compile then []
+              else
+                filenames
+                |> List.map (fun filename ->
+                     {
+                       id = get_id ();
+                       test_type;
+                       ppx_config;
+                       filename;
+                       descriptors = None;
+                     })
+            | Error ->
+              if not ppx_config.native then
+                error_filenames
+                |> List.map (fun filename ->
+                     {
+                       id = get_id ();
+                       test_type;
+                       ppx_config;
+                       filename;
+                       descriptors = None;
+                     })
+              else []))
 
 let concurrent_processes = 30
 let inflight_files = ref (tests |> List.flatten |> List.flatten)
 
 let fill_inflight () =
   inflight_files :=
-    ListLabels.mapi !inflight_files ~f:(fun i test ->
-      match test with
-      | { descriptors = None; _ } when i < concurrent_processes ->
-        {
-          test with
-          descriptors =
-            Some
-              (match test with
-              | { test_type = Generate; filename; ppx_config; _ } ->
-                Ppx
-                  (start_ppx
-                     ("tests_bucklescript/operations/" ^ filename)
-                     ppx_config.options)
-              | { test_type = Compile; filename; ppx_config; _ } ->
-                Bsb
-                  (start_bsb ~ppxOptions:ppx_config.options ~filename
-                     ~pathIn:"tests_bucklescript/operations")
-              | { test_type = Error; filename; ppx_config; _ } ->
-                Bsb
-                  (start_bsb ~ppxOptions:ppx_config.options ~filename
-                     ~pathIn:"tests_bucklescript/operations/errors"));
-        }
-      | test -> test)
+    !inflight_files
+    |> List.mapi (fun i test ->
+         match test with
+         | { descriptors = None; _ } when i < concurrent_processes ->
+           {
+             test with
+             descriptors =
+               Some
+                 (match test with
+                 | { test_type = Generate; filename; ppx_config; _ } ->
+                   Ppx
+                     (start_ppx
+                        (("tests_bucklescript/operations/"
+                         [@reason.raw_literal "tests_bucklescript/operations/"])
+                       ^ filename)
+                        ppx_config.options)
+                 | { test_type = Compile; filename; ppx_config; _ } ->
+                   Bsb
+                     (start_bsb ~ppxOptions:ppx_config.options ~filename
+                        ~pathIn:
+                          ("tests_bucklescript/operations"
+                          [@reason.raw_literal "tests_bucklescript/operations"]))
+                 | { test_type = Error; filename; ppx_config; _ } ->
+                   Bsb
+                     (start_bsb ~ppxOptions:ppx_config.options ~filename
+                        ~pathIn:
+                          ("tests_bucklescript/operations/errors"
+                          [@reason.raw_literal
+                            "tests_bucklescript/operations/errors"])));
+           }
+         | test -> test)
 
 let remove_inflight id =
   inflight_files :=
@@ -330,43 +350,50 @@ let get_type_and_config tests =
   | _ -> raise Not_found
 ;;
 
-ListLabels.iter tests ~f:(fun tests_by_type ->
-  ListLabels.iter tests_by_type ~f:(fun tests_by_config ->
-    match tests_by_config with
-    | [] -> ()
-    | _ ->
-      let test_type, ppx_config = get_type_and_config tests_by_config in
-      let typeName =
-        match test_type with
-        | Generate -> "Generate"
-        | Compile -> "Compile"
-        | Error -> "Error"
-      in
-      describe
-        (typeName ^ " " ^ ppx_config.name)
-        (fun { describe; _ } ->
-          ListLabels.iter tests_by_config ~f:(fun { filename; id; _ } ->
-            describe filename (fun { test; _ } ->
-              test "output" (fun { expect; _ } ->
-                fill_inflight ();
-                match test_type with
-                | Generate ->
-                  let descriptors =
-                    id |> get_descriptors |> get_ppx_descriptors
-                  in
-                  let output, error = continue_ppx descriptors in
-                  (expect.string output).toMatchSnapshot ();
-                  (expect.string error).toEqual ""
-                | Compile ->
-                  let descriptors =
-                    id |> get_descriptors |> get_bsb_descriptors
-                  in
-                  let output, error = descriptors |> continue_bsb in
-                  (expect.string output).toMatchSnapshot ();
-                  (expect.string error).toEqual ""
-                | Error ->
-                  let descriptors =
-                    id |> get_descriptors |> get_bsb_descriptors
-                  in
-                  let _, error = descriptors |> continue_bsb in
-                  (expect.string error).toMatchSnapshot ()))))))
+tests
+|> List.iter (fun tests_by_type ->
+     tests_by_type
+     |> List.iter (fun tests_by_config ->
+          match tests_by_config with
+          | [] -> ()
+          | _ ->
+            let test_type, ppx_config = get_type_and_config tests_by_config in
+            let typeName =
+              match test_type with
+              | Generate -> "Generate"
+              | Compile -> "Compile"
+              | Error -> "Error"
+            in
+            describe
+              (typeName ^ " " ^ ppx_config.name)
+              (fun { describe; _ } ->
+                tests_by_config
+                |> List.iter (fun { filename; id; _ } ->
+                     describe filename (fun { test; _ } ->
+                       test ("output" [@reason.raw_literal "output"])
+                         (fun { expect; _ } ->
+                         ((fill_inflight ();
+                           match test_type with
+                           | Generate ->
+                             let descriptors =
+                               id |> get_descriptors |> get_ppx_descriptors
+                             in
+                             let output, error = continue_ppx descriptors in
+                             (expect.string output).toMatchSnapshot ();
+                             (expect.string error).toEqual
+                               ("" [@reason.raw_literal ""])
+                           | Compile ->
+                             let descriptors =
+                               id |> get_descriptors |> get_bsb_descriptors
+                             in
+                             let output, error = descriptors |> continue_bsb in
+                             (expect.string output).toMatchSnapshot ();
+                             (expect.string error).toEqual
+                               ("" [@reason.raw_literal ""])
+                           | Error ->
+                             let descriptors =
+                               id |> get_descriptors |> get_bsb_descriptors
+                             in
+                             let _, error = descriptors |> continue_bsb in
+                             (expect.string error).toMatchSnapshot ())
+                         [@reason.preserve_braces])))))))

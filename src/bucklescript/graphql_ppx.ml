@@ -676,11 +676,10 @@ class mapper =
                                                            pexp_loc = loc;
                                                            pexp_desc =
                                                              Pexp_constant
-                                                               ((Pconst_string
-                                                                  ( query,
-                                                                    _,
-                                                                    delim ))
-                                                               [@explicit_arity]);
+                                                               (Pconst_string
+                                                                 ( query,
+                                                                   _,
+                                                                   delim ));
                                                            _;
                                                          },
                                                          _ );

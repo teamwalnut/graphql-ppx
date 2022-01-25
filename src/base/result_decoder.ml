@@ -686,18 +686,30 @@ let config_arguments_to_config existing_query_config directive_arguments :
 
 let to_output_config ~map_loc ~delimiter ~document (definition, query_config) =
   let schema = Lazy.force (Read_schema.get_schema query_config.schema) in
+  (* let () =
+       Printf.eprintf "Apollo mode? query: %s %B"
+         (match query_config.apollo_mode with
+         | Some true -> "Some true"
+         | Some false -> "Some false"
+         | None -> "None")
+         (Ppx_config.apollo_mode ())
+     in *)
+  let apollo_mode =
+    match query_config.apollo_mode with
+    | None -> Ppx_config.apollo_mode ()
+    | Some apollo_mode -> apollo_mode
+  in
+  (* let () = Printf.eprintf "Really Apollo mode2?  %B\n" apollo_mode in *)
+  let definitions =
+    if apollo_mode then
+      [ definition ] |> Ast_transforms.add_typename_to_selection_set schema
+    else [ definition ]
+  in
+  let definitions =
+    definitions |> Ast_transforms.remove_typename_from_union schema
+  in
   let definition =
-    match
-      (if
-       match query_config.apollo_mode with
-       | None -> Ppx_config.apollo_mode ()
-       | Some apollo_mode -> apollo_mode
-      then [ definition ] |> Ast_transforms.add_typename_to_selection_set schema
-      else [ definition ])
-      |> Ast_transforms.remove_typename_from_union schema
-    with
-    | [ definition ] -> definition
-    | _ -> definition
+    match definitions with [ definition ] -> definition | _ -> definition
   in
   let template_tag = get_template_tag query_config in
   ( definition,
