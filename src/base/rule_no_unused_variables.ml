@@ -19,10 +19,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
     Hashtbl.iter
       (fun v span ->
         let message =
-          Printf.sprintf
-            ("Variable \"$%s\" is never used in fragment \"%s\""
-            [@reason.raw_literal
-              "Variable \\\"$%s\\\" is never used in fragment \\\"%s\\\""]) v
+          Printf.sprintf "Variable \"$%s\" is never used in fragment \"%s\"" v
             def.item.fg_name.item
         in
         Context.push_error ctx span message)
@@ -44,10 +41,8 @@ module Visitor : Traversal_utils.VisitorSig = struct
             | None -> Printf.sprintf "Variable \"$%s\" is never used." v
             | Some name ->
                 Printf.sprintf
-                  ("Variable \"$%s\" is never used in operation \"%s\""
-                  [@reason.raw_literal
-                    "Variable \\\"$%s\\\" is never used in operation \\\"%s\\\""])
-                  v name.item
+                  "Variable \"$%s\" is never used in operation \"%s\"" v
+                  name.item
           in
           Context.push_error ctx span message)
       self

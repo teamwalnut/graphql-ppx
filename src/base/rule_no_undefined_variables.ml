@@ -33,10 +33,8 @@ module Visitor : Traversal_utils.VisitorSig = struct
     if opts.active && not (Hashtbl.mem self def.item) then
       let message =
         Printf.sprintf
-          ("Variable \"%s\" not found in operation. Make sure it's defined!"
-          [@reason.raw_literal
-            "Variable \\\"%s\\\" not found in operation. Make sure it's \
-             defined!"]) def.item
+          "Variable \"%s\" not found in operation. Make sure it's defined!"
+          def.item
       in
       Context.push_error ctx def.span message
 end

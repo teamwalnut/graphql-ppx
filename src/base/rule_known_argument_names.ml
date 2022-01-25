@@ -16,17 +16,12 @@ module Visitor : Traversal_utils.VisitorSig = struct
     let msg =
       match pos with
       | Directive dir_name ->
-          Printf.sprintf
-            ("Unknown argument \"%s\" on directive \"%s\""
-            [@reason.raw_literal
-              "Unknown argument \\\"%s\\\" on directive \\\"%s\\\""]) arg_name
+          Printf.sprintf "Unknown argument \"%s\" on directive \"%s\"" arg_name
             dir_name
       | Field (field_name, type_name) ->
           Printf.sprintf
-            ("Unknown argument \"%s\" on field \"%s\" of type \"%s\""
-            [@reason.raw_literal
-              "Unknown argument \\\"%s\\\" on field \\\"%s\\\" of type \
-               \\\"%s\\\""]) arg_name field_name type_name
+            "Unknown argument \"%s\" on field \"%s\" of type \"%s\"" arg_name
+            field_name type_name
     in
     Context.push_error ctx span msg
 

@@ -19,10 +19,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
            | None -> ()
            | Some reason ->
                let message =
-                 Printf.sprintf
-                   ("Field \"%s\" has been deprecated. Reason: %s"
-                   [@reason.raw_literal
-                     "Field \\\"%s\\\" has been deprecated. Reason: %s"])
+                 Printf.sprintf "Field \"%s\" has been deprecated. Reason: %s"
                    field.fm_name reason
                in
                Context.push_warning ctx def.span message)

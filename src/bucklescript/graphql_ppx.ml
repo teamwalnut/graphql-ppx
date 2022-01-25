@@ -403,11 +403,8 @@ class mapper =
                        acc
                  | _ ->
                      Location.raise_errorf ~loc
-                       ("[%%graphql] accepts a string, e.g. [%%graphql {| { \
-                         query |}]"
-                       [@reason.raw_literal
-                         "[%%graphql] accepts a string, e.g. [%%graphql {| { \
-                          query |}]"]))
+                       "[%%graphql] accepts a string, e.g. [%%graphql {| { \
+                        query |}]")
              | { psig_desc = Psig_recmodule module_declarations } as pstr ->
                  {
                    pstr with
@@ -462,11 +459,8 @@ class mapper =
                                         acc
                                   | _ ->
                                       Location.raise_errorf ~loc
-                                        ("[%%graphql] accepts a string, e.g. \
-                                          [%%graphql {| { query |}]"
-                                        [@reason.raw_literal
-                                          "[%%graphql] accepts a string, e.g. \
-                                           [%%graphql {| { query |}]"]))
+                                        "[%%graphql] accepts a string, e.g. \
+                                         [%%graphql {| { query |}]")
                               | other -> other :: acc)
                             []
                        |> List.rev);
@@ -638,13 +632,7 @@ class mapper =
                                          pmty_attributes;
                                          pmty_desc =
                                            Pmty_extension
-                                             ( {
-                                                 txt =
-                                                   ("graphql"
-                                                   [@reason.raw_literal
-                                                     "graphql"]);
-                                                 _;
-                                               },
+                                             ( { txt = "graphql"; _ },
                                                PStr
                                                  [
                                                    {
@@ -798,11 +786,8 @@ class mapper =
                        acc
                  | _ ->
                      Location.raise_errorf ~loc
-                       ("[%%graphql] accepts a string, e.g. [%%graphql {| { \
-                         query |}]"
-                       [@reason.raw_literal
-                         "[%%graphql] accepts a string, e.g. [%%graphql {| { \
-                          query |}]"]))
+                       "[%%graphql] accepts a string, e.g. [%%graphql {| { \
+                        query |}]")
              | { pstr_desc = Pstr_recmodule module_bindings } as pstr ->
                  {
                    pstr with
@@ -836,14 +821,7 @@ class mapper =
                                           ( {
                                               pmod_desc =
                                                 Pmod_extension
-                                                  ( {
-                                                      txt =
-                                                        ("gql"
-                                                        [@reason.raw_literal
-                                                          "gql"]);
-                                                      loc;
-                                                    },
-                                                    pstr );
+                                                  ({ txt = "gql"; loc }, pstr);
                                               _;
                                             },
                                             _ );
@@ -963,11 +941,8 @@ class mapper =
                                         acc
                                   | _ ->
                                       Location.raise_errorf ~loc
-                                        ("[%%graphql] accepts a string, e.g. \
-                                          [%%graphql {| { query |}]"
-                                        [@reason.raw_literal
-                                          "[%%graphql] accepts a string, e.g. \
-                                           [%%graphql {| { query |}]"]))
+                                        "[%%graphql] accepts a string, e.g. \
+                                         [%%graphql {| { query |}]")
                               | other -> other :: acc)
                             []
                        |> List.rev);
@@ -992,11 +967,8 @@ let args =
             (fun moduleKey ->
               Hashtbl.add (Ppx_config.custom_fields ()) !argKey moduleKey);
         ],
-      ("Adds a global custom field decoder/serializer (format: -custom-field \
-        ScalarType Module)"
-      [@reason.raw_literal
-        "Adds a global custom field decoder/serializer (format: -custom-field \
-         ScalarType Module)"]) );
+      "Adds a global custom field decoder/serializer (format: -custom-field \
+       ScalarType Module)" );
     ( "-verbose",
       Arg.Unit
         (fun () ->
@@ -1008,9 +980,7 @@ let args =
         (fun () ->
           Ppx_config.update_config (fun current ->
               { current with apollo_mode = true })),
-      ("Automatically add __typename everywhere (necessary for apollo)"
-      [@reason.raw_literal
-        "Automatically add __typename everywhere (necessary for apollo)"]) );
+      "Automatically add __typename everywhere (necessary for apollo)" );
     ( "-schema",
       Arg.String
         (fun schema_file ->
@@ -1033,17 +1003,13 @@ let args =
         (fun future_added_value ->
           Ppx_config.update_config (fun current ->
               { current with future_added_value })),
-      ("Omits the `FutureAddedValue variant for enums if set to false"
-      [@reason.raw_literal
-        "Omits the `FutureAddedValue variant for enums if set to false"]) );
+      "Omits the `FutureAddedValue variant for enums if set to false" );
     ( "-verbose-errors",
       Arg.Unit
         (fun () ->
           Ppx_config.update_config (fun current ->
               { current with verbose_error_handling = true })),
-      ("Verbose error handling. If not defined NODE_ENV will be used"
-      [@reason.raw_literal
-        "Verbose error handling. If not defined NODE_ENV will be used"]) );
+      "Verbose error handling. If not defined NODE_ENV will be used" );
     ( "-template-tag",
       Arg.String
         (fun template_tag ->
@@ -1055,10 +1021,7 @@ let args =
         (fun template_tag_import ->
           Ppx_config.update_config (fun current ->
               { current with template_tag_import = Some template_tag_import })),
-      ("the import to use for the template tag (default is \"default\")"
-      [@reason.raw_literal
-        "the import to use for the template tag (default is \\\"default\\\")"])
-    );
+      "the import to use for the template tag (default is \"default\")" );
     ( "-template-tag-location",
       Arg.String
         (fun template_tag_location ->
@@ -1086,9 +1049,7 @@ let args =
         | _ ->
             Ppx_config.update_config (fun current ->
                 { current with fragment_in_query = Include })),
-      ("Include the full fragment in the query (either 'include' or 'exclude')"
-      [@reason.raw_literal
-        "Include the full fragment in the query (either 'include' or 'exclude')"])
+      "Include the full fragment in the query (either 'include' or 'exclude')"
     );
     ( "-extend-query",
       Arg.String
@@ -1105,9 +1066,7 @@ let args =
                 extend_query_no_required_variables =
                   Some extend_query_no_required_variables;
               })),
-      ("extend queries having no required variables with the following functor"
-      [@reason.raw_literal
-        "extend queries having no required variables with the following functor"])
+      "extend queries having no required variables with the following functor"
     );
     ( "-extend-mutation",
       Arg.String
@@ -1124,11 +1083,8 @@ let args =
                 extend_mutation_no_required_variables =
                   Some extend_mutation_no_required_variables;
               })),
-      ("extend mutations having no required variables with the following \
-        functor"
-      [@reason.raw_literal
-        "extend mutations having no required variables with the following \
-         functor"]) );
+      "extend mutations having no required variables with the following functor"
+    );
     ( "-extend-subscription",
       Arg.String
         (fun extend_subscription ->
@@ -1144,11 +1100,8 @@ let args =
                 extend_subscription_no_required_variables =
                   Some extend_subscription_no_required_variables;
               })),
-      ("extend subscriptions having no required variables with the following \
-        functor"
-      [@reason.raw_literal
-        "extend subscriptions having no required variables with the following \
-         functor"]) );
+      "extend subscriptions having no required variables with the following \
+       functor" );
     ( "-extend-fragment",
       Arg.String
         (fun extend_fragment ->

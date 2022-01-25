@@ -292,9 +292,7 @@ let fill_inflight () =
               | { test_type = Generate; filename; ppx_config; _ } ->
                 Ppx
                   (start_ppx
-                     (("tests_bucklescript/operations/"
-                      [@reason.raw_literal "tests_bucklescript/operations/"])
-                    ^ filename)
+                     ("tests_bucklescript/operations/" ^ filename)
                      ppx_config.options)
               | { test_type = Compile; filename; ppx_config; _ } ->
                 Bsb

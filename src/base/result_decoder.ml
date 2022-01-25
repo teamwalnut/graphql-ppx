@@ -141,9 +141,7 @@ and unify_interface error_marker _as_record config span interface_meta ty
         match selection with
         | InlineFragment { item = { if_type_condition = None; _ }; span } ->
             raise_error config.map_loc span
-              ("Inline fragments must have a type condition"
-              [@reason.raw_literal
-                "Inline fragments must have a type condition"])
+              "Inline fragments must have a type condition"
         | InlineFragment frag -> (selections, frag :: fragments)
         | selection -> (selection :: selections, fragments)
       in
@@ -218,9 +216,7 @@ and unify_union error_marker config span union_meta omit_future_value
               "Only inline fragments can appear on unions"
         | InlineFragment { item = { if_type_condition = None; _ }; span } ->
             raise_error config.map_loc span
-              ("Inline fragments must have a type condition"
-              [@reason.raw_literal
-                "Inline fragments must have a type condition"])
+              "Inline fragments must have a type condition"
         | InlineFragment frag -> frag
       in
       let type_cond_name { item = { if_type_condition; _ }; _ } =
@@ -291,9 +287,7 @@ and unify_variant error_marker config span ty selection_set =
       | Some (Union _)
       | Some (InputObject _) ->
           make_error error_marker config.map_loc span
-            ("Variant fields can only be applied to object types"
-            [@reason.raw_literal
-              "Variant fields can only be applied to object types"])
+            "Variant fields can only be applied to object types"
       | Some (Object _ as ty) -> (
           match selection_set with
           | None ->
@@ -317,11 +311,8 @@ and unify_variant error_marker config span ty selection_set =
                                  with
                                  | Ntr_list _ | Ntr_named _ ->
                                      raise_error config.map_loc span
-                                       ("Variant field must only contain \
-                                         nullable fields"
-                                       [@reason.raw_literal
-                                         "Variant field must only contain \
-                                          nullable fields"])
+                                       "Variant field must only contain \
+                                        nullable fields"
                                  | Ntr_nullable i -> i
                                in
                                ( key,
@@ -330,14 +321,10 @@ and unify_variant error_marker config span ty selection_set =
                                    item.fd_selection_set ))
                        | FragmentSpread { span; _ } ->
                            raise_error config.map_loc span
-                             ("Variant selections can only contain fields"
-                             [@reason.raw_literal
-                               "Variant selections can only contain fields"])
+                             "Variant selections can only contain fields"
                        | InlineFragment { span; _ } ->
                            raise_error config.map_loc span
-                             ("Variant selections can only contain fields"
-                             [@reason.raw_literal
-                               "Variant selections can only contain fields"]))
+                             "Variant selections can only contain fields")
               in
               Res_poly_variant_selection_set
                 { loc = config.map_loc span; name = n; fragments = fields }))
@@ -424,9 +411,7 @@ and unify_field error_marker config field_span ty =
               loc_key;
               type_ =
                 make_error error_marker config.map_loc span
-                  ("ppxDecoder must be given 'module' argument"
-                  [@reason.raw_literal
-                    "ppxDecoder must be given 'module' argument"]);
+                  "ppxDecoder must be given 'module' argument";
               arguments;
             }
       | Some (_, { item = Iv_string module_name; span }) -> (
@@ -564,11 +549,8 @@ and unify_selection_set error_marker as_record existing_record config span ty
       let arguments = find_fragment_arguments fs_directives in
       if as_record then
         make_error error_marker config.map_loc span
-          ("@ppxRecord can not be used with fragment spreads, place @ppxRecord \
-            on the fragment definition instead"
-          [@reason.raw_literal
-            "@ppxRecord can not be used with fragment spreads, place \
-             @ppxRecord on the fragment definition instead"])
+          "@ppxRecord can not be used with fragment spreads, place @ppxRecord \
+           on the fragment definition instead"
       else
         Res_solo_fragment_spread
           {
@@ -621,9 +603,7 @@ let unify_operation error_marker config = function
             subscription_type (Some o_selection_set)
       | None ->
           make_error error_marker config.map_loc span
-            ("This schema does not contain any subscriptions"
-            [@reason.raw_literal
-              "This schema does not contain any subscriptions"]))
+            "This schema does not contain any subscriptions")
 
 type query_config = {
   schema : string option;
@@ -813,9 +793,7 @@ let rec unify_document_schema document =
             | _, None ->
                 Error
                   (make_error error_marker config.map_loc span
-                     ("ppxDecoder must be given 'module' argument"
-                     [@reason.raw_literal
-                       "ppxDecoder must be given 'module' argument"]))
+                     "ppxDecoder must be given 'module' argument")
             | _, Some (_, { item = Iv_string ident; span }) ->
                 Ok
                   (Some
@@ -825,9 +803,7 @@ let rec unify_document_schema document =
             | _, Some (_, { span; _ }) ->
                 Error
                   (make_error error_marker config.map_loc span
-                     ("The 'module' argument must be a string"
-                     [@reason.raw_literal
-                       "The 'module' argument must be a string"])))
+                     "The 'module' argument must be a string"))
       in
       let is_record = has_directive ~prepend:true "Record" fg_directives in
       let argumentDefinitions = fg.item.fg_variable_definitions in

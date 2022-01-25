@@ -33,10 +33,7 @@ module Visitor : Traversal_utils.VisitorSig = struct
            in
            if not provided then
              let message =
-               Printf.sprintf
-                 ("Argument \"%s\" on field \"%s\" not provided"
-                 [@reason.raw_literal
-                   "Argument \\\"%s\\\" on field \\\"%s\\\" not provided"])
+               Printf.sprintf "Argument \"%s\" on field \"%s\" not provided"
                  arg.am_name def.item.fd_name.item
              in
              Context.push_error ctx def.item.fd_name.span message)

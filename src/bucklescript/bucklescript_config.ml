@@ -146,14 +146,8 @@ let read_config () =
               | other ->
                   raise
                     (Config_error
-                       (("Error in graphql configuration: ast-out \""
-                        [@reason.raw_literal
-                          "Error in graphql configuration: ast-out \\\""])
-                      ^ other
-                      ^ ("\" is not supported. Choose either apollo or string."
-                        [@reason.raw_literal
-                          "\\\" is not supported. Choose either apollo or \
-                           string."]))));
+                       ("Error in graphql configuration: ast-out \"" ^ other
+                      ^ "\" is not supported. Choose either apollo or string.")));
           })
     in
     let handleFragmentInQuery mode =
@@ -167,14 +161,9 @@ let read_config () =
       | other ->
           raise
             (Config_error
-               (("Error in graphql-ppx configuration: fragment-in-query\""
-                [@reason.raw_literal
-                  "Error in graphql-ppx configuration: fragment-in-query\\\""])
+               ("Error in graphql-ppx configuration: fragment-in-query\""
               ^ other
-              ^ ("\" is not supported. Choose either 'include' or 'exclude'."
-                [@reason.raw_literal
-                  "\\\" is not supported. Choose either 'include' or 'exclude'."])
-               ))
+              ^ "\" is not supported. Choose either 'include' or 'exclude'."))
     in
     let handleExtendQuery extend_query =
       Ppx_config.update_config (fun current ->

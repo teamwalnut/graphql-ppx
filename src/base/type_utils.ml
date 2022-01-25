@@ -153,31 +153,20 @@ module Generic = struct
   let generate_error (error : error) =
     match error with
     | MismatchedTypes (expected, received) ->
-        Printf.sprintf
-          ("Invalid argument. Expected \"%s\" but received \"%s\"."
-          [@reason.raw_literal
-            "Invalid argument. Expected \\\"%s\\\" but received \\\"%s\\\"."])
+        Printf.sprintf "Invalid argument. Expected \"%s\" but received \"%s\"."
           expected received
     | MismatchedRequiredVar (arg_name, val_name) ->
         Printf.sprintf
-          ("Invalid argument. Trying to apply the nullable variable \"$%s\" to \
-            the required argument \"%s\"."
-          [@reason.raw_literal
-            "Invalid argument. Trying to apply the nullable variable \
-             \\\"$%s\\\" to the required argument \\\"%s\\\"."])
+          "Invalid argument. Trying to apply the nullable variable \"$%s\" to \
+           the required argument \"%s\"."
           val_name arg_name
     | RequiredFieldMissing (arg_name, key_name) ->
         Printf.sprintf
-          ("Invalid argument. The field \"%s\" on argument \"%s\" is missing."
-          [@reason.raw_literal
-            "Invalid argument. The field \\\"%s\\\" on argument \\\"%s\\\" is \
-             missing."]) key_name arg_name
+          "Invalid argument. The field \"%s\" on argument \"%s\" is missing."
+          key_name arg_name
     | RequiredVariableMissing (arg_name, variable_name) ->
         Printf.sprintf
-          ("Invalid argument. The variable \"$%s\" on argument \"%s\" is \
-            missing."
-          [@reason.raw_literal
-            "Invalid argument. The variable \\\"$%s\\\" on argument \\\"%s\\\" \
-             is missing."])
+          "Invalid argument. The variable \"$%s\" on argument \"%s\" is \
+           missing."
           variable_name arg_name
 end
