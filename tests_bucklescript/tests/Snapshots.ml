@@ -172,16 +172,11 @@ let start_bsb ~ppxOptions ~filename ~pathIn =
             "-w";
             "-30";
             "-ppx";
-            ppx_path
-            ^ (" -schema=graphql_schema.json "
-              [@reason.raw_literal " -schema=graphql_schema.json "])
+            ppx_path ^ " -schema=graphql_schema.json "
             ^ Array.fold_left
                 (fun acc ppxOption ->
-                  (match acc = ("" [@reason.raw_literal ""]) with
-                  | true -> ("" [@reason.raw_literal ""])
-                  | false -> (" " [@reason.raw_literal " "]))
-                  ^ ppxOption)
-                ("" [@reason.raw_literal ""]) ppxOptions;
+                  (match acc = "" with true -> "" | false -> " ") ^ ppxOption)
+                "" ppxOptions;
             pathIn ^ "/" ^ filename;
           |]
           Unix.stdin out_write err_write
@@ -305,23 +300,16 @@ let fill_inflight () =
                  | { test_type = Generate; filename; ppx_config; _ } ->
                    Ppx
                      (start_ppx
-                        (("tests_bucklescript/operations/"
-                         [@reason.raw_literal "tests_bucklescript/operations/"])
-                       ^ filename)
+                        ("tests_bucklescript/operations/" ^ filename)
                         ppx_config.options)
                  | { test_type = Compile; filename; ppx_config; _ } ->
                    Bsb
                      (start_bsb ~ppxOptions:ppx_config.options ~filename
-                        ~pathIn:
-                          ("tests_bucklescript/operations"
-                          [@reason.raw_literal "tests_bucklescript/operations"]))
+                        ~pathIn:"tests_bucklescript/operations")
                  | { test_type = Error; filename; ppx_config; _ } ->
                    Bsb
                      (start_bsb ~ppxOptions:ppx_config.options ~filename
-                        ~pathIn:
-                          ("tests_bucklescript/operations/errors"
-                          [@reason.raw_literal
-                            "tests_bucklescript/operations/errors"])));
+                        ~pathIn:"tests_bucklescript/operations/errors"));
            }
          | test -> test)
 
@@ -370,8 +358,7 @@ tests
                 tests_by_config
                 |> List.iter (fun { filename; id; _ } ->
                      describe filename (fun { test; _ } ->
-                       test ("output" [@reason.raw_literal "output"])
-                         (fun { expect; _ } ->
+                       test "output" (fun { expect; _ } ->
                          ((fill_inflight ();
                            match test_type with
                            | Generate ->
@@ -380,16 +367,14 @@ tests
                              in
                              let output, error = continue_ppx descriptors in
                              (expect.string output).toMatchSnapshot ();
-                             (expect.string error).toEqual
-                               ("" [@reason.raw_literal ""])
+                             (expect.string error).toEqual ""
                            | Compile ->
                              let descriptors =
                                id |> get_descriptors |> get_bsb_descriptors
                              in
                              let output, error = descriptors |> continue_bsb in
                              (expect.string output).toMatchSnapshot ();
-                             (expect.string error).toEqual
-                               ("" [@reason.raw_literal ""])
+                             (expect.string error).toEqual ""
                            | Error ->
                              let descriptors =
                                id |> get_descriptors |> get_bsb_descriptors
