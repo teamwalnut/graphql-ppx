@@ -1,0 +1,88 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {enumInput: string};
+    type t_variables = {arg: string};
+  };
+  type t = {enumInput: string};
+  type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let makeVariables:
+    (~arg: [ | `FIRST | `SECOND | `THIRD], unit) => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {enumInput: string};
+    type t_variables = {arg: string};
+  };
+  type t = {enumInput: string};
+  type t_variables = {arg: [ | `FIRST | `SECOND | `THIRD]};
+  let query: string = [%raw
+    "require(\"gql\")`\n  query ($arg: SampleField!)  {\n    enumInput(arg: $arg)\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        enumInput: {
+          let value = (value: Raw.t).enumInput;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let enumInput = {
+          let value = (value: t).enumInput;
+          value;
+        };
+        {enumInput: enumInput};
+      }: Raw.t
+    );
+  let serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      arg:
+        (
+          a =>
+            switch (a) {
+            | `FIRST => "FIRST"
+            | `SECOND => "SECOND"
+            | `THIRD => "THIRD"
+            }
+        )(
+          (inp: t_variables).arg,
+        ),
+    };
+  let makeVariables = (~arg, ()): t_variables => {arg: arg};
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};

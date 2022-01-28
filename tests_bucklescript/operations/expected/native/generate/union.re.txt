@@ -1,0 +1,537 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = Yojson.Basic.Util.member("dogOrHuman", value);
+          let typename: string =
+            value
+            |> Yojson.Basic.Util.member("__typename")
+            |> Yojson.Basic.Util.to_string;
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                  barkVolume: {
+                    let value = Yojson.Basic.Util.member("barkVolume", value);
+                    Yojson.Basic.Util.to_float(value);
+                  },
+                }: t_dogOrHuman_Dog,
+              )
+            | "Human" =>
+              `Human(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                }: t_dogOrHuman_Human,
+              )
+            | _ => `FutureAddedValue(value)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = (value: t).dogOrHuman;
+        switch (value) {
+        | `Dog(value) =>
+          let barkVolume = {
+            let value = (value: t_dogOrHuman_Dog).barkVolume;
+            `Float(value);
+          }
+          and name = {
+            let value = (value: t_dogOrHuman_Dog).name;
+            `String(value);
+          };
+          `Assoc([
+            ("__typename", `String("Dog")),
+            ("name", name),
+            ("barkVolume", barkVolume),
+          ]);
+        | `Human(value) =>
+          let name = {
+            let value = (value: t_dogOrHuman_Human).name;
+            `String(value);
+          };
+          `Assoc([("__typename", `String("Human")), ("name", name)]);
+        | `FutureAddedValue(value) => value
+        };
+      };
+      `Assoc([("dogOrHuman", dogOrHuman)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+};
+module MyQueryNoError: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_dogOrHuman_Human = {name: string};
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(t_dogOrHuman_Dog)
+    | `Human(t_dogOrHuman_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = Yojson.Basic.Util.member("dogOrHuman", value);
+          let typename: string =
+            value
+            |> Yojson.Basic.Util.member("__typename")
+            |> Yojson.Basic.Util.to_string;
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                  barkVolume: {
+                    let value = Yojson.Basic.Util.member("barkVolume", value);
+                    Yojson.Basic.Util.to_float(value);
+                  },
+                }: t_dogOrHuman_Dog,
+              )
+            | "Human" =>
+              `Human(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                }: t_dogOrHuman_Human,
+              )
+            | _ => `FutureAddedValue(value)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = (value: t).dogOrHuman;
+        switch (value) {
+        | `Dog(value) =>
+          let barkVolume = {
+            let value = (value: t_dogOrHuman_Dog).barkVolume;
+            `Float(value);
+          }
+          and name = {
+            let value = (value: t_dogOrHuman_Dog).name;
+            `String(value);
+          };
+          `Assoc([
+            ("__typename", `String("Dog")),
+            ("name", name),
+            ("barkVolume", barkVolume),
+          ]);
+        | `Human(value) =>
+          let name = {
+            let value = (value: t_dogOrHuman_Human).name;
+            `String(value);
+          };
+          `Assoc([("__typename", `String("Human")), ("name", name)]);
+        | `FutureAddedValue(value) => value
+        };
+      };
+      `Assoc([("dogOrHuman", dogOrHuman)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+};
+
+type named = {
+  name: string,
+  __typename: string,
+};
+module NamedQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(named)
+    | `Human(named)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Yojson.Basic.t)
+    | `Dog(named)
+    | `Human(named)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query = "query   {\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \n__typename  \n}\n\n...on Human   {\nname  \n__typename  \n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = Yojson.Basic.Util.member("dogOrHuman", value);
+          let typename: string =
+            value
+            |> Yojson.Basic.Util.member("__typename")
+            |> Yojson.Basic.Util.to_string;
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                  __typename: {
+                    let value = Yojson.Basic.Util.member("__typename", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                }: named,
+              )
+            | "Human" =>
+              `Human(
+                {
+                  name: {
+                    let value = Yojson.Basic.Util.member("name", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                  __typename: {
+                    let value = Yojson.Basic.Util.member("__typename", value);
+                    Yojson.Basic.Util.to_string(value);
+                  },
+                }: named,
+              )
+            | _ => `FutureAddedValue(value)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let dogOrHuman = {
+        let value = (value: t).dogOrHuman;
+        switch (value) {
+        | `Dog(value) =>
+          let __typename = {
+            let value = (value: named).__typename;
+            `String(value);
+          }
+          and name = {
+            let value = (value: named).name;
+            `String(value);
+          };
+          `Assoc([("name", name), ("__typename", `String("Dog"))]);
+        | `Human(value) =>
+          let __typename = {
+            let value = (value: named).__typename;
+            `String(value);
+          }
+          and name = {
+            let value = (value: named).name;
+            `String(value);
+          };
+          `Assoc([("name", name), ("__typename", `String("Human"))]);
+        | `FutureAddedValue(value) => value
+        };
+      };
+      `Assoc([("dogOrHuman", dogOrHuman)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+};
+module NamedSpread = {
+  module DogFields: {
+    [@ocaml.warning "-32-30"];
+    module Raw: {type t;};
+    type t = named;
+    type nonrec t_Dog = named;
+    /** the GraphQL fragment */
+    let query: string;
+    /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+    let parse: Raw.t => named;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+    let serialize: named => Raw.t;
+    let verifyArgsAndParse: (~fragmentName: [ | `DogFields], Raw.t) => t;
+    let verifyName: [ | `DogFields] => unit;
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+    external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  } = {
+    [@ocaml.warning "-32-30"];
+    module Raw = {
+      type t = Yojson.Basic.t;
+    };
+    type t = named;
+    type nonrec t_Dog = named;
+    let query = "fragment DogFields on Dog   {\nname  \n__typename  \n}\n";
+    let parse: Raw.t => named =
+      (value) => (
+        {
+          name: {
+            let value = Yojson.Basic.Util.member("name", value);
+            Yojson.Basic.Util.to_string(value);
+          },
+          __typename: {
+            let value = Yojson.Basic.Util.member("__typename", value);
+            Yojson.Basic.Util.to_string(value);
+          },
+        }: named
+      );
+    let serialize: named => Raw.t =
+      value => {
+        let __typename = {
+          let value = (value: named).__typename;
+          `String(value);
+        }
+        and name = {
+          let value = (value: named).name;
+          `String(value);
+        };
+        `Assoc([("name", name), ("__typename", __typename)]);
+      };
+    let verifyArgsAndParse =
+        (~fragmentName as _DogFields: [ | `DogFields], value: Raw.t) =>
+      parse(value);
+    let verifyName =
+      fun
+      | `DogFields => ();
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+    external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  };
+  module DogOrHuman: {
+    [@ocaml.warning "-32-30"];
+    module Raw: {
+      type t;
+      type t_variables;
+    };
+    type t_dogOrHuman = [
+      | `FutureAddedValue(Yojson.Basic.t)
+      | `Dog(DogFields.t_Dog)
+    ];
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+    /** The GraphQL query */
+    let query: string;
+    /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+    let parse: Raw.t => t;
+    /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+    let serialize: t => Raw.t;
+    let serializeVariables: unit => Raw.t_variables;
+    let makeVariables: unit => t_variables;
+    let makeDefaultVariables: unit => t_variables;
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+    external toJson: Raw.t => Yojson.Basic.t = "%identity";
+    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  } = {
+    [@ocaml.warning "-32-30"];
+    module Raw = {
+      type t = Yojson.Basic.t;
+      type t_variables = Yojson.Basic.t;
+    };
+    type t_dogOrHuman = [
+      | `FutureAddedValue(Yojson.Basic.t)
+      | `Dog(DogFields.t_Dog)
+    ];
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+    let query =
+      "query dogOrHuman  {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFields   \n}\n\n}\n\n}\n"
+      ++ DogFields.query;
+    let parse: Raw.t => t =
+      (value) => (
+        {
+          dogOrHuman: {
+            let value = Yojson.Basic.Util.member("dogOrHuman", value);
+            let typename: string =
+              value
+              |> Yojson.Basic.Util.member("__typename")
+              |> Yojson.Basic.Util.to_string;
+            (
+              switch (typename) {
+              | "Dog" =>
+                `Dog(
+                  DogFields.verifyArgsAndParse(
+                    ~fragmentName=`DogFields,
+                    DogFields.unsafe_fromJson(value),
+                  ),
+                )
+              | _ => `FutureAddedValue(value)
+              }: t_dogOrHuman
+            );
+          },
+        }: t
+      );
+    let serialize: t => Raw.t =
+      value => {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => DogFields.toJson(DogFields.serialize(value))
+          | `FutureAddedValue(value) => value
+          };
+        };
+        `Assoc([("dogOrHuman", dogOrHuman)]);
+      };
+    let serializeVariables = () => `Null;
+    let makeVariables = () => ();
+    let makeDefaultVariables = () => makeVariables();
+    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+    external toJson: Raw.t => Yojson.Basic.t = "%identity";
+    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  };
+};

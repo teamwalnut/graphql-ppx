@@ -1,0 +1,236 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {type t;} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_variousScalars = {string};
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query = "query   {\nvariousScalars  {\nstring  \n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = Yojson.Basic.Util.member("variousScalars", value);
+          (
+            {
+              string: {
+                let value = Yojson.Basic.Util.member("string", value);
+                Yojson.Basic.Util.to_string(value);
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let string = {
+          let value = (value: t_variousScalars).string;
+          `String(value);
+        };
+        `Assoc([("string", string)]);
+      };
+      `Assoc([("variousScalars", variousScalars)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+};
+module MyQuery2: {
+  type t_variousScalars;
+  type t = {variousScalars: t_variousScalars};
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_variousScalars = {string};
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query = "query   {\nvariousScalars  {\nstring  \n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = Yojson.Basic.Util.member("variousScalars", value);
+          (
+            {
+              string: {
+                let value = Yojson.Basic.Util.member("string", value);
+                Yojson.Basic.Util.to_string(value);
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let variousScalars = {
+        let value = (value: t).variousScalars;
+        let string = {
+          let value = (value: t_variousScalars).string;
+          `String(value);
+        };
+        `Assoc([("string", string)]);
+      };
+      `Assoc([("variousScalars", variousScalars)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+};
+
+module rec MyQueryRecursive: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_nestedObject_inner_inner = {field: string};
+  type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+  type t_nestedObject = {inner: option(t_nestedObject_inner)};
+  type t = {nestedObject: VariousScalars.t};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t;
+  };
+  type t_nestedObject_inner_inner = {field: string};
+  type t_nestedObject_inner = {inner: option(t_nestedObject_inner_inner)};
+  type t_nestedObject = {inner: option(t_nestedObject_inner)};
+  type t = {nestedObject: VariousScalars.t};
+  type t_variables = unit;
+  let query = "query   {\nnestedObject  {\ninner  {\ninner  {\nfield  \n}\n\n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nestedObject: {
+          let value = Yojson.Basic.Util.member("nestedObject", value);
+          VariousScalars.parse(
+            {
+              inner: {
+                let value = Yojson.Basic.Util.member("inner", value);
+                switch (value) {
+                | `Null => None
+                | value =>
+                  Some(
+                    {
+                      inner: {
+                        let value = Yojson.Basic.Util.member("inner", value);
+                        switch (value) {
+                        | `Null => None
+                        | value =>
+                          Some(
+                            {
+                              field: {
+                                let value =
+                                  Yojson.Basic.Util.member("field", value);
+                                Yojson.Basic.Util.to_string(value);
+                              },
+                            }: t_nestedObject_inner_inner,
+                          )
+                        };
+                      },
+                    }: t_nestedObject_inner,
+                  )
+                };
+              },
+            }: t_nestedObject,
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let nestedObject = {
+        let value = (value: t).nestedObject;
+        let value = VariousScalars.serialize(value);
+        let inner = {
+          let value = (value: t_nestedObject).inner;
+          switch (value) {
+          | Some(value) =>
+            let inner = {
+              let value = (value: t_nestedObject_inner).inner;
+              switch (value) {
+              | Some(value) =>
+                let field = {
+                  let value = (value: t_nestedObject_inner_inner).field;
+                  `String(value);
+                };
+                `Assoc([("field", field)]);
+              | None => `Null
+              };
+            };
+            `Assoc([("inner", inner)]);
+          | None => `Null
+          };
+        };
+        `Assoc([("inner", inner)]);
+      };
+      `Assoc([("nestedObject", nestedObject)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
+  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+}
+
+and VariousScalars: {
+  type t;
+  let parse: MyQueryRecursive.t_nestedObject => t;
+  let serialize: t => MyQueryRecursive.t_nestedObject;
+} = {
+  type t = {otherInner: option(MyQueryRecursive.t_nestedObject_inner)};
+  let parse = (nestedObject: MyQueryRecursive.t_nestedObject) => {
+    otherInner: nestedObject.inner,
+  };
+  let serialize: t => MyQueryRecursive.t_nestedObject =
+    t => {inner: t.otherInner};
+};

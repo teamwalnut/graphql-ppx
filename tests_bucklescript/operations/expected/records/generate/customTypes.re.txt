@@ -1,0 +1,246 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Color = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some("green") => Green
+    | Some("blue") => Blue
+    | Some("red")
+    | Some(_)
+    | None => Red
+    };
+  let serialize = color =>
+    (
+      switch (color) {
+      | Red => "red"
+      | Green => "green"
+      | Blue => "blue"
+      }
+    )
+    |> Js.Json.string;
+};
+
+module NullableString = {
+  type t =
+    | Red
+    | Green
+    | Blue;
+  let parse: option(string) => t =
+    color =>
+      switch (color) {
+      | Some("green") => Green
+      | Some("blue") => Blue
+      | Some("red") => Red
+      | Some(_)
+      | None => Red
+      };
+  let serialize: t => option(string) =
+    color =>
+      switch (color) {
+      | Red => Some("red")
+      | Green => Some("green")
+      | Blue => Some("blue")
+      };
+};
+
+module DateTime = {
+  type t = Js.Date.t;
+  let parse = json =>
+    switch (json |> Js.Json.decodeString) {
+    | Some(str) => str |> Js.Date.fromString
+    | None => Js.Date.make()
+    };
+  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string;
+};
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_customFields = {
+      currentTime: Js.Json.t,
+      favoriteColor: Js.Json.t,
+      futureTime: Js.Nullable.t(Js.Json.t),
+      nullableColor: Js.Nullable.t(Js.Json.t),
+      nullableString: Js.Nullable.t(string),
+    };
+    type t = {customFields: t_customFields};
+    type t_variables = unit;
+  };
+  type t_customFields = {
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
+    nullableColor: option(Color.t),
+    nullableString: NullableString.t,
+  };
+  type t = {customFields: t_customFields};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_customFields = {
+      currentTime: Js.Json.t,
+      favoriteColor: Js.Json.t,
+      futureTime: Js.Nullable.t(Js.Json.t),
+      nullableColor: Js.Nullable.t(Js.Json.t),
+      nullableString: Js.Nullable.t(string),
+    };
+    type t = {customFields: t_customFields};
+    type t_variables = unit;
+  };
+  type t_customFields = {
+    currentTime: DateTime.t,
+    favoriteColor: Color.t,
+    futureTime: option(DateTime.t),
+    nullableColor: option(Color.t),
+    nullableString: NullableString.t,
+  };
+  type t = {customFields: t_customFields};
+  type t_variables = unit;
+  let query = "query   {\ncustomFields  {\ncurrentTime  \nfavoriteColor  \nfutureTime  \nnullableColor  \nnullableString  \n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        customFields: {
+          let value = (value: Raw.t).customFields;
+          (
+            {
+              currentTime: {
+                let value = (value: Raw.t_customFields).currentTime;
+                DateTime.parse(value);
+              },
+              favoriteColor: {
+                let value = (value: Raw.t_customFields).favoriteColor;
+                Color.parse(value);
+              },
+              futureTime: {
+                let value = (value: Raw.t_customFields).futureTime;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(DateTime.parse(value))
+                | None => None
+                };
+              },
+              nullableColor: {
+                let value = (value: Raw.t_customFields).nullableColor;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(Color.parse(value))
+                | None => None
+                };
+              },
+              nullableString: {
+                let value = (value: Raw.t_customFields).nullableString;
+                NullableString.parse(
+                  switch (Js.toOption(value)) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  },
+                );
+              },
+            }: t_customFields
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let customFields = {
+          let value = (value: t).customFields;
+          (
+            {
+              let nullableString = {
+                let value = (value: t_customFields).nullableString;
+                let value = NullableString.serialize(value);
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and nullableColor = {
+                let value = (value: t_customFields).nullableColor;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let value = Color.serialize(value);
+                      value;
+                    },
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and futureTime = {
+                let value = (value: t_customFields).futureTime;
+                switch (value) {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    {
+                      let value = DateTime.serialize(value);
+                      value;
+                    },
+                  )
+                | None => Js.Nullable.null
+                };
+              }
+              and favoriteColor = {
+                let value = (value: t_customFields).favoriteColor;
+                let value = Color.serialize(value);
+                value;
+              }
+              and currentTime = {
+                let value = (value: t_customFields).currentTime;
+                let value = DateTime.serialize(value);
+                value;
+              };
+              {
+                currentTime,
+                favoriteColor,
+                futureTime,
+                nullableColor,
+                nullableString,
+              };
+            }: Raw.t_customFields
+          );
+        };
+        {customFields: customFields};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};

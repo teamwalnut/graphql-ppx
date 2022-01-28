@@ -1,0 +1,2094 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module GraphQL_PPX = {
+  let deepMerge = (json1, _) => json1;
+};
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gql\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+
+module MyTypes = {
+  type query;
+};
+module MyQuery1a: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: MyTypes.query;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: MyTypes.query = [%raw
+    "require(\"gql\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery1b: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gql\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery2: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery3: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gatsby\").graphql`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery4: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {variousScalars: t_variousScalars};
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {variousScalars: t_variousScalars};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gatsby\")`\n  query   {\n    variousScalars  {\n      nullableString\n      string\n      nullableInt\n      int\n      nullableFloat\n      float\n      nullableBoolean\n      boolean\n      nullableID\n      id\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        };
+        {variousScalars: variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module ListFragment: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  let query: string = [%raw
+    "require(\"gatsby\")`\n  fragment ListFragment on Lists   {\n    nullableOfNullable\n    nullableOfNonNullable\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value = (value: Raw.t).nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        },
+        nullableOfNonNullable: {
+          let value = (value: Raw.t).nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nullableOfNonNullable = {
+          let value = (value: t).nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = (value: t).nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {nullableOfNullable, nullableOfNonNullable};
+      }: Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `ListFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+};
+module MyQuery5: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gatsby\")`\n  query MyQuery5  {\n    lists  {\n      ...ListFragment\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+
+          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          ListFragment.serialize(value);
+        };
+        {lists: lists};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery6: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  let query: string =
+    [%raw
+      "(frag_0) => require(\"gatsby\")`\n  query MyQuery6  {\n    lists  {\n      ...ListFragment\n    }\n  }\n  ${frag_0}\n`"
+    ](
+      ListFragment.query,
+    );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+
+          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          ListFragment.serialize(value);
+        };
+        {lists: lists};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module MyQuery7: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {lists: ListFragment.Raw.t_Lists};
+    type t_variables = unit;
+  };
+  type t = {lists: ListFragment.t_Lists};
+  type t_variables = unit;
+  let query: string = [%raw
+    "require(\"gql\")`\n  query MyQuery7  {\n    lists  {\n      ...ListFragment\n    }\n  }\n`"
+  ];
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+
+          ListFragment.verifyArgsAndParse(~fragmentName=`ListFragment, value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let lists = {
+          let value = (value: t).lists;
+          ListFragment.serialize(value);
+        };
+        {lists: lists};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
+module ListFragment8: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: int;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment8], Raw.t) => t;
+  let verifyName: [ | `ListFragment8] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+    };
+    type nonrec t_Lists = t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+  };
+  type nonrec t_Lists = t;
+  [@bs.module "apollo-client"] external graphql: array(string) => int = "gql";
+  let query =
+    graphql([|
+      "fragment ListFragment8 on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n",
+    |]);
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value = (value: Raw.t).nullableOfNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) =>
+            Some(
+              value
+              |> Js.Array.map(value =>
+                   switch (Js.toOption(value)) {
+                   | Some(value) => Some(value)
+                   | None => None
+                   }
+                 ),
+            )
+          | None => None
+          };
+        },
+        nullableOfNonNullable: {
+          let value = (value: Raw.t).nullableOfNonNullable;
+          switch (Js.toOption(value)) {
+          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | None => None
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let nullableOfNonNullable = {
+          let value = (value: t).nullableOfNonNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(value |> Js.Array.map(value => value))
+          | None => Js.Nullable.null
+          };
+        }
+        and nullableOfNullable = {
+          let value = (value: t).nullableOfNullable;
+          switch (value) {
+          | Some(value) =>
+            Js.Nullable.return(
+              value
+              |> Js.Array.map(value =>
+                   switch (value) {
+                   | Some(value) => Js.Nullable.return(value)
+                   | None => Js.Nullable.null
+                   }
+                 ),
+            )
+          | None => Js.Nullable.null
+          };
+        };
+        {nullableOfNullable, nullableOfNonNullable};
+      }: Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment8: [ | `ListFragment8], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `ListFragment8 => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+};
+module MyQuery8: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {
+      lists: ListFragment8.Raw.t_Lists,
+      variousScalars: t_variousScalars,
+    };
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {
+    lists: ListFragment8.t_Lists,
+    variousScalars: t_variousScalars,
+  };
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: int;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_variousScalars = {
+      nullableString: Js.Nullable.t(string),
+      string,
+      nullableInt: Js.Nullable.t(int),
+      int,
+      nullableFloat: Js.Nullable.t(float),
+      float,
+      nullableBoolean: Js.Nullable.t(bool),
+      boolean: bool,
+      nullableID: Js.Nullable.t(string),
+      id: string,
+    };
+    type t = {
+      lists: ListFragment8.Raw.t_Lists,
+      variousScalars: t_variousScalars,
+    };
+    type t_variables = unit;
+  };
+  type t_variousScalars = {
+    nullableString: option(string),
+    string,
+    nullableInt: option(int),
+    int,
+    nullableFloat: option(float),
+    float,
+    nullableBoolean: option(bool),
+    boolean: bool,
+    nullableID: option(string),
+    id: string,
+  };
+  type t = {
+    lists: ListFragment8.t_Lists,
+    variousScalars: t_variousScalars,
+  };
+  type t_variables = unit;
+  [@bs.module "apollo-client"]
+  external graphql: (array(string), int) => int = "gql";
+  let query =
+    graphql(
+      [|
+        "query MyQuery8  {\nlists  {\n...ListFragment8   \n}\n\nvariousScalars  {\nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
+        "",
+      |],
+      ListFragment8.query,
+    );
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        lists: {
+          let value = (value: Raw.t).lists;
+
+          ListFragment8.verifyArgsAndParse(
+            ~fragmentName=`ListFragment8,
+            value,
+          );
+        },
+        variousScalars: {
+          let value = (value: Raw.t).variousScalars;
+          (
+            {
+              nullableString: {
+                let value = (value: Raw.t_variousScalars).nullableString;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              string: {
+                let value = (value: Raw.t_variousScalars).string;
+                value;
+              },
+              nullableInt: {
+                let value = (value: Raw.t_variousScalars).nullableInt;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              int: {
+                let value = (value: Raw.t_variousScalars).int;
+                value;
+              },
+              nullableFloat: {
+                let value = (value: Raw.t_variousScalars).nullableFloat;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              float: {
+                let value = (value: Raw.t_variousScalars).float;
+                value;
+              },
+              nullableBoolean: {
+                let value = (value: Raw.t_variousScalars).nullableBoolean;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              boolean: {
+                let value = (value: Raw.t_variousScalars).boolean;
+                value;
+              },
+              nullableID: {
+                let value = (value: Raw.t_variousScalars).nullableID;
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                };
+              },
+              id: {
+                let value = (value: Raw.t_variousScalars).id;
+                value;
+              },
+            }: t_variousScalars
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let variousScalars = {
+          let value = (value: t).variousScalars;
+          (
+            {
+              let id = {
+                let value = (value: t_variousScalars).id;
+                value;
+              }
+              and nullableID = {
+                let value = (value: t_variousScalars).nullableID;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and boolean = {
+                let value = (value: t_variousScalars).boolean;
+                value;
+              }
+              and nullableBoolean = {
+                let value = (value: t_variousScalars).nullableBoolean;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and float = {
+                let value = (value: t_variousScalars).float;
+                value;
+              }
+              and nullableFloat = {
+                let value = (value: t_variousScalars).nullableFloat;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and int = {
+                let value = (value: t_variousScalars).int;
+                value;
+              }
+              and nullableInt = {
+                let value = (value: t_variousScalars).nullableInt;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              }
+              and string = {
+                let value = (value: t_variousScalars).string;
+                value;
+              }
+              and nullableString = {
+                let value = (value: t_variousScalars).nullableString;
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                };
+              };
+              {
+                nullableString,
+                string,
+                nullableInt,
+                int,
+                nullableFloat,
+                float,
+                nullableBoolean,
+                boolean,
+                nullableID,
+                id,
+              };
+            }: Raw.t_variousScalars
+          );
+        }
+        and lists = {
+          let value = (value: t).lists;
+          ListFragment8.serialize(value);
+        };
+        {lists, variousScalars};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
