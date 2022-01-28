@@ -3,7 +3,7 @@
  (public_name graphql_ppx)
  (kind ppx_rewriter)
  (ppx_runtime_libraries graphql_ppx.graphql_ppx_runtime)
- (libraries reason graphql_ppx.base ppxlib)
+ (libraries graphql_ppx.base ppxlib)
  (flags
   (:standard -w -9))
  (preprocess

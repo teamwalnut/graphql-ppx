@@ -2,15 +2,15 @@
   "name": "graphql_ppx",
   "description": "Used for native Reason/OCaml using latest version of OCaml",
   "scripts": {
-    "watch": "esy refmterr dune build --promote-install-files --root . --watch",
+    "watch": "esy dune build --promote-install-files --root . --watch",
     "format": "esy dune build @fmt --auto-promote",
     "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
-    "test": "dune exec tests_bucklescript/tests/RunTests.exe --"
+    "test": "tests.sh"
   },
   "dependencies": {
     "@opam/ppxlib": ">=0.21.0",
-    "@opam/reason": "reasonml/reason#ccc3472",
-    "@opam/yojson": "*"
+    "@opam/yojson": "*",
+    "@opam/reason": "reasonml/reason#ccc3472"
   },
   "devDependencies": {
     "@opam/ocamlformat": "0.20.1",
@@ -18,16 +18,11 @@
     "@opam/ocaml-lsp-server": "1.9.1",
     "@opam/merlin": "*",
     "@opam/alcotest": "*",
-    "ocaml": "~4.13.0",
-    "@reason-native/rely": "jfrolich/reason-native:rely.json#08085a4048974b06aaf3aab918b677b39dea3d18",
-    "refmterr": "jfrolich/reason-native:refmterr.json#08085a4048974b06aaf3aab918b677b39dea3d18"
-  },
-  "resolutions": {
-    "@opam/reason": "reasonml/reason#ccc3472"
+    "ocaml": "~4.13.0"
   },
   "esy": {
     "build": "dune build -p #{self.name}",
-    "buildDev": "refmterr dune build --promote-install-files --root .",
+    "buildDev": "dune build --promote-install-files --root .",
     "buildsInSource": "_build"
   }
 }

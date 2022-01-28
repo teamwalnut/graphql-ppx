@@ -44,15 +44,16 @@ build: [
 depends: [
   # Please keep the lower bound in sync with .github/workflows/workflow.yml,
   # dune-project and min_ocaml_version in bootstrap.ml
-  ("ocaml" {>= "4.08"} | ("ocaml" {< "4.08~~"} & "ocamlfind-secondary"))
+  ("ocaml" {>= "4.08"} | ("ocaml" {>= "4.03" & < "4.08~~"} & "ocamlfind-secondary"))
   "base-unix"
   "base-threads"
 ]
-x-commit-hash: "e41c66259135d6d1d72b031be6684bf8826a2586"
 url {
-  src: "https://github.com/ocaml/dune/releases/download/2.9.1/dune-2.9.1.tbz"
+  src:
+    "https://github.com/ocaml/dune/releases/download/2.9.2/dune-site-2.9.2.tbz"
   checksum: [
-    "sha256=b374feb22b34099ccc6dd32128e18d088ff9a81837952b29f05110b308c09f26"
-    "sha512=fce1aa520db785c25ded75a959e9dafeb7887d4f5deeb14b044cd5b9e2d235dca24589d794d2f01513765bc4764cf72f8659bd15f3a4fc06efa61363dc5d709b"
+    "sha256=b8e7cc507fb978b45f6fdc839f2b3201d2c1e611e4a8e972c8c8cfd8522e7447"
+    "sha512=e45986afdce4a1a19671206bf9818463b398ee2658ca7203a00546b9b1079cde018bc435b4846c82281960fa3ca1cdca8aab670b15a1b7cac6cafac369de7b67"
   ]
 }
+x-commit-hash: "ee27573858f9ff7fe8e0b8bb1d785be8cabd3b23"
