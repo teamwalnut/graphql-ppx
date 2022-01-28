@@ -1,5 +1,4 @@
 #!/bin/zsh
-
 setopt extendedglob
 
 function snapshotGeneratePath {
