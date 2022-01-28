@@ -37,23 +37,18 @@ let my_query =
         [@reason.raw_literal
           "< first = < inner = @[%a@] > ; second = < inner = @[%a@] > >"])
         ((fun formatter (v : MyQuery.t_first_inner) ->
-           Format.fprintf formatter
-             ("< inner = @[%a@] >" [@reason.raw_literal "< inner = @[%a@] >"])
+           Format.fprintf formatter "< inner = @[%a@] >"
              ((fun formatter (v : MyQuery.t_first_inner_inner) ->
-                Format.fprintf formatter
-                  ("< field = %a >" [@reason.raw_literal "< field = %a >"])
-                  Format.pp_print_string v.field)
+                Format.fprintf formatter "< field = %a >" Format.pp_print_string
+                  v.field)
              |> print_option)
              v.inner)
         |> print_option)
         obj.first.inner
         ((fun formatter (v : MyQuery.t_second_inner) ->
-           Format.fprintf formatter
-             ("< inner = @[%a@] >" [@reason.raw_literal "< inner = @[%a@] >"])
+           Format.fprintf formatter "< inner = @[%a@] >"
              ((fun formatter (v : MyQuery.t_second_inner_inner) ->
-                Format.fprintf formatter
-                  ("{ f1 = %a ; f2 = %a }"
-                  [@reason.raw_literal "{ f1 = %a ; f2 = %a }"])
+                Format.fprintf formatter "{ f1 = %a ; f2 = %a }"
                   Format.pp_print_string v.f1 Format.pp_print_string v.f2)
              |> print_option)
              v.inner)
@@ -80,8 +75,7 @@ let my_query =
     with type t = qt)
 
 let decodes_recursively () =
-  Alcotest.check my_query
-    ("query result equality" [@reason.raw_literal "query result equality"])
+  Alcotest.check my_query "query result equality"
     (Yojson.Basic.from_string
        {| {
       "first": {"inner": {"inner": {"field": "second"}}},
@@ -89,23 +83,8 @@ let decodes_recursively () =
     } |}
     |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
-      first =
-        {
-          inner =
-            Some
-              {
-                inner =
-                  Some { field = ("second" [@reason.raw_literal "second"]) }
-                  [@explicit_arity];
-              }
-            [@explicit_arity];
-        };
+      first = { inner = Some { inner = Some { field = "second" } } };
       second = { inner = None };
     }
 
-let tests =
-  [
-    ( ("Decodes recursively" [@reason.raw_literal "Decodes recursively"]),
-      `Quick,
-      decodes_recursively );
-  ]
+let tests = [ ("Decodes recursively", `Quick, decodes_recursively) ]

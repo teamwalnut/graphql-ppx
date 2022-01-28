@@ -24,30 +24,22 @@ let my_query =
     type t = qt
 
     let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< mutationWithError = %a >"
-        [@reason.raw_literal "< mutationWithError = %a >"])
+      Format.fprintf formatter "< mutationWithError = %a >"
         (fun formatter -> function
           | `Value (v : MyQuery.t_mutationWithError_value) ->
-            Format.fprintf formatter
-              ("`Value @[<>< stringField = %a >@]"
-              [@reason.raw_literal "`Value @[<>< stringField = %a >@]"])
+            Format.fprintf formatter "`Value @[<>< stringField = %a >@]"
               Format.pp_print_string v.stringField
           | `Errors (v : MyQuery.t_mutationWithError_errors array) ->
-            Format.fprintf formatter
-              ("`Errors %a" [@reason.raw_literal "`Errors %a"])
+            Format.fprintf formatter "`Errors %a"
               (print_array
                  (fun formatter (v : MyQuery.t_mutationWithError_errors) ->
-                 Format.fprintf formatter
-                   ("< field = %a ; message = %a >"
-                   [@reason.raw_literal "< field = %a ; message = %a >"])
+                 Format.fprintf formatter "< field = %a ; message = %a >"
                    Format.pp_print_string
                    (match v.field with
-                   | `FIRST -> ("FIRST" [@reason.raw_literal "FIRST"])
-                   | `SECOND -> ("SECOND" [@reason.raw_literal "SECOND"])
-                   | `THIRD -> ("THIRD" [@reason.raw_literal "THIRD"])
-                   | `FutureAddedValue _ ->
-                     ("THIRD" [@reason.raw_literal "THIRD"]))
+                   | `FIRST -> "FIRST"
+                   | `SECOND -> "SECOND"
+                   | `THIRD -> "THIRD"
+                   | `FutureAddedValue _ -> "THIRD")
                    Format.pp_print_string v.message))
               v)
         obj.mutationWithError
@@ -68,8 +60,7 @@ let my_query =
     with type t = qt)
 
 let converts_into_variant () =
-  Alcotest.check my_query
-    ("result equality" [@reason.raw_literal "result equality"])
+  Alcotest.check my_query "result equality"
     ({| {
     "mutationWithError": {
       "value": {
@@ -78,15 +69,6 @@ let converts_into_variant () =
     }
   } |}
    |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
-    {
-      mutationWithError =
-        `Value { stringField = ("a string" [@reason.raw_literal "a string"]) };
-    }
+    { mutationWithError = `Value { stringField = "a string" } }
 
-let tests =
-  [
-    ( ("Converts object into variant"
-      [@reason.raw_literal "Converts object into variant"]),
-      `Quick,
-      converts_into_variant );
-  ]
+let tests = [ ("Converts object into variant", `Quick, converts_into_variant) ]

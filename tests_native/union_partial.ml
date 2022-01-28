@@ -18,18 +18,14 @@ let my_query =
     type t = qt
 
     let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< dogOrHuman = %a >" [@reason.raw_literal "< dogOrHuman = %a >"])
+      Format.fprintf formatter "< dogOrHuman = %a >"
         (fun formatter -> function
           | `Dog (dog : MyQuery.t_dogOrHuman_Dog) ->
             Format.fprintf formatter
-              ("`Dog @[<>< name = %a ; barkVolume = %a >@]"
-              [@reason.raw_literal "`Dog @[<>< name = %a ; barkVolume = %a >@]"])
+              "`Dog @[<>< name = %a ; barkVolume = %a >@]"
               Format.pp_print_string dog.name Format.pp_print_float
               dog.barkVolume
-          | `FutureAddedValue _ ->
-            Format.fprintf formatter
-              ("`FutureAddedValue" [@reason.raw_literal "`FutureAddedValue"]))
+          | `FutureAddedValue _ -> Format.fprintf formatter "`FutureAddedValue")
         obj.dogOrHuman
 
     let equal (a : qt) (b : qt) =
@@ -41,8 +37,7 @@ let my_query =
     with type t = qt)
 
 let decodes_non_exhaustive_query () =
-  Alcotest.check my_query
-    ("result equality" [@reason.raw_literal "result equality"])
+  Alcotest.check my_query "result equality"
     ({| {
       "dogOrHuman": {
         "__typename": "Human",
@@ -53,19 +48,8 @@ let decodes_non_exhaustive_query () =
     {
       dogOrHuman =
         `FutureAddedValue
-          (`Assoc
-            [
-              ( ("__typename" [@reason.raw_literal "__typename"]),
-                `String ("Human" [@reason.raw_literal "Human"]) );
-              ( ("name" [@reason.raw_literal "name"]),
-                `String ("Max" [@reason.raw_literal "Max"]) );
-            ]);
+          (`Assoc [ ("__typename", `String "Human"); ("name", `String "Max") ]);
     }
 
 let tests =
-  [
-    ( ("Decodes non-exhaustive query"
-      [@reason.raw_literal "Decodes non-exhaustive query"]),
-      `Quick,
-      decodes_non_exhaustive_query );
-  ]
+  [ ("Decodes non-exhaustive query", `Quick, decodes_non_exhaustive_query) ]
