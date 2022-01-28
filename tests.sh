@@ -21,7 +21,15 @@ function maybeWait {
   [[ $((taskCount % 20)) = 0 ]] && printf "." && wait
 }
 
-platform='darwin'
+case $(uname) in
+  Darwin) platform=darwin;;
+  Linux) platform=linux;;
+  Windows) platform=win32;;
+  *)
+    echo "Unknown OS: $uname"
+    exit 1
+esac
+
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
 ppx_path="./_build/default/src/bucklescript_bin/bin.exe"
 bsb_path="./node_modules/rescript/${platform}/bsc.exe"
@@ -37,9 +45,11 @@ for config in $configs; do
     "apollo"  ) opts="-apollo-mode" ;;
     "native"  ) opts="-native" ;;
   esac
+
   mkdir -p tests_bucklescript/operations/expected/$config/generate
   mkdir -p tests_bucklescript/operations/expected/$config/compile
   mkdir -p tests_bucklescript/operations/errors/expected
+
   for file in tests_bucklescript/operations/*.re; do
     $refmt_path --parse=re --print=binary $file | $ppx_path -schema=graphql_schema.json $opts /dev/stdin /dev/stdout | $refmt_path --parse=binary &> $(snapshotGeneratePath $file $config) & maybeWait
 
