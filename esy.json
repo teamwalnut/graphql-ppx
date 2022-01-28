@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@opam/ppxlib": ">=0.21.0",
-    "@opam/yojson": "*",
-    "@opam/reason": "reasonml/reason#ccc3472"
+    "@opam/yojson": "*"
   },
   "devDependencies": {
     "@opam/ocamlformat": "0.20.1",
