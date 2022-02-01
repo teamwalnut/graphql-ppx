@@ -5,7 +5,7 @@
     "watch": "esy dune build --promote-install-files --root . --watch",
     "format": "esy dune build @fmt --auto-promote",
     "release-static": "dune build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static",
-    "test": "tests.sh"
+    "test": "./tests.sh"
   },
   "dependencies": {
     "@opam/ppxlib": ">=0.21.0",
