@@ -105,13 +105,17 @@ jobs:
         env:
           CI: true
 
-      - name: test-bucklescript
+      - name: npm ci
         if: runner.os != 'Windows'
         run: |
           npm ci --no-optional
-          esy test
         env:
           GRAPHQL_CI: true
+
+      - name: test-bucklescript
+        if: runner.os != 'Windows'
+        run: |
+          esy test
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
