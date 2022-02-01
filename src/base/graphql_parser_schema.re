@@ -65,14 +65,16 @@ let parse_type_argument = parser => {
      )
   |> flat_map(((name, type_ref)) => {
        parse_default_value(parser)
-       |> map(default_value =>
+       |> map(default_value => {
+            // there can be directives, but we don't do anything with them yet
+            let _ = parse_directives(parser);
             Schema.{
               am_name: name.item,
               am_arg_type: type_ref,
               am_default_value: default_value,
               am_description: description,
-            }
-          )
+            };
+          })
      });
 };
 
