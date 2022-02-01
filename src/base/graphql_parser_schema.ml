@@ -46,12 +46,14 @@ let parse_type_argument parser =
   let open Result_ext in
   let description = get_description parser in
   expect_name parser
-  |> flat_map (fun name -> expect parser Graphql_lexer.Colon |> replace name)
+  |> flat_map (fun name -> replace name (expect parser Graphql_lexer.Colon))
   |> flat_map (fun name ->
        parse_type_ref parser |> map (fun type_ref -> (name, type_ref)))
   |> flat_map (fun (name, type_ref) ->
        parse_default_value parser
        |> map (fun default_value ->
+            (* we should pick up the deprecated directive here, but it's not part of the schema yet *)
+            let _ = parse_directives parser in
             let open Schema in
             {
               am_name = name.item;
