@@ -1,5 +1,5 @@
-#!/bin/zsh
-setopt extendedglob
+#!/bin/bash
+# setopt extendedglob
 
 function snapshotGeneratePath {
   echo "$(dirname $1)/expected/$2/generate/$(basename $1).txt"
@@ -32,12 +32,12 @@ esac
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
 ppx_path="./_build/default/src/bucklescript_bin/bin.exe"
 bsb_path="./node_modules/rescript/${platform}/bsc.exe"
-configs=('records' 'template' 'apollo' 'native')
+declare -a configs=('records' 'template' 'apollo' 'native')
 
 rm -rf tests_bucklescript/operations/expected/
 rm -rf tests_bucklescript/operations/error/expected/
 
-for config in $configs; do
+for config in "${configs[@]}"; do
   case $config in
     "records" ) opts="" ;;
     "template") opts="-template-tag-location=gql" ;;
