@@ -226,6 +226,7 @@ let read_config () =
     in
     let configBool key value = ppxConfig |> JsonHelper.mapBool key value in
     let configString key value = ppxConfig |> JsonHelper.mapString key value in
+
     configBool "verbose" handleVerboseLogging;
     configBool "future-added-value" handleFutureAddedValue;
     configBool "futureAddedValue" handleFutureAddedValue;

@@ -4,7 +4,6 @@ open Generator_utils
 open Extract_type_definitions
 open Output_bucklescript_utils
 open Ppxlib
-open Ast_helper
 
 exception Cant_find_fragment_type_with_loc of Source_pos.ast_location * string
 
@@ -28,7 +27,7 @@ module VariableFinderImpl = struct
 end
 
 let constraint_on_type exp type_name =
-  Exp.constraint_ exp
+  Ast_helper.Exp.constraint_ exp
     (base_type_name
        (match type_name with None -> "string" | Some type_name -> type_name))
 
@@ -78,7 +77,7 @@ let compress_parts (parts : Graphql_printer.t array) =
   |> List.rev |> Array.of_list
 
 let make_fragment_query f =
-  Exp.ident
+  Ast_helper.Exp.ident
     { Location.txt = Longident.parse (f ^ ".query"); loc = Location.none }
 
 let emit_printed_template_query (parts : Graphql_printer.t array) config =
@@ -115,12 +114,12 @@ let emit_printed_template_query (parts : Graphql_printer.t array) config =
 let emit_printed_query parts config =
   let open Graphql_printer in
   let make_string s =
-    Exp.constant (Parsetree.Pconst_string (s, Location.none, None))
+    Ast_helper.Exp.constant (Parsetree.Pconst_string (s, Location.none, None))
   in
   let join part1 part2 =
-    let open Ast_helper in
-    Exp.apply
-      (Exp.ident { Location.txt = Longident.parse "^"; loc = Location.none })
+    Ast_helper.Exp.apply
+      (Ast_helper.Exp.ident
+         { Location.txt = Longident.parse "^"; loc = Location.none })
       [ (Nolabel, part1); (Nolabel, part2) ]
   in
   let query =
@@ -149,25 +148,26 @@ let emit_printed_query parts config =
 
 let rec list_literal = function
   | [] ->
-    Exp.construct { txt = Longident.Lident "[]"; loc = Location.none } None
+    Ast_helper.Exp.construct
+      { txt = Longident.Lident "[]"; loc = Location.none }
+      None
   | value :: values ->
-    let open Ast_helper in
-    Exp.construct
+    Ast_helper.Exp.construct
       { txt = Longident.Lident "::"; loc = Location.none }
-      (Some (Exp.tuple [ value; list_literal values ]))
+      (Some (Ast_helper.Exp.tuple [ value; list_literal values ]))
 
 let loc = Location.none
 
 let rec emit_json config = function
   | `Assoc vs ->
     let pairs =
-      let open Ast_helper in
-      Exp.array
+      Ast_helper.Exp.array
         (vs
         |> List.map (fun (key, value) ->
-             Exp.tuple
+             Ast_helper.Exp.tuple
                [
-                 Exp.constant (Pconst_string (key, Location.none, None));
+                 Ast_helper.Exp.constant
+                   (Pconst_string (key, Location.none, None));
                  emit_json config value;
                ]))
     in
@@ -199,14 +199,14 @@ let wrap_template_tag ?import ?location ?template_tag source =
   | _ -> source
 
 let wrap_structure_raw contents =
-  Str.extension
+  Ast_helper.Str.extension
     ( { txt = "raw"; loc = Location.none },
       PStr
         [
           {
             pstr_desc =
               Pstr_eval
-                ( Exp.constant
+                ( Ast_helper.Exp.constant
                     (Parsetree.Pconst_string (contents, Location.none, None)),
                   [] );
             pstr_loc = Location.none;
@@ -214,14 +214,14 @@ let wrap_structure_raw contents =
         ] )
 
 let wrap_raw contents =
-  Exp.extension
+  Ast_helper.Exp.extension
     ( { txt = "raw"; loc = Location.none },
       PStr
         [
           {
             pstr_desc =
               Pstr_eval
-                ( Exp.constant
+                ( Ast_helper.Exp.constant
                     (Parsetree.Pconst_string (contents, Location.none, None)),
                   [] );
             pstr_loc = Location.none;
@@ -237,11 +237,11 @@ let make_printed_query config document =
     match (config.template_tag_is_function, config.template_tag) with
     | Some true, (_, location, _) when location <> None ->
       let source_list = source |> Array.to_list in
-      Exp.apply
-        (Exp.ident
+      Ast_helper.Exp.apply
+        (Ast_helper.Exp.ident
            { Location.txt = Longident.Lident "graphql"; loc = Location.none })
         (( Nolabel,
-           Exp.array
+           Ast_helper.Exp.array
              (emit_printed_query
                 (source_list
                 |> List.filter (function
@@ -290,7 +290,7 @@ let make_printed_query config document =
                    (List.hd fragment_names))
             ^ ") => "
           in
-          Exp.apply
+          Ast_helper.Exp.apply
             (wrap_raw (frag_fun ^ template_tag))
             (fragments |> List.map (fun f -> (Nolabel, make_fragment_query f))))
         config.template_tag_return_type
@@ -308,7 +308,7 @@ let signature_module name signature =
               txt = Some (Generator_utils.capitalize_ascii name);
               loc = Location.none;
             };
-          pmd_type = Mty.signature signature;
+          pmd_type = Ast_helper.Mty.signature signature;
           pmd_attributes = [];
         };
   }
@@ -324,11 +324,13 @@ let wrap_module ~loc:_ ?module_type (name : string) contents =
             (match module_type with
             | Some module_type ->
               {
-                pmod_desc = Pmod_constraint (Mod.structure contents, module_type);
+                pmod_desc =
+                  Pmod_constraint
+                    (Ast_helper.Mod.structure contents, module_type);
                 pmod_loc = loc;
                 pmod_attributes = [];
               }
-            | None -> Mod.structure contents);
+            | None -> Ast_helper.Mod.structure contents);
           pmb_attributes = [];
           pmb_loc = loc;
         };
@@ -378,13 +380,15 @@ let wrap_query_module ~loc:module_loc ~module_type definition name contents
       let contents =
         [
           inner_module;
-          Str.include_
-            (Incl.mk (Mod.ident { txt = Longident.parse module_name; loc }));
-          Str.include_
-            (Incl.mk
-               (Mod.apply
-                  (Mod.ident { txt = Longident.parse funct; loc })
-                  (Mod.ident { txt = Longident.parse module_name; loc })));
+          Ast_helper.Str.include_
+            (Ast_helper.Incl.mk
+               (Ast_helper.Mod.ident { txt = Longident.parse module_name; loc }));
+          Ast_helper.Str.include_
+            (Ast_helper.Incl.mk
+               (Ast_helper.Mod.apply
+                  (Ast_helper.Mod.ident { txt = Longident.parse funct; loc })
+                  (Ast_helper.Mod.ident
+                     { txt = Longident.parse module_name; loc })));
         ]
       in
       let signature =
@@ -392,31 +396,31 @@ let wrap_query_module ~loc:module_loc ~module_type definition name contents
           [
             [ signature_module module_name signature ];
             [
-              Sig.include_
-                (Incl.mk
-                   (Mty.typeof_
-                      (Mod.mk
+              Ast_helper.Sig.include_
+                (Ast_helper.Incl.mk
+                   (Ast_helper.Mty.typeof_
+                      (Ast_helper.Mod.mk
                          (Pmod_structure
                             [
-                              Str.include_
-                                (Incl.mk
-                                   (Mod.ident
+                              Ast_helper.Str.include_
+                                (Ast_helper.Incl.mk
+                                   (Ast_helper.Mod.ident
                                       { txt = Longident.parse module_name; loc }));
                             ]))));
             ];
             [
-              Sig.include_
-                (Incl.mk
-                   (Mty.typeof_
-                      (Mod.mk
+              Ast_helper.Sig.include_
+                (Ast_helper.Incl.mk
+                   (Ast_helper.Mty.typeof_
+                      (Ast_helper.Mod.mk
                          (Pmod_structure
                             [
-                              Str.include_
-                                (Incl.mk
-                                   (Mod.apply
-                                      (Mod.ident
+                              Ast_helper.Str.include_
+                                (Ast_helper.Incl.mk
+                                   (Ast_helper.Mod.apply
+                                      (Ast_helper.Mod.ident
                                          { txt = Longident.parse funct; loc })
-                                      (Mod.ident
+                                      (Ast_helper.Mod.ident
                                          {
                                            txt = Longident.parse module_name;
                                            loc;
@@ -425,7 +429,7 @@ let wrap_query_module ~loc:module_loc ~module_type definition name contents
             ];
           ]
       in
-      (contents, Mty.mk ~loc:module_loc (Pmty_signature signature))
+      (contents, Ast_helper.Mty.mk ~loc:module_loc (Pmty_signature signature))
     | None -> (contents, module_type)
   in
   match (funct, name) with
@@ -450,18 +454,18 @@ let wrap_query_module_signature ~signature definition name config =
           [ signature_module module_name signature ];
           signature;
           [
-            Sig.include_
-              (Incl.mk
-                 (Mty.typeof_
-                    (Mod.mk
+            Ast_helper.Sig.include_
+              (Ast_helper.Incl.mk
+                 (Ast_helper.Mty.typeof_
+                    (Ast_helper.Mod.mk
                        (Pmod_structure
                           [
-                            Str.include_
-                              (Incl.mk
-                                 (Mod.apply
-                                    (Mod.ident
+                            Ast_helper.Str.include_
+                              (Ast_helper.Incl.mk
+                                 (Ast_helper.Mod.apply
+                                    (Ast_helper.Mod.ident
                                        { txt = Longident.parse funct; loc })
-                                    (Mod.ident
+                                    (Ast_helper.Mod.ident
                                        {
                                          txt = Longident.parse module_name;
                                          loc;
@@ -564,7 +568,7 @@ let generate_operation_signature config variable_defs res_structure =
 let rec create_arity_fn arity typ =
   match arity with
   | 0 -> typ
-  | arity -> Typ.arrow Nolabel typ (create_arity_fn (arity - 1) typ)
+  | arity -> Ast_helper.Typ.arrow Nolabel typ (create_arity_fn (arity - 1) typ)
 
 let graphql_external (config : output_config) document =
   match config with
@@ -591,19 +595,18 @@ let graphql_external (config : output_config) document =
            0
     in
     [
-      (let open Ast_helper in
-      Str.primitive
-        (Val.mk
+      Ast_helper.Str.primitive
+        (Ast_helper.Val.mk
            ~attrs:
              [
                Ast_helper.Attr.mk
                  { txt = "bs.module"; loc = Location.none }
-                 (PStr [ Str.eval (const_str_expr location) ]);
+                 (PStr [ Ast_helper.Str.eval (const_str_expr location) ]);
              ]
            ~prim:[ import ]
            { txt = "graphql"; loc = Location.none }
-           (Typ.arrow Nolabel [%type: string array]
-              (create_arity_fn arity (base_type_name return_type)))));
+           (Ast_helper.Typ.arrow Nolabel [%type: string array]
+              (create_arity_fn arity (base_type_name return_type))));
     ]
   | _ -> []
 
@@ -719,8 +722,8 @@ let generate_fragment_signature config name variable_definitions _has_error
     | [] -> final_type
     | ({ Source_pos.item = name }, { Graphql_ast.vd_type = { item = type_ref } })
       :: tl ->
-      Typ.arrow (Labelled name)
-        (Typ.variant
+      Ast_helper.Typ.arrow (Labelled name)
+        (Ast_helper.Typ.variant
            [
              {
                prf_desc =
@@ -742,8 +745,8 @@ let generate_fragment_signature config name variable_definitions _has_error
   in
   let verify_parse =
     make_labeled_fun_sig
-      (Typ.arrow (Labelled "fragmentName")
-         (Typ.variant
+      (Ast_helper.Typ.arrow (Labelled "fragmentName")
+         (Ast_helper.Typ.variant
             [
               {
                 prf_desc = Rtag ({ txt = name; loc = Location.none }, true, []);
@@ -752,14 +755,15 @@ let generate_fragment_signature config name variable_definitions _has_error
               };
             ]
             Closed None)
-         (Typ.arrow Nolabel (base_type_name "Raw.t") (base_type_name "t")))
+         (Ast_helper.Typ.arrow Nolabel (base_type_name "Raw.t")
+            (base_type_name "t")))
       (match variable_definitions with
       | Some { Source_pos.item = variable_definitions } -> variable_definitions
       | None -> [])
   in
   let verify_name =
-    Typ.arrow Nolabel
-      (Typ.variant
+    Ast_helper.Typ.arrow Nolabel
+      (Ast_helper.Typ.variant
          [
            {
              prf_desc = Rtag ({ txt = name; loc = Location.none }, true, []);
@@ -846,11 +850,10 @@ let generate_fragment_implementation config name
     | [] -> body
     | ({ Source_pos.item = name }, { Graphql_ast.vd_type = { item = type_ref } })
       :: tl ->
-      let open Ast_helper in
-      Exp.fun_ (Labelled name) None
-        (Pat.constraint_
-           (Pat.var { txt = "_" ^ name; loc = Location.none })
-           (Typ.variant
+      Ast_helper.Exp.fun_ (Labelled name) None
+        (Ast_helper.Pat.constraint_
+           (Ast_helper.Pat.var { txt = "_" ^ name; loc = Location.none })
+           (Ast_helper.Typ.variant
               [
                 {
                   prf_desc =
@@ -874,10 +877,10 @@ let generate_fragment_implementation config name
   let printed_query = make_printed_query config document in
   let verify_parse =
     make_labeled_fun
-      (Exp.fun_ (Labelled "fragmentName") None
-         (Pat.constraint_
-            (Pat.var { txt = "_" ^ name; loc = Location.none })
-            (Typ.variant
+      (Ast_helper.Exp.fun_ (Labelled "fragmentName") None
+         (Ast_helper.Pat.constraint_
+            (Ast_helper.Pat.var { txt = "_" ^ name; loc = Location.none })
+            (Ast_helper.Typ.variant
                [
                  {
                    prf_desc =
@@ -893,11 +896,11 @@ let generate_fragment_implementation config name
       | None -> [])
   in
   let verifyName =
-    let open Ast_helper in
-    Exp.function_
+    Ast_helper.Exp.function_
       [
-        Exp.case (Pat.variant name None)
-          (Exp.construct
+        Ast_helper.Exp.case
+          (Ast_helper.Pat.variant name None)
+          (Ast_helper.Exp.construct
              { txt = Longident.Lident "()"; loc = Location.none }
              None);
       ]
@@ -979,7 +982,7 @@ let generate_modules module_name module_type operations =
       let module_type =
         match module_type with
         | Some module_type -> module_type
-        | None -> Mty.mk (Pmty_signature signature)
+        | None -> Ast_helper.Mty.mk (Pmty_signature signature)
       in
       wrap_query_module ~loc ~module_type definition
         (match (config.inline, module_name) with
@@ -991,7 +994,7 @@ let generate_modules module_name module_type operations =
       let module_type =
         match module_type with
         | Some module_type -> module_type
-        | None -> Mty.mk (Pmty_signature signature)
+        | None -> Ast_helper.Mty.mk (Pmty_signature signature)
       in
       wrap_query_module ~loc ~module_type definition module_name contents config
     )
@@ -1005,7 +1008,7 @@ let generate_modules module_name module_type operations =
            let module_type =
              match module_type with
              | Some module_type -> module_type
-             | None -> Mty.mk (Pmty_signature signature)
+             | None -> Ast_helper.Mty.mk (Pmty_signature signature)
            in
            match name with
            | Some name ->

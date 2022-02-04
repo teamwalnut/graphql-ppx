@@ -10,8 +10,7 @@ open Extract_type_definitions
 let conv_loc _ = Location.none
 
 let record_to_object loc record =
-  let open Ast_helper in
-  Exp.extension
+  Ast_helper.Exp.extension
     ({ txt = "bs.obj"; loc = conv_loc loc }, PStr [ [%stri [%e record]] ])
 
 let raw_opaque_object interface_fragments fields =
@@ -62,35 +61,33 @@ let raw_value loc = ([%expr value] [@metaloc loc])
 
 let generate_poly_enum_decoder loc enum_meta omit_future_value =
   let enum_match_arms =
-    let open Ast_helper in
     enum_meta.em_values
     |> List.map (fun { evm_name; _ } ->
-         Exp.case (const_str_pat evm_name)
-           (Exp.variant (to_valid_ident evm_name) None))
+         Ast_helper.Exp.case (const_str_pat evm_name)
+           (Ast_helper.Exp.variant (to_valid_ident evm_name) None))
   in
   let fallback_arm =
     match omit_future_value with
     | true ->
-      let open Ast_helper in
-      Exp.case (Pat.any ())
-        (Exp.apply
-           (Exp.ident (mknoloc (Longident.parse "raise")))
+      Ast_helper.Exp.case (Ast_helper.Pat.any ())
+        (Ast_helper.Exp.apply
+           (Ast_helper.Exp.ident (mknoloc (Longident.parse "raise")))
            [
              ( Nolabel,
-               Exp.construct (mknoloc (Longident.parse "Not_found")) None );
+               Ast_helper.Exp.construct
+                 (mknoloc (Longident.parse "Not_found"))
+                 None );
            ])
     | false ->
-      let open Ast_helper in
-      Exp.case
-        (Pat.var { loc = conv_loc loc; txt = "other" })
-        (Exp.variant "FutureAddedValue"
+      Ast_helper.Exp.case
+        (Ast_helper.Pat.var { loc = conv_loc loc; txt = "other" })
+        (Ast_helper.Exp.variant "FutureAddedValue"
            (Some
-              (Exp.ident
+              (Ast_helper.Exp.ident
                  { Location.txt = Longident.parse "other"; loc = conv_loc loc })))
   in
   let match_expr =
-    let open Ast_helper in
-    Exp.match_
+    Ast_helper.Exp.match_
       (match Ppx_config.native () with
       | true ->
         [%expr value |> Yojson.Basic.Util.to_string] [@metaloc conv_loc loc]
@@ -100,7 +97,6 @@ let generate_poly_enum_decoder loc enum_meta omit_future_value =
   [%expr [%e match_expr]]
 
 let generate_fragment_parse_fun config loc name arguments definition =
-  let open Ast_helper in
   let ident =
     Ast_helper.Exp.ident
       {
@@ -115,7 +111,7 @@ let generate_fragment_parse_fun config loc name arguments definition =
          arguments |> List.exists (fun arg -> arg = name))
     |> List.map (fun (arg_name, type_, _span, type_span) ->
          ( Labelled arg_name,
-           Exp.variant
+           Ast_helper.Exp.variant
              ~loc:
                (config.map_loc type_span |> Output_bucklescript_utils.conv_loc)
              type_ None ))
@@ -126,7 +122,7 @@ let generate_fragment_parse_fun config loc name arguments definition =
     (List.append labeled_args
        [
          ( Labelled "fragmentName",
-           Exp.variant
+           Ast_helper.Exp.variant
              ~loc:(loc |> Output_bucklescript_utils.conv_loc)
              name None );
          ( Nolabel,
@@ -197,7 +193,6 @@ and generate_custom_decoder config loc ident inner path definition =
 and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
   ~existing_record ~interface_fragments fields =
   let do_obj_constructor_base () =
-    let open Ast_helper in
     let opaque = raw_opaque_object interface_fragments fields in
     let object_type = base_type_name ("Raw." ^ generate_type_name path) in
     let get_value = function
@@ -222,7 +217,9 @@ and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
                          [%e const_str_expr key])]
                 | false ->
                   Ast_helper.Exp.field
-                    (Exp.constraint_ (ident_from_string "value") object_type)
+                    (Ast_helper.Exp.constraint_
+                       (ident_from_string "value")
+                       object_type)
                     {
                       loc = Location.none;
                       Location.txt = Longident.parse (to_valid_ident key);
@@ -262,15 +259,14 @@ and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
             interface_name fragments (interface_name :: path) definition )
         :: record_fields
     in
-    Exp.record record_fields None
+    Ast_helper.Exp.record record_fields None
   in
-  ((let open Ast_helper in
-   Exp.constraint_
+  (Ast_helper.Exp.constraint_
      (do_obj_constructor_base ())
      (base_type_name
         (match existing_record with
         | None -> generate_type_name path
-        | Some type_name -> type_name))) [@metaloc loc])
+        | Some type_name -> type_name)) [@metaloc loc])
 
 and generate_poly_variant_selection_set_decoder config loc name fields path
   definition =
@@ -278,8 +274,7 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
     | (({ item = field } : Result_structure.name), inner) :: next -> (
       let field_name = String.capitalize_ascii field in
       let variant_decoder =
-        let open Ast_helper in
-        Exp.variant field_name
+        Ast_helper.Exp.variant field_name
           (Some (generate_parser config (field :: path) definition inner))
       in
       match config.native with
@@ -334,17 +329,15 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
 and generate_poly_variant_interface_decoder config loc _name fragments path
   definition =
   let fallback_case =
-    let open Ast_helper in
-    let name_pattern = Pat.any () in
-    Exp.variant "UnspecifiedFragment" (Some [%expr typename])
-    |> Exp.case name_pattern
+    let name_pattern = Ast_helper.Pat.any () in
+    Ast_helper.Exp.variant "UnspecifiedFragment" (Some [%expr typename])
+    |> Ast_helper.Exp.case name_pattern
   in
   let fragment_cases =
     List.map
       (fun (type_name, inner) ->
-        let open Ast_helper in
         let name_pattern = const_str_pat type_name in
-        Exp.variant type_name
+        Ast_helper.Exp.variant type_name
           (Some
              (match config.native with
              | true ->
@@ -359,13 +352,12 @@ and generate_poly_variant_interface_decoder config loc _name fragments path
                  in
                  [%e
                    generate_parser config (type_name :: path) definition inner]]))
-        |> Exp.case name_pattern)
+        |> Ast_helper.Exp.case name_pattern)
       fragments
   in
   let fallback_case = fallback_case in
   let typename_matcher =
-    let open Ast_helper in
-    Exp.match_ [%expr typename]
+    Ast_helper.Exp.match_ [%expr typename]
       (List.concat [ fragment_cases; [ fallback_case ] ])
   in
   match config.native with
@@ -392,9 +384,8 @@ and generate_poly_variant_union_decoder config loc _name fragments
   let fragment_cases =
     fragments
     |> List.map (fun (({ item = type_name } : Result_structure.name), inner) ->
-         let open Ast_helper in
-         Exp.case (const_str_pat type_name)
-           (Exp.variant type_name
+         Ast_helper.Exp.case (const_str_pat type_name)
+           (Ast_helper.Exp.variant type_name
               (Some
                  (match config.native with
                  | true ->
@@ -418,35 +409,34 @@ and generate_poly_variant_union_decoder config loc _name fragments
   in
   let fallback_case =
     if omit_future_value then
-      let open Ast_helper in
-      Exp.case (Pat.any ())
-        (Exp.apply
-           (Exp.ident (mknoloc (Longident.parse "raise")))
+      Ast_helper.Exp.case (Ast_helper.Pat.any ())
+        (Ast_helper.Exp.apply
+           (Ast_helper.Exp.ident (mknoloc (Longident.parse "raise")))
            [
              ( Nolabel,
-               Exp.construct (mknoloc (Longident.parse "Not_found")) None );
+               Ast_helper.Exp.construct
+                 (mknoloc (Longident.parse "Not_found"))
+                 None );
            ])
     else if Ppx_config.native () then
-      let open Ast_helper in
-      Exp.case (Pat.any ())
-        (Exp.variant "FutureAddedValue"
+      Ast_helper.Exp.case (Ast_helper.Pat.any ())
+        (Ast_helper.Exp.variant "FutureAddedValue"
            (Some
               [%expr
                 [%e
-                  Exp.ident
+                  Ast_helper.Exp.ident
                     {
                       Location.txt = Longident.parse "value";
                       loc = Location.none;
                     }]]))
     else
-      let open Ast_helper in
-      Exp.case (Pat.any ())
-        (Exp.variant "FutureAddedValue"
+      Ast_helper.Exp.case (Ast_helper.Pat.any ())
+        (Ast_helper.Exp.variant "FutureAddedValue"
            (Some
               [%expr
                 (Obj.magic
                    [%e
-                     Exp.ident
+                     Ast_helper.Exp.ident
                        {
                          Location.txt = Longident.parse "value";
                          loc = Location.none;
@@ -454,8 +444,7 @@ and generate_poly_variant_union_decoder config loc _name fragments
                   : Js.Json.t)]))
   in
   let typename_matcher =
-    let open Ast_helper in
-    Exp.match_ [%expr typename]
+    Ast_helper.Exp.match_ [%expr typename]
       (List.concat [ fragment_cases; [ fallback_case ] ])
   in
   if config.native then

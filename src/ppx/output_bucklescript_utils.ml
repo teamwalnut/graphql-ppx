@@ -20,20 +20,16 @@ let extend_loc_from_start (loc : Location.t) cnum =
   }
 
 let base_type_name ?(loc = Location.none) name =
-  let open Ast_helper in
-  Typ.constr { txt = Longident.parse name; loc } []
+  Ast_helper.Typ.constr { txt = Longident.parse name; loc } []
 
 let const_str_expr s =
-  let open Ast_helper in
-  Exp.constant (Pconst_string (s, Location.none, None))
+  Ast_helper.Exp.constant (Pconst_string (s, Location.none, None))
 
 let const_str_pat s =
-  let open Ast_helper in
-  Pat.constant (Pconst_string (s, Location.none, None))
+  Ast_helper.Pat.constant (Pconst_string (s, Location.none, None))
 
 let ident_from_string ?(loc = Location.none) ident =
-  let open Ast_helper in
-  Exp.ident ~loc { txt = Longident.parse ident; loc }
+  Ast_helper.Exp.ident ~loc { txt = Longident.parse ident; loc }
 
 let mkloc txt loc = { Location.txt; loc }
 let mknoloc txt = mkloc txt Location.none

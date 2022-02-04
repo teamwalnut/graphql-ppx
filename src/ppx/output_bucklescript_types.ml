@@ -16,9 +16,7 @@ let make_error_raiser message =
     [%expr Js.Exn.raiseError ("graphql-ppx: " ^ [%e message])]
   else [%expr Js.Exn.raiseError "Unexpected GraphQL query response"]
 
-let const_str_expr s =
-  let open Ast_helper in
-  Exp.constant (Pconst_string (s, loc, None))
+let const_str_expr s = Ast_helper.Exp.constant (Pconst_string (s, loc, None))
 
 let base_type ?(inner = []) ?loc name =
   Ast_helper.Typ.constr
@@ -136,8 +134,7 @@ let variant_interface_type ~name:interface_name ~config ~fragments ~path
     }
   in
   let fragment_case_tys = fragments |> List.map map_case_ty in
-  let open Ast_helper in
-  Typ.variant (fallback_case_ty :: fragment_case_tys) Closed None
+  Ast_helper.Typ.variant (fallback_case_ty :: fragment_case_tys) Closed None
 
 let generate_variant_interface ~emit_locations ~name ~config ~fragments ~path
   ~(loc : ast_location) ~raw =
@@ -180,8 +177,7 @@ let generate_record_type ~config ~obj_path ~raw ~(loc : ast_location)
              :: acc
            | Field { path = name :: path; type_; loc_key; loc = _loc_field } ->
              let valid_name = to_valid_ident name in
-             (let open Ast_helper in
-             Type.field
+             Ast_helper.Type.field
                ?loc:
                  (match emit_locations with
                  | true -> None
@@ -193,7 +189,7 @@ let generate_record_type ~config ~obj_path ~raw ~(loc : ast_location)
                    [
                      Ast_helper.Attr.mk
                        { txt = "bs.as"; loc = Location.none }
-                       (PStr [ Str.eval (const_str_expr name) ]);
+                       (PStr [ Ast_helper.Str.eval (const_str_expr name) ]);
                    ])
                {
                  Location.txt = valid_name;
@@ -207,7 +203,7 @@ let generate_record_type ~config ~obj_path ~raw ~(loc : ast_location)
                     (match emit_locations with
                     | true -> None
                     | false -> Some (conv_loc loc_key))
-                  ~config ~path:(name :: path) ~raw type_))
+                  ~config ~path:(name :: path) ~raw type_)
              :: acc
            | Field { path = []; loc } ->
              Location.raise_errorf ~loc:(loc |> conv_loc) "No path")
@@ -248,33 +244,32 @@ let generate_variant_selection ~emit_locations config fields path
   else
     wrap_type_declaration Ptype_abstract
       ~manifest:
-        (let open Ast_helper in
-        Typ.variant
-          (fields
-          |> List.map (fun ((name : Result_structure.name), res) ->
-               {
-                 prf_desc =
-                   Rtag
-                     ( {
-                         txt = String.capitalize_ascii name.item;
-                         loc = Location.none;
-                       },
-                       false,
-                       [
-                         generate_type
-                           ?atLoc:
-                             (match emit_locations with
-                             | true ->
-                               Some
-                                 (conv_loc
-                                    (config.Generator_utils.map_loc name.span))
-                             | false -> None)
-                           ~config ~path:(name.item :: path) ~raw res;
-                       ] );
-                 prf_loc = Location.none;
-                 prf_attributes = [];
-               }))
-          Closed None)
+        (Ast_helper.Typ.variant
+           (fields
+           |> List.map (fun ((name : Result_structure.name), res) ->
+                {
+                  prf_desc =
+                    Rtag
+                      ( {
+                          txt = String.capitalize_ascii name.item;
+                          loc = Location.none;
+                        },
+                        false,
+                        [
+                          generate_type
+                            ?atLoc:
+                              (match emit_locations with
+                              | true ->
+                                Some
+                                  (conv_loc
+                                     (config.Generator_utils.map_loc name.span))
+                              | false -> None)
+                            ~config ~path:(name.item :: path) ~raw res;
+                        ] );
+                  prf_loc = Location.none;
+                  prf_attributes = [];
+                }))
+           Closed None)
       ?loc:(match emit_locations with true -> Some loc | false -> None)
       path
 
@@ -349,10 +344,9 @@ let generate_variant_union ~emit_locations config
     in
     wrap_type_declaration Ptype_abstract
       ~manifest:
-        (let open Ast_helper in
-        Typ.variant
-          (List.concat [ fallback_case_ty; fragment_case_tys ])
-          Closed None)
+        (Ast_helper.Typ.variant
+           (List.concat [ fallback_case_ty; fragment_case_tys ])
+           Closed None)
       ?loc:
         (match emit_locations with
         | true -> Some (conv_loc loc)
@@ -365,8 +359,7 @@ let generate_enum ~emit_locations _config fields path ~(loc : ast_location) raw
     ~manifest:
       (if raw then base_type "string"
       else
-        (let open Ast_helper in
-        Typ.variant
+        Ast_helper.Typ.variant
           (List.append
              (match omit_future_value with
              | true -> []
@@ -411,7 +404,7 @@ let generate_enum ~emit_locations _config fields path ~(loc : ast_location) raw
                       | false -> Location.none);
                     prf_attributes = [];
                   })))
-          Closed None)
+          Closed None
         [@metaloc
           match emit_locations with
           | true -> conv_loc loc
@@ -502,10 +495,9 @@ let generate_object_type ~emit_locations config fields obj_path raw
   | false ->
     wrap_type_declaration
       ~manifest:
-        (let open Ast_helper in
-        Typ.constr
-          { Location.txt = Longident.parse "Js.t"; loc = Location.none }
-          [ Ast_helper.Typ.object_ object_fields Closed ])
+        (Ast_helper.Typ.constr
+           { Location.txt = Longident.parse "Js.t"; loc = Location.none }
+           [ Ast_helper.Typ.object_ object_fields Closed ])
       Ptype_abstract
       ?loc:(match emit_locations with true -> Some loc | false -> None)
       obj_path
@@ -544,10 +536,9 @@ let generate_types ~(config : Generator_utils.output_config) ~raw
   |> List.rev
 
 let make_fragment_type config raw type_name fragment_name fragment_name_loc =
-  let open Ast_helper in
-  Type.mk
+  Ast_helper.Type.mk
     ~manifest:
-      (Typ.constr
+      (Ast_helper.Typ.constr
          (match raw with
          | true -> mknoloc (Longident.Lident "t")
          | false ->
@@ -563,10 +554,7 @@ let make_fragment_type config raw type_name fragment_name fragment_name_loc =
     (mknoloc ("t_" ^ fragment_name))
 
 let generate_type_structure_items config res raw type_name fragment_name =
-  let str_type types =
-    let open Ast_helper in
-    Str.type_ Nonrecursive types
-  in
+  let str_type types = Ast_helper.Str.type_ Nonrecursive types in
   let types =
     generate_types ~config ~emit_locations:false ~raw ~type_name ~fragment_name
       res
@@ -605,10 +593,7 @@ let generate_type_signature_items (config : Generator_utils.output_config) res
     generate_types ~config ~emit_locations ~raw ~type_name ~fragment_name res
     |> List.map (fun type_ -> Ast_helper.Sig.type_ Recursive [ type_ ])
   in
-  let sig_type types =
-    let open Ast_helper in
-    Sig.type_ Nonrecursive types
-  in
+  let sig_type types = Ast_helper.Sig.type_ Nonrecursive types in
   match fragment_name with
   | Some (fragment_name, fragment_name_loc) -> (
     match Schema.lookup_type config.schema fragment_name with
@@ -659,8 +644,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
     if raw then base_type "string"
     else
       let open Graphql_ppx_base__.Schema in
-      let open Ast_helper in
-      Typ.variant ?loc
+      Ast_helper.Typ.variant ?loc
         (enum_meta.em_values
         |> List.map (fun { evm_name; _ } ->
              {
@@ -710,8 +694,7 @@ let generate_empty_input_object impl raw =
       { loc = Location.none; txt = generate_type_name ~prefix:"t_variables" [] }
 
 let generate_record_input_object raw input_obj_name fields =
-  let open Ast_helper in
-  Type.mk
+  Ast_helper.Type.mk
     ~kind:
       (Ptype_record
          (fields
@@ -727,7 +710,7 @@ let generate_record_input_object raw input_obj_name fields =
                       [
                         Ast_helper.Attr.mk
                           { txt = "bs.as"; loc = Location.none }
-                          (PStr [ Str.eval (const_str_expr name) ]);
+                          (PStr [ Ast_helper.Str.eval (const_str_expr name) ]);
                       ])
                 {
                   Location.txt = valid_name;
@@ -753,13 +736,15 @@ let generate_record_input_object raw input_obj_name fields =
     }
 
 let generate_native_raw_input_object impl input_obj_name =
-  let open Ast_helper in
-  Type.mk
+  Ast_helper.Type.mk
     ?kind:(match impl with true -> None | false -> Some Ptype_abstract)
     ?manifest:
       (match impl with
       | true ->
-        Some (Typ.constr (mknoloc (Longident.parse "Yojson.Basic.t")) [])
+        Some
+          (Ast_helper.Typ.constr
+             (mknoloc (Longident.parse "Yojson.Basic.t"))
+             [])
       | false -> None)
     {
       loc = Location.none;
