@@ -1,5 +1,5 @@
 {
-  "checksum": "0f969a852f22e7070fcd445512afff73",
+  "checksum": "012268b9fbb89d372ff31fbfb206fd79",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "ocaml@4.13.1000@d41d8cd9": {
