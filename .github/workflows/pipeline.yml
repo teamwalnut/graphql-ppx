@@ -112,7 +112,7 @@ jobs:
         env:
           GRAPHQL_CI: true
 
-      - name: test-bucklescript
+      - name: snaphot tests
         if: runner.os != 'Windows'
         run: |
           esy test
