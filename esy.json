@@ -12,7 +12,6 @@
     "@opam/yojson": "*"
   },
   "devDependencies": {
-    "@opam/ocamlformat": "0.20.1",
     "@opam/dune": "*",
     "@opam/ocaml-lsp-server": "1.9.1",
     "@opam/merlin": "*",
