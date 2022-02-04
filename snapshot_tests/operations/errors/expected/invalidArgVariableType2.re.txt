@@ -1,0 +1,12 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/invalidArgVariableType2.re[0m:[2m8:25-28[0m
+
+   6 [2m┆[0m query invalidArgValues($arg: String) {
+   7 [2m┆[0m   invalidArgValues(
+   [1;31m8[0m [2m┆[0m       stringRequired: [1;31m$arg[0m
+   9 [2m┆[0m   )
+  10 [2m┆[0m }
+
+  Invalid argument. Trying to apply the nullable variable "$arg" to the required argument "stringRequired".
+

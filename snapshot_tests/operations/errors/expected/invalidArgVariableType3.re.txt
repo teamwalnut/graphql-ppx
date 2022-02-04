@@ -1,0 +1,12 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/invalidArgVariableType3.re[0m:[2m9:17-21[0m
+
+   7 [2m┆[0m   invalidArgValues(
+   8 [2m┆[0m       stringRequired: $arg
+   [1;31m9[0m [2m┆[0m       string: [1;31m$arg2[0m
+  10 [2m┆[0m   )
+  11 [2m┆[0m }
+
+  Invalid argument. Expected "String" but received "Int".
+

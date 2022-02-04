@@ -1,0 +1,11 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/wrongArguments.re[0m
+
+  [1;33mThe module or file Yojson can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run `bsb` instead of `bsb -make-world`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?
+

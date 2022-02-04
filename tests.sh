@@ -30,12 +30,12 @@ case $(uname) in
 esac
 
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
-ppx_path="./_build/default/src/bucklescript_bin/bin.exe"
+ppx_path="./_build/default/src/bin/bin.exe"
 bsb_path="./node_modules/rescript/${platform}/bsc.exe"
 declare -a configs=('records' 'template' 'apollo' 'native')
 
-rm -rf tests_bucklescript/operations/expected/
-rm -rf tests_bucklescript/operations/error/expected/
+rm -rf snapshot_tests/operations/expected/
+rm -rf snapshot_tests/operations/error/expected/
 
 for config in "${configs[@]}"; do
   case $config in
@@ -45,18 +45,18 @@ for config in "${configs[@]}"; do
     "native"  ) opts="-native" ;;
   esac
 
-  mkdir -p tests_bucklescript/operations/expected/$config/generate
-  mkdir -p tests_bucklescript/operations/expected/$config/compile
-  mkdir -p tests_bucklescript/operations/errors/expected
+  mkdir -p snapshot_tests/operations/expected/$config/generate
+  mkdir -p snapshot_tests/operations/expected/$config/compile
+  mkdir -p snapshot_tests/operations/errors/expected
 
-  for file in tests_bucklescript/operations/*.re; do
+  for file in snapshot_tests/operations/*.re; do
     $refmt_path --parse=re --print=binary $file | $ppx_path -schema=graphql_schema.json $opts /dev/stdin /dev/stdout | $refmt_path --parse=binary &> $(snapshotGeneratePath $file $config) & maybeWait
 
     if [[ $config != "native" ]]; then
       $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
     fi
   done
-  for file in tests_bucklescript/operations/errors/*.re; do
+  for file in snapshot_tests/operations/errors/*.re; do
     $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json $opts" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
   done
 done
@@ -67,7 +67,7 @@ warningYellow='\033[0;33m'
 successGreen='\033[0;32m'
 reset='\033[0m'
 
-diff=$(git ls-files --modified tests_bucklescript/operations/**/expected)
+diff=$(git ls-files --modified snapshot_tests/operations/**/expected)
 printf "\033[2K\r"
 if [[ $diff = "" ]]; then
   printf "${successGreen}✅ No unstaged tests difference.${reset}\n"
