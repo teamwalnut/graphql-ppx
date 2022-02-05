@@ -73,7 +73,7 @@ let decode_with_fragments () =
        `UnspecifiedFragment "OtherUser";
      |]
       : QueryWithFragments.t_users_User array)
-    equal_user (make_unit_pp pp_user)
+    equal_user pp_user
 
 let decode_without_fragments () =
   test_exp_array
@@ -81,8 +81,7 @@ let decode_without_fragments () =
     |> QueryWithoutFragments.unsafe_fromJson |> QueryWithoutFragments.parse)
       .users
     [| ({ id = "1" } : only_user); { id = "2" }; { id = "3" } |]
-    equal_only_user
-    (make_unit_pp pp_only_user)
+    equal_only_user pp_only_user
 
 let tests =
   [

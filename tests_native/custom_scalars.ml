@@ -17,10 +17,10 @@ let equal_payload (a : t) (b : t) =
   a.customScalarField.nullable = b.customScalarField.nullable
   && a.customScalarField.nonNullable = b.customScalarField.nonNullable
 
-let payload_to_str p = p |> My_query.serialize |> My_query.toJson |> pp_json
+let payload_to_json p = p |> My_query.serialize |> My_query.toJson
 
 let test_payload (a : t) (b : t) =
-  if equal_payload a b then Pass else Fail (payload_to_str a, payload_to_str b)
+  test_json_ (payload_to_json a) (payload_to_json b)
 
 let encodes_json_objects () =
   test_json_

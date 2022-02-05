@@ -38,7 +38,7 @@ let fragment_equal (a : ft) (b : ft) =
   a.nullableOfNullable = b.nullableOfNullable
   && a.nullableOfNonNullable = b.nullableOfNonNullable
 
-let pp_payload (obj : qt) formatter () =
+let pp_payload formatter (obj : qt) =
   Format.fprintf formatter
     "{ l1 = @[%a@]; l2 = @[<>< frag1 = @[%a@]; frag2 = @[%a@] >@] }"
     print_fragment obj.l1 print_fragment obj.l2.frag1 print_fragment
