@@ -28,9 +28,7 @@ type ft = ListFragment.t
 
 let print_fragment formatter (obj : ft) =
   Format.fprintf formatter
-    ("< nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@] >"
-    [@reason.raw_literal
-      "< nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@] >"])
+    "{ nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@] }"
     (Format.pp_print_string |> print_option |> print_array |> print_option)
     obj.nullableOfNullable
     (Format.pp_print_string |> print_array |> print_option)
@@ -40,36 +38,19 @@ let fragment_equal (a : ft) (b : ft) =
   a.nullableOfNullable = b.nullableOfNullable
   && a.nullableOfNonNullable = b.nullableOfNonNullable
 
-let fragment =
-  (module struct
-    type t = ListFragment.t
+let pp_payload (obj : qt) formatter () =
+  Format.fprintf formatter
+    "{ l1 = @[%a@]; l2 = @[<>< frag1 = @[%a@]; frag2 = @[%a@] >@] }"
+    print_fragment obj.l1 print_fragment obj.l2.frag1 print_fragment
+    obj.l2.frag2
 
-    let pp = print_fragment
-    let equal = fragment_equal
-  end : Alcotest.TESTABLE
-    with type t = ft)
-
-let my_query =
-  (module struct
-    type t = qt
-
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< l1 = @[%a@]; l2 = @[<>< frag1 = @[%a@]; frag2 = @[%a@] >@] >"
-        [@reason.raw_literal
-          "< l1 = @[%a@]; l2 = @[<>< frag1 = @[%a@]; frag2 = @[%a@] >@] >"])
-        print_fragment obj.l1 print_fragment obj.l2.frag1 print_fragment
-        obj.l2.frag2
-
-    let equal (a : qt) (b : qt) =
-      fragment_equal a.l1 b.l1
-      && fragment_equal a.l2.frag1 b.l2.frag1
-      && fragment_equal a.l2.frag2 b.l2.frag2
-  end : Alcotest.TESTABLE
-    with type t = qt)
+let payload_equal (a : qt) (b : qt) =
+  fragment_equal a.l1 b.l1
+  && fragment_equal a.l2.frag1 b.l2.frag1
+  && fragment_equal a.l2.frag2 b.l2.frag2
 
 let decodes_the_fragment () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     ({|{
         "l1": {"nullableOfNullable": ["a", null, "b"]},
         "l2": {"nullableOfNullable": ["a", null, "b"]}
@@ -96,5 +77,6 @@ let decodes_the_fragment () =
             };
         };
     }
+    payload_equal pp_payload
 
-let tests = [ ("Decodes the fragment", `Quick, decodes_the_fragment) ]
+let tests = [ ("Decodes the fragment", decodes_the_fragment) ]

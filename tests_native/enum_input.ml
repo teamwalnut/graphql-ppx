@@ -9,9 +9,9 @@ module MyQuery =
 |}]
 
 let encodes_arguments () =
-  Alcotest.check yojson "json"
+  test_json_
     (MyQuery.makeVariables ~arg:`FIRST ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
     (Yojson.Basic.from_string {| { "arg": "FIRST" } |})
 
-let tests = [ ("Encodes enum arguments to strings", `Quick, encodes_arguments) ]
+let tests = [ ("Encodes enum arguments to strings", encodes_arguments) ]

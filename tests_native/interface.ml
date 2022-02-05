@@ -1,3 +1,5 @@
+open Test_shared
+
 module QueryWithFragments =
 [%graphql
 {|
@@ -36,49 +38,32 @@ let json =
              { "__typename": "OtherUser", "id": "3"}
              ]}|}
 
-let user =
-  (module struct
-    type t = user
+let pp_user formatter = function
+  | `UnspecifiedFragment s ->
+    Format.fprintf formatter "`UnspecifiedFragment < @[%s@] >" s
+  | `AdminUser (u : QueryWithFragments.t_users_User_AdminUser) ->
+    Format.fprintf formatter "`AdminUser < id = @[%s@]; name = @[%s@] >" u.id
+      u.name
+  | `AnonymousUser (u : QueryWithFragments.t_users_User_AnonymousUser) ->
+    Format.fprintf formatter
+      "`AnonymousUser < id = @[%s@]; anonymousId = @[%i@] >" u.id u.anonymousId
 
-    let pp formatter = function
-      | `UnspecifiedFragment s ->
-        Format.fprintf formatter "`UnspecifiedFragment < @[%s@] >" s
-      | `AdminUser (u : QueryWithFragments.t_users_User_AdminUser) ->
-        Format.fprintf formatter "`AdminUser < id = @[%s@]; name = @[%s@] >"
-          u.id u.name
-      | `AnonymousUser (u : QueryWithFragments.t_users_User_AnonymousUser) ->
-        Format.fprintf formatter
-          ("`AnonymousUser < id = @[%s@]; anonymousId = @[%i@] >"
-          [@reason.raw_literal
-            "`AnonymousUser < id = @[%s@]; anonymousId = @[%i@] >"]) u.id
-          u.anonymousId
+let equal_user (a : user) (b : user) =
+  match (a, b) with
+  | `UnspecifiedFragment u1, `UnspecifiedFragment u2 -> u1 = u2
+  | `AdminUser u1, `AdminUser u2 -> u1.id = u2.id && u1.name = u2.name
+  | `AnonymousUser u1, `AnonymousUser u2 ->
+    u1.id = u2.id && u1.anonymousId = u2.anonymousId
+  | _ -> false
 
-    let equal (a : user) (b : user) =
-      match (a, b) with
-      | `UnspecifiedFragment u1, `UnspecifiedFragment u2 -> u1 = u2
-      | `AdminUser u1, `AdminUser u2 -> u1.id = u2.id && u1.name = u2.name
-      | `AnonymousUser u1, `AnonymousUser u2 ->
-        u1.id = u2.id && u1.anonymousId = u2.anonymousId
-      | _ -> false
-  end : Alcotest.TESTABLE
-    with type t = user)
+let pp_only_user formatter (u : QueryWithoutFragments.t_users) =
+  Format.fprintf formatter "`User < id = @[%s@] >" u.id
 
-let only_user =
-  (module struct
-    type t = only_user
-
-    let pp formatter (u : QueryWithoutFragments.t_users) =
-      Format.fprintf formatter "`User < id = @[%s@] >" u.id
-
-    let equal (a : only_user) (b : only_user) =
-      match (a, b) with u1, u2 -> u1.id = u2.id
-  end : Alcotest.TESTABLE
-    with type t = only_user)
+let equal_only_user (a : only_user) (b : only_user) =
+  match (a, b) with u1, u2 -> u1.id = u2.id
 
 let decode_with_fragments () =
-  (let open Alcotest in
-  check (array user))
-    "query result equality"
+  test_exp_array
     (Yojson.Basic.from_string json
     |> QueryWithFragments.unsafe_fromJson |> QueryWithFragments.parse)
       .users
@@ -88,18 +73,19 @@ let decode_with_fragments () =
        `UnspecifiedFragment "OtherUser";
      |]
       : QueryWithFragments.t_users_User array)
+    equal_user (make_unit_pp pp_user)
 
 let decode_without_fragments () =
-  (let open Alcotest in
-  check (array only_user))
-    "query result equality"
+  test_exp_array
     (Yojson.Basic.from_string json
     |> QueryWithoutFragments.unsafe_fromJson |> QueryWithoutFragments.parse)
       .users
-    [| { id = "1" }; { id = "2" }; { id = "3" } |]
+    [| ({ id = "1" } : only_user); { id = "2" }; { id = "3" } |]
+    equal_only_user
+    (make_unit_pp pp_only_user)
 
 let tests =
   [
-    ("Decodes the interface with fragments", `Quick, decode_with_fragments);
-    ("Decodes the interface without fragments", `Quick, decode_without_fragments);
+    ("Decodes the interface with fragments", decode_with_fragments);
+    ("Decodes the interface without fragments", decode_without_fragments);
   ]

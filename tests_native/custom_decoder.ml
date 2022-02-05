@@ -1,3 +1,5 @@
+open Test_shared
+
 module IntOfString = struct
   let parse = int_of_string
   let serialize = string_of_int
@@ -23,30 +25,22 @@ module My_query =
   }
 |}]
 
-type qt = My_query.t
+type t = My_query.t
 
-let my_query =
-  (module struct
-    type t = qt
+let equal_payload (a : t) (b : t) =
+  a.variousScalars.string = b.variousScalars.string
+  && a.variousScalars.int = b.variousScalars.int
 
-    let pp formatter (obj : t) =
-      Format.fprintf formatter
-        ("<variousScalars = @[<>string = @[%i@]; int = @[%s@]>@] >"
-        [@reason.raw_literal
-          "<variousScalars = @[<>string = @[%i@]; int = @[%s@]>@] >"])
-        obj.variousScalars.string obj.variousScalars.int
+let payload_to_str p = p |> My_query.serialize |> My_query.toJson |> pp_json
 
-    let equal (a : t) (b : t) =
-      a.variousScalars.string = b.variousScalars.string
-      && a.variousScalars.int = b.variousScalars.int
-  end : Alcotest.TESTABLE
-    with type t = qt)
+let test_payload (a : t) (b : t) =
+  if equal_payload a b then Pass else Fail (payload_to_str a, payload_to_str b)
 
 let runs_the_decoder () =
-  Alcotest.check my_query "query result equality"
+  test_payload
     (Yojson.Basic.from_string
        {|{"variousScalars": {"string": "123", "int": 456}}|}
     |> My_query.unsafe_fromJson |> My_query.parse)
     { variousScalars = { string = 123; int = "456" } }
 
-let tests = [ ("Runs the decoder", `Quick, runs_the_decoder) ]
+let tests = [ ("Runs the decoder", runs_the_decoder) ]

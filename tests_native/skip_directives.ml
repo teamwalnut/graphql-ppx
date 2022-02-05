@@ -23,11 +23,8 @@ let my_query =
 
     let pp formatter (obj : qt) =
       Format.fprintf formatter
-        ("< v1 = @[<>< nullableString = %a ; string = %a >@] ; @[<>< \
-          nullableString = %a ; string = %a >@] >"
-        [@reason.raw_literal
-          "< v1 = @[<>< nullableString = %a ; string = %a >@] ; @[<>< \
-           nullableString = %a ; string = %a >@] >"])
+        "< v1 = @[<>< nullableString = %a ; string = %a >@] ; @[<>< \
+         nullableString = %a ; string = %a >@] >"
         (Format.pp_print_string |> print_option)
         obj.v1.nullableString
         (Format.pp_print_string |> print_option)
