@@ -27,58 +27,65 @@ module MyQuery =
 
 type qt = MyQuery.t
 
-let my_query =
-  (module struct
-    type t = qt
+let pp fmt (obj : qt) =
+  pp_record fmt
+    [
+      ( "first",
+        pp_inner_record
+          [
+            ( "inner",
+              pp_inner_option obj.first.inner (fun inner ->
+                pp_inner_record
+                  [
+                    ( "inner",
+                      pp_inner_option inner.inner (fun inner ->
+                        pp_inner_record
+                          [ ("field", pp_inner_string_literal inner.field) ]) );
+                  ]) );
+          ] );
+      ( "second",
+        pp_inner_record
+          [
+            ( "inner",
+              pp_inner_option obj.second.inner (fun inner ->
+                pp_inner_record
+                  [
+                    ( "inner",
+                      pp_inner_option inner.inner (fun inner ->
+                        pp_inner_record
+                          [
+                            ( "inner",
+                              pp_inner_record
+                                [
+                                  ("f1", pp_inner_string_literal inner.f1);
+                                  ("f2", pp_inner_string_literal inner.f2);
+                                ] );
+                          ]) );
+                  ]) );
+          ] );
+    ]
 
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< first = < inner = @[%a@] > ; second = < inner = @[%a@] > >"
-        [@reason.raw_literal
-          "< first = < inner = @[%a@] > ; second = < inner = @[%a@] > >"])
-        ((fun formatter (v : MyQuery.t_first_inner) ->
-           Format.fprintf formatter "< inner = @[%a@] >"
-             ((fun formatter (v : MyQuery.t_first_inner_inner) ->
-                Format.fprintf formatter "< field = %a >" Format.pp_print_string
-                  v.field)
-             |> print_option)
-             v.inner)
-        |> print_option)
-        obj.first.inner
-        ((fun formatter (v : MyQuery.t_second_inner) ->
-           Format.fprintf formatter "< inner = @[%a@] >"
-             ((fun formatter (v : MyQuery.t_second_inner_inner) ->
-                Format.fprintf formatter "{ f1 = %a ; f2 = %a }"
-                  Format.pp_print_string v.f1 Format.pp_print_string v.f2)
-             |> print_option)
-             v.inner)
-        |> print_option)
-        obj.second.inner
-
-    let equal (a : qt) (b : qt) =
+let equal (a : qt) (b : qt) =
+  opt_eq
+    (fun (a : MyQuery.t_first_inner) (b : MyQuery.t_first_inner) ->
       opt_eq
-        (fun (a : MyQuery.t_first_inner) (b : MyQuery.t_first_inner) ->
-          opt_eq
-            (fun (a : MyQuery.t_first_inner_inner)
-               (b : MyQuery.t_first_inner_inner) -> a.field = b.field)
-            a.inner b.inner)
-        a.first.inner b.first.inner
-      && opt_eq
-           (fun (a : MyQuery.t_second_inner) (b : MyQuery.t_second_inner) ->
-             opt_eq
-               (fun (a : MyQuery.t_second_inner_inner)
-                  (b : MyQuery.t_second_inner_inner) ->
-                 a.f1 = b.f1 && a.f2 = b.f2)
-               a.inner b.inner)
-           a.second.inner b.second.inner
-  end : Alcotest.TESTABLE
-    with type t = qt)
+        (fun (a : MyQuery.t_first_inner_inner) (b : MyQuery.t_first_inner_inner) ->
+          a.field = b.field)
+        a.inner b.inner)
+    a.first.inner b.first.inner
+  && opt_eq
+       (fun (a : MyQuery.t_second_inner) (b : MyQuery.t_second_inner) ->
+         opt_eq
+           (fun (a : MyQuery.t_second_inner_inner)
+              (b : MyQuery.t_second_inner_inner) -> a.f1 = b.f1 && a.f2 = b.f2)
+           a.inner b.inner)
+       a.second.inner b.second.inner
 
 let decodes_recursively () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     (Yojson.Basic.from_string
        {| {
-      "first": {"inner": {"inner": {"field": "second"}}},
+      "first": {"inner": {"inner": {"field": "secon"}}},
       "second": {"inner": null}
     } |}
     |> MyQuery.unsafe_fromJson |> MyQuery.parse)
@@ -86,5 +93,6 @@ let decodes_recursively () =
       first = { inner = Some { inner = Some { field = "second" } } };
       second = { inner = None };
     }
+    equal pp
 
-let tests = [ ("Decodes recursively", `Quick, decodes_recursively) ]
+let tests = [ ("Decodes recursively", decodes_recursively) ]

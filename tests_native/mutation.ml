@@ -1,3 +1,5 @@
+open Test_shared
+
 module MyQuery =
 [%graphql
 {|
@@ -16,8 +18,9 @@ module MyQuery =
 |}]
 
 let printed_query () =
-  Alcotest.check Alcotest.int "string equal"
-    (Str.search_forward (Str.regexp "^mutation") MyQuery.query 0)
-    0
+  match Str.search_forward (Str.regexp "^mutation") MyQuery.query 0 with
+  | 0 -> Pass
+  | (exception Not_found) | _ ->
+    Fail "mutation not found as first index of the operation string"
 
-let tests = [ ("Printed query is a mutation", `Quick, printed_query) ]
+let tests = [ ("Printed query is a mutation", printed_query) ]

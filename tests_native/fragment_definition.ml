@@ -26,23 +26,34 @@ module MyQuery =
 type qt = MyQuery.t
 type ft = ListFragment.t
 
-let print_fragment formatter (obj : ft) =
-  Format.fprintf formatter
-    "{ nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@] }"
-    (Format.pp_print_string |> print_option |> print_array |> print_option)
-    obj.nullableOfNullable
-    (Format.pp_print_string |> print_array |> print_option)
-    obj.nullableOfNonNullable
+let print_fragment fmt (obj : ft) =
+  pp_record fmt
+    [
+      ( "nullableOfNullable",
+        (pp_string_literal |> print_option |> print_array |> print_option
+       |> swap_args)
+          obj.nullableOfNullable );
+      ( "nullableOfNonNullable",
+        (pp_string_literal |> print_array |> print_option |> swap_args)
+          obj.nullableOfNonNullable );
+    ]
 
 let fragment_equal (a : ft) (b : ft) =
   a.nullableOfNullable = b.nullableOfNullable
   && a.nullableOfNonNullable = b.nullableOfNonNullable
 
-let pp_payload formatter (obj : qt) =
-  Format.fprintf formatter
-    "{ l1 = @[%a@]; l2 = @[<>< frag1 = @[%a@]; frag2 = @[%a@] >@] }"
-    print_fragment obj.l1 print_fragment obj.l2.frag1 print_fragment
-    obj.l2.frag2
+let pp_payload fmt (obj : qt) =
+  pp_record fmt
+    [
+      ("l1", fun fmt -> print_fragment fmt obj.l1);
+      ( "l2",
+        fun fmt ->
+          pp_record fmt
+            [
+              ("frag1", fun fmt -> print_fragment fmt obj.l2.frag1);
+              ("frag2", fun fmt -> print_fragment fmt obj.l2.frag2);
+            ] );
+    ]
 
 let payload_equal (a : qt) (b : qt) =
   fragment_equal a.l1 b.l1

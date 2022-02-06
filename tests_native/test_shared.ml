@@ -1,12 +1,14 @@
 type result =
   | Pass
-  | Fail of
+  | CompareFail of
       (Format.formatter -> unit -> unit) * (Format.formatter -> unit -> unit)
+  | Fail of string
 
 let make_unit_pp pp v fmt () = pp fmt v
 
 let test_exp a b exp (pp : Format.formatter -> 'a -> unit) =
-  if exp a b then Pass else Fail ((make_unit_pp pp) a, (make_unit_pp pp) b)
+  if exp a b then Pass
+  else CompareFail ((make_unit_pp pp) a, (make_unit_pp pp) b)
 
 let pp_string = Format.pp_print_text
 let test_str s1 s2 = test_exp s1 s2 ( = ) pp_string
@@ -30,22 +32,65 @@ let pp_json formatter json =
 
 let json_equal a b = Yojson.Basic.equal a b
 let test_json_ a b = test_exp a b json_equal pp_json
+let pp_color fmt color = Format.fprintf fmt "@<0>%s" color
+
+let pp_colored_str fmt str color =
+  pp_color fmt color;
+  Format.pp_print_string fmt str;
+  pp_color fmt Cli_colors.reset
 
 let print_option inner formatter = function
-  | None -> Format.pp_print_string formatter "None"
-  | Some v -> Format.fprintf formatter "Some(@[%a@])" inner v
+  | None -> pp_colored_str formatter "None" Cli_colors.red
+  | Some v ->
+    pp_colored_str formatter "Some" Cli_colors.red;
+    Format.fprintf formatter "(@[%a@])" inner v
 
-let print_array inner formatter value =
+let print_array inner fmt value =
   let open Format in
-  pp_print_string formatter "[ ";
+  pp_colored_str fmt "[|" Cli_colors.blue;
+  Format.pp_print_break fmt 1 2;
+  Format.pp_open_hvbox fmt 0;
   Array.iteri
     (fun idx v ->
-      if idx > 0 then pp_print_string formatter "; ";
-      pp_open_hovbox formatter 1;
-      inner formatter v;
-      pp_close_box formatter ())
+      pp_open_hvbox fmt 0;
+      inner fmt v;
+      pp_close_box fmt ();
+      if idx < Array.length value - 1 then (
+        pp_colored_str fmt ";" Cli_colors.blue;
+        pp_print_break fmt 1 2)
+      else (
+        pp_color fmt Cli_colors.blue;
+        Format.pp_print_if_newline fmt ();
+        Format.pp_print_string fmt ";";
+        pp_color fmt Cli_colors.reset))
     value;
-  pp_print_string formatter " ]"
+  Format.pp_close_box fmt ();
+  Format.pp_print_break fmt 1 0;
+  pp_colored_str fmt "|]" Cli_colors.blue
+
+let pp_record fmt (fields : (string * (Format.formatter -> unit)) list) =
+  pp_colored_str fmt "{" Cli_colors.blue;
+  Format.pp_print_break fmt 1 2;
+  Format.pp_open_hvbox fmt 0;
+  let len = List.length fields in
+  fields
+  |> List.iteri (fun i (field, value) ->
+       Format.pp_open_hvbox fmt 0;
+       pp_colored_str fmt field Cli_colors.purple;
+       pp_colored_str fmt " = " Cli_colors.Dimmed.purple;
+       value fmt;
+       Format.pp_close_box fmt ();
+       if i < len - 1 then (
+         pp_colored_str fmt ";" Cli_colors.blue;
+         Format.pp_print_break fmt 1 0)
+       else (
+         pp_color fmt Cli_colors.blue;
+         Format.pp_print_if_newline fmt ();
+         Format.pp_print_string fmt ";";
+         pp_color fmt Cli_colors.reset));
+  Format.pp_close_box fmt ();
+  Format.pp_print_break fmt 1 0;
+  pp_colored_str fmt "}" Cli_colors.blue
 
 let test_exp_array a b exp pp =
   test_exp a b
@@ -58,3 +103,14 @@ let array_zipmap f a b =
 
 let opt_eq f a b =
   match (a, b) with Some a, Some b -> f a b | None, None -> true | _ -> false
+
+let pp_string_literal fmt s =
+  pp_colored_str fmt ("\"" ^ s ^ "\"") Cli_colors.yellow
+
+let swap_args fn fmt fields = fn fields fmt
+let inner_pp = swap_args
+
+(* let pp_inner_record fields fmt = pp_record fmt fields *)
+let pp_inner_record = swap_args pp_record
+let pp_inner_option field inner fmt = print_option (swap_args inner) fmt field
+let pp_inner_string_literal = swap_args pp_string_literal

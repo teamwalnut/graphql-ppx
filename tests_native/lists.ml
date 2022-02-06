@@ -15,36 +15,35 @@ module MyQuery =
 
 type qt = MyQuery.t
 
-let my_query =
-  (module struct
-    type t = qt
+let pp fmt (obj : qt) =
+  pp_record fmt
+    [
+      ( "nullableOfNullable",
+        fun fmt ->
+          (Format.pp_print_string |> print_option |> print_array |> print_option)
+            fmt obj.lists.nullableOfNullable );
+      ( "nullableOfNonNullable",
+        fun fmt ->
+          (Format.pp_print_string |> print_array |> print_option)
+            fmt obj.lists.nullableOfNonNullable );
+      ( "nonNullableOfNullable",
+        fun fmt ->
+          (Format.pp_print_string |> print_option |> print_array)
+            fmt obj.lists.nonNullableOfNullable );
+      ( "nonNullableOfNonNullable",
+        fun fmt ->
+          (Format.pp_print_string |> print_array)
+            fmt obj.lists.nonNullableOfNonNullable );
+    ]
 
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@]; \
-          nonNullableOfNullable = @[%a@]; nonNullableOfNonNullable = @[%a@] >"
-        [@reason.raw_literal
-          "< nullableOfNullable = @[%a@]; nullableOfNonNullable = @[%a@]; \
-           nonNullableOfNullable = @[%a@]; nonNullableOfNonNullable = @[%a@] >"])
-        (Format.pp_print_string |> print_option |> print_array |> print_option)
-        obj.lists.nullableOfNullable
-        (Format.pp_print_string |> print_array |> print_option)
-        obj.lists.nullableOfNonNullable
-        (Format.pp_print_string |> print_option |> print_array)
-        obj.lists.nonNullableOfNullable
-        (Format.pp_print_string |> print_array)
-        obj.lists.nonNullableOfNonNullable
-
-    let equal (a : qt) (b : qt) =
-      a.lists.nullableOfNullable = b.lists.nullableOfNullable
-      && a.lists.nullableOfNonNullable = b.lists.nullableOfNonNullable
-      && a.lists.nonNullableOfNullable = b.lists.nonNullableOfNullable
-      && a.lists.nonNullableOfNonNullable = b.lists.nonNullableOfNonNullable
-  end : Alcotest.TESTABLE
-    with type t = qt)
+let equal (a : qt) (b : qt) =
+  a.lists.nullableOfNullable = b.lists.nullableOfNullable
+  && a.lists.nullableOfNonNullable = b.lists.nullableOfNonNullable
+  && a.lists.nonNullableOfNullable = b.lists.nonNullableOfNullable
+  && a.lists.nonNullableOfNonNullable = b.lists.nonNullableOfNonNullable
 
 let null_in_lists () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     (MyQuery.parse
        (Yojson.Basic.from_string
           {|{"lists": {"nullableOfNullable": [null, "123"], "nonNullableOfNullable": [null, "123"], "nonNullableOfNonNullable": ["a", "b"]}}|}
@@ -58,5 +57,6 @@ let null_in_lists () =
           nonNullableOfNonNullable = [| "a"; "b" |];
         };
     }
+    equal pp
 
-let tests = [ ("Null in nullable lists", `Quick, null_in_lists) ]
+let tests = [ ("Null in nullable lists", null_in_lists) ]

@@ -18,21 +18,8 @@ module MyQuery =
   }
 |}]
 
-type qt = MyQuery.t
-
-let my_query =
-  (module struct
-    type t = qt
-
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter "< lists = @[%s@] >" obj.lists
-
-    let equal (a : qt) (b : qt) = a.lists = b.lists
-  end : Alcotest.TESTABLE
-    with type t = qt)
-
 let omit_nullable_args () =
-  test_json
+  test_json_
     (MyQuery.makeVariables ~nonNullableOfNullable:[||]
        ~nonNullableOfNonNullable:[||] ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
@@ -45,7 +32,7 @@ let omit_nullable_args () =
     } |})
 
 let allows_none_in_lists () =
-  test_json
+  test_json_
     (MyQuery.makeVariables
        ~nullableOfNullable:[| Some "x"; None; Some "y" |]
        ~nonNullableOfNullable:[| Some "a"; None; Some "b" |]
@@ -61,6 +48,6 @@ let allows_none_in_lists () =
 
 let tests =
   [
-    ("Can omit nullable arguments", `Quick, omit_nullable_args);
-    ("Allows None in lists with nullable items", `Quick, allows_none_in_lists);
+    ("Can omit nullable arguments", omit_nullable_args);
+    ("Allows None in lists with nullable items", allows_none_in_lists);
   ]

@@ -10,19 +10,13 @@ module MyQuery =
 
 type qt = MyQuery.t
 
-let my_query =
-  (module struct
-    type t = qt
+let pp formatter (obj : qt) =
+  Format.fprintf formatter "< listsInput = @[%s@] >" obj.listsInput
 
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter "< listsInput = @[%s@] >" obj.listsInput
-
-    let equal (a : qt) (b : qt) = a.listsInput = b.listsInput
-  end : Alcotest.TESTABLE
-    with type t = qt)
+let equal (a : qt) (b : qt) = a.listsInput = b.listsInput
 
 let allows_none_in_lists_of_nullable () =
-  test_json
+  test_json_
     (MyQuery.makeVariables
        ~arg:
          {
@@ -45,7 +39,5 @@ let allows_none_in_lists_of_nullable () =
 
 let tests =
   [
-    ( "Allows None in lists of nullable types",
-      `Quick,
-      allows_none_in_lists_of_nullable );
+    ("Allows None in lists of nullable types", allows_none_in_lists_of_nullable);
   ]
