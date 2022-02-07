@@ -21,51 +21,43 @@ module MyQuery =
 
 type qt = MyQuery.t
 
-let my_query =
-  (module struct
-    type t = qt
+let pp formatter (obj : qt) =
+  Format.fprintf formatter
+    ("< variousScalars = @[<>< nullablleString = %a ; string = %a ; \
+      nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; \
+      nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]"
+    [@reason.raw_literal
+      "< variousScalars = @[<>< nullablleString = %a ; string = %a ; \
+       nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; \
+       nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]"])
+    (Format.pp_print_string |> print_option)
+    obj.variousScalars.nullableString Format.pp_print_string
+    obj.variousScalars.string
+    (Format.pp_print_int |> print_option)
+    obj.variousScalars.nullableInt Format.pp_print_int obj.variousScalars.int
+    (Format.pp_print_float |> print_option)
+    obj.variousScalars.nullableFloat Format.pp_print_float
+    obj.variousScalars.float
+    (Format.pp_print_bool |> print_option)
+    obj.variousScalars.nullableBoolean Format.pp_print_bool
+    obj.variousScalars.boolean
+    (Format.pp_print_string |> print_option)
+    obj.variousScalars.nullableID Format.pp_print_string obj.variousScalars.id
 
-    let pp formatter (obj : qt) =
-      Format.fprintf formatter
-        ("< variousScalars = @[<>< nullablleString = %a ; string = %a ; \
-          nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; \
-          nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]"
-        [@reason.raw_literal
-          "< variousScalars = @[<>< nullablleString = %a ; string = %a ; \
-           nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; \
-           nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]"])
-        (Format.pp_print_string |> print_option)
-        obj.variousScalars.nullableString Format.pp_print_string
-        obj.variousScalars.string
-        (Format.pp_print_int |> print_option)
-        obj.variousScalars.nullableInt Format.pp_print_int
-        obj.variousScalars.int
-        (Format.pp_print_float |> print_option)
-        obj.variousScalars.nullableFloat Format.pp_print_float
-        obj.variousScalars.float
-        (Format.pp_print_bool |> print_option)
-        obj.variousScalars.nullableBoolean Format.pp_print_bool
-        obj.variousScalars.boolean
-        (Format.pp_print_string |> print_option)
-        obj.variousScalars.nullableID Format.pp_print_string
-        obj.variousScalars.id
-
-    let equal (a : qt) (b : qt) =
-      a.variousScalars.nullableString = b.variousScalars.nullableString
-      && a.variousScalars.string = b.variousScalars.string
-      && a.variousScalars.nullableInt = b.variousScalars.nullableInt
-      && a.variousScalars.int = b.variousScalars.int
-      && a.variousScalars.nullableFloat = b.variousScalars.nullableFloat
-      && a.variousScalars.float = b.variousScalars.float
-      && a.variousScalars.nullableBoolean = b.variousScalars.nullableBoolean
-      && a.variousScalars.boolean = b.variousScalars.boolean
-      && a.variousScalars.nullableID = b.variousScalars.nullableID
-      && a.variousScalars.id = b.variousScalars.id
-  end : Alcotest.TESTABLE
-    with type t = qt)
+let equal (a : qt) (b : qt) =
+  a.variousScalars.nullableString = b.variousScalars.nullableString
+  && a.variousScalars.string = b.variousScalars.string
+  && a.variousScalars.nullableInt = b.variousScalars.nullableInt
+  && a.variousScalars.int = b.variousScalars.int
+  && a.variousScalars.nullableFloat = b.variousScalars.nullableFloat
+  && a.variousScalars.float = b.variousScalars.float
+  && a.variousScalars.nullableBoolean = b.variousScalars.nullableBoolean
+  && a.variousScalars.boolean = b.variousScalars.boolean
+  && a.variousScalars.nullableID = b.variousScalars.nullableID
+  && a.variousScalars.id = b.variousScalars.id
 
 let decodes_non_null_scalars () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     ({| {
       "variousScalars": {
         "nullableString": "a nullable string",
@@ -96,9 +88,10 @@ let decodes_non_null_scalars () =
           id = "an ID";
         };
     }
+    equal pp
 
 let decodes_null_scalars () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     ({| {
       "variousScalars": {
         "nullableString": null,
@@ -129,9 +122,10 @@ let decodes_null_scalars () =
           id = "an ID";
         };
     }
+    equal pp
 
 let decodes_omitted_scalars () =
-  Alcotest.check my_query "query result equality"
+  test_exp
     ({| {
       "variousScalars": {
         "string": "a string",
@@ -157,10 +151,11 @@ let decodes_omitted_scalars () =
           id = "an ID";
         };
     }
+    equal pp
 
 let tests =
   [
-    ("Decodes non-null scalars", `Quick, decodes_non_null_scalars);
-    ("Decodes null scalars", `Quick, decodes_null_scalars);
-    ("Decodes omitted scalars", `Quick, decodes_omitted_scalars);
+    ("Decodes non-null scalars", decodes_non_null_scalars);
+    ("Decodes null scalars", decodes_null_scalars);
+    ("Decodes omitted scalars", decodes_omitted_scalars);
   ]

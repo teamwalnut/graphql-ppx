@@ -31,7 +31,7 @@ module MyQuery =
 |}]
 
 let allows_you_to_omit_nullable_arguments () =
-  Alcotest.check yojson "json equality"
+  test_json_
     (MyQuery.makeVariables ~string:"a string" ~int:123 ~float:1234.5
        ~boolean:true ~id:"an ID" ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
@@ -50,7 +50,7 @@ let allows_you_to_omit_nullable_arguments () =
     } |})
 
 let includes_non_nulled_arguments () =
-  Alcotest.check yojson "json equality"
+  test_json_
     (MyQuery.makeVariables ~nullableString:"a nullable string"
        ~string:"a string" ~nullableInt:456 ~int:123 ~nullableFloat:567.5
        ~float:1234.5 ~nullableBoolean:false ~boolean:true
@@ -73,7 +73,6 @@ let includes_non_nulled_arguments () =
 let tests =
   [
     ( "Allows you to omit nullable arguments",
-      `Quick,
       allows_you_to_omit_nullable_arguments );
-    ("Includes non-nulled arguments", `Quick, includes_non_nulled_arguments);
+    ("Includes non-nulled arguments", includes_non_nulled_arguments);
   ]

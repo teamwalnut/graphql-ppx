@@ -10,19 +10,18 @@ let suites =
     ("List arguments", List_args.tests);
     ("List inputs", List_inputs.tests);
     ("Mutations", Mutation.tests);
-    ("Nested decoding", Nested.tests)
-    (* ("Nonrecursive input", Nonrecursive_input.tests);
-
-       ("Records", Record.tests);
-       ("Recursive input", Recursive_input.tests);
-       ("Scalars", Scalars.tests);
-       ("Scalar arguments", Scalars_args.tests);
-       ("Scalar inputs", Scalars_input.tests);
-       ("Skip directives", Skip_directives.tests);
-       ("Typename", Typename.tests);
-       ("Unions", Union.tests);
-       ("Partial unions", Union_partial.tests);
-       ("Variant conversion", Variant.tests); *);
+    ("Nested decoding", Nested.tests);
+    ("Nonrecursive input", Nonrecursive_input.tests);
+    ("Records", Record.tests);
+    ("Recursive input", Recursive_input.tests);
+    ("Scalars", Scalars.tests);
+    ("Scalar arguments", Scalars_args.tests);
+    ("Scalar inputs", Scalars_input.tests);
+    ("Skip directives", Skip_directives.tests);
+    ("Typename", Typename.tests);
+    ("Unions", Union.tests);
+    ("Partial unions", Union_partial.tests);
+    ("Variant conversion", Variant.tests);
   ]
 ;;
 

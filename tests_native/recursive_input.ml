@@ -9,7 +9,7 @@ module MyQuery =
 |}]
 
 let construct_recursive_input_type () =
-  Alcotest.check yojson "json equality"
+  test_json_
     (MyQuery.makeVariables
        ~arg:
          {
@@ -35,8 +35,4 @@ let construct_recursive_input_type () =
     } |})
 
 let tests =
-  [
-    ( "Constructing a recursive input type",
-      `Quick,
-      construct_recursive_input_type );
-  ]
+  [ ("Constructing a recursive input type", construct_recursive_input_type) ]

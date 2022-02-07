@@ -1,5 +1,5 @@
 (tests
  (names main)
- (libraries alcotest yojson str)
+ (libraries yojson str)
  (preprocess
   (pps graphql_ppx)))

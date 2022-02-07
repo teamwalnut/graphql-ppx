@@ -14,19 +14,6 @@ let pp_string = Format.pp_print_text
 let test_str s1 s2 = test_exp s1 s2 ( = ) pp_string
 let test_str_not s1 s2 = test_exp s1 s2 ( != ) pp_string
 
-let yojson =
-  (module struct
-    type t = Yojson.Basic.t
-
-    let pp formatter t =
-      Format.pp_print_text formatter (Yojson.Basic.pretty_to_string t)
-
-    let equal = ( = )
-  end : Alcotest.TESTABLE
-    with type t = Yojson.Basic.t)
-
-let test_json a b = Alcotest.check yojson "JSON equality" a b
-
 let pp_json formatter json =
   Format.pp_print_text formatter (Yojson.Basic.pretty_to_string json)
 

@@ -15,7 +15,6 @@
     "@opam/dune": "*",
     "@opam/ocaml-lsp-server": "1.9.1",
     "@opam/merlin": "*",
-    "@opam/alcotest": "*",
     "ocaml": "4.13.1000"
   },
   "esy": {

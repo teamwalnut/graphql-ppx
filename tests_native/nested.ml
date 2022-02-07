@@ -85,9 +85,10 @@ let decodes_recursively () =
   test_exp
     (Yojson.Basic.from_string
        {| {
-      "first": {"inner": {"inner": {"field": "secon"}}},
-      "second": {"inner": null}
-    } |}
+         "first": {"inner": {"inner": {"field": "second"}}},
+         "second": {"inner": null}
+        }
+        |}
     |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       first = { inner = Some { inner = Some { field = "second" } } };

@@ -9,7 +9,7 @@ module MyQuery =
 |}]
 
 let includes_non_nulled_arguments () =
-  Alcotest.check yojson "json equality"
+  test_json_
     (MyQuery.makeVariables
        ~arg:
          {
@@ -42,5 +42,4 @@ let includes_non_nulled_arguments () =
       }
     } |})
 
-let tests =
-  [ ("Includes non-nulled arguments", `Quick, includes_non_nulled_arguments) ]
+let tests = [ ("Includes non-nulled arguments", includes_non_nulled_arguments) ]
