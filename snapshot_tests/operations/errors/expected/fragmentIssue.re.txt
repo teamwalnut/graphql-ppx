@@ -1,11 +1,15 @@
 
   [1;31mWe've found a bug for you![0m
-  [36msnapshot_tests/operations/errors/fragmentIssue.re[0m
+  [36msnapshot_tests/operations/errors/fragmentIssue.re[0m:[2m8:5-10:5[0m
 
-  [1;33mThe module or file Yojson can't be found.[0m
-  - If it's a third-party dependency:
-    - Did you list it in bsconfig.json?
-    - Did you run `bsb` instead of `bsb -make-world`
-      (latter builds third-parties)?
-  - Did you include the file's directory in bsconfig.json?
+   6 [2m│[0m 
+   7 [2m│[0m   fragment DemoVersion_Model on DemoVersion {
+   [1;31m8[0m [2m│[0m     [1;31mscreens {[0m
+   [1;31m9[0m [2m│[0m [1;31m      ...Screen_Model[0m
+  [1;31m10[0m [2m│[0m [1;31m    }[0m
+  11 [2m│[0m   }
+  12 [2m│[0m |}
+
+  This type constructor, `Screen_Model.Raw.t_DemoScreen`, can't be found.
+  
 

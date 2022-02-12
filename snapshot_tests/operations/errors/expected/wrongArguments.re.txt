@@ -1,11 +1,12 @@
 
   [1;31mWe've found a bug for you![0m
-  [36msnapshot_tests/operations/errors/wrongArguments.re[0m
+  [36msnapshot_tests/operations/errors/wrongArguments.re[0m:[2m14:7-25[0m
 
-  [1;33mThe module or file Yojson can't be found.[0m
-  - If it's a third-party dependency:
-    - Did you list it in bsconfig.json?
-    - Did you run `bsb` instead of `bsb -make-world`
-      (latter builds third-parties)?
-  - Did you include the file's directory in bsconfig.json?
+  12 [2m┆[0m   lists {
+  13 [2m┆[0m     nonNullableOfNullable
+  [1;31m14[0m [2m┆[0m     [1;31m...FragmentWithArgs[0m
+  15 [2m┆[0m   }
+  16 [2m┆[0m }
+
+  [1;33mThis call is missing an argument[0m of type (~arg1: [ `String ])
 

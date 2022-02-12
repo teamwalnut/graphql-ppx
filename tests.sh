@@ -56,9 +56,9 @@ for config in "${configs[@]}"; do
       $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
     fi
   done
-  for file in snapshot_tests/operations/errors/*.re; do
-    $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json $opts" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
-  done
+done
+for file in snapshot_tests/operations/errors/*.re; do
+  $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
 done
 
 wait
