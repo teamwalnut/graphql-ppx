@@ -281,7 +281,7 @@ let rewrite_definition_interface ~(query_config : query_config) ~loc ~delim
         "%s" (fmt_parse_err e.item)
     | Result.Ok document ->
       let document_with_config =
-        Result_decoder.generate_config
+        Result_decoder.generate_config ~json_read_fn:Json.Read.from_file
           ~map_loc:(fun source_pos ->
             conv_loc_from_ast (add_loc delimLength loc source_pos))
           ~delimiter:delim ~initial_query_config:query_config document
@@ -309,7 +309,7 @@ let rewrite_definition ~(query_config : query_config) ~loc ~delim ~query
         "%s" (fmt_parse_err e.item)
     | Result.Ok document -> (
       let document_with_config =
-        Result_decoder.generate_config
+        Result_decoder.generate_config ~json_read_fn:Json.Read.from_file
           ~map_loc:(fun source_pos ->
             conv_loc_from_ast (add_loc delimLength loc source_pos))
           ~delimiter:delim ~initial_query_config:query_config document

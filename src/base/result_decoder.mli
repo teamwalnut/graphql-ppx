@@ -16,6 +16,7 @@ type query_config = {
 }
 
 val generate_config :
+  json_read_fn:(string -> Read_schema.Json.t) ->
   map_loc:
     (Source_pos.source_position * Source_pos.source_position ->
     Source_pos.ast_location) ->
@@ -27,14 +28,13 @@ val generate_config :
 val unify_document_schema :
   (Graphql_ast.definition * Generator_utils.output_config) list ->
   (Result_structure.definition * Generator_utils.output_config) list
-  [@@ocaml.doc
-    "\n\
-    \ * Takes a list of the AST of the GraphQL definitions (operations or \
-     fragments)\n\
-    \ * and transforms that into a list of result structures. These result \
-     structures\n\
-    \ * form the basis to generate the reason code for:\n\
-    \ * - `query` variable\n\
-    \ * - `parse` function\n\
-    \ * - `serialize` function\n\
-    \ * - `makeVariables` function\n"]
+(**
+  Takes a list of the AST of the GraphQL definitions (operations or \
+  fragments) and transforms that into a list of result structures. These result \
+  structures form the basis to generate the reason code for:
+
+    - `query` variable
+    - `parse` function
+    - `serialize` function
+    - `makeVariables` function
+*)

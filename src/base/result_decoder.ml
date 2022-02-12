@@ -644,6 +644,7 @@ let get_config_arguments directives =
        | _ -> None)
   |> List.concat
 
+(** Allow configuration per definition using directives *)
 let config_arguments_to_config existing_query_config directive_arguments :
   query_config =
   let open Graphql_ast in
@@ -682,10 +683,12 @@ let config_arguments_to_config existing_query_config directive_arguments :
            { config with apollo_mode = Some value }
          | _ -> config)
        existing_query_config
-  [@@ocaml.doc "\n  Allow configuration per definition using directives\n"]
 
-let to_output_config ~map_loc ~delimiter ~document (definition, query_config) =
-  let schema = Lazy.force (Read_schema.get_schema query_config.schema) in
+let to_output_config ~json_read_fn ~map_loc ~delimiter ~document
+  (definition, query_config) =
+  let schema =
+    Lazy.force (Read_schema.get_schema ~json_read_fn query_config.schema)
+  in
   (* let () =
        Printf.eprintf "Apollo mode? query: %s %B"
          (match query_config.apollo_mode with
@@ -739,7 +742,8 @@ let to_output_config ~map_loc ~delimiter ~document (definition, query_config) =
       native = Ppx_config.native ();
     } )
 
-let rec generate_config ~map_loc ~delimiter ~initial_query_config document =
+let rec generate_config ~json_read_fn ~map_loc ~delimiter ~initial_query_config
+  document =
   match document with
   | (Operation { item = { o_directives = directives } } as definition) :: rest
   | (Fragment { item = { fg_directives = directives } } as definition) :: rest
@@ -748,8 +752,10 @@ let rec generate_config ~map_loc ~delimiter ~initial_query_config document =
       directives |> get_config_arguments
       |> config_arguments_to_config initial_query_config
     in
-    to_output_config ~document ~map_loc ~delimiter (definition, query_config)
-    :: generate_config ~map_loc ~delimiter ~initial_query_config rest
+    to_output_config ~json_read_fn ~document ~map_loc ~delimiter
+      (definition, query_config)
+    :: generate_config ~json_read_fn ~map_loc ~delimiter ~initial_query_config
+         rest
   | [] -> []
 
 let rec unify_document_schema document =

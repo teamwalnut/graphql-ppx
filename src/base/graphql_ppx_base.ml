@@ -19,4 +19,3 @@ module Graphql_printer = Graphql_printer
 module Ast_serializer_apollo = Ast_serializer_apollo
 module Extract_type_definitions = Extract_type_definitions
 module Ast_transforms = Ast_transforms
-module Json = Json

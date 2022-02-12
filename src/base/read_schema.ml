@@ -1,5 +1,53 @@
 exception Schema_file_not_found
 
+module Json = struct
+  type t =
+    [ `Null
+    | `Bool of bool
+    | `Int of int
+    | `Float of float
+    | `String of string
+    | `Assoc of (string * t) list
+    | `List of t list ]
+
+  exception Type_error of string * t
+
+  let typeof = function
+    | `Assoc _ -> "object"
+    | `Bool _ -> "bool"
+    | `Float _ -> "float"
+    | `Int _ -> "int"
+    | `List _ -> "array"
+    | `Null -> "null"
+    | `String _ -> "string"
+
+  let typerr msg js = raise (Type_error (msg ^ typeof js, js))
+  let assoc name obj = try List.assoc name obj with Not_found -> `Null
+
+  let member name = function
+    | `Assoc obj -> assoc name obj
+    | js -> typerr ("Can't get member '" ^ name ^ "' of non-object type ") js
+
+  let to_string = function
+    | `String s -> s
+    | js -> typerr "Expected string, got " js
+
+  let to_float = function
+    | `Float f -> f
+    | js -> typerr "Expected float, got " js
+
+  let to_int = function `Int i -> i | js -> typerr "Expected int, got " js
+  let to_bool = function `Bool b -> b | js -> typerr "Expected bool, got " js
+
+  let to_string_option = function
+    | `String s -> Some s
+    | `Null -> None
+    | js -> typerr "Expected string or null, got " js
+
+  let to_list = function `List l -> l | js -> typerr "Expected array, got " js
+  let to_option f = function `Null -> None | x -> Some (f x)
+end
+
 let typename_field =
   {
     Schema.fm_name = "__typename";
@@ -38,7 +86,7 @@ let rec type_ref_name tr =
   | List i -> type_ref_name i
 
 let make_enum_value_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     evm_name = v |> member "name" |> to_string;
@@ -53,7 +101,7 @@ let make_enum_value_meta v =
   }
 
 let rec make_type_ref v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   match v |> member "kind" |> to_string with
   | "LIST" -> List (v |> member "ofType" |> make_type_ref)
@@ -61,7 +109,7 @@ let rec make_type_ref v =
   | _ -> Named (v |> member "name" |> to_string)
 
 let make_argument_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     am_name = v |> member "name" |> to_string;
@@ -71,7 +119,7 @@ let make_argument_meta v =
   }
 
 let make_field_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     fm_name = v |> member "name" |> to_string;
@@ -88,7 +136,7 @@ let make_field_meta v =
   }
 
 let make_scalar_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     sm_name = v |> member "name" |> to_string;
@@ -96,7 +144,7 @@ let make_scalar_meta v =
   }
 
 let make_object_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     om_name = v |> member "name" |> to_string;
@@ -110,7 +158,7 @@ let make_object_meta v =
   }
 
 let make_enum_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     em_name = v |> member "name" |> to_string;
@@ -120,7 +168,7 @@ let make_enum_meta v =
   }
 
 let make_interface_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     im_name = v |> member "name" |> to_string;
@@ -131,7 +179,7 @@ let make_interface_meta v =
   }
 
 let make_union_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     um_name = v |> member "name" |> to_string;
@@ -142,7 +190,7 @@ let make_union_meta v =
   }
 
 let make_input_object_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     iom_name = v |> member "name" |> to_string;
@@ -152,7 +200,7 @@ let make_input_object_meta v =
   }
 
 let make_type_meta _ v =
-  let open Json.Util in
+  let open Json in
   match v |> member "kind" |> to_string with
   | "SCALAR" -> Schema.Scalar (make_scalar_meta v)
   | "OBJECT" -> Schema.Object (make_object_meta v)
@@ -163,7 +211,7 @@ let make_type_meta _ v =
   | e -> raise @@ Unknown_type_kind e
 
 let make_type_map type_array =
-  let open Json.Util in
+  let open Json in
   let rec type_map_loop i type_map =
     if i = Array.length type_array then type_map
     else
@@ -179,7 +227,7 @@ let make_type_map type_array =
 
 let make_directive_location directive_location =
   let open Schema in
-  let open Json.Util in
+  let open Json in
   match directive_location |> to_string with
   | "QUERY" -> Dl_query
   | "MUTATION" -> Dl_mutation
@@ -192,7 +240,7 @@ let make_directive_location directive_location =
 
 let make_directive_meta _ directive =
   let open Schema in
-  let open Json.Util in
+  let open Json in
   {
     dm_name = directive |> member "name" |> to_string;
     dm_locations =
@@ -203,7 +251,7 @@ let make_directive_meta _ directive =
   }
 
 let make_directive_map directive_array =
-  let open Json.Util in
+  let open Json in
   let directive_json_map = Hashtbl.create (Array.length directive_array) in
   let () =
     Array.iter
@@ -216,7 +264,7 @@ let make_directive_map directive_array =
   map_values make_directive_meta directive_json_map
 
 let make_schema_meta v =
-  let open Json.Util in
+  let open Json in
   let open Schema in
   {
     sm_query_type = v |> member "queryType" |> member "name" |> to_string;
@@ -283,10 +331,10 @@ let get_ppx_cache_path suffix relative_to =
 let get_marshaled_path = get_ppx_cache_path ".marshaled"
 let get_hash_path = get_ppx_cache_path ".hash"
 
-let parse_json_schema json_schema =
+let parse_json_schema ~read_fn json_schema =
   Log.log ("[parse json schema] " ^ json_schema);
-  let result = Json.Read.from_file json_schema in
-  let open Json.Util in
+  let result = read_fn json_schema in
+  let open Json in
   let open Schema in
   let schema =
     result |> member "data" |> to_option (fun json -> json |> member "__schema")
@@ -342,25 +390,26 @@ let parse_graphql_schema schema_file =
              (snd parser_error.span).line )))
   | Error _lex_error -> raise (LexerError "lexer error!")
 
-let parse_schema schema_file =
+let parse_schema ~json_read_fn schema_file =
   match String.lowercase_ascii (Filename.extension schema_file) with
   | ".graphql" -> parse_graphql_schema schema_file
-  | ".json" -> parse_json_schema schema_file
+  | ".json" -> parse_json_schema ~read_fn:json_read_fn schema_file
   | extension -> raise (InvalidExtension extension)
 
-let build_schema schema_file =
-  schema_file |> parse_schema |> create_marshaled_schema schema_file
+let build_schema ~json_read_fn schema_file =
+  schema_file |> parse_schema ~json_read_fn
+  |> create_marshaled_schema schema_file
 
-let build_schema_if_dirty json_schema =
+let build_schema_if_dirty ~json_read_fn json_schema =
   let open Dirty_checker in
   {
     src = json_schema;
     hash_path = get_hash_path json_schema;
-    dirty_callback = build_schema;
+    dirty_callback = build_schema ~json_read_fn;
   }
   |> check
 
-let rec read_marshaled_schema json_schema =
+let rec read_marshaled_schema ~json_read_fn json_schema =
   let marshaled_schema = get_marshaled_path json_schema in
   Log.log ("[read marshaled] " ^ marshaled_schema);
   match open_in_bin marshaled_schema with
@@ -375,16 +424,16 @@ let rec read_marshaled_schema json_schema =
         data
       | exception _ ->
         close_in file;
-        recovery_build json_schema
+        recovery_build ~json_read_fn json_schema
     in
     data
 
-and recovery_build json_schema =
+and recovery_build ~json_read_fn json_schema =
   let () = Log.error_log "Marshaled file is broken. Doing recovery build..." in
-  build_schema_if_dirty json_schema;
-  read_marshaled_schema json_schema
+  build_schema_if_dirty ~json_read_fn json_schema;
+  read_marshaled_schema ~json_read_fn json_schema
 
-let get_schema maybe_schema =
+let get_schema ~json_read_fn maybe_schema =
   lazy
     (match
        find_file_towards_root
@@ -395,5 +444,5 @@ let get_schema maybe_schema =
      with
     | None -> raise Schema_file_not_found
     | Some json_schema ->
-      build_schema_if_dirty json_schema;
-      read_marshaled_schema json_schema)
+      build_schema_if_dirty ~json_read_fn json_schema;
+      read_marshaled_schema ~json_read_fn json_schema)
