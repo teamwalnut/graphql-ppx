@@ -59,9 +59,11 @@ function back to the original JSON compatible data */
     let serializeVariables: unit => Raw.t_variables;
     let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   };
   include (module type of {
     include Bla_inner;
@@ -94,14 +96,16 @@ function back to the original JSON compatible data */
     let serializeVariables: unit => Raw.t_variables;
     let makeVariables: unit => t_variables;
     let makeDefaultVariables: unit => t_variables;
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   } = {
     [@ocaml.warning "-32-30"];
     module Raw = {
-      type t = Yojson.Basic.t;
-      type t_variables = Yojson.Basic.t;
+      type t = Graphql_ppx_runtime.Json.t;
+      type t_variables = Graphql_ppx_runtime.Json.t;
     };
     type t_lists = {
       nullableOfNullable: option(array(option(string))),
@@ -116,12 +120,15 @@ function back to the original JSON compatible data */
       (value) => (
         {
           lists: {
-            let value = Yojson.Basic.Util.member("lists", value);
+            let value = Graphql_ppx_runtime.Json.member("lists", value);
             (
               {
                 nullableOfNullable: {
                   let value =
-                    Yojson.Basic.Util.member("nullableOfNullable", value);
+                    Graphql_ppx_runtime.Json.member(
+                      "nullableOfNullable",
+                      value,
+                    );
                   switch (value) {
                   | `Null => None
                   | value =>
@@ -133,7 +140,7 @@ function back to the original JSON compatible data */
                             switch (value) {
                             | `Null => None
                             | value =>
-                              Some(Yojson.Basic.Util.to_string(value))
+                              Some(Graphql_ppx_runtime.Json.to_string(value))
                             },
                           json_list,
                         )
@@ -145,7 +152,10 @@ function back to the original JSON compatible data */
                 },
                 nullableOfNonNullable: {
                   let value =
-                    Yojson.Basic.Util.member("nullableOfNonNullable", value);
+                    Graphql_ppx_runtime.Json.member(
+                      "nullableOfNonNullable",
+                      value,
+                    );
                   switch (value) {
                   | `Null => None
                   | value =>
@@ -153,7 +163,7 @@ function back to the original JSON compatible data */
                       switch (value) {
                       | `List(json_list) =>
                         List.map(
-                          value => Yojson.Basic.Util.to_string(value),
+                          value => Graphql_ppx_runtime.Json.to_string(value),
                           json_list,
                         )
                         |> Array.of_list
@@ -164,14 +174,18 @@ function back to the original JSON compatible data */
                 },
                 nonNullableOfNullable: {
                   let value =
-                    Yojson.Basic.Util.member("nonNullableOfNullable", value);
+                    Graphql_ppx_runtime.Json.member(
+                      "nonNullableOfNullable",
+                      value,
+                    );
                   switch (value) {
                   | `List(json_list) =>
                     List.map(
                       value =>
                         switch (value) {
                         | `Null => None
-                        | value => Some(Yojson.Basic.Util.to_string(value))
+                        | value =>
+                          Some(Graphql_ppx_runtime.Json.to_string(value))
                         },
                       json_list,
                     )
@@ -181,14 +195,14 @@ function back to the original JSON compatible data */
                 },
                 nonNullableOfNonNullable: {
                   let value =
-                    Yojson.Basic.Util.member(
+                    Graphql_ppx_runtime.Json.member(
                       "nonNullableOfNonNullable",
                       value,
                     );
                   switch (value) {
                   | `List(json_list) =>
                     List.map(
-                      value => Yojson.Basic.Util.to_string(value),
+                      value => Graphql_ppx_runtime.Json.to_string(value),
                       json_list,
                     )
                     |> Array.of_list
@@ -262,9 +276,11 @@ function back to the original JSON compatible data */
     let serializeVariables = () => `Null;
     let makeVariables = () => ();
     let makeDefaultVariables = () => makeVariables();
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   };
   include Bla_inner;
   include Parent.ExtendQuery(Bla_inner);
@@ -293,14 +309,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_lists = {
     nullableOfNullable: option(array(option(string))),
@@ -315,12 +332,15 @@ function back to the original JSON compatible data */
     (value) => (
       {
         lists: {
-          let value = Yojson.Basic.Util.member("lists", value);
+          let value = Graphql_ppx_runtime.Json.member("lists", value);
           (
             {
               nullableOfNullable: {
                 let value =
-                  Yojson.Basic.Util.member("nullableOfNullable", value);
+                  Graphql_ppx_runtime.Json.member(
+                    "nullableOfNullable",
+                    value,
+                  );
                 switch (value) {
                 | `Null => None
                 | value =>
@@ -331,7 +351,8 @@ function back to the original JSON compatible data */
                         value =>
                           switch (value) {
                           | `Null => None
-                          | value => Some(Yojson.Basic.Util.to_string(value))
+                          | value =>
+                            Some(Graphql_ppx_runtime.Json.to_string(value))
                           },
                         json_list,
                       )
@@ -343,7 +364,10 @@ function back to the original JSON compatible data */
               },
               nullableOfNonNullable: {
                 let value =
-                  Yojson.Basic.Util.member("nullableOfNonNullable", value);
+                  Graphql_ppx_runtime.Json.member(
+                    "nullableOfNonNullable",
+                    value,
+                  );
                 switch (value) {
                 | `Null => None
                 | value =>
@@ -351,7 +375,7 @@ function back to the original JSON compatible data */
                     switch (value) {
                     | `List(json_list) =>
                       List.map(
-                        value => Yojson.Basic.Util.to_string(value),
+                        value => Graphql_ppx_runtime.Json.to_string(value),
                         json_list,
                       )
                       |> Array.of_list
@@ -362,14 +386,18 @@ function back to the original JSON compatible data */
               },
               nonNullableOfNullable: {
                 let value =
-                  Yojson.Basic.Util.member("nonNullableOfNullable", value);
+                  Graphql_ppx_runtime.Json.member(
+                    "nonNullableOfNullable",
+                    value,
+                  );
                 switch (value) {
                 | `List(json_list) =>
                   List.map(
                     value =>
                       switch (value) {
                       | `Null => None
-                      | value => Some(Yojson.Basic.Util.to_string(value))
+                      | value =>
+                        Some(Graphql_ppx_runtime.Json.to_string(value))
                       },
                     json_list,
                   )
@@ -379,11 +407,14 @@ function back to the original JSON compatible data */
               },
               nonNullableOfNonNullable: {
                 let value =
-                  Yojson.Basic.Util.member("nonNullableOfNonNullable", value);
+                  Graphql_ppx_runtime.Json.member(
+                    "nonNullableOfNonNullable",
+                    value,
+                  );
                 switch (value) {
                 | `List(json_list) =>
                   List.map(
-                    value => Yojson.Basic.Util.to_string(value),
+                    value => Graphql_ppx_runtime.Json.to_string(value),
                     json_list,
                   )
                   |> Array.of_list
@@ -457,9 +488,10 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 include Inner;
 include Parent.ExtendQuery(Inner);

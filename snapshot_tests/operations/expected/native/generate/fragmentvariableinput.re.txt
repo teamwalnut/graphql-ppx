@@ -32,12 +32,12 @@ function back to the original JSON-compatible data */
   let verifyArgsAndParse:
     (~name: [ | `NonNull_String], ~fragmentName: [ | `test], Raw.t) => t;
   let verifyName: [ | `test] => unit;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
   };
   type t_reposts = {id: int};
   type t = {reposts: array(option(t_reposts))};
@@ -47,7 +47,7 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         reposts: {
-          let value = Yojson.Basic.Util.member("reposts", value);
+          let value = Graphql_ppx_runtime.Json.member("reposts", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
@@ -58,8 +58,9 @@ function back to the original JSON-compatible data */
                   Some(
                     {
                       id: {
-                        let value = Yojson.Basic.Util.member("id", value);
-                        Yojson.Basic.Util.to_int(value);
+                        let value =
+                          Graphql_ppx_runtime.Json.member("id", value);
+                        Graphql_ppx_runtime.Json.to_int(value);
                       },
                     }: t_reposts,
                   )
@@ -104,6 +105,6 @@ function back to the original JSON-compatible data */
   let verifyName =
     fun
     | `test => ();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
 };

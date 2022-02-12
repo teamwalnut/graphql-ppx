@@ -33,14 +33,15 @@ function back to the original JSON compatible data */
   let serialize: t => Raw.t;
   let serializeVariables: t_variables => Raw.t_variables;
   let makeVariables: (~query: int, unit) => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t = {argNamedQuery: int};
   type t_variables = {query: int};
@@ -49,8 +50,8 @@ function back to the original JSON compatible data */
     (value) => (
       {
         argNamedQuery: {
-          let value = Yojson.Basic.Util.member("argNamedQuery", value);
-          Yojson.Basic.Util.to_int(value);
+          let value = Graphql_ppx_runtime.Json.member("argNamedQuery", value);
+          Graphql_ppx_runtime.Json.to_int(value);
         },
       }: t
     );
@@ -65,9 +66,10 @@ function back to the original JSON compatible data */
   let serializeVariables: t_variables => Raw.t_variables =
     inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
   let makeVariables = (~query, ()): t_variables => {query: query};
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module MultipleQueryWithSameVarName = {
   module Query1: {
@@ -87,14 +89,16 @@ function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: t_variables => Raw.t_variables;
     let makeVariables: (~query: int, unit) => t_variables;
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   } = {
     [@ocaml.warning "-32-30"];
     module Raw = {
-      type t = Yojson.Basic.t;
-      type t_variables = Yojson.Basic.t;
+      type t = Graphql_ppx_runtime.Json.t;
+      type t_variables = Graphql_ppx_runtime.Json.t;
     };
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -103,8 +107,9 @@ function back to the original JSON compatible data */
       (value) => (
         {
           argNamedQuery: {
-            let value = Yojson.Basic.Util.member("argNamedQuery", value);
-            Yojson.Basic.Util.to_int(value);
+            let value =
+              Graphql_ppx_runtime.Json.member("argNamedQuery", value);
+            Graphql_ppx_runtime.Json.to_int(value);
           },
         }: t
       );
@@ -119,9 +124,11 @@ function back to the original JSON compatible data */
     let serializeVariables: t_variables => Raw.t_variables =
       inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
     let makeVariables = (~query, ()): t_variables => {query: query};
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   };
   module Query2: {
     [@ocaml.warning "-32-30"];
@@ -140,14 +147,16 @@ function back to the original JSON compatible data */
     let serialize: t => Raw.t;
     let serializeVariables: t_variables => Raw.t_variables;
     let makeVariables: (~query: int, unit) => t_variables;
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   } = {
     [@ocaml.warning "-32-30"];
     module Raw = {
-      type t = Yojson.Basic.t;
-      type t_variables = Yojson.Basic.t;
+      type t = Graphql_ppx_runtime.Json.t;
+      type t_variables = Graphql_ppx_runtime.Json.t;
     };
     type t = {argNamedQuery: int};
     type t_variables = {query: int};
@@ -156,8 +165,9 @@ function back to the original JSON compatible data */
       (value) => (
         {
           argNamedQuery: {
-            let value = Yojson.Basic.Util.member("argNamedQuery", value);
-            Yojson.Basic.Util.to_int(value);
+            let value =
+              Graphql_ppx_runtime.Json.member("argNamedQuery", value);
+            Graphql_ppx_runtime.Json.to_int(value);
           },
         }: t
       );
@@ -172,8 +182,10 @@ function back to the original JSON compatible data */
     let serializeVariables: t_variables => Raw.t_variables =
       inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
     let makeVariables = (~query, ()): t_variables => {query: query};
-    external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-    external toJson: Raw.t => Yojson.Basic.t = "%identity";
-    external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+    external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
+      "%identity";
+    external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+    external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+      "%identity";
   };
 };

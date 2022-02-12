@@ -30,12 +30,12 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t;
   let verifyArgsAndParse: (~fragmentName: [ | `Dog], Raw.t) => t;
   let verifyName: [ | `Dog] => unit;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
   };
   type t = {name: string};
   type nonrec t_Dog = t;
@@ -44,8 +44,8 @@ function back to the original JSON-compatible data */
     (value) => (
       {
         name: {
-          let value = Yojson.Basic.Util.member("name", value);
-          Yojson.Basic.Util.to_string(value);
+          let value = Graphql_ppx_runtime.Json.member("name", value);
+          Graphql_ppx_runtime.Json.to_string(value);
         },
       }: t
     );
@@ -62,8 +62,8 @@ function back to the original JSON-compatible data */
   let verifyName =
     fun
     | `Dog => ();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
 };
 module HasuraRepro: {
   [@ocaml.warning "-32-30"];
@@ -87,14 +87,15 @@ function back to the original JSON compatible data */
   let makeVariables:
     (~blockNumber: int=?, ~type_: string=?, unit) => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t = {hasuraRepro: Dog.t_Dog};
   type t_variables = {
@@ -108,7 +109,7 @@ function back to the original JSON compatible data */
     (value) => (
       {
         hasuraRepro: {
-          let value = Yojson.Basic.Util.member("hasuraRepro", value);
+          let value = Graphql_ppx_runtime.Json.member("hasuraRepro", value);
 
           Dog.verifyArgsAndParse(
             ~fragmentName=`Dog,
@@ -158,9 +159,10 @@ function back to the original JSON compatible data */
     type_,
   };
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 
 let _ = HasuraRepro.makeVariables(~blockNumber=1, ~type_="1", ());

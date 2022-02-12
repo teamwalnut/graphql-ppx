@@ -49,15 +49,16 @@ function back to the original JSON compatible data */
       unit
     ) =>
     t_variables_RecursiveInput;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t
-    and t_variables_RecursiveInput = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t
+    and t_variables_RecursiveInput = Graphql_ppx_runtime.Json.t;
   };
   type t = {recursiveInput: string};
   type t_variables = {arg: t_variables_RecursiveInput}
@@ -71,8 +72,9 @@ function back to the original JSON compatible data */
     (value) => (
       {
         recursiveInput: {
-          let value = Yojson.Basic.Util.member("recursiveInput", value);
-          Yojson.Basic.Util.to_string(value);
+          let value =
+            Graphql_ppx_runtime.Json.member("recursiveInput", value);
+          Graphql_ppx_runtime.Json.to_string(value);
         },
       }: t
     );
@@ -152,9 +154,10 @@ function back to the original JSON compatible data */
     inner,
     enum,
   };
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module Test: {
   [@ocaml.warning "-32-30"];
@@ -203,17 +206,18 @@ function back to the original JSON compatible data */
   let makeInputObjectnested_type:
     (~the_problem: t_variables_this_will_be_duplicated=?, unit) =>
     t_variables_nested_type;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t
-    and t_variables_problem_input = Yojson.Basic.t
-    and t_variables_this_will_be_duplicated = Yojson.Basic.t
-    and t_variables_nested_type = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t
+    and t_variables_problem_input = Graphql_ppx_runtime.Json.t
+    and t_variables_this_will_be_duplicated = Graphql_ppx_runtime.Json.t
+    and t_variables_nested_type = Graphql_ppx_runtime.Json.t;
   };
   type t = {recursiveRepro: bool};
   type t_variables = {input: t_variables_problem_input}
@@ -230,8 +234,9 @@ function back to the original JSON compatible data */
     (value) => (
       {
         recursiveRepro: {
-          let value = Yojson.Basic.Util.member("recursiveRepro", value);
-          Yojson.Basic.Util.to_bool(value);
+          let value =
+            Graphql_ppx_runtime.Json.member("recursiveRepro", value);
+          Graphql_ppx_runtime.Json.to_bool(value);
         },
       }: t
     );
@@ -325,7 +330,8 @@ function back to the original JSON compatible data */
       (~the_problem=?, ()): t_variables_nested_type => {
     the_problem: the_problem,
   };
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };

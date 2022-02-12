@@ -50,14 +50,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_users_User_AnonymousUser = {
     id: string,
@@ -79,28 +80,32 @@ function back to the original JSON compatible data */
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.Util.member("users", value);
+          let value = Graphql_ppx_runtime.Json.member("users", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
               value => {
                 let typename: string =
                   value
-                  |> Yojson.Basic.Util.member("__typename")
-                  |> Yojson.Basic.Util.to_string;
+                  |> Graphql_ppx_runtime.Json.member("__typename")
+                  |> Graphql_ppx_runtime.Json.to_string;
                 (
                   switch (typename) {
                   | "AnonymousUser" =>
                     `AnonymousUser(
                       {
                         id: {
-                          let value = Yojson.Basic.Util.member("id", value);
-                          Yojson.Basic.Util.to_string(value);
+                          let value =
+                            Graphql_ppx_runtime.Json.member("id", value);
+                          Graphql_ppx_runtime.Json.to_string(value);
                         },
                         anonymousId: {
                           let value =
-                            Yojson.Basic.Util.member("anonymousId", value);
-                          Yojson.Basic.Util.to_int(value);
+                            Graphql_ppx_runtime.Json.member(
+                              "anonymousId",
+                              value,
+                            );
+                          Graphql_ppx_runtime.Json.to_int(value);
                         },
                       }: t_users_User_AnonymousUser,
                     )
@@ -108,12 +113,14 @@ function back to the original JSON compatible data */
                     `AdminUser(
                       {
                         id: {
-                          let value = Yojson.Basic.Util.member("id", value);
-                          Yojson.Basic.Util.to_string(value);
+                          let value =
+                            Graphql_ppx_runtime.Json.member("id", value);
+                          Graphql_ppx_runtime.Json.to_string(value);
                         },
                         name: {
-                          let value = Yojson.Basic.Util.member("name", value);
-                          Yojson.Basic.Util.to_string(value);
+                          let value =
+                            Graphql_ppx_runtime.Json.member("name", value);
+                          Graphql_ppx_runtime.Json.to_string(value);
                         },
                       }: t_users_User_AdminUser,
                     )
@@ -176,9 +183,10 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module QueryWithTypename: {
   [@ocaml.warning "-32-30"];
@@ -206,14 +214,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_users_User_AdminUser = {
     __typename: string,
@@ -230,15 +239,15 @@ function back to the original JSON compatible data */
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.Util.member("users", value);
+          let value = Graphql_ppx_runtime.Json.member("users", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
               value => {
                 let typename: string =
                   value
-                  |> Yojson.Basic.Util.member("__typename")
-                  |> Yojson.Basic.Util.to_string;
+                  |> Graphql_ppx_runtime.Json.member("__typename")
+                  |> Graphql_ppx_runtime.Json.to_string;
                 (
                   switch (typename) {
                   | "AdminUser" =>
@@ -246,12 +255,16 @@ function back to the original JSON compatible data */
                       {
                         __typename: {
                           let value =
-                            Yojson.Basic.Util.member("__typename", value);
-                          Yojson.Basic.Util.to_string(value);
+                            Graphql_ppx_runtime.Json.member(
+                              "__typename",
+                              value,
+                            );
+                          Graphql_ppx_runtime.Json.to_string(value);
                         },
                         id: {
-                          let value = Yojson.Basic.Util.member("id", value);
-                          Yojson.Basic.Util.to_string(value);
+                          let value =
+                            Graphql_ppx_runtime.Json.member("id", value);
+                          Graphql_ppx_runtime.Json.to_string(value);
                         },
                       }: t_users_User_AdminUser,
                     )
@@ -299,9 +312,10 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module QueryWithMixedFragments: {
   [@ocaml.warning "-32-30"];
@@ -332,14 +346,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_users_User_AnonymousUser = {anonymousId: int};
   type t_users_User_AdminUser = {name: string};
@@ -359,7 +374,7 @@ function back to the original JSON compatible data */
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.Util.member("users", value);
+          let value = Graphql_ppx_runtime.Json.member("users", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
@@ -368,8 +383,8 @@ function back to the original JSON compatible data */
                   fragment: {
                     let typename: string =
                       value
-                      |> Yojson.Basic.Util.member("__typename")
-                      |> Yojson.Basic.Util.to_string;
+                      |> Graphql_ppx_runtime.Json.member("__typename")
+                      |> Graphql_ppx_runtime.Json.to_string;
                     (
                       switch (typename) {
                       | "AnonymousUser" =>
@@ -377,11 +392,11 @@ function back to the original JSON compatible data */
                           {
                             anonymousId: {
                               let value =
-                                Yojson.Basic.Util.member(
+                                Graphql_ppx_runtime.Json.member(
                                   "anonymousId",
                                   value,
                                 );
-                              Yojson.Basic.Util.to_int(value);
+                              Graphql_ppx_runtime.Json.to_int(value);
                             },
                           }: t_users_User_AnonymousUser,
                         )
@@ -390,8 +405,11 @@ function back to the original JSON compatible data */
                           {
                             name: {
                               let value =
-                                Yojson.Basic.Util.member("name", value);
-                              Yojson.Basic.Util.to_string(value);
+                                Graphql_ppx_runtime.Json.member(
+                                  "name",
+                                  value,
+                                );
+                              Graphql_ppx_runtime.Json.to_string(value);
                             },
                           }: t_users_User_AdminUser,
                         )
@@ -400,8 +418,8 @@ function back to the original JSON compatible data */
                     );
                   },
                   id: {
-                    let value = Yojson.Basic.Util.member("id", value);
-                    Yojson.Basic.Util.to_string(value);
+                    let value = Graphql_ppx_runtime.Json.member("id", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
                   },
                 },
               json_list,
@@ -465,9 +483,10 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module MixedQueryWithTypename: {
   [@ocaml.warning "-32-30"];
@@ -500,14 +519,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_users_User_AdminUser = {
     __typename: string,
@@ -529,7 +549,7 @@ function back to the original JSON compatible data */
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.Util.member("users", value);
+          let value = Graphql_ppx_runtime.Json.member("users", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
@@ -538,8 +558,8 @@ function back to the original JSON compatible data */
                   fragment: {
                     let typename: string =
                       value
-                      |> Yojson.Basic.Util.member("__typename")
-                      |> Yojson.Basic.Util.to_string;
+                      |> Graphql_ppx_runtime.Json.member("__typename")
+                      |> Graphql_ppx_runtime.Json.to_string;
                     (
                       switch (typename) {
                       | "AdminUser" =>
@@ -547,13 +567,16 @@ function back to the original JSON compatible data */
                           {
                             __typename: {
                               let value =
-                                Yojson.Basic.Util.member("__typename", value);
-                              Yojson.Basic.Util.to_string(value);
+                                Graphql_ppx_runtime.Json.member(
+                                  "__typename",
+                                  value,
+                                );
+                              Graphql_ppx_runtime.Json.to_string(value);
                             },
                             id: {
                               let value =
-                                Yojson.Basic.Util.member("id", value);
-                              Yojson.Basic.Util.to_string(value);
+                                Graphql_ppx_runtime.Json.member("id", value);
+                              Graphql_ppx_runtime.Json.to_string(value);
                             },
                           }: t_users_User_AdminUser,
                         )
@@ -562,12 +585,13 @@ function back to the original JSON compatible data */
                     );
                   },
                   __typename: {
-                    let value = Yojson.Basic.Util.member("__typename", value);
-                    Yojson.Basic.Util.to_string(value);
+                    let value =
+                      Graphql_ppx_runtime.Json.member("__typename", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
                   },
                   id: {
-                    let value = Yojson.Basic.Util.member("id", value);
-                    Yojson.Basic.Util.to_string(value);
+                    let value = Graphql_ppx_runtime.Json.member("id", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
                   },
                 },
               json_list,
@@ -630,9 +654,10 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
 module QueryWithoutFragments: {
   [@ocaml.warning "-32-30"];
@@ -653,14 +678,15 @@ function back to the original JSON compatible data */
   let serializeVariables: unit => Raw.t_variables;
   let makeVariables: unit => t_variables;
   let makeDefaultVariables: unit => t_variables;
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 } = {
   [@ocaml.warning "-32-30"];
   module Raw = {
-    type t = Yojson.Basic.t;
-    type t_variables = Yojson.Basic.t;
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
   };
   type t_users = {id: string};
   type t = {users: array(t_users)};
@@ -670,15 +696,15 @@ function back to the original JSON compatible data */
     (value) => (
       {
         users: {
-          let value = Yojson.Basic.Util.member("users", value);
+          let value = Graphql_ppx_runtime.Json.member("users", value);
           switch (value) {
           | `List(json_list) =>
             List.map(
               (value): t_users =>
                 {
                   id: {
-                    let value = Yojson.Basic.Util.member("id", value);
-                    Yojson.Basic.Util.to_string(value);
+                    let value = Graphql_ppx_runtime.Json.member("id", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
                   },
                 },
               json_list,
@@ -710,7 +736,8 @@ function back to the original JSON compatible data */
   let serializeVariables = () => `Null;
   let makeVariables = () => ();
   let makeDefaultVariables = () => makeVariables();
-  external unsafe_fromJson: Yojson.Basic.t => Raw.t = "%identity";
-  external toJson: Raw.t => Yojson.Basic.t = "%identity";
-  external variablesToJson: Raw.t_variables => Yojson.Basic.t = "%identity";
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
 };
