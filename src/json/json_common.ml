@@ -1,6 +1,7 @@
 open Json_type
-(* type in_param = { string_buf : Buffer.t } *)
 
+(* Not necessary anymore? *)
+(* type in_param = { string_buf : Buffer.t } *)
 (* let create_in_param ?(len = 256) () = { string_buf = Buffer.create len } *)
 
 let utf8_of_code buf x =
