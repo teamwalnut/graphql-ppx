@@ -81,9 +81,22 @@ let pp_record fmt (fields : (string * (Format.formatter -> unit)) list) =
   Format.pp_print_break fmt 1 0;
   pp_colored_str fmt "}" Cli_colors.blue
 
+(* Vendored from Array.combine in stdlib, because it's just included in 4.13 *)
+let array_combine a b =
+  let na = Array.length a in
+  let nb = Array.length b in
+  if na <> nb then invalid_arg "Array.combine";
+  if na = 0 then [||]
+  else
+    let x = Array.make na (Array.unsafe_get a 0, Array.unsafe_get b 0) in
+    for i = 1 to na - 1 do
+      Array.unsafe_set x i (Array.unsafe_get a i, Array.unsafe_get b i)
+    done;
+    x
+
 let test_exp_array a b exp pp =
   test_exp a b
-    (fun a b -> Array.for_all (fun (a, b) -> exp a b) (Array.combine a b))
+    (fun a b -> Array.for_all (fun (a, b) -> exp a b) (array_combine a b))
     (pp_array pp)
 
 let array_zipmap f a b =
