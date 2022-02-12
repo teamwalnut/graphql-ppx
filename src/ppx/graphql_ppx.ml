@@ -281,7 +281,9 @@ let rewrite_definition_interface ~(query_config : query_config) ~loc ~delim
         "%s" (fmt_parse_err e.item)
     | Result.Ok document ->
       let document_with_config =
-        Result_decoder.generate_config ~map_loc:(add_loc delimLength loc)
+        Result_decoder.generate_config
+          ~map_loc:(fun source_pos ->
+            conv_loc_from_ast (add_loc delimLength loc source_pos))
           ~delimiter:delim ~initial_query_config:query_config document
       in
       document_with_config |> Result_decoder.unify_document_schema
@@ -307,7 +309,9 @@ let rewrite_definition ~(query_config : query_config) ~loc ~delim ~query
         "%s" (fmt_parse_err e.item)
     | Result.Ok document -> (
       let document_with_config =
-        Result_decoder.generate_config ~map_loc:(add_loc delimLength loc)
+        Result_decoder.generate_config
+          ~map_loc:(fun source_pos ->
+            conv_loc_from_ast (add_loc delimLength loc source_pos))
           ~delimiter:delim ~initial_query_config:query_config document
       in
       let errors =
@@ -394,8 +398,8 @@ class mapper =
                    ] ->
                  List.append
                    (rewrite_definition_interface
-                      ~query_config:empty_query_config
-                      ~loc:(conv_loc_from_ast loc) ~delim ~query ~module_name ()
+                      ~query_config:empty_query_config ~loc ~delim ~query
+                      ~module_name ()
                    |> List.rev)
                    acc
                | _ ->
@@ -448,9 +452,8 @@ class mapper =
                                 List.append
                                   (get_module_declarations
                                      (rewrite_definition_interface
-                                        ~query_config:empty_query_config
-                                        ~loc:(conv_loc_from_ast loc) ~delim
-                                        ~query ~module_name:name ())
+                                        ~query_config:empty_query_config ~loc
+                                        ~delim ~query ~module_name:name ())
                                   |> List.rev)
                                   acc
                               | _ ->
@@ -698,9 +701,8 @@ class mapper =
                        pmty_desc =
                          Pmty_signature
                            (rewrite_definition_interface
-                              ~query_config:empty_query_config
-                              ~loc:(conv_loc_from_ast loc) ~delim ~query
-                              ~module_name:None ());
+                              ~query_config:empty_query_config ~loc ~delim
+                              ~query ~module_name:None ());
                      }
                  | {
                   pstr_desc =
@@ -749,8 +751,7 @@ class mapper =
                             | None -> query_config.inline
                             | Some inline -> Some inline);
                         }
-                      ~loc:(conv_loc_from_ast loc) ~delim ~query ~module_name
-                      ~module_type ()
+                      ~loc ~delim ~query ~module_name ~module_type ()
                    |> List.rev)
                    acc
                | PStr
@@ -771,8 +772,7 @@ class mapper =
                  List.append
                    (rewrite_definition
                       ~query_config:{ empty_query_config with inline }
-                      ~loc:(conv_loc_from_ast loc) ~delim ~query ~module_name
-                      ~module_type ()
+                      ~loc ~delim ~query ~module_name ~module_type ()
                    |> List.rev)
                    acc
                | _ ->
@@ -896,8 +896,8 @@ class mapper =
                                         ~query_config:
                                           (get_query_config_from_trailing_record
                                              fields)
-                                        ~loc:(conv_loc_from_ast loc) ~delim
-                                        ~query ~module_name ~module_type ())
+                                        ~loc ~delim ~query ~module_name
+                                        ~module_type ())
                                   |> List.rev)
                                   acc
                               | PStr
@@ -920,9 +920,9 @@ class mapper =
                                 List.append
                                   (get_module_bindings
                                      (rewrite_definition
-                                        ~query_config:empty_query_config
-                                        ~loc:(conv_loc_from_ast loc) ~delim
-                                        ~query ~module_name ~module_type ())
+                                        ~query_config:empty_query_config ~loc
+                                        ~delim ~query ~module_name ~module_type
+                                        ())
                                   |> List.rev)
                                   acc
                               | _ ->

@@ -136,7 +136,7 @@ let generate_fragment_parse_fun config loc name arguments definition =
                     txt = Longident.parse (name ^ ".unsafe_fromJson");
                   })
                [ (Nolabel, ident_from_string "value") ]
-           | false -> ident_from_string ~loc "value" );
+           | false -> ident_from_string ~loc:(conv_loc loc) "value" );
        ])
 
 let generate_solo_fragment_spread_decoder config loc name arguments definition =

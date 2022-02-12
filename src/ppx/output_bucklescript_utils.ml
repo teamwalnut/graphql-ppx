@@ -9,10 +9,6 @@ let conv_pos pos =
     Lexing.pos_cnum = pos.Source_pos.pos_cnum;
   }
 
-let conv_loc loc = loc
-let conv_pos_from_ast pos = pos
-let conv_loc_from_ast loc = loc
-
 let extend_loc_from_start (loc : Location.t) cnum =
   {
     loc with
@@ -110,3 +106,37 @@ let to_valid_ident ident =
     with
     | true -> ident ^ "_"
     | false -> ident
+
+let ppxlib_position (pos : Source_pos.ast_position) =
+  {
+    Ppxlib.pos_fname = pos.pos_fname;
+    pos_lnum = pos.pos_lnum;
+    pos_bol = pos.pos_bol;
+    pos_cnum = pos.pos_cnum;
+  }
+
+let ppxlib_position_to_ast (pos : Ppxlib.position) =
+  {
+    Source_pos.pos_fname = pos.pos_fname;
+    pos_lnum = pos.pos_lnum;
+    pos_bol = pos.pos_bol;
+    pos_cnum = pos.pos_cnum;
+  }
+
+let ppxlib_location (loc : Source_pos.ast_location) =
+  {
+    Ppxlib.loc_start = ppxlib_position loc.loc_start;
+    loc_end = ppxlib_position loc.loc_end;
+    loc_ghost = loc.loc_ghost;
+  }
+
+let ppxlib_location_to_ast (loc : Ppxlib.location) =
+  {
+    Source_pos.loc_start = ppxlib_position_to_ast loc.loc_start;
+    loc_end = ppxlib_position_to_ast loc.loc_end;
+    loc_ghost = loc.loc_ghost;
+  }
+
+let conv_loc loc = ppxlib_location loc
+let conv_pos_from_ast pos = ppxlib_position pos
+let conv_loc_from_ast loc = ppxlib_location_to_ast loc
