@@ -3,6 +3,4 @@
  (public_name graphql_ppx.base)
  (libraries unix result json)
  (flags
-  (:standard -w -9))
- (preprocess
-  (pps ppxlib.metaquot)))
+  (:standard -w -9)))
