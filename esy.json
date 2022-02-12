@@ -8,8 +8,7 @@
     "test": "./tests.sh"
   },
   "dependencies": {
-    "@opam/ppxlib": ">=0.21.0",
-    "@opam/yojson": "*"
+    "@opam/ppxlib": ">=0.21.0"
   },
   "devDependencies": {
     "@opam/dune": "*",

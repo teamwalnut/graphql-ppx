@@ -1,6 +1,9 @@
 opam-version: "2.0"
-maintainer: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
-authors: "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
+maintainer: "Jaap Frolich <jfrolich@gmail.com>"
+authors: [
+  "Jaap Frolich <jfrolich@gmail.com>"
+  "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
+]
 synopsis: "GraphQL PPX rewriter for ReScript/ReasonML"
 description: "GraphQL language primitives for ReScript/ReasonML written in ReasonML"
 license: "MIT"
@@ -11,11 +14,8 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
-
 depends: [
-  "alcotest" {with-test}
   "dune" {>= "2.5"}
   "ocaml" {>= "4.06"}
   "ppxlib" {>= "0.21.0"}
-  "yojson" {>= "1.6.0"}
 ]

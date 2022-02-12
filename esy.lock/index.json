@@ -1,5 +1,5 @@
 {
-  "checksum": "ab3a71ba447a830f70556d2537968b3c",
+  "checksum": "d7434ae7e7ebe6f78e1c80656f54c741",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "ocaml@4.13.1000@d41d8cd9": {
@@ -22,10 +22,7 @@
       "version": "link-dev:./esy.json",
       "source": { "type": "link-dev", "path": ".", "manifest": "esy.json" },
       "overrides": [],
-      "dependencies": [
-        "@opam/yojson@opam:1.7.0@69d87312",
-        "@opam/ppxlib@opam:0.24.0@4c00d6db"
-      ],
+      "dependencies": [ "@opam/ppxlib@opam:0.24.0@4c00d6db" ],
       "devDependencies": [
         "ocaml@4.13.1000@d41d8cd9",
         "@opam/ocaml-lsp-server@opam:1.9.1@1397dba9",
