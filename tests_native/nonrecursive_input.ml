@@ -24,7 +24,7 @@ let construct_recursive_input_type () =
          }
        ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
             "arg":
             {

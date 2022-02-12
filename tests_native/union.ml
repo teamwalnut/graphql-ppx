@@ -46,7 +46,7 @@ let decodes_exhaustive_query () =
         "barkVolume": 123.0
       }
     } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     { dogOrHuman = `Dog { name = "Fido"; barkVolume = 123.0 } }
     equal pp
 

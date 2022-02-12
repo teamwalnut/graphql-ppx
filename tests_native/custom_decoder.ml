@@ -38,8 +38,7 @@ let test_payload (a : t) (b : t) =
 
 let runs_the_decoder () =
   test_payload
-    (Yojson.Basic.from_string
-       {|{"variousScalars": {"string": "123", "int": 456}}|}
+    (Json.Read.from_string {|{"variousScalars": {"string": "123", "int": 456}}|}
     |> My_query.unsafe_fromJson |> My_query.parse)
     { variousScalars = { string = 123; int = "456" } }
 

@@ -61,7 +61,7 @@ let converts_into_variant () =
       }
     }
   } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     { mutationWithError = `Value { stringField = "a string" } }
     equal pp
 

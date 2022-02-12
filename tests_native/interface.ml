@@ -64,8 +64,8 @@ let equal_only_user (a : only_user) (b : only_user) =
 
 let decode_with_fragments () =
   test_exp_array
-    (Yojson.Basic.from_string json
-    |> QueryWithFragments.unsafe_fromJson |> QueryWithFragments.parse)
+    (Json.Read.from_string json |> QueryWithFragments.unsafe_fromJson
+   |> QueryWithFragments.parse)
       .users
     ([|
        `AdminUser { id = "1"; name = "bob" };
@@ -77,8 +77,8 @@ let decode_with_fragments () =
 
 let decode_without_fragments () =
   test_exp_array
-    (Yojson.Basic.from_string json
-    |> QueryWithoutFragments.unsafe_fromJson |> QueryWithoutFragments.parse)
+    (Json.Read.from_string json |> QueryWithoutFragments.unsafe_fromJson
+   |> QueryWithoutFragments.parse)
       .users
     [| ({ id = "1" } : only_user); { id = "2" }; { id = "3" } |]
     equal_only_user pp_only_user

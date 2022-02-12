@@ -35,7 +35,7 @@ let allows_you_to_omit_nullable_arguments () =
     (MyQuery.makeVariables ~string:"a string" ~int:123 ~float:1234.5
        ~boolean:true ~id:"an ID" ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "nullableString": null,
       "string": "a string",
@@ -56,7 +56,7 @@ let includes_non_nulled_arguments () =
        ~float:1234.5 ~nullableBoolean:false ~boolean:true
        ~nullableID:"a nullable ID" ~id:"an ID" ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "nullableString": "a nullable string",
       "string": "a string",

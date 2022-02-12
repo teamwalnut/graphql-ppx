@@ -54,7 +54,7 @@ let decodes_typename () =
     ({|
       {"first": {"__typename": "NestedObject", "inner": null}}
     |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     { first = { __typename = "NestedObject"; inner = None } }
     equal pp
 

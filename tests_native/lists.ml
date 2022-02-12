@@ -45,7 +45,7 @@ let equal (a : qt) (b : qt) =
 let null_in_lists () =
   test_exp
     (MyQuery.parse
-       (Yojson.Basic.from_string
+       (Json.Read.from_string
           {|{"lists": {"nullableOfNullable": [null, "123"], "nonNullableOfNullable": [null, "123"], "nonNullableOfNonNullable": ["a", "b"]}}|}
        |> MyQuery.unsafe_fromJson))
     {

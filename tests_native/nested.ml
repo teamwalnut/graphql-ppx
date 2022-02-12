@@ -83,7 +83,7 @@ let equal (a : qt) (b : qt) =
 
 let decodes_recursively () =
   test_exp
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
          "first": {"inner": {"inner": {"field": "second"}}},
          "second": {"inner": null}

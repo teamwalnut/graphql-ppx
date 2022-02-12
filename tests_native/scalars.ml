@@ -72,7 +72,7 @@ let decodes_non_null_scalars () =
         "id": "an ID"
       }
     } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       variousScalars =
         {
@@ -106,7 +106,7 @@ let decodes_null_scalars () =
         "id": "an ID"
       }
     } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       variousScalars =
         {
@@ -135,7 +135,7 @@ let decodes_omitted_scalars () =
         "id": "an ID"
       }
     } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       variousScalars =
         {

@@ -26,7 +26,7 @@ let includes_non_nulled_arguments () =
          }
        ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "arg": {
         "nullableString": "a nullable string",

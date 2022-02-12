@@ -15,9 +15,9 @@ let test_str s1 s2 = test_exp s1 s2 ( = ) pp_string
 let test_str_not s1 s2 = test_exp s1 s2 ( != ) pp_string
 
 let pp_json formatter json =
-  Format.pp_print_text formatter (Yojson.Basic.pretty_to_string json)
+  Format.pp_print_text formatter (Json.pretty_to_string json)
 
-let json_equal a b = Yojson.Basic.equal a b
+let json_equal a b = Json.equal a b
 let test_json_ a b = test_exp a b json_equal pp_json
 let pp_color fmt color = Format.fprintf fmt "@<0>%s" color
 

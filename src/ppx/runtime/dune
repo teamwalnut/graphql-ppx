@@ -1,4 +1,3 @@
 (library
  (public_name graphql_ppx.graphql_ppx_runtime)
- (name graphql_ppx_runtime)
- (libraries yojson))
+ (name graphql_ppx_runtime))

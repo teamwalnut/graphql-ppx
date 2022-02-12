@@ -26,11 +26,11 @@ let encodes_json_objects () =
   test_json_
     (My_query.makeVariables ~opt:(`Int 123) ~req:(`Int 456) ()
     |> My_query.serializeVariables |> My_query.variablesToJson)
-    (Yojson.Basic.from_string {| { "opt": 123, "req": 456 } |})
+    (Json.Read.from_string {| { "opt": 123, "req": 456 } |})
 
 let decodes_to_json () =
   test_payload
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {|{"customScalarField": { "nullable": 123, "nonNullable": 456 }}|}
     |> My_query.unsafe_fromJson |> My_query.parse)
     {

@@ -146,14 +146,14 @@ end
 let decodes_record_in_selection () =
   test_exp
     ({| {"variousScalars": {"string": "a string", "int": 123}} |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     { variousScalars = { string = "a string"; int = 123 } }
     MyQueryTest.equal MyQueryTest.pp
 
 let decodes_record_in_external_fragment () =
   test_exp
     ({| {"variousScalars": {"string": "a string", "int": 123}} |}
-   |> Yojson.Basic.from_string |> ExternalFragmentQuery.unsafe_fromJson
+   |> Json.Read.from_string |> ExternalFragmentQuery.unsafe_fromJson
    |> ExternalFragmentQuery.parse)
     { variousScalars = { string = "a string"; int = 123 } }
     ExternalFragmentQueryTest.equal ExternalFragmentQueryTest.pp
@@ -161,7 +161,7 @@ let decodes_record_in_external_fragment () =
 let decodes_record_in_inline_fragment () =
   test_exp
     ({| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
-   |> Yojson.Basic.from_string |> InlineFragmentQuery.unsafe_fromJson
+   |> Json.Read.from_string |> InlineFragmentQuery.unsafe_fromJson
    |> InlineFragmentQuery.parse)
     { dogOrHuman = `Dog { name = "name"; barkVolume = 123.0 } }
     InlineFragmentQueryTest.equal InlineFragmentQueryTest.pp
@@ -169,7 +169,7 @@ let decodes_record_in_inline_fragment () =
 let decodes_record_in_external_fragment_on_union_selections () =
   test_exp
     ({| {"dogOrHuman": {"__typename": "Dog", "name": "name", "barkVolume": 123.0}} |}
-   |> Yojson.Basic.from_string |> UnionExternalFragmentQuery.unsafe_fromJson
+   |> Json.Read.from_string |> UnionExternalFragmentQuery.unsafe_fromJson
    |> UnionExternalFragmentQuery.parse)
     { dogOrHuman = `Dog { name = "name"; barkVolume = 123.0 } }
     UnionExternalFragmentQueryTest.equal UnionExternalFragmentQueryTest.pp

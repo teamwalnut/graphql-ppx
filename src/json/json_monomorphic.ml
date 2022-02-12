@@ -1,40 +1,77 @@
-open Json_type
-
-let pp_list sep ppx out l =
-  let pp_sep out () = Format.fprintf out "%s@ " sep in
-  Format.pp_print_list ~pp_sep ppx out l
-
-let rec format std (out : Format.formatter) (x : t) : unit =
-  match x with
-  | `Null -> Format.pp_print_string out "null"
-  | `Bool x -> Format.pp_print_bool out x
-  | `Int x -> Format.pp_print_string out (Json_write.json_string_of_int x)
+let rec pp fmt = function
+  | `Null -> Format.pp_print_string fmt "`Null"
+  | `Bool x ->
+    Format.fprintf fmt "`Bool (@[<hov>";
+    Format.fprintf fmt "%B" x;
+    Format.fprintf fmt "@])"
+  | `Int x ->
+    Format.fprintf fmt "`Int (@[<hov>";
+    Format.fprintf fmt "%d" x;
+    Format.fprintf fmt "@])"
   | `Float x ->
-    let s =
-      if std then Json_write.std_json_string_of_float x
-      else Json_write.json_string_of_float x
-    in
-    Format.pp_print_string out s
-  | `String s -> Format.pp_print_string out (Json_write.json_string_of_string s)
-  | `List [] -> Format.pp_print_string out "[]"
-  | `List l ->
-    Format.fprintf out "[@;<1 0>@[<hov>%a@]@;<1 -2>]"
-      (pp_list "," (format std))
-      l
-  | `Assoc [] -> Format.pp_print_string out "{}"
-  | `Assoc l ->
-    Format.fprintf out "{@;<1 0>%a@;<1 -2>}" (pp_list "," (format_field std)) l
+    Format.fprintf fmt "`Float (@[<hov>";
+    Format.fprintf fmt "%F" x;
+    Format.fprintf fmt "@])"
+  | `String x ->
+    Format.fprintf fmt "`String (@[<hov>";
+    Format.fprintf fmt "%S" x;
+    Format.fprintf fmt "@])"
+  | `Assoc xs ->
+    Format.fprintf fmt "`Assoc (@[<hov>";
+    Format.fprintf fmt "@[<2>[";
+    ignore
+      (List.fold_left
+         (fun sep (key, value) ->
+           if sep then Format.fprintf fmt ";@ ";
+           Format.fprintf fmt "(@[";
+           Format.fprintf fmt "%S" key;
+           Format.fprintf fmt ",@ ";
+           pp fmt value;
+           Format.fprintf fmt "@])";
+           true)
+         false xs);
+    Format.fprintf fmt "@,]@]";
+    Format.fprintf fmt "@])"
+  | `List xs ->
+    Format.fprintf fmt "`List (@[<hov>";
+    Format.fprintf fmt "@[<2>[";
+    ignore
+      (List.fold_left
+         (fun sep x ->
+           if sep then Format.fprintf fmt ";@ ";
+           pp fmt x;
+           true)
+         false xs);
+    Format.fprintf fmt "@,]@]";
+    Format.fprintf fmt "@])"
 
-and format_field std out (name, x) =
-  Format.fprintf out "@[<hv2>%s: %a@]"
-    (Json_write.json_string_of_string name)
-    (format std) x
+let show x = Format.asprintf "%a" pp x
 
-let pp ?(std = false) out x =
-  Format.fprintf out "@[<hv2>%a@]" (format std) (x :> t)
-
-let to_string ?std x = Format.asprintf "%a" (pp ?std) x
-
-let to_channel ?std oc x =
-  let fmt = Format.formatter_of_out_channel oc in
-  Format.fprintf fmt "%a@?" (pp ?std) x
+let rec equal a b =
+  match (a, b) with
+  | `Null, `Null -> true
+  | `Bool a, `Bool b -> a = b
+  | `Int a, `Int b -> a = b
+  | `Float a, `Float b -> a = b
+  | `String a, `String b -> a = b
+  | `Assoc xs, `Assoc ys -> (
+    let compare_keys (key, _) (key', _) = String.compare key key' in
+    let xs = List.stable_sort compare_keys xs in
+    let ys = List.stable_sort compare_keys ys in
+    match
+      List.for_all2
+        (fun (key, value) (key', value') ->
+          match key = key' with false -> false | true -> equal value value')
+        xs ys
+    with
+    | result -> result
+    | exception Invalid_argument _ ->
+      (* the lists were of different lengths, thus unequal *)
+      false)
+  | `List xs, `List ys -> (
+    match List.for_all2 equal xs ys with
+    | result -> result
+    | exception Invalid_argument _ ->
+      (* the lists were of different lengths, thus unequal *)
+      false)
+  | _ -> false

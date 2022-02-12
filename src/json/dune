@@ -3,6 +3,5 @@
 (library
  (name json)
  (public_name graphql_ppx.json)
- ; (libraries unix result yojson ppxlib)
  (flags
   (:standard -w -9)))

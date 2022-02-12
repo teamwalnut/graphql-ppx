@@ -66,7 +66,7 @@ let decodes_the_fragment () =
         "l2": {"nullableOfNullable": ["a", null, "b"]}
       }
     |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       l1 =
         {

@@ -39,7 +39,7 @@ let equal (a : qt) (b : qt) =
 let responds_with_none_to_nulled_fields () =
   test_exp
     ({|{"v1": {"nullableString": null, "string": null}, "v2": {"nullableString": null, "string": null}}|}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       v1 = { nullableString = None; string = None };
       v2 = { nullableString = None; string = None };
@@ -48,7 +48,7 @@ let responds_with_none_to_nulled_fields () =
 
 let responds_with_none_to_omitted_fields () =
   test_exp
-    ({|{"v1": {}, "v2": {}}|} |> Yojson.Basic.from_string
+    ({|{"v1": {}, "v2": {}}|} |> Json.Read.from_string
    |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       v1 = { nullableString = None; string = None };

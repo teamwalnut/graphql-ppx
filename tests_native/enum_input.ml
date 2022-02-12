@@ -12,6 +12,6 @@ let encodes_arguments () =
   test_json_
     (MyQuery.makeVariables ~arg:`FIRST ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string {| { "arg": "FIRST" } |})
+    (Json.Read.from_string {| { "arg": "FIRST" } |})
 
 let tests = [ ("Encodes enum arguments to strings", encodes_arguments) ]

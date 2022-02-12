@@ -27,7 +27,7 @@ let allows_none_in_lists_of_nullable () =
          }
        ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "arg": {
         "nullableOfNullable": ["x", null, "y"],

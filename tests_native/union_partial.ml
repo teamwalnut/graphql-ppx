@@ -38,7 +38,7 @@ let decodes_non_exhaustive_query () =
         "name": "Max"
       }
     } |}
-   |> Yojson.Basic.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
+   |> Json.Read.from_string |> MyQuery.unsafe_fromJson |> MyQuery.parse)
     {
       dogOrHuman =
         `FutureAddedValue

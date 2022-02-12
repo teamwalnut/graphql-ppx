@@ -12,7 +12,7 @@ let serializes_variables () =
   test_json_
     (My_query.makeVariables ~query:2 ()
     |> My_query.serializeVariables |> My_query.variablesToJson)
-    (Yojson.Basic.from_string {|{"query": 2}|})
+    (Json.Read.from_string {|{"query": 2}|})
 
 let no_name_clash () = test_str_not My_query.query "a query"
 

@@ -10,3 +10,5 @@ end
 module Read = struct
   include Json_read
 end
+
+include Json_monomorphic

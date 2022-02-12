@@ -23,7 +23,7 @@ let omit_nullable_args () =
     (MyQuery.makeVariables ~nonNullableOfNullable:[||]
        ~nonNullableOfNonNullable:[||] ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "nullableOfNullable": null,
       "nullableOfNonNullable": null,
@@ -38,7 +38,7 @@ let allows_none_in_lists () =
        ~nonNullableOfNullable:[| Some "a"; None; Some "b" |]
        ~nonNullableOfNonNullable:[| "1"; "2"; "3" |] ()
     |> MyQuery.serializeVariables |> MyQuery.variablesToJson)
-    (Yojson.Basic.from_string
+    (Json.Read.from_string
        {| {
       "nullableOfNullable": ["x", null, "y"],
       "nullableOfNonNullable": null,
