@@ -1,4 +1,4 @@
-open Graphql_ppx_base
+open Graphql_compiler
 open Result_structure
 open Generator_utils
 open Extract_type_definitions

@@ -1,4 +1,4 @@
-open Graphql_ppx_base
+open Graphql_compiler
 open Result_structure
 open Extract_type_definitions
 open Source_pos
@@ -643,7 +643,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
   | Type (Enum enum_meta) ->
     if raw then base_type "string"
     else
-      let open Graphql_ppx_base__.Schema in
+      let open Graphql_compiler.Schema in
       Ast_helper.Typ.variant ?loc
         (enum_meta.em_values
         |> List.map (fun { evm_name; _ } ->

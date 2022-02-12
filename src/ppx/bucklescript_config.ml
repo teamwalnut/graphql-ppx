@@ -1,4 +1,4 @@
-open Graphql_ppx_base
+open Graphql_compiler
 
 module Paths = struct
   let bsconfig = "bsconfig.json"

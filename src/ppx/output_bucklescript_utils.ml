@@ -1,4 +1,4 @@
-open Graphql_ppx_base
+open Graphql_compiler
 open Ppxlib
 
 let conv_pos pos =

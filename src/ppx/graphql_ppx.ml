@@ -1,4 +1,4 @@
-open Graphql_ppx_base
+open Graphql_compiler
 open Source_pos
 open Output_bucklescript_utils
 open Ppxlib
