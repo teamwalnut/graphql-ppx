@@ -21,13 +21,13 @@ let pp formatter (obj : qt) =
   Format.fprintf formatter
     "< v1 = @[<>< nullableString = %a ; string = %a >@] ; @[<>< nullableString \
      = %a ; string = %a >@] >"
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.v1.nullableString
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.v1.string
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.v2.nullableString
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.v2.string
 
 let equal (a : qt) (b : qt) =

@@ -30,11 +30,10 @@ let print_fragment fmt (obj : ft) =
   pp_record fmt
     [
       ( "nullableOfNullable",
-        (pp_string_literal |> print_option |> print_array |> print_option
-       |> swap_args)
+        (pp_string_literal |> pp_option |> pp_array |> pp_option |> pp_to_print)
           obj.nullableOfNullable );
       ( "nullableOfNonNullable",
-        (pp_string_literal |> print_array |> print_option |> swap_args)
+        (pp_string_literal |> pp_array |> pp_option |> pp_to_print)
           obj.nullableOfNonNullable );
     ]
 

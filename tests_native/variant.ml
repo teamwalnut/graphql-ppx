@@ -27,8 +27,7 @@ let pp formatter (obj : qt) =
           Format.pp_print_string v.stringField
       | `Errors (v : MyQuery.t_mutationWithError_errors array) ->
         Format.fprintf formatter "`Errors %a"
-          (print_array
-             (fun formatter (v : MyQuery.t_mutationWithError_errors) ->
+          (pp_array (fun formatter (v : MyQuery.t_mutationWithError_errors) ->
              Format.fprintf formatter "< field = %a ; message = %a >"
                Format.pp_print_string
                (match v.field with

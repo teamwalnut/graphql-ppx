@@ -20,19 +20,19 @@ let pp fmt (obj : qt) =
     [
       ( "nullableOfNullable",
         fun fmt ->
-          (Format.pp_print_string |> print_option |> print_array |> print_option)
+          (Format.pp_print_string |> pp_option |> pp_array |> pp_option)
             fmt obj.lists.nullableOfNullable );
       ( "nullableOfNonNullable",
         fun fmt ->
-          (Format.pp_print_string |> print_array |> print_option)
+          (Format.pp_print_string |> pp_array |> pp_option)
             fmt obj.lists.nullableOfNonNullable );
       ( "nonNullableOfNullable",
         fun fmt ->
-          (Format.pp_print_string |> print_option |> print_array)
+          (Format.pp_print_string |> pp_option |> pp_array)
             fmt obj.lists.nonNullableOfNullable );
       ( "nonNullableOfNonNullable",
         fun fmt ->
-          (Format.pp_print_string |> print_array)
+          (Format.pp_print_string |> pp_array)
             fmt obj.lists.nonNullableOfNonNullable );
     ]
 

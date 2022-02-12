@@ -30,18 +30,18 @@ let pp formatter (obj : qt) =
       "< variousScalars = @[<>< nullablleString = %a ; string = %a ; \
        nullableInt = %a ; int = %a ; nullableFloat = %a ; float = %a ; \
        nullableBoolean = %a ; boolean = %a ; nullableID = %a ; id = %a >@]"])
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.variousScalars.nullableString Format.pp_print_string
     obj.variousScalars.string
-    (Format.pp_print_int |> print_option)
+    (Format.pp_print_int |> pp_option)
     obj.variousScalars.nullableInt Format.pp_print_int obj.variousScalars.int
-    (Format.pp_print_float |> print_option)
+    (Format.pp_print_float |> pp_option)
     obj.variousScalars.nullableFloat Format.pp_print_float
     obj.variousScalars.float
-    (Format.pp_print_bool |> print_option)
+    (Format.pp_print_bool |> pp_option)
     obj.variousScalars.nullableBoolean Format.pp_print_bool
     obj.variousScalars.boolean
-    (Format.pp_print_string |> print_option)
+    (Format.pp_print_string |> pp_option)
     obj.variousScalars.nullableID Format.pp_print_string obj.variousScalars.id
 
 let equal (a : qt) (b : qt) =

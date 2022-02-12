@@ -3,9 +3,12 @@ open Test_shared
 type scalars = { string : string; int : int }
 
 module Scalars = struct
-  let pp formatter (obj : scalars) =
-    Format.fprintf formatter "{ string = %a ; int = %a }" Format.pp_print_string
-      obj.string Format.pp_print_int obj.int
+  let pp fmt (obj : scalars) =
+    pp_record fmt
+      [
+        ("string", print_string_literal obj.string);
+        ("int", print_int_literal obj.int);
+      ]
 
   let equal (a : scalars) (b : scalars) = a.string = b.string && a.int = b.int
 end
@@ -24,9 +27,9 @@ module MyQuery =
 type qt = MyQuery.t
 
 module MyQueryTest = struct
-  let pp formatter (obj : qt) =
-    Format.fprintf formatter "< variousScalars = @[%a@] >" Scalars.pp
-      obj.variousScalars
+  let pp fmt (obj : qt) =
+    pp_record fmt
+      [ ("variousScalars", (pp_to_print Scalars.pp) obj.variousScalars) ]
 
   let equal (a : qt) (b : qt) = Scalars.equal a.variousScalars b.variousScalars
 end
@@ -48,8 +51,8 @@ end
 
 module ExternalFragmentQueryTest = struct
   let pp fmt (obj : ExternalFragmentQuery.t) =
-    Format.fprintf fmt "< variousScalars = @[%a@] >" Scalars.pp
-      obj.variousScalars
+    pp_record fmt
+      [ ("variousScalars", (pp_to_print Scalars.pp) obj.variousScalars) ]
 
   let equal (a : ExternalFragmentQuery.t) (b : ExternalFragmentQuery.t) =
     Scalars.equal a.variousScalars b.variousScalars
@@ -71,19 +74,27 @@ module InlineFragmentQuery =
 type if_qt = InlineFragmentQuery.t
 
 module InlineFragmentQueryTest = struct
-  let pp formatter (obj : if_qt) =
-    Format.fprintf formatter "< dogOrHuman = @[%a@] >"
-      (fun formatter v ->
-        match v with
-        | `FutureAddedValue _ -> Format.fprintf formatter "`FutureAddedValue(_)"
-        | `Dog (dog : InlineFragmentQuery.t_dogOrHuman_Dog) ->
-          Format.fprintf formatter "`Dog @[<>< name = %a ; barkVolume = %a >@]"
-            Format.pp_print_string dog.name Format.pp_print_float dog.barkVolume)
-      obj.dogOrHuman
+  let pp fmt (obj : if_qt) =
+    pp_record fmt
+      [
+        ( "dogOrHuman",
+          fun fmt ->
+            match obj.dogOrHuman with
+            | `FutureAddedValue _ -> Format.fprintf fmt "`FutureAddedValue(_)"
+            | `Dog (dog : InlineFragmentQuery.t_dogOrHuman_Dog) ->
+              Format.fprintf fmt "`Dog @[%a@]"
+                (fun fmt (dog : InlineFragmentQuery.t_dogOrHuman_Dog) ->
+                  pp_record fmt
+                    [
+                      ("name", print_string_literal dog.name);
+                      ("barkVolume", print_float_literal dog.barkVolume);
+                    ])
+                dog );
+      ]
 
   let equal (a : if_qt) (b : if_qt) =
     match (a.dogOrHuman, b.dogOrHuman) with
-    | `Dog a, `Dog b -> a.name = b.name
+    | `Dog a, `Dog b -> a.name = b.name && a.barkVolume = b.barkVolume
     | `FutureAddedValue a, `FutureAddedValue b -> a = b
     | _ -> false
 end
@@ -107,19 +118,27 @@ end
 
 module UnionExternalFragmentQueryTest = struct
   let pp fmt (obj : UnionExternalFragmentQuery.t) =
-    Format.fprintf fmt "< dogOrHuman = @[%a@] >"
-      (fun formatter v ->
-        match v with
-        | `FutureAddedValue _ -> Format.fprintf formatter "`FutureAddedValue(_)"
-        | `Dog (dog : DogFragment.t) ->
-          Format.fprintf formatter "`Dog @[<>< name = %a ; barkVolume = %a >@]"
-            Format.pp_print_string dog.name Format.pp_print_float dog.barkVolume)
-      obj.dogOrHuman
+    pp_record fmt
+      [
+        ( "dogOrHuman",
+          fun fmt ->
+            match obj.dogOrHuman with
+            | `FutureAddedValue _ -> Format.fprintf fmt "`FutureAddedValue(_)"
+            | `Dog (dog : DogFragment.t) ->
+              Format.fprintf fmt "`Dog @[%a@]"
+                (fun fmt (dog : DogFragment.t) ->
+                  pp_record fmt
+                    [
+                      ("name", print_string_literal dog.name);
+                      ("barkVolume", print_float_literal dog.barkVolume);
+                    ])
+                dog );
+      ]
 
   let equal (a : UnionExternalFragmentQuery.t)
     (b : UnionExternalFragmentQuery.t) =
     match (a.dogOrHuman, b.dogOrHuman) with
-    | `Dog a, `Dog b -> a.name = b.name
+    | `Dog a, `Dog b -> a.name = b.name && a.barkVolume = b.barkVolume
     | `FutureAddedValue a, `FutureAddedValue b -> a = b
     | _ -> false
 end

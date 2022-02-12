@@ -21,18 +21,20 @@ let json_equal a b = Yojson.Basic.equal a b
 let test_json_ a b = test_exp a b json_equal pp_json
 let pp_color fmt color = Format.fprintf fmt "@<0>%s" color
 
-let pp_colored_str fmt str color =
+let pp_colored pp fmt v color =
   pp_color fmt color;
-  Format.pp_print_string fmt str;
+  pp fmt v;
   pp_color fmt Cli_colors.reset
 
-let print_option inner formatter = function
+let pp_colored_str = pp_colored Format.pp_print_string
+
+let pp_option inner formatter = function
   | None -> pp_colored_str formatter "None" Cli_colors.red
   | Some v ->
     pp_colored_str formatter "Some" Cli_colors.red;
     Format.fprintf formatter "(@[%a@])" inner v
 
-let print_array inner fmt value =
+let pp_array inner fmt value =
   let open Format in
   pp_colored_str fmt "[|" Cli_colors.blue;
   Format.pp_print_break fmt 1 2;
@@ -82,7 +84,7 @@ let pp_record fmt (fields : (string * (Format.formatter -> unit)) list) =
 let test_exp_array a b exp pp =
   test_exp a b
     (fun a b -> Array.for_all (fun (a, b) -> exp a b) (Array.combine a b))
-    (print_array pp)
+    (pp_array pp)
 
 let array_zipmap f a b =
   let min = min (Array.length a) (Array.length b) in
@@ -95,9 +97,13 @@ let pp_string_literal fmt s =
   pp_colored_str fmt ("\"" ^ s ^ "\"") Cli_colors.yellow
 
 let swap_args fn fmt fields = fn fields fmt
-let inner_pp = swap_args
+let pp_to_print = swap_args
+let print_record = pp_to_print pp_record
+let print_option field inner fmt = pp_option (pp_to_print inner) fmt field
+let print_string_literal = pp_to_print pp_string_literal
 
-(* let pp_inner_record fields fmt = pp_record fmt fields *)
-let pp_inner_record = swap_args pp_record
-let pp_inner_option field inner fmt = print_option (swap_args inner) fmt field
-let pp_inner_string_literal = swap_args pp_string_literal
+let print_int_literal integer fmt =
+  pp_colored Format.pp_print_int fmt integer Cli_colors.yellow
+
+let print_float_literal f fmt =
+  pp_colored Format.pp_print_float fmt f Cli_colors.yellow

@@ -31,34 +31,34 @@ let pp fmt (obj : qt) =
   pp_record fmt
     [
       ( "first",
-        pp_inner_record
+        print_record
           [
             ( "inner",
-              pp_inner_option obj.first.inner (fun inner ->
-                pp_inner_record
+              print_option obj.first.inner (fun inner ->
+                print_record
                   [
                     ( "inner",
-                      pp_inner_option inner.inner (fun inner ->
-                        pp_inner_record
-                          [ ("field", pp_inner_string_literal inner.field) ]) );
+                      print_option inner.inner (fun inner ->
+                        print_record
+                          [ ("field", print_string_literal inner.field) ]) );
                   ]) );
           ] );
       ( "second",
-        pp_inner_record
+        print_record
           [
             ( "inner",
-              pp_inner_option obj.second.inner (fun inner ->
-                pp_inner_record
+              print_option obj.second.inner (fun inner ->
+                print_record
                   [
                     ( "inner",
-                      pp_inner_option inner.inner (fun inner ->
-                        pp_inner_record
+                      print_option inner.inner (fun inner ->
+                        print_record
                           [
                             ( "inner",
-                              pp_inner_record
+                              print_record
                                 [
-                                  ("f1", pp_inner_string_literal inner.f1);
-                                  ("f2", pp_inner_string_literal inner.f2);
+                                  ("f1", print_string_literal inner.f1);
+                                  ("f2", print_string_literal inner.f2);
                                 ] );
                           ]) );
                   ]) );
