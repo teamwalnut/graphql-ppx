@@ -71,37 +71,37 @@ let defaultConfig =
   }
 
 module JsonHelper = struct
-  open Yojson.Basic.Util
+  open Json.Util
 
   let mapBool option update json =
     try update (json |> fun json -> json |> member option |> to_bool) with
-    | Yojson.Basic.Util.Type_error _ -> ()
+    | Json.Util.Type_error _ -> ()
     | other -> raise other
 
   let mapString option update json =
     try update (json |> fun json -> json |> member option |> to_string) with
-    | Yojson.Basic.Util.Type_error _ -> ()
+    | Json.Util.Type_error _ -> ()
     | other -> raise other
 end
 
 let read_custom_fields json =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let custom_fields = Ppx_config.custom_fields () |> Hashtbl.copy in
   let custom_fields_result_depr =
     try json |> member "custom-fields" |> to_assoc with
-    | Yojson.Basic.Util.Type_error _ -> []
+    | Json.Util.Type_error _ -> []
     | other -> raise other
   in
   let custom_fields_result =
     try json |> member "customFields" |> to_assoc with
-    | Yojson.Basic.Util.Type_error _ -> []
+    | Json.Util.Type_error _ -> []
     | other -> raise other
   in
   List.append custom_fields_result_depr custom_fields_result
   |> List.map (fun (key, value) ->
        let value =
          try Some (value |> to_string) with
-         | Yojson.Basic.Util.Type_error _ -> None
+         | Json.Util.Type_error _ -> None
          | other -> raise other
        in
        (key, value))
@@ -115,8 +115,8 @@ let read_custom_fields json =
 let read_config () =
   Ppx_config.set_config defaultConfig;
   Paths.setProjectRoot ();
-  let open Yojson.Basic.Util in
-  let parseConfig (json : Yojson.Basic.t) =
+  let open Json.Util in
+  let parseConfig (json : Json.t) =
     let ppxConfig = json |> member "graphql" in
     let handleVerboseLogging verbose_logging =
       Ppx_config.update_config (fun current -> { current with verbose_logging })
@@ -272,7 +272,7 @@ let read_config () =
   in
   match Paths.getBsConfigFile () with
   | Some bsConfigFile -> (
-    try bsConfigFile |> Yojson.Basic.from_file |> parseConfig with
+    try bsConfigFile |> Json.Read.from_file |> parseConfig with
     | Config_error _ as e -> raise e
     | _ -> ())
   | None -> ()

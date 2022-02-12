@@ -38,7 +38,7 @@ let rec type_ref_name tr =
   | List i -> type_ref_name i
 
 let make_enum_value_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     evm_name = v |> member "name" |> to_string;
@@ -53,7 +53,7 @@ let make_enum_value_meta v =
   }
 
 let rec make_type_ref v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   match v |> member "kind" |> to_string with
   | "LIST" -> List (v |> member "ofType" |> make_type_ref)
@@ -61,7 +61,7 @@ let rec make_type_ref v =
   | _ -> Named (v |> member "name" |> to_string)
 
 let make_argument_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     am_name = v |> member "name" |> to_string;
@@ -71,7 +71,7 @@ let make_argument_meta v =
   }
 
 let make_field_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     fm_name = v |> member "name" |> to_string;
@@ -88,7 +88,7 @@ let make_field_meta v =
   }
 
 let make_scalar_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     sm_name = v |> member "name" |> to_string;
@@ -96,7 +96,7 @@ let make_scalar_meta v =
   }
 
 let make_object_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     om_name = v |> member "name" |> to_string;
@@ -110,7 +110,7 @@ let make_object_meta v =
   }
 
 let make_enum_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     em_name = v |> member "name" |> to_string;
@@ -120,7 +120,7 @@ let make_enum_meta v =
   }
 
 let make_interface_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     im_name = v |> member "name" |> to_string;
@@ -131,7 +131,7 @@ let make_interface_meta v =
   }
 
 let make_union_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     um_name = v |> member "name" |> to_string;
@@ -142,7 +142,7 @@ let make_union_meta v =
   }
 
 let make_input_object_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     iom_name = v |> member "name" |> to_string;
@@ -152,7 +152,7 @@ let make_input_object_meta v =
   }
 
 let make_type_meta _ v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   match v |> member "kind" |> to_string with
   | "SCALAR" -> Schema.Scalar (make_scalar_meta v)
   | "OBJECT" -> Schema.Object (make_object_meta v)
@@ -163,7 +163,7 @@ let make_type_meta _ v =
   | e -> raise @@ Unknown_type_kind e
 
 let make_type_map type_array =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let rec type_map_loop i type_map =
     if i = Array.length type_array then type_map
     else
@@ -179,7 +179,7 @@ let make_type_map type_array =
 
 let make_directive_location directive_location =
   let open Schema in
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   match directive_location |> to_string with
   | "QUERY" -> Dl_query
   | "MUTATION" -> Dl_mutation
@@ -192,7 +192,7 @@ let make_directive_location directive_location =
 
 let make_directive_meta _ directive =
   let open Schema in
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   {
     dm_name = directive |> member "name" |> to_string;
     dm_locations =
@@ -203,7 +203,7 @@ let make_directive_meta _ directive =
   }
 
 let make_directive_map directive_array =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let directive_json_map = Hashtbl.create (Array.length directive_array) in
   let () =
     Array.iter
@@ -216,7 +216,7 @@ let make_directive_map directive_array =
   map_values make_directive_meta directive_json_map
 
 let make_schema_meta v =
-  let open Yojson.Basic.Util in
+  let open Json.Util in
   let open Schema in
   {
     sm_query_type = v |> member "queryType" |> member "name" |> to_string;
@@ -285,8 +285,8 @@ let get_hash_path = get_ppx_cache_path ".hash"
 
 let parse_json_schema json_schema =
   Log.log ("[parse json schema] " ^ json_schema);
-  let result = Yojson.Basic.from_file json_schema in
-  let open Yojson.Basic.Util in
+  let result = Json.Read.from_file json_schema in
+  let open Json.Util in
   let open Schema in
   let schema =
     result |> member "data" |> to_option (fun json -> json |> member "__schema")

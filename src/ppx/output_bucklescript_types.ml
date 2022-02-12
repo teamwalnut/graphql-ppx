@@ -51,7 +51,7 @@ let rec generate_type ?atLoc ~config ~path ~raw = function
   | Res_raw_scalar _ ->
     base_type ?loc:atLoc
       (match Ppx_config.native () with
-      | true -> "Yojson.Basic.t"
+      | true -> "Graphql_ppx_runtime.Json.t"
       | false -> "Js.Json.t")
   | Res_object { type_name } | Res_record { type_name } -> (
     match (type_name, raw) with
@@ -299,7 +299,7 @@ let generate_variant_union ~emit_locations config
                   [
                     base_type
                       (match Ppx_config.native () with
-                      | true -> "Yojson.Basic.t"
+                      | true -> "Graphql_ppx_runtime.Json.t"
                       | false -> "Js.Json.t");
                   ] );
             prf_loc =
@@ -638,7 +638,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
   | Type (Scalar { sm_name = _ }) ->
     base_type ?loc
       (match Ppx_config.native () with
-      | true -> "Yojson.Basic.t"
+      | true -> "Graphql_ppx_runtime.Json.t"
       | false -> "Js.Json.t")
   | Type (Enum enum_meta) ->
     if raw then base_type "string"
@@ -687,7 +687,7 @@ let generate_empty_input_object impl raw =
       ?manifest:
         (match not impl with
         | true -> None
-        | false -> Some (base_type_name "Yojson.Basic.t"))
+        | false -> Some (base_type_name "Graphql_ppx_runtime.Json.t"))
       { loc = Location.none; txt = generate_type_name ~prefix:"t_variables" [] }
   | false ->
     Ast_helper.Type.mk ~manifest:(base_type_name "unit")
@@ -743,7 +743,7 @@ let generate_native_raw_input_object impl input_obj_name =
       | true ->
         Some
           (Ast_helper.Typ.constr
-             (mknoloc (Longident.parse "Yojson.Basic.t"))
+             (mknoloc (Longident.parse "Graphql_ppx_runtime.Json.t"))
              [])
       | false -> None)
     {

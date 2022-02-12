@@ -549,11 +549,13 @@ let generate_operation_signature config variable_defs res_structure =
     | true ->
       [
         [%sigi:
-          external unsafe_fromJson : Yojson.Basic.t -> Raw.t = "%identity"];
-        [%sigi: external toJson : Raw.t -> Yojson.Basic.t = "%identity"];
-        [%sigi:
-          external variablesToJson : Raw.t_variables -> Yojson.Basic.t
+          external unsafe_fromJson : Graphql_ppx_runtime.Json.t -> Raw.t
             = "%identity"];
+        [%sigi:
+          external toJson : Raw.t -> Graphql_ppx_runtime.Json.t = "%identity"];
+        [%sigi:
+          external variablesToJson :
+            Raw.t_variables -> Graphql_ppx_runtime.Json.t = "%identity"];
       ]
     | false ->
       [
@@ -626,7 +628,7 @@ let generate_operation_implementation config variable_defs _has_error operation
   in
   let raw_types =
     match config.native with
-    | true -> [ [%stri type t = Yojson.Basic.t] ]
+    | true -> [ [%stri type t = Graphql_ppx_runtime.Json.t] ]
     | false ->
       Output_bucklescript_types.generate_type_structure_items config
         res_structure true None None
@@ -676,11 +678,14 @@ let generate_operation_implementation config variable_defs _has_error operation
         | true ->
           [
             [%stri
-              external unsafe_fromJson : Yojson.Basic.t -> Raw.t = "%identity"];
-            [%stri external toJson : Raw.t -> Yojson.Basic.t = "%identity"];
-            [%stri
-              external variablesToJson : Raw.t_variables -> Yojson.Basic.t
+              external unsafe_fromJson : Graphql_ppx_runtime.Json.t -> Raw.t
                 = "%identity"];
+            [%stri
+              external toJson : Raw.t -> Graphql_ppx_runtime.Json.t
+                = "%identity"];
+            [%stri
+              external variablesToJson :
+                Raw.t_variables -> Graphql_ppx_runtime.Json.t = "%identity"];
           ]
         | false ->
           [
@@ -811,8 +816,10 @@ let generate_fragment_signature config name variable_definitions _has_error
       | true ->
         [
           [%sigi:
-            external unsafe_fromJson : Yojson.Basic.t -> Raw.t = "%identity"];
-          [%sigi: external toJson : Raw.t -> Yojson.Basic.t = "%identity"];
+            external unsafe_fromJson : Graphql_ppx_runtime.Json.t -> Raw.t
+              = "%identity"];
+          [%sigi:
+            external toJson : Raw.t -> Graphql_ppx_runtime.Json.t = "%identity"];
         ]
       | false ->
         [
@@ -840,7 +847,7 @@ let generate_fragment_implementation config name
   in
   let raw_types =
     match config.native with
-    | true -> [ [%stri type t = Yojson.Basic.t] ]
+    | true -> [ [%stri type t = Graphql_ppx_runtime.Json.t] ]
     | false ->
       Output_bucklescript_types.generate_type_structure_items config
         res_structure true None
@@ -928,8 +935,10 @@ let generate_fragment_implementation config name
       | true ->
         [
           [%stri
-            external unsafe_fromJson : Yojson.Basic.t -> Raw.t = "%identity"];
-          [%stri external toJson : Raw.t -> Yojson.Basic.t = "%identity"];
+            external unsafe_fromJson : Graphql_ppx_runtime.Json.t -> Raw.t
+              = "%identity"];
+          [%stri
+            external toJson : Raw.t -> Graphql_ppx_runtime.Json.t = "%identity"];
         ]
       | false ->
         [

@@ -90,7 +90,8 @@ let generate_poly_enum_decoder loc enum_meta omit_future_value =
     Ast_helper.Exp.match_
       (match Ppx_config.native () with
       | true ->
-        [%expr value |> Yojson.Basic.Util.to_string] [@metaloc conv_loc loc]
+        [%expr value |> Graphql_ppx_runtime.Json.to_string]
+        [@metaloc conv_loc loc]
       | false -> [%expr (Obj.magic value : string)] [@metaloc conv_loc loc])
       (List.concat [ enum_match_arms; [ fallback_arm ] ])
   in
@@ -201,7 +202,7 @@ and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
         | true ->
           [%expr
             let value =
-              Yojson.Basic.Util.member [%e const_str_expr key] value
+              Graphql_ppx_runtime.Json.member [%e const_str_expr key] value
             in
             [%e generate_parser config (key :: path) definition inner]]
           [@metaloc conv_loc loc]
@@ -280,7 +281,9 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
       match config.native with
       | true ->
         [%expr
-          let temp = Yojson.Basic.Util.member [%e const_str_expr field] value in
+          let temp =
+            Graphql_ppx_runtime.Json.member [%e const_str_expr field] value
+          in
           match temp with
           | `Null -> [%e generator_loop next]
           | _ ->
@@ -365,8 +368,8 @@ and generate_poly_variant_interface_decoder config loc _name fragments path
     [%expr
       let typename =
         (value
-         |> Yojson.Basic.Util.member "__typename"
-         |> Yojson.Basic.Util.to_string
+         |> Graphql_ppx_runtime.Json.member "__typename"
+         |> Graphql_ppx_runtime.Json.to_string
           : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
@@ -451,8 +454,8 @@ and generate_poly_variant_union_decoder config loc _name fragments
     [%expr
       let typename =
         (value
-         |> Yojson.Basic.Util.member "__typename"
-         |> Yojson.Basic.Util.to_string
+         |> Graphql_ppx_runtime.Json.member "__typename"
+         |> Graphql_ppx_runtime.Json.to_string
           : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
@@ -473,27 +476,27 @@ and generate_parser config (path : string list) definition = function
   | Res_id { loc } -> (
     let loc = conv_loc loc in
     match config.native with
-    | true -> [%expr Yojson.Basic.Util.to_string value] [@metaloc loc]
+    | true -> [%expr Graphql_ppx_runtime.Json.to_string value] [@metaloc loc]
     | false -> [%expr value] [@metaloc loc])
   | Res_string { loc } -> (
     let loc = conv_loc loc in
     match config.native with
-    | true -> [%expr Yojson.Basic.Util.to_string value] [@metaloc loc]
+    | true -> [%expr Graphql_ppx_runtime.Json.to_string value] [@metaloc loc]
     | false -> [%expr value] [@metaloc loc])
   | Res_int { loc } -> (
     let loc = conv_loc loc in
     match config.native with
-    | true -> [%expr Yojson.Basic.Util.to_int value] [@metaloc loc]
+    | true -> [%expr Graphql_ppx_runtime.Json.to_int value] [@metaloc loc]
     | false -> [%expr value] [@metaloc loc])
   | Res_float { loc } -> (
     let loc = conv_loc loc in
     match config.native with
-    | true -> [%expr Yojson.Basic.Util.to_float value] [@metaloc loc]
+    | true -> [%expr Graphql_ppx_runtime.Json.to_float value] [@metaloc loc]
     | false -> [%expr value] [@metaloc loc])
   | Res_boolean { loc } -> (
     let loc = conv_loc loc in
     match config.native with
-    | true -> [%expr Yojson.Basic.Util.to_bool value] [@metaloc loc]
+    | true -> [%expr Graphql_ppx_runtime.Json.to_bool value] [@metaloc loc]
     | false -> [%expr value] [@metaloc loc])
   | Res_raw_scalar { loc } ->
     let loc = conv_loc loc in
