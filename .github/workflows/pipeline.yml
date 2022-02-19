@@ -121,7 +121,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
-          path: _build/default/src/ppx/bin.exe
+          path: _build/default/src/bin/bin.exe
 
   publish:
     needs: [test_and_build, test_and_build_linux]
