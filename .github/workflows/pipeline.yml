@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
-          path: _build/default/src/ppx/bin.exe
+          path: _build/default/src/bin/bin.exe
 
   test_and_build:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
