@@ -1,5 +1,5 @@
 {
-  "checksum": "d7434ae7e7ebe6f78e1c80656f54c741",
+  "checksum": "9bf1352af64a084601aabd3bd6f70a67",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "ocaml@4.13.1000@d41d8cd9": {
@@ -25,7 +25,7 @@
       "dependencies": [ "@opam/ppxlib@opam:0.24.0@4c00d6db" ],
       "devDependencies": [
         "ocaml@4.13.1000@d41d8cd9",
-        "@opam/ocaml-lsp-server@opam:1.9.1@1397dba9",
+        "@opam/ocaml-lsp-server@opam:1.10.1@48c84271",
         "@opam/merlin@opam:4.4-413@72d13f31",
         "@opam/dune@opam:2.9.3@f57a6d69"
       ]
@@ -58,8 +58,8 @@
         "@opam/dune@opam:2.9.3@f57a6d69", "@opam/biniou@opam:1.2.1@420bda02"
       ]
     },
-    "@opam/stdlib-shims@opam:0.3.0@0d088929": {
-      "id": "@opam/stdlib-shims@opam:0.3.0@0d088929",
+    "@opam/stdlib-shims@opam:0.3.0@72c7bc98": {
+      "id": "@opam/stdlib-shims@opam:0.3.0@72c7bc98",
       "name": "@opam/stdlib-shims",
       "version": "opam:0.3.0",
       "source": {
@@ -221,14 +221,14 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.13.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.3.0@0d088929",
+        "ocaml@4.13.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.3.0@72c7bc98",
         "@opam/sexplib0@opam:v0.14.0@155c136c",
         "@opam/ppx_derivers@opam:1.2.1@e2cbad12",
         "@opam/ocaml-compiler-libs@opam:v0.12.4@41979882",
         "@opam/dune@opam:2.9.3@f57a6d69", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.13.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.3.0@0d088929",
+        "ocaml@4.13.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.3.0@72c7bc98",
         "@opam/sexplib0@opam:v0.14.0@155c136c",
         "@opam/ppx_derivers@opam:1.2.1@e2cbad12",
         "@opam/ocaml-compiler-libs@opam:v0.12.4@41979882",
@@ -365,20 +365,20 @@
       ],
       "devDependencies": [ "ocaml@4.13.1000@d41d8cd9" ]
     },
-    "@opam/ocaml-lsp-server@opam:1.9.1@1397dba9": {
-      "id": "@opam/ocaml-lsp-server@opam:1.9.1@1397dba9",
+    "@opam/ocaml-lsp-server@opam:1.10.1@48c84271": {
+      "id": "@opam/ocaml-lsp-server@opam:1.10.1@48c84271",
       "name": "@opam/ocaml-lsp-server",
-      "version": "opam:1.9.1",
+      "version": "opam:1.10.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/cf/cf1cdb257d4ef1ed1a05e951264b11c7dc7d3066bf448111cb17c67be56ddcee#sha256:cf1cdb257d4ef1ed1a05e951264b11c7dc7d3066bf448111cb17c67be56ddcee",
-          "archive:https://github.com/ocaml/ocaml-lsp/releases/download/1.9.1/jsonrpc-1.9.1.tbz#sha256:cf1cdb257d4ef1ed1a05e951264b11c7dc7d3066bf448111cb17c67be56ddcee"
+          "archive:https://opam.ocaml.org/cache/sha256/23/23006064074617974a7237443f4db6234e305b3b74eb7134bf870499cb59aafe#sha256:23006064074617974a7237443f4db6234e305b3b74eb7134bf870499cb59aafe",
+          "archive:https://github.com/ocaml/ocaml-lsp/releases/download/1.10.1/jsonrpc-1.10.1.tbz#sha256:23006064074617974a7237443f4db6234e305b3b74eb7134bf870499cb59aafe"
         ],
         "opam": {
           "name": "ocaml-lsp-server",
-          "version": "1.9.1",
-          "path": "esy.lock/opam/ocaml-lsp-server.1.9.1"
+          "version": "1.10.1",
+          "path": "esy.lock/opam/ocaml-lsp-server.1.10.1"
         }
       },
       "overrides": [],
