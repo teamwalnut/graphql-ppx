@@ -22,5 +22,12 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "files": [
+    "copyPlatformBinaryInPlace.js",
+    "bsconfig.json",
+    "rescript-runtime",
+    "bin",
+    "LICENSE"
+  ]
 }
