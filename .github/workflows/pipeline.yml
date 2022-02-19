@@ -23,6 +23,8 @@ jobs:
 
       - name: Add tar
         run: apk add --no-cache tar
+      - name: Install
+        run: esy install
 
       - name: Print esy cache
         id: print_esy_cache
@@ -36,9 +38,6 @@ jobs:
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
             ${{ matrix.os }}-
-
-      - name: Install
-        run: esy install
 
       - name: build
         run: esy b
@@ -83,6 +82,9 @@ jobs:
         run: |
           npm install -g esy@0.6.12
 
+      - name: Install
+        run: esy install
+
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
@@ -93,9 +95,6 @@ jobs:
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
           key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-
-      - name: Install
-        run: esy install
 
       - name: build
         run: esy b
