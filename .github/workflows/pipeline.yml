@@ -160,6 +160,8 @@ jobs:
         run: |
           mkdir -p bin
           mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
+          # this one is checked in the repo, because we don't have CI runners for it
+          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
           mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 
