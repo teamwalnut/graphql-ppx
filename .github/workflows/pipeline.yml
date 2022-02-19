@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
         os: [ubuntu-latest]
 
     container:
@@ -42,13 +42,13 @@ jobs:
       - name: build
         run: esy b
 
-      - name: test-native
+      - name: native tests
         run: |
           esy b dune runtest -f
         env:
           CI: true
 
-      - name: test-bucklescript
+      - name: snapshot tests
         env:
           GRAPHQL_CI: true
         run: |
@@ -67,7 +67,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
         os: [windows-latest, macOS-latest]
 
     steps:
