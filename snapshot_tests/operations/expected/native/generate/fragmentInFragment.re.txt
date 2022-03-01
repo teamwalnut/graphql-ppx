@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment: {
@@ -171,7 +171,7 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     value =>
       Array.fold_left(
-        (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+        Graphql_ppx_runtime.deepMerge,
         {
           let nullableOfNullable = {
             let value = (value: t).nullableOfNullable;

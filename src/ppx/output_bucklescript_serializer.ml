@@ -567,14 +567,12 @@ and generate_object_encoder config loc _name fields path definition
     match Ppx_config.native () with
     | true ->
       [%expr
-        Array.fold_left
-          (fun a b -> Graphql_ppx_runtime.deepMerge a b)
-          [%e do_obj_constructor ()]
+        Array.fold_left Graphql_ppx_runtime.deepMerge [%e do_obj_constructor ()]
           [%e fields |> Ast_helper.Exp.array]]
     | false ->
       [%expr
         (Obj.magic
-           (Js.Array.reduce GraphQL_PPX.deepMerge
+           (Js.Array.reduce Graphql_ppx_runtime.deepMerge
               (Obj.magic [%e do_obj_constructor ()] : Js.Json.t)
               [%e fields |> Ast_helper.Exp.array])
           : [%t base_type_name ("Raw." ^ generate_type_name path)])]

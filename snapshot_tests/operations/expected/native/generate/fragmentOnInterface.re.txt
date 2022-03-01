@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module InterfaceFragment: {
@@ -133,7 +133,7 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     value =>
       Array.fold_left(
-        (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+        Graphql_ppx_runtime.deepMerge,
         {
           let id = {
             let value = (value: t).id;
@@ -205,7 +205,7 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     value =>
       Array.fold_left(
-        (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+        Graphql_ppx_runtime.deepMerge,
         {
           let id = {
             let value = (value: t).id;

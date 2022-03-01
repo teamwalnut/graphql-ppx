@@ -6,7 +6,7 @@ function deepMerge(json1, param) {
   return json1;
 }
 
-var GraphQL_PPX = {
+var Graphql_ppx_runtime = {
   deepMerge: deepMerge
 };
 
@@ -118,7 +118,7 @@ var AnonUser = {
   verifyName: verifyName$2
 };
 
-exports.GraphQL_PPX = GraphQL_PPX;
+exports.Graphql_ppx_runtime = Graphql_ppx_runtime;
 exports.InterfaceFragment = InterfaceFragment;
 exports.AnotherFragment = AnotherFragment;
 exports.AnonUser = AnonUser;

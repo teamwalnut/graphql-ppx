@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module MyQuery: {

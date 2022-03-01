@@ -6,7 +6,7 @@ function deepMerge(json1, param) {
   return json1;
 }
 
-var GraphQL_PPX = {
+var Graphql_ppx_runtime = {
   deepMerge: deepMerge
 };
 
@@ -415,7 +415,7 @@ var MyQuery2 = {
   makeDefaultVariables: makeDefaultVariables$1
 };
 
-exports.GraphQL_PPX = GraphQL_PPX;
+exports.Graphql_ppx_runtime = Graphql_ppx_runtime;
 exports.ListFragment = ListFragment;
 exports.Another = Another;
 exports.FragmentWithArgs = FragmentWithArgs;

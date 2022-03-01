@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module InterfaceFragment: {
@@ -164,7 +164,7 @@ function back to the original JSON-compatible data */
     (value) => (
       Obj.magic(
         Js.Array.reduce(
-          GraphQL_PPX.deepMerge,
+          Graphql_ppx_runtime.deepMerge,
           Obj.magic(
             {
               let id = {
@@ -253,7 +253,7 @@ function back to the original JSON-compatible data */
     (value) => (
       Obj.magic(
         Js.Array.reduce(
-          GraphQL_PPX.deepMerge,
+          Graphql_ppx_runtime.deepMerge,
           Obj.magic(
             {
               let id = {

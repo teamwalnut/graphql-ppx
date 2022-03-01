@@ -1,4 +1,4 @@
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   // mock
   let deepMerge = (json1, _) => {
     json1;

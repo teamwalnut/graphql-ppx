@@ -40,6 +40,11 @@ module Json = struct
   let to_bool = function `Bool b -> b | js -> typerr "Expected bool, got " js
 end
 
+let assign_typename (json : Json.t) (typename : string) =
+  match json with
+  | `Assoc assoc_list -> `Assoc (("__typename", `String typename) :: assoc_list)
+  | other -> other
+
 let rec merge_pairs (pairs1 : (string * Json.t) list)
   (pairs2 : (string * Json.t) list) =
   let unique_keys =

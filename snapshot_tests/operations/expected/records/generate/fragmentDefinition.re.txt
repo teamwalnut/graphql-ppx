@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module ListFragment: {
@@ -676,7 +676,7 @@ function back to the original JSON compatible data */
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+                Graphql_ppx_runtime.deepMerge,
                 Obj.magic(
                   {
                     let nullableOfNullable = {
@@ -716,7 +716,7 @@ function back to the original JSON compatible data */
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+                Graphql_ppx_runtime.deepMerge,
                 Obj.magic(
                   {
                     let nullableOfNullable = {
@@ -755,7 +755,7 @@ function back to the original JSON compatible data */
           (
             Obj.magic(
               Js.Array.reduce(
-                GraphQL_PPX.deepMerge,
+                Graphql_ppx_runtime.deepMerge,
                 Obj.magic(Js.Dict.empty): Js.Json.t,
                 [|
                   (

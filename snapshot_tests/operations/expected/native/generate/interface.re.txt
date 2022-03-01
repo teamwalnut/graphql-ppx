@@ -16,7 +16,7 @@
     cookies: [],
   }
 ];
-module GraphQL_PPX = {
+module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1;
 };
 module QueryWithOnlyFragments: {
@@ -438,7 +438,7 @@ function back to the original JSON compatible data */
           value
           |> Array.map(value =>
                Array.fold_left(
-                 (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+                 Graphql_ppx_runtime.deepMerge,
                  {
                    let id = {
                      let value = (value: t_users).id;
@@ -610,7 +610,7 @@ function back to the original JSON compatible data */
           value
           |> Array.map(value =>
                Array.fold_left(
-                 (a, b) => Graphql_ppx_runtime.deepMerge(a, b),
+                 Graphql_ppx_runtime.deepMerge,
                  {
                    let id = {
                      let value = (value: t_users).id;
