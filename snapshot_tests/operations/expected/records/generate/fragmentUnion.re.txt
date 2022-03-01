@@ -1,0 +1,239 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module DogFragment: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {name: string};
+    type nonrec t_Dog = t;
+  };
+  type t = {name: string};
+  type nonrec t_Dog = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `DogFragment], Raw.t) => t;
+  let verifyName: [ | `DogFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {name: string};
+    type nonrec t_Dog = t;
+  };
+  type t = {name: string};
+  type nonrec t_Dog = t;
+  let query = "fragment DogFragment on Dog   {\nname  \n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        name: {
+          let value = (value: Raw.t).name;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let name = {
+          let value = (value: t).name;
+          value;
+        };
+        {name: name};
+      }: Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _DogFragment: [ | `DogFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `DogFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+};
+module HumanFragment: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t = {name: string};
+    type nonrec t_Human = t;
+  };
+  type t = {name: string};
+  type nonrec t_Human = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `HumanFragment], Raw.t) => t;
+  let verifyName: [ | `HumanFragment] => unit;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = {name: string};
+    type nonrec t_Human = t;
+  };
+  type t = {name: string};
+  type nonrec t_Human = t;
+  let query = "fragment HumanFragment on Human   {\nname  \n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        name: {
+          let value = (value: Raw.t).name;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let name = {
+          let value = (value: t).name;
+          value;
+        };
+        {name: name};
+      }: Raw.t
+    );
+  let verifyArgsAndParse =
+      (~fragmentName as _HumanFragment: [ | `HumanFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `HumanFragment => ();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+};
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(DogFragment.t_Dog)
+    | `Human(HumanFragment.t_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t_dogOrHuman;
+    type t = {dogOrHuman: t_dogOrHuman};
+    type t_variables = unit;
+  };
+  type t_dogOrHuman = [
+    | `FutureAddedValue(Js.Json.t)
+    | `Dog(DogFragment.t_Dog)
+    | `Human(HumanFragment.t_Human)
+  ];
+  type t = {dogOrHuman: t_dogOrHuman};
+  type t_variables = unit;
+  let query =
+    (
+      "query MyQuery  {\ndogOrHuman  {\n__typename\n...on Dog   {\n...DogFragment   \n}\n\n...on Human   {\n...HumanFragment   \n}\n\n}\n\n}\n"
+      ++ DogFragment.query
+    )
+    ++ HumanFragment.query;
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        dogOrHuman: {
+          let value = (value: Raw.t).dogOrHuman;
+          let typename: string =
+            Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename"));
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  let value: DogFragment.Raw.t = Obj.magic(value);
+
+                  DogFragment.verifyArgsAndParse(
+                    ~fragmentName=`DogFragment,
+                    value,
+                  );
+                },
+              )
+            | "Human" =>
+              `Human(
+                {
+                  let value: HumanFragment.Raw.t = Obj.magic(value);
+
+                  HumanFragment.verifyArgsAndParse(
+                    ~fragmentName=`HumanFragment,
+                    value,
+                  );
+                },
+              )
+            | _ => `FutureAddedValue(Obj.magic(value): Js.Json.t)
+            }: t_dogOrHuman
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let dogOrHuman = {
+          let value = (value: t).dogOrHuman;
+          switch (value) {
+          | `Dog(value) => (
+              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | `Human(value) => (
+              Obj.magic(HumanFragment.serialize(value)): Raw.t_dogOrHuman
+            )
+          | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
+          };
+        };
+        {dogOrHuman: dogOrHuman};
+      }: Raw.t
+    );
+  let serializeVariables = () => ();
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Js.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity";
+};
