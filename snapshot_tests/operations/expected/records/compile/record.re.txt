@@ -2,6 +2,14 @@
 'use strict';
 
 
+function assign_typename(obj, param) {
+  return obj;
+}
+
+var Graphql_ppx_runtime = {
+  assign_typename: assign_typename
+};
+
 var Raw = {};
 
 function parse(value) {
@@ -386,6 +394,7 @@ var UnionExternalFragmentQuery = {
   Untitled1: Untitled1$1
 };
 
+exports.Graphql_ppx_runtime = Graphql_ppx_runtime;
 exports.MyQuery = MyQuery;
 exports.OneFieldQuery = OneFieldQuery;
 exports.OneFieldQueryWithTypename = OneFieldQueryWithTypename;

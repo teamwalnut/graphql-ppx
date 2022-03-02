@@ -2,6 +2,12 @@
 'use strict';
 
 
+var assign_typename = ((obj, typename) => { obj.__typename = typename; return obj });
+
+var Graphql_ppx_runtime = {
+  assign_typename: assign_typename
+};
+
 var Raw = {};
 
 var query = (require("gql")`
@@ -136,7 +142,7 @@ function serialize$2(value) {
   var value$1 = value.dogOrHuman;
   var variant = value$1.NAME;
   var dogOrHuman = variant === "FutureAddedValue" ? value$1.VAL : (
-      variant === "Dog" ? serialize(value$1.VAL) : serialize$1(value$1.VAL)
+      variant === "Dog" ? assign_typename(serialize(value$1.VAL), "Dog") : assign_typename(serialize$1(value$1.VAL), "Human")
     );
   return {
           dogOrHuman: dogOrHuman
@@ -165,6 +171,7 @@ var MyQuery = {
   makeDefaultVariables: makeDefaultVariables
 };
 
+exports.Graphql_ppx_runtime = Graphql_ppx_runtime;
 exports.DogFragment = DogFragment;
 exports.HumanFragment = HumanFragment;
 exports.MyQuery = MyQuery;

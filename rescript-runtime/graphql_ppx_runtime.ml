@@ -1,5 +1,5 @@
 let assign_typename : Js.Json.t -> string -> Js.Json.t =
-  [%raw {| (obj, typename) => { __typename: typename, ...obj } |}]
+  [%raw {| (obj, typename) => { obj.__typename = typename; return obj } |}]
 
 [%%private
 let clone =

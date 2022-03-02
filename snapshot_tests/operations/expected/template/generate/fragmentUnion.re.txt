@@ -16,6 +16,12 @@
     cookies: [],
   }
 ];
+
+module Graphql_ppx_runtime = {
+  let assign_typename: (Js.Json.t, string) => Js.Json.t = [%raw
+    {| (obj, typename) => { obj.__typename = typename; return obj } |}
+  ];
+};
 module DogFragment: {
   [@ocaml.warning "-32-30"];
   module Raw: {
@@ -224,10 +230,20 @@ function back to the original JSON compatible data */
           let value = (value: t).dogOrHuman;
           switch (value) {
           | `Dog(value) => (
-              Obj.magic(DogFragment.serialize(value)): Raw.t_dogOrHuman
+              Obj.magic(
+                Graphql_ppx_runtime.assign_typename(
+                  Obj.magic(DogFragment.serialize(value)): Js.Json.t,
+                  "Dog",
+                ),
+              ): Raw.t_dogOrHuman
             )
           | `Human(value) => (
-              Obj.magic(HumanFragment.serialize(value)): Raw.t_dogOrHuman
+              Obj.magic(
+                Graphql_ppx_runtime.assign_typename(
+                  Obj.magic(HumanFragment.serialize(value)): Js.Json.t,
+                  "Human",
+                ),
+              ): Raw.t_dogOrHuman
             )
           | `FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
           };

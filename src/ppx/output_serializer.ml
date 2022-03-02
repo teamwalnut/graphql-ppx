@@ -590,16 +590,36 @@ and generate_poly_variant_union_encoder config _loc _name fragments _exhaustive
            (Ast_helper.Pat.variant type_name
               (Some (Ast_helper.Pat.var { txt = "value"; loc = Location.none })))
            (match Ppx_config.native () with
-           | true ->
-             generate_serializer config (type_name :: path) definition
-               (Some type_name) inner
-           | false ->
-             [%expr
-               (Obj.magic
-                  [%e
-                    generate_serializer config (type_name :: path) definition
-                      (Some type_name) inner]
-                 : [%t base_type_name ("Raw." ^ generate_type_name path)])]))
+           | true -> (
+             let expr =
+               generate_serializer config (type_name :: path) definition
+                 (Some type_name) inner
+             in
+             match inner with
+             | Res_solo_fragment_spread _ ->
+               [%expr
+                 Graphql_ppx_runtime.assign_typename [%e expr]
+                   [%e const_str_expr type_name]]
+             | _ -> expr)
+           | false -> (
+             let raw_type_name =
+               base_type_name ("Raw." ^ generate_type_name path)
+             in
+             let expr =
+               [%expr
+                 [%e
+                   generate_serializer config (type_name :: path) definition
+                     (Some type_name) inner]]
+             in
+             match inner with
+             | Res_solo_fragment_spread _ ->
+               [%expr
+                 (Obj.magic
+                    (Graphql_ppx_runtime.assign_typename
+                       (Obj.magic [%e expr] : Js.Json.t)
+                       [%e const_str_expr type_name])
+                   : [%t raw_type_name])]
+             | _ -> [%expr (Obj.magic [%e expr] : [%t raw_type_name])])))
   in
   let fallback_case =
     Ast_helper.Exp.case
@@ -699,8 +719,8 @@ and generate_error loc message =
     let _value = value in
     [%e To_ppxlib.copy_expression extension]]
 
-and generate_serializer config (path : string list) definition typename =
-  function
+and generate_serializer (config : Generator_utils.output_config)
+  (path : string list) (definition : Graphql_ast.definition) typename = function
   | Res_nullable { loc; inner } ->
     generate_nullable_encoder config (conv_loc loc) inner path definition
   | Res_array { loc; inner } ->
@@ -736,9 +756,7 @@ and generate_serializer config (path : string list) definition typename =
   | Res_custom_decoder { loc; ident; inner } ->
     generate_custom_encoder config (conv_loc loc) ident inner path definition
   | Res_record
-      { loc; name; fields; type_name = existing_record; interface_fragments } ->
-    generate_object_encoder config (conv_loc loc) name fields path definition
-      existing_record typename interface_fragments
+      { loc; name; fields; type_name = existing_record; interface_fragments }
   | Res_object
       { loc; name; fields; type_name = existing_record; interface_fragments } ->
     generate_object_encoder config (conv_loc loc) name fields path definition

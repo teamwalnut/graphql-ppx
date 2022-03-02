@@ -16,6 +16,10 @@
     cookies: [],
   }
 ];
+module Graphql_ppx_runtime = {
+  let assign_typename = (obj, _) => obj;
+};
+
 type scalars = {
   __typename: string,
   string,
@@ -697,7 +701,11 @@ function back to the original JSON compatible data */
         let dogOrHuman = {
           let value = (value: t).dogOrHuman;
           switch (value) {
-          | `Dog(value) => DogFragment.toJson(DogFragment.serialize(value))
+          | `Dog(value) =>
+            Graphql_ppx_runtime.assign_typename(
+              DogFragment.toJson(DogFragment.serialize(value)),
+              "Dog",
+            )
           | `FutureAddedValue(value) => value
           };
         };

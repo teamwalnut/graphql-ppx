@@ -1,3 +1,10 @@
+module Graphql_ppx_runtime = {
+  // mock
+  let assign_typename = (obj, _) => {
+    obj;
+  };
+};
+
 module MyQuery = [%graphql
   {|
   {

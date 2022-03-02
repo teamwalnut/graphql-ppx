@@ -2,6 +2,14 @@
 'use strict';
 
 
+function assign_typename(obj, param) {
+  return obj;
+}
+
+var Graphql_ppx_runtime = {
+  assign_typename: assign_typename
+};
+
 var Raw = {};
 
 var query = (require("gql")`
@@ -404,6 +412,7 @@ var NamedSpread = {
   DogOrHuman: DogOrHuman
 };
 
+exports.Graphql_ppx_runtime = Graphql_ppx_runtime;
 exports.MyQuery = MyQuery;
 exports.MyQueryNoError = MyQueryNoError;
 exports.NamedQuery = NamedQuery;

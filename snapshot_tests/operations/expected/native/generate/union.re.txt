@@ -16,6 +16,9 @@
     cookies: [],
   }
 ];
+module Graphql_ppx_runtime = {
+  let assign_typename = (obj, _) => obj;
+};
 module MyQuery: {
   [@ocaml.warning "-32-30"];
   module Raw: {
@@ -541,7 +544,11 @@ function back to the original JSON compatible data */
         let dogOrHuman = {
           let value = (value: t).dogOrHuman;
           switch (value) {
-          | `Dog(value) => DogFields.toJson(DogFields.serialize(value))
+          | `Dog(value) =>
+            Graphql_ppx_runtime.assign_typename(
+              DogFields.toJson(DogFields.serialize(value)),
+              "Dog",
+            )
           | `FutureAddedValue(value) => value
           };
         };
