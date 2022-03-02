@@ -2,7 +2,7 @@ open Graphql_compiler
 open Result_structure
 open Generator_utils
 open Extract_type_definitions
-open Output_bucklescript_utils
+open Output_utils
 open Ppxlib
 
 exception Cant_find_fragment_type_with_loc of Source_pos.ast_location * string
@@ -486,28 +486,28 @@ let generate_operation_signature config variable_defs res_structure =
     match config.native with
     | true -> [ [%sigi: type t] ]
     | false ->
-      Output_bucklescript_types.generate_type_signature_items config
+      Output_types.generate_type_signature_items config
         res_structure true None None
   in
   let types =
-    Output_bucklescript_types.generate_type_signature_items config res_structure
+    Output_types.generate_type_signature_items config res_structure
       false None None
   in
   let raw_arg_types =
-    Output_bucklescript_types.generate_arg_type_signature_items true config
+    Output_types.generate_arg_type_signature_items true config
       variable_defs
   in
   let arg_types =
-    Output_bucklescript_types.generate_arg_type_signature_items false config
+    Output_types.generate_arg_type_signature_items false config
       variable_defs
   in
   let extracted_args = extract_args config variable_defs in
   let serialize_variable_signatures =
-    Output_bucklescript_serializer.generate_serialize_variable_signatures
+    Output_serializer.generate_serialize_variable_signatures
       extracted_args
   in
   let variable_constructor_signatures =
-    Output_bucklescript_serializer.generate_variable_constructor_signatures
+    Output_serializer.generate_variable_constructor_signatures
       extracted_args
   in
   let has_required_variables = has_required_variables extracted_args in
@@ -615,38 +615,38 @@ let graphql_external (config : output_config) document =
 let generate_operation_implementation config variable_defs _has_error operation
   res_structure =
   let parse_fn =
-    Output_bucklescript_parser.generate_parser config []
+    Output_parser.generate_parser config []
       (Graphql_ast.Operation operation) res_structure
   in
   let serialize_fn =
-    Output_bucklescript_serializer.generate_serializer config []
+    Output_serializer.generate_serializer config []
       (Graphql_ast.Operation operation) None res_structure
   in
   let types =
-    Output_bucklescript_types.generate_type_structure_items config res_structure
+    Output_types.generate_type_structure_items config res_structure
       false None None
   in
   let raw_types =
     match config.native with
     | true -> [ [%stri type t = Graphql_ppx_runtime.Json.t] ]
     | false ->
-      Output_bucklescript_types.generate_type_structure_items config
+      Output_types.generate_type_structure_items config
         res_structure true None None
   in
   let arg_types =
-    Output_bucklescript_types.generate_arg_type_structure_items false config
+    Output_types.generate_arg_type_structure_items false config
       variable_defs
   in
   let raw_arg_types =
-    Output_bucklescript_types.generate_arg_type_structure_items true config
+    Output_types.generate_arg_type_structure_items true config
       variable_defs
   in
   let extracted_args = extract_args config variable_defs in
   let serialize_variable_functions =
-    Output_bucklescript_serializer.generate_serialize_variables extracted_args
+    Output_serializer.generate_serialize_variables extracted_args
   in
   let variable_constructors =
-    Output_bucklescript_serializer.generate_variable_constructors extracted_args
+    Output_serializer.generate_variable_constructors extracted_args
   in
   let has_required_variables = has_required_variables extracted_args in
   let document = [ Graphql_ast.Operation operation ] in
@@ -711,7 +711,7 @@ let generate_fragment_signature config name variable_definitions _has_error
   (fragment : Graphql_ast.fragment Source_pos.spanning) type_name res_structure
     =
   let types =
-    Output_bucklescript_types.generate_type_signature_items config res_structure
+    Output_types.generate_type_signature_items config res_structure
       false type_name
       (Some (fragment.item.fg_type_condition.item, fragment.item.fg_name.span))
   in
@@ -719,7 +719,7 @@ let generate_fragment_signature config name variable_definitions _has_error
     match config.native with
     | true -> [ [%sigi: type t] ]
     | false ->
-      Output_bucklescript_types.generate_type_signature_items config
+      Output_types.generate_type_signature_items config
         res_structure true None
         (Some (fragment.item.fg_type_condition.item, fragment.item.fg_name.span))
   in
@@ -735,7 +735,7 @@ let generate_fragment_signature config name variable_definitions _has_error
                  Rtag
                    ( {
                        txt =
-                         Output_bucklescript_parser.generate_poly_type_ref_name
+                         Output_parser.generate_poly_type_ref_name
                            type_ref;
                        loc = Location.none;
                      },
@@ -833,15 +833,15 @@ let generate_fragment_implementation config name
     Graphql_ast.variable_definitions Source_pos.spanning option) _has_error
   fragment type_name res_structure =
   let parse_fn =
-    Output_bucklescript_parser.generate_parser config []
+    Output_parser.generate_parser config []
       (Graphql_ast.Fragment fragment) res_structure
   in
   let serialize_fn =
-    Output_bucklescript_serializer.generate_serializer config []
+    Output_serializer.generate_serializer config []
       (Graphql_ast.Fragment fragment) None res_structure
   in
   let types =
-    Output_bucklescript_types.generate_type_structure_items config res_structure
+    Output_types.generate_type_structure_items config res_structure
       false type_name
       (Some (fragment.item.fg_type_condition.item, fragment.item.fg_name.span))
   in
@@ -849,7 +849,7 @@ let generate_fragment_implementation config name
     match config.native with
     | true -> [ [%stri type t = Graphql_ppx_runtime.Json.t] ]
     | false ->
-      Output_bucklescript_types.generate_type_structure_items config
+      Output_types.generate_type_structure_items config
         res_structure true None
         (Some (fragment.item.fg_type_condition.item, fragment.item.fg_name.span))
   in
@@ -867,7 +867,7 @@ let generate_fragment_implementation config name
                     Rtag
                       ( {
                           txt =
-                            Output_bucklescript_parser
+                            Output_parser
                             .generate_poly_type_ref_name type_ref;
                           loc = Location.none;
                         },

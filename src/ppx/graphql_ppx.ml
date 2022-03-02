@@ -1,6 +1,6 @@
 open Graphql_compiler
 open Source_pos
-open Output_bucklescript_utils
+open Output_utils
 open Ppxlib
 
 let filter_map f =
@@ -287,7 +287,7 @@ let rewrite_definition_interface ~(query_config : query_config) ~loc ~delim
           ~delimiter:delim ~initial_query_config:query_config document
       in
       document_with_config |> Result_decoder.unify_document_schema
-      |> Output_bucklescript_module.generate_module_interfaces module_name)
+      |> Output_module.generate_module_interfaces module_name)
 
 let rewrite_definition ~(query_config : query_config) ~loc ~delim ~query
   ~module_name ~module_type () =
@@ -328,22 +328,22 @@ let rewrite_definition ~(query_config : query_config) ~loc ~delim ~query
       | [] -> (
         try
           document_with_config |> Result_decoder.unify_document_schema
-          |> Output_bucklescript_module.generate_modules module_name module_type
+          |> Output_module.generate_modules module_name module_type
         with
-        | Output_bucklescript_module.Cant_find_fragment_type_with_loc
+        | Output_module.Cant_find_fragment_type_with_loc
             (location, fragment_type)
         ->
           [
             [%stri
               [%e
                 make_error_expr
-                  (Output_bucklescript_utils.conv_loc location)
+                  (Output_utils.conv_loc location)
                   ("Can't find fragment type: " ^ fragment_type)]];
           ])
       | errors -> errors |> List.concat))
 ;;
 
-Bucklescript_config.read_config ()
+Rescript_config.read_config ()
 
 let get_module_bindings structure =
   structure

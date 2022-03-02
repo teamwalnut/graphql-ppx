@@ -2,7 +2,7 @@ open Graphql_compiler
 open Result_structure
 open Extract_type_definitions
 open Source_pos
-open Output_bucklescript_utils
+open Output_utils
 open Ppxlib
 
 let loc = Location.none

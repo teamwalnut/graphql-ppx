@@ -3,8 +3,8 @@ open Result_structure
 open Schema
 open Ppxlib
 open Generator_utils
-open Output_bucklescript_utils
-open Output_bucklescript_types
+open Output_utils
+open Output_types
 open Extract_type_definitions
 
 let conv_loc _ = Location.none
@@ -101,7 +101,7 @@ let generate_fragment_parse_fun config loc name arguments definition =
   let ident =
     Ast_helper.Exp.ident
       {
-        loc = loc |> Output_bucklescript_utils.conv_loc;
+        loc = loc |> Output_utils.conv_loc;
         txt = Longident.parse (name ^ ".verifyArgsAndParse");
       }
   in
@@ -114,17 +114,17 @@ let generate_fragment_parse_fun config loc name arguments definition =
          ( Labelled arg_name,
            Ast_helper.Exp.variant
              ~loc:
-               (config.map_loc type_span |> Output_bucklescript_utils.conv_loc)
+               (config.map_loc type_span |> Output_utils.conv_loc)
              type_ None ))
   in
   Ast_helper.Exp.apply
-    ~loc:(loc |> Output_bucklescript_utils.conv_loc)
+    ~loc:(loc |> Output_utils.conv_loc)
     ident
     (List.append labeled_args
        [
          ( Labelled "fragmentName",
            Ast_helper.Exp.variant
-             ~loc:(loc |> Output_bucklescript_utils.conv_loc)
+             ~loc:(loc |> Output_utils.conv_loc)
              name None );
          ( Nolabel,
            match config.native with

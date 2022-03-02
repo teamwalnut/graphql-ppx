@@ -2,10 +2,10 @@ open Graphql_compiler
 open Source_pos
 open Schema
 open Ppxlib
-open Output_bucklescript_utils
+open Output_utils
 open Extract_type_definitions
 open Result_structure
-open Output_bucklescript_types
+open Output_types
 
 let conv_loc _ = Location.none
 let raw_value loc = ([%expr value] [@metaloc loc])
@@ -689,7 +689,7 @@ and generate_solo_fragment_spread_encorder _config _loc name _arguments
         [%e ident_from_string "value"]]
 
 and generate_error loc message =
-  let loc = Output_bucklescript_utils.conv_loc loc in
+  let loc = Output_utils.conv_loc loc in
   let ext =
     Ocaml_common.Ast_mapper.extension_of_error
       (Ocaml_common.Location.error ~loc message)

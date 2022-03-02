@@ -50,7 +50,7 @@ let defaultConfig =
     root_directory = Sys.getcwd ();
     raise_error_with_loc =
       (fun loc message ->
-        let loc = Output_bucklescript_utils.conv_loc loc in
+        let loc = Output_utils.conv_loc loc in
         raise (Location.Error (Location.error ~loc message)));
     template_tag = None;
     template_tag_location = None;
