@@ -180,7 +180,7 @@ module MyQuery4 = [%graphql
 
 [%graphql
   {|
-  fragment ListFragment8 on Lists  @ppxConfig(
+  fragment ListFragment8 on Lists @ppxConfig(
     templateTagImport: "gql",
     templateTagLocation: "apollo-client",
     templateTagReturnType: "int",
