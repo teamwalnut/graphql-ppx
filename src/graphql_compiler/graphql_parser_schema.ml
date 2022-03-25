@@ -213,6 +213,17 @@ let parse_implements parser =
     parse_implementations parser []
   | _ -> Ok []
 
+let add_implicit_typename fields =
+  let open Schema in
+  {
+    fm_name = "__typename";
+    fm_description = None;
+    fm_arguments = [];
+    fm_field_type = NonNull (Named "String");
+    fm_deprecation_reason = None;
+  }
+  :: fields
+
 let parse_object ~description parser =
   expect_name parser
   |> Result_ext.flat_map (fun _ -> expect_name parser)
@@ -223,6 +234,7 @@ let parse_object ~description parser =
             |> Result_ext.flat_map (fun _ -> parse_fields parser)
             |> Result_ext.map (fun fields ->
                  let open Schema in
+                 let fields = add_implicit_typename fields in
                  {
                    om_name = name;
                    om_description = description;
@@ -238,6 +250,7 @@ let parse_interface ~description parser =
        |> Result_ext.flat_map (fun _ -> parse_fields parser)
        |> Result_ext.map (fun fields ->
             let open Schema in
+            let fields = add_implicit_typename fields in
             { im_name = name; im_description = description; im_fields = fields }))
 
 let rec add_to_schema parser (callback : string -> Schema.schema_meta) =

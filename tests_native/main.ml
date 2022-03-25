@@ -23,6 +23,7 @@ let suites =
     ("Partial unions", Union_partial.tests);
     ("Variant conversion", Variant.tests);
     ("Fragment union serialization", Fragment_union_serialization.tests);
+    ("Typename", Implicit_typename.tests);
   ]
 ;;
 
