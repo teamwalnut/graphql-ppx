@@ -1,0 +1,131 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_simpleSubscription_Dog = {name: string};
+  type t_simpleSubscription_Human = {name: string};
+  type t_simpleSubscription = [
+    | `FutureAddedValue(Graphql_ppx_runtime.Json.t)
+    | `Dog(t_simpleSubscription_Dog)
+    | `Human(t_simpleSubscription_Human)
+  ];
+  type t = {simpleSubscription: t_simpleSubscription};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
+  };
+  type t_simpleSubscription_Dog = {name: string};
+  type t_simpleSubscription_Human = {name: string};
+  type t_simpleSubscription = [
+    | `FutureAddedValue(Graphql_ppx_runtime.Json.t)
+    | `Dog(t_simpleSubscription_Dog)
+    | `Human(t_simpleSubscription_Human)
+  ];
+  type t = {simpleSubscription: t_simpleSubscription};
+  type t_variables = unit;
+  let query = "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\nname  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        simpleSubscription: {
+          let value =
+            Graphql_ppx_runtime.Json.member("simpleSubscription", value);
+          let typename: string =
+            value
+            |> Graphql_ppx_runtime.Json.member("__typename")
+            |> Graphql_ppx_runtime.Json.to_string;
+          (
+            switch (typename) {
+            | "Dog" =>
+              `Dog(
+                {
+                  name: {
+                    let value =
+                      Graphql_ppx_runtime.Json.member("name", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
+                  },
+                }: t_simpleSubscription_Dog,
+              )
+            | "Human" =>
+              `Human(
+                {
+                  name: {
+                    let value =
+                      Graphql_ppx_runtime.Json.member("name", value);
+                    Graphql_ppx_runtime.Json.to_string(value);
+                  },
+                }: t_simpleSubscription_Human,
+              )
+            | _ => `FutureAddedValue(value)
+            }: t_simpleSubscription
+          );
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let simpleSubscription = {
+        let value = (value: t).simpleSubscription;
+        switch (value) {
+        | `Dog(value) =>
+          let name = {
+            let value = (value: t_simpleSubscription_Dog).name;
+            `String(value);
+          };
+          `Assoc([("__typename", `String("Dog")), ("name", name)]);
+        | `Human(value) =>
+          let name = {
+            let value = (value: t_simpleSubscription_Human).name;
+            `String(value);
+          };
+          `Assoc([("__typename", `String("Human")), ("name", name)]);
+        | `FutureAddedValue(value) => value
+        };
+      };
+      `Assoc([("simpleSubscription", simpleSubscription)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
+};

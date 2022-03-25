@@ -1,0 +1,11 @@
+Error Apollo › invalidArgVariableType3.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36msnapshot_tests/operations/errors/invalidArgVariableType3.re\027[0m:\027[2m9:17-21\027[0m
+
+   7 \027[2m\226\148\134\027[0m   invalidArgValues(
+   8 \027[2m\226\148\134\027[0m       stringRequired: $arg
+   \027[1;31m9\027[0m \027[2m\226\148\134\027[0m       string: \027[1;31m$arg2\027[0m
+  10 \027[2m\226\148\134\027[0m   )
+  11 \027[2m\226\148\134\027[0m }
+
+  Invalid argument. Expected \"String\" but received \"Int\".

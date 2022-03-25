@@ -1,0 +1,11 @@
+Error Records › invalidArgVariableType4.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36msnapshot_tests/operations/errors/invalidArgVariableType4.re\027[0m:\027[2m10:14-18\027[0m
+
+   8 \027[2m\226\148\134\027[0m invalidArgValues(
+   9 \027[2m\226\148\134\027[0m     custom: $arg
+  \027[1;31m10\027[0m \027[2m\226\148\134\027[0m     obj: \027[1;31m$arg2\027[0m
+  11 \027[2m\226\148\134\027[0m     stringRequired: \"\"
+  12 \027[2m\226\148\134\027[0m )
+
+  Invalid argument. Expected \"InputObject\" but received \"Int\".

@@ -1,0 +1,256 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {
+    type t;
+    type t_variables;
+  };
+  type t_mutationForVariant_dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_human = {name: string};
+  type t_mutationForVariant_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_dogOrHuman_Human = {name: string};
+  type t_mutationForVariant_dogOrHuman = [
+    | `FutureAddedValue(Graphql_ppx_runtime.Json.t)
+    | `Dog(t_mutationForVariant_dogOrHuman_Dog)
+    | `Human(t_mutationForVariant_dogOrHuman_Human)
+  ];
+  type t_mutationForVariant = [
+    | `BaseType(string)
+    | `BaseTypeList(array(string))
+    | `Dog(t_mutationForVariant_dog)
+    | `Human(t_mutationForVariant_human)
+    | `DogOrHuman(t_mutationForVariant_dogOrHuman)
+  ];
+  type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = unit;
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: unit => Raw.t_variables;
+  let makeVariables: unit => t_variables;
+  let makeDefaultVariables: unit => t_variables;
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Graphql_ppx_runtime.Json.t;
+    type t_variables = Graphql_ppx_runtime.Json.t;
+  };
+  type t_mutationForVariant_dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_human = {name: string};
+  type t_mutationForVariant_dogOrHuman_Dog = {
+    name: string,
+    barkVolume: float,
+  };
+  type t_mutationForVariant_dogOrHuman_Human = {name: string};
+  type t_mutationForVariant_dogOrHuman = [
+    | `FutureAddedValue(Graphql_ppx_runtime.Json.t)
+    | `Dog(t_mutationForVariant_dogOrHuman_Dog)
+    | `Human(t_mutationForVariant_dogOrHuman_Human)
+  ];
+  type t_mutationForVariant = [
+    | `BaseType(string)
+    | `BaseTypeList(array(string))
+    | `Dog(t_mutationForVariant_dog)
+    | `Human(t_mutationForVariant_human)
+    | `DogOrHuman(t_mutationForVariant_dogOrHuman)
+  ];
+  type t = {mutationForVariant: t_mutationForVariant};
+  type t_variables = unit;
+  let query = "mutation   {\nmutationForVariant  {\nbaseType  \nbaseTypeList  \ndog  {\nname  \nbarkVolume  \n}\n\nhuman  {\nname  \n}\n\ndogOrHuman  {\n__typename\n...on Dog   {\nname  \nbarkVolume  \n}\n\n...on Human   {\nname  \n}\n\n}\n\n}\n\n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        mutationForVariant: {
+          let value =
+            Graphql_ppx_runtime.Json.member("mutationForVariant", value);
+          switch (value) {
+          | `Null =>
+            raise(
+              Failure(
+                "graphql-ppx: "
+                ++ "Expected type "
+                ++ "VariantTestResult"
+                ++ " to be an object",
+              ),
+            )
+          | value =>
+            let temp = Graphql_ppx_runtime.Json.member("baseType", value);
+            switch (temp) {
+            | `Null =>
+              let temp =
+                Graphql_ppx_runtime.Json.member("baseTypeList", value);
+              switch (temp) {
+              | `Null =>
+                let temp = Graphql_ppx_runtime.Json.member("dog", value);
+                switch (temp) {
+                | `Null =>
+                  let temp = Graphql_ppx_runtime.Json.member("human", value);
+                  switch (temp) {
+                  | `Null =>
+                    let temp =
+                      Graphql_ppx_runtime.Json.member("dogOrHuman", value);
+                    switch (temp) {
+                    | `Null =>
+                      raise(
+                        Failure(
+                          "graphql-ppx: "
+                          ++ "All fields on variant selection set on type "
+                          ++ "VariantTestResult"
+                          ++ " were null",
+                        ),
+                      )
+                    | _ =>
+                      let value = temp;
+                      `DogOrHuman(
+                        {
+                          let typename: string =
+                            value
+                            |> Graphql_ppx_runtime.Json.member("__typename")
+                            |> Graphql_ppx_runtime.Json.to_string;
+                          (
+                            switch (typename) {
+                            | "Dog" =>
+                              `Dog(
+                                {
+                                  name: {
+                                    let value =
+                                      Graphql_ppx_runtime.Json.member(
+                                        "name",
+                                        value,
+                                      );
+                                    Graphql_ppx_runtime.Json.to_string(value);
+                                  },
+                                  barkVolume: {
+                                    let value =
+                                      Graphql_ppx_runtime.Json.member(
+                                        "barkVolume",
+                                        value,
+                                      );
+                                    Graphql_ppx_runtime.Json.to_float(value);
+                                  },
+                                }: t_mutationForVariant_dogOrHuman_Dog,
+                              )
+                            | "Human" =>
+                              `Human(
+                                {
+                                  name: {
+                                    let value =
+                                      Graphql_ppx_runtime.Json.member(
+                                        "name",
+                                        value,
+                                      );
+                                    Graphql_ppx_runtime.Json.to_string(value);
+                                  },
+                                }: t_mutationForVariant_dogOrHuman_Human,
+                              )
+                            | _ => `FutureAddedValue(value)
+                            }: t_mutationForVariant_dogOrHuman
+                          );
+                        },
+                      );
+                    };
+                  | _ =>
+                    let value = temp;
+                    `Human(
+                      {
+                        name: {
+                          let value =
+                            Graphql_ppx_runtime.Json.member("name", value);
+                          Graphql_ppx_runtime.Json.to_string(value);
+                        },
+                      }: t_mutationForVariant_human,
+                    );
+                  };
+                | _ =>
+                  let value = temp;
+                  `Dog(
+                    {
+                      name: {
+                        let value =
+                          Graphql_ppx_runtime.Json.member("name", value);
+                        Graphql_ppx_runtime.Json.to_string(value);
+                      },
+                      barkVolume: {
+                        let value =
+                          Graphql_ppx_runtime.Json.member(
+                            "barkVolume",
+                            value,
+                          );
+                        Graphql_ppx_runtime.Json.to_float(value);
+                      },
+                    }: t_mutationForVariant_dog,
+                  );
+                };
+              | _ =>
+                let value = temp;
+                `BaseTypeList(
+                  switch (value) {
+                  | `List(json_list) =>
+                    List.map(
+                      value => Graphql_ppx_runtime.Json.to_string(value),
+                      json_list,
+                    )
+                    |> Array.of_list
+                  | _ => [||]
+                  },
+                );
+              };
+            | _ =>
+              let value = temp;
+              `BaseType(Graphql_ppx_runtime.Json.to_string(value));
+            };
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let mutationForVariant = {
+        let value = (value: t).mutationForVariant;
+        let _temp = value;
+        `Null;
+      };
+      `Assoc([("mutationForVariant", mutationForVariant)]);
+    };
+  let serializeVariables = () => `Null;
+  let makeVariables = () => ();
+  let makeDefaultVariables = () => makeVariables();
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+  external variablesToJson: Raw.t_variables => Graphql_ppx_runtime.Json.t =
+    "%identity";
+};

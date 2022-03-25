@@ -1,0 +1,12 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/invalidDefaultValue1.re[0m:[2m21:14-26[0m
+
+  19 [2m┆[0m query invalidDefaultValues {
+  20 [2m┆[0m   invalidDefaultValues(
+  [1;31m21[0m [2m┆[0m       int: [1;31m"Some string"[0m
+  22 [2m┆[0m   )
+  23 [2m┆[0m }
+
+  Invalid argument. Expected "Int" but received "String!".
+

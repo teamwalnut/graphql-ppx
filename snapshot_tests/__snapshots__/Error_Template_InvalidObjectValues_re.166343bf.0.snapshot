@@ -1,0 +1,11 @@
+Error Template › InvalidObjectValues2.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36msnapshot_tests/operations/errors/InvalidObjectValues2.re\027[0m:\027[2m8:13-18\027[0m
+
+   6 \027[2m\226\148\134\027[0m query {
+   7 \027[2m\226\148\134\027[0m     invalidObjectValues(
+   \027[1;31m8\027[0m \027[2m\226\148\134\027[0m         \027[1;31mnonRec\027[0m: {
+   9 \027[2m\226\148\134\027[0m             nullableArray: [\"\"]
+  10 \027[2m\226\148\134\027[0m             field: \"\"
+
+  Invalid argument. The field \"nonNullableField\" on argument \"nonRec\" is missing.

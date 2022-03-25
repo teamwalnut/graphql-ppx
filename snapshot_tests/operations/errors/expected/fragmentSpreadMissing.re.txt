@@ -1,0 +1,19 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/fragmentSpreadMissing.re[0m:[2m4:5-6:5[0m
+
+  2 [2m┆[0m {|
+  3 [2m┆[0m query MyQuery {
+  [1;31m4[0m [2m┆[0m   [1;31mlists {[0m
+  [1;31m5[0m [2m┆[0m [1;31m    ...MissingFragment[0m
+  [1;31m6[0m [2m┆[0m [1;31m  }[0m
+  7 [2m┆[0m }
+  8 [2m┆[0m |}
+
+  [1;33mThe module or file MissingFragment can't be found.[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run `bsb` instead of `bsb -make-world`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?
+

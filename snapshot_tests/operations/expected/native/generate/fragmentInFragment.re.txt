@@ -1,0 +1,209 @@
+[@ocaml.ppx.context
+  {
+    tool_name: "ppx_driver",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module Graphql_ppx_runtime = {
+  let deepMerge = (json1, _) => json1;
+};
+module ListFragment: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {type t;};
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `ListFragment], Raw.t) => t;
+  let verifyName: [ | `ListFragment] => unit;
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Graphql_ppx_runtime.Json.t;
+  };
+  type t = {nullableOfNullable: option(array(option(string)))};
+  type nonrec t_Lists = t;
+  let query = "fragment ListFragment on Lists   {\nnullableOfNullable  \n}\n";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value =
+            Graphql_ppx_runtime.Json.member("nullableOfNullable", value);
+          switch (value) {
+          | `Null => None
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value =>
+                      Some(Graphql_ppx_runtime.Json.to_string(value))
+                    },
+                  json_list,
+                )
+                |> Array.of_list
+              | _ => [||]
+              },
+            )
+          };
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let nullableOfNullable = {
+        let value = (value: t).nullableOfNullable;
+        switch (value) {
+        | Some(value) =>
+          `List(
+            value
+            |> Array.map(value =>
+                 switch (value) {
+                 | Some(value) => `String(value)
+                 | None => `Null
+                 }
+               )
+            |> Array.to_list,
+          )
+        | None => `Null
+        };
+      };
+      `Assoc([("nullableOfNullable", nullableOfNullable)]);
+    };
+  let verifyArgsAndParse =
+      (~fragmentName as _ListFragment: [ | `ListFragment], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `ListFragment => ();
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+};
+module Another: {
+  [@ocaml.warning "-32-30"];
+  module Raw: {type t;};
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  /** the GraphQL fragment */
+  let query: string;
+  /** Parse the raw JSON-compatible GraphQL data into ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data */
+  let serialize: t => Raw.t;
+  let verifyArgsAndParse: (~fragmentName: [ | `Another], Raw.t) => t;
+  let verifyName: [ | `Another] => unit;
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+} = {
+  [@ocaml.warning "-32-30"];
+  module Raw = {
+    type t = Graphql_ppx_runtime.Json.t;
+  };
+  type t = {
+    nullableOfNullable: option(array(option(string))),
+    listFragment: ListFragment.t_Lists,
+  };
+  type nonrec t_Lists = t;
+  let query =
+    "fragment Another on Lists   {\nnullableOfNullable  \n...ListFragment   \n}\n"
+    ++ ListFragment.query;
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        nullableOfNullable: {
+          let value =
+            Graphql_ppx_runtime.Json.member("nullableOfNullable", value);
+          switch (value) {
+          | `Null => None
+          | value =>
+            Some(
+              switch (value) {
+              | `List(json_list) =>
+                List.map(
+                  value =>
+                    switch (value) {
+                    | `Null => None
+                    | value =>
+                      Some(Graphql_ppx_runtime.Json.to_string(value))
+                    },
+                  json_list,
+                )
+                |> Array.of_list
+              | _ => [||]
+              },
+            )
+          };
+        },
+        listFragment:
+          ListFragment.verifyArgsAndParse(
+            ~fragmentName=`ListFragment,
+            ListFragment.unsafe_fromJson(value),
+          ),
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value =>
+      Array.fold_left(
+        Graphql_ppx_runtime.deepMerge,
+        {
+          let nullableOfNullable = {
+            let value = (value: t).nullableOfNullable;
+            switch (value) {
+            | Some(value) =>
+              `List(
+                value
+                |> Array.map(value =>
+                     switch (value) {
+                     | Some(value) => `String(value)
+                     | None => `Null
+                     }
+                   )
+                |> Array.to_list,
+              )
+            | None => `Null
+            };
+          };
+          {"nullableOfNullable": nullableOfNullable};
+        },
+        [|
+          ListFragment.toJson(
+            ListFragment.serialize((value: t).listFragment),
+          ),
+        |],
+      );
+  let verifyArgsAndParse =
+      (~fragmentName as _Another: [ | `Another], value: Raw.t) =>
+    parse(value);
+  let verifyName =
+    fun
+    | `Another => ();
+  external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
+  external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
+};

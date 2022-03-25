@@ -1,0 +1,7 @@
+(ocamllex json_read)
+
+(library
+ (name json)
+ (public_name graphql_ppx.json)
+ (flags
+  (:standard -w -9)))

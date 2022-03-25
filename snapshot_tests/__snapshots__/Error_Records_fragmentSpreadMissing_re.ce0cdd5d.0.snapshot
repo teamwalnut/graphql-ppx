@@ -1,0 +1,18 @@
+Error Records › fragmentSpreadMissing.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36msnapshot_tests/operations/errors/fragmentSpreadMissing.re\027[0m:\027[2m4:5-6:5\027[0m
+
+  2 \027[2m\226\148\134\027[0m {|
+  3 \027[2m\226\148\134\027[0m query MyQuery {
+  \027[1;31m4\027[0m \027[2m\226\148\134\027[0m   \027[1;31mlists {\027[0m
+  \027[1;31m5\027[0m \027[2m\226\148\134\027[0m \027[1;31m    ...MissingFragment\027[0m
+  \027[1;31m6\027[0m \027[2m\226\148\134\027[0m \027[1;31m  }\027[0m
+  7 \027[2m\226\148\134\027[0m }
+  8 \027[2m\226\148\134\027[0m |}
+
+  \027[1;33mThe module or file MissingFragment can't be found.\027[0m
+  - If it's a third-party dependency:
+    - Did you list it in bsconfig.json?
+    - Did you run `bsb` instead of `bsb -make-world`
+      (latter builds third-parties)?
+  - Did you include the file's directory in bsconfig.json?

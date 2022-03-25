@@ -1,0 +1,212 @@
+Generate Native › listsInput.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"ppx_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
+  module Raw: {
+    type t;
+    type t_variables
+    and t_variables_ListsInput;
+  };
+  type t = {listsInput: string};
+  type t_variables = {arg: t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeInputObjectListsInput:
+    t_variables_ListsInput => Raw.t_variables_ListsInput;
+  let makeVariables: (~arg: t_variables_ListsInput, unit) => t_variables;
+  let makeInputObjectListsInput:
+    (
+      ~nullableOfNullable: array(option(string))=?,
+      ~nullableOfNonNullable: array(string)=?,
+      ~nonNullableOfNullable: array(option(string)),
+      ~nonNullableOfNonNullable: array(string),
+      unit
+    ) =>
+    t_variables_ListsInput;
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32-30\"];
+  module Raw = {
+    type t = Yojson.Basic.t;
+    type t_variables = Yojson.Basic.t
+    and t_variables_ListsInput = Yojson.Basic.t;
+  };
+  type t = {listsInput: string};
+  type t_variables = {arg: t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let query = \"query ($arg: ListsInput!)  {\\nlistsInput(arg: $arg)  \\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        listsInput: {
+          let value = Yojson.Basic.Util.member(\"listsInput\", value);
+          Yojson.Basic.Util.to_string(value);
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    value => {
+      let listsInput = {
+        let value = (value: t).listsInput;
+        `String(value);
+      };
+      `Assoc([(\"listsInput\", listsInput)]);
+    };
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp =>
+      `Assoc([
+        (
+          \"arg\",
+          (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
+        ),
+      ])
+  and serializeInputObjectListsInput:
+    t_variables_ListsInput => Raw.t_variables_ListsInput =
+    inp =>
+      `Assoc([
+        (
+          \"nullableOfNullable\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(
+                        b =>
+                          (
+                            a =>
+                              switch (a) {
+                              | None => `Null
+                              | Some(b) => (a => `String(a))(b)
+                              }
+                          )(
+                            b,
+                          ),
+                        a,
+                      )
+                      |> Array.to_list,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_ListsInput).nullableOfNullable,
+          ),
+        ),
+        (
+          \"nullableOfNonNullable\",
+          (
+            a =>
+              switch (a) {
+              | None => `Null
+              | Some(b) =>
+                (
+                  a =>
+                    `List(
+                      Array.map(b => (a => `String(a))(b), a)
+                      |> Array.to_list,
+                    )
+                )(
+                  b,
+                )
+              }
+          )(
+            (inp: t_variables_ListsInput).nullableOfNonNullable,
+          ),
+        ),
+        (
+          \"nonNullableOfNullable\",
+          (
+            a =>
+              `List(
+                Array.map(
+                  b =>
+                    (
+                      a =>
+                        switch (a) {
+                        | None => `Null
+                        | Some(b) => (a => `String(a))(b)
+                        }
+                    )(
+                      b,
+                    ),
+                  a,
+                )
+                |> Array.to_list,
+              )
+          )(
+            (inp: t_variables_ListsInput).nonNullableOfNullable,
+          ),
+        ),
+        (
+          \"nonNullableOfNonNullable\",
+          (
+            a =>
+              `List(
+                Array.map(b => (a => `String(a))(b), a) |> Array.to_list,
+              )
+          )(
+            (inp: t_variables_ListsInput).nonNullableOfNonNullable,
+          ),
+        ),
+      ]);
+  let makeVariables = (~arg, ()): t_variables => {arg: arg}
+  and makeInputObjectListsInput =
+      (
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      )
+      : t_variables_ListsInput => {
+    nullableOfNullable,
+    nullableOfNonNullable,
+    nonNullableOfNullable,
+    nonNullableOfNonNullable,
+  };
+  external unsafe_fromJson: Yojson.Basic.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Yojson.Basic.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Yojson.Basic.t = \"%identity\";
+};
+

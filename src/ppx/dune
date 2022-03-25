@@ -1,0 +1,10 @@
+(library
+ (name graphql_ppx)
+ (public_name graphql_ppx)
+ (kind ppx_rewriter)
+ (ppx_runtime_libraries graphql_ppx.graphql_ppx_runtime)
+ (libraries graphql_ppx.graphql_compiler ppxlib json)
+ (flags
+  (:standard -w -9))
+ (preprocess
+  (pps ppxlib.metaquot)))

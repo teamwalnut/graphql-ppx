@@ -1,1 +1,1 @@
-(dirs src tests_native tests_bucklescript)
+(dirs src tests_native snapshot_tests)

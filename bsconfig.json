@@ -8,7 +8,7 @@
   "suffix": ".bs.js",
   "sources": [
     {
-      "dir": "bucklescript",
+      "dir": "rescript-runtime",
       "subdirs": true
     }
   ],

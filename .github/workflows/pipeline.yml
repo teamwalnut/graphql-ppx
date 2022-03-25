@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
         os: [ubuntu-latest]
 
     container:
@@ -35,20 +35,20 @@ jobs:
         id: deps-cache
         with:
           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}---${{ hashFiles('**/index.json') }}
+          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
           restore-keys: |
-            ${{ matrix.os }}---
+            ${{ matrix.os }}-
 
       - name: build
         run: esy b
 
-      - name: test-native
+      - name: native tests
         run: |
           esy b dune runtest -f
         env:
           CI: true
 
-      - name: test-bucklescript
+      - name: snapshot tests
         env:
           GRAPHQL_CI: true
         run: |
@@ -60,14 +60,14 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
-          path: _build/default/src/bucklescript_bin/bin.exe
+          path: _build/default/src/bin/bin.exe
 
   test_and_build:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
         os: [windows-latest, macOS-latest]
 
     steps:
@@ -80,7 +80,7 @@ jobs:
 
       - name: Install esy
         run: |
-          npm install -g esy@0.6.0
+          npm install -g esy@0.6.12
 
       - name: Install
         run: esy install
@@ -105,19 +105,23 @@ jobs:
         env:
           CI: true
 
-      - name: test-bucklescript
+      - name: npm ci
         if: runner.os != 'Windows'
         run: |
           npm ci --no-optional
-          esy test
         env:
           GRAPHQL_CI: true
+
+      - name: snaphot tests
+        if: runner.os != 'Windows'
+        run: |
+          esy test
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
-          path: _build/default/src/bucklescript_bin/bin.exe
+          path: _build/default/src/bin/bin.exe
 
   publish:
     needs: [test_and_build, test_and_build_linux]
@@ -156,6 +160,8 @@ jobs:
         run: |
           mkdir -p bin
           mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
+          # this one is checked in the repo, because we don't have CI runners for it
+          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
           mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 

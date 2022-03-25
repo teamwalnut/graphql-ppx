@@ -1,0 +1,196 @@
+Generate Apollo › listsInput.re › output
+[@ocaml.ppx.context
+  {
+    tool_name: \"ppx_driver\",
+    include_dirs: [],
+    load_path: [],
+    open_modules: [],
+    for_package: None,
+    debug: false,
+    use_threads: false,
+    use_vmthreads: false,
+    recursive_types: false,
+    principal: false,
+    transparent_modules: false,
+    unboxed_types: false,
+    unsafe_string: false,
+    cookies: [],
+  }
+];
+module MyQuery: {
+  [@ocaml.warning \"-32-30\"];
+  module Raw: {
+    type t = {listsInput: string};
+    type t_variables = {arg: t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+  };
+  type t = {listsInput: string};
+  type t_variables = {arg: t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  /** The GraphQL query */
+  let query: string;
+  /** Parse the JSON-compatible GraphQL data to ReasonML data types */
+  let parse: Raw.t => t;
+  /** Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data */
+  let serialize: t => Raw.t;
+  let serializeVariables: t_variables => Raw.t_variables;
+  let serializeInputObjectListsInput:
+    t_variables_ListsInput => Raw.t_variables_ListsInput;
+  let makeVariables: (~arg: t_variables_ListsInput, unit) => t_variables;
+  let makeInputObjectListsInput:
+    (
+      ~nullableOfNullable: array(option(string))=?,
+      ~nullableOfNonNullable: array(string)=?,
+      ~nonNullableOfNullable: array(option(string)),
+      ~nonNullableOfNonNullable: array(string),
+      unit
+    ) =>
+    t_variables_ListsInput;
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+} = {
+  [@ocaml.warning \"-32-30\"];
+  module Raw = {
+    type t = {listsInput: string};
+    type t_variables = {arg: t_variables_ListsInput}
+    and t_variables_ListsInput = {
+      nullableOfNullable: Js.Nullable.t(array(Js.Nullable.t(string))),
+      nullableOfNonNullable: Js.Nullable.t(array(string)),
+      nonNullableOfNullable: array(Js.Nullable.t(string)),
+      nonNullableOfNonNullable: array(string),
+    };
+  };
+  type t = {listsInput: string};
+  type t_variables = {arg: t_variables_ListsInput}
+  and t_variables_ListsInput = {
+    nullableOfNullable: option(array(option(string))),
+    nullableOfNonNullable: option(array(string)),
+    nonNullableOfNullable: array(option(string)),
+    nonNullableOfNonNullable: array(string),
+  };
+  let query = \"query ($arg: ListsInput!)  {\\nlistsInput(arg: $arg)  \\n}\\n\";
+  let parse: Raw.t => t =
+    (value) => (
+      {
+        listsInput: {
+          let value = (value: Raw.t).listsInput;
+          value;
+        },
+      }: t
+    );
+  let serialize: t => Raw.t =
+    (value) => (
+      {
+        let listsInput = {
+          let value = (value: t).listsInput;
+          value;
+        };
+        {listsInput: listsInput};
+      }: Raw.t
+    );
+  let rec serializeVariables: t_variables => Raw.t_variables =
+    inp => {
+      arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
+    }
+  and serializeInputObjectListsInput:
+    t_variables_ListsInput => Raw.t_variables_ListsInput =
+    inp => {
+      nullableOfNullable:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (
+                  a =>
+                    Js.Array.map(
+                      b =>
+                        (
+                          a =>
+                            switch (a) {
+                            | None => Js.Nullable.undefined
+                            | Some(b) => Js.Nullable.return((a => a)(b))
+                            }
+                        )(
+                          b,
+                        ),
+                      a,
+                    )
+                )(
+                  b,
+                ),
+              )
+            }
+        )(
+          (inp: t_variables_ListsInput).nullableOfNullable,
+        ),
+      nullableOfNonNullable:
+        (
+          a =>
+            switch (a) {
+            | None => Js.Nullable.undefined
+            | Some(b) =>
+              Js.Nullable.return(
+                (a => Js.Array.map(b => (a => a)(b), a))(b),
+              )
+            }
+        )(
+          (inp: t_variables_ListsInput).nullableOfNonNullable,
+        ),
+      nonNullableOfNullable:
+        (
+          a =>
+            Js.Array.map(
+              b =>
+                (
+                  a =>
+                    switch (a) {
+                    | None => Js.Nullable.undefined
+                    | Some(b) => Js.Nullable.return((a => a)(b))
+                    }
+                )(
+                  b,
+                ),
+              a,
+            )
+        )(
+          (inp: t_variables_ListsInput).nonNullableOfNullable,
+        ),
+      nonNullableOfNonNullable:
+        (a => Js.Array.map(b => (a => a)(b), a))(
+          (inp: t_variables_ListsInput).nonNullableOfNonNullable,
+        ),
+    };
+  let makeVariables = (~arg, ()): t_variables => {arg: arg}
+  and makeInputObjectListsInput =
+      (
+        ~nullableOfNullable=?,
+        ~nullableOfNonNullable=?,
+        ~nonNullableOfNullable,
+        ~nonNullableOfNonNullable,
+        (),
+      )
+      : t_variables_ListsInput => {
+    nullableOfNullable,
+    nullableOfNonNullable,
+    nonNullableOfNullable,
+    nonNullableOfNonNullable,
+  };
+  external unsafe_fromJson: Js.Json.t => Raw.t = \"%identity\";
+  external toJson: Raw.t => Js.Json.t = \"%identity\";
+  external variablesToJson: Raw.t_variables => Js.Json.t = \"%identity\";
+};
+

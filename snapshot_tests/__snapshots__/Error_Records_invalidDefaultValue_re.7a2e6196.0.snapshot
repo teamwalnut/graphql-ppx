@@ -1,0 +1,11 @@
+Error Records › invalidDefaultValue4.re › output
+\027[1;31mWe've found a bug for you!\027[0m
+  \027[36msnapshot_tests/operations/errors/invalidDefaultValue4.re\027[0m:\027[2m8:17-26\027[0m
+
+   6 \027[2m\226\148\134\027[0m query invalidDefaultValues {
+   7 \027[2m\226\148\134\027[0m   invalidDefaultValues(
+   \027[1;31m8\027[0m \027[2m\226\148\134\027[0m       string: \027[1;31m[\"1\", \"2\"]\027[0m
+   9 \027[2m\226\148\134\027[0m   )
+  10 \027[2m\226\148\134\027[0m }
+
+  Invalid argument. Expected \"String\" but received \"List\".

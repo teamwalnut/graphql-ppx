@@ -1,8 +1,0 @@
-(library
- (name graphql_ppx_base)
- (public_name graphql_ppx.base)
- (libraries unix result yojson ppxlib)
- (flags
-  (:standard -w -9))
- (preprocess
-  (pps ppxlib.metaquot)))

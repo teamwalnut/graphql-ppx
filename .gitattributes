@@ -1,6 +1,6 @@
 # Hide generated files
-tests_bucklescript/**/*.bs.js linguist-generated
-tests_bucklescript/__snapshots__/**/* linguist-generated
+snapshot_tests/**/*.bs.js linguist-generated
+snapshot_tests/__snapshots__/**/* linguist-generated
 graphql_schema.json linguist-generated
 package-lock.json linguist-generated
 pokedex_schema.json linguist-generated
