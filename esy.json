@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@opam/dune": "*",
-    "@opam/ocaml-lsp-server": "1.10.1",
+    "@opam/ocaml-lsp-server": "1.10.3",
     "@opam/merlin": "*",
     "ocaml": "4.13.1000"
   },
