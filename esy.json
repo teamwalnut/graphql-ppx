@@ -12,9 +12,9 @@
   },
   "devDependencies": {
     "@opam/dune": "*",
-    "@opam/ocaml-lsp-server": "1.10.3",
+    "@opam/ocaml-lsp-server": "1.11.6",
     "@opam/merlin": "*",
-    "ocaml": "4.13.1000"
+    "ocaml": "4.14.0"
   },
   "esy": {
     "build": "dune build -p #{self.name}",

@@ -993,70 +993,8 @@ and junk = parse
 
   exception Finally of exn * exn
 
-  let stream_from_lexbuf v ?(fin = fun () -> ()) lexbuf =
-    let stream = Some true in
-    let f _i =
-      try Some (from_lexbuf v ?stream lexbuf)
-      with
-          End_of_input ->
-            fin ();
-            None
-        | e ->
-            (try fin () with fin_e -> raise (Finally (e, fin_e)));
-            raise e
-    in
-    Stream.from f
-
-  let stream_from_string ?buf ?fname ?lnum s =
-    let v = init_lexer ?buf ?fname ?lnum () in
-    stream_from_lexbuf v (Lexing.from_string s)
-
-  let stream_from_channel ?buf ?fin ?fname ?lnum ic =
-    let lexbuf = Lexing.from_channel ic in
-    let v = init_lexer ?buf ?fname ?lnum () in
-    stream_from_lexbuf v ?fin lexbuf
-
-  let stream_from_file ?buf ?fname ?lnum file =
-    let ic = open_in file in
-    let fin () = close_in ic in
-    let fname =
-      match fname with
-          None -> Some file
-        | x -> x
-    in
-    let lexbuf = Lexing.from_channel ic in
-    let v = init_lexer ?buf ?fname ?lnum () in
-    stream_from_lexbuf v ~fin lexbuf
 
   type json_line = [ `Json of t | `Exn of exn ]
-
-  let linestream_from_channel
-      ?buf ?(fin = fun () -> ()) ?fname ?lnum:(lnum0 = 1) ic =
-    let buf =
-      match buf with
-          None -> Some (Buffer.create 256)
-        | Some _ -> buf
-    in
-    let f i =
-      try
-        let line = input_line ic in
-        let lnum = lnum0 + i in
-        Some (`Json (from_string ?buf ?fname ~lnum line))
-      with
-          End_of_file -> fin (); None
-        | e -> Some (`Exn e)
-    in
-    Stream.from f
-
-  let linestream_from_file ?buf ?fname ?lnum file =
-    let ic = open_in file in
-    let fin () = close_in ic in
-    let fname =
-      match fname with
-          None -> Some file
-        | x -> x
-    in
-    linestream_from_channel ?buf ~fin ?fname ?lnum ic
 
   let prettify ?std s =
     Json_common.pretty_to_string ?std (from_string s)
