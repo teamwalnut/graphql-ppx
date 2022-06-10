@@ -1,6 +1,6 @@
 (library
  (name graphql_compiler)
  (public_name graphql_ppx.graphql_compiler)
- (libraries unix result)
+ (libraries unix)
  (flags
   (:standard -w -9)))

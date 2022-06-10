@@ -330,34 +330,6 @@ let to_file ?len ?std ?(newline = true) file x =
     close_out_noerr oc;
     raise e
 
-let stream_to_buffer ?std ob st = Stream.iter (to_buffer ?std ob) st
-
-let stream_to_string ?buf ?(len = 256) ?std st =
-  let ob =
-    match buf with
-    | None -> Buffer.create len
-    | Some ob ->
-      Buffer.clear ob;
-      ob
-  in
-  stream_to_buffer ?std ob st;
-  let s = Buffer.contents ob in
-  Buffer.clear ob;
-  s
-
-let stream_to_channel ?buf ?(len = 2096) ?std st =
-  let ob = match buf with None -> Buffer.create len | Some ob -> ob in
-  stream_to_buffer ?std ob st
-
-let stream_to_file ?len ?std file st =
-  let oc = open_out file in
-  try
-    stream_to_channel ?len ?std st;
-    close_out oc
-  with e ->
-    close_out_noerr oc;
-    raise e
-
 let rec sort = function
   | `Assoc l ->
     let l = List.rev (List.rev_map (fun (k, v) -> (k, sort v)) l) in
