@@ -1,5 +1,5 @@
 {
-  "checksum": "138528fe6d0c95b2d43072d20ef650cf",
+  "checksum": "e07b85c6451a41f6114acd57137f1392",
   "root": "graphql_ppx@link-dev:./esy.json",
   "node": {
     "ocaml@4.14.0@d41d8cd9": {
@@ -26,7 +26,7 @@
       "devDependencies": [
         "ocaml@4.14.0@d41d8cd9",
         "@opam/ocaml-lsp-server@opam:1.11.6@31f0970f",
-        "@opam/merlin@opam:4.5-414@67b2fe71",
+        "@opam/merlin@opam:4.5-414@a44b4c8c",
         "@opam/dune@opam:3.2.0@586e8442"
       ]
     },
@@ -625,8 +625,8 @@
         "ocaml@4.14.0@d41d8cd9", "@opam/dune@opam:3.2.0@586e8442"
       ]
     },
-    "@opam/merlin@opam:4.5-414@67b2fe71": {
-      "id": "@opam/merlin@opam:4.5-414@67b2fe71",
+    "@opam/merlin@opam:4.5-414@a44b4c8c": {
+      "id": "@opam/merlin@opam:4.5-414@a44b4c8c",
       "name": "@opam/merlin",
       "version": "opam:4.5-414",
       "source": {
