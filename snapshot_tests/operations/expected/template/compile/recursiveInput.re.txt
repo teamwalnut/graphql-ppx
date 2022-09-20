@@ -99,6 +99,12 @@ function serializeInputObjectnested_type(inp) {
         };
 }
 
+function serializeInputObjectthis_will_be_duplicated(inp) {
+  return {
+          id: inp.id
+        };
+}
+
 function serializeInputObjectproblem_input(inp) {
   var a = inp.the_problem;
   var a$1 = inp.b;
@@ -107,12 +113,6 @@ function serializeInputObjectproblem_input(inp) {
                 id: a.id
               }) : undefined,
           b: a$1 !== undefined ? serializeInputObjectnested_type(a$1) : undefined
-        };
-}
-
-function serializeInputObjectthis_will_be_duplicated(inp) {
-  return {
-          id: inp.id
         };
 }
 
