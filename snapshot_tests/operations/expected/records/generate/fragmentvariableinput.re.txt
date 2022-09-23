@@ -76,22 +76,21 @@ function back to the original JSON-compatible data */
       {
         let reposts = {
           let value = (value: t).reposts;
-          value
-          |> Js.Array.map(value =>
-               switch (value) {
-               | Some(value) =>
-                 Js.Nullable.return(
-                   {
-                     let id = {
-                       let value = (value: t_reposts).id;
-                       value;
-                     };
-                     {id: id};
-                   }: Raw.t_reposts,
-                 )
-               | None => Js.Nullable.null
-               }
-             );
+          Js.Array2.map(value, value =>
+            switch (value) {
+            | Some(value) =>
+              Js.Nullable.return(
+                {
+                  let id = {
+                    let value = (value: t_reposts).id;
+                    value;
+                  };
+                  {id: id};
+                }: Raw.t_reposts,
+              )
+            | None => Js.Nullable.null
+            }
+          );
         };
         {reposts: reposts};
       }: Raw.t

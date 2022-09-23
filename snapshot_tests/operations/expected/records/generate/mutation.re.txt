@@ -166,29 +166,28 @@ function back to the original JSON compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             }
-                             and field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => "FIRST"
-                               | `SECOND => "SECOND"
-                               | `THIRD => "THIRD"
-                               | `FutureAddedValue(other) => other
-                               };
-                             };
-                             {field, message};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
+                    Js.Array2.map(value, (value) =>
+                      (
+                        {
+                          let message = {
+                            let value =
+                              (value: t_mutationWithError_errors).message;
+                            value;
+                          }
+                          and field = {
+                            let value =
+                              (value: t_mutationWithError_errors).field;
+                            switch (value) {
+                            | `FIRST => "FIRST"
+                            | `SECOND => "SECOND"
+                            | `THIRD => "THIRD"
+                            | `FutureAddedValue(other) => other
+                            };
+                          };
+                          {field, message};
+                        }: Raw.t_mutationWithError_errors
+                      )
+                    ),
                   )
                 | None => Js.Nullable.null
                 };

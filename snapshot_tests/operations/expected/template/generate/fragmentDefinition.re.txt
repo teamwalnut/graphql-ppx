@@ -95,7 +95,7 @@ function back to the original JSON-compatible data */
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -104,13 +104,12 @@ function back to the original JSON-compatible data */
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -176,7 +175,7 @@ function back to the original JSON-compatible data */
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         };
@@ -251,13 +250,12 @@ function back to the original JSON-compatible data */
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -330,7 +328,7 @@ module InlineListFragment = {
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -339,13 +337,12 @@ module InlineListFragment = {
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -417,7 +414,7 @@ module Wrapper = {
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -426,13 +423,12 @@ module Wrapper = {
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -696,13 +692,12 @@ function back to the original JSON compatible data */
                       switch (value) {
                       | Some(value) =>
                         Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
+                          Js.Array2.map(value, value =>
+                            switch (value) {
+                            | Some(value) => Js.Nullable.return(value)
+                            | None => Js.Nullable.null
+                            }
+                          ),
                         )
                       | None => Js.Nullable.null
                       };
@@ -735,13 +730,12 @@ function back to the original JSON compatible data */
                       switch (value) {
                       | Some(value) =>
                         Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
+                          Js.Array2.map(value, value =>
+                            switch (value) {
+                            | Some(value) => Js.Nullable.return(value)
+                            | None => Js.Nullable.null
+                            }
+                          ),
                         )
                       | None => Js.Nullable.null
                       };

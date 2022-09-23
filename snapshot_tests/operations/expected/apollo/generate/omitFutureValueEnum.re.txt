@@ -160,35 +160,33 @@ function back to the original JSON compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => "FIRST"
-                               | `SECOND => "SECOND"
-                               | `THIRD => "THIRD"
-                               | `FutureAddedValue(other) => other
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             }
-                             and __typename = {
-                               let value =
-                                 (value: t_mutationWithError_errors).
-                                   __typename;
-                               value;
-                             };
-                             {__typename, message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
+                    Js.Array2.map(value, (value) =>
+                      (
+                        {
+                          let field = {
+                            let value =
+                              (value: t_mutationWithError_errors).field;
+                            switch (value) {
+                            | `FIRST => "FIRST"
+                            | `SECOND => "SECOND"
+                            | `THIRD => "THIRD"
+                            | `FutureAddedValue(other) => other
+                            };
+                          }
+                          and message = {
+                            let value =
+                              (value: t_mutationWithError_errors).message;
+                            value;
+                          }
+                          and __typename = {
+                            let value =
+                              (value: t_mutationWithError_errors).__typename;
+                            value;
+                          };
+                          {__typename, message, field};
+                        }: Raw.t_mutationWithError_errors
+                      )
+                    ),
                   )
                 | None => Js.Nullable.null
                 };
@@ -345,34 +343,32 @@ function back to the original JSON compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => "FIRST"
-                               | `SECOND => "SECOND"
-                               | `THIRD => "THIRD"
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             }
-                             and __typename = {
-                               let value =
-                                 (value: t_mutationWithError_errors).
-                                   __typename;
-                               value;
-                             };
-                             {__typename, message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
+                    Js.Array2.map(value, (value) =>
+                      (
+                        {
+                          let field = {
+                            let value =
+                              (value: t_mutationWithError_errors).field;
+                            switch (value) {
+                            | `FIRST => "FIRST"
+                            | `SECOND => "SECOND"
+                            | `THIRD => "THIRD"
+                            };
+                          }
+                          and message = {
+                            let value =
+                              (value: t_mutationWithError_errors).message;
+                            value;
+                          }
+                          and __typename = {
+                            let value =
+                              (value: t_mutationWithError_errors).__typename;
+                            value;
+                          };
+                          {__typename, message, field};
+                        }: Raw.t_mutationWithError_errors
+                      )
+                    ),
                   )
                 | None => Js.Nullable.null
                 };
@@ -529,34 +525,32 @@ function back to the original JSON compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             let field = {
-                               let value =
-                                 (value: t_mutationWithError_errors).field;
-                               switch (value) {
-                               | `FIRST => "FIRST"
-                               | `SECOND => "SECOND"
-                               | `THIRD => "THIRD"
-                               };
-                             }
-                             and message = {
-                               let value =
-                                 (value: t_mutationWithError_errors).message;
-                               value;
-                             }
-                             and __typename = {
-                               let value =
-                                 (value: t_mutationWithError_errors).
-                                   __typename;
-                               value;
-                             };
-                             {__typename, message, field};
-                           }: Raw.t_mutationWithError_errors
-                         )
-                       ),
+                    Js.Array2.map(value, (value) =>
+                      (
+                        {
+                          let field = {
+                            let value =
+                              (value: t_mutationWithError_errors).field;
+                            switch (value) {
+                            | `FIRST => "FIRST"
+                            | `SECOND => "SECOND"
+                            | `THIRD => "THIRD"
+                            };
+                          }
+                          and message = {
+                            let value =
+                              (value: t_mutationWithError_errors).message;
+                            value;
+                          }
+                          and __typename = {
+                            let value =
+                              (value: t_mutationWithError_errors).__typename;
+                            value;
+                          };
+                          {__typename, message, field};
+                        }: Raw.t_mutationWithError_errors
+                      )
+                    ),
                   )
                 | None => Js.Nullable.null
                 };

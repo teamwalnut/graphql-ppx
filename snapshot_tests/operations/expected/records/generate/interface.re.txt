@@ -165,45 +165,44 @@ function back to the original JSON compatible data */
       {
         let users = {
           let value = (value: t).users;
-          value
-          |> Js.Array.map(value =>
-               switch (value) {
-               | `AnonymousUser(value) => (
-                   Obj.magic(
-                     {
-                       let anonymousId = {
-                         let value =
-                           (value: t_users_User_AnonymousUser).anonymousId;
-                         value;
-                       }
-                       and id = {
-                         let value = (value: t_users_User_AnonymousUser).id;
-                         value;
-                       };
-                       {__typename: "AnonymousUser", id, anonymousId};
-                     }: Raw.t_users_User_AnonymousUser,
-                   ): Raw.t_users_User
-                 )
-               | `AdminUser(value) => (
-                   Obj.magic(
-                     {
-                       let name = {
-                         let value = (value: t_users_User_AdminUser).name;
-                         value;
-                       }
-                       and id = {
-                         let value = (value: t_users_User_AdminUser).id;
-                         value;
-                       };
-                       {__typename: "AdminUser", id, name};
-                     }: Raw.t_users_User_AdminUser,
-                   ): Raw.t_users_User
-                 )
-               | `UnspecifiedFragment(_) => (
-                   Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                 )
-               }
-             );
+          Js.Array2.map(value, value =>
+            switch (value) {
+            | `AnonymousUser(value) => (
+                Obj.magic(
+                  {
+                    let anonymousId = {
+                      let value =
+                        (value: t_users_User_AnonymousUser).anonymousId;
+                      value;
+                    }
+                    and id = {
+                      let value = (value: t_users_User_AnonymousUser).id;
+                      value;
+                    };
+                    {__typename: "AnonymousUser", id, anonymousId};
+                  }: Raw.t_users_User_AnonymousUser,
+                ): Raw.t_users_User
+              )
+            | `AdminUser(value) => (
+                Obj.magic(
+                  {
+                    let name = {
+                      let value = (value: t_users_User_AdminUser).name;
+                      value;
+                    }
+                    and id = {
+                      let value = (value: t_users_User_AdminUser).id;
+                      value;
+                    };
+                    {__typename: "AdminUser", id, name};
+                  }: Raw.t_users_User_AdminUser,
+                ): Raw.t_users_User
+              )
+            | `UnspecifiedFragment(_) => (
+                Obj.magic(Js.Dict.empty()): Raw.t_users_User
+              )
+            }
+          );
         };
         {users: users};
       }: Raw.t
@@ -317,30 +316,28 @@ function back to the original JSON compatible data */
       {
         let users = {
           let value = (value: t).users;
-          value
-          |> Js.Array.map(value =>
-               switch (value) {
-               | `AdminUser(value) => (
-                   Obj.magic(
-                     {
-                       let id = {
-                         let value = (value: t_users_User_AdminUser).id;
-                         value;
-                       }
-                       and __typename = {
-                         let value =
-                           (value: t_users_User_AdminUser).__typename;
-                         value;
-                       };
-                       {__typename: "AdminUser", id};
-                     }: Raw.t_users_User_AdminUser,
-                   ): Raw.t_users_User
-                 )
-               | `UnspecifiedFragment(_) => (
-                   Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                 )
-               }
-             );
+          Js.Array2.map(value, value =>
+            switch (value) {
+            | `AdminUser(value) => (
+                Obj.magic(
+                  {
+                    let id = {
+                      let value = (value: t_users_User_AdminUser).id;
+                      value;
+                    }
+                    and __typename = {
+                      let value = (value: t_users_User_AdminUser).__typename;
+                      value;
+                    };
+                    {__typename: "AdminUser", id};
+                  }: Raw.t_users_User_AdminUser,
+                ): Raw.t_users_User
+              )
+            | `UnspecifiedFragment(_) => (
+                Obj.magic(Js.Dict.empty()): Raw.t_users_User
+              )
+            }
+          );
         };
         {users: users};
       }: Raw.t
@@ -492,67 +489,63 @@ function back to the original JSON compatible data */
       {
         let users = {
           let value = (value: t).users;
-          value
-          |> Js.Array.map((value) =>
-               (
-                 Obj.magic(
-                   Js.Array2.reduce(
-                     [|
-                       {
-                         let value = (value: t_users).fragment;
-                         (
-                           Obj.magic(
-                             switch (value) {
-                             | `AnonymousUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let anonymousId = {
-                                       let value =
-                                         (value: t_users_User_AnonymousUser).
-                                           anonymousId;
-                                       value;
-                                     };
-                                     {
-                                       __typename: "AnonymousUser",
-                                       anonymousId,
-                                     };
-                                   }: Raw.t_users_User_AnonymousUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `AdminUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let name = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).name;
-                                       value;
-                                     };
-                                     {__typename: "AdminUser", name};
-                                   }: Raw.t_users_User_AdminUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `UnspecifiedFragment(_) => (
-                                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                               )
-                             },
-                           ): Js.Json.t
-                         );
-                       },
-                     |],
-                     Graphql_ppx_runtime.deepMerge,
-                     Obj.magic(
-                       {
-                         let id = {
-                           let value = (value: t_users).id;
-                           value;
-                         };
-                         {"id": id};
-                       },
-                     ): Js.Json.t,
-                   ),
-                 ): Raw.t_users
-               )
-             );
+          Js.Array2.map(value, (value) =>
+            (
+              Obj.magic(
+                Js.Array2.reduce(
+                  [|
+                    {
+                      let value = (value: t_users).fragment;
+                      (
+                        Obj.magic(
+                          switch (value) {
+                          | `AnonymousUser(value) => (
+                              Obj.magic(
+                                {
+                                  let anonymousId = {
+                                    let value =
+                                      (value: t_users_User_AnonymousUser).
+                                        anonymousId;
+                                    value;
+                                  };
+                                  {__typename: "AnonymousUser", anonymousId};
+                                }: Raw.t_users_User_AnonymousUser,
+                              ): Raw.t_users_User
+                            )
+                          | `AdminUser(value) => (
+                              Obj.magic(
+                                {
+                                  let name = {
+                                    let value =
+                                      (value: t_users_User_AdminUser).name;
+                                    value;
+                                  };
+                                  {__typename: "AdminUser", name};
+                                }: Raw.t_users_User_AdminUser,
+                              ): Raw.t_users_User
+                            )
+                          | `UnspecifiedFragment(_) => (
+                              Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                            )
+                          },
+                        ): Js.Json.t
+                      );
+                    },
+                  |],
+                  Graphql_ppx_runtime.deepMerge,
+                  Obj.magic(
+                    {
+                      let id = {
+                        let value = (value: t_users).id;
+                        value;
+                      };
+                      {"id": id};
+                    },
+                  ): Js.Json.t,
+                ),
+              ): Raw.t_users
+            )
+          );
         };
         {users: users};
       }: Raw.t
@@ -696,61 +689,60 @@ function back to the original JSON compatible data */
       {
         let users = {
           let value = (value: t).users;
-          value
-          |> Js.Array.map((value) =>
-               (
-                 Obj.magic(
-                   Js.Array2.reduce(
-                     [|
-                       {
-                         let value = (value: t_users).fragment;
-                         (
-                           Obj.magic(
-                             switch (value) {
-                             | `AdminUser(value) => (
-                                 Obj.magic(
-                                   {
-                                     let id = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).id;
-                                       value;
-                                     }
-                                     and __typename = {
-                                       let value =
-                                         (value: t_users_User_AdminUser).
-                                           __typename;
-                                       value;
-                                     };
-                                     {__typename: "AdminUser", id};
-                                   }: Raw.t_users_User_AdminUser,
-                                 ): Raw.t_users_User
-                               )
-                             | `UnspecifiedFragment(_) => (
-                                 Obj.magic(Js.Dict.empty()): Raw.t_users_User
-                               )
-                             },
-                           ): Js.Json.t
-                         );
-                       },
-                     |],
-                     Graphql_ppx_runtime.deepMerge,
-                     Obj.magic(
-                       {
-                         let id = {
-                           let value = (value: t_users).id;
-                           value;
-                         }
-                         and __typename = {
-                           let value = (value: t_users).__typename;
-                           value;
-                         };
-                         {"__typename": __typename, "id": id};
-                       },
-                     ): Js.Json.t,
-                   ),
-                 ): Raw.t_users
-               )
-             );
+          Js.Array2.map(value, (value) =>
+            (
+              Obj.magic(
+                Js.Array2.reduce(
+                  [|
+                    {
+                      let value = (value: t_users).fragment;
+                      (
+                        Obj.magic(
+                          switch (value) {
+                          | `AdminUser(value) => (
+                              Obj.magic(
+                                {
+                                  let id = {
+                                    let value =
+                                      (value: t_users_User_AdminUser).id;
+                                    value;
+                                  }
+                                  and __typename = {
+                                    let value =
+                                      (value: t_users_User_AdminUser).
+                                        __typename;
+                                    value;
+                                  };
+                                  {__typename: "AdminUser", id};
+                                }: Raw.t_users_User_AdminUser,
+                              ): Raw.t_users_User
+                            )
+                          | `UnspecifiedFragment(_) => (
+                              Obj.magic(Js.Dict.empty()): Raw.t_users_User
+                            )
+                          },
+                        ): Js.Json.t
+                      );
+                    },
+                  |],
+                  Graphql_ppx_runtime.deepMerge,
+                  Obj.magic(
+                    {
+                      let id = {
+                        let value = (value: t_users).id;
+                        value;
+                      }
+                      and __typename = {
+                        let value = (value: t_users).__typename;
+                        value;
+                      };
+                      {"__typename": __typename, "id": id};
+                    },
+                  ): Js.Json.t,
+                ),
+              ): Raw.t_users
+            )
+          );
         };
         {users: users};
       }: Raw.t
@@ -819,18 +811,17 @@ function back to the original JSON compatible data */
       {
         let users = {
           let value = (value: t).users;
-          value
-          |> Js.Array.map((value) =>
-               (
-                 {
-                   let id = {
-                     let value = (value: t_users).id;
-                     value;
-                   };
-                   {id: id};
-                 }: Raw.t_users
-               )
-             );
+          Js.Array2.map(value, (value) =>
+            (
+              {
+                let id = {
+                  let value = (value: t_users).id;
+                  value;
+                };
+                {id: id};
+              }: Raw.t_users
+            )
+          );
         };
         {users: users};
       }: Raw.t

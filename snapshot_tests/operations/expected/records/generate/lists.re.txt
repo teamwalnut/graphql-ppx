@@ -126,23 +126,22 @@ function back to the original JSON compatible data */
             {
               let nonNullableOfNonNullable = {
                 let value = (value: t_lists).nonNullableOfNonNullable;
-                value |> Js.Array.map(value => value);
+                Js.Array2.map(value, value => value);
               }
               and nonNullableOfNullable = {
                 let value = (value: t_lists).nonNullableOfNullable;
-                value
-                |> Js.Array.map(value =>
-                     switch (value) {
-                     | Some(value) => Js.Nullable.return(value)
-                     | None => Js.Nullable.null
-                     }
-                   );
+                Js.Array2.map(value, value =>
+                  switch (value) {
+                  | Some(value) => Js.Nullable.return(value)
+                  | None => Js.Nullable.null
+                  }
+                );
               }
               and nullableOfNonNullable = {
                 let value = (value: t_lists).nullableOfNonNullable;
                 switch (value) {
                 | Some(value) =>
-                  Js.Nullable.return(value |> Js.Array.map(value => value))
+                  Js.Nullable.return(Js.Array2.map(value, value => value))
                 | None => Js.Nullable.null
                 };
               }
@@ -151,13 +150,12 @@ function back to the original JSON compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (value) {
-                         | Some(value) => Js.Nullable.return(value)
-                         | None => Js.Nullable.null
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (value) {
+                      | Some(value) => Js.Nullable.return(value)
+                      | None => Js.Nullable.null
+                      }
+                    ),
                   )
                 | None => Js.Nullable.null
                 };
