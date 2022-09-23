@@ -67,13 +67,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -81,7 +80,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -94,7 +93,7 @@ function back to the original JSON-compatible data */
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -103,13 +102,12 @@ function back to the original JSON-compatible data */
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -160,7 +158,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -173,7 +171,7 @@ function back to the original JSON-compatible data */
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         };
@@ -226,13 +224,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -247,13 +244,12 @@ function back to the original JSON-compatible data */
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -298,13 +294,12 @@ module InlineListFragment = {
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -312,7 +307,7 @@ module InlineListFragment = {
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -325,7 +320,7 @@ module InlineListFragment = {
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -334,13 +329,12 @@ module InlineListFragment = {
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -384,13 +378,12 @@ module Wrapper = {
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -398,7 +391,7 @@ module Wrapper = {
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -411,7 +404,7 @@ module Wrapper = {
           let value = (value: t).nullableOfNonNullable;
           switch (value) {
           | Some(value) =>
-            Js.Nullable.return(value |> Js.Array.map(value => value))
+            Js.Nullable.return(Js.Array2.map(value, value => value))
           | None => Js.Nullable.null
           };
         }
@@ -420,13 +413,12 @@ module Wrapper = {
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -586,13 +578,12 @@ function back to the original JSON compatible data */
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (Js.toOption(value)) {
+                      | Some(value) => Some(value)
+                      | None => None
+                      }
+                    ),
                   )
                 | None => None
                 };
@@ -631,13 +622,12 @@ function back to the original JSON compatible data */
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (Js.toOption(value)) {
+                      | Some(value) => Some(value)
+                      | None => None
+                      }
+                    ),
                   )
                 | None => None
                 };
@@ -675,29 +665,7 @@ function back to the original JSON compatible data */
           let value = (value: t).l4;
           (
             Obj.magic(
-              Js.Array.reduce(
-                Graphql_ppx_runtime.deepMerge,
-                Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l4).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    };
-                    {"nullableOfNullable": nullableOfNullable};
-                  },
-                ): Js.Json.t,
+              Js.Array2.reduce(
                 [|
                   (
                     Obj.magic(
@@ -707,6 +675,27 @@ function back to the original JSON compatible data */
                     ): Js.Json.t
                   ),
                 |],
+                Graphql_ppx_runtime.deepMerge,
+                Obj.magic(
+                  {
+                    let nullableOfNullable = {
+                      let value = (value: t_l4).nullableOfNullable;
+                      switch (value) {
+                      | Some(value) =>
+                        Js.Nullable.return(
+                          Js.Array2.map(value, value =>
+                            switch (value) {
+                            | Some(value) => Js.Nullable.return(value)
+                            | None => Js.Nullable.null
+                            }
+                          ),
+                        )
+                      | None => Js.Nullable.null
+                      };
+                    };
+                    {"nullableOfNullable": nullableOfNullable};
+                  },
+                ): Js.Json.t,
               ),
             ): Raw.t_l4
           );
@@ -715,29 +704,7 @@ function back to the original JSON compatible data */
           let value = (value: t).l3;
           (
             Obj.magic(
-              Js.Array.reduce(
-                Graphql_ppx_runtime.deepMerge,
-                Obj.magic(
-                  {
-                    let nullableOfNullable = {
-                      let value = (value: t_l3).nullableOfNullable;
-                      switch (value) {
-                      | Some(value) =>
-                        Js.Nullable.return(
-                          value
-                          |> Js.Array.map(value =>
-                               switch (value) {
-                               | Some(value) => Js.Nullable.return(value)
-                               | None => Js.Nullable.null
-                               }
-                             ),
-                        )
-                      | None => Js.Nullable.null
-                      };
-                    };
-                    {"nullableOfNullable": nullableOfNullable};
-                  },
-                ): Js.Json.t,
+              Js.Array2.reduce(
                 [|
                   (
                     Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
@@ -746,6 +713,27 @@ function back to the original JSON compatible data */
                     Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
                   ),
                 |],
+                Graphql_ppx_runtime.deepMerge,
+                Obj.magic(
+                  {
+                    let nullableOfNullable = {
+                      let value = (value: t_l3).nullableOfNullable;
+                      switch (value) {
+                      | Some(value) =>
+                        Js.Nullable.return(
+                          Js.Array2.map(value, value =>
+                            switch (value) {
+                            | Some(value) => Js.Nullable.return(value)
+                            | None => Js.Nullable.null
+                            }
+                          ),
+                        )
+                      | None => Js.Nullable.null
+                      };
+                    };
+                    {"nullableOfNullable": nullableOfNullable};
+                  },
+                ): Js.Json.t,
               ),
             ): Raw.t_l3
           );
@@ -754,9 +742,7 @@ function back to the original JSON compatible data */
           let value = (value: t).l2;
           (
             Obj.magic(
-              Js.Array.reduce(
-                Graphql_ppx_runtime.deepMerge,
-                Obj.magic(Js.Dict.empty): Js.Json.t,
+              Js.Array2.reduce(
                 [|
                   (
                     Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
@@ -765,6 +751,8 @@ function back to the original JSON compatible data */
                     Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
                   ),
                 |],
+                Graphql_ppx_runtime.deepMerge,
+                Obj.magic(Js.Dict.empty): Js.Json.t,
               ),
             ): Raw.t_l2
           );

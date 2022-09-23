@@ -158,7 +158,14 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     (value) => (
       Obj.magic(
-        Js.Array.reduce(
+        Js.Array2.reduce(
+          [|
+            (
+              Obj.magic(
+                InterfaceFragment.serialize((value: t).interfaceFragment),
+              ): Js.Json.t
+            ),
+          |],
           Graphql_ppx_runtime.deepMerge,
           Obj.magic(
             {
@@ -169,13 +176,6 @@ function back to the original JSON-compatible data */
               {"id": id};
             },
           ): Js.Json.t,
-          [|
-            (
-              Obj.magic(
-                InterfaceFragment.serialize((value: t).interfaceFragment),
-              ): Js.Json.t
-            ),
-          |],
         ),
       ): Raw.t
     );
@@ -251,7 +251,14 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     (value) => (
       Obj.magic(
-        Js.Array.reduce(
+        Js.Array2.reduce(
+          [|
+            (
+              Obj.magic(
+                InterfaceFragment.serialize((value: t).interfaceFragment),
+              ): Js.Json.t
+            ),
+          |],
           Graphql_ppx_runtime.deepMerge,
           Obj.magic(
             {
@@ -266,13 +273,6 @@ function back to the original JSON-compatible data */
               {"__typename": __typename, "id": id};
             },
           ): Js.Json.t,
-          [|
-            (
-              Obj.magic(
-                InterfaceFragment.serialize((value: t).interfaceFragment),
-              ): Js.Json.t
-            ),
-          |],
         ),
       ): Raw.t
     );

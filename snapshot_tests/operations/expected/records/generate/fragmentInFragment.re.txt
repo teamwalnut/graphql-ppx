@@ -59,13 +59,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -80,13 +79,12 @@ function back to the original JSON-compatible data */
           switch (value) {
           | Some(value) =>
             Js.Nullable.return(
-              value
-              |> Js.Array.map(value =>
-                   switch (value) {
-                   | Some(value) => Js.Nullable.return(value)
-                   | None => Js.Nullable.null
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (value) {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              ),
             )
           | None => Js.Nullable.null
           };
@@ -150,13 +148,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -171,7 +168,12 @@ function back to the original JSON-compatible data */
   let serialize: t => Raw.t =
     (value) => (
       Obj.magic(
-        Js.Array.reduce(
+        Js.Array2.reduce(
+          [|
+            (
+              Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
+            ),
+          |],
           Graphql_ppx_runtime.deepMerge,
           Obj.magic(
             {
@@ -180,13 +182,12 @@ function back to the original JSON-compatible data */
                 switch (value) {
                 | Some(value) =>
                   Js.Nullable.return(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (value) {
-                         | Some(value) => Js.Nullable.return(value)
-                         | None => Js.Nullable.null
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (value) {
+                      | Some(value) => Js.Nullable.return(value)
+                      | None => Js.Nullable.null
+                      }
+                    ),
                   )
                 | None => Js.Nullable.null
                 };
@@ -194,11 +195,6 @@ function back to the original JSON-compatible data */
               {"nullableOfNullable": nullableOfNullable};
             },
           ): Js.Json.t,
-          [|
-            (
-              Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t
-            ),
-          |],
         ),
       ): Raw.t
     );

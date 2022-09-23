@@ -281,22 +281,22 @@ function parse$3(value) {
 function serialize$3(value) {
   var value$1 = value.users;
   var users = value$1.map(function (value) {
-        var value$1 = value.id;
-        var value$2 = value.__typename;
-        var value$3 = value.fragment;
+        var value$1 = value.fragment;
         var tmp;
-        if (value$3.NAME === "AdminUser") {
-          var value$4 = value$3.VAL.id;
+        if (value$1.NAME === "AdminUser") {
+          var value$2 = value$1.VAL.id;
           tmp = {
             __typename: "AdminUser",
-            id: value$4
+            id: value$2
           };
         } else {
           tmp = {};
         }
+        var value$3 = value.id;
+        var value$4 = value.__typename;
         return [tmp].reduce(deepMerge, {
-                    __typename: value$2,
-                    id: value$1
+                    __typename: value$4,
+                    id: value$3
                   });
       });
   return {
