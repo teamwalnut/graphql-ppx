@@ -113,8 +113,7 @@ let generate_fragment_parse_fun config loc name arguments definition =
     |> List.map (fun (arg_name, type_, _span, type_span) ->
          ( Labelled arg_name,
            Ast_helper.Exp.variant
-             ~loc:
-               (config.map_loc type_span |> Output_utils.conv_loc)
+             ~loc:(config.map_loc type_span |> Output_utils.conv_loc)
              type_ None ))
   in
   Ast_helper.Exp.apply
@@ -123,9 +122,8 @@ let generate_fragment_parse_fun config loc name arguments definition =
     (List.append labeled_args
        [
          ( Labelled "fragmentName",
-           Ast_helper.Exp.variant
-             ~loc:(loc |> Output_utils.conv_loc)
-             name None );
+           Ast_helper.Exp.variant ~loc:(loc |> Output_utils.conv_loc) name None
+         );
          ( Nolabel,
            match config.native with
            | true ->
@@ -180,9 +178,8 @@ and generate_array_decoder config loc inner path definition =
     [@metaloc loc]
   | false ->
     [%expr
-      value
-      |> Js.Array.map (fun value ->
-           [%e generate_parser config path definition inner])]
+      Js.Array2.map value (fun value ->
+        [%e generate_parser config path definition inner])]
     [@metaloc loc]
 
 and generate_custom_decoder config loc ident inner path definition =

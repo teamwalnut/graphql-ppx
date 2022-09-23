@@ -1477,13 +1477,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -1491,7 +1490,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -1768,13 +1767,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -1782,7 +1780,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },

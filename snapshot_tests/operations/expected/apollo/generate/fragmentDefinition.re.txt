@@ -75,13 +75,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -89,7 +88,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -188,7 +187,7 @@ function back to the original JSON-compatible data */
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -274,13 +273,12 @@ function back to the original JSON-compatible data */
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -356,13 +354,12 @@ module InlineListFragment = {
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -370,7 +367,7 @@ module InlineListFragment = {
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -452,13 +449,12 @@ module Wrapper = {
           switch (Js.toOption(value)) {
           | Some(value) =>
             Some(
-              value
-              |> Js.Array.map(value =>
-                   switch (Js.toOption(value)) {
-                   | Some(value) => Some(value)
-                   | None => None
-                   }
-                 ),
+              Js.Array2.map(value, value =>
+                switch (Js.toOption(value)) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              ),
             )
           | None => None
           };
@@ -466,7 +462,7 @@ module Wrapper = {
         nullableOfNonNullable: {
           let value = (value: Raw.t).nullableOfNonNullable;
           switch (Js.toOption(value)) {
-          | Some(value) => Some(value |> Js.Array.map(value => value))
+          | Some(value) => Some(Js.Array2.map(value, value => value))
           | None => None
           };
         },
@@ -678,13 +674,12 @@ function back to the original JSON compatible data */
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (Js.toOption(value)) {
+                      | Some(value) => Some(value)
+                      | None => None
+                      }
+                    ),
                   )
                 | None => None
                 };
@@ -730,13 +725,12 @@ function back to the original JSON compatible data */
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
-                    value
-                    |> Js.Array.map(value =>
-                         switch (Js.toOption(value)) {
-                         | Some(value) => Some(value)
-                         | None => None
-                         }
-                       ),
+                    Js.Array2.map(value, value =>
+                      switch (Js.toOption(value)) {
+                      | Some(value) => Some(value)
+                      | None => None
+                      }
+                    ),
                   )
                 | None => None
                 };
@@ -774,7 +768,16 @@ function back to the original JSON compatible data */
           let value = (value: t).l4;
           (
             Obj.magic(
-              Js.Array.reduce(
+              Js.Array2.reduce(
+                [|
+                  (
+                    Obj.magic(
+                      InlineListFragment.serialize(
+                        (value: t_l4).inlineListFragment,
+                      ),
+                    ): Js.Json.t
+                  ),
+                |],
                 Graphql_ppx_runtime.deepMerge,
                 Obj.magic(
                   {
@@ -804,15 +807,6 @@ function back to the original JSON compatible data */
                     };
                   },
                 ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(
-                      InlineListFragment.serialize(
-                        (value: t_l4).inlineListFragment,
-                      ),
-                    ): Js.Json.t
-                  ),
-                |],
               ),
             ): Raw.t_l4
           );
@@ -821,7 +815,15 @@ function back to the original JSON compatible data */
           let value = (value: t).l3;
           (
             Obj.magic(
-              Js.Array.reduce(
+              Js.Array2.reduce(
+                [|
+                  (
+                    Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
+                  ),
+                  (
+                    Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
+                  ),
+                |],
                 Graphql_ppx_runtime.deepMerge,
                 Obj.magic(
                   {
@@ -851,14 +853,6 @@ function back to the original JSON compatible data */
                     };
                   },
                 ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t
-                  ),
-                |],
               ),
             ): Raw.t_l3
           );
@@ -867,7 +861,15 @@ function back to the original JSON compatible data */
           let value = (value: t).l2;
           (
             Obj.magic(
-              Js.Array.reduce(
+              Js.Array2.reduce(
+                [|
+                  (
+                    Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
+                  ),
+                  (
+                    Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
+                  ),
+                |],
                 Graphql_ppx_runtime.deepMerge,
                 Obj.magic(
                   {
@@ -878,14 +880,6 @@ function back to the original JSON compatible data */
                     {"__typename": __typename};
                   },
                 ): Js.Json.t,
-                [|
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t
-                  ),
-                  (
-                    Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t
-                  ),
-                |],
               ),
             ): Raw.t_l2
           );

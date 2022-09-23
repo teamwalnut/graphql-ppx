@@ -124,29 +124,27 @@ function back to the original JSON compatible data */
                 switch (Js.toOption(value)) {
                 | Some(value) =>
                   Some(
-                    value
-                    |> Js.Array.map((value) =>
-                         (
-                           {
-                             field: {
-                               let value =
-                                 (value: Raw.t_mutationWithError_errors).field;
-                               switch ((Obj.magic(value): string)) {
-                               | "FIRST" => `FIRST
-                               | "SECOND" => `SECOND
-                               | "THIRD" => `THIRD
-                               | other => `FutureAddedValue(other)
-                               };
-                             },
-                             message: {
-                               let value =
-                                 (value: Raw.t_mutationWithError_errors).
-                                   message;
-                               value;
-                             },
-                           }: t_mutationWithError_errors
-                         )
-                       ),
+                    Js.Array2.map(value, (value) =>
+                      (
+                        {
+                          field: {
+                            let value =
+                              (value: Raw.t_mutationWithError_errors).field;
+                            switch ((Obj.magic(value): string)) {
+                            | "FIRST" => `FIRST
+                            | "SECOND" => `SECOND
+                            | "THIRD" => `THIRD
+                            | other => `FutureAddedValue(other)
+                            };
+                          },
+                          message: {
+                            let value =
+                              (value: Raw.t_mutationWithError_errors).message;
+                            value;
+                          },
+                        }: t_mutationWithError_errors
+                      )
+                    ),
                   )
                 | None => None
                 };

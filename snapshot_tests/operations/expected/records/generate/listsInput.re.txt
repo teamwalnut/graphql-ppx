@@ -115,18 +115,16 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Js.Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) => Js.Nullable.return((a => a)(b))
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+                    Js.Array2.map(a, b =>
+                      (
+                        a =>
+                          switch (a) {
+                          | None => Js.Nullable.undefined
+                          | Some(b) => Js.Nullable.return((a => a)(b))
+                          }
+                      )(
+                        b,
+                      )
                     )
                 )(
                   b,
@@ -143,7 +141,7 @@ function back to the original JSON compatible data */
             | None => Js.Nullable.undefined
             | Some(b) =>
               Js.Nullable.return(
-                (a => Js.Array.map(b => (a => a)(b), a))(b),
+                (a => Js.Array2.map(a, b => (a => a)(b)))(b),
               )
             }
         )(
@@ -152,24 +150,22 @@ function back to the original JSON compatible data */
       nonNullableOfNullable:
         (
           a =>
-            Js.Array.map(
-              b =>
-                (
-                  a =>
-                    switch (a) {
-                    | None => Js.Nullable.undefined
-                    | Some(b) => Js.Nullable.return((a => a)(b))
-                    }
-                )(
-                  b,
-                ),
-              a,
+            Js.Array2.map(a, b =>
+              (
+                a =>
+                  switch (a) {
+                  | None => Js.Nullable.undefined
+                  | Some(b) => Js.Nullable.return((a => a)(b))
+                  }
+              )(
+                b,
+              )
             )
         )(
           (inp: t_variables_ListsInput).nonNullableOfNullable,
         ),
       nonNullableOfNonNullable:
-        (a => Js.Array.map(b => (a => a)(b), a))(
+        (a => Js.Array2.map(a, b => (a => a)(b)))(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
     };

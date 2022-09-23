@@ -141,18 +141,16 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Js.Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) => Js.Nullable.return((a => a)(b))
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+                    Js.Array2.map(a, b =>
+                      (
+                        a =>
+                          switch (a) {
+                          | None => Js.Nullable.undefined
+                          | Some(b) => Js.Nullable.return((a => a)(b))
+                          }
+                      )(
+                        b,
+                      )
                     )
                 )(
                   b,
@@ -203,23 +201,19 @@ function back to the original JSON compatible data */
               Js.Nullable.return(
                 (
                   a =>
-                    Js.Array.map(
-                      b =>
-                        (
-                          a =>
-                            switch (a) {
-                            | None => Js.Nullable.undefined
-                            | Some(b) =>
-                              Js.Nullable.return(
-                                (a => serializeInputObjectEmbeddedInput(a))(
-                                  b,
-                                ),
-                              )
-                            }
-                        )(
-                          b,
-                        ),
-                      a,
+                    Js.Array2.map(a, b =>
+                      (
+                        a =>
+                          switch (a) {
+                          | None => Js.Nullable.undefined
+                          | Some(b) =>
+                            Js.Nullable.return(
+                              (a => serializeInputObjectEmbeddedInput(a))(b),
+                            )
+                          }
+                      )(
+                        b,
+                      )
                     )
                 )(
                   b,

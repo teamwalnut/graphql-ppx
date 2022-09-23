@@ -54,21 +54,20 @@ function back to the original JSON-compatible data */
       {
         reposts: {
           let value = (value: Raw.t).reposts;
-          value
-          |> Js.Array.map(value =>
-               switch (Js.toOption(value)) {
-               | Some(value) =>
-                 Some(
-                   {
-                     id: {
-                       let value = (value: Raw.t_reposts).id;
-                       value;
-                     },
-                   }: t_reposts,
-                 )
-               | None => None
-               }
-             );
+          Js.Array2.map(value, value =>
+            switch (Js.toOption(value)) {
+            | Some(value) =>
+              Some(
+                {
+                  id: {
+                    let value = (value: Raw.t_reposts).id;
+                    value;
+                  },
+                }: t_reposts,
+              )
+            | None => None
+            }
+          );
         },
       }: t
     );

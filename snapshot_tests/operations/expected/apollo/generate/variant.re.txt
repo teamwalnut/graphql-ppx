@@ -170,7 +170,7 @@ function back to the original JSON compatible data */
               switch (Js.Json.decodeNull(temp)) {
               | None =>
                 let value = temp;
-                `BaseTypeList(value |> Js.Array.map(value => value));
+                `BaseTypeList(Js.Array2.map(value, value => value));
               | Some(_) =>
                 let temp = Js.Dict.unsafeGet(Obj.magic(value), "dog");
                 switch (Js.Json.decodeNull(temp)) {
