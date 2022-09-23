@@ -367,9 +367,8 @@ and generate_array_encoder config loc inner path definition =
     [@metaloc loc]
   | false ->
     [%expr
-      value
-      |> Js.Array.map (fun value ->
-           [%e generate_serializer config path definition None inner])]
+      Js.Array2.map value (fun value ->
+        [%e generate_serializer config path definition None inner])]
     [@metaloc loc]
 
 and generate_poly_enum_encoder loc enum_meta omit_future_value =
