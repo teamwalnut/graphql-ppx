@@ -126,7 +126,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("hasuraRepro", hasuraRepro)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -153,7 +153,9 @@ function back to the original JSON compatible data */
             (inp: t_variables).type_,
           ),
         ),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {
     blockNumber,
     type_,

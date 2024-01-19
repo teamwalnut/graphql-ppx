@@ -96,13 +96,15 @@ function back to the original JSON compatible data */
         {recursiveInput: recursiveInput};
       }: Raw.t
     );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       arg:
         (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
-    }
+    }:
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectRecursiveInput:
-    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput =
+    t_variables_RecursiveInput => Raw.t_variables_RecursiveInput = (
     inp => {
       otherField:
         (
@@ -149,7 +151,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables_RecursiveInput).enum,
         ),
-    };
+    }:
+      t_variables_RecursiveInput => Raw.t_variables_RecursiveInput
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectRecursiveInput =
       (~otherField=?, ~inner=?, ~enum=?, ()): t_variables_RecursiveInput => {
@@ -262,15 +266,17 @@ function back to the original JSON compatible data */
         {recursiveRepro: recursiveRepro};
       }: Raw.t
     );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       input:
         (a => serializeInputObjectproblem_input(a))(
           (inp: t_variables).input,
         ),
-    }
+    }:
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectproblem_input:
-    t_variables_problem_input => Raw.t_variables_problem_input =
+    t_variables_problem_input => Raw.t_variables_problem_input = (
     inp => {
       the_problem:
         (
@@ -298,13 +304,18 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables_problem_input).b,
         ),
-    }
+    }:
+      t_variables_problem_input => Raw.t_variables_problem_input
+  )
   and serializeInputObjectthis_will_be_duplicated:
     t_variables_this_will_be_duplicated =>
-    Raw.t_variables_this_will_be_duplicated =
-    inp => {id: (a => a)((inp: t_variables_this_will_be_duplicated).id)}
+    Raw.t_variables_this_will_be_duplicated = (
+    inp => {id: (a => a)((inp: t_variables_this_will_be_duplicated).id)}:
+      t_variables_this_will_be_duplicated =>
+      Raw.t_variables_this_will_be_duplicated
+  )
   and serializeInputObjectnested_type:
-    t_variables_nested_type => Raw.t_variables_nested_type =
+    t_variables_nested_type => Raw.t_variables_nested_type = (
     inp => {
       the_problem:
         (
@@ -319,7 +330,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables_nested_type).the_problem,
         ),
-    };
+    }:
+      t_variables_nested_type => Raw.t_variables_nested_type
+  );
   let makeVariables = (~input, ()): t_variables => {input: input}
   and makeInputObjectproblem_input =
       (~the_problem=?, ~b=?, ()): t_variables_problem_input => {

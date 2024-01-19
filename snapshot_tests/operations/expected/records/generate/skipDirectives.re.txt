@@ -186,8 +186,10 @@ function back to the original JSON compatible data */
         {v1, v2};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
-    inp => {var: (a => a)((inp: t_variables).var)};
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {var: (a => a)((inp: t_variables).var)}:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";

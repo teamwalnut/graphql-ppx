@@ -63,8 +63,10 @@ function back to the original JSON compatible data */
       };
       `Assoc([("argNamedQuery", argNamedQuery)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
-    inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~query, ()): t_variables => {query: query};
   external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";
@@ -121,8 +123,10 @@ function back to the original JSON compatible data */
         };
         `Assoc([("argNamedQuery", argNamedQuery)]);
       };
-    let serializeVariables: t_variables => Raw.t_variables =
-      inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
+    let serializeVariables: t_variables => Raw.t_variables = (
+      inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]):
+        t_variables => Raw.t_variables
+    );
     let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
       "%identity";
@@ -179,8 +183,10 @@ function back to the original JSON compatible data */
         };
         `Assoc([("argNamedQuery", argNamedQuery)]);
       };
-    let serializeVariables: t_variables => Raw.t_variables =
-      inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]);
+    let serializeVariables: t_variables => Raw.t_variables = (
+      inp => `Assoc([("query", (a => `Int(a))((inp: t_variables).query))]):
+        t_variables => Raw.t_variables
+    );
     let makeVariables = (~query, ()): t_variables => {query: query};
     external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t =
       "%identity";

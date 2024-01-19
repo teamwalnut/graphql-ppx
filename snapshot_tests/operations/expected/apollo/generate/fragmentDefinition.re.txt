@@ -885,7 +885,7 @@ function back to the original JSON compatible data */
         {l1, l2, l3, l4, l5};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       arg1:
         (
@@ -897,7 +897,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables).arg1,
         ),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~arg1=?, ()): t_variables => {arg1: arg1};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

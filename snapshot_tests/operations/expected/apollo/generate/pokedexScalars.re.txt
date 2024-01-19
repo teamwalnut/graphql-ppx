@@ -142,7 +142,7 @@ function back to the original JSON compatible data */
         {pokemon: pokemon};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       id:
         (
@@ -164,7 +164,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables).name,
         ),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~id=?, ~name=?, ()): t_variables => {id, name};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
@@ -297,7 +299,7 @@ function back to the original JSON compatible data */
         {pokemon: pokemon};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       id:
         (
@@ -319,7 +321,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables).name,
         ),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~id=?, ~name=?, ()): t_variables => {id, name};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";

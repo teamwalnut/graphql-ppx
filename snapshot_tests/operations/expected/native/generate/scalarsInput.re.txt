@@ -107,7 +107,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("scalarsInput", scalarsInput)]);
     };
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -116,9 +116,11 @@ function back to the original JSON compatible data */
             (inp: t_variables).arg,
           ),
         ),
-      ])
+      ]):
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectVariousScalarsInput:
-    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput =
+    t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput = (
     inp =>
       `Assoc([
         (
@@ -198,7 +200,9 @@ function back to the original JSON compatible data */
           "id",
           (a => `String(a))((inp: t_variables_VariousScalarsInput).id),
         ),
-      ]);
+      ]):
+      t_variables_VariousScalarsInput => Raw.t_variables_VariousScalarsInput
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectVariousScalarsInput =
       (

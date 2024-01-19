@@ -157,8 +157,10 @@ function back to the original JSON compatible data */
       };
       `Assoc([("v1", v1), ("v2", v2)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
-    inp => `Assoc([("var", (a => `Bool(a))((inp: t_variables).var))]);
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => `Assoc([("var", (a => `Bool(a))((inp: t_variables).var))]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~var, ()): t_variables => {var: var};
   external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";

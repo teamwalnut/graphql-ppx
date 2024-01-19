@@ -99,12 +99,14 @@ function back to the original JSON compatible data */
         {listsInput: listsInput};
       }: Raw.t
     );
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
-    }
+    }:
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectListsInput:
-    t_variables_ListsInput => Raw.t_variables_ListsInput =
+    t_variables_ListsInput => Raw.t_variables_ListsInput = (
     inp => {
       nullableOfNullable:
         (
@@ -168,7 +170,9 @@ function back to the original JSON compatible data */
         (a => Js.Array2.map(a, b => (a => a)(b)))(
           (inp: t_variables_ListsInput).nonNullableOfNonNullable,
         ),
-    };
+    }:
+      t_variables_ListsInput => Raw.t_variables_ListsInput
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectListsInput =
       (
