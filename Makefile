@@ -23,18 +23,26 @@ install: ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-test
 
+.PHONY: native-tests
+native-tests: ## Run native tests
+	$(DUNE) runtest -f
+
+.PHONY: snapshot-tests
+snapshot-tests: ## Run snapshot tests
+	./tests.sh
+
 .PHONY: test
 test: ## Run tests using yest
-	$(DUNE) build
-	./tests.sh
+	make native-tests
+	make snapshot-tests
 
 .PHONY: build
 build: ## Build the project
 	$(DUNE) build
 
-.PHONY: release_static
-release_static: ## Release the project
-	$(DUNE) build --root . --only-packages '#{self.name}' --ignore-promoted-rules --no-config --profile release-static
+.PHONY: release-static
+release-static: ## Release the project
+	$(DUNE) build --root . --only-packages ${project_name} --ignore-promoted-rules --no-config --profile release-static
 
 .PHONY: build_verbose
 build_verbose: ## Build the project
