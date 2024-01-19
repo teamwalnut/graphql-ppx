@@ -81,7 +81,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("listsInput", listsInput)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -173,7 +173,9 @@ function back to the original JSON compatible data */
             (inp: t_variables).nonNullableOfNonNullable,
           ),
         ),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables =
       (
         ~nullableOfNullable=?,

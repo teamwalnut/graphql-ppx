@@ -791,7 +791,7 @@ function back to the original JSON compatible data */
         ("l5", l5),
       ]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -806,7 +806,9 @@ function back to the original JSON compatible data */
             (inp: t_variables).arg1,
           ),
         ),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~arg1=?, ()): t_variables => {arg1: arg1};
   let makeDefaultVariables = () => makeVariables();
   external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";

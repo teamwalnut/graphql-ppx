@@ -111,7 +111,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("customScalarField", customScalarField)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -127,7 +127,9 @@ function back to the original JSON compatible data */
           ),
         ),
         ("req", (a => a)((inp: t_variables).req)),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~opt=?, ~req, ()): t_variables => {opt, req};
   external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";

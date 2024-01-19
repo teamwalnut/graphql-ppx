@@ -65,7 +65,7 @@ function back to the original JSON compatible data */
         {enumInput: enumInput};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       arg:
         (
@@ -78,7 +78,9 @@ function back to the original JSON compatible data */
         )(
           (inp: t_variables).arg,
         ),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg};
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";

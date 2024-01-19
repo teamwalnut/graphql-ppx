@@ -1,137 +1,67 @@
 name: graphql-ppx-pipeline
 
-on: [pull_request, push]
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  test_and_build_linux:
-    name: ${{ matrix.os }}/node-${{ matrix.node-version }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [16.x]
-        os: [ubuntu-latest]
-
-    container:
-      image: alexfedoseev/alpine-node-yarn-esy:0.0.4
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Add tar
-        run: apk add --no-cache tar
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        uses: actions/cache@v2
-        id: deps-cache
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-
-
-      - name: build
-        run: esy b
-
-      - name: native tests
-        run: |
-          esy b dune runtest -f
-        env:
-          CI: true
-
-      - name: snapshot tests
-        env:
-          GRAPHQL_CI: true
-        run: |
-          npm ci --no-optional --ignore-scripts
-          esy test
-          esy release-static
-
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}
-          path: _build/default/src/bin/bin.exe
-
   test_and_build:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
-        os: [windows-latest, macOS-latest]
+        node-version:
+          - 18.x
+        ocaml-compiler:
+          - 5.1.0
+        os: [ubuntu-latest]
+    container:
+      image: ocaml/opam:alpine-ocaml-5.1-afl
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install esy
+      - name: Install NPM
+        run: apk add --update nodejs npm
+ 
+      - name: Install Deps
         run: |
-          npm install -g esy@0.6.12
+          make install
+          npm ci --no-optional --ignore-scripts
 
-      - name: Install
-        run: esy install
+      - name: Build
+        run: make build
 
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-
-      - name: build
-        run: esy b
-
-      - name: test-native
-        run: |
-          esy b dune runtest -f
+      - name: Native Tests
+        run: make native-tests
         env:
           CI: true
 
-      - name: npm ci
-        if: runner.os != 'Windows'
-        run: |
-          npm ci --no-optional
+      - name: Snapshot Tests
+        run: make snapshot-tests
+        env:
+          CI: true
+
+      - name: Release Static
         env:
           GRAPHQL_CI: true
+        run: make release-static
 
-      - name: snaphot tests
-        if: runner.os != 'Windows'
-        run: |
-          esy test
-
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
+      - name: Upload artifacts ${{ matrix.os }} (Only on release)
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
           path: _build/default/src/bin/bin.exe
 
   publish:
-    needs: [test_and_build, test_and_build_linux]
+    needs: [test_and_build]
     name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Download linux artifacts

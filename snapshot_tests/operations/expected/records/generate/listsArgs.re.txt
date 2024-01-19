@@ -92,7 +92,7 @@ function back to the original JSON compatible data */
         {listsInput: listsInput};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       nullableOfNullable:
         (
@@ -156,7 +156,9 @@ function back to the original JSON compatible data */
         (a => Js.Array2.map(a, b => (a => a)(b)))(
           (inp: t_variables).nonNullableOfNonNullable,
         ),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables =
       (
         ~nullableOfNullable=?,

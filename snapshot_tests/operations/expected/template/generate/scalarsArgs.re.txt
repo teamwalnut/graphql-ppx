@@ -124,7 +124,7 @@ function back to the original JSON compatible data */
         {scalarsInput: scalarsInput};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       nullableString:
         (
@@ -181,7 +181,9 @@ function back to the original JSON compatible data */
           (inp: t_variables).nullableID,
         ),
       id: (a => a)((inp: t_variables).id),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables =
       (
         ~nullableString=?,

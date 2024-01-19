@@ -104,7 +104,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("nonrecursiveInput", nonrecursiveInput)]);
     };
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -113,9 +113,11 @@ function back to the original JSON compatible data */
             (inp: t_variables).arg,
           ),
         ),
-      ])
+      ]):
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectNonrecursiveInput:
-    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput =
+    t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput = (
     inp =>
       `Assoc([
         (
@@ -239,9 +241,11 @@ function back to the original JSON compatible data */
             (inp: t_variables_NonrecursiveInput).custom,
           ),
         ),
-      ])
+      ]):
+      t_variables_NonrecursiveInput => Raw.t_variables_NonrecursiveInput
+  )
   and serializeInputObjectEmbeddedInput:
-    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput =
+    t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput = (
     inp =>
       `Assoc([
         (
@@ -256,7 +260,9 @@ function back to the original JSON compatible data */
             (inp: t_variables_EmbeddedInput).field,
           ),
         ),
-      ]);
+      ]):
+      t_variables_EmbeddedInput => Raw.t_variables_EmbeddedInput
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectNonrecursiveInput =
       (

@@ -99,7 +99,7 @@ function back to the original JSON compatible data */
       };
       `Assoc([("scalarsInput", scalarsInput)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
@@ -167,7 +167,9 @@ function back to the original JSON compatible data */
           ),
         ),
         ("id", (a => `String(a))((inp: t_variables).id)),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables =
       (
         ~nullableString=?,

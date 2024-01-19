@@ -64,11 +64,13 @@ function back to the original JSON compatible data */
       };
       `Assoc([("optionalInputArgs", optionalInputArgs)]);
     };
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         ("required", (a => `String(a))((inp: t_variables).required)),
-      ]);
+      ]):
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~required, ()): t_variables => {required: required};
   external unsafe_fromJson: Graphql_ppx_runtime.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Graphql_ppx_runtime.Json.t = "%identity";

@@ -121,7 +121,7 @@ function back to the original JSON compatible data */
         {customScalarField: customScalarField};
       }: Raw.t
     );
-  let serializeVariables: t_variables => Raw.t_variables =
+  let serializeVariables: t_variables => Raw.t_variables = (
     inp => {
       opt:
         (
@@ -134,7 +134,9 @@ function back to the original JSON compatible data */
           (inp: t_variables).opt,
         ),
       req: (a => a)((inp: t_variables).req),
-    };
+    }:
+      t_variables => Raw.t_variables
+  );
   let makeVariables = (~opt=?, ~req, ()): t_variables => {opt, req};
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity";
   external toJson: Raw.t => Js.Json.t = "%identity";

@@ -88,16 +88,18 @@ function back to the original JSON compatible data */
       };
       `Assoc([("listsInput", listsInput)]);
     };
-  let rec serializeVariables: t_variables => Raw.t_variables =
+  let rec serializeVariables: t_variables => Raw.t_variables = (
     inp =>
       `Assoc([
         (
           "arg",
           (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
         ),
-      ])
+      ]):
+      t_variables => Raw.t_variables
+  )
   and serializeInputObjectListsInput:
-    t_variables_ListsInput => Raw.t_variables_ListsInput =
+    t_variables_ListsInput => Raw.t_variables_ListsInput = (
     inp =>
       `Assoc([
         (
@@ -189,7 +191,9 @@ function back to the original JSON compatible data */
             (inp: t_variables_ListsInput).nonNullableOfNonNullable,
           ),
         ),
-      ]);
+      ]):
+      t_variables_ListsInput => Raw.t_variables_ListsInput
+  );
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectListsInput =
       (
