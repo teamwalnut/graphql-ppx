@@ -188,7 +188,7 @@ let generate_record_type ~config ~obj_path ~raw ~(loc : ast_location)
                  | false ->
                    [
                      Ast_helper.Attr.mk
-                       { txt = "bs.as"; loc = Location.none }
+                       { txt = "as"; loc = Location.none }
                        (PStr [ Ast_helper.Str.eval (const_str_expr name) ]);
                    ])
                {
@@ -709,7 +709,7 @@ let generate_record_input_object raw input_obj_name fields =
                     | false ->
                       [
                         Ast_helper.Attr.mk
-                          { txt = "bs.as"; loc = Location.none }
+                          { txt = "as"; loc = Location.none }
                           (PStr [ Ast_helper.Str.eval (const_str_expr name) ]);
                       ])
                 {
