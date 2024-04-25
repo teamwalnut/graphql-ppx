@@ -194,6 +194,7 @@ let extract_records_from_config = extract_bool_from_config "records"
 let extract_objects_from_config = extract_bool_from_config "objects"
 let extract_inline_from_config = extract_bool_from_config "inline"
 let extract_apollo_mode_from_config = extract_bool_from_config "apolloMode"
+let extract_uncurried_from_config = extract_bool_from_config "uncurried"
 
 let extract_future_added_value_from_config =
   extract_bool_from_config "futureAddedValue"
@@ -220,6 +221,7 @@ let get_query_config_from_trailing_record fields =
     fragment_in_query = extract_fragment_in_query_from_config fields;
     apollo_mode = extract_apollo_mode_from_config fields;
     template_tag_is_function = None;
+    uncurried = extract_uncurried_from_config fields;
   }
 
 let empty_query_config =
@@ -239,6 +241,7 @@ let empty_query_config =
     extend = None;
     fragment_in_query = None;
     apollo_mode = None;
+    uncurried = None;
   }
 
 let get_with_default value default_value =
@@ -1097,6 +1100,12 @@ let args =
           Ppx_config.update_config (fun current ->
             { current with native = true })),
       "native mode (non-ReScript)" );
+    ( "-uncurried",
+      Arg.Unit
+        (fun () ->
+          Ppx_config.update_config (fun current ->
+            { current with uncurried = true })),
+      "uncurried mode" );
   ]
 
 let () =

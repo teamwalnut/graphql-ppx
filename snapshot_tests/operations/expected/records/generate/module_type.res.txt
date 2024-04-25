@@ -17,38 +17,34 @@ string
 
 }
 "
-  let parse = (
-    (value): t => {
-      variousScalars: {
-        let value = (value: Raw.t).variousScalars
-        (
-          {
-            string: {
-              let value = (value: Raw.t_variousScalars).string
-              value
-            },
-          }: t_variousScalars
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let variousScalars = {
-        let value = (value: t).variousScalars
-        (
-          {
-            let string = {
-              let value = (value: t_variousScalars).string
-              value
-            }
-            {string: string}
-          }: Raw.t_variousScalars
-        )
-      }
-      {variousScalars: variousScalars}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          {string: string}
+        }: Raw.t_variousScalars
+      )
+    }
+    {variousScalars: variousScalars}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()
@@ -76,38 +72,34 @@ string
 
 }
 "
-  let parse = (
-    (value): t => {
-      variousScalars: {
-        let value = (value: Raw.t).variousScalars
-        (
-          {
-            string: {
-              let value = (value: Raw.t_variousScalars).string
-              value
-            },
-          }: t_variousScalars
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let variousScalars = {
-        let value = (value: t).variousScalars
-        (
-          {
-            let string = {
-              let value = (value: t_variousScalars).string
-              value
-            }
-            {string: string}
-          }: Raw.t_variousScalars
-        )
-      }
-      {variousScalars: variousScalars}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          {string: string}
+        }: Raw.t_variousScalars
+      )
+    }
+    {variousScalars: variousScalars}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()
@@ -169,95 +161,91 @@ field
 
 }
 "
-  let parse = (
-    (value): t => {
-      nestedObject: {
-        let value = (value: Raw.t).nestedObject
-        VariousScalars.parse(
-          (
-            {
-              inner: {
-                let value = (value: Raw.t_nestedObject).inner
-                switch Js.toOption(value) {
-                | Some(value) =>
-                  Some(
-                    (
-                      {
-                        inner: {
-                          let value = (value: Raw.t_nestedObject_inner).inner
-                          switch Js.toOption(value) {
-                          | Some(value) =>
-                            Some(
-                              (
-                                {
-                                  field: {
-                                    let value = (value: Raw.t_nestedObject_inner_inner).field
-                                    value
-                                  },
-                                }: t_nestedObject_inner_inner
-                              ),
-                            )
-                          | None => None
-                          }
-                        },
-                      }: t_nestedObject_inner
-                    ),
-                  )
-                | None => None
-                }
-              },
-            }: t_nestedObject
-          ),
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nestedObject = {
-        let value = (value: t).nestedObject
-        let value = VariousScalars.serialize(value)
+  let parse = (value): t => {
+    nestedObject: {
+      let value = (value: Raw.t).nestedObject
+      VariousScalars.parse(
         (
           {
-            let inner = {
-              let value = (value: t_nestedObject).inner
-              switch value {
+            inner: {
+              let value = (value: Raw.t_nestedObject).inner
+              switch Js.toOption(value) {
               | Some(value) =>
-                Js.Nullable.return(
+                Some(
                   (
                     {
-                      let inner = {
-                        let value = (value: t_nestedObject_inner).inner
-                        switch value {
+                      inner: {
+                        let value = (value: Raw.t_nestedObject_inner).inner
+                        switch Js.toOption(value) {
                         | Some(value) =>
-                          Js.Nullable.return(
+                          Some(
                             (
                               {
-                                let field = {
-                                  let value = (value: t_nestedObject_inner_inner).field
+                                field: {
+                                  let value = (value: Raw.t_nestedObject_inner_inner).field
                                   value
-                                }
-                                {field: field}
-                              }: Raw.t_nestedObject_inner_inner
+                                },
+                              }: t_nestedObject_inner_inner
                             ),
                           )
-                        | None => Js.Nullable.null
+                        | None => None
                         }
-                      }
-                      {inner: inner}
-                    }: Raw.t_nestedObject_inner
+                      },
+                    }: t_nestedObject_inner
                   ),
                 )
-              | None => Js.Nullable.null
+              | None => None
               }
+            },
+          }: t_nestedObject
+        ),
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nestedObject = {
+      let value = (value: t).nestedObject
+      let value = VariousScalars.serialize(value)
+      (
+        {
+          let inner = {
+            let value = (value: t_nestedObject).inner
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return(
+                (
+                  {
+                    let inner = {
+                      let value = (value: t_nestedObject_inner).inner
+                      switch value {
+                      | Some(value) =>
+                        Js.Nullable.return(
+                          (
+                            {
+                              let field = {
+                                let value = (value: t_nestedObject_inner_inner).field
+                                value
+                              }
+                              {field: field}
+                            }: Raw.t_nestedObject_inner_inner
+                          ),
+                        )
+                      | None => Js.Nullable.null
+                      }
+                    }
+                    {inner: inner}
+                  }: Raw.t_nestedObject_inner
+                ),
+              )
+            | None => Js.Nullable.null
             }
-            {inner: inner}
-          }: Raw.t_nestedObject
-        )
-      }
-      {nestedObject: nestedObject}
-    }: t => Raw.t
-  )
+          }
+          {inner: inner}
+        }: Raw.t_nestedObject
+      )
+    }
+    {nestedObject: nestedObject}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

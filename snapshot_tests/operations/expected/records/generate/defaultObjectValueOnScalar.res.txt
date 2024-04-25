@@ -30,23 +30,19 @@ function back to the original JSON compatible data ")
 defaultObjectValueOnScalar(filter: {some: {json: "value"}}, arg: {field: "otherValue"})  
 }
 "
-  let parse = (
-    (value): t => {
-      defaultObjectValueOnScalar: {
-        let value = (value: Raw.t).defaultObjectValueOnScalar
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let defaultObjectValueOnScalar = {
-        let value = (value: t).defaultObjectValueOnScalar
-        value
-      }
-      {defaultObjectValueOnScalar: defaultObjectValueOnScalar}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    defaultObjectValueOnScalar: {
+      let value = (value: Raw.t).defaultObjectValueOnScalar
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let defaultObjectValueOnScalar = {
+      let value = (value: t).defaultObjectValueOnScalar
+      value
+    }
+    {defaultObjectValueOnScalar: defaultObjectValueOnScalar}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

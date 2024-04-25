@@ -55,23 +55,19 @@ function back to the original JSON compatible data ")
 listsInput(arg: {nullableOfNullable: $nullableOfNullable, nullableOfNonNullable: $nullableOfNonNullable, nonNullableOfNullable: $nonNullableOfNullable, nonNullableOfNonNullable: $nonNullableOfNonNullable})  
 }
 "
-  let parse = (
-    (value): t => {
-      listsInput: {
-        let value = (value: Raw.t).listsInput
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let listsInput = {
-        let value = (value: t).listsInput
-        value
-      }
-      {listsInput: listsInput}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    listsInput: {
+      let value = (value: Raw.t).listsInput
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let listsInput = {
+      let value = (value: t).listsInput
+      value
+    }
+    {listsInput: listsInput}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     nullableOfNullable: (
       a =>

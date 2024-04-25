@@ -56,23 +56,19 @@ function back to the original JSON compatible data ")
 recursiveInput(arg: $arg)  
 }
 "
-  let parse = (
-    (value): t => {
-      recursiveInput: {
-        let value = (value: Raw.t).recursiveInput
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let recursiveInput = {
-        let value = (value: t).recursiveInput
-        value
-      }
-      {recursiveInput: recursiveInput}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    recursiveInput: {
+      let value = (value: Raw.t).recursiveInput
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let recursiveInput = {
+      let value = (value: t).recursiveInput
+      value
+    }
+    {recursiveInput: recursiveInput}
+  }
   let rec serializeVariables: t_variables => Raw.t_variables = inp => {
     arg: (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
   }
@@ -191,23 +187,19 @@ function back to the original JSON compatible data ")
 recursiveRepro(input: $input)  
 }
 "
-  let parse = (
-    (value): t => {
-      recursiveRepro: {
-        let value = (value: Raw.t).recursiveRepro
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let recursiveRepro = {
-        let value = (value: t).recursiveRepro
-        value
-      }
-      {recursiveRepro: recursiveRepro}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    recursiveRepro: {
+      let value = (value: Raw.t).recursiveRepro
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let recursiveRepro = {
+      let value = (value: t).recursiveRepro
+      value
+    }
+    {recursiveRepro: recursiveRepro}
+  }
   let rec serializeVariables: t_variables => Raw.t_variables = inp => {
     input: (a => serializeInputObjectproblem_input(a))((inp: t_variables).input),
   }

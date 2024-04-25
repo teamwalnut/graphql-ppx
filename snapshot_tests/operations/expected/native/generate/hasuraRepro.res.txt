@@ -104,24 +104,20 @@ hasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  
 ",
     Dog.query,
   )
-  let parse = (
-    (value): t => {
-      hasuraRepro: {
-        let value = (value: Raw.t).hasuraRepro
+  let parse = (value): t => {
+    hasuraRepro: {
+      let value = (value: Raw.t).hasuraRepro
 
-        Dog.verifyArgsAndParse(~fragmentName=#Dog, value)
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let hasuraRepro = {
-        let value = (value: t).hasuraRepro
-        Dog.serialize(value)
-      }
-      {hasuraRepro: hasuraRepro}
-    }: t => Raw.t
-  )
+      Dog.verifyArgsAndParse(~fragmentName=#Dog, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let hasuraRepro = {
+      let value = (value: t).hasuraRepro
+      Dog.serialize(value)
+    }
+    {hasuraRepro: hasuraRepro}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     blockNumber: (
       a =>

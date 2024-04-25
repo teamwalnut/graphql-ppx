@@ -68,6 +68,7 @@ let defaultConfig =
     extend_fragment = None;
     fragment_in_query = Include;
     native = true;
+    uncurried = false;
   }
 
 module JsonHelper = struct
@@ -131,6 +132,9 @@ let read_config () =
     in
     let handleApolloMode apollo_mode =
       Ppx_config.update_config (fun current -> { current with apollo_mode })
+    in
+    let handleUncurried uncurried =
+      Ppx_config.update_config (fun current -> { current with uncurried })
     in
     let handleSchema schema_file =
       Ppx_config.update_config (fun current -> { current with schema_file })
@@ -268,6 +272,7 @@ let read_config () =
     configString "templateTagReturnType" handleTemplateTagReturnType;
     configBool "template-tag-is-function" handleTemplateTagIsFunction;
     configBool "templateTagIsFunction" handleTemplateTagIsFunction;
+    configBool "uncurried" handleUncurried;
     read_custom_fields ppxConfig
   in
   match Paths.getBsConfigFile () with

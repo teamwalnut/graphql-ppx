@@ -29,23 +29,19 @@ function back to the original JSON compatible data ")
 optionalInputArgs(required: $required, anotherRequired: "val")  
 }
 "
-  let parse = (
-    (value): t => {
-      optionalInputArgs: {
-        let value = (value: Raw.t).optionalInputArgs
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let optionalInputArgs = {
-        let value = (value: t).optionalInputArgs
-        value
-      }
-      {optionalInputArgs: optionalInputArgs}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    optionalInputArgs: {
+      let value = (value: Raw.t).optionalInputArgs
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let optionalInputArgs = {
+      let value = (value: t).optionalInputArgs
+      value
+    }
+    {optionalInputArgs: optionalInputArgs}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     required: (a => a)((inp: t_variables).required),
   }

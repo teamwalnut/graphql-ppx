@@ -118,101 +118,97 @@ nullableString
 
 }
 "
-  let parse = (
-    (value): t => {
-      customFields: {
-        let value = (value: Raw.t).customFields
-        (
-          {
-            currentTime: {
-              let value = (value: Raw.t_customFields).currentTime
-              DateTime.parse(value)
-            },
-            favoriteColor: {
-              let value = (value: Raw.t_customFields).favoriteColor
-              Color.parse(value)
-            },
-            futureTime: {
-              let value = (value: Raw.t_customFields).futureTime
+  let parse = (value): t => {
+    customFields: {
+      let value = (value: Raw.t).customFields
+      (
+        {
+          currentTime: {
+            let value = (value: Raw.t_customFields).currentTime
+            DateTime.parse(value)
+          },
+          favoriteColor: {
+            let value = (value: Raw.t_customFields).favoriteColor
+            Color.parse(value)
+          },
+          futureTime: {
+            let value = (value: Raw.t_customFields).futureTime
+            switch Js.toOption(value) {
+            | Some(value) => Some(DateTime.parse(value))
+            | None => None
+            }
+          },
+          nullableColor: {
+            let value = (value: Raw.t_customFields).nullableColor
+            switch Js.toOption(value) {
+            | Some(value) => Some(Color.parse(value))
+            | None => None
+            }
+          },
+          nullableString: {
+            let value = (value: Raw.t_customFields).nullableString
+            NullableString.parse(
               switch Js.toOption(value) {
-              | Some(value) => Some(DateTime.parse(value))
+              | Some(value) => Some(value)
               | None => None
-              }
-            },
-            nullableColor: {
-              let value = (value: Raw.t_customFields).nullableColor
-              switch Js.toOption(value) {
-              | Some(value) => Some(Color.parse(value))
-              | None => None
-              }
-            },
-            nullableString: {
-              let value = (value: Raw.t_customFields).nullableString
-              NullableString.parse(
-                switch Js.toOption(value) {
-                | Some(value) => Some(value)
-                | None => None
-                },
-              )
-            },
-          }: t_customFields
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let customFields = {
-        let value = (value: t).customFields
-        (
-          {
-            let nullableString = {
-              let value = (value: t_customFields).nullableString
-              let value = NullableString.serialize(value)
-              switch value {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              }
+              },
+            )
+          },
+        }: t_customFields
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let customFields = {
+      let value = (value: t).customFields
+      (
+        {
+          let nullableString = {
+            let value = (value: t_customFields).nullableString
+            let value = NullableString.serialize(value)
+            switch value {
+            | Some(value) => Js.Nullable.return(value)
+            | None => Js.Nullable.null
             }
-            and nullableColor = {
-              let value = (value: t_customFields).nullableColor
-              switch value {
-              | Some(value) =>
-                Js.Nullable.return({
-                  let value = Color.serialize(value)
-                  value
-                })
-              | None => Js.Nullable.null
-              }
+          }
+          and nullableColor = {
+            let value = (value: t_customFields).nullableColor
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return({
+                let value = Color.serialize(value)
+                value
+              })
+            | None => Js.Nullable.null
             }
-            and futureTime = {
-              let value = (value: t_customFields).futureTime
-              switch value {
-              | Some(value) =>
-                Js.Nullable.return({
-                  let value = DateTime.serialize(value)
-                  value
-                })
-              | None => Js.Nullable.null
-              }
+          }
+          and futureTime = {
+            let value = (value: t_customFields).futureTime
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return({
+                let value = DateTime.serialize(value)
+                value
+              })
+            | None => Js.Nullable.null
             }
-            and favoriteColor = {
-              let value = (value: t_customFields).favoriteColor
-              let value = Color.serialize(value)
-              value
-            }
-            and currentTime = {
-              let value = (value: t_customFields).currentTime
-              let value = DateTime.serialize(value)
-              value
-            }
-            {currentTime, favoriteColor, futureTime, nullableColor, nullableString}
-          }: Raw.t_customFields
-        )
-      }
-      {customFields: customFields}
-    }: t => Raw.t
-  )
+          }
+          and favoriteColor = {
+            let value = (value: t_customFields).favoriteColor
+            let value = Color.serialize(value)
+            value
+          }
+          and currentTime = {
+            let value = (value: t_customFields).currentTime
+            let value = DateTime.serialize(value)
+            value
+          }
+          {currentTime, favoriteColor, futureTime, nullableColor, nullableString}
+        }: Raw.t_customFields
+      )
+    }
+    {customFields: customFields}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

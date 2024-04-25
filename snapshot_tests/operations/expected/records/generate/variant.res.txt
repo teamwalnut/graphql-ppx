@@ -134,142 +134,134 @@ name
 
 }
 "
-  let parse = (
-    (value): t => {
-      mutationForVariant: {
-        let value = (value: Raw.t).mutationForVariant
-        switch Js.Json.decodeObject((Obj.magic(value): Js.Json.t)) {
+  let parse = (value): t => {
+    mutationForVariant: {
+      let value = (value: Raw.t).mutationForVariant
+      switch Js.Json.decodeObject((Obj.magic(value): Js.Json.t)) {
+      | None =>
+        Js.Exn.raiseError(
+          \"^"(
+            "graphql-ppx: ",
+            \"^"("Expected type ", \"^"("VariantTestResult", " to be an object")),
+          ),
+        )
+      | Some(value) =>
+        let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType")
+        switch Js.Json.decodeNull(temp) {
         | None =>
-          Js.Exn.raiseError(
-            \"^"(
-              "graphql-ppx: ",
-              \"^"("Expected type ", \"^"("VariantTestResult", " to be an object")),
-            ),
-          )
-        | Some(value) =>
-          let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType")
+          let value = temp
+          #BaseType(value)
+        | Some(_) =>
+          let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseTypeList")
           switch Js.Json.decodeNull(temp) {
           | None =>
             let value = temp
-            #BaseType(value)
+            #BaseTypeList(Js.Array2.map(value, value => value))
           | Some(_) =>
-            let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseTypeList")
+            let temp = Js.Dict.unsafeGet(Obj.magic(value), "dog")
             switch Js.Json.decodeNull(temp) {
             | None =>
               let value = temp
-              #BaseTypeList(Js.Array2.map(value, value => value))
+              #Dog(
+                (
+                  {
+                    name: {
+                      let value = (value: Raw.t_mutationForVariant_dog).name
+                      value
+                    },
+                    barkVolume: {
+                      let value = (value: Raw.t_mutationForVariant_dog).barkVolume
+                      value
+                    },
+                  }: t_mutationForVariant_dog
+                ),
+              )
             | Some(_) =>
-              let temp = Js.Dict.unsafeGet(Obj.magic(value), "dog")
+              let temp = Js.Dict.unsafeGet(Obj.magic(value), "human")
               switch Js.Json.decodeNull(temp) {
               | None =>
                 let value = temp
-                #Dog(
+                #Human(
                   (
                     {
                       name: {
-                        let value = (value: Raw.t_mutationForVariant_dog).name
+                        let value = (value: Raw.t_mutationForVariant_human).name
                         value
                       },
-                      barkVolume: {
-                        let value = (value: Raw.t_mutationForVariant_dog).barkVolume
-                        value
-                      },
-                    }: t_mutationForVariant_dog
+                    }: t_mutationForVariant_human
                   ),
                 )
               | Some(_) =>
-                let temp = Js.Dict.unsafeGet(Obj.magic(value), "human")
+                let temp = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman")
                 switch Js.Json.decodeNull(temp) {
                 | None =>
                   let value = temp
-                  #Human(
+                  #DogOrHuman({
+                    let typename = (
+                      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string
+                    )
                     (
-                      {
-                        name: {
-                          let value = (value: Raw.t_mutationForVariant_human).name
-                          value
-                        },
-                      }: t_mutationForVariant_human
+                      switch typename {
+                      | "Dog" =>
+                        #Dog({
+                          let value = (Obj.magic(value): Raw.t_mutationForVariant_dogOrHuman_Dog)
+                          (
+                            {
+                              name: {
+                                let value = (value: Raw.t_mutationForVariant_dogOrHuman_Dog).name
+                                value
+                              },
+                              barkVolume: {
+                                let value = (
+                                  value: Raw.t_mutationForVariant_dogOrHuman_Dog
+                                ).barkVolume
+                                value
+                              },
+                            }: t_mutationForVariant_dogOrHuman_Dog
+                          )
+                        })
+                      | "Human" =>
+                        #Human({
+                          let value = (Obj.magic(value): Raw.t_mutationForVariant_dogOrHuman_Human)
+                          (
+                            {
+                              name: {
+                                let value = (value: Raw.t_mutationForVariant_dogOrHuman_Human).name
+                                value
+                              },
+                            }: t_mutationForVariant_dogOrHuman_Human
+                          )
+                        })
+                      | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
+                      }: t_mutationForVariant_dogOrHuman
+                    )
+                  })
+                | Some(_) =>
+                  Js.Exn.raiseError(
+                    \"^"(
+                      "graphql-ppx: ",
+                      \"^"(
+                        "All fields on variant selection set on type ",
+                        \"^"("VariantTestResult", " were null"),
+                      ),
                     ),
                   )
-                | Some(_) =>
-                  let temp = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman")
-                  switch Js.Json.decodeNull(temp) {
-                  | None =>
-                    let value = temp
-                    #DogOrHuman({
-                      let typename = (
-                        Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string
-                      )
-                      (
-                        switch typename {
-                        | "Dog" =>
-                          #Dog({
-                            let value = (Obj.magic(value): Raw.t_mutationForVariant_dogOrHuman_Dog)
-                            (
-                              {
-                                name: {
-                                  let value = (value: Raw.t_mutationForVariant_dogOrHuman_Dog).name
-                                  value
-                                },
-                                barkVolume: {
-                                  let value = (
-                                    value: Raw.t_mutationForVariant_dogOrHuman_Dog
-                                  ).barkVolume
-                                  value
-                                },
-                              }: t_mutationForVariant_dogOrHuman_Dog
-                            )
-                          })
-                        | "Human" =>
-                          #Human({
-                            let value = (
-                              Obj.magic(value): Raw.t_mutationForVariant_dogOrHuman_Human
-                            )
-                            (
-                              {
-                                name: {
-                                  let value = (
-                                    value: Raw.t_mutationForVariant_dogOrHuman_Human
-                                  ).name
-                                  value
-                                },
-                              }: t_mutationForVariant_dogOrHuman_Human
-                            )
-                          })
-                        | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
-                        }: t_mutationForVariant_dogOrHuman
-                      )
-                    })
-                  | Some(_) =>
-                    Js.Exn.raiseError(
-                      \"^"(
-                        "graphql-ppx: ",
-                        \"^"(
-                          "All fields on variant selection set on type ",
-                          \"^"("VariantTestResult", " were null"),
-                        ),
-                      ),
-                    )
-                  }
                 }
               }
             }
           }
         }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let mutationForVariant = {
-        let value = (value: t).mutationForVariant
-        let _temp = value
-        Obj.magic(Js.Json.null)
       }
-      {mutationForVariant: mutationForVariant}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let mutationForVariant = {
+      let value = (value: t).mutationForVariant
+      let _temp = value
+      Obj.magic(Js.Json.null)
+    }
+    {mutationForVariant: mutationForVariant}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

@@ -9,10 +9,6 @@ open Extract_type_definitions
 
 let conv_loc _ = Location.none
 
-let record_to_object loc record =
-  Ast_helper.Exp.extension
-    ({ txt = "bs.obj"; loc = conv_loc loc }, PStr [ [%stri [%e record]] ])
-
 let raw_opaque_object interface_fragments fields =
   let has_fragments =
     fields |> List.exists (function Fr_fragment_spread _ -> true | _ -> false)

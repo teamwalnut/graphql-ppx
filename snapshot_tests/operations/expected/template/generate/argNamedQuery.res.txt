@@ -29,23 +29,19 @@ function back to the original JSON compatible data ")
 argNamedQuery(query: $query)  
 }
 "
-  let parse = (
-    (value): t => {
-      argNamedQuery: {
-        let value = (value: Raw.t).argNamedQuery
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let argNamedQuery = {
-        let value = (value: t).argNamedQuery
-        value
-      }
-      {argNamedQuery: argNamedQuery}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    argNamedQuery: {
+      let value = (value: Raw.t).argNamedQuery
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let argNamedQuery = {
+      let value = (value: t).argNamedQuery
+      value
+    }
+    {argNamedQuery: argNamedQuery}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     query: (a => a)((inp: t_variables).query),
   }
@@ -86,23 +82,19 @@ function back to the original JSON compatible data ")
 argNamedQuery(query: $query)  
 }
 "
-    let parse = (
-      (value): t => {
-        argNamedQuery: {
-          let value = (value: Raw.t).argNamedQuery
-          value
-        },
-      }: Raw.t => t
-    )
-    let serialize = (
-      (value): Raw.t => {
-        let argNamedQuery = {
-          let value = (value: t).argNamedQuery
-          value
-        }
-        {argNamedQuery: argNamedQuery}
-      }: t => Raw.t
-    )
+    let parse = (value): t => {
+      argNamedQuery: {
+        let value = (value: Raw.t).argNamedQuery
+        value
+      },
+    }
+    let serialize = (value): Raw.t => {
+      let argNamedQuery = {
+        let value = (value: t).argNamedQuery
+        value
+      }
+      {argNamedQuery: argNamedQuery}
+    }
     let serializeVariables: t_variables => Raw.t_variables = inp => {
       query: (a => a)((inp: t_variables).query),
     }
@@ -142,23 +134,19 @@ function back to the original JSON compatible data ")
 argNamedQuery(query: $query)  
 }
 "
-    let parse = (
-      (value): t => {
-        argNamedQuery: {
-          let value = (value: Raw.t).argNamedQuery
-          value
-        },
-      }: Raw.t => t
-    )
-    let serialize = (
-      (value): Raw.t => {
-        let argNamedQuery = {
-          let value = (value: t).argNamedQuery
-          value
-        }
-        {argNamedQuery: argNamedQuery}
-      }: t => Raw.t
-    )
+    let parse = (value): t => {
+      argNamedQuery: {
+        let value = (value: Raw.t).argNamedQuery
+        value
+      },
+    }
+    let serialize = (value): Raw.t => {
+      let argNamedQuery = {
+        let value = (value: t).argNamedQuery
+        value
+      }
+      {argNamedQuery: argNamedQuery}
+    }
     let serializeVariables: t_variables => Raw.t_variables = inp => {
       query: (a => a)((inp: t_variables).query),
     }
