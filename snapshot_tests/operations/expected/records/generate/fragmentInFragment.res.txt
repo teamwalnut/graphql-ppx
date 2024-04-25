@@ -1,0 +1,182 @@
+module Graphql_ppx_runtime = {
+  // mock
+  let deepMerge = (json1, _) => json1
+}
+module ListFragment: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {nullableOfNullable: Js.Nullable.t<array<Js.Nullable.t<string>>>}
+    type t_Lists = t
+  }
+  type rec t = {nullableOfNullable: option<array<option<string>>>}
+  type t_Lists = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#ListFragment], Raw.t) => t
+  let verifyName: [#ListFragment] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {nullableOfNullable: Js.Nullable.t<array<Js.Nullable.t<string>>>}
+    type t_Lists = t
+  }
+  type rec t = {nullableOfNullable: option<array<option<string>>>}
+  type t_Lists = t
+  let query = "fragment ListFragment on Lists   {
+nullableOfNullable  
+}
+"
+  let parse = (
+    (value): t => {
+      nullableOfNullable: {
+        let value = (value: Raw.t).nullableOfNullable
+        switch Js.toOption(value) {
+        | Some(value) =>
+          Some(
+            Js.Array2.map(value, value =>
+              switch Js.toOption(value) {
+              | Some(value) => Some(value)
+              | None => None
+              }
+            ),
+          )
+        | None => None
+        }
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let nullableOfNullable = {
+        let value = (value: t).nullableOfNullable
+        switch value {
+        | Some(value) =>
+          Js.Nullable.return(
+            Js.Array2.map(value, value =>
+              switch value {
+              | Some(value) => Js.Nullable.return(value)
+              | None => Js.Nullable.null
+              }
+            ),
+          )
+        | None => Js.Nullable.null
+        }
+      }
+      {nullableOfNullable: nullableOfNullable}
+    }: t => Raw.t
+  )
+  let verifyArgsAndParse = (~fragmentName as _ListFragment: [#ListFragment], value: Raw.t) =>
+    parse(value)
+  let verifyName = x => switch x {
+  | #ListFragment => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+module Another: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    listFragment: ListFragment.t_Lists,
+  }
+  type t_Lists = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#Another], Raw.t) => t
+  let verifyName: [#Another] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    listFragment: ListFragment.t_Lists,
+  }
+  type t_Lists = t
+  let query = \"^"(
+    "fragment Another on Lists   {
+nullableOfNullable  
+...ListFragment   
+}
+",
+    ListFragment.query,
+  )
+  let parse = (
+    (value): t => {
+      nullableOfNullable: {
+        let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"))
+        switch Js.toOption(value) {
+        | Some(value) =>
+          Some(
+            Js.Array2.map(value, value =>
+              switch Js.toOption(value) {
+              | Some(value) => Some(value)
+              | None => None
+              }
+            ),
+          )
+        | None => None
+        }
+      },
+      listFragment: {
+        let value = (Obj.magic(value): ListFragment.Raw.t)
+
+        ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t =>
+      Obj.magic(
+        Js.Array2.reduce(
+          [(Obj.magic(ListFragment.serialize((value: t).listFragment)): Js.Json.t)],
+          Graphql_ppx_runtime.deepMerge,
+          (
+            Obj.magic({
+              let nullableOfNullable = {
+                let value = (value: t).nullableOfNullable
+                switch value {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    Js.Array2.map(value, value =>
+                      switch value {
+                      | Some(value) => Js.Nullable.return(value)
+                      | None => Js.Nullable.null
+                      }
+                    ),
+                  )
+                | None => Js.Nullable.null
+                }
+              }
+              {"nullableOfNullable": nullableOfNullable}
+            }): Js.Json.t
+          ),
+        ),
+      ): t => Raw.t
+  )
+  let verifyArgsAndParse = (~fragmentName as _Another: [#Another], value: Raw.t) => parse(value)
+  let verifyName = x => switch x {
+  | #Another => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+

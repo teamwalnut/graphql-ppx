@@ -1,0 +1,13 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/missingField3.res[0m:[2m12:7-18[0m
+
+  10 [2m│[0m     l1: lists {
+  11 [2m│[0m       ...Fragments
+  [1;31m12[0m [2m│[0m       [1;31mdoesNotExist[0m
+  13 [2m│[0m     }
+  14 [2m│[0m   }
+  15 [2m│[0m `)
+
+  Unknown field 'doesNotExist' on type Lists
+

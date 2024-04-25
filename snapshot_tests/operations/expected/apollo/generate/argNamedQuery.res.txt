@@ -1,0 +1,171 @@
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+  }
+  type rec t = {argNamedQuery: int}
+  type rec t_variables = {query: int}
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: t_variables => Raw.t_variables
+  let makeVariables: (~query: int, unit) => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+  }
+  type rec t = {argNamedQuery: int}
+  type rec t_variables = {query: int}
+  let query = "query ($query: Int!)  {
+argNamedQuery(query: $query)  
+}
+"
+  let parse = (
+    (value): t => {
+      argNamedQuery: {
+        let value = (value: Raw.t).argNamedQuery
+        value
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let argNamedQuery = {
+        let value = (value: t).argNamedQuery
+        value
+      }
+      {argNamedQuery: argNamedQuery}
+    }: t => Raw.t
+  )
+  let serializeVariables: t_variables => Raw.t_variables = inp => {
+    query: (a => a)((inp: t_variables).query),
+  }
+  let makeVariables = (~query, ()): t_variables => {query: query}
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+module MultipleQueryWithSameVarName = {
+  module Query1: {
+    @@ocaml.warning("-32-30")
+    module Raw: {
+      type rec t = {argNamedQuery: int}
+      type rec t_variables = {query: int}
+    }
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+    @ocaml.doc(" The GraphQL query ") let query: string
+    @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+    let parse: Raw.t => t
+    @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+    let serialize: t => Raw.t
+    let serializeVariables: t_variables => Raw.t_variables
+    let makeVariables: (~query: int, unit) => t_variables
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  } = {
+    @@ocaml.warning("-32-30")
+    module Raw = {
+      type rec t = {argNamedQuery: int}
+      type rec t_variables = {query: int}
+    }
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+    let query = "query Query1($query: Int!)  {
+argNamedQuery(query: $query)  
+}
+"
+    let parse = (
+      (value): t => {
+        argNamedQuery: {
+          let value = (value: Raw.t).argNamedQuery
+          value
+        },
+      }: Raw.t => t
+    )
+    let serialize = (
+      (value): Raw.t => {
+        let argNamedQuery = {
+          let value = (value: t).argNamedQuery
+          value
+        }
+        {argNamedQuery: argNamedQuery}
+      }: t => Raw.t
+    )
+    let serializeVariables: t_variables => Raw.t_variables = inp => {
+      query: (a => a)((inp: t_variables).query),
+    }
+    let makeVariables = (~query, ()): t_variables => {query: query}
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  }
+  module Query2: {
+    @@ocaml.warning("-32-30")
+    module Raw: {
+      type rec t = {argNamedQuery: int}
+      type rec t_variables = {query: int}
+    }
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+    @ocaml.doc(" The GraphQL query ") let query: string
+    @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+    let parse: Raw.t => t
+    @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+    let serialize: t => Raw.t
+    let serializeVariables: t_variables => Raw.t_variables
+    let makeVariables: (~query: int, unit) => t_variables
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  } = {
+    @@ocaml.warning("-32-30")
+    module Raw = {
+      type rec t = {argNamedQuery: int}
+      type rec t_variables = {query: int}
+    }
+    type rec t = {argNamedQuery: int}
+    type rec t_variables = {query: int}
+    let query = "query Query2($query: Int!)  {
+argNamedQuery(query: $query)  
+}
+"
+    let parse = (
+      (value): t => {
+        argNamedQuery: {
+          let value = (value: Raw.t).argNamedQuery
+          value
+        },
+      }: Raw.t => t
+    )
+    let serialize = (
+      (value): Raw.t => {
+        let argNamedQuery = {
+          let value = (value: t).argNamedQuery
+          value
+        }
+        {argNamedQuery: argNamedQuery}
+      }: t => Raw.t
+    )
+    let serializeVariables: t_variables => Raw.t_variables = inp => {
+      query: (a => a)((inp: t_variables).query),
+    }
+    let makeVariables = (~query, ()): t_variables => {query: query}
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  }
+}
+

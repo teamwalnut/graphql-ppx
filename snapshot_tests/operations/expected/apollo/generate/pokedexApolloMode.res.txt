@@ -1,0 +1,115 @@
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_pokemon = {
+      id: string,
+      name: Js.Nullable.t<string>,
+    }
+    type rec t = {pokemon: Js.Nullable.t<t_pokemon>}
+    type rec t_variables = unit
+  }
+  type rec t_pokemon = {id: string, name: option<string>}
+  type rec t = {pokemon: option<t_pokemon>}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_pokemon = {
+      id: string,
+      name: Js.Nullable.t<string>,
+    }
+    type rec t = {pokemon: Js.Nullable.t<t_pokemon>}
+    type rec t_variables = unit
+  }
+  type rec t_pokemon = {
+    id: string,
+    name: option<string>,
+  }
+  type rec t = {pokemon: option<t_pokemon>}
+  type rec t_variables = unit
+  let query = "query   {
+pokemon(name: "Pikachu")  {
+id  
+name  
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      pokemon: {
+        let value = (value: Raw.t).pokemon
+        switch Js.toOption(value) {
+        | Some(value) =>
+          Some(
+            (
+              {
+                id: {
+                  let value = (value: Raw.t_pokemon).id
+                  value
+                },
+                name: {
+                  let value = (value: Raw.t_pokemon).name
+                  switch Js.toOption(value) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  }
+                },
+              }: t_pokemon
+            ),
+          )
+        | None => None
+        }
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let pokemon = {
+        let value = (value: t).pokemon
+        switch value {
+        | Some(value) =>
+          Js.Nullable.return(
+            (
+              {
+                let name = {
+                  let value = (value: t_pokemon).name
+                  switch value {
+                  | Some(value) => Js.Nullable.return(value)
+                  | None => Js.Nullable.null
+                  }
+                }
+                and id = {
+                  let value = (value: t_pokemon).id
+                  value
+                }
+                {id, name}
+              }: Raw.t_pokemon
+            ),
+          )
+        | None => Js.Nullable.null
+        }
+      }
+      {pokemon: pokemon}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+
