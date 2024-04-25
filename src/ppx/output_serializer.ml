@@ -158,7 +158,11 @@ let filter_map f =
 
 let generate_serialize_variable_signatures (arg_type_defs : arg_type_def list) =
   match arg_type_defs with
-  | [ NoVariables ] -> [%sig: val serializeVariables : unit -> Raw.t_variables]
+  | [ NoVariables ] ->
+    [
+      Uncurried_utils.wrap_sig_uncurried_fn
+        [%sigi: val serializeVariables : unit -> Raw.t_variables];
+    ]
   | arg_type_defs ->
     arg_type_defs
     |> filter_map (function
@@ -170,26 +174,31 @@ let generate_serialize_variable_signatures (arg_type_defs : arg_type_def list) =
            | None -> "t_variables"
            | Some input_object_name -> "t_variables_" ^ input_object_name
          in
-         Ast_helper.Sig.value
-           (Ast_helper.Val.mk
-              {
-                loc = conv_loc loc;
-                txt =
-                  (match name with
-                  | None -> "serializeVariables"
-                  | Some input_object_name ->
-                    "serializeInputObject" ^ input_object_name);
-              }
-              (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
-                 (base_type_name type_name)
-                 (base_type_name ("Raw." ^ type_name)))))
+         Uncurried_utils.wrap_sig_uncurried_fn
+         @@ Ast_helper.Sig.value
+              (Ast_helper.Val.mk
+                 {
+                   loc = conv_loc loc;
+                   txt =
+                     (match name with
+                     | None -> "serializeVariables"
+                     | Some input_object_name ->
+                       "serializeInputObject" ^ input_object_name);
+                 }
+                 (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
+                    (base_type_name type_name)
+                    (base_type_name ("Raw." ^ type_name)))))
 
 let generate_serialize_variables (arg_type_defs : arg_type_def list) =
   match arg_type_defs with
   | [ NoVariables ] -> (
     match Ppx_config.native () with
-    | true -> [%stri let serializeVariables () = `Null]
-    | false -> [%stri let serializeVariables () = ()])
+    | true ->
+      Uncurried_utils.wrap_as_uncurried_fn
+        [%stri let serializeVariables () = `Null]
+    | false ->
+      Uncurried_utils.wrap_as_uncurried_fn
+        [%stri let serializeVariables () = ()])
   | arg_type_defs ->
     Ast_helper.Str.value
       (match is_recursive arg_type_defs with
@@ -205,21 +214,23 @@ let generate_serialize_variables (arg_type_defs : arg_type_def list) =
              | None -> "t_variables"
              | Some input_object_name -> "t_variables_" ^ input_object_name
            in
-           (Ast_helper.Vb.mk
-              (Ast_helper.Pat.constraint_ ~loc:(conv_loc loc)
-                 (Ast_helper.Pat.var
-                    {
-                      loc = conv_loc loc;
-                      txt =
-                        (match name with
-                        | None -> "serializeVariables"
-                        | Some input_object_name ->
-                          "serializeInputObject" ^ input_object_name);
-                    })
-                 (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
-                    (base_type_name type_name)
-                    (base_type_name ("Raw." ^ type_name))))
-              (serialize_fun fields type_name) [@metaloc conv_loc loc])))
+           Ast_helper.Vb.mk
+             (Ast_helper.Pat.constraint_ ~loc:(conv_loc loc)
+                (Ast_helper.Pat.var
+                   {
+                     loc = conv_loc loc;
+                     txt =
+                       (match name with
+                       | None -> "serializeVariables"
+                       | Some input_object_name ->
+                         "serializeInputObject" ^ input_object_name);
+                   })
+                (Uncurried_utils.wrap_core_type_uncurried
+                   (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
+                      (base_type_name type_name)
+                      (base_type_name ("Raw." ^ type_name)))))
+             (Uncurried_utils.wrap_function_exp_uncurried ~arity:1
+                (serialize_fun fields type_name))))
 
 let generate_variable_constructors (arg_type_defs : arg_type_def list) =
   match arg_type_defs with

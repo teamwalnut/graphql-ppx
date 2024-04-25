@@ -46,7 +46,6 @@ declare -a configs=(
 rm -rf snapshot_tests/operations/expected/
 rm -rf snapshot_tests/operations/error/expected/
 
-
 for config in "${configs[@]}"; do
   case $config in
     "records" ) opts="" ;;
@@ -56,6 +55,11 @@ for config in "${configs[@]}"; do
     "records_schema" ) opts="-schema=schema.graphql" ;;
     "uncurried" ) opts="-uncurried" ;;
   esac
+  bsc_opts=""
+  case $config in
+    "uncurried" ) bsc_opts="-uncurried" ;;
+  esac
+
 
   mkdir -p snapshot_tests/operations/expected/$config/generate
   mkdir -p snapshot_tests/operations/expected/$config/compile
@@ -65,7 +69,7 @@ for config in "${configs[@]}"; do
     $bsc_path -ppx $ppx_path -bs-no-builtin-ppx -reprint-source $file &> $(snapshotGeneratePath $file $config) & maybeWait
 
     if [[ $config != "native" ]]; then
-      $bsc_path -I ./utilities -w -30 -ppx "$ppx_path $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
+      $bsc_path -I ./utilities -w -30 $bsc_opts -ppx "$ppx_path $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
     fi
   done
 done

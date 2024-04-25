@@ -77,23 +77,19 @@ function back to the original JSON compatible data ")
 nonrecursiveInput(arg: $arg)  
 }
 "
-  let parse = (
-    (value): t => {
-      nonrecursiveInput: {
-        let value = (value: Raw.t).nonrecursiveInput
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nonrecursiveInput = {
-        let value = (value: t).nonrecursiveInput
-        value
-      }
-      {nonrecursiveInput: nonrecursiveInput}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    nonrecursiveInput: {
+      let value = (value: Raw.t).nonrecursiveInput
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nonrecursiveInput = {
+      let value = (value: t).nonrecursiveInput
+      value
+    }
+    {nonrecursiveInput: nonrecursiveInput}
+  }
   let rec serializeVariables: t_variables => Raw.t_variables = inp => {
     arg: (a => serializeInputObjectNonrecursiveInput(a))((inp: t_variables).arg),
   }
@@ -298,31 +294,27 @@ scalarsInput(arg: $arg)
 more: scalarsInput(arg: $arg2)  
 }
 "
-  let parse = (
-    (value): t => {
-      scalarsInput: {
-        let value = (value: Raw.t).scalarsInput
-        value
-      },
-      more: {
-        let value = (value: Raw.t).more
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let more = {
-        let value = (value: t).more
-        value
-      }
-      and scalarsInput = {
-        let value = (value: t).scalarsInput
-        value
-      }
-      {scalarsInput, more}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    scalarsInput: {
+      let value = (value: Raw.t).scalarsInput
+      value
+    },
+    more: {
+      let value = (value: Raw.t).more
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let more = {
+      let value = (value: t).more
+      value
+    }
+    and scalarsInput = {
+      let value = (value: t).scalarsInput
+      value
+    }
+    {scalarsInput, more}
+  }
   let rec serializeVariables: t_variables => Raw.t_variables = inp => {
     arg: (a => serializeInputObjectNonrecursiveInput(a))((inp: t_variables).arg),
     arg2: (a => serializeInputObjectNonrecursiveInput(a))((inp: t_variables).arg2),

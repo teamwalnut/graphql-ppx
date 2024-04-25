@@ -607,6 +607,7 @@ type query_config = {
   extend : string option;
   fragment_in_query : Ppx_config.fragment_in_query option;
   apollo_mode : bool option;
+  uncurried : bool option;
 }
 
 let get_template_tag query_config =

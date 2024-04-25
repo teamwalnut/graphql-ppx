@@ -79,90 +79,86 @@ name
 
 }
 "
-  let parse = (
-    (value): t => {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman
-        let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+  let parse = (value): t => {
+    dogOrHuman: {
+      let value = (value: Raw.t).dogOrHuman
+      let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+      (
+        switch typename {
+        | "Dog" =>
+          #Dog({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).name
+                  value
+                },
+                barkVolume: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
+                  value
+                },
+              }: t_dogOrHuman_Dog
+            )
+          })
+        | "Human" =>
+          #Human({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Human).name
+                  value
+                },
+              }: t_dogOrHuman_Human
+            )
+          })
+        | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
+        }: t_dogOrHuman
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let dogOrHuman = {
+      let value = (value: t).dogOrHuman
+      switch value {
+      | #Dog(value) =>
         (
-          switch typename {
-          | "Dog" =>
-            #Dog({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).name
-                    value
-                  },
-                  barkVolume: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
-                    value
-                  },
-                }: t_dogOrHuman_Dog
-              )
-            })
-          | "Human" =>
-            #Human({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Human).name
-                    value
-                  },
-                }: t_dogOrHuman_Human
-              )
-            })
-          | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
-          }: t_dogOrHuman
+          Obj.magic(
+            (
+              {
+                let barkVolume = {
+                  let value = (value: t_dogOrHuman_Dog).barkVolume
+                  value
+                }
+                and name = {
+                  let value = (value: t_dogOrHuman_Dog).name
+                  value
+                }
+                {__typename: "Dog", name, barkVolume}
+              }: Raw.t_dogOrHuman_Dog
+            ),
+          ): Raw.t_dogOrHuman
         )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman
-        switch value {
-        | #Dog(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let barkVolume = {
-                    let value = (value: t_dogOrHuman_Dog).barkVolume
-                    value
-                  }
-                  and name = {
-                    let value = (value: t_dogOrHuman_Dog).name
-                    value
-                  }
-                  {__typename: "Dog", name, barkVolume}
-                }: Raw.t_dogOrHuman_Dog
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        | #Human(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let name = {
-                    let value = (value: t_dogOrHuman_Human).name
-                    value
-                  }
-                  {__typename: "Human", name}
-                }: Raw.t_dogOrHuman_Human
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        | #FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
-        }
+      | #Human(value) =>
+        (
+          Obj.magic(
+            (
+              {
+                let name = {
+                  let value = (value: t_dogOrHuman_Human).name
+                  value
+                }
+                {__typename: "Human", name}
+              }: Raw.t_dogOrHuman_Human
+            ),
+          ): Raw.t_dogOrHuman
+        )
+      | #FutureAddedValue(value) => (Obj.magic(value): Raw.t_dogOrHuman)
       }
-      {dogOrHuman: dogOrHuman}
-    }: t => Raw.t
-  )
+    }
+    {dogOrHuman: dogOrHuman}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()
@@ -243,89 +239,85 @@ name
 
 }
 "
-  let parse = (
-    (value): t => {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman
-        let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+  let parse = (value): t => {
+    dogOrHuman: {
+      let value = (value: Raw.t).dogOrHuman
+      let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+      (
+        switch typename {
+        | "Dog" =>
+          #Dog({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).name
+                  value
+                },
+                barkVolume: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
+                  value
+                },
+              }: t_dogOrHuman_Dog
+            )
+          })
+        | "Human" =>
+          #Human({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Human).name
+                  value
+                },
+              }: t_dogOrHuman_Human
+            )
+          })
+        | _ => raise(Not_found)
+        }: t_dogOrHuman
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let dogOrHuman = {
+      let value = (value: t).dogOrHuman
+      switch value {
+      | #Dog(value) =>
         (
-          switch typename {
-          | "Dog" =>
-            #Dog({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).name
-                    value
-                  },
-                  barkVolume: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
-                    value
-                  },
-                }: t_dogOrHuman_Dog
-              )
-            })
-          | "Human" =>
-            #Human({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Human).name
-                    value
-                  },
-                }: t_dogOrHuman_Human
-              )
-            })
-          | _ => raise(Not_found)
-          }: t_dogOrHuman
+          Obj.magic(
+            (
+              {
+                let barkVolume = {
+                  let value = (value: t_dogOrHuman_Dog).barkVolume
+                  value
+                }
+                and name = {
+                  let value = (value: t_dogOrHuman_Dog).name
+                  value
+                }
+                {__typename: "Dog", name, barkVolume}
+              }: Raw.t_dogOrHuman_Dog
+            ),
+          ): Raw.t_dogOrHuman
         )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman
-        switch value {
-        | #Dog(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let barkVolume = {
-                    let value = (value: t_dogOrHuman_Dog).barkVolume
-                    value
-                  }
-                  and name = {
-                    let value = (value: t_dogOrHuman_Dog).name
-                    value
-                  }
-                  {__typename: "Dog", name, barkVolume}
-                }: Raw.t_dogOrHuman_Dog
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        | #Human(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let name = {
-                    let value = (value: t_dogOrHuman_Human).name
-                    value
-                  }
-                  {__typename: "Human", name}
-                }: Raw.t_dogOrHuman_Human
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        }
+      | #Human(value) =>
+        (
+          Obj.magic(
+            (
+              {
+                let name = {
+                  let value = (value: t_dogOrHuman_Human).name
+                  value
+                }
+                {__typename: "Human", name}
+              }: Raw.t_dogOrHuman_Human
+            ),
+          ): Raw.t_dogOrHuman
+        )
       }
-      {dogOrHuman: dogOrHuman}
-    }: t => Raw.t
-  )
+    }
+    {dogOrHuman: dogOrHuman}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()
@@ -406,89 +398,85 @@ name
 
 }
 "
-  let parse = (
-    (value): t => {
-      dogOrHuman: {
-        let value = (value: Raw.t).dogOrHuman
-        let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+  let parse = (value): t => {
+    dogOrHuman: {
+      let value = (value: Raw.t).dogOrHuman
+      let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+      (
+        switch typename {
+        | "Dog" =>
+          #Dog({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).name
+                  value
+                },
+                barkVolume: {
+                  let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
+                  value
+                },
+              }: t_dogOrHuman_Dog
+            )
+          })
+        | "Human" =>
+          #Human({
+            let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_dogOrHuman_Human).name
+                  value
+                },
+              }: t_dogOrHuman_Human
+            )
+          })
+        | _ => raise(Not_found)
+        }: t_dogOrHuman
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let dogOrHuman = {
+      let value = (value: t).dogOrHuman
+      switch value {
+      | #Dog(value) =>
         (
-          switch typename {
-          | "Dog" =>
-            #Dog({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Dog)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).name
-                    value
-                  },
-                  barkVolume: {
-                    let value = (value: Raw.t_dogOrHuman_Dog).barkVolume
-                    value
-                  },
-                }: t_dogOrHuman_Dog
-              )
-            })
-          | "Human" =>
-            #Human({
-              let value = (Obj.magic(value): Raw.t_dogOrHuman_Human)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_dogOrHuman_Human).name
-                    value
-                  },
-                }: t_dogOrHuman_Human
-              )
-            })
-          | _ => raise(Not_found)
-          }: t_dogOrHuman
+          Obj.magic(
+            (
+              {
+                let barkVolume = {
+                  let value = (value: t_dogOrHuman_Dog).barkVolume
+                  value
+                }
+                and name = {
+                  let value = (value: t_dogOrHuman_Dog).name
+                  value
+                }
+                {__typename: "Dog", name, barkVolume}
+              }: Raw.t_dogOrHuman_Dog
+            ),
+          ): Raw.t_dogOrHuman
         )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let dogOrHuman = {
-        let value = (value: t).dogOrHuman
-        switch value {
-        | #Dog(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let barkVolume = {
-                    let value = (value: t_dogOrHuman_Dog).barkVolume
-                    value
-                  }
-                  and name = {
-                    let value = (value: t_dogOrHuman_Dog).name
-                    value
-                  }
-                  {__typename: "Dog", name, barkVolume}
-                }: Raw.t_dogOrHuman_Dog
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        | #Human(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let name = {
-                    let value = (value: t_dogOrHuman_Human).name
-                    value
-                  }
-                  {__typename: "Human", name}
-                }: Raw.t_dogOrHuman_Human
-              ),
-            ): Raw.t_dogOrHuman
-          )
-        }
+      | #Human(value) =>
+        (
+          Obj.magic(
+            (
+              {
+                let name = {
+                  let value = (value: t_dogOrHuman_Human).name
+                  value
+                }
+                {__typename: "Human", name}
+              }: Raw.t_dogOrHuman_Human
+            ),
+          ): Raw.t_dogOrHuman
+        )
       }
-      {dogOrHuman: dogOrHuman}
-    }: t => Raw.t
-  )
+    }
+    {dogOrHuman: dogOrHuman}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

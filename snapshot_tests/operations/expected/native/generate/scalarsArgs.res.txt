@@ -85,23 +85,19 @@ function back to the original JSON compatible data ")
 scalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  
 }
 "
-  let parse = (
-    (value): t => {
-      scalarsInput: {
-        let value = (value: Raw.t).scalarsInput
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let scalarsInput = {
-        let value = (value: t).scalarsInput
-        value
-      }
-      {scalarsInput: scalarsInput}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    scalarsInput: {
+      let value = (value: Raw.t).scalarsInput
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let scalarsInput = {
+      let value = (value: t).scalarsInput
+      value
+    }
+    {scalarsInput: scalarsInput}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     nullableString: (
       a =>

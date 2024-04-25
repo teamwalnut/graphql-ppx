@@ -60,105 +60,101 @@ nonNullableOfNonNullable
 
 }
 "
-  let parse = (
-    (value): t => {
-      lists: {
-        let value = (value: Raw.t).lists
-        (
-          {
-            nullableOfNullable: {
-              let value = (value: Raw.t_lists).nullableOfNullable
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
+      (
+        {
+          nullableOfNullable: {
+            let value = (value: Raw.t_lists).nullableOfNullable
+            switch Js.toOption(value) {
+            | Some(value) =>
+              Some(
+                Js.Array2.map(value, value =>
+                  switch Js.toOption(value) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  }
+                ),
+              )
+            | None => None
+            }
+          },
+          nullableOfNonNullable: {
+            let value = (value: Raw.t_lists).nullableOfNonNullable
+            switch Js.toOption(value) {
+            | Some(value) => Some(Js.Array2.map(value, value => value))
+            | None => None
+            }
+          },
+          nonNullableOfNullable: {
+            let value = (value: Raw.t_lists).nonNullableOfNullable
+            Js.Array2.map(value, value =>
               switch Js.toOption(value) {
-              | Some(value) =>
-                Some(
-                  Js.Array2.map(value, value =>
-                    switch Js.toOption(value) {
-                    | Some(value) => Some(value)
-                    | None => None
-                    }
-                  ),
-                )
+              | Some(value) => Some(value)
               | None => None
               }
-            },
-            nullableOfNonNullable: {
-              let value = (value: Raw.t_lists).nullableOfNonNullable
-              switch Js.toOption(value) {
-              | Some(value) => Some(Js.Array2.map(value, value => value))
-              | None => None
+            )
+          },
+          nonNullableOfNonNullable: {
+            let value = (value: Raw.t_lists).nonNullableOfNonNullable
+            Js.Array2.map(value, value => value)
+          },
+        }: t_lists
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let lists = {
+      let value = (value: t).lists
+      (
+        {
+          let nonNullableOfNonNullable = {
+            let value = (value: t_lists).nonNullableOfNonNullable
+            Js.Array2.map(value, value => value)
+          }
+          and nonNullableOfNullable = {
+            let value = (value: t_lists).nonNullableOfNullable
+            Js.Array2.map(value, value =>
+              switch value {
+              | Some(value) => Js.Nullable.return(value)
+              | None => Js.Nullable.null
               }
-            },
-            nonNullableOfNullable: {
-              let value = (value: Raw.t_lists).nonNullableOfNullable
-              Js.Array2.map(value, value =>
-                switch Js.toOption(value) {
-                | Some(value) => Some(value)
-                | None => None
-                }
+            )
+          }
+          and nullableOfNonNullable = {
+            let value = (value: t_lists).nullableOfNonNullable
+            switch value {
+            | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+            | None => Js.Nullable.null
+            }
+          }
+          and nullableOfNullable = {
+            let value = (value: t_lists).nullableOfNullable
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return(
+                Js.Array2.map(value, value =>
+                  switch value {
+                  | Some(value) => Js.Nullable.return(value)
+                  | None => Js.Nullable.null
+                  }
+                ),
               )
-            },
-            nonNullableOfNonNullable: {
-              let value = (value: Raw.t_lists).nonNullableOfNonNullable
-              Js.Array2.map(value, value => value)
-            },
-          }: t_lists
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let lists = {
-        let value = (value: t).lists
-        (
+            | None => Js.Nullable.null
+            }
+          }
           {
-            let nonNullableOfNonNullable = {
-              let value = (value: t_lists).nonNullableOfNonNullable
-              Js.Array2.map(value, value => value)
-            }
-            and nonNullableOfNullable = {
-              let value = (value: t_lists).nonNullableOfNullable
-              Js.Array2.map(value, value =>
-                switch value {
-                | Some(value) => Js.Nullable.return(value)
-                | None => Js.Nullable.null
-                }
-              )
-            }
-            and nullableOfNonNullable = {
-              let value = (value: t_lists).nullableOfNonNullable
-              switch value {
-              | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
-              | None => Js.Nullable.null
-              }
-            }
-            and nullableOfNullable = {
-              let value = (value: t_lists).nullableOfNullable
-              switch value {
-              | Some(value) =>
-                Js.Nullable.return(
-                  Js.Array2.map(value, value =>
-                    switch value {
-                    | Some(value) => Js.Nullable.return(value)
-                    | None => Js.Nullable.null
-                    }
-                  ),
-                )
-              | None => Js.Nullable.null
-              }
-            }
-            {
-              nullableOfNullable,
-              nullableOfNonNullable,
-              nonNullableOfNullable,
-              nonNullableOfNonNullable,
-            }
-          }: Raw.t_lists
-        )
-      }
-      {lists: lists}
-    }: t => Raw.t
-  )
+            nullableOfNullable,
+            nullableOfNonNullable,
+            nonNullableOfNullable,
+            nonNullableOfNonNullable,
+          }
+        }: Raw.t_lists
+      )
+    }
+    {lists: lists}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

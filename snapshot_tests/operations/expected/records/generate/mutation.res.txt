@@ -88,114 +88,110 @@ message
 
 }
 "
-  let parse = (
-    (value): t => {
-      mutationWithError: {
-        let value = (value: Raw.t).mutationWithError
-        (
-          {
-            value: {
-              let value = (value: Raw.t_mutationWithError).value
-              switch Js.toOption(value) {
-              | Some(value) =>
-                Some(
-                  (
-                    {
-                      stringField: {
-                        let value = (value: Raw.t_mutationWithError_value).stringField
-                        value
-                      },
-                    }: t_mutationWithError_value
-                  ),
-                )
-              | None => None
-              }
-            },
-            errors: {
-              let value = (value: Raw.t_mutationWithError).errors
-              switch Js.toOption(value) {
-              | Some(value) =>
-                Some(
-                  Js.Array2.map(value, (value): t_mutationWithError_errors => {
-                    field: {
-                      let value = (value: Raw.t_mutationWithError_errors).field
-                      switch (Obj.magic(value): string) {
-                      | "FIRST" => #FIRST
-                      | "SECOND" => #SECOND
-                      | "THIRD" => #THIRD
-                      | other => #FutureAddedValue(other)
-                      }
-                    },
-                    message: {
-                      let value = (value: Raw.t_mutationWithError_errors).message
+  let parse = (value): t => {
+    mutationWithError: {
+      let value = (value: Raw.t).mutationWithError
+      (
+        {
+          value: {
+            let value = (value: Raw.t_mutationWithError).value
+            switch Js.toOption(value) {
+            | Some(value) =>
+              Some(
+                (
+                  {
+                    stringField: {
+                      let value = (value: Raw.t_mutationWithError_value).stringField
                       value
                     },
-                  }),
-                )
-              | None => None
-              }
-            },
-          }: t_mutationWithError
-        )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let mutationWithError = {
-        let value = (value: t).mutationWithError
-        (
-          {
-            let errors = {
-              let value = (value: t_mutationWithError).errors
-              switch value {
-              | Some(value) =>
-                Js.Nullable.return(
-                  Js.Array2.map(value, (value): Raw.t_mutationWithError_errors => {
-                    let message = {
-                      let value = (value: t_mutationWithError_errors).message
+                  }: t_mutationWithError_value
+                ),
+              )
+            | None => None
+            }
+          },
+          errors: {
+            let value = (value: Raw.t_mutationWithError).errors
+            switch Js.toOption(value) {
+            | Some(value) =>
+              Some(
+                Js.Array2.map(value, (value): t_mutationWithError_errors => {
+                  field: {
+                    let value = (value: Raw.t_mutationWithError_errors).field
+                    switch (Obj.magic(value): string) {
+                    | "FIRST" => #FIRST
+                    | "SECOND" => #SECOND
+                    | "THIRD" => #THIRD
+                    | other => #FutureAddedValue(other)
+                    }
+                  },
+                  message: {
+                    let value = (value: Raw.t_mutationWithError_errors).message
+                    value
+                  },
+                }),
+              )
+            | None => None
+            }
+          },
+        }: t_mutationWithError
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let mutationWithError = {
+      let value = (value: t).mutationWithError
+      (
+        {
+          let errors = {
+            let value = (value: t_mutationWithError).errors
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return(
+                Js.Array2.map(value, (value): Raw.t_mutationWithError_errors => {
+                  let message = {
+                    let value = (value: t_mutationWithError_errors).message
+                    value
+                  }
+                  and field = {
+                    let value = (value: t_mutationWithError_errors).field
+                    switch value {
+                    | #FIRST => "FIRST"
+                    | #SECOND => "SECOND"
+                    | #THIRD => "THIRD"
+                    | #FutureAddedValue(other) => other
+                    }
+                  }
+                  {field, message}
+                }),
+              )
+            | None => Js.Nullable.null
+            }
+          }
+          and value = {
+            let value = (value: t_mutationWithError).value
+            switch value {
+            | Some(value) =>
+              Js.Nullable.return(
+                (
+                  {
+                    let stringField = {
+                      let value = (value: t_mutationWithError_value).stringField
                       value
                     }
-                    and field = {
-                      let value = (value: t_mutationWithError_errors).field
-                      switch value {
-                      | #FIRST => "FIRST"
-                      | #SECOND => "SECOND"
-                      | #THIRD => "THIRD"
-                      | #FutureAddedValue(other) => other
-                      }
-                    }
-                    {field, message}
-                  }),
-                )
-              | None => Js.Nullable.null
-              }
+                    {stringField: stringField}
+                  }: Raw.t_mutationWithError_value
+                ),
+              )
+            | None => Js.Nullable.null
             }
-            and value = {
-              let value = (value: t_mutationWithError).value
-              switch value {
-              | Some(value) =>
-                Js.Nullable.return(
-                  (
-                    {
-                      let stringField = {
-                        let value = (value: t_mutationWithError_value).stringField
-                        value
-                      }
-                      {stringField: stringField}
-                    }: Raw.t_mutationWithError_value
-                  ),
-                )
-              | None => Js.Nullable.null
-              }
-            }
-            {value, errors}
-          }: Raw.t_mutationWithError
-        )
-      }
-      {mutationWithError: mutationWithError}
-    }: t => Raw.t
-  )
+          }
+          {value, errors}
+        }: Raw.t_mutationWithError
+      )
+    }
+    {mutationWithError: mutationWithError}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

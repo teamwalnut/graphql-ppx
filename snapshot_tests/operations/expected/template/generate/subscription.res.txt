@@ -73,82 +73,78 @@ name
 
 }
 "
-  let parse = (
-    (value): t => {
-      simpleSubscription: {
-        let value = (value: Raw.t).simpleSubscription
-        let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+  let parse = (value): t => {
+    simpleSubscription: {
+      let value = (value: Raw.t).simpleSubscription
+      let typename = (Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string)
+      (
+        switch typename {
+        | "Dog" =>
+          #Dog({
+            let value = (Obj.magic(value): Raw.t_simpleSubscription_Dog)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_simpleSubscription_Dog).name
+                  value
+                },
+              }: t_simpleSubscription_Dog
+            )
+          })
+        | "Human" =>
+          #Human({
+            let value = (Obj.magic(value): Raw.t_simpleSubscription_Human)
+            (
+              {
+                name: {
+                  let value = (value: Raw.t_simpleSubscription_Human).name
+                  value
+                },
+              }: t_simpleSubscription_Human
+            )
+          })
+        | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
+        }: t_simpleSubscription
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let simpleSubscription = {
+      let value = (value: t).simpleSubscription
+      switch value {
+      | #Dog(value) =>
         (
-          switch typename {
-          | "Dog" =>
-            #Dog({
-              let value = (Obj.magic(value): Raw.t_simpleSubscription_Dog)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_simpleSubscription_Dog).name
-                    value
-                  },
-                }: t_simpleSubscription_Dog
-              )
-            })
-          | "Human" =>
-            #Human({
-              let value = (Obj.magic(value): Raw.t_simpleSubscription_Human)
-              (
-                {
-                  name: {
-                    let value = (value: Raw.t_simpleSubscription_Human).name
-                    value
-                  },
-                }: t_simpleSubscription_Human
-              )
-            })
-          | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
-          }: t_simpleSubscription
+          Obj.magic(
+            (
+              {
+                let name = {
+                  let value = (value: t_simpleSubscription_Dog).name
+                  value
+                }
+                {__typename: "Dog", name}
+              }: Raw.t_simpleSubscription_Dog
+            ),
+          ): Raw.t_simpleSubscription
         )
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let simpleSubscription = {
-        let value = (value: t).simpleSubscription
-        switch value {
-        | #Dog(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let name = {
-                    let value = (value: t_simpleSubscription_Dog).name
-                    value
-                  }
-                  {__typename: "Dog", name}
-                }: Raw.t_simpleSubscription_Dog
-              ),
-            ): Raw.t_simpleSubscription
-          )
-        | #Human(value) =>
-          (
-            Obj.magic(
-              (
-                {
-                  let name = {
-                    let value = (value: t_simpleSubscription_Human).name
-                    value
-                  }
-                  {__typename: "Human", name}
-                }: Raw.t_simpleSubscription_Human
-              ),
-            ): Raw.t_simpleSubscription
-          )
-        | #FutureAddedValue(value) => (Obj.magic(value): Raw.t_simpleSubscription)
-        }
+      | #Human(value) =>
+        (
+          Obj.magic(
+            (
+              {
+                let name = {
+                  let value = (value: t_simpleSubscription_Human).name
+                  value
+                }
+                {__typename: "Human", name}
+              }: Raw.t_simpleSubscription_Human
+            ),
+          ): Raw.t_simpleSubscription
+        )
+      | #FutureAddedValue(value) => (Obj.magic(value): Raw.t_simpleSubscription)
       }
-      {simpleSubscription: simpleSubscription}
-    }: t => Raw.t
-  )
+    }
+    {simpleSubscription: simpleSubscription}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

@@ -526,195 +526,189 @@ l5: lists  {
     ),
     ListFragment.query,
   )
-  let parse = (
-    (value): t => {
-      l1: {
-        let value = (value: Raw.t).l1
+  let parse = (value): t => {
+    l1: {
+      let value = (value: Raw.t).l1
 
-        ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-      },
-      l2: {
-        let value = (value: Raw.t).l2
-        (
-          {
-            frag1: {
-              let value = (Obj.magic(value): ListFragment.Raw.t)
+      ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+    },
+    l2: {
+      let value = (value: Raw.t).l2
+      (
+        {
+          frag1: {
+            let value = (Obj.magic(value): ListFragment.Raw.t)
 
-              ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-            },
-            frag2: {
-              let value = (Obj.magic(value): ListFragment.Raw.t)
+            ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+          },
+          frag2: {
+            let value = (Obj.magic(value): ListFragment.Raw.t)
 
-              ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-            },
-          }: t_l2
-        )
-      },
-      l3: {
-        let value = (value: Raw.t).l3
-        (
-          {
-            nullableOfNullable: {
-              let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"))
-              switch Js.toOption(value) {
-              | Some(value) =>
-                Some(
-                  Js.Array2.map(value, value =>
-                    switch Js.toOption(value) {
-                    | Some(value) => Some(value)
-                    | None => None
-                    }
-                  ),
-                )
-              | None => None
-              }
-            },
-            frag1: {
-              let value = (Obj.magic(value): ListFragment.Raw.t)
-
-              ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-            },
-            frag2: {
-              let value = (Obj.magic(value): ListFragment.Raw.t)
-
-              ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-            },
-          }: t_l3
-        )
-      },
-      l4: {
-        let value = (value: Raw.t).l4
-        (
-          {
-            nullableOfNullable: {
-              let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"))
-              switch Js.toOption(value) {
-              | Some(value) =>
-                Some(
-                  Js.Array2.map(value, value =>
-                    switch Js.toOption(value) {
-                    | Some(value) => Some(value)
-                    | None => None
-                    }
-                  ),
-                )
-              | None => None
-              }
-            },
-            inlineListFragment: {
-              let value = (Obj.magic(value): InlineListFragment.Raw.t)
-
-              InlineListFragment.verifyArgsAndParse(~fragmentName=#InlineListFragment, value)
-            },
-          }: t_l4
-        )
-      },
-      l5: {
-        let value = (value: Raw.t).l5
-
-        FragmentWithArgs.verifyArgsAndParse(~arg1=#String, ~fragmentName=#FragmentWithArgs, value)
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let l5 = {
-        let value = (value: t).l5
-        FragmentWithArgs.serialize(value)
-      }
-      and l4 = {
-        let value = (value: t).l4
-        (
-          Obj.magic(
-            Js.Array2.reduce(
-              [
-                (
-                  Obj.magic(
-                    InlineListFragment.serialize((value: t_l4).inlineListFragment),
-                  ): Js.Json.t
+            ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+          },
+        }: t_l2
+      )
+    },
+    l3: {
+      let value = (value: Raw.t).l3
+      (
+        {
+          nullableOfNullable: {
+            let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"))
+            switch Js.toOption(value) {
+            | Some(value) =>
+              Some(
+                Js.Array2.map(value, value =>
+                  switch Js.toOption(value) {
+                  | Some(value) => Some(value)
+                  | None => None
+                  }
                 ),
-              ],
-              Graphql_ppx_runtime.deepMerge,
-              (
-                Obj.magic({
-                  let nullableOfNullable = {
-                    let value = (value: t_l4).nullableOfNullable
-                    switch value {
-                    | Some(value) =>
-                      Js.Nullable.return(
-                        Js.Array2.map(value, value =>
-                          switch value {
-                          | Some(value) => Js.Nullable.return(value)
-                          | None => Js.Nullable.null
-                          }
-                        ),
-                      )
-                    | None => Js.Nullable.null
-                    }
+              )
+            | None => None
+            }
+          },
+          frag1: {
+            let value = (Obj.magic(value): ListFragment.Raw.t)
+
+            ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+          },
+          frag2: {
+            let value = (Obj.magic(value): ListFragment.Raw.t)
+
+            ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+          },
+        }: t_l3
+      )
+    },
+    l4: {
+      let value = (value: Raw.t).l4
+      (
+        {
+          nullableOfNullable: {
+            let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "nullableOfNullable"))
+            switch Js.toOption(value) {
+            | Some(value) =>
+              Some(
+                Js.Array2.map(value, value =>
+                  switch Js.toOption(value) {
+                  | Some(value) => Some(value)
+                  | None => None
                   }
-                  {"nullableOfNullable": nullableOfNullable}
-                }): Js.Json.t
-              ),
-            ),
-          ): Raw.t_l4
-        )
-      }
-      and l3 = {
-        let value = (value: t).l3
-        (
-          Obj.magic(
-            Js.Array2.reduce(
-              [
-                (Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t),
-                (Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t),
-              ],
-              Graphql_ppx_runtime.deepMerge,
+                ),
+              )
+            | None => None
+            }
+          },
+          inlineListFragment: {
+            let value = (Obj.magic(value): InlineListFragment.Raw.t)
+
+            InlineListFragment.verifyArgsAndParse(~fragmentName=#InlineListFragment, value)
+          },
+        }: t_l4
+      )
+    },
+    l5: {
+      let value = (value: Raw.t).l5
+
+      FragmentWithArgs.verifyArgsAndParse(~arg1=#String, ~fragmentName=#FragmentWithArgs, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let l5 = {
+      let value = (value: t).l5
+      FragmentWithArgs.serialize(value)
+    }
+    and l4 = {
+      let value = (value: t).l4
+      (
+        Obj.magic(
+          Js.Array2.reduce(
+            [
               (
-                Obj.magic({
-                  let nullableOfNullable = {
-                    let value = (value: t_l3).nullableOfNullable
-                    switch value {
-                    | Some(value) =>
-                      Js.Nullable.return(
-                        Js.Array2.map(value, value =>
-                          switch value {
-                          | Some(value) => Js.Nullable.return(value)
-                          | None => Js.Nullable.null
-                          }
-                        ),
-                      )
-                    | None => Js.Nullable.null
-                    }
-                  }
-                  {"nullableOfNullable": nullableOfNullable}
-                }): Js.Json.t
+                Obj.magic(InlineListFragment.serialize((value: t_l4).inlineListFragment)): Js.Json.t
               ),
+            ],
+            Graphql_ppx_runtime.deepMerge,
+            (
+              Obj.magic({
+                let nullableOfNullable = {
+                  let value = (value: t_l4).nullableOfNullable
+                  switch value {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      Js.Array2.map(value, value =>
+                        switch value {
+                        | Some(value) => Js.Nullable.return(value)
+                        | None => Js.Nullable.null
+                        }
+                      ),
+                    )
+                  | None => Js.Nullable.null
+                  }
+                }
+                {"nullableOfNullable": nullableOfNullable}
+              }): Js.Json.t
             ),
-          ): Raw.t_l3
-        )
-      }
-      and l2 = {
-        let value = (value: t).l2
-        (
-          Obj.magic(
-            Js.Array2.reduce(
-              [
-                (Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t),
-                (Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t),
-              ],
-              Graphql_ppx_runtime.deepMerge,
-              (Obj.magic(Js.Dict.empty): Js.Json.t),
+          ),
+        ): Raw.t_l4
+      )
+    }
+    and l3 = {
+      let value = (value: t).l3
+      (
+        Obj.magic(
+          Js.Array2.reduce(
+            [
+              (Obj.magic(ListFragment.serialize((value: t_l3).frag1)): Js.Json.t),
+              (Obj.magic(ListFragment.serialize((value: t_l3).frag2)): Js.Json.t),
+            ],
+            Graphql_ppx_runtime.deepMerge,
+            (
+              Obj.magic({
+                let nullableOfNullable = {
+                  let value = (value: t_l3).nullableOfNullable
+                  switch value {
+                  | Some(value) =>
+                    Js.Nullable.return(
+                      Js.Array2.map(value, value =>
+                        switch value {
+                        | Some(value) => Js.Nullable.return(value)
+                        | None => Js.Nullable.null
+                        }
+                      ),
+                    )
+                  | None => Js.Nullable.null
+                  }
+                }
+                {"nullableOfNullable": nullableOfNullable}
+              }): Js.Json.t
             ),
-          ): Raw.t_l2
-        )
-      }
-      and l1 = {
-        let value = (value: t).l1
-        ListFragment.serialize(value)
-      }
-      {l1, l2, l3, l4, l5}
-    }: t => Raw.t
-  )
+          ),
+        ): Raw.t_l3
+      )
+    }
+    and l2 = {
+      let value = (value: t).l2
+      (
+        Obj.magic(
+          Js.Array2.reduce(
+            [
+              (Obj.magic(ListFragment.serialize((value: t_l2).frag1)): Js.Json.t),
+              (Obj.magic(ListFragment.serialize((value: t_l2).frag2)): Js.Json.t),
+            ],
+            Graphql_ppx_runtime.deepMerge,
+            (Obj.magic(Js.Dict.empty): Js.Json.t),
+          ),
+        ): Raw.t_l2
+      )
+    }
+    and l1 = {
+      let value = (value: t).l1
+      ListFragment.serialize(value)
+    }
+    {l1, l2, l3, l4, l5}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     arg1: (
       a =>
@@ -768,24 +762,20 @@ lists  {
 ",
     ListFragment.query,
   )
-  let parse = (
-    (value): t => {
-      lists: {
-        let value = (value: Raw.t).lists
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
 
-        ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let lists = {
-        let value = (value: t).lists
-        ListFragment.serialize(value)
-      }
-      {lists: lists}
-    }: t => Raw.t
-  )
+      ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let lists = {
+      let value = (value: t).lists
+      ListFragment.serialize(value)
+    }
+    {lists: lists}
+  }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()

@@ -29,23 +29,19 @@ function back to the original JSON compatible data ")
 enumInput(arg: $arg)  
 }
 "
-  let parse = (
-    (value): t => {
-      enumInput: {
-        let value = (value: Raw.t).enumInput
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let enumInput = {
-        let value = (value: t).enumInput
-        value
-      }
-      {enumInput: enumInput}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    enumInput: {
+      let value = (value: Raw.t).enumInput
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let enumInput = {
+      let value = (value: t).enumInput
+      value
+    }
+    {enumInput: enumInput}
+  }
   let serializeVariables: t_variables => Raw.t_variables = inp => {
     arg: (
       a =>

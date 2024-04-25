@@ -25,6 +25,7 @@ type config = {
   extend_fragment : string option;
   fragment_in_query : fragment_in_query;
   native : bool;
+  uncurried : bool;
 }
 
 let config_ref = ref None
@@ -83,3 +84,5 @@ let native () = (!config_ref |> unsafe_unwrap_config).native
 
 let raise_error_with_loc loc message =
   (!config_ref |> unsafe_unwrap_config).raise_error_with_loc loc message
+
+let uncurried () = (!config_ref |> unsafe_unwrap_config).uncurried
