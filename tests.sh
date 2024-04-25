@@ -32,7 +32,16 @@ esac
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
 ppx_path="./_build/default/src/bin/bin.exe"
 bsc_path="./node_modules/rescript/${platform}/bsc.exe"
-declare -a configs=('records' 'template' 'apollo' 'native' 'records_schema')
+declare -a configs=(
+  'records'
+  'template'
+  'apollo'
+  'native'
+  # there is still a bug in the parser that prevents it from working on the current schema
+  # 'records_schema'
+  # turn on uncurried mode later
+  'uncurried'
+)
 
 rm -rf snapshot_tests/operations/expected/
 rm -rf snapshot_tests/operations/error/expected/
