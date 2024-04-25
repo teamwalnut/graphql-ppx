@@ -31,37 +31,43 @@ esac
 
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
 ppx_path="./_build/default/src/bin/bin.exe"
-bsb_path="./node_modules/rescript/${platform}/bsc.exe"
-declare -a configs=('records' 'template' 'apollo' 'native')
+bsc_path="./node_modules/rescript/${platform}/bsc.exe"
+declare -a configs=('records' 'template' 'apollo' 'native' 'records_schema')
 
 rm -rf snapshot_tests/operations/expected/
 rm -rf snapshot_tests/operations/error/expected/
 
+
 for config in "${configs[@]}"; do
   case $config in
     "records" ) opts="" ;;
-    "template") opts="-template-tag-location=gql" ;;
-    "apollo"  ) opts="-apollo-mode" ;;
-    "native"  ) opts="-native" ;;
+    "template") opts="-template-tag-location=gql -schema=graphql_schema.json" ;;
+    "apollo"  ) opts="-apollo-mode -schema=graphql_schema.json" ;;
+    "native"  ) opts="-native -schema=graphql_schema.json" ;;
+    "records_schema" ) opts="-schema=schema.graphql" ;;
+    "uncurried" ) opts="-uncurried" ;;
   esac
 
   mkdir -p snapshot_tests/operations/expected/$config/generate
   mkdir -p snapshot_tests/operations/expected/$config/compile
   mkdir -p snapshot_tests/operations/errors/expected
 
-  for file in snapshot_tests/operations/*.re; do
-    $refmt_path --parse=re --print=binary $file | $ppx_path -schema=graphql_schema.json $opts /dev/stdin /dev/stdout | $refmt_path --parse=binary &> $(snapshotGeneratePath $file $config) & maybeWait
+  for file in snapshot_tests/operations/*.res; do
+    $bsc_path -ppx $ppx_path -bs-no-builtin-ppx -reprint-source $file &> $(snapshotGeneratePath $file $config) & maybeWait
 
     if [[ $config != "native" ]]; then
-      $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
+      $bsc_path -I ./utilities -w -30 -ppx "$ppx_path $opts" $file &> $(snapshotCompilePath $file $config) & maybeWait
     fi
   done
 done
-for file in snapshot_tests/operations/errors/*.re; do
-  $bsb_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
+for file in snapshot_tests/operations/errors/*.res; do
+  $bsc_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
 done
 
 wait
+
+rm snapshot_tests/operations/*.cm*
+rm snapshot_tests/operations/errors/*.cm*
 
 warningYellow='\033[0;33m'
 successGreen='\033[0;32m'

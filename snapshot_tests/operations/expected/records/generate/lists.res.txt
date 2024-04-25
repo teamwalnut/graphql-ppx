@@ -1,0 +1,169 @@
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_lists = {
+      nullableOfNullable: Js.Nullable.t<array<Js.Nullable.t<string>>>,
+      nullableOfNonNullable: Js.Nullable.t<array<string>>,
+      nonNullableOfNullable: array<Js.Nullable.t<string>>,
+      nonNullableOfNonNullable: array<string>,
+    }
+    type rec t = {lists: t_lists}
+    type rec t_variables = unit
+  }
+  type rec t_lists = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+    nonNullableOfNullable: array<option<string>>,
+    nonNullableOfNonNullable: array<string>,
+  }
+  type rec t = {lists: t_lists}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_lists = {
+      nullableOfNullable: Js.Nullable.t<array<Js.Nullable.t<string>>>,
+      nullableOfNonNullable: Js.Nullable.t<array<string>>,
+      nonNullableOfNullable: array<Js.Nullable.t<string>>,
+      nonNullableOfNonNullable: array<string>,
+    }
+    type rec t = {lists: t_lists}
+    type rec t_variables = unit
+  }
+  type rec t_lists = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+    nonNullableOfNullable: array<option<string>>,
+    nonNullableOfNonNullable: array<string>,
+  }
+  type rec t = {lists: t_lists}
+  type rec t_variables = unit
+  let query = "query   {
+lists  {
+nullableOfNullable  
+nullableOfNonNullable  
+nonNullableOfNullable  
+nonNullableOfNonNullable  
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      lists: {
+        let value = (value: Raw.t).lists
+        (
+          {
+            nullableOfNullable: {
+              let value = (value: Raw.t_lists).nullableOfNullable
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  Js.Array2.map(value, value =>
+                    switch Js.toOption(value) {
+                    | Some(value) => Some(value)
+                    | None => None
+                    }
+                  ),
+                )
+              | None => None
+              }
+            },
+            nullableOfNonNullable: {
+              let value = (value: Raw.t_lists).nullableOfNonNullable
+              switch Js.toOption(value) {
+              | Some(value) => Some(Js.Array2.map(value, value => value))
+              | None => None
+              }
+            },
+            nonNullableOfNullable: {
+              let value = (value: Raw.t_lists).nonNullableOfNullable
+              Js.Array2.map(value, value =>
+                switch Js.toOption(value) {
+                | Some(value) => Some(value)
+                | None => None
+                }
+              )
+            },
+            nonNullableOfNonNullable: {
+              let value = (value: Raw.t_lists).nonNullableOfNonNullable
+              Js.Array2.map(value, value => value)
+            },
+          }: t_lists
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let lists = {
+        let value = (value: t).lists
+        (
+          {
+            let nonNullableOfNonNullable = {
+              let value = (value: t_lists).nonNullableOfNonNullable
+              Js.Array2.map(value, value => value)
+            }
+            and nonNullableOfNullable = {
+              let value = (value: t_lists).nonNullableOfNullable
+              Js.Array2.map(value, value =>
+                switch value {
+                | Some(value) => Js.Nullable.return(value)
+                | None => Js.Nullable.null
+                }
+              )
+            }
+            and nullableOfNonNullable = {
+              let value = (value: t_lists).nullableOfNonNullable
+              switch value {
+              | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+              | None => Js.Nullable.null
+              }
+            }
+            and nullableOfNullable = {
+              let value = (value: t_lists).nullableOfNullable
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  Js.Array2.map(value, value =>
+                    switch value {
+                    | Some(value) => Js.Nullable.return(value)
+                    | None => Js.Nullable.null
+                    }
+                  ),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {
+              nullableOfNullable,
+              nullableOfNonNullable,
+              nonNullableOfNullable,
+              nonNullableOfNonNullable,
+            }
+          }: Raw.t_lists
+        )
+      }
+      {lists: lists}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+

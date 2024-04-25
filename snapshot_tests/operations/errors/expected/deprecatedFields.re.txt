@@ -1,4 +1,0 @@
-File "snapshot_tests/operations/errors/deprecatedFields.re", line 7, characters 6-21:
-7 |       deprecatedField
-          ^^^^^^^^^^^^^^^
-Warning 22 [preprocessor]: Field "deprecatedField" has been deprecated. Reason: Use something else instead

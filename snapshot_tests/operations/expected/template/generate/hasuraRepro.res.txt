@@ -1,0 +1,149 @@
+module Dog: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {name: string}
+    type t_Dog = t
+  }
+  type rec t = {name: string}
+  type t_Dog = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#Dog], Raw.t) => t
+  let verifyName: [#Dog] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {name: string}
+    type t_Dog = t
+  }
+  type rec t = {name: string}
+  type t_Dog = t
+  let query = "fragment Dog on Dog   {
+name  
+}
+"
+  let parse = (
+    (value): t => {
+      name: {
+        let value = (value: Raw.t).name
+        value
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let name = {
+        let value = (value: t).name
+        value
+      }
+      {name: name}
+    }: t => Raw.t
+  )
+  let verifyArgsAndParse = (~fragmentName as _Dog: [#Dog], value: Raw.t) => parse(value)
+  let verifyName = x => switch x {
+  | #Dog => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+module HasuraRepro: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {hasuraRepro: Dog.Raw.t_Dog}
+    type rec t_variables = {
+      blockNumber: Js.Nullable.t<int>,
+      @as("type") type_: Js.Nullable.t<string>,
+    }
+  }
+  type rec t = {hasuraRepro: Dog.t_Dog}
+  type rec t_variables = {
+    blockNumber: option<int>,
+    @as("type")
+    type_: option<string>,
+  }
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: t_variables => Raw.t_variables
+  let makeVariables: (~blockNumber: int=?, ~type_: string=?, unit) => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {hasuraRepro: Dog.Raw.t_Dog}
+    type rec t_variables = {
+      blockNumber: Js.Nullable.t<int>,
+      @as("type") type_: Js.Nullable.t<string>,
+    }
+  }
+  type rec t = {hasuraRepro: Dog.t_Dog}
+  type rec t_variables = {
+    blockNumber: option<int>,
+    @as("type")
+    type_: option<string>,
+  }
+  let query = \"^"(
+    "query HasuraRepro($blockNumber: Int, $type: String)  {
+hasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  {
+...Dog   
+}
+
+}
+",
+    Dog.query,
+  )
+  let parse = (
+    (value): t => {
+      hasuraRepro: {
+        let value = (value: Raw.t).hasuraRepro
+
+        Dog.verifyArgsAndParse(~fragmentName=#Dog, value)
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let hasuraRepro = {
+        let value = (value: t).hasuraRepro
+        Dog.serialize(value)
+      }
+      {hasuraRepro: hasuraRepro}
+    }: t => Raw.t
+  )
+  let serializeVariables: t_variables => Raw.t_variables = inp => {
+    blockNumber: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => a)(b))
+        }
+    )((inp: t_variables).blockNumber),
+    type_: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => a)(b))
+        }
+    )((inp: t_variables).type_),
+  }
+  let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {blockNumber, type_}
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+
+let _ = HasuraRepro.makeVariables(~blockNumber=1, ~type_="1", ())
+

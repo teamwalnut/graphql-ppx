@@ -1,0 +1,257 @@
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {recursiveInput: string}
+    type rec t_variables = {arg: t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      otherField: Js.Nullable.t<string>,
+      inner: Js.Nullable.t<t_variables_RecursiveInput>,
+      enum: Js.Nullable.t<string>,
+    }
+  }
+  type rec t = {recursiveInput: string}
+  type rec t_variables = {arg: t_variables_RecursiveInput}
+  and t_variables_RecursiveInput = {
+    otherField: option<string>,
+    inner: option<t_variables_RecursiveInput>,
+    enum: option<[#FIRST | #SECOND | #THIRD]>,
+  }
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: t_variables => Raw.t_variables
+  let serializeInputObjectRecursiveInput: t_variables_RecursiveInput => Raw.t_variables_RecursiveInput
+  let makeVariables: (~arg: t_variables_RecursiveInput, unit) => t_variables
+  let makeInputObjectRecursiveInput: (
+    ~otherField: string=?,
+    ~inner: t_variables_RecursiveInput=?,
+    ~enum: [#FIRST | #SECOND | #THIRD]=?,
+    unit,
+  ) => t_variables_RecursiveInput
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {recursiveInput: string}
+    type rec t_variables = {arg: t_variables_RecursiveInput}
+    and t_variables_RecursiveInput = {
+      otherField: Js.Nullable.t<string>,
+      inner: Js.Nullable.t<t_variables_RecursiveInput>,
+      enum: Js.Nullable.t<string>,
+    }
+  }
+  type rec t = {recursiveInput: string}
+  type rec t_variables = {arg: t_variables_RecursiveInput}
+  and t_variables_RecursiveInput = {
+    otherField: option<string>,
+    inner: option<t_variables_RecursiveInput>,
+    enum: option<[#FIRST | #SECOND | #THIRD]>,
+  }
+  let query = "query ($arg: RecursiveInput!)  {
+recursiveInput(arg: $arg)  
+}
+"
+  let parse = (
+    (value): t => {
+      recursiveInput: {
+        let value = (value: Raw.t).recursiveInput
+        value
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let recursiveInput = {
+        let value = (value: t).recursiveInput
+        value
+      }
+      {recursiveInput: recursiveInput}
+    }: t => Raw.t
+  )
+  let rec serializeVariables: t_variables => Raw.t_variables = inp => {
+    arg: (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
+  }
+  and serializeInputObjectRecursiveInput: t_variables_RecursiveInput => Raw.t_variables_RecursiveInput = inp => {
+    otherField: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => a)(b))
+        }
+    )((inp: t_variables_RecursiveInput).otherField),
+    inner: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => serializeInputObjectRecursiveInput(a))(b))
+        }
+    )((inp: t_variables_RecursiveInput).inner),
+    enum: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) =>
+          Js.Nullable.return(
+            (
+              a =>
+                switch a {
+                | #FIRST => "FIRST"
+                | #SECOND => "SECOND"
+                | #THIRD => "THIRD"
+                }
+            )(b),
+          )
+        }
+    )((inp: t_variables_RecursiveInput).enum),
+  }
+  let makeVariables = (~arg, ()): t_variables => {arg: arg}
+  and makeInputObjectRecursiveInput = (
+    ~otherField=?,
+    ~inner=?,
+    ~enum=?,
+    (),
+  ): t_variables_RecursiveInput => {otherField, inner, enum}
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+module Test: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {recursiveRepro: bool}
+    type rec t_variables = {input: t_variables_problem_input}
+    and t_variables_problem_input = {
+      the_problem: Js.Nullable.t<t_variables_this_will_be_duplicated>,
+      b: Js.Nullable.t<t_variables_nested_type>,
+    }
+    and t_variables_this_will_be_duplicated = {id: string}
+    and t_variables_nested_type = {the_problem: Js.Nullable.t<t_variables_this_will_be_duplicated>}
+  }
+  type rec t = {recursiveRepro: bool}
+  type rec t_variables = {input: t_variables_problem_input}
+  and t_variables_problem_input = {
+    the_problem: option<t_variables_this_will_be_duplicated>,
+    b: option<t_variables_nested_type>,
+  }
+  and t_variables_this_will_be_duplicated = {id: string}
+  and t_variables_nested_type = {the_problem: option<t_variables_this_will_be_duplicated>}
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: t_variables => Raw.t_variables
+  let serializeInputObjectproblem_input: t_variables_problem_input => Raw.t_variables_problem_input
+  let serializeInputObjectthis_will_be_duplicated: t_variables_this_will_be_duplicated => Raw.t_variables_this_will_be_duplicated
+  let serializeInputObjectnested_type: t_variables_nested_type => Raw.t_variables_nested_type
+  let makeVariables: (~input: t_variables_problem_input, unit) => t_variables
+  let makeInputObjectproblem_input: (
+    ~the_problem: t_variables_this_will_be_duplicated=?,
+    ~b: t_variables_nested_type=?,
+    unit,
+  ) => t_variables_problem_input
+  let makeInputObjectthis_will_be_duplicated: (
+    ~id: string,
+    unit,
+  ) => t_variables_this_will_be_duplicated
+  let makeInputObjectnested_type: (
+    ~the_problem: t_variables_this_will_be_duplicated=?,
+    unit,
+  ) => t_variables_nested_type
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {recursiveRepro: bool}
+    type rec t_variables = {input: t_variables_problem_input}
+    and t_variables_problem_input = {
+      the_problem: Js.Nullable.t<t_variables_this_will_be_duplicated>,
+      b: Js.Nullable.t<t_variables_nested_type>,
+    }
+    and t_variables_this_will_be_duplicated = {id: string}
+    and t_variables_nested_type = {the_problem: Js.Nullable.t<t_variables_this_will_be_duplicated>}
+  }
+  type rec t = {recursiveRepro: bool}
+  type rec t_variables = {input: t_variables_problem_input}
+  and t_variables_problem_input = {
+    the_problem: option<t_variables_this_will_be_duplicated>,
+    b: option<t_variables_nested_type>,
+  }
+  and t_variables_this_will_be_duplicated = {id: string}
+  and t_variables_nested_type = {the_problem: option<t_variables_this_will_be_duplicated>}
+  let query = "query Test($input: problem_input!)  {
+recursiveRepro(input: $input)  
+}
+"
+  let parse = (
+    (value): t => {
+      recursiveRepro: {
+        let value = (value: Raw.t).recursiveRepro
+        value
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let recursiveRepro = {
+        let value = (value: t).recursiveRepro
+        value
+      }
+      {recursiveRepro: recursiveRepro}
+    }: t => Raw.t
+  )
+  let rec serializeVariables: t_variables => Raw.t_variables = inp => {
+    input: (a => serializeInputObjectproblem_input(a))((inp: t_variables).input),
+  }
+  and serializeInputObjectproblem_input: t_variables_problem_input => Raw.t_variables_problem_input = inp => {
+    the_problem: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
+        }
+    )((inp: t_variables_problem_input).the_problem),
+    b: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => serializeInputObjectnested_type(a))(b))
+        }
+    )((inp: t_variables_problem_input).b),
+  }
+  and serializeInputObjectthis_will_be_duplicated: t_variables_this_will_be_duplicated => Raw.t_variables_this_will_be_duplicated = inp => {
+    id: (a => a)((inp: t_variables_this_will_be_duplicated).id),
+  }
+  and serializeInputObjectnested_type: t_variables_nested_type => Raw.t_variables_nested_type = inp => {
+    the_problem: (
+      a =>
+        switch a {
+        | None => Js.Nullable.undefined
+        | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
+        }
+    )((inp: t_variables_nested_type).the_problem),
+  }
+  let makeVariables = (~input, ()): t_variables => {input: input}
+  and makeInputObjectproblem_input = (~the_problem=?, ~b=?, ()): t_variables_problem_input => {
+    the_problem,
+    b,
+  }
+  and makeInputObjectthis_will_be_duplicated = (~id, ()): t_variables_this_will_be_duplicated => {
+    id: id,
+  }
+  and makeInputObjectnested_type = (~the_problem=?, ()): t_variables_nested_type => {
+    the_problem: the_problem,
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+

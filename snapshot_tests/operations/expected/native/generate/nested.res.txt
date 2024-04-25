@@ -1,0 +1,710 @@
+type record = {
+  f1: string,
+  f2: string,
+}
+module MyQuery: {
+  @@ocaml.warning(
+    "-32-30"
+
+    // not sure why we would need this...
+    // might remove this functionality later
+  )
+  module Raw: {
+    type rec t_first_inner_inner = {field: string}
+    type rec t_first_inner = {inner: Js.Nullable.t<t_first_inner_inner>}
+    type rec t_first = {inner: Js.Nullable.t<t_first_inner>}
+    type rec t_second_inner_inner = {
+      f1: string,
+      f2: string,
+    }
+    type rec t_second_inner = {inner: Js.Nullable.t<t_second_inner_inner>}
+    type rec t_second = {inner: Js.Nullable.t<t_second_inner>}
+    type rec t_let_inner_inner = {field: string}
+    type rec t_let_inner = {inner: Js.Nullable.t<t_let_inner_inner>}
+    type rec t_let = {inner: Js.Nullable.t<t_let_inner>}
+    type rec t = {
+      first: t_first,
+      second: t_second,
+      @as("let")
+      let_: t_let,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_first_inner_inner = {field: string}
+  type rec t_first_inner = {inner: option<t_first_inner_inner>}
+  type rec t_first = {inner: option<t_first_inner>}
+  type rec t_second_inner_inner = {f1: string, f2: string}
+  type rec t_second_inner = {inner: option<t_second_inner_inner>}
+  type rec t_second = {inner: option<t_second_inner>}
+  type rec t_let_inner_inner = {field: string}
+  type rec t_let_inner = {inner: option<t_let_inner_inner>}
+  type rec t_let = {inner: option<t_let_inner>}
+  type rec t = {first: t_first, second: t_second, @as("let") let_: t_let}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_first_inner_inner = {field: string}
+    type rec t_first_inner = {inner: Js.Nullable.t<t_first_inner_inner>}
+    type rec t_first = {inner: Js.Nullable.t<t_first_inner>}
+    type rec t_second_inner_inner = {
+      f1: string,
+      f2: string,
+    }
+    type rec t_second_inner = {inner: Js.Nullable.t<t_second_inner_inner>}
+    type rec t_second = {inner: Js.Nullable.t<t_second_inner>}
+    type rec t_let_inner_inner = {field: string}
+    type rec t_let_inner = {inner: Js.Nullable.t<t_let_inner_inner>}
+    type rec t_let = {inner: Js.Nullable.t<t_let_inner>}
+    type rec t = {
+      first: t_first,
+      second: t_second,
+      @as("let")
+      let_: t_let,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_first_inner_inner = {field: string}
+  type rec t_first_inner = {inner: option<t_first_inner_inner>}
+  type rec t_first = {inner: option<t_first_inner>}
+  type rec t_second_inner_inner = {
+    f1: string,
+    f2: string,
+  }
+  type rec t_second_inner = {inner: option<t_second_inner_inner>}
+  type rec t_second = {inner: option<t_second_inner>}
+  type rec t_let_inner_inner = {field: string}
+  type rec t_let_inner = {inner: option<t_let_inner_inner>}
+  type rec t_let = {inner: option<t_let_inner>}
+  type rec t = {
+    first: t_first,
+    second: t_second,
+    @as("let")
+    let_: t_let,
+  }
+  type rec t_variables = unit
+  let query = "query   {
+first: nestedObject  {
+inner  {
+inner  {
+field  
+}
+
+}
+
+}
+
+second: nestedObject  {
+inner  {
+inner  {
+f1: field  
+f2: field  
+}
+
+}
+
+}
+
+let: nestedObject  {
+inner  {
+inner  {
+field  
+}
+
+}
+
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      first: {
+        let value = (value: Raw.t).first
+        (
+          {
+            inner: {
+              let value = (value: Raw.t_first).inner
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  (
+                    {
+                      inner: {
+                        let value = (value: Raw.t_first_inner).inner
+                        switch Js.toOption(value) {
+                        | Some(value) =>
+                          Some(
+                            (
+                              {
+                                field: {
+                                  let value = (value: Raw.t_first_inner_inner).field
+                                  value
+                                },
+                              }: t_first_inner_inner
+                            ),
+                          )
+                        | None => None
+                        }
+                      },
+                    }: t_first_inner
+                  ),
+                )
+              | None => None
+              }
+            },
+          }: t_first
+        )
+      },
+      second: {
+        let value = (value: Raw.t).second
+        (
+          {
+            inner: {
+              let value = (value: Raw.t_second).inner
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  (
+                    {
+                      inner: {
+                        let value = (value: Raw.t_second_inner).inner
+                        switch Js.toOption(value) {
+                        | Some(value) =>
+                          Some(
+                            (
+                              {
+                                f1: {
+                                  let value = (value: Raw.t_second_inner_inner).f1
+                                  value
+                                },
+                                f2: {
+                                  let value = (value: Raw.t_second_inner_inner).f2
+                                  value
+                                },
+                              }: t_second_inner_inner
+                            ),
+                          )
+                        | None => None
+                        }
+                      },
+                    }: t_second_inner
+                  ),
+                )
+              | None => None
+              }
+            },
+          }: t_second
+        )
+      },
+      let_: {
+        let value = (value: Raw.t).let_
+        (
+          {
+            inner: {
+              let value = (value: Raw.t_let).inner
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  (
+                    {
+                      inner: {
+                        let value = (value: Raw.t_let_inner).inner
+                        switch Js.toOption(value) {
+                        | Some(value) =>
+                          Some(
+                            (
+                              {
+                                field: {
+                                  let value = (value: Raw.t_let_inner_inner).field
+                                  value
+                                },
+                              }: t_let_inner_inner
+                            ),
+                          )
+                        | None => None
+                        }
+                      },
+                    }: t_let_inner
+                  ),
+                )
+              | None => None
+              }
+            },
+          }: t_let
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let let_ = {
+        let value = (value: t).let_
+        (
+          {
+            let inner = {
+              let value = (value: t_let).inner
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  (
+                    {
+                      let inner = {
+                        let value = (value: t_let_inner).inner
+                        switch value {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            (
+                              {
+                                let field = {
+                                  let value = (value: t_let_inner_inner).field
+                                  value
+                                }
+                                {field: field}
+                              }: Raw.t_let_inner_inner
+                            ),
+                          )
+                        | None => Js.Nullable.null
+                        }
+                      }
+                      {inner: inner}
+                    }: Raw.t_let_inner
+                  ),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {inner: inner}
+          }: Raw.t_let
+        )
+      }
+      and second = {
+        let value = (value: t).second
+        (
+          {
+            let inner = {
+              let value = (value: t_second).inner
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  (
+                    {
+                      let inner = {
+                        let value = (value: t_second_inner).inner
+                        switch value {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            (
+                              {
+                                let f2 = {
+                                  let value = (value: t_second_inner_inner).f2
+                                  value
+                                }
+                                and f1 = {
+                                  let value = (value: t_second_inner_inner).f1
+                                  value
+                                }
+                                {f1, f2}
+                              }: Raw.t_second_inner_inner
+                            ),
+                          )
+                        | None => Js.Nullable.null
+                        }
+                      }
+                      {inner: inner}
+                    }: Raw.t_second_inner
+                  ),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {inner: inner}
+          }: Raw.t_second
+        )
+      }
+      and first = {
+        let value = (value: t).first
+        (
+          {
+            let inner = {
+              let value = (value: t_first).inner
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  (
+                    {
+                      let inner = {
+                        let value = (value: t_first_inner).inner
+                        switch value {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            (
+                              {
+                                let field = {
+                                  let value = (value: t_first_inner_inner).field
+                                  value
+                                }
+                                {field: field}
+                              }: Raw.t_first_inner_inner
+                            ),
+                          )
+                        | None => Js.Nullable.null
+                        }
+                      }
+                      {inner: inner}
+                    }: Raw.t_first_inner
+                  ),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {inner: inner}
+          }: Raw.t_first
+        )
+      }
+      {first, second, let_}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+
+module Test: {
+  module MyQueryWithSig: {
+    @@ocaml.warning("-32-30")
+    module Raw: {
+      type rec t_nestedObject_inner_inner = {field: string}
+      type rec t_nestedObject_inner = {inner: Js.Nullable.t<t_nestedObject_inner_inner>}
+      type rec t_nestedObject = {inner: Js.Nullable.t<t_nestedObject_inner>}
+      type rec t = {nestedObject: t_nestedObject}
+      type rec t_variables = unit
+    }
+    type rec t_nestedObject_inner_inner = {field: string}
+    type rec t_nestedObject_inner = {inner: option<t_nestedObject_inner_inner>}
+    type rec t_nestedObject = {inner: option<t_nestedObject_inner>}
+    type rec t = {nestedObject: t_nestedObject}
+    type rec t_variables = unit
+    @ocaml.doc(" The GraphQL query ") let query: string
+    @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+    let parse: Raw.t => t
+    @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+    let serialize: t => Raw.t
+    let serializeVariables: unit => Raw.t_variables
+    let makeVariables: unit => t_variables
+    let makeDefaultVariables: unit => t_variables
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  }
+} = {
+  module MyQueryWithSig: {
+    @@ocaml.warning("-32-30")
+    module Raw: {
+      type rec t_nestedObject_inner_inner = {field: string}
+      type rec t_nestedObject_inner = {inner: Js.Nullable.t<t_nestedObject_inner_inner>}
+      type rec t_nestedObject = {inner: Js.Nullable.t<t_nestedObject_inner>}
+      type rec t = {nestedObject: t_nestedObject}
+      type rec t_variables = unit
+    }
+    type rec t_nestedObject_inner_inner = {field: string}
+    type rec t_nestedObject_inner = {inner: option<t_nestedObject_inner_inner>}
+    type rec t_nestedObject = {inner: option<t_nestedObject_inner>}
+    type rec t = {nestedObject: t_nestedObject}
+    type rec t_variables = unit
+    @ocaml.doc(" The GraphQL query ") let query: string
+    @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+    let parse: Raw.t => t
+    @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+    let serialize: t => Raw.t
+    let serializeVariables: unit => Raw.t_variables
+    let makeVariables: unit => t_variables
+    let makeDefaultVariables: unit => t_variables
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  } = {
+    @@ocaml.warning("-32-30")
+    module Raw = {
+      type rec t_nestedObject_inner_inner = {field: string}
+      type rec t_nestedObject_inner = {inner: Js.Nullable.t<t_nestedObject_inner_inner>}
+      type rec t_nestedObject = {inner: Js.Nullable.t<t_nestedObject_inner>}
+      type rec t = {nestedObject: t_nestedObject}
+      type rec t_variables = unit
+    }
+    type rec t_nestedObject_inner_inner = {field: string}
+    type rec t_nestedObject_inner = {inner: option<t_nestedObject_inner_inner>}
+    type rec t_nestedObject = {inner: option<t_nestedObject_inner>}
+    type rec t = {nestedObject: t_nestedObject}
+    type rec t_variables = unit
+    let query = "query   {
+nestedObject  {
+inner  {
+inner  {
+field  
+}
+
+}
+
+}
+
+}
+"
+    let parse = (
+      (value): t => {
+        nestedObject: {
+          let value = (value: Raw.t).nestedObject
+          (
+            {
+              inner: {
+                let value = (value: Raw.t_nestedObject).inner
+                switch Js.toOption(value) {
+                | Some(value) =>
+                  Some(
+                    (
+                      {
+                        inner: {
+                          let value = (value: Raw.t_nestedObject_inner).inner
+                          switch Js.toOption(value) {
+                          | Some(value) =>
+                            Some(
+                              (
+                                {
+                                  field: {
+                                    let value = (value: Raw.t_nestedObject_inner_inner).field
+                                    value
+                                  },
+                                }: t_nestedObject_inner_inner
+                              ),
+                            )
+                          | None => None
+                          }
+                        },
+                      }: t_nestedObject_inner
+                    ),
+                  )
+                | None => None
+                }
+              },
+            }: t_nestedObject
+          )
+        },
+      }: Raw.t => t
+    )
+    let serialize = (
+      (value): Raw.t => {
+        let nestedObject = {
+          let value = (value: t).nestedObject
+          (
+            {
+              let inner = {
+                let value = (value: t_nestedObject).inner
+                switch value {
+                | Some(value) =>
+                  Js.Nullable.return(
+                    (
+                      {
+                        let inner = {
+                          let value = (value: t_nestedObject_inner).inner
+                          switch value {
+                          | Some(value) =>
+                            Js.Nullable.return(
+                              (
+                                {
+                                  let field = {
+                                    let value = (value: t_nestedObject_inner_inner).field
+                                    value
+                                  }
+                                  {field: field}
+                                }: Raw.t_nestedObject_inner_inner
+                              ),
+                            )
+                          | None => Js.Nullable.null
+                          }
+                        }
+                        {inner: inner}
+                      }: Raw.t_nestedObject_inner
+                    ),
+                  )
+                | None => Js.Nullable.null
+                }
+              }
+              {inner: inner}
+            }: Raw.t_nestedObject
+          )
+        }
+        {nestedObject: nestedObject}
+      }: t => Raw.t
+    )
+    let serializeVariables = () => ()
+    let makeVariables = () => ()
+    let makeDefaultVariables = () => makeVariables()
+    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+    external toJson: Raw.t => Js.Json.t = "%identity"
+    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  }
+}
+module MyQueryWithSigDirect: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_nestedObject_inner_inner = {field: string}
+    type rec t_nestedObject_inner = {inner: Js.Nullable.t<t_nestedObject_inner_inner>}
+    type rec t_nestedObject = {inner: Js.Nullable.t<t_nestedObject_inner>}
+    type rec t = {nestedObject: t_nestedObject}
+    type rec t_variables = unit
+  }
+  type rec t_nestedObject_inner_inner = {field: string}
+  type rec t_nestedObject_inner = {inner: option<t_nestedObject_inner_inner>}
+  type rec t_nestedObject = {inner: option<t_nestedObject_inner>}
+  type rec t = {nestedObject: t_nestedObject}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_nestedObject_inner_inner = {field: string}
+    type rec t_nestedObject_inner = {inner: Js.Nullable.t<t_nestedObject_inner_inner>}
+    type rec t_nestedObject = {inner: Js.Nullable.t<t_nestedObject_inner>}
+    type rec t = {nestedObject: t_nestedObject}
+    type rec t_variables = unit
+  }
+  type rec t_nestedObject_inner_inner = {field: string}
+  type rec t_nestedObject_inner = {inner: option<t_nestedObject_inner_inner>}
+  type rec t_nestedObject = {inner: option<t_nestedObject_inner>}
+  type rec t = {nestedObject: t_nestedObject}
+  type rec t_variables = unit
+  let query = "query   {
+nestedObject  {
+inner  {
+inner  {
+field  
+}
+
+}
+
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      nestedObject: {
+        let value = (value: Raw.t).nestedObject
+        (
+          {
+            inner: {
+              let value = (value: Raw.t_nestedObject).inner
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  (
+                    {
+                      inner: {
+                        let value = (value: Raw.t_nestedObject_inner).inner
+                        switch Js.toOption(value) {
+                        | Some(value) =>
+                          Some(
+                            (
+                              {
+                                field: {
+                                  let value = (value: Raw.t_nestedObject_inner_inner).field
+                                  value
+                                },
+                              }: t_nestedObject_inner_inner
+                            ),
+                          )
+                        | None => None
+                        }
+                      },
+                    }: t_nestedObject_inner
+                  ),
+                )
+              | None => None
+              }
+            },
+          }: t_nestedObject
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let nestedObject = {
+        let value = (value: t).nestedObject
+        (
+          {
+            let inner = {
+              let value = (value: t_nestedObject).inner
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  (
+                    {
+                      let inner = {
+                        let value = (value: t_nestedObject_inner).inner
+                        switch value {
+                        | Some(value) =>
+                          Js.Nullable.return(
+                            (
+                              {
+                                let field = {
+                                  let value = (value: t_nestedObject_inner_inner).field
+                                  value
+                                }
+                                {field: field}
+                              }: Raw.t_nestedObject_inner_inner
+                            ),
+                          )
+                        | None => Js.Nullable.null
+                        }
+                      }
+                      {inner: inner}
+                    }: Raw.t_nestedObject_inner
+                  ),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {inner: inner}
+          }: Raw.t_nestedObject
+        )
+      }
+      {nestedObject: nestedObject}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+

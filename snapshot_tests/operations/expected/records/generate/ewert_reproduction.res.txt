@@ -1,0 +1,117 @@
+module UserData: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_user = {
+      id: string,
+      firstname: Js.Nullable.t<string>,
+      lastname: string,
+    }
+    type rec t = {user: t_user}
+    type t_Workspace = t
+  }
+  type rec t_user = {id: string, firstname: option<string>, lastname: string}
+  type rec t = {user: t_user}
+  type t_Workspace = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~userId: [#NonNull_String], ~fragmentName: [#UserData], Raw.t) => t
+  let verifyName: [#UserData] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_user = {
+      id: string,
+      firstname: Js.Nullable.t<string>,
+      lastname: string,
+    }
+    type rec t = {user: t_user}
+    type t_Workspace = t
+  }
+  type rec t_user = {
+    id: string,
+    firstname: option<string>,
+    lastname: string,
+  }
+  type rec t = {user: t_user}
+  type t_Workspace = t
+  let query = "fragment UserData on Workspace   {
+user(id: $userId)  {
+id  
+firstname  
+lastname  
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      user: {
+        let value = (value: Raw.t).user
+        (
+          {
+            id: {
+              let value = (value: Raw.t_user).id
+              value
+            },
+            firstname: {
+              let value = (value: Raw.t_user).firstname
+              switch Js.toOption(value) {
+              | Some(value) => Some(value)
+              | None => None
+              }
+            },
+            lastname: {
+              let value = (value: Raw.t_user).lastname
+              value
+            },
+          }: t_user
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let user = {
+        let value = (value: t).user
+        (
+          {
+            let lastname = {
+              let value = (value: t_user).lastname
+              value
+            }
+            and firstname = {
+              let value = (value: t_user).firstname
+              switch value {
+              | Some(value) => Js.Nullable.return(value)
+              | None => Js.Nullable.null
+              }
+            }
+            and id = {
+              let value = (value: t_user).id
+              value
+            }
+            {id, firstname, lastname}
+          }: Raw.t_user
+        )
+      }
+      {user: user}
+    }: t => Raw.t
+  )
+  let verifyArgsAndParse = (
+    ~userId as _userId: [#NonNull_String],
+    ~fragmentName as _UserData: [#UserData],
+    value: Raw.t,
+  ) => parse(value)
+  let verifyName = x => switch x {
+  | #UserData => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+

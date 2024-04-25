@@ -1,0 +1,233 @@
+module Graphql_ppx_runtime = {
+  // mock
+  let deepMerge = (json1, _) => json1
+}
+module InterfaceFragment: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {id: string}
+    type t_User = t
+    type t_AdminUser = t
+    type t_AnonymousUser = t
+    type t_OtherUser = t
+  }
+  type rec t = {id: string}
+  type t_User = t
+  type t_AdminUser = t
+  type t_AnonymousUser = t
+  type t_OtherUser = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#InterfaceFragment], Raw.t) => t
+  let verifyName: [#InterfaceFragment] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {id: string}
+    type t_User = t
+    type t_AdminUser = t
+    type t_AnonymousUser = t
+    type t_OtherUser = t
+  }
+  type rec t = {id: string}
+  type t_User = t
+  type t_AdminUser = t
+  type t_AnonymousUser = t
+  type t_OtherUser = t
+  let query = "fragment InterfaceFragment on User   {
+__typename
+id  
+}
+"
+  let parse = (
+    (value): t => {
+      id: {
+        let value = (value: Raw.t).id
+        value
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let id = {
+        let value = (value: t).id
+        value
+      }
+      {id: id}
+    }: t => Raw.t
+  )
+  let verifyArgsAndParse = (
+    ~fragmentName as _InterfaceFragment: [#InterfaceFragment],
+    value: Raw.t,
+  ) => parse(value)
+  let verifyName = x => switch x {
+  | #InterfaceFragment => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+module AnotherFragment: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t
+    type t_User = t
+    type t_AdminUser = t
+    type t_AnonymousUser = t
+    type t_OtherUser = t
+  }
+  type rec t = {id: string, interfaceFragment: InterfaceFragment.t_User}
+  type t_User = t
+  type t_AdminUser = t
+  type t_AnonymousUser = t
+  type t_OtherUser = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#AnotherFragment], Raw.t) => t
+  let verifyName: [#AnotherFragment] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t
+    type t_User = t
+    type t_AdminUser = t
+    type t_AnonymousUser = t
+    type t_OtherUser = t
+  }
+  type rec t = {id: string, interfaceFragment: InterfaceFragment.t_User}
+  type t_User = t
+  type t_AdminUser = t
+  type t_AnonymousUser = t
+  type t_OtherUser = t
+  let query = \"^"(
+    "fragment AnotherFragment on User   {
+__typename
+id  
+...InterfaceFragment   
+}
+",
+    InterfaceFragment.query,
+  )
+  let parse = (
+    (value): t => {
+      id: {
+        let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "id"))
+        value
+      },
+      interfaceFragment: {
+        let value = (Obj.magic(value): InterfaceFragment.Raw.t)
+
+        InterfaceFragment.verifyArgsAndParse(~fragmentName=#InterfaceFragment, value)
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t =>
+      Obj.magic(
+        Js.Array2.reduce(
+          [(Obj.magic(InterfaceFragment.serialize((value: t).interfaceFragment)): Js.Json.t)],
+          Graphql_ppx_runtime.deepMerge,
+          (
+            Obj.magic({
+              let id = {
+                let value = (value: t).id
+                value
+              }
+              {"id": id}
+            }): Js.Json.t
+          ),
+        ),
+      ): t => Raw.t
+  )
+  let verifyArgsAndParse = (~fragmentName as _AnotherFragment: [#AnotherFragment], value: Raw.t) =>
+    parse(value)
+  let verifyName = x => switch x {
+  | #AnotherFragment => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+module AnonUser: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t
+    type t_AnonymousUser = t
+  }
+  type rec t = {id: string, interfaceFragment: InterfaceFragment.t_AnonymousUser}
+  type t_AnonymousUser = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#AnonUser], Raw.t) => t
+  let verifyName: [#AnonUser] => unit
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t
+    type t_AnonymousUser = t
+  }
+  type rec t = {id: string, interfaceFragment: InterfaceFragment.t_AnonymousUser}
+  type t_AnonymousUser = t
+  let query = \"^"(
+    "fragment AnonUser on AnonymousUser   {
+id  
+...InterfaceFragment   
+}
+",
+    InterfaceFragment.query,
+  )
+  let parse = (
+    (value): t => {
+      id: {
+        let value = Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "id"))
+        value
+      },
+      interfaceFragment: {
+        let value = (Obj.magic(value): InterfaceFragment.Raw.t)
+
+        InterfaceFragment.verifyArgsAndParse(~fragmentName=#InterfaceFragment, value)
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t =>
+      Obj.magic(
+        Js.Array2.reduce(
+          [(Obj.magic(InterfaceFragment.serialize((value: t).interfaceFragment)): Js.Json.t)],
+          Graphql_ppx_runtime.deepMerge,
+          (
+            Obj.magic({
+              let id = {
+                let value = (value: t).id
+                value
+              }
+              {"id": id}
+            }): Js.Json.t
+          ),
+        ),
+      ): t => Raw.t
+  )
+  let verifyArgsAndParse = (~fragmentName as _AnonUser: [#AnonUser], value: Raw.t) => parse(value)
+  let verifyName = x => switch x {
+  | #AnonUser => ()
+  }
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+}
+

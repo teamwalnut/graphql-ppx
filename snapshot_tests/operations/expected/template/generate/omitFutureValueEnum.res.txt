@@ -1,0 +1,429 @@
+module Normal: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [
+    | #FutureAddedValue(string)
+    | #FIRST
+    | #SECOND
+    | #THIRD
+  ]
+  type rec t_mutationWithError_errors = {message: string, field: t_mutationWithError_errors_field}
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [
+    | #FutureAddedValue(string)
+    | #FIRST
+    | #SECOND
+    | #THIRD
+  ]
+  type rec t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  }
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  let query = "mutation   {
+mutationWithError  {
+errors  {
+message  
+field  
+}
+
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      mutationWithError: {
+        let value = (value: Raw.t).mutationWithError
+        (
+          {
+            errors: {
+              let value = (value: Raw.t_mutationWithError).errors
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  Js.Array2.map(value, (value): t_mutationWithError_errors => {
+                    message: {
+                      let value = (value: Raw.t_mutationWithError_errors).message
+                      value
+                    },
+                    field: {
+                      let value = (value: Raw.t_mutationWithError_errors).field
+                      switch (Obj.magic(value): string) {
+                      | "FIRST" => #FIRST
+                      | "SECOND" => #SECOND
+                      | "THIRD" => #THIRD
+                      | other => #FutureAddedValue(other)
+                      }
+                    },
+                  }),
+                )
+              | None => None
+              }
+            },
+          }: t_mutationWithError
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError
+        (
+          {
+            let errors = {
+              let value = (value: t_mutationWithError).errors
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  Js.Array2.map(value, (value): Raw.t_mutationWithError_errors => {
+                    let field = {
+                      let value = (value: t_mutationWithError_errors).field
+                      switch value {
+                      | #FIRST => "FIRST"
+                      | #SECOND => "SECOND"
+                      | #THIRD => "THIRD"
+                      | #FutureAddedValue(other) => other
+                      }
+                    }
+                    and message = {
+                      let value = (value: t_mutationWithError_errors).message
+                      value
+                    }
+                    {message, field}
+                  }),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {errors: errors}
+          }: Raw.t_mutationWithError
+        )
+      }
+      {mutationWithError: mutationWithError}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+module ByConfig: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [#FIRST | #SECOND | #THIRD]
+  type rec t_mutationWithError_errors = {message: string, field: t_mutationWithError_errors_field}
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [#FIRST | #SECOND | #THIRD]
+  type rec t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  }
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  let query = "mutation   {
+mutationWithError  {
+errors  {
+message  
+field  
+}
+
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      mutationWithError: {
+        let value = (value: Raw.t).mutationWithError
+        (
+          {
+            errors: {
+              let value = (value: Raw.t_mutationWithError).errors
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  Js.Array2.map(value, (value): t_mutationWithError_errors => {
+                    message: {
+                      let value = (value: Raw.t_mutationWithError_errors).message
+                      value
+                    },
+                    field: {
+                      let value = (value: Raw.t_mutationWithError_errors).field
+                      switch (Obj.magic(value): string) {
+                      | "FIRST" => #FIRST
+                      | "SECOND" => #SECOND
+                      | "THIRD" => #THIRD
+                      | _ => raise(Not_found)
+                      }
+                    },
+                  }),
+                )
+              | None => None
+              }
+            },
+          }: t_mutationWithError
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError
+        (
+          {
+            let errors = {
+              let value = (value: t_mutationWithError).errors
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  Js.Array2.map(value, (value): Raw.t_mutationWithError_errors => {
+                    let field = {
+                      let value = (value: t_mutationWithError_errors).field
+                      switch value {
+                      | #FIRST => "FIRST"
+                      | #SECOND => "SECOND"
+                      | #THIRD => "THIRD"
+                      }
+                    }
+                    and message = {
+                      let value = (value: t_mutationWithError_errors).message
+                      value
+                    }
+                    {message, field}
+                  }),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {errors: errors}
+          }: Raw.t_mutationWithError
+        )
+      }
+      {mutationWithError: mutationWithError}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+module ByDirective: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [#FIRST | #SECOND | #THIRD]
+  type rec t_mutationWithError_errors = {message: string, field: t_mutationWithError_errors_field}
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_mutationWithError_errors_field = string
+    type rec t_mutationWithError_errors = {
+      message: string,
+      field: t_mutationWithError_errors_field,
+    }
+    type rec t_mutationWithError = {errors: Js.Nullable.t<array<t_mutationWithError_errors>>}
+    type rec t = {mutationWithError: t_mutationWithError}
+    type rec t_variables = unit
+  }
+  type rec t_mutationWithError_errors_field = [#FIRST | #SECOND | #THIRD]
+  type rec t_mutationWithError_errors = {
+    message: string,
+    field: t_mutationWithError_errors_field,
+  }
+  type rec t_mutationWithError = {errors: option<array<t_mutationWithError_errors>>}
+  type rec t = {mutationWithError: t_mutationWithError}
+  type rec t_variables = unit
+  let query = "mutation   {
+mutationWithError  {
+errors  {
+message  
+field  
+}
+
+}
+
+}
+"
+  let parse = (
+    (value): t => {
+      mutationWithError: {
+        let value = (value: Raw.t).mutationWithError
+        (
+          {
+            errors: {
+              let value = (value: Raw.t_mutationWithError).errors
+              switch Js.toOption(value) {
+              | Some(value) =>
+                Some(
+                  Js.Array2.map(value, (value): t_mutationWithError_errors => {
+                    message: {
+                      let value = (value: Raw.t_mutationWithError_errors).message
+                      value
+                    },
+                    field: {
+                      let value = (value: Raw.t_mutationWithError_errors).field
+                      switch (Obj.magic(value): string) {
+                      | "FIRST" => #FIRST
+                      | "SECOND" => #SECOND
+                      | "THIRD" => #THIRD
+                      | _ => raise(Not_found)
+                      }
+                    },
+                  }),
+                )
+              | None => None
+              }
+            },
+          }: t_mutationWithError
+        )
+      },
+    }: Raw.t => t
+  )
+  let serialize = (
+    (value): Raw.t => {
+      let mutationWithError = {
+        let value = (value: t).mutationWithError
+        (
+          {
+            let errors = {
+              let value = (value: t_mutationWithError).errors
+              switch value {
+              | Some(value) =>
+                Js.Nullable.return(
+                  Js.Array2.map(value, (value): Raw.t_mutationWithError_errors => {
+                    let field = {
+                      let value = (value: t_mutationWithError_errors).field
+                      switch value {
+                      | #FIRST => "FIRST"
+                      | #SECOND => "SECOND"
+                      | #THIRD => "THIRD"
+                      }
+                    }
+                    and message = {
+                      let value = (value: t_mutationWithError_errors).message
+                      value
+                    }
+                    {message, field}
+                  }),
+                )
+              | None => Js.Nullable.null
+              }
+            }
+            {errors: errors}
+          }: Raw.t_mutationWithError
+        )
+      }
+      {mutationWithError: mutationWithError}
+    }: t => Raw.t
+  )
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
+  external toJson: Raw.t => Js.Json.t = "%identity"
+  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+}
+
