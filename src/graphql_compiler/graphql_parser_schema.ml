@@ -202,9 +202,7 @@ let parse_implements parser =
       match peek parser with
       | { item = Graphql_lexer.Curly_open } -> Ok (List.rev acc)
       | { item = Graphql_lexer.Ampersand } -> parse_implementations parser acc
-      | { item; span } ->
-        print_endline "HWOWWOOWO";
-        Error { span; item = Unexpected_token item })
+      | { item; span } -> Error { span; item = Unexpected_token item })
     | Error e -> Error e
   in
   match peek parser with
