@@ -14,11 +14,11 @@
     "postinstall": "node ./copyPlatformBinaryInPlace.js"
   },
   "devDependencies": {
-    "rescript": "10.0.1",
+    "rescript": "11.1.0",
     "graphql": "^15.5.0"
   },
   "peerDependencies": {
-    "rescript": "^10.0.1"
+    "rescript": "^11.1.0"
   },
   "publishConfig": {
     "access": "public"
