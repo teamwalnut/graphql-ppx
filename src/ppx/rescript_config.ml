@@ -2,11 +2,15 @@ open Graphql_compiler
 
 module Paths = struct
   let bsconfig = "bsconfig.json"
+  let rescriptconfig = "rescript.json"
   let bsbProjectRoot = ref ""
   let projectRoot = ref ""
 
   let rec findProjectRoot ~dir =
-    if Sys.file_exists (Filename.concat dir bsconfig) then dir
+    if
+      Sys.file_exists (Filename.concat dir bsconfig)
+      || Sys.file_exists (Filename.concat dir rescriptconfig)
+    then dir
     else
       let parent = dir |> Filename.dirname in
       if parent = dir then
@@ -28,9 +32,11 @@ module Paths = struct
 
   let getBsConfigFile () =
     let bsconfig = concat !projectRoot bsconfig in
-    match bsconfig |> Sys.file_exists with
-    | true -> Some bsconfig
-    | false -> None
+    let rescriptconfig = concat !projectRoot rescriptconfig in
+    match (bsconfig |> Sys.file_exists, rescriptconfig |> Sys.file_exists) with
+    | _, true -> Some rescriptconfig
+    | true, _ -> Some bsconfig
+    | _ -> None
 end
 
 exception Config_error of string
