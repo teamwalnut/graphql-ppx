@@ -1,0 +1,14 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/fragmentTemplateTagWrongTypeReverse.res[0m:[2m11:10-21[0m
+
+   9 [2m│[0m   query MyQuery {
+  10 [2m│[0m     lists {
+  [1;31m11[0m [2m│[0m       ...[1;31mListFragment[0m
+  12 [2m│[0m     }
+  13 [2m│[0m   }
+  14 [2m│[0m `)
+
+  This has type: [1;31mbool[0m
+  But this function argument is expecting: [1;33mstring[0m
+

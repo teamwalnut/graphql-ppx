@@ -18,6 +18,14 @@ let extend_loc_from_start (loc : Location.t) cnum =
 let base_type_name ?(loc = Location.none) name =
   Ast_helper.Typ.constr { txt = Longident.parse name; loc } []
 
+let base_type ?(inner = []) ?loc name =
+  Ast_helper.Typ.constr
+    {
+      Location.txt = Longident.parse name;
+      loc = (match loc with None -> Location.none | Some loc -> loc);
+    }
+    inner
+
 let const_str_expr s =
   Ast_helper.Exp.constant (Pconst_string (s, Location.none, None))
 

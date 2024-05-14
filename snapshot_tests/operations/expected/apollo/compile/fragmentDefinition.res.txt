@@ -278,7 +278,7 @@ var Wrapper = {
 
 var Raw$5 = {};
 
-var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n__typename  \n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\n__typename  \nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\n__typename  \nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\n__typename  \nlistWithArg(arg1: $arg1)  \n}\nfragment InlineListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
+var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n__typename  \n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\n__typename  \nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\n__typename  \nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\n__typename  \nlistWithArg(arg1: $arg1)  \n}\nfragment ListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment InlineListFragment on Lists   {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$5(value) {
   var value$1 = value.l2;

@@ -19,6 +19,7 @@ let replace span item = { span = span.span; item }
 let map f span = { span = span.span; item = f span.item }
 let start_pos span = fst span.span
 let end_pos span = snd span.span
+let span span = span.item
 
 type ast_position = {
   pos_fname : string;

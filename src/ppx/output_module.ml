@@ -27,8 +27,8 @@ module VariableFinderImpl = struct
   let from_self (self : t) : StringSet.t = !self
 end
 
-let constraint_on_type exp type_name =
-  Ast_helper.Exp.constraint_ exp
+let constraint_on_type ?loc exp type_name =
+  Ast_helper.Exp.constraint_ ?loc exp
     (base_type_name
        (match type_name with None -> "string" | Some type_name -> type_name))
 
@@ -77,8 +77,8 @@ let compress_parts (parts : Graphql_printer.t array) =
        []
   |> List.rev |> Array.of_list
 
-let make_fragment_query f =
-  Ast_helper.Exp.ident
+let make_fragment_query ?loc f =
+  Ast_helper.Exp.ident ?loc
     { Location.txt = Longident.parse (f ^ ".query"); loc = Location.none }
 
 let emit_printed_template_query (parts : Graphql_printer.t array) config =
@@ -91,7 +91,7 @@ let emit_printed_template_query (parts : Graphql_printer.t array) config =
            (fun acc -> function
              | String _ -> acc
              | FragmentNameRef _ -> acc
-             | FragmentQueryRef f -> f :: acc)
+             | FragmentQueryRef f -> f.contents :: acc)
            []
       |> List.rev
     | Exclude -> []
@@ -100,7 +100,7 @@ let emit_printed_template_query (parts : Graphql_printer.t array) config =
     Array.fold_left
       (fun acc -> function
         | String s -> acc ^ s
-        | FragmentNameRef f -> acc ^ f
+        | FragmentNameRef f -> acc ^ f.contents.item
         | FragmentQueryRef _ -> acc)
       "" parts
   in
@@ -112,7 +112,7 @@ let emit_printed_template_query (parts : Graphql_printer.t array) config =
   in
   query :: fragments |> List.fold_left (fun acc el -> acc ^ el) ""
 
-let emit_printed_query parts config =
+let emit_printed_query ~config parts =
   let open Graphql_printer in
   let make_string s =
     Ast_helper.Exp.constant (Parsetree.Pconst_string (s, Location.none, None))
@@ -128,19 +128,23 @@ let emit_printed_query parts config =
     Array.fold_left
       (fun acc -> function
         | String s -> acc ^ s
-        | FragmentNameRef f -> acc ^ f
+        | FragmentNameRef f -> acc ^ f.contents.item
         | FragmentQueryRef _ -> acc)
       "" parts
   in
   let fragment_query_refs =
     match config.fragment_in_query with
-    | Include ->
+    | Ppx_config.Include ->
       parts
       |> Array.fold_left
            (fun acc -> function
              | String _ -> acc
              | FragmentNameRef _ -> acc
-             | FragmentQueryRef f -> make_fragment_query f :: acc)
+             | FragmentQueryRef f ->
+               make_fragment_query
+                 ~loc:(config.map_loc f.contents.span |> Output_utils.conv_loc)
+                 f.contents.item
+               :: acc)
            []
       |> List.rev
     | Exclude -> []
@@ -191,7 +195,7 @@ let rec emit_json config = function
         Js.Json.number
           [%e Ast_helper.Exp.constant (Pconst_float (string_of_int i, None))]]
   | `StringExpr parts ->
-    add_uapp [%expr Js.Json.string [%e emit_printed_query parts config]]
+    add_uapp [%expr Js.Json.string [%e emit_printed_query ~config parts]]
 
 let wrap_template_tag ?import ?location ?template_tag source =
   match (import, location, template_tag) with
@@ -232,74 +236,105 @@ let wrap_raw contents =
           };
         ] )
 
-let make_printed_query config document =
-  let source = Graphql_printer.print_document config.schema document in
+let make_printed_query config definition =
+  let definition_loc = Graphql_ast.get_spanning_of_definition definition in
+  let source = Graphql_printer.print_document config.schema [ definition ] in
   match Ppx_config.output_mode () with
   | Ppx_config.Apollo_AST ->
-    Ast_serializer_apollo.serialize_document source document |> emit_json config
+    Ast_serializer_apollo.serialize_document source [ definition ]
+    |> emit_json config
   | Ppx_config.String -> (
     match (config.template_tag_is_function, config.template_tag) with
-    | Some true, (_, location, _) when location <> None ->
+    | Some true, (template_tag, location, _import)
+      when location <> None || template_tag <> None ->
       let source_list = source |> Array.to_list in
-      add_uapp
-      @@ Ast_helper.Exp.apply
-           (Ast_helper.Exp.ident
-              { Location.txt = Longident.Lident "graphql"; loc = Location.none })
-           (( Nolabel,
-              Ast_helper.Exp.array
-                (emit_printed_query
-                   (source_list
-                   |> List.filter (function
-                        | Graphql_printer.FragmentQueryRef _ -> false
-                        | _ -> true)
-                   |> Array.of_list)
-                   config
-                :: (source_list
-                   |> filter_map (function
-                        | Graphql_printer.FragmentQueryRef _ -> Some [%expr ""]
-                        | _ -> None))) )
-           :: (source_list
+      Ast_helper.Exp.apply
+        (Ast_helper.Exp.ident
+           {
+             Location.txt =
+               Longident.Lident (template_tag |> Option.get_or_else "graphql");
+             loc = Location.none;
+           })
+        [
+          ( Nolabel,
+            Ast_helper.Exp.array
+              (emit_printed_query ~config
+                 (source_list
+                 |> List.filter (function
+                      | Graphql_printer.FragmentQueryRef _ -> false
+                      | _ -> true)
+                 |> Array.of_list)
+              :: (source_list
+                 |> filter_map (function
+                      | Graphql_printer.FragmentQueryRef _ -> Some [%expr ""]
+                      | _ -> None))) );
+          ( Nolabel,
+            Ast_helper.Exp.array
+              (source_list
               |> filter_map (function
                    | Graphql_printer.FragmentQueryRef x ->
-                     Some (Nolabel, make_fragment_query x)
-                   | _ -> None)))
-    | _, (template_tag, location, import)
-      when template_tag <> None || location <> None ->
-      let open Graphql_printer in
-      let fragments =
-        source
-        |> Array.fold_left
-             (fun acc -> function
-               | String _ -> acc
-               | FragmentNameRef _ -> acc
-               | FragmentQueryRef f -> f :: acc)
-             []
-        |> List.rev
-      in
-      let template_tag =
-        wrap_template_tag ?template_tag ?location ?import
-          (pretty_print (emit_printed_template_query source config))
-      in
-      constraint_on_type
-        (match (config.fragment_in_query, fragments) with
-        | Exclude, _ | _, [] -> wrap_raw template_tag
-        | Include, fragments ->
-          let fragment_names =
-            fragments |> List.mapi (fun i _frag -> "frag_" ^ string_of_int i)
-          in
-          let frag_fun =
-            "("
-            ^ (List.tl fragment_names
-              |> List.fold_left
-                   (fun acc el -> acc ^ ", " ^ el)
-                   (List.hd fragment_names))
-            ^ ") => "
-          in
-          Ast_helper.Exp.apply
-            (wrap_raw (frag_fun ^ template_tag))
-            (fragments |> List.map (fun f -> (Nolabel, make_fragment_query f))))
-        config.template_tag_return_type
-    | _ -> emit_printed_query source config)
+                     Some (make_fragment_query x.contents.item)
+                   | _ -> None)) );
+        ]
+    | template_tag_is_function, (template_tag, location, _import)
+      when (location <> None || template_tag <> None)
+           && template_tag_is_function <> Some true ->
+      let source_list = source |> Array.to_list in
+      Ast_helper.Exp.apply
+        (Ast_helper.Exp.ident
+           ~loc:(config.map_loc definition_loc |> Output_utils.conv_loc)
+           {
+             Location.txt =
+               Longident.Lident (template_tag |> Option.get_or_else "graphql");
+             loc = config.map_loc definition_loc |> Output_utils.conv_loc;
+           })
+        [
+          ( Nolabel,
+            Ast_helper.Exp.array
+              (emit_printed_query ~config
+                 (source_list
+                 |> List.filter (function
+                      | Graphql_printer.FragmentQueryRef _ -> false
+                      | _ -> true)
+                 |> Array.of_list)
+              :: (source_list
+                 |> filter_map (function
+                      | Graphql_printer.FragmentQueryRef _ -> Some [%expr ""]
+                      | _ -> None))) );
+          ( Nolabel,
+            Ast_helper.Exp.array
+              (source_list
+              |> filter_map (function
+                   | Graphql_printer.FragmentQueryRef x ->
+                     let fragment_query =
+                       make_fragment_query
+                         ~loc:
+                           (config.map_loc x.contents.span
+                           |> Output_utils.conv_loc)
+                         x.contents.item
+                     in
+                     if x.allow_string then
+                       (* this coerces the value from a string to the desired return type *)
+                       Some
+                         (Ast_helper.Exp.apply
+                            (Ast_helper.Exp.ident
+                               {
+                                 Location.txt =
+                                   Longident.Lident "graphql_allow_string";
+                                 loc = Location.none;
+                               })
+                            [
+                              ( Nolabel,
+                                constraint_on_type
+                                  ~loc:
+                                    (config.map_loc x.contents.span
+                                    |> Output_utils.conv_loc)
+                                  fragment_query (Some "string") );
+                            ])
+                     else Some fragment_query
+                   | _ -> None)) );
+        ]
+    | _ -> emit_printed_query ~config source)
 
 let signature_module name signature =
   {
@@ -445,8 +480,8 @@ let wrap_query_module ~loc:module_loc ~module_type definition name contents
     [ wrap_module ~module_type ~loc:module_loc name contents ]
   | None, None -> contents
 
-let wrap_query_module_signature ~signature definition name config =
-  let loc = Location.none in
+let wrap_query_module_signature ~signature ?(loc = Location.none) definition
+  name config =
   let module_name =
     match name with Some name -> name ^ "_inner" | None -> "Inner"
   in
@@ -583,13 +618,14 @@ let rec create_arity_fn arity typ =
   | 0 -> typ
   | arity -> Ast_helper.Typ.arrow Nolabel typ (create_arity_fn (arity - 1) typ)
 
-let graphql_external (config : output_config) document =
+let graphql_external (config : output_config) _ =
   match config with
   | {
-   template_tag = import, Some location, _;
+   template_tag = template_tag, location, import;
    template_tag_return_type;
    template_tag_is_function = Some true;
-  } ->
+  }
+    when location <> None ->
     let return_type =
       match template_tag_return_type with
       | None -> "string"
@@ -598,28 +634,85 @@ let graphql_external (config : output_config) document =
     let import =
       match import with None -> "default" | Some import -> import
     in
-    let arity =
-      Graphql_printer.print_document config.schema document
-      |> Array.fold_left
-           (fun arity el ->
-             match el with
-             | Graphql_printer.FragmentQueryRef _ -> arity + 1
-             | _ -> arity)
-           0
+    [
+      Ast_helper.Str.primitive
+        (Ast_helper.Val.mk
+           ~attrs:
+             (match location with
+             | None -> []
+             | Some location ->
+               [
+                 Ast_helper.Attr.mk
+                   { txt = "module"; loc = Location.none }
+                   (PStr [ Ast_helper.Str.eval (const_str_expr location) ]);
+                 Ast_helper.Attr.mk
+                   { txt = "variadic"; loc = Location.none }
+                   (PStr []);
+               ])
+           ~prim:[ import ]
+           {
+             txt = template_tag |> Option.get_or_else "graphql";
+             loc = Location.none;
+           }
+           (Ast_helper.Typ.arrow Nolabel [%type: string array]
+              (Ast_helper.Typ.arrow Nolabel
+                 (base_type ~inner:[ base_type_name return_type ] "array")
+                 (base_type_name return_type))));
+    ]
+  | { template_tag = template_tag, location, import; template_tag_return_type }
+    when location <> None ->
+    let return_type =
+      match template_tag_return_type with
+      | None -> "string"
+      | Some return_type -> return_type
+    in
+    let import =
+      match (import, location, template_tag) with
+      | None, Some _, _ -> "default"
+      | Some import, Some _, _ -> import
+      | _, None, Some template_tag -> template_tag
+      | _, None, None -> assert false
     in
     [
       Ast_helper.Str.primitive
         (Ast_helper.Val.mk
            ~attrs:
-             [
-               Ast_helper.Attr.mk
-                 { txt = "bs.module"; loc = Location.none }
-                 (PStr [ Ast_helper.Str.eval (const_str_expr location) ]);
-             ]
+             (match location with
+             | None ->
+               [
+                 Ast_helper.Attr.mk
+                   { txt = "taggedTemplate"; loc = Location.none }
+                   (PStr []);
+               ]
+             | Some location ->
+               [
+                 Ast_helper.Attr.mk
+                   { txt = "module"; loc = Location.none }
+                   (PStr [ Ast_helper.Str.eval (const_str_expr location) ]);
+                 Ast_helper.Attr.mk
+                   { txt = "taggedTemplate"; loc = Location.none }
+                   (PStr []);
+               ])
            ~prim:[ import ]
-           { txt = "graphql"; loc = Location.none }
+           {
+             txt = template_tag |> Option.get_or_else "graphql";
+             loc = Location.none;
+           }
            (Ast_helper.Typ.arrow Nolabel [%type: string array]
-              (create_arity_fn arity (base_type_name return_type))));
+              (Ast_helper.Typ.arrow Nolabel
+                 (base_type ~inner:[ base_type_name return_type ] "array")
+                 (base_type_name return_type))));
+      (*
+        this converts a string to the expected return type to make old fragments
+        compatible if you use apollo with fragments that don't use the template tag
+        this use-case is useful if you have two different GraphQL clients and you want
+        to mix the fragments while they are not using the template tag
+      *)
+      Ast_helper.Str.primitive
+        (Ast_helper.Val.mk ~attrs:[] ~prim:[ "%identity" ]
+           { txt = "graphql_allow_string"; loc = Location.none }
+           (Ast_helper.Typ.arrow Nolabel [%type: string]
+              (base_type_name return_type)));
     ]
   | _ -> []
 
@@ -658,8 +751,9 @@ let generate_operation_implementation config variable_defs _has_error operation
     Output_serializer.generate_variable_constructors extracted_args
   in
   let has_required_variables = has_required_variables extracted_args in
-  let document = [ Graphql_ast.Operation operation ] in
-  let printed_query = make_printed_query config document in
+  let printed_query =
+    make_printed_query config (Graphql_ast.Operation operation)
+  in
   let contents =
     List.concat
       [
@@ -670,7 +764,7 @@ let generate_operation_implementation config variable_defs _has_error operation
         ];
         types;
         arg_types;
-        graphql_external config document;
+        graphql_external config (Graphql_ast.Operation operation);
         [
           [%stri let query = [%e printed_query]];
           wrap_as_uncurried_fn [%stri let parse value = [%e parse_fn]];
@@ -888,8 +982,9 @@ let generate_fragment_implementation config name
               Closed None))
         (make_labeled_fun body tl)
   in
-  let document = [ Graphql_ast.Fragment fragment ] in
-  let printed_query = make_printed_query config document in
+  let printed_query =
+    make_printed_query config (Graphql_ast.Fragment fragment)
+  in
   let verify_parse =
     make_labeled_fun
       (Ast_helper.Exp.fun_ (Labelled "fragmentName") None
@@ -926,7 +1021,7 @@ let generate_fragment_implementation config name
       [ [%stri [@@@ocaml.warning "-32-30"]] ];
       [ wrap_module ~loc:Location.none "Raw" raw_types ];
       types;
-      graphql_external config document;
+      graphql_external config (Graphql_ast.Fragment fragment);
       [
         [%stri let query = [%e printed_query]];
         wrap_as_uncurried_fn
