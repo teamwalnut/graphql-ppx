@@ -522,9 +522,9 @@ l5: lists  {
 ",
         FragmentWithArgs.query,
       ),
-      InlineListFragment.query,
+      ListFragment.query,
     ),
-    ListFragment.query,
+    InlineListFragment.query,
   )
   let parse = (value): t => {
     l1: {

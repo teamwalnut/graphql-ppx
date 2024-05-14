@@ -3,6 +3,9 @@ module Graphql_ppx_runtime = {
   let deepMerge = (json1, _) => json1
 }
 
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
+
 module MyQuery = %graphql(
   `
   {
@@ -27,6 +30,9 @@ module MyTypes = {
   type query
 }
 
+@variadic @taggedTemplate
+external graphql: (array<string>, array<MyTypes.query>) => MyTypes.query = "graphql"
+
 module MyQuery1a = %graphql(
   `
   {
@@ -46,6 +52,9 @@ module MyQuery1a = %graphql(
 `
   {templateTag: "graphql", templateTagReturnType: "MyTypes.query"}
 )
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
 
 module MyQuery1b = %graphql(
   `
@@ -128,7 +137,7 @@ module MyQuery4 = %graphql(
     }
   }
 `
-  {templateTag: graphql, templateTagLocation: "gatsby"}
+  {templateTagImport: "graphql", templateTagLocation: "gatsby"}
 )
 
 %graphql(
@@ -144,7 +153,7 @@ module MyQuery4 = %graphql(
   }
   `
   {
-    templateTag: graphql,
+    templateTagImport: "graphql",
     templateTagLocation: "gatsby",
     fragmentInQuery: "exclude",
   }
@@ -159,7 +168,7 @@ module MyQuery4 = %graphql(
   }
   `
   {
-    templateTag: graphql,
+    templateTagImport: "graphql",
     templateTagLocation: "gatsby",
     fragmentInQuery: "include",
   }

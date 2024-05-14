@@ -1,0 +1,17 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/fragmentTemplateTagNotFound.res[0m:[2m11:3-15:3[0m
+
+   9 [2m│[0m 
+  10 [2m│[0m %graphql(`
+  [1;31m11[0m [2m│[0m   [1;31mquery MyQuery @ppxConfig(templateTag: "gql", templateTagReturnType: "[0m
+     [2m│[0m [1;31mbool") {[0m
+  [1;31m12[0m [2m│[0m [1;31m    lists {[0m
+  [1;31m13[0m [2m│[0m [1;31m      ...ListFragment[0m
+  [1;31m14[0m [2m│[0m [1;31m    }[0m
+  [1;31m15[0m [2m│[0m [1;31m  }[0m
+  16 [2m│[0m `)
+  17 [2m│[0m 
+
+  The value gql can't be found
+

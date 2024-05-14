@@ -18,14 +18,6 @@ let make_error_raiser message =
 
 let const_str_expr s = Ast_helper.Exp.constant (Pconst_string (s, loc, None))
 
-let base_type ?(inner = []) ?loc name =
-  Ast_helper.Typ.constr
-    {
-      Location.txt = Longident.parse name;
-      loc = (match loc with None -> Location.none | Some loc -> loc);
-    }
-    inner
-
 let rec generate_type ?atLoc ~config ~path ~raw = function
   | Res_string _ -> base_type ?loc:atLoc "string"
   | Res_nullable { inner } ->

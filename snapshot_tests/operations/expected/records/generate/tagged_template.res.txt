@@ -2,6 +2,9 @@ module Graphql_ppx_runtime = {
   // mock
   let deepMerge = (json1, _) => json1
 }
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
 module MyQuery: {
   @@ocaml.warning("-32-30")
   module Raw: {
@@ -78,23 +81,26 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("graphql`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): string
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -248,6 +254,9 @@ function back to the original JSON compatible data ")
 module MyTypes = {
   type query
 }
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<MyTypes.query>) => MyTypes.query = "graphql"
 module MyQuery1a: {
   @@ocaml.warning("-32-30")
   module Raw: {
@@ -324,23 +333,26 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("graphql`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): MyTypes.query
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -490,6 +502,9 @@ function back to the original JSON compatible data ")
   external toJson: Raw.t => Js.Json.t = "%identity"
   external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
 }
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
 module MyQuery1b: {
   @@ocaml.warning("-32-30")
   module Raw: {
@@ -566,23 +581,26 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("graphql`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): string
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -808,23 +826,29 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("require("gatsby").graphql`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -1050,23 +1074,29 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("require("gatsby").graphql`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -1292,23 +1322,29 @@ function back to the original JSON compatible data ")
   }
   type rec t = {variousScalars: t_variousScalars}
   type rec t_variables = unit
-  let query = (
-    %raw("require("gatsby")`
-  query   {
-    variousScalars  {
-      nullableString
-      string
-      nullableInt
-      int
-      nullableFloat
-      float
-      nullableBoolean
-      boolean
-      nullableID
-      id
-    }
-  }
-`"): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
   )
   let parse = (value): t => {
     variousScalars: {
@@ -1496,13 +1532,18 @@ function back to the original JSON-compatible data ")
     nullableOfNonNullable: option<array<string>>,
   }
   type t_Lists = t
-  let query = (
-    %raw("require("gatsby")`
-  fragment ListFragment on Lists   {
-    nullableOfNullable
-    nullableOfNonNullable
-  }
-`"): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "fragment ListFragment on Lists   {
+nullableOfNullable  
+nullableOfNonNullable  
+}
+",
+    ],
+    [],
   )
   let parse = (
     (value): t => {
@@ -1593,14 +1634,21 @@ function back to the original JSON compatible data ")
   }
   type rec t = {lists: ListFragment.t_Lists}
   type rec t_variables = unit
-  let query = (
-    %raw("require("gatsby")`
-  query MyQuery5  {
-    lists  {
-      ...ListFragment
-    }
-  }
-`"): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query MyQuery5  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
   )
   let parse = (value): t => {
     lists: {
@@ -1651,15 +1699,21 @@ function back to the original JSON compatible data ")
   }
   type rec t = {lists: ListFragment.t_Lists}
   type rec t_variables = unit
-  let query = (
-    %raw("(frag_0) => require("gatsby")`
-  query MyQuery6  {
-    lists  {
-      ...ListFragment
-    }
-  }
-  ${frag_0}
-`")(ListFragment.query): string
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query MyQuery6  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
   )
   let parse = (value): t => {
     lists: {
@@ -1710,14 +1764,18 @@ function back to the original JSON compatible data ")
   }
   type rec t = {lists: ListFragment.t_Lists}
   type rec t_variables = unit
-  let query = (
-    %raw("graphql`
-  query MyQuery7  {
-    lists  {
-      ...ListFragment
-    }
-  }
-`"): string
+  let query = graphql(
+    [
+      "query MyQuery7  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
   )
   let parse = (value): t => {
     lists: {
@@ -1778,14 +1836,17 @@ function back to the original JSON-compatible data ")
     nullableOfNonNullable: option<array<string>>,
   }
   type t_Lists = t
-  @module("apollo-client") external graphql: array<string> => int = "gql"
-  let query = graphql([
-    "fragment ListFragment8 on Lists   {
+  @module("apollo-client") @variadic external gql: (array<string>, array<int>) => int = "gql"
+  let query = gql(
+    [
+      "fragment ListFragment8 on Lists   {
 nullableOfNullable  
 nullableOfNonNullable  
 }
 ",
-  ])
+    ],
+    [],
+  )
   let parse = (
     (value): t => {
       nullableOfNullable: {
@@ -1932,8 +1993,8 @@ function back to the original JSON compatible data ")
     variousScalars: t_variousScalars,
   }
   type rec t_variables = unit
-  @module("apollo-client") external graphql: (array<string>, int) => int = "gql"
-  let query = graphql(
+  @module("apollo-client") @variadic external gql: (array<string>, array<int>) => int = "gql"
+  let query = gql(
     [
       "query MyQuery8  {
 lists  {
@@ -1957,7 +2018,7 @@ id
 ",
       "",
     ],
-    ListFragment8.query,
+    [ListFragment8.query],
   )
   let parse = (value): t => {
     lists: {

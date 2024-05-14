@@ -26,7 +26,10 @@ module MyQuery =
 
 type qt = MyQuery.t
 
-module MyQueryTest = struct
+module MyQueryTest : sig
+  val pp : Format.formatter -> qt -> unit
+  val equal : qt -> qt -> bool
+end = struct
   let pp fmt (obj : qt) =
     pp_record fmt
       [ ("variousScalars", (pp_to_print Scalars.pp) obj.variousScalars) ]

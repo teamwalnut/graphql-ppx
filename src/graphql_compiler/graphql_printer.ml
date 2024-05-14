@@ -6,8 +6,8 @@ exception Cant_find_fragment_type of string spanning
 
 type t =
   | String of string
-  | FragmentNameRef of string
-  | FragmentQueryRef of string
+  | FragmentNameRef of { contents : string spanning; allow_string : bool }
+  | FragmentQueryRef of { contents : string spanning; allow_string : bool }
 
 let rec type_ref_name = function
   | Named n -> n
@@ -73,7 +73,15 @@ let print_directives ds =
 let print_fragment_spread s =
   [|
     String "...";
-    FragmentNameRef s.fs_name.item;
+    FragmentNameRef
+      {
+        contents = s.fs_name;
+        allow_string =
+          s.fs_directives
+          |> List.exists (fun x ->
+               if x.item.d_name.item = "ppxAllowStringReturnType" then true
+               else false);
+      };
     String (" " ^ print_directives s.fs_directives);
   |]
 
@@ -234,17 +242,17 @@ let print_definition schema def =
   | Operation { item = operation; _ } -> print_operation schema operation
   | Fragment { item = fragment; _ } -> print_fragment schema fragment
 
-module StringSet = Set.Make (String)
-
 let find_fragment_refs parts =
   parts
   |> Array.fold_left
        (fun acc -> function
          | String _ -> acc
-         | FragmentNameRef r -> StringSet.add r acc
+         | FragmentNameRef r ->
+           Hashtbl.replace acc r.contents.item (r.contents, r.allow_string);
+           acc
          | FragmentQueryRef _ -> acc)
-       StringSet.empty
-  |> StringSet.elements
+       (Hashtbl.create ~random:false 10)
+  |> Hashtbl.to_seq_values |> List.of_seq
 
 let compress_parts (parts : t array) =
   parts |> Array.to_list
@@ -263,6 +271,7 @@ let print_document schema defs =
     [
       parts;
       fragment_refs |> Array.of_list
-      |> Array.map (fun ref -> FragmentQueryRef ref);
+      |> Array.map (fun ref ->
+           FragmentQueryRef { contents = fst ref; allow_string = snd ref });
     ]
   |> compress_parts
