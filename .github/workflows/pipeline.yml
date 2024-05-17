@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        os: [windows-latest, macOS-13, macOS-latest]
+        os: [macOS-13, macOS-latest]
         ocaml-compiler: ["5.1"]
 
     steps:
@@ -136,12 +136,12 @@ jobs:
           name: macOS-13
           path: binaries/darwin
 
-      - name: Download windows artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest
-          path: binaries/windows
+      # - name: Download windows artifacts
+      #   if: success()
+      #   uses: actions/download-artifact@master
+      #   with:
+      #     name: windows-latest
+      #     path: binaries/windows
 
       - name: Move artifacts
         if: success()
@@ -149,7 +149,7 @@ jobs:
           mkdir -p bin
           mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
           mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
-          mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
+          # mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 
       - name: Publish
