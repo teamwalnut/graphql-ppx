@@ -2,6 +2,8 @@ name: graphql-ppx-pipeline
 
 on: [pull_request, push]
 
+permissions: read-all
+
 jobs:
   test_and_build_linux:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
