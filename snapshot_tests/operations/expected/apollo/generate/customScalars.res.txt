@@ -88,16 +88,18 @@ nonNullable
     }
     {customScalarField: customScalarField}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    opt: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).opt),
-    req: (a => a)((inp: t_variables).req),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      opt: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).opt),
+      req: (a => a)((inp: t_variables).req),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (~opt=?, ~req, ()): t_variables => {opt, req}
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
   external toJson: Raw.t => Js.Json.t = "%identity"
