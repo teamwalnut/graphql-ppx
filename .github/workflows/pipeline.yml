@@ -41,7 +41,6 @@ jobs:
         run: |
           npm ci --no-optional --ignore-scripts
           ./tests.sh
-          esy release-static
 
       - name: Release build
         run: opam exec -- dune build --root . --only-packages 'graphql-ppx' --ignore-promoted-rules --no-config --profile release-static
