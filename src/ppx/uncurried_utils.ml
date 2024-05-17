@@ -1,13 +1,13 @@
 open Ppxlib
-open Ocaml_common
 open Parsetree
 open Graphql_compiler
+open Output_utils
 
 let function_expression_uncurried ?(loc = Location.none) ~arity funExpr =
   let arity_to_attributes ~loc arity : Parsetree.attribute list =
     [
       {
-        attr_name = Location.mknoloc "res.arity";
+        attr_name = mknoloc "res.arity";
         attr_payload =
           Parsetree.PStr
             [
@@ -21,7 +21,7 @@ let function_expression_uncurried ?(loc = Location.none) ~arity funExpr =
   in
   Ast_helper.Exp.construct ~loc
     ~attrs:(arity_to_attributes ~loc arity)
-    (Location.mknoloc (Longident.Lident "Function$"))
+    (mknoloc (Longident.Lident "Function$"))
     (Some funExpr)
 
 let wrap_function_exp_uncurried ?(arity = 1) expr =
