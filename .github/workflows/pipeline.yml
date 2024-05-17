@@ -14,9 +14,6 @@ jobs:
         os: [ubuntu-latest]
         ocaml-compiler: ["5.1"]
 
-    container:
-      image: alexfedoseev/alpine-node-yarn-esy:0.0.4
-
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
@@ -62,6 +59,7 @@ jobs:
       matrix:
         node-version: [16.x]
         os: [windows-latest, macOS-13, macOS-latest]
+        ocaml-compiler: ["5.1"]
 
     steps:
       - uses: actions/checkout@v1
@@ -71,30 +69,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install esy
-        run: |
-          npm install -g esy@0.6.12
-
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v2
+      - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
 
-      - name: build
-        run: esy b
+      - run: opam install . --deps-only --with-test
 
-      - name: test-native
-        run: |
-          esy b dune runtest -f
+      - run: opam exec -- dune build
+
+      - name: native tests
+        run: opam exec -- dune runtest -f
         env:
           CI: true
 
@@ -108,7 +93,10 @@ jobs:
       - name: snaphot tests
         if: runner.os != 'Windows'
         run: |
-          esy test
+          ./tests.sh
+
+      - name: Release build
+        run: opam exec -- dune build --root . --only-packages 'graphql-ppx' --ignore-promoted-rules --no-config --profile release-static
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
