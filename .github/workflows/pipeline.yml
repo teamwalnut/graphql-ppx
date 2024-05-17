@@ -43,7 +43,7 @@ jobs:
           ./tests.sh
 
       - name: Release build
-        run: opam exec -- dune build --root . --only-packages 'graphql-ppx' --ignore-promoted-rules --no-config --profile release-static
+        run: opam exec -- dune build --root . --only-packages 'graphql_ppx' --ignore-promoted-rules --no-config --profile release-static
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
@@ -95,7 +95,7 @@ jobs:
           ./tests.sh
 
       - name: Release build
-        run: opam exec -- dune build --root . --only-packages 'graphql-ppx' --ignore-promoted-rules --no-config --profile release-static
+        run: opam exec -- dune build --root . --only-packages 'graphql_ppx' --ignore-promoted-rules --no-config --profile release-static
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
