@@ -66,7 +66,7 @@ var Raw$1 = {};
 
 var query$1 = Gql`query MyQuery  {
 lists  {
-...ListFragment  @ppxAllowStringReturnType 
+...ListFragment   
 }
 
 }

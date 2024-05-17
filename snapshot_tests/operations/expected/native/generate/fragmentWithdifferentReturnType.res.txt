@@ -136,7 +136,7 @@ function back to the original JSON compatible data ")
     [
       "query MyQuery  {
 lists  {
-...ListFragment  @ppxAllowStringReturnType 
+...ListFragment   
 }
 
 }

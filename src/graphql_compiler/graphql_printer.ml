@@ -53,14 +53,13 @@ let print_directive d =
   | None -> ""
 
 let is_internal_directive d =
-  match d.item.d_name.item with
-  | "bsOmitFutureValue" | "ppxOmitFutureValue" | "bsVariant" | "ppxVariant"
-  | "bsRecord" | "ppxRecord" | "bsObject" | "ppxObject" | "bsDecoder"
-  | "ppxDecoder" | "bsCustom" | "ppxCustom" | "ppxCustomOpt" | "bsAs" | "ppxAs"
-  | "argumentDefinitions" | "arguments" | "bsField" | "ppxField" | "ppxConfig"
-    ->
-    true
-  | _ -> false
+  let name = d.item.d_name.item in
+  if
+    String.starts_with ~prefix:"bs" name
+    || String.starts_with ~prefix:"ppx" name
+  then true
+  else
+    match name with "argumentDefinitions" | "arguments" -> true | _ -> false
 
 let print_directives ds =
   " "
