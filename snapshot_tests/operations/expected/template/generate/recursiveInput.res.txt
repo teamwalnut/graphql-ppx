@@ -69,42 +69,46 @@ recursiveInput(arg: $arg)
     }
     {recursiveInput: recursiveInput}
   }
-  let rec serializeVariables: t_variables => Raw.t_variables = inp => {
-    arg: (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
-  }
-  and serializeInputObjectRecursiveInput: t_variables_RecursiveInput => Raw.t_variables_RecursiveInput = inp => {
-    otherField: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables_RecursiveInput).otherField),
-    inner: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => serializeInputObjectRecursiveInput(a))(b))
-        }
-    )((inp: t_variables_RecursiveInput).inner),
-    enum: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) =>
-          Js.Nullable.return(
-            (
-              a =>
-                switch a {
-                | #FIRST => "FIRST"
-                | #SECOND => "SECOND"
-                | #THIRD => "THIRD"
-                }
-            )(b),
-          )
-        }
-    )((inp: t_variables_RecursiveInput).enum),
-  }
+  let rec serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      arg: (a => serializeInputObjectRecursiveInput(a))((inp: t_variables).arg),
+    }: t_variables => Raw.t_variables
+  )
+  and serializeInputObjectRecursiveInput: t_variables_RecursiveInput => Raw.t_variables_RecursiveInput = (
+    inp => {
+      otherField: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables_RecursiveInput).otherField),
+      inner: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => serializeInputObjectRecursiveInput(a))(b))
+          }
+      )((inp: t_variables_RecursiveInput).inner),
+      enum: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) =>
+            Js.Nullable.return(
+              (
+                a =>
+                  switch a {
+                  | #FIRST => "FIRST"
+                  | #SECOND => "SECOND"
+                  | #THIRD => "THIRD"
+                  }
+              )(b),
+            )
+          }
+      )((inp: t_variables_RecursiveInput).enum),
+    }: t_variables_RecursiveInput => Raw.t_variables_RecursiveInput
+  )
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectRecursiveInput = (
     ~otherField=?,
@@ -200,37 +204,45 @@ recursiveRepro(input: $input)
     }
     {recursiveRepro: recursiveRepro}
   }
-  let rec serializeVariables: t_variables => Raw.t_variables = inp => {
-    input: (a => serializeInputObjectproblem_input(a))((inp: t_variables).input),
-  }
-  and serializeInputObjectproblem_input: t_variables_problem_input => Raw.t_variables_problem_input = inp => {
-    the_problem: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
-        }
-    )((inp: t_variables_problem_input).the_problem),
-    b: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => serializeInputObjectnested_type(a))(b))
-        }
-    )((inp: t_variables_problem_input).b),
-  }
-  and serializeInputObjectthis_will_be_duplicated: t_variables_this_will_be_duplicated => Raw.t_variables_this_will_be_duplicated = inp => {
-    id: (a => a)((inp: t_variables_this_will_be_duplicated).id),
-  }
-  and serializeInputObjectnested_type: t_variables_nested_type => Raw.t_variables_nested_type = inp => {
-    the_problem: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
-        }
-    )((inp: t_variables_nested_type).the_problem),
-  }
+  let rec serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      input: (a => serializeInputObjectproblem_input(a))((inp: t_variables).input),
+    }: t_variables => Raw.t_variables
+  )
+  and serializeInputObjectproblem_input: t_variables_problem_input => Raw.t_variables_problem_input = (
+    inp => {
+      the_problem: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
+          }
+      )((inp: t_variables_problem_input).the_problem),
+      b: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => serializeInputObjectnested_type(a))(b))
+          }
+      )((inp: t_variables_problem_input).b),
+    }: t_variables_problem_input => Raw.t_variables_problem_input
+  )
+  and serializeInputObjectthis_will_be_duplicated: t_variables_this_will_be_duplicated => Raw.t_variables_this_will_be_duplicated = (
+    inp => {
+      id: (a => a)((inp: t_variables_this_will_be_duplicated).id),
+    }: t_variables_this_will_be_duplicated => Raw.t_variables_this_will_be_duplicated
+  )
+  and serializeInputObjectnested_type: t_variables_nested_type => Raw.t_variables_nested_type = (
+    inp => {
+      the_problem: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => serializeInputObjectthis_will_be_duplicated(a))(b))
+          }
+      )((inp: t_variables_nested_type).the_problem),
+    }: t_variables_nested_type => Raw.t_variables_nested_type
+  )
   let makeVariables = (~input, ()): t_variables => {input: input}
   and makeInputObjectproblem_input = (~the_problem=?, ~b=?, ()): t_variables_problem_input => {
     the_problem,

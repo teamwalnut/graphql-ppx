@@ -1,9 +1,11 @@
 module Graphql_ppx_runtime = {
   // mock
-  let assign_typename: (
-    Js.Json.t,
-    string,
-  ) => Js.Json.t = %raw(` (obj, typename) => { obj.__typename = typename; return obj } `)
+  let assign_typename: (Js.Json.t, string) => Js.Json.t = (
+    %raw(` (obj, typename) => { obj.__typename = typename; return obj } `): (
+      Js.Json.t,
+      string,
+    ) => Js.Json.t
+  )
 }
 module DogFragment: {
   @@ocaml.warning("-32-30")

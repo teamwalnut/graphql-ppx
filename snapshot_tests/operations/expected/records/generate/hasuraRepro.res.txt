@@ -118,22 +118,24 @@ hasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  
     }
     {hasuraRepro: hasuraRepro}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    blockNumber: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).blockNumber),
-    type_: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).type_),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      blockNumber: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).blockNumber),
+      type_: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).type_),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {blockNumber, type_}
   let makeDefaultVariables = () => makeVariables()
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"

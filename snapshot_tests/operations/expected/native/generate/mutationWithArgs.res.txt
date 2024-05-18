@@ -42,9 +42,9 @@ optionalInputArgs(required: $required, anotherRequired: "val")
     }
     {optionalInputArgs: optionalInputArgs}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    required: (a => a)((inp: t_variables).required),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {required: (a => a)((inp: t_variables).required)}: t_variables => Raw.t_variables
+  )
   let makeVariables = (~required, ()): t_variables => {required: required}
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
   external toJson: Raw.t => Js.Json.t = "%identity"

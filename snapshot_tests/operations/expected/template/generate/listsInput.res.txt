@@ -74,54 +74,58 @@ listsInput(arg: $arg)
     }
     {listsInput: listsInput}
   }
-  let rec serializeVariables: t_variables => Raw.t_variables = inp => {
-    arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
-  }
-  and serializeInputObjectListsInput: t_variables_ListsInput => Raw.t_variables_ListsInput = inp => {
-    nullableOfNullable: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) =>
-          Js.Nullable.return(
+  let rec serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      arg: (a => serializeInputObjectListsInput(a))((inp: t_variables).arg),
+    }: t_variables => Raw.t_variables
+  )
+  and serializeInputObjectListsInput: t_variables_ListsInput => Raw.t_variables_ListsInput = (
+    inp => {
+      nullableOfNullable: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) =>
+            Js.Nullable.return(
+              (
+                a =>
+                  Js.Array2.map(a, b =>
+                    (
+                      a =>
+                        switch a {
+                        | None => Js.Nullable.undefined
+                        | Some(b) => Js.Nullable.return((a => a)(b))
+                        }
+                    )(b)
+                  )
+              )(b),
+            )
+          }
+      )((inp: t_variables_ListsInput).nullableOfNullable),
+      nullableOfNonNullable: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => Js.Array2.map(a, b => (a => a)(b)))(b))
+          }
+      )((inp: t_variables_ListsInput).nullableOfNonNullable),
+      nonNullableOfNullable: (
+        a =>
+          Js.Array2.map(a, b =>
             (
               a =>
-                Js.Array2.map(a, b =>
-                  (
-                    a =>
-                      switch a {
-                      | None => Js.Nullable.undefined
-                      | Some(b) => Js.Nullable.return((a => a)(b))
-                      }
-                  )(b)
-                )
-            )(b),
+                switch a {
+                | None => Js.Nullable.undefined
+                | Some(b) => Js.Nullable.return((a => a)(b))
+                }
+            )(b)
           )
-        }
-    )((inp: t_variables_ListsInput).nullableOfNullable),
-    nullableOfNonNullable: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => Js.Array2.map(a, b => (a => a)(b)))(b))
-        }
-    )((inp: t_variables_ListsInput).nullableOfNonNullable),
-    nonNullableOfNullable: (
-      a =>
-        Js.Array2.map(a, b =>
-          (
-            a =>
-              switch a {
-              | None => Js.Nullable.undefined
-              | Some(b) => Js.Nullable.return((a => a)(b))
-              }
-          )(b)
-        )
-    )((inp: t_variables_ListsInput).nonNullableOfNullable),
-    nonNullableOfNonNullable: (a => Js.Array2.map(a, b => (a => a)(b)))(
-      (inp: t_variables_ListsInput).nonNullableOfNonNullable,
-    ),
-  }
+      )((inp: t_variables_ListsInput).nonNullableOfNullable),
+      nonNullableOfNonNullable: (a => Js.Array2.map(a, b => (a => a)(b)))(
+        (inp: t_variables_ListsInput).nonNullableOfNonNullable,
+      ),
+    }: t_variables_ListsInput => Raw.t_variables_ListsInput
+  )
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   and makeInputObjectListsInput = (
     ~nullableOfNullable=?,

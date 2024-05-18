@@ -709,15 +709,17 @@ l5: lists  {
     }
     {l1, l2, l3, l4, l5}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    arg1: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).arg1),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      arg1: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).arg1),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (~arg1=?, ()): t_variables => {arg1: arg1}
   let makeDefaultVariables = () => makeVariables()
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"

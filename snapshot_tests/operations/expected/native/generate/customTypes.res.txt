@@ -25,21 +25,25 @@ module NullableString = {
     | Red
     | Green
     | Blue
-  let parse: option<string> => t = color =>
-    switch color {
-    | Some("green") => Green
-    | Some("blue") => Blue
-    | Some("red") => Red
-    | Some(_)
-    | None =>
-      Red
-    }
-  let serialize: t => option<string> = color =>
-    switch color {
-    | Red => Some("red")
-    | Green => Some("green")
-    | Blue => Some("blue")
-    }
+  let parse: option<string> => t = (
+    color =>
+      switch color {
+      | Some("green") => Green
+      | Some("blue") => Blue
+      | Some("red") => Red
+      | Some(_)
+      | None =>
+        Red
+      }: option<string> => t
+  )
+  let serialize: t => option<string> = (
+    color =>
+      switch color {
+      | Red => Some("red")
+      | Green => Some("green")
+      | Blue => Some("blue")
+      }: t => option<string>
+  )
 }
 
 module DateTime = {

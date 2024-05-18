@@ -2,6 +2,8 @@ name: graphql-ppx-pipeline
 
 on: [pull_request, push]
 
+permissions: read-all
+
 jobs:
   test_and_build_linux:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
@@ -10,9 +12,7 @@ jobs:
       matrix:
         node-version: [16.x]
         os: [ubuntu-latest]
-
-    container:
-      image: alexfedoseev/alpine-node-yarn-esy:0.0.4
+        ocaml-compiler: ["5.1"]
 
     steps:
       - uses: actions/checkout@v1
@@ -21,30 +21,19 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Add tar
-        run: apk add --no-cache tar
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        uses: actions/cache@v2
-        id: deps-cache
+      - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          opam-local-packages: |
+            ocaml-option-static
 
-      - name: build
-        run: esy b
+      - run: opam install . --deps-only --with-test
+
+      - run: opam exec -- dune build
 
       - name: native tests
-        run: |
-          esy b dune runtest -f
+        run: opam exec -- dune runtest -f
         env:
           CI: true
 
@@ -53,8 +42,10 @@ jobs:
           GRAPHQL_CI: true
         run: |
           npm ci --no-optional --ignore-scripts
-          esy test
-          esy release-static
+          ./tests.sh
+
+      - name: Release build
+        run: opam exec -- dune build --root . --only-packages 'graphql_ppx' --ignore-promoted-rules --no-config --profile release
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
@@ -68,7 +59,8 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        os: [windows-latest, macOS-13, macOS-latest]
+        os: [macOS-13, macOS-latest]
+        ocaml-compiler: ["5.1"]
 
     steps:
       - uses: actions/checkout@v1
@@ -78,30 +70,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install esy
-        run: |
-          npm install -g esy@0.6.12
-
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v2
+      - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
 
-      - name: build
-        run: esy b
+      - run: opam install . --deps-only --with-test
 
-      - name: test-native
-        run: |
-          esy b dune runtest -f
+      - run: opam exec -- dune build
+
+      - name: native tests
+        run: opam exec -- dune runtest -f
         env:
           CI: true
 
@@ -115,7 +94,10 @@ jobs:
       - name: snaphot tests
         if: runner.os != 'Windows'
         run: |
-          esy test
+          ./tests.sh
+
+      - name: Release build
+        run: opam exec -- dune build --root . --only-packages 'graphql_ppx' --ignore-promoted-rules --no-config --profile release
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
@@ -155,12 +137,12 @@ jobs:
           name: macOS-13
           path: binaries/darwin
 
-      - name: Download windows artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest
-          path: binaries/windows
+      # - name: Download windows artifacts
+      #   if: success()
+      #   uses: actions/download-artifact@master
+      #   with:
+      #     name: windows-latest
+      #     path: binaries/windows
 
       - name: Move artifacts
         if: success()
@@ -168,7 +150,7 @@ jobs:
           mkdir -p bin
           mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
           mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
-          mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
+          # mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 
       - name: Publish

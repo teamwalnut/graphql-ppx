@@ -98,48 +98,50 @@ scalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt
     }
     {scalarsInput: scalarsInput}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    nullableString: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).nullableString),
-    string: (a => a)((inp: t_variables).string),
-    nullableInt: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).nullableInt),
-    int: (a => a)((inp: t_variables).int),
-    nullableFloat: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).nullableFloat),
-    float: (a => a)((inp: t_variables).float),
-    nullableBoolean: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).nullableBoolean),
-    boolean: (a => a)((inp: t_variables).boolean),
-    nullableID: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).nullableID),
-    id: (a => a)((inp: t_variables).id),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      nullableString: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).nullableString),
+      string: (a => a)((inp: t_variables).string),
+      nullableInt: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).nullableInt),
+      int: (a => a)((inp: t_variables).int),
+      nullableFloat: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).nullableFloat),
+      float: (a => a)((inp: t_variables).float),
+      nullableBoolean: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).nullableBoolean),
+      boolean: (a => a)((inp: t_variables).boolean),
+      nullableID: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).nullableID),
+      id: (a => a)((inp: t_variables).id),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (
     ~nullableString=?,
     ~string,

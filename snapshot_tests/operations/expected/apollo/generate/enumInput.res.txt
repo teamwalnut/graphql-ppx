@@ -42,16 +42,18 @@ enumInput(arg: $arg)
     }
     {enumInput: enumInput}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    arg: (
-      a =>
-        switch a {
-        | #FIRST => "FIRST"
-        | #SECOND => "SECOND"
-        | #THIRD => "THIRD"
-        }
-    )((inp: t_variables).arg),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      arg: (
+        a =>
+          switch a {
+          | #FIRST => "FIRST"
+          | #SECOND => "SECOND"
+          | #THIRD => "THIRD"
+          }
+      )((inp: t_variables).arg),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (~arg, ()): t_variables => {arg: arg}
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
   external toJson: Raw.t => Js.Json.t = "%identity"
