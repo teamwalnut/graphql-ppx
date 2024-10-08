@@ -197,8 +197,9 @@ var Raw$4 = {};
 var query$1 = "query   {\nvariousScalars  {\n...Fragment   \n}\n\n}\nfragment Fragment on VariousScalars   {\nstring  \nint  \n}\n";
 
 function parse$4(value) {
+  var value$1 = value.variousScalars;
   return {
-          variousScalars: parse$3(value.variousScalars)
+          variousScalars: parse$3(value$1)
         };
 }
 

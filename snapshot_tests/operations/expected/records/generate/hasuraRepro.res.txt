@@ -28,23 +28,19 @@ function back to the original JSON-compatible data ")
 name  
 }
 "
-  let parse = (
-    (value): t => {
-      name: {
-        let value = (value: Raw.t).name
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let name = {
-        let value = (value: t).name
-        value
-      }
-      {name: name}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    name: {
+      let value = (value: Raw.t).name
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let name = {
+      let value = (value: t).name
+      value
+    }
+    {name: name}
+  }
   let verifyArgsAndParse = (~fragmentName as _Dog: [#Dog], value: Raw.t) => parse(value)
   let verifyName = x => switch x {
   | #Dog => ()

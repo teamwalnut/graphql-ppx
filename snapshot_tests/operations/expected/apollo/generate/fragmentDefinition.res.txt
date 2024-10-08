@@ -45,59 +45,55 @@ nullableOfNullable
 nullableOfNonNullable  
 }
 "
-  let parse = (
-    (value): t => {
-      nullableOfNullable: {
-        let value = (value: Raw.t).nullableOfNullable
-        switch Js.toOption(value) {
-        | Some(value) =>
-          Some(
-            Js.Array2.map(value, value =>
-              switch Js.toOption(value) {
-              | Some(value) => Some(value)
-              | None => None
-              }
-            ),
-          )
-        | None => None
-        }
-      },
-      nullableOfNonNullable: {
-        let value = (value: Raw.t).nullableOfNonNullable
-        switch Js.toOption(value) {
-        | Some(value) => Some(Js.Array2.map(value, value => value))
-        | None => None
-        }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nullableOfNonNullable = {
-        let value = (value: t).nullableOfNonNullable
-        switch value {
-        | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
-        | None => Js.Nullable.null
-        }
+  let parse = (value): t => {
+    nullableOfNullable: {
+      let value = (value: Raw.t).nullableOfNullable
+      switch Js.toOption(value) {
+      | Some(value) =>
+        Some(
+          Js.Array2.map(value, value =>
+            switch Js.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
       }
-      and nullableOfNullable = {
-        let value = (value: t).nullableOfNullable
-        switch value {
-        | Some(value) =>
-          Js.Nullable.return(
-            Js.Array2.map(value, value =>
-              switch value {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              }
-            ),
-          )
-        | None => Js.Nullable.null
-        }
+    },
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Js.toOption(value) {
+      | Some(value) => Some(Js.Array2.map(value, value => value))
+      | None => None
       }
-      {nullableOfNullable, nullableOfNonNullable}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+      | None => Js.Nullable.null
+      }
+    }
+    and nullableOfNullable = {
+      let value = (value: t).nullableOfNullable
+      switch value {
+      | Some(value) =>
+        Js.Nullable.return(
+          Js.Array2.map(value, value =>
+            switch value {
+            | Some(value) => Js.Nullable.return(value)
+            | None => Js.Nullable.null
+            }
+          ),
+        )
+      | None => Js.Nullable.null
+      }
+    }
+    {nullableOfNullable, nullableOfNonNullable}
+  }
   let verifyArgsAndParse = (~fragmentName as _ListFragment: [#ListFragment], value: Raw.t) =>
     parse(value)
   let verifyName = x => switch x {
@@ -136,29 +132,25 @@ function back to the original JSON-compatible data ")
 nullableOfNonNullable  
 }
 "
-  let parse = (
-    (value): t => {
-      nullableOfNonNullable: {
-        let value = (value: Raw.t).nullableOfNonNullable
-        switch Js.toOption(value) {
-        | Some(value) => Some(Js.Array2.map(value, value => value))
-        | None => None
-        }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nullableOfNonNullable = {
-        let value = (value: t).nullableOfNonNullable
-        switch value {
-        | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
-        | None => Js.Nullable.null
-        }
+  let parse = (value): t => {
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Js.toOption(value) {
+      | Some(value) => Some(Js.Array2.map(value, value => value))
+      | None => None
       }
-      {nullableOfNonNullable: nullableOfNonNullable}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+      | None => Js.Nullable.null
+      }
+    }
+    {nullableOfNonNullable: nullableOfNonNullable}
+  }
   let verifyArgsAndParse = (~fragmentName as _Another: [#Another], value: Raw.t) => parse(value)
   let verifyName = x => switch x {
   | #Another => ()
@@ -196,45 +188,41 @@ function back to the original JSON-compatible data ")
 listWithArg(arg1: $arg1)  
 }
 "
-  let parse = (
-    (value): t => {
-      listWithArg: {
-        let value = (value: Raw.t).listWithArg
-        switch Js.toOption(value) {
-        | Some(value) =>
-          Some(
-            Js.Array2.map(value, value =>
-              switch Js.toOption(value) {
-              | Some(value) => Some(value)
-              | None => None
-              }
-            ),
-          )
-        | None => None
-        }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let listWithArg = {
-        let value = (value: t).listWithArg
-        switch value {
-        | Some(value) =>
-          Js.Nullable.return(
-            Js.Array2.map(value, value =>
-              switch value {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              }
-            ),
-          )
-        | None => Js.Nullable.null
-        }
+  let parse = (value): t => {
+    listWithArg: {
+      let value = (value: Raw.t).listWithArg
+      switch Js.toOption(value) {
+      | Some(value) =>
+        Some(
+          Js.Array2.map(value, value =>
+            switch Js.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
       }
-      {listWithArg: listWithArg}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let listWithArg = {
+      let value = (value: t).listWithArg
+      switch value {
+      | Some(value) =>
+        Js.Nullable.return(
+          Js.Array2.map(value, value =>
+            switch value {
+            | Some(value) => Js.Nullable.return(value)
+            | None => Js.Nullable.null
+            }
+          ),
+        )
+      | None => Js.Nullable.null
+      }
+    }
+    {listWithArg: listWithArg}
+  }
   let verifyArgsAndParse = (
     ~arg1 as _arg1: [#String],
     ~fragmentName as _FragmentWithArgs: [#FragmentWithArgs],
@@ -266,59 +254,55 @@ nullableOfNullable
 nullableOfNonNullable  
 }
 "
-  let parse = (
-    (value): t => {
-      nullableOfNullable: {
-        let value = (value: Raw.t).nullableOfNullable
-        switch Js.toOption(value) {
-        | Some(value) =>
-          Some(
-            Js.Array2.map(value, value =>
-              switch Js.toOption(value) {
-              | Some(value) => Some(value)
-              | None => None
-              }
-            ),
-          )
-        | None => None
-        }
-      },
-      nullableOfNonNullable: {
-        let value = (value: Raw.t).nullableOfNonNullable
-        switch Js.toOption(value) {
-        | Some(value) => Some(Js.Array2.map(value, value => value))
-        | None => None
-        }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nullableOfNonNullable = {
-        let value = (value: t).nullableOfNonNullable
-        switch value {
-        | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
-        | None => Js.Nullable.null
-        }
+  let parse = (value): t => {
+    nullableOfNullable: {
+      let value = (value: Raw.t).nullableOfNullable
+      switch Js.toOption(value) {
+      | Some(value) =>
+        Some(
+          Js.Array2.map(value, value =>
+            switch Js.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
       }
-      and nullableOfNullable = {
-        let value = (value: t).nullableOfNullable
-        switch value {
-        | Some(value) =>
-          Js.Nullable.return(
-            Js.Array2.map(value, value =>
-              switch value {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              }
-            ),
-          )
-        | None => Js.Nullable.null
-        }
+    },
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Js.toOption(value) {
+      | Some(value) => Some(Js.Array2.map(value, value => value))
+      | None => None
       }
-      {nullableOfNullable, nullableOfNonNullable}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+      | None => Js.Nullable.null
+      }
+    }
+    and nullableOfNullable = {
+      let value = (value: t).nullableOfNullable
+      switch value {
+      | Some(value) =>
+        Js.Nullable.return(
+          Js.Array2.map(value, value =>
+            switch value {
+            | Some(value) => Js.Nullable.return(value)
+            | None => Js.Nullable.null
+            }
+          ),
+        )
+      | None => Js.Nullable.null
+      }
+    }
+    {nullableOfNullable, nullableOfNonNullable}
+  }
   let verifyArgsAndParse = (
     ~fragmentName as _InlineListFragment: [#InlineListFragment],
     value: Raw.t,
@@ -349,59 +333,55 @@ nullableOfNullable
 nullableOfNonNullable  
 }
 "
-  let parse = (
-    (value): t => {
-      nullableOfNullable: {
-        let value = (value: Raw.t).nullableOfNullable
-        switch Js.toOption(value) {
-        | Some(value) =>
-          Some(
-            Js.Array2.map(value, value =>
-              switch Js.toOption(value) {
-              | Some(value) => Some(value)
-              | None => None
-              }
-            ),
-          )
-        | None => None
-        }
-      },
-      nullableOfNonNullable: {
-        let value = (value: Raw.t).nullableOfNonNullable
-        switch Js.toOption(value) {
-        | Some(value) => Some(Js.Array2.map(value, value => value))
-        | None => None
-        }
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let nullableOfNonNullable = {
-        let value = (value: t).nullableOfNonNullable
-        switch value {
-        | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
-        | None => Js.Nullable.null
-        }
+  let parse = (value): t => {
+    nullableOfNullable: {
+      let value = (value: Raw.t).nullableOfNullable
+      switch Js.toOption(value) {
+      | Some(value) =>
+        Some(
+          Js.Array2.map(value, value =>
+            switch Js.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
       }
-      and nullableOfNullable = {
-        let value = (value: t).nullableOfNullable
-        switch value {
-        | Some(value) =>
-          Js.Nullable.return(
-            Js.Array2.map(value, value =>
-              switch value {
-              | Some(value) => Js.Nullable.return(value)
-              | None => Js.Nullable.null
-              }
-            ),
-          )
-        | None => Js.Nullable.null
-        }
+    },
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Js.toOption(value) {
+      | Some(value) => Some(Js.Array2.map(value, value => value))
+      | None => None
       }
-      {nullableOfNullable, nullableOfNonNullable}
-    }: t => Raw.t
-  )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Js.Nullable.return(Js.Array2.map(value, value => value))
+      | None => Js.Nullable.null
+      }
+    }
+    and nullableOfNullable = {
+      let value = (value: t).nullableOfNullable
+      switch value {
+      | Some(value) =>
+        Js.Nullable.return(
+          Js.Array2.map(value, value =>
+            switch value {
+            | Some(value) => Js.Nullable.return(value)
+            | None => Js.Nullable.null
+            }
+          ),
+        )
+      | None => Js.Nullable.null
+      }
+    }
+    {nullableOfNullable, nullableOfNonNullable}
+  }
   let verifyArgsAndParse = (
     ~fragmentName as _InlineListFragment: [#InlineListFragment],
     value: Raw.t,

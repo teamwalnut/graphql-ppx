@@ -70,8 +70,9 @@ lists  {
 ${query}`;
 
 function parse$1(value) {
+  var value$1 = value.lists;
   return {
-          lists: parse(value.lists)
+          lists: parse(value$1)
         };
 }
 
