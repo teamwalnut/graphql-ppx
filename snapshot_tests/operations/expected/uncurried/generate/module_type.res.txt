@@ -263,8 +263,10 @@ and VariousScalars: {
   let parse = (nestedObject: MyQueryRecursive.t_nestedObject) => {
     otherInner: nestedObject.inner,
   }
-  let serialize: t => MyQueryRecursive.t_nestedObject = t => {
-    inner: t.otherInner,
-  }
+  let serialize: t => MyQueryRecursive.t_nestedObject = (
+    t => {
+      inner: t.otherInner,
+    }: t => MyQueryRecursive.t_nestedObject
+  )
 }
 
