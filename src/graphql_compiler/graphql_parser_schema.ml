@@ -129,17 +129,16 @@ let parse_enum ~description parser =
          | { item = Graphql_lexer.String description } -> (
            let _ = next parser in
            match parse_enum_value ~description:(Some description) parser with
-           | Ok value -> consume_enums (value :: acc)
+           | Ok value -> (consume_enums [@tailcall]) (value :: acc)
            | Error e -> Error e)
          | { item = Graphql_lexer.Name _ } -> (
            match parse_enum_value ~description:None parser with
-           | Ok value -> consume_enums (value :: acc)
+           | Ok value -> (consume_enums [@tailcall]) (value :: acc)
            | Error e -> Error e)
          | { item = Graphql_lexer.Curly_close } ->
            let _ = next parser in
            Ok (List.rev acc)
          | { item; span } -> Error { span; item = Unexpected_token item }
-         [@@tailcall]
        in
        let em_values = consume_enums [] in
        em_values
@@ -290,10 +289,9 @@ let rec parse_union_types ?(acc = []) parser =
   match (acc, pipe) with
   | _, Ok (Some _) | [], Ok None -> (
     match expect_name parser with
-    | Ok union -> parse_union_types ~acc:(union.item :: acc) parser
+    | Ok union -> (parse_union_types [@tailcall]) ~acc:(union.item :: acc) parser
     | Error e -> Error e)
   | _, _ -> Ok (List.rev acc)
-  [@@tailcall]
 
 let parse_union ~description parser =
   expect_name parser
