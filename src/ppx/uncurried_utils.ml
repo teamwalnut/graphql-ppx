@@ -49,15 +49,21 @@ let wrap_core_type_uncurried ?(arity = 1) typ =
   | false -> typ
   | true -> ctyp_arrow ~loc:typ.ptyp_loc ~arity typ
 
+let rec determine_arity_params acc = function
+  | { pparam_desc = Pparam_val _; _ } :: rest -> determine_arity_params (acc + 1) rest
+  | { pparam_desc = Pparam_newtype _; _} :: rest -> determine_arity_params acc rest
+  | [] -> acc
+
 let rec determineArity ~arity expr =
   match expr.pexp_desc with
-  | Pexp_fun (_, _, _, fn) -> determineArity ~arity:(arity + 1) fn
+  | Pexp_function (params, _constraint, Pfunction_body fn) -> determineArity ~arity:(arity + determine_arity_params 0 params) fn
+  | Pexp_function (params, _constraint, Pfunction_cases _) -> arity + determine_arity_params 0 params
   | _ -> arity
 
 let wrap_as_uncurried_vb ?(arity = 1) item =
   match (Ppx_config.uncurried (), item) with
   | false, _ -> item
-  | _, ({ pvb_expr = { pexp_desc = Pexp_fun _ } as fn } as outerV) ->
+  | _, ({ pvb_expr = { pexp_desc = Pexp_function (_ :: _, _, _) } as fn } as outerV) ->
     {
       outerV with
       pvb_expr = function_expression_uncurried ~loc:outerV.pvb_loc ~arity fn;
@@ -81,7 +87,7 @@ let wrap_as_uncurried_fn_multi ?(arity = 1) item =
     let new_value_bindings =
       value_bindings
       |> List.map (function
-           | { pvb_expr = { pexp_desc = Pexp_fun _ } as fn } as outerV ->
+           | { pvb_expr = { pexp_desc = Pexp_function (_ :: _, _, _) } as fn } as outerV ->
              {
                outerV with
                pvb_expr =
@@ -119,7 +125,7 @@ let wrap_sig_uncurried_fn ?(arity = 1) item =
 let handle_str_item item =
   match item.pstr_desc with
   | Pstr_value
-      (a1, [ ({ pvb_expr = { pexp_desc = Pexp_fun _ } as fn } as outerV) ]) ->
+      (a1, [ ({ pvb_expr = { pexp_desc = Pexp_function (_ :: _, _, _) } as fn } as outerV) ]) ->
     {
       item with
       pstr_desc =
