@@ -37,7 +37,7 @@ jobs:
       #     esy test
       #     esy release-static
 
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
+      - name: (only on release) Upload artifacts ${{ matrix.os }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}
@@ -120,27 +120,27 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: ubuntu-arm64
-          path: binaries/linux-arm64
+          path: binaries/linux-22.04-arm64
 
       - name: Download linux artifacts (x64)
         if: success()
         uses: actions/download-artifact@master
         with:
           name: ubuntu-x64
-          path: binaries/linux-x64
+          path: binaries/linux-22.04-x64
 
       - name: Download macOS artifacts (arm64)
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: macOS-arm64
+          name: macOS-14-arm64
           path: binaries/darwin-arm64
 
       - name: Download macOS artifacts (x64)
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: macOS-x64
+          name: macOS-14-x64
           path: binaries/darwin-x64
 
       # - name: Download windows artifacts
