@@ -24,7 +24,7 @@ jobs:
       - name: Use OCaml
         uses: avsm/setup-ocaml@v2
         with:
-          ocaml-compiler: 4.12.1
+          ocaml-compiler: 4.13.1
 
       - run: opam install . --deps-only
       - run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
