@@ -38,7 +38,7 @@ jobs:
       #     esy release-static
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}
           path: _build/default/src/bin/bin.exe
