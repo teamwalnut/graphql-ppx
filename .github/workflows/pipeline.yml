@@ -119,14 +119,14 @@ jobs:
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-arm64
+          name: ubuntu-22.04-arm64
           path: binaries/linux-22.04-arm64
 
       - name: Download linux artifacts (x64)
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-x64
+          name: ubuntu-22.04-x64
           path: binaries/linux-22.04-x64
 
       - name: Download macOS artifacts (arm64)
