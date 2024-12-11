@@ -3,7 +3,7 @@ name: graphql-ppx-pipeline
 on: [pull_request, push]
 
 jobs:
-  test_and_build_linux:
+  test_and_build:
     name: ${{ matrix.os }}/node-${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -105,10 +105,9 @@ jobs:
   #         path: _build/default/src/bin/bin.exe
 
   publish:
-    # needs: [test_and_build, test_and_build_linux]
-    needs: [test_and_build_linux]
+    needs: [test_and_build]
     name: (only on release) Publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -116,26 +115,33 @@ jobs:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Download linux artifacts
+      - name: Download linux artifacts (arm64)
         if: success()
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-latest
-          path: binaries/linux
+          name: ubuntu-22.04
+          path: binaries/linux-arm64
 
-      # - name: Download macOS artifacts (arm)
-      #   if: success()
-      #   uses: actions/download-artifact@master
-      #   with:
-      #     name: macOS-latest
-      #     path: binaries/darwin-arm64
+      - name: Download linux artifacts (x64)
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-22.04
+          path: binaries/linux-x64
 
-      # - name: Download macOS artifacts
-      #   if: success()
-      #   uses: actions/download-artifact@master
-      #   with:
-      #     name: macOS-13
-      #     path: binaries/darwin
+      - name: Download macOS artifacts (arm64)
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-14
+          path: binaries/darwin-arm64
+
+      - name: Download macOS artifacts (x64)
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-14
+          path: binaries/darwin-x64
 
       # - name: Download windows artifacts
       #   if: success()
@@ -148,10 +154,11 @@ jobs:
         if: success()
         run: |
           mkdir -p bin
-          # mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
-          # mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
+          mv binaries/darwin-x64/bin.exe bin/graphql-ppx-darwin-x64.exe
+          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
           # mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
+          mv binaries/linux-x64/bin.exe bin/graphql-ppx-linux-x64.exe
+          mv binaries/linux-arm64/bin.exe bin/graphql-ppx-linux-arm64.exe
 
       - name: Publish
         if: success() && github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
