@@ -33,7 +33,7 @@ jobs:
         env:
           GRAPHQL_CI: true
         run: |
-          npm ci --no-optional --ignore-scripts
+          npm ci --omit=optional --ignore-scripts
           esy test
           esy release-static
 
