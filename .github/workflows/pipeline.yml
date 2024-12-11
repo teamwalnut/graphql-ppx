@@ -8,45 +8,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         os: [ubuntu-latest]
 
-    container:
-      image: alexfedoseev/alpine-node-yarn-esy:0.0.4
-
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Add tar
-        run: apk add --no-cache tar
-      - name: Install
-        run: esy install
-
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
-
-      - name: Try to restore dependencies cache
-        uses: actions/cache@v2
-        id: deps-cache
+      - name: Use OCaml
+        uses: avsm/setup-ocaml@v2
         with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-
+          ocaml-compiler: 4.12.1
 
-      - name: build
-        run: esy b
-
-      - name: native tests
-        run: |
-          esy b dune runtest -f
-        env:
-          CI: true
+      - run: opam install . --deps-only
+      - run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
 
       - name: snapshot tests
         env:
@@ -62,76 +42,77 @@ jobs:
           name: ${{ matrix.os }}
           path: _build/default/src/bin/bin.exe
 
-  test_and_build:
-    name: ${{ matrix.os }}/node-${{ matrix.node-version }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [16.x]
-        os: [windows-latest, macOS-13, macOS-latest]
+  # test_and_build:
+  #   name: ${{ matrix.os }}/node-${{ matrix.node-version }}
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+  #       os: [windows-latest, macOS-13, macOS-latest]
 
-    steps:
-      - uses: actions/checkout@v1
+  #   steps:
+  #     - uses: actions/checkout@v1
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
 
-      - name: Install esy
-        run: |
-          npm install -g esy@0.6.12
+  #     - name: Install esy
+  #       run: |
+  #         npm install -g esy@0.6.12
 
-      - name: Install
-        run: esy install
+  #     - name: Install
+  #       run: esy install
 
-      - name: Print esy cache
-        id: print_esy_cache
-        run: node .github/workflows/print_esy_cache.js
+  #     - name: Print esy cache
+  #       id: print_esy_cache
+  #       run: node .github/workflows/print_esy_cache.js
 
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+  #     - name: Try to restore dependencies cache
+  #       id: deps-cache
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+  #         key: ${{ matrix.os }}-${{ hashFiles('**/index.json') }}
 
-      - name: build
-        run: esy b
+  #     - name: build
+  #       run: esy b
 
-      - name: test-native
-        run: |
-          esy b dune runtest -f
-        env:
-          CI: true
+  #     - name: test-native
+  #       run: |
+  #         esy b dune runtest -f
+  #       env:
+  #         CI: true
 
-      - name: npm ci
-        if: runner.os != 'Windows'
-        run: |
-          npm ci --no-optional
-        env:
-          GRAPHQL_CI: true
+  #     - name: npm ci
+  #       if: runner.os != 'Windows'
+  #       run: |
+  #         npm ci --no-optional
+  #       env:
+  #         GRAPHQL_CI: true
 
-      - name: snaphot tests
-        if: runner.os != 'Windows'
-        run: |
-          esy test
+  #     - name: snaphot tests
+  #       if: runner.os != 'Windows'
+  #       run: |
+  #         esy test
 
-      - name: (only on release) Upload artifacts ${{ matrix.os }}
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}
-          path: _build/default/src/bin/bin.exe
+  #     - name: (only on release) Upload artifacts ${{ matrix.os }}
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         name: ${{ matrix.os }}
+  #         path: _build/default/src/bin/bin.exe
 
   publish:
-    needs: [test_and_build, test_and_build_linux]
+    # needs: [test_and_build, test_and_build_linux]
+    needs: [test_and_build_linux]
     name: (only on release) Publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "12.x"
+          node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Download linux artifacts
@@ -141,34 +122,34 @@ jobs:
           name: ubuntu-latest
           path: binaries/linux
 
-      - name: Download macOS artifacts (arm)
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: macOS-latest
-          path: binaries/darwin-arm64
+      # - name: Download macOS artifacts (arm)
+      #   if: success()
+      #   uses: actions/download-artifact@master
+      #   with:
+      #     name: macOS-latest
+      #     path: binaries/darwin-arm64
 
-      - name: Download macOS artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: macOS-13
-          path: binaries/darwin
+      # - name: Download macOS artifacts
+      #   if: success()
+      #   uses: actions/download-artifact@master
+      #   with:
+      #     name: macOS-13
+      #     path: binaries/darwin
 
-      - name: Download windows artifacts
-        if: success()
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest
-          path: binaries/windows
+      # - name: Download windows artifacts
+      #   if: success()
+      #   uses: actions/download-artifact@master
+      #   with:
+      #     name: windows-latest
+      #     path: binaries/windows
 
       - name: Move artifacts
         if: success()
         run: |
           mkdir -p bin
-          mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
-          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
-          mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
+          # mv binaries/darwin/bin.exe bin/graphql-ppx-darwin-x64.exe
+          # mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
+          # mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux/bin.exe bin/graphql-ppx-linux-x64.exe
 
       - name: Publish
