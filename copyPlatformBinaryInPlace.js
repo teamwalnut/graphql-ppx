@@ -43,14 +43,14 @@ function copyBinary(filename, destFilename) {
   }
 
   copyFileSync(filename, destFilename);
-  fs.chmodSync(destFilename, 0755);
+  fs.chmodSync(destFilename, 0x0755);
 
   // I am not sure why we need this but let's keep it for backwards compatibility
   // perhaps it's necessary for windows?
   // if it's not needed we can remove it later
   var destFilenameExe = destFilename + ".exe";
   copyFileSync(filename, destFilenameExe);
-  fs.chmodSync(destFilenameExe, 0755);
+  fs.chmodSync(destFilenameExe, 0x0755);
 }
 
 function copyFileSync(source, dest) {

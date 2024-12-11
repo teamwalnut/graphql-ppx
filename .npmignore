@@ -1,8 +1,12 @@
 /_build
 /_esy
+/_opam
+/.github
 /.vscode
 /node_modules
 /ppx
+/snapshot_tests
+/tests_native
 /.github
 /tests
 /esy.lock
