@@ -9,7 +9,8 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04, macOS-14]
+        arch: [x64, arm64]
 
     steps:
       - name: Checkout repository
@@ -39,7 +40,7 @@ jobs:
       - name: (only on release) Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
-          name: ${{ matrix.os }}
+          name: ${{ matrix.os }}-${{ matrix.arch }}
           path: _build/default/src/bin/bin.exe
 
   # test_and_build:
