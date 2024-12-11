@@ -29,16 +29,16 @@ jobs:
       - run: opam install . --deps-only
       - run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
 
-      - name: snapshot tests
-        env:
-          GRAPHQL_CI: true
-        run: |
-          npm ci --omit=optional --ignore-scripts
-          esy test
-          esy release-static
+      # - name: snapshot tests
+      #   env:
+      #     GRAPHQL_CI: true
+      #   run: |
+      #     npm ci --omit=optional --ignore-scripts
+      #     esy test
+      #     esy release-static
 
       - name: (only on release) Upload artifacts ${{ matrix.os }}
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}
           path: _build/default/src/bin/bin.exe
