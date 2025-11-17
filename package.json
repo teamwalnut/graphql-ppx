@@ -1,6 +1,6 @@
 {
   "name": "@illusionalsagacity/graphql-ppx",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-f885fc66.0",
   "description": "graphql-ppx rewriter for ReScript/ReasonML",
   "repository": "https://github.com/illusionalsagacity/graphql-ppx",
   "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
