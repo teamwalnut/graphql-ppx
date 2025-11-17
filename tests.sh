@@ -31,7 +31,7 @@ esac
 
 refmt_path="./node_modules/rescript/${platform}/refmt.exe"
 ppx_path="./_build/default/src/bin/bin.exe"
-bsc_path="./node_modules/rescript/${platform}/bsc.exe"
+bsc_path="./node_modules/rescript/cli/bsc.js"
 declare -a configs=(
   'records'
   'template'

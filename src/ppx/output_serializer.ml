@@ -56,20 +56,20 @@ let rec serialize_type = function
       Ast_helper.Exp.match_ (ident_from_string "a")
         (em_values
         |> List.map (fun value ->
-             Ast_helper.Exp.case
-               (Ast_helper.Pat.variant value.evm_name None)
-               (match Ppx_config.native () with
-               | true ->
-                 [%expr
-                   `String
-                     [%e
-                       Ast_helper.Exp.constant
-                         (Parsetree.Pconst_string
-                            (value.evm_name, Location.none, None))]]
-               | false ->
-                 Ast_helper.Exp.constant
-                   (Parsetree.Pconst_string (value.evm_name, Location.none, None))))
-        )
+               Ast_helper.Exp.case
+                 (Ast_helper.Pat.variant value.evm_name None)
+                 (match Ppx_config.native () with
+                 | true ->
+                   [%expr
+                     `String
+                       [%e
+                         Ast_helper.Exp.constant
+                           (Parsetree.Pconst_string
+                              (value.evm_name, Location.none, None))]]
+                 | false ->
+                   Ast_helper.Exp.constant
+                     (Parsetree.Pconst_string
+                        (value.evm_name, Location.none, None)))))
     in
     [%expr fun a -> [%e case_exp]]
   | Nullable inner -> (
@@ -82,8 +82,8 @@ let rec serialize_type = function
       [%expr
         fun a ->
           match a with
-          | None -> Js.Nullable.undefined
-          | Some b -> Js.Nullable.return ([%e serialize_type inner] b)])
+          | None -> Nullable.undefined
+          | Some b -> Nullable.make ([%e serialize_type inner] b)])
   | List inner -> (
     match Ppx_config.native () with
     | true ->
@@ -128,18 +128,18 @@ let serialize_fun fields type_name =
       Ast_helper.Exp.record
         (fields
         |> List.map (fun (InputField { name; type_; loc }) ->
-             let loc = conv_loc loc in
-             ( { txt = Longident.parse (to_valid_ident name); loc },
-               [%expr
-                 [%e serialize_type type_]
-                   [%e
-                     Ast_helper.Exp.field
-                       (Ast_helper.Exp.constraint_ (ident_from_string arg)
-                          (base_type_name type_name))
-                       {
-                         loc = Location.none;
-                         Location.txt = Longident.parse (to_valid_ident name);
-                       }]] )))
+               let loc = conv_loc loc in
+               ( { txt = Longident.parse (to_valid_ident name); loc },
+                 [%expr
+                   [%e serialize_type type_]
+                     [%e
+                       Ast_helper.Exp.field
+                         (Ast_helper.Exp.constraint_ (ident_from_string arg)
+                            (base_type_name type_name))
+                         {
+                           loc = Location.none;
+                           Location.txt = Longident.parse (to_valid_ident name);
+                         }]] )))
         None
   in
   Ast_helper.Exp.fun_ Nolabel None
@@ -169,25 +169,25 @@ let generate_serialize_variable_signatures (arg_type_defs : arg_type_def list) =
          | InputObject { name; loc } -> Some (name, loc)
          | NoVariables -> None)
     |> List.map (fun (name, loc) ->
-         let type_name =
-           match name with
-           | None -> "t_variables"
-           | Some input_object_name -> "t_variables_" ^ input_object_name
-         in
-         Uncurried_utils.wrap_sig_uncurried_fn
-         @@ Ast_helper.Sig.value
-              (Ast_helper.Val.mk
-                 {
-                   loc = conv_loc loc;
-                   txt =
-                     (match name with
-                     | None -> "serializeVariables"
-                     | Some input_object_name ->
-                       "serializeInputObject" ^ input_object_name);
-                 }
-                 (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
-                    (base_type_name type_name)
-                    (base_type_name ("Raw." ^ type_name)))))
+           let type_name =
+             match name with
+             | None -> "t_variables"
+             | Some input_object_name -> "t_variables_" ^ input_object_name
+           in
+           Uncurried_utils.wrap_sig_uncurried_fn
+           @@ Ast_helper.Sig.value
+                (Ast_helper.Val.mk
+                   {
+                     loc = conv_loc loc;
+                     txt =
+                       (match name with
+                       | None -> "serializeVariables"
+                       | Some input_object_name ->
+                         "serializeInputObject" ^ input_object_name);
+                   }
+                   (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
+                      (base_type_name type_name)
+                      (base_type_name ("Raw." ^ type_name)))))
 
 let generate_serialize_variables (arg_type_defs : arg_type_def list) =
   match arg_type_defs with
@@ -209,28 +209,28 @@ let generate_serialize_variables (arg_type_defs : arg_type_def list) =
            | InputObject { name; fields; loc } -> Some (name, fields, loc)
            | NoVariables -> None)
       |> List.map (fun (name, fields, loc) ->
-           let type_name =
-             match name with
-             | None -> "t_variables"
-             | Some input_object_name -> "t_variables_" ^ input_object_name
-           in
-           Ast_helper.Vb.mk
-             (Ast_helper.Pat.constraint_ ~loc:(conv_loc loc)
-                (Ast_helper.Pat.var
-                   {
-                     loc = conv_loc loc;
-                     txt =
-                       (match name with
-                       | None -> "serializeVariables"
-                       | Some input_object_name ->
-                         "serializeInputObject" ^ input_object_name);
-                   })
-                (Uncurried_utils.wrap_core_type_uncurried
-                   (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
-                      (base_type_name type_name)
-                      (base_type_name ("Raw." ^ type_name)))))
-             (Uncurried_utils.wrap_function_exp_uncurried ~arity:1
-                (serialize_fun fields type_name))))
+             let type_name =
+               match name with
+               | None -> "t_variables"
+               | Some input_object_name -> "t_variables_" ^ input_object_name
+             in
+             Ast_helper.Vb.mk
+               (Ast_helper.Pat.constraint_ ~loc:(conv_loc loc)
+                  (Ast_helper.Pat.var
+                     {
+                       loc = conv_loc loc;
+                       txt =
+                         (match name with
+                         | None -> "serializeVariables"
+                         | Some input_object_name ->
+                           "serializeInputObject" ^ input_object_name);
+                     })
+                  (Uncurried_utils.wrap_core_type_uncurried
+                     (Ast_helper.Typ.arrow ~loc:(conv_loc loc) Nolabel
+                        (base_type_name type_name)
+                        (base_type_name ("Raw." ^ type_name)))))
+               (Uncurried_utils.wrap_function_exp_uncurried ~arity:1
+                  (serialize_fun fields type_name))))
 
 let generate_variable_constructors (arg_type_defs : arg_type_def list) =
   match arg_type_defs with
@@ -243,57 +243,59 @@ let generate_variable_constructors (arg_type_defs : arg_type_def list) =
               | InputObject { name; fields; loc } -> Some (name, fields, loc)
               | NoVariables -> None)
          |> List.map (fun (name, fields, loc) ->
-              let loc = conv_loc loc in
-              let rec make_labeled_fun body = function
-                | [] -> [%expr fun () -> [%e body]] [@metaloc loc]
-                | InputField { name; loc; type_ } :: tl ->
-                  let name_loc = loc |> conv_loc in
-                  Ast_helper.Exp.fun_ ~loc:name_loc
-                    (match type_ with
-                    | List _ | Type _ -> Labelled (to_valid_ident name)
-                    | _ -> Optional (to_valid_ident name))
+                let loc = conv_loc loc in
+                let rec make_labeled_fun body = function
+                  | [] -> [%expr fun () -> [%e body]] [@metaloc loc]
+                  | InputField { name; loc; type_ } :: tl ->
+                    let name_loc = loc |> conv_loc in
+                    Ast_helper.Exp.fun_ ~loc:name_loc
+                      (match type_ with
+                      | List _ | Type _ -> Labelled (to_valid_ident name)
+                      | _ -> Optional (to_valid_ident name))
+                      None
+                      (Ast_helper.Pat.var ~loc:name_loc
+                         { txt = to_valid_ident name; loc = name_loc })
+                      (make_labeled_fun body tl)
+                in
+                let object_ =
+                  Ast_helper.Exp.record ~loc:(loc |> conv_loc)
+                    (fields
+                    |> List.map (fun (InputField { name; loc }) ->
+                           ( {
+                               Location.txt =
+                                 Longident.parse (to_valid_ident name);
+                               loc = conv_loc loc;
+                             },
+                             ident_from_string (to_valid_ident name) )))
                     None
-                    (Ast_helper.Pat.var ~loc:name_loc
-                       { txt = to_valid_ident name; loc = name_loc })
-                    (make_labeled_fun body tl)
-              in
-              let object_ =
-                Ast_helper.Exp.record ~loc:(loc |> conv_loc)
-                  (fields
-                  |> List.map (fun (InputField { name; loc }) ->
-                       ( {
-                           Location.txt = Longident.parse (to_valid_ident name);
-                           loc = conv_loc loc;
-                         },
-                         ident_from_string (to_valid_ident name) )))
-                  None
-              in
-              let body =
-                Ast_helper.Exp.constraint_ ~loc:(conv_loc loc) object_
-                  (base_type_name
-                     (match name with
-                     | None -> "t_variables"
-                     | Some input_type_name -> "t_variables_" ^ input_type_name))
-              in
-              match name with
-              | None ->
-                let make_variables_body = make_labeled_fun body fields in
-                [ (name, loc, make_variables_body) ]
-              | Some _ -> [ (name, loc, make_labeled_fun body fields) ])
+                in
+                let body =
+                  Ast_helper.Exp.constraint_ ~loc:(conv_loc loc) object_
+                    (base_type_name
+                       (match name with
+                       | None -> "t_variables"
+                       | Some input_type_name ->
+                         "t_variables_" ^ input_type_name))
+                in
+                match name with
+                | None ->
+                  let make_variables_body = make_labeled_fun body fields in
+                  [ (name, loc, make_variables_body) ]
+                | Some _ -> [ (name, loc, make_labeled_fun body fields) ])
          |> List.concat
          |> List.map (fun (name, loc, expr) ->
-              (Ast_helper.Vb.mk
-                 (Ast_helper.Pat.var
-                    {
-                      loc = conv_loc loc;
-                      txt =
-                        (match name with
-                        | None -> "makeVariables"
-                        | Some "make" -> "make"
-                        | Some input_object_name ->
-                          "makeInputObject" ^ input_object_name);
-                    })
-                 expr [@metaloc conv_loc loc]))))
+                (Ast_helper.Vb.mk
+                   (Ast_helper.Pat.var
+                      {
+                        loc = conv_loc loc;
+                        txt =
+                          (match name with
+                          | None -> "makeVariables"
+                          | Some "make" -> "make"
+                          | Some input_object_name ->
+                            "makeInputObject" ^ input_object_name);
+                      })
+                   expr [@metaloc conv_loc loc]))))
 
 let generate_variable_constructor_signatures (arg_type_defs : arg_type_def list)
     =
@@ -305,37 +307,37 @@ let generate_variable_constructor_signatures (arg_type_defs : arg_type_def list)
          | InputObject { name; fields; loc } -> Some (name, fields, loc)
          | NoVariables -> None)
     |> List.map (fun (name, fields, loc) ->
-         let rec make_labeled_fun final_type = function
-           | [] -> final_type
-           | InputField { name; loc; type_ } :: tl ->
-             Ast_helper.Typ.arrow
-               (match type_ with
-               | List _ | Type _ -> Labelled (to_valid_ident name)
-               | _ -> Optional (to_valid_ident name))
-               (generate_arg_type ~nulls:false false loc type_)
-               (make_labeled_fun final_type tl)
-         in
-         let final_type =
-           Ast_helper.Typ.arrow Nolabel (base_type_name "unit")
-             (base_type_name
-                (match name with
-                | None -> "t_variables"
-                | Some input_type_name -> "t_variables_" ^ input_type_name))
-         in
-         (name, loc, make_labeled_fun final_type fields))
-    |> List.map (fun (name, loc, type_) ->
-         Ast_helper.Sig.value
-           (Ast_helper.Val.mk
-              {
-                loc = conv_loc loc;
-                txt =
+           let rec make_labeled_fun final_type = function
+             | [] -> final_type
+             | InputField { name; loc; type_ } :: tl ->
+               Ast_helper.Typ.arrow
+                 (match type_ with
+                 | List _ | Type _ -> Labelled (to_valid_ident name)
+                 | _ -> Optional (to_valid_ident name))
+                 (generate_arg_type ~nulls:false false loc type_)
+                 (make_labeled_fun final_type tl)
+           in
+           let final_type =
+             Ast_helper.Typ.arrow Nolabel (base_type_name "unit")
+               (base_type_name
                   (match name with
-                  | None -> "makeVariables"
-                  | Some "make" -> "make"
-                  | Some input_object_name ->
-                    "makeInputObject" ^ input_object_name);
-              }
-              type_))
+                  | None -> "t_variables"
+                  | Some input_type_name -> "t_variables_" ^ input_type_name))
+           in
+           (name, loc, make_labeled_fun final_type fields))
+    |> List.map (fun (name, loc, type_) ->
+           Ast_helper.Sig.value
+             (Ast_helper.Val.mk
+                {
+                  loc = conv_loc loc;
+                  txt =
+                    (match name with
+                    | None -> "makeVariables"
+                    | Some "make" -> "make"
+                    | Some input_object_name ->
+                      "makeInputObject" ^ input_object_name);
+                }
+                type_))
 
 let get_field key existing_record path =
   [%expr
@@ -361,9 +363,8 @@ let rec generate_nullable_encoder config loc inner path definition =
     [%expr
       match value with
       | Some value ->
-        Js.Nullable.return
-          [%e generate_serializer config path definition None inner]
-      | None -> Js.Nullable.null]
+        Nullable.make [%e generate_serializer config path definition None inner]
+      | None -> Nullable.make]
     [@metaloc loc]
 
 and generate_array_encoder config loc inner path definition =
@@ -373,24 +374,24 @@ and generate_array_encoder config loc inner path definition =
       `List
         (value
         |> Array.map (fun value ->
-             [%e generate_serializer config path definition None inner])
+               [%e generate_serializer config path definition None inner])
         |> Array.to_list)]
     [@metaloc loc]
   | false ->
     [%expr
       Js.Array2.map value (fun value ->
-        [%e generate_serializer config path definition None inner])]
+          [%e generate_serializer config path definition None inner])]
     [@metaloc loc]
 
 and generate_poly_enum_encoder loc enum_meta omit_future_value =
   let enum_match_arms =
     enum_meta.em_values
     |> List.map (fun { evm_name; _ } ->
-         Ast_helper.Exp.case
-           (Ast_helper.Pat.variant evm_name None)
-           (match Ppx_config.native () with
-           | true -> [%expr `String [%e const_str_expr evm_name]]
-           | false -> const_str_expr evm_name))
+           Ast_helper.Exp.case
+             (Ast_helper.Pat.variant evm_name None)
+             (match Ppx_config.native () with
+             | true -> [%expr `String [%e const_str_expr evm_name]]
+             | false -> const_str_expr evm_name))
   in
   let fallback_arm =
     Ast_helper.Exp.case
@@ -450,13 +451,13 @@ and generate_object_encoder config loc _name fields path definition
            in
            fields
            |> List.map (fun (key, _inner) ->
-                let key_value =
-                  { Location.txt = Longident.parse (to_valid_ident key); loc }
-                in
-                match (key, typename) with
-                | "__typename", Some typename ->
-                  (key_value, const_str_expr typename)
-                | _ -> (key_value, ident_from_string (to_valid_ident key))))
+                  let key_value =
+                    { Location.txt = Longident.parse (to_valid_ident key); loc }
+                  in
+                  match (key, typename) with
+                  | "__typename", Some typename ->
+                    (key_value, const_str_expr typename)
+                  | _ -> (key_value, ident_from_string (to_valid_ident key))))
           None
       in
       let record =
@@ -465,13 +466,13 @@ and generate_object_encoder config loc _name fields path definition
       let bindings =
         fields
         |> List.map (fun (key, inner) ->
-             Ast_helper.Vb.mk
-               (Ast_helper.Pat.var { txt = to_valid_ident key; loc })
-               [%expr
-                 let value = [%e get_field key existing_record path] in
-                 [%e
-                   generate_serializer config (key :: path) definition None
-                     inner]])
+               Ast_helper.Vb.mk
+                 (Ast_helper.Pat.var { txt = to_valid_ident key; loc })
+                 [%expr
+                   let value = [%e get_field key existing_record path] in
+                   [%e
+                     generate_serializer config (key :: path) definition None
+                       inner]])
         |> List.rev
       in
       Ast_helper.Exp.let_ Nonrecursive bindings record
@@ -487,33 +488,33 @@ and generate_object_encoder config loc _name fields path definition
     | fields ->
       let assoc_fields =
         (if
-         typename <> None
-         && not
-              (fields
-              |> List.exists (function "__typename", _ -> true | _ -> false))
-        then
-         ("__typename", Res_string { loc = conv_loc_from_ast loc }) :: fields
-        else fields)
+           typename <> None
+           && not
+                (fields
+                |> List.exists (function "__typename", _ -> true | _ -> false))
+         then
+           ("__typename", Res_string { loc = conv_loc_from_ast loc }) :: fields
+         else fields)
         |> List.map (fun (key, _inner) ->
-             match (key, typename) with
-             | "__typename", Some typename ->
-               [%expr "__typename", `String [%e const_str_expr typename]]
-             | key, _ ->
-               [%expr
-                 [%e const_str_expr key],
-                   [%e ident_from_string (to_valid_ident key)]])
+               match (key, typename) with
+               | "__typename", Some typename ->
+                 [%expr "__typename", `String [%e const_str_expr typename]]
+               | key, _ ->
+                 [%expr
+                   [%e const_str_expr key],
+                     [%e ident_from_string (to_valid_ident key)]])
       in
       let assoc = [%expr `Assoc [%e list_literal assoc_fields]] in
       let bindings =
         fields
         |> List.map (fun (key, inner) ->
-             Ast_helper.Vb.mk
-               (Ast_helper.Pat.var { txt = to_valid_ident key; loc })
-               [%expr
-                 let value = [%e get_field key existing_record path] in
-                 [%e
-                   generate_serializer config (key :: path) definition None
-                     inner]])
+               Ast_helper.Vb.mk
+                 (Ast_helper.Pat.var { txt = to_valid_ident key; loc })
+                 [%expr
+                   let value = [%e get_field key existing_record path] in
+                   [%e
+                     generate_serializer config (key :: path) definition None
+                       inner]])
         |> List.rev
       in
       Ast_helper.Exp.let_ Nonrecursive bindings assoc
@@ -597,40 +598,41 @@ and generate_poly_variant_union_encoder config _loc _name fragments _exhaustive
   let fragment_cases =
     fragments
     |> List.map (fun (({ item = type_name } : Result_structure.name), inner) ->
-         Ast_helper.Exp.case
-           (Ast_helper.Pat.variant type_name
-              (Some (Ast_helper.Pat.var { txt = "value"; loc = Location.none })))
-           (match Ppx_config.native () with
-           | true -> (
-             let expr =
-               generate_serializer config (type_name :: path) definition
-                 (Some type_name) inner
-             in
-             match inner with
-             | Res_solo_fragment_spread _ ->
-               [%expr
-                 Graphql_ppx_runtime.assign_typename [%e expr]
-                   [%e const_str_expr type_name]]
-             | _ -> expr)
-           | false -> (
-             let raw_type_name =
-               base_type_name ("Raw." ^ generate_type_name path)
-             in
-             let expr =
-               [%expr
-                 [%e
-                   generate_serializer config (type_name :: path) definition
-                     (Some type_name) inner]]
-             in
-             match inner with
-             | Res_solo_fragment_spread _ ->
-               [%expr
-                 (Obj.magic
-                    (Graphql_ppx_runtime.assign_typename
-                       (Obj.magic [%e expr] : Js.Json.t)
-                       [%e const_str_expr type_name])
-                   : [%t raw_type_name])]
-             | _ -> [%expr (Obj.magic [%e expr] : [%t raw_type_name])])))
+           Ast_helper.Exp.case
+             (Ast_helper.Pat.variant type_name
+                (Some
+                   (Ast_helper.Pat.var { txt = "value"; loc = Location.none })))
+             (match Ppx_config.native () with
+             | true -> (
+               let expr =
+                 generate_serializer config (type_name :: path) definition
+                   (Some type_name) inner
+               in
+               match inner with
+               | Res_solo_fragment_spread _ ->
+                 [%expr
+                   Graphql_ppx_runtime.assign_typename [%e expr]
+                     [%e const_str_expr type_name]]
+               | _ -> expr)
+             | false -> (
+               let raw_type_name =
+                 base_type_name ("Raw." ^ generate_type_name path)
+               in
+               let expr =
+                 [%expr
+                   [%e
+                     generate_serializer config (type_name :: path) definition
+                       (Some type_name) inner]]
+               in
+               match inner with
+               | Res_solo_fragment_spread _ ->
+                 [%expr
+                   (Obj.magic
+                      (Graphql_ppx_runtime.assign_typename
+                         (Obj.magic [%e expr] : Js.Json.t)
+                         [%e const_str_expr type_name])
+                     : [%t raw_type_name])]
+               | _ -> [%expr (Obj.magic [%e expr] : [%t raw_type_name])])))
   in
   let fallback_case =
     Ast_helper.Exp.case
@@ -671,23 +673,25 @@ and generate_poly_variant_interface_encoder config _loc name fragments path
   let fragment_cases =
     fragments
     |> List.map (fun (type_name, inner) ->
-         Ast_helper.Exp.case
-           (Ast_helper.Pat.variant type_name
-              (Some (Ast_helper.Pat.var { txt = "value"; loc = Location.none })))
-           (match Ppx_config.native () with
-           | true ->
-             generate_serializer config
-               (type_name :: name :: path)
-               definition (Some type_name) inner
-           | false ->
-             [%expr
-               (Obj.magic
-                  [%e
-                    generate_serializer config
-                      (type_name :: name :: path)
-                      definition (Some type_name) inner]
-                 : [%t
-                     base_type_name ("Raw." ^ generate_type_name (name :: path))])]))
+           Ast_helper.Exp.case
+             (Ast_helper.Pat.variant type_name
+                (Some
+                   (Ast_helper.Pat.var { txt = "value"; loc = Location.none })))
+             (match Ppx_config.native () with
+             | true ->
+               generate_serializer config
+                 (type_name :: name :: path)
+                 definition (Some type_name) inner
+             | false ->
+               [%expr
+                 (Obj.magic
+                    [%e
+                      generate_serializer config
+                        (type_name :: name :: path)
+                        definition (Some type_name) inner]
+                   : [%t
+                       base_type_name
+                         ("Raw." ^ generate_type_name (name :: path))])]))
   in
   let fallback_case =
     Ast_helper.Exp.case
