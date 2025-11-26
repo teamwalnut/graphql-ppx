@@ -14,9 +14,9 @@ function back to the original JSON compatible data ")
   let serialize: t => Raw.t
   let serializeVariables: t_variables => Raw.t_variables
   let makeVariables: (~query: int, unit) => t_variables
-  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-  external toJson: Raw.t => Js.Json.t = "%identity"
-  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
 } = {
   @@ocaml.warning("-32-30")
   module Raw = {
@@ -46,9 +46,9 @@ argNamedQuery(query: $query)
     inp => {query: (a => a)((inp: t_variables).query)}: t_variables => Raw.t_variables
   )
   let makeVariables = (~query, ()): t_variables => {query: query}
-  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-  external toJson: Raw.t => Js.Json.t = "%identity"
-  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
 }
 module MultipleQueryWithSameVarName = {
   module Query1: {
@@ -67,9 +67,9 @@ function back to the original JSON compatible data ")
     let serialize: t => Raw.t
     let serializeVariables: t_variables => Raw.t_variables
     let makeVariables: (~query: int, unit) => t_variables
-    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-    external toJson: Raw.t => Js.Json.t = "%identity"
-    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+    external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+    external toJson: Raw.t => JSON.t = "%identity"
+    external variablesToJson: Raw.t_variables => JSON.t = "%identity"
   } = {
     @@ocaml.warning("-32-30")
     module Raw = {
@@ -99,9 +99,9 @@ argNamedQuery(query: $query)
       inp => {query: (a => a)((inp: t_variables).query)}: t_variables => Raw.t_variables
     )
     let makeVariables = (~query, ()): t_variables => {query: query}
-    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-    external toJson: Raw.t => Js.Json.t = "%identity"
-    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+    external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+    external toJson: Raw.t => JSON.t = "%identity"
+    external variablesToJson: Raw.t_variables => JSON.t = "%identity"
   }
   module Query2: {
     @@ocaml.warning("-32-30")
@@ -119,9 +119,9 @@ function back to the original JSON compatible data ")
     let serialize: t => Raw.t
     let serializeVariables: t_variables => Raw.t_variables
     let makeVariables: (~query: int, unit) => t_variables
-    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-    external toJson: Raw.t => Js.Json.t = "%identity"
-    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+    external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+    external toJson: Raw.t => JSON.t = "%identity"
+    external variablesToJson: Raw.t_variables => JSON.t = "%identity"
   } = {
     @@ocaml.warning("-32-30")
     module Raw = {
@@ -151,9 +151,9 @@ argNamedQuery(query: $query)
       inp => {query: (a => a)((inp: t_variables).query)}: t_variables => Raw.t_variables
     )
     let makeVariables = (~query, ()): t_variables => {query: query}
-    external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-    external toJson: Raw.t => Js.Json.t = "%identity"
-    external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+    external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+    external toJson: Raw.t => JSON.t = "%identity"
+    external variablesToJson: Raw.t_variables => JSON.t = "%identity"
   }
 }
 

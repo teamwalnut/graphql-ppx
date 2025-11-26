@@ -2,15 +2,15 @@
 # setopt extendedglob
 
 function snapshotGeneratePath {
-  echo "$(dirname $1)/expected/$2/generate/$(basename $1).txt"
+  echo "$(dirname "$1")/expected/$2/generate/$(basename "$1").txt"
 }
 
 function snapshotCompilePath {
-  echo "$(dirname $1)/expected/$2/compile/$(basename $1).txt"
+  echo "$(dirname "$1")/expected/$2/compile/$(basename "$1").txt"
 }
 
 function snapshotErrorPath {
-  echo "$(dirname $1)/expected/$(basename $1).txt"
+  echo "$(dirname "$1")/expected/$(basename "$1").txt"
 }
 
 taskCount=0
@@ -73,8 +73,19 @@ for config in "${configs[@]}"; do
     fi
   done
 done
+error_bsc_opts="$bsc_opts"
+error_ppx_opts="-schema=graphql_schema.json"
+if [[ $opts != "" ]]; then
+  error_ppx_opts="$opts $error_ppx_opts"
+fi
+
 for file in snapshot_tests/operations/errors/*.res; do
-  $bsc_path -I ./utilities -w -30 -ppx "$ppx_path -schema=graphql_schema.json" $file 2> $(snapshotErrorPath $file $config) 1> /dev/null & maybeWait
+  cmd=("$bsc_path" -I ./utilities -w -30)
+  if [[ $error_bsc_opts != "" ]]; then
+    cmd+=("$error_bsc_opts")
+  fi
+  cmd+=(-ppx "$ppx_path $error_ppx_opts" "$file")
+  "${cmd[@]}" 2> "$(snapshotErrorPath "$file" "$config")" 1> /dev/null & maybeWait
 done
 
 wait
@@ -90,8 +101,8 @@ diff=$(git ls-files --modified snapshot_tests/operations/*expected/*.txt)
 printf "\033[2K\r"
 
 if [[ $diff = "" ]]; then
-  printf "${successGreen}✅ No unstaged tests difference.${reset}\n"
+  printf '%s✅ No unstaged tests difference.%s\n' "$successGreen" "$reset"
 else
-  printf "${warningYellow}⚠️ There are unstaged differences in tests! Did you break a test?\n${diff}\n${reset}"
+  printf '%s⚠️ There are unstaged differences in tests! Did you break a test?\n%s\n%s' "$warningYellow" "$diff" "$reset"
   exit 1
 fi

@@ -1,9 +1,9 @@
 module Graphql_ppx_runtime = {
   // mock
   let assign_typename: (
-    Js.Json.t,
+    JSON.t,
     string,
-  ) => Js.Json.t = %raw(` (obj, typename) => { obj.__typename = typename; return obj } `)
+  ) => JSON.t = %raw(` (obj, typename) => { obj.__typename = typename; return obj } `)
 }
 
 %graphql(`

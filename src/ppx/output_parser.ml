@@ -59,8 +59,8 @@ let generate_poly_enum_decoder loc enum_meta omit_future_value =
   let enum_match_arms =
     enum_meta.em_values
     |> List.map (fun { evm_name; _ } ->
-         Ast_helper.Exp.case (const_str_pat evm_name)
-           (Ast_helper.Exp.variant (to_valid_ident evm_name) None))
+           Ast_helper.Exp.case (const_str_pat evm_name)
+             (Ast_helper.Exp.variant (to_valid_ident evm_name) None))
   in
   let fallback_arm =
     match omit_future_value with
@@ -105,12 +105,12 @@ let generate_fragment_parse_fun config loc name arguments definition =
   let labeled_args =
     variable_defs
     |> List.filter (fun (name, _, _, _) ->
-         arguments |> List.exists (fun arg -> arg = name))
+           arguments |> List.exists (fun arg -> arg = name))
     |> List.map (fun (arg_name, type_, _span, type_span) ->
-         ( Labelled arg_name,
-           Ast_helper.Exp.variant
-             ~loc:(config.map_loc type_span |> Output_utils.conv_loc)
-             type_ None ))
+           ( Labelled arg_name,
+             Ast_helper.Exp.variant
+               ~loc:(config.map_loc type_span |> Output_utils.conv_loc)
+               type_ None ))
   in
   Ast_helper.Exp.apply
     ~loc:(loc |> Output_utils.conv_loc)
@@ -173,9 +173,12 @@ and generate_array_decoder config loc inner path definition =
       | _ -> [||]]
     [@metaloc loc]
   | false ->
-    [%expr
-      Js.Array2.map value (fun value ->
-        [%e generate_parser config path definition inner])]
+    let callback = 
+      Uncurried_utils.wrap_function_exp_uncurried
+        [%expr fun value -> [%e generate_parser config path definition inner]]
+    in
+    Uncurried_utils.add_uapp
+      [%expr Array.map value [%e callback]]
     [@metaloc loc]
 
 and generate_custom_decoder config loc ident inner path definition =
@@ -207,8 +210,7 @@ and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
                 | true ->
                   [%expr
                     Obj.magic
-                      (Js.Dict.unsafeGet (Obj.magic value)
-                         [%e const_str_expr key])]
+                      (Dict.getUnsafe (Obj.magic value) [%e const_str_expr key])]
                 | false ->
                   Ast_helper.Exp.field
                     (Ast_helper.Exp.constraint_
@@ -286,9 +288,9 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
       | false ->
         [%expr
           let temp =
-            Js.Dict.unsafeGet (Obj.magic value) [%e const_str_expr field]
+            Dict.getUnsafe (Obj.magic value) [%e const_str_expr field]
           in
-          match Js.Json.decodeNull temp with
+          match JSON.Decode.null temp with
           | None ->
             let value = temp in
             [%e variant_decoder]
@@ -312,8 +314,9 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
       | value -> [%e generator_loop fields]]
     [@metaloc loc]
   | false ->
+    (* JSON.Decode.object is invalid ocaml *)
     [%expr
-      match Js.Json.decodeObject (Obj.magic value : Js.Json.t) with
+      match Js.Json.decodeObject (Obj.magic value : JSON.t) with
       | None ->
         [%e
           make_error_raiser
@@ -370,7 +373,7 @@ and generate_poly_variant_interface_decoder config loc _name fragments path
   | false ->
     [%expr
       let typename =
-        (Obj.magic (Js.Dict.unsafeGet (Obj.magic value) "__typename") : string)
+        (Obj.magic (Dict.getUnsafe (Obj.magic value) "__typename") : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
     [@metaloc loc]
@@ -380,28 +383,28 @@ and generate_poly_variant_union_decoder config loc _name fragments
   let fragment_cases =
     fragments
     |> List.map (fun (({ item = type_name } : Result_structure.name), inner) ->
-         Ast_helper.Exp.case (const_str_pat type_name)
-           (Ast_helper.Exp.variant type_name
-              (Some
-                 (match config.native with
-                 | true ->
-                   generate_parser config (type_name :: path) definition inner
-                 | false ->
-                   [%expr
-                     let value =
-                       (Obj.magic value
-                         : [%t
-                             match inner with
-                             | Res_solo_fragment_spread { name } ->
-                               base_type_name (name ^ ".Raw.t")
-                             | _ ->
-                               base_type_name
-                                 ("Raw."
-                                 ^ generate_type_name (type_name :: path))])
-                     in
-                     [%e
-                       generate_parser config (type_name :: path) definition
-                         inner]]))))
+           Ast_helper.Exp.case (const_str_pat type_name)
+             (Ast_helper.Exp.variant type_name
+                (Some
+                   (match config.native with
+                   | true ->
+                     generate_parser config (type_name :: path) definition inner
+                   | false ->
+                     [%expr
+                       let value =
+                         (Obj.magic value
+                           : [%t
+                               match inner with
+                               | Res_solo_fragment_spread { name } ->
+                                 base_type_name (name ^ ".Raw.t")
+                               | _ ->
+                                 base_type_name
+                                   ("Raw."
+                                   ^ generate_type_name (type_name :: path))])
+                       in
+                       [%e
+                         generate_parser config (type_name :: path) definition
+                           inner]]))))
   in
   let fallback_case =
     if omit_future_value then
@@ -437,7 +440,7 @@ and generate_poly_variant_union_decoder config loc _name fragments
                          Location.txt = Longident.parse "value";
                          loc = Location.none;
                        }]
-                  : Js.Json.t)]))
+                  : JSON.t)]))
   in
   let typename_matcher =
     Ast_helper.Exp.match_ [%expr typename]
@@ -456,7 +459,7 @@ and generate_poly_variant_union_decoder config loc _name fragments
   else
     [%expr
       let typename =
-        (Obj.magic (Js.Dict.unsafeGet (Obj.magic value) "__typename") : string)
+        (Obj.magic (Dict.getUnsafe (Obj.magic value) "__typename") : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
     [@metaloc loc]

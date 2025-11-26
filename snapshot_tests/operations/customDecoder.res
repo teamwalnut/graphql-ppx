@@ -1,11 +1,11 @@
 module StringOfInt = {
-  let parse = string_of_int
-  let serialize = int_of_string
+  let parse = Int.toString
+  let serialize = Int.fromString
   type t = string
 }
 module IntOfString = {
-  let parse = int_of_string
-  let serialize = string_of_int
+  let parse = Int.fromString
+  let serialize = Int.toString
   type t = int
 }
 module MyQuery = %graphql(`

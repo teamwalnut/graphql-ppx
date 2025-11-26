@@ -42,7 +42,7 @@ let rec generate_type ?atLoc ~config ~path ~raw = function
     base_type ?loc:atLoc
       (match Ppx_config.native () with
       | true -> "Graphql_ppx_runtime.Json.t"
-      | false -> "Js.Json.t")
+      | false -> "JSON.t")
   | Res_object { type_name } | Res_record { type_name } -> (
     match (type_name, raw) with
     | Some type_name, false -> base_type ?loc:atLoc type_name
@@ -290,7 +290,7 @@ let generate_variant_union ~emit_locations config
                     base_type
                       (match Ppx_config.native () with
                       | true -> "Graphql_ppx_runtime.Json.t"
-                      | false -> "Js.Json.t");
+                      | false -> "JSON.t");
                   ] );
             prf_loc =
               (match emit_locations with
@@ -633,7 +633,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
     base_type ?loc
       (match Ppx_config.native () with
       | true -> "Graphql_ppx_runtime.Json.t"
-      | false -> "Js.Json.t")
+      | false -> "JSON.t")
   | Type (Enum enum_meta) ->
     if raw then base_type "string"
     else

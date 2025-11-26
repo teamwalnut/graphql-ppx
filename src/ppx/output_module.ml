@@ -45,23 +45,23 @@ let pretty_print (query : string) : string =
     |> List.map (fun l -> String.trim l)
     |> List.filter (fun l -> l <> "")
     |> List.map (fun line ->
-         let prevIndent = !indent in
-         String.iter
-           (function
-             | '{' -> indent := !indent + 1
-             | '}' -> indent := !indent - 1
-             | _ -> ())
-           line;
-         let currIndent =
-           match prevIndent < !indent with
-           | true -> prevIndent
-           | false -> !indent
-         in
-         let currIndent =
-           match currIndent < 1 with true -> 1 | false -> currIndent
-         in
-         let line = String.make (currIndent * 2) ' ' ^ line in
-         line)
+           let prevIndent = !indent in
+           String.iter
+             (function
+               | '{' -> indent := !indent + 1
+               | '}' -> indent := !indent - 1
+               | _ -> ())
+             line;
+           let currIndent =
+             match prevIndent < !indent with
+             | true -> prevIndent
+             | false -> !indent
+           in
+           let currIndent =
+             match currIndent < 1 with true -> 1 | false -> currIndent
+           in
+           let line = String.make (currIndent * 2) ' ' ^ line in
+           line)
     |> String.concat "\n"
   in
   str ^ "\n"
@@ -170,32 +170,32 @@ let rec emit_json config = function
       Ast_helper.Exp.array
         (vs
         |> List.map (fun (key, value) ->
-             Ast_helper.Exp.tuple
-               [
-                 Ast_helper.Exp.constant
-                   (Pconst_string (key, Location.none, None));
-                 emit_json config value;
-               ]))
+               Ast_helper.Exp.tuple
+                 [
+                   Ast_helper.Exp.constant
+                     (Pconst_string (key, Location.none, None));
+                   emit_json config value;
+                 ]))
     in
-    add_uapp [%expr Js.Json.object_ (Js.Dict.fromArray [%e pairs])]
+    add_uapp [%expr JSON.Object (Dict.fromArray [%e pairs])]
   | `List ls ->
     let values = Ast_helper.Exp.array (List.map (emit_json config) ls) in
-    add_uapp [%expr Js.Json.array [%e values]]
-  | `Bool true -> [%expr Js.Json.boolean true]
-  | `Bool false -> [%expr Js.Json.boolean false]
-  | `Null -> [%expr Obj.magic Js.Undefined.empty]
+    add_uapp [%expr JSON.Array [%e values]]
+  | `Bool true -> [%expr JSON.Boolean true]
+  | `Bool false -> [%expr JSON.Boolean false]
+  | `Null -> [%expr Obj.magic JSON.Null]
   | `String s ->
     add_uapp
       [%expr
-        Js.Json.string
+        JSON.String
           [%e Ast_helper.Exp.constant (Pconst_string (s, Location.none, None))]]
   | `Int i ->
     add_uapp
       [%expr
-        Js.Json.number
+        JSON.Number
           [%e Ast_helper.Exp.constant (Pconst_float (string_of_int i, None))]]
   | `StringExpr parts ->
-    add_uapp [%expr Js.Json.string [%e emit_printed_query ~config parts]]
+    add_uapp [%expr JSON.String [%e emit_printed_query ~config parts]]
 
 let wrap_template_tag ?import ?location ?template_tag source =
   match (import, location, template_tag) with
@@ -565,19 +565,19 @@ let generate_operation_signature config variable_defs res_structure =
                 | (_, Some _, _), Some return_type ->
                   return_type
                 | _ -> "string")]
-            [@@ocaml.doc " The GraphQL query "]];
+          [@@ocaml.doc " The GraphQL query "]];
       wrap_sig_uncurried_fn
         [%sigi:
           val parse : Raw.t -> t
-            [@@ocaml.doc
-              " Parse the JSON-compatible GraphQL data to ReasonML data types "]];
+          [@@ocaml.doc
+            " Parse the JSON-compatible GraphQL data to ReasonML data types "]];
       wrap_sig_uncurried_fn
         [%sigi:
           val serialize : t -> Raw.t
-            [@@ocaml.doc
-              " Serialize the ReasonML GraphQL data that was parsed using the \
-               parse\n\
-               function back to the original JSON compatible data "]];
+          [@@ocaml.doc
+            " Serialize the ReasonML GraphQL data that was parsed using the \
+             parse\n\
+             function back to the original JSON compatible data "]];
     ];
     serialize_variable_signatures;
     (match variable_constructor_signatures with
@@ -605,10 +605,10 @@ let generate_operation_signature config variable_defs res_structure =
       ]
     | false ->
       [
-        [%sigi: external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-        [%sigi: external toJson : Raw.t -> Js.Json.t = "%identity"];
+        [%sigi: external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+        [%sigi: external toJson : Raw.t -> JSON.t = "%identity"];
         [%sigi:
-          external variablesToJson : Raw.t_variables -> Js.Json.t = "%identity"];
+          external variablesToJson : Raw.t_variables -> JSON.t = "%identity"];
       ]);
   ]
   |> List.concat
@@ -617,6 +617,12 @@ let rec create_arity_fn arity typ =
   match arity with
   | 0 -> typ
   | arity -> Ast_helper.Typ.arrow Nolabel typ (create_arity_fn (arity - 1) typ)
+
+(* Helper to wrap arrow type for uncurried externals *)
+let wrap_external_type ~arity typ =
+  if should_use_uncurried () then
+    ctyp_arrow ~arity typ
+  else typ
 
 let graphql_external (config : output_config) _ =
   match config with
@@ -633,6 +639,12 @@ let graphql_external (config : output_config) _ =
     in
     let import =
       match import with None -> "default" | Some import -> import
+    in
+    let arrow_type = 
+      Ast_helper.Typ.arrow Nolabel [%type: string array]
+        (Ast_helper.Typ.arrow Nolabel
+           (base_type ~inner:[ base_type_name return_type ] "array")
+           (base_type_name return_type))
     in
     [
       Ast_helper.Str.primitive
@@ -654,10 +666,7 @@ let graphql_external (config : output_config) _ =
              txt = template_tag |> Option.get_or_else "graphql";
              loc = Location.none;
            }
-           (Ast_helper.Typ.arrow Nolabel [%type: string array]
-              (Ast_helper.Typ.arrow Nolabel
-                 (base_type ~inner:[ base_type_name return_type ] "array")
-                 (base_type_name return_type))));
+           (wrap_external_type ~arity:2 arrow_type));
     ]
   | { template_tag = template_tag, location, import; template_tag_return_type }
     when location <> None ->
@@ -672,6 +681,16 @@ let graphql_external (config : output_config) _ =
       | Some import, Some _, _ -> import
       | _, None, Some template_tag -> template_tag
       | _, None, None -> assert false
+    in
+    let arrow_type = 
+      Ast_helper.Typ.arrow Nolabel [%type: string array]
+        (Ast_helper.Typ.arrow Nolabel
+           (base_type ~inner:[ base_type_name return_type ] "array")
+           (base_type_name return_type))
+    in
+    let identity_arrow_type = 
+      Ast_helper.Typ.arrow Nolabel [%type: string]
+        (base_type_name return_type)
     in
     [
       Ast_helper.Str.primitive
@@ -698,10 +717,7 @@ let graphql_external (config : output_config) _ =
              txt = template_tag |> Option.get_or_else "graphql";
              loc = Location.none;
            }
-           (Ast_helper.Typ.arrow Nolabel [%type: string array]
-              (Ast_helper.Typ.arrow Nolabel
-                 (base_type ~inner:[ base_type_name return_type ] "array")
-                 (base_type_name return_type))));
+           (wrap_external_type ~arity:2 arrow_type));
       (*
         this converts a string to the expected return type to make old fragments
         compatible if you use apollo with fragments that don't use the template tag
@@ -711,8 +727,7 @@ let graphql_external (config : output_config) _ =
       Ast_helper.Str.primitive
         (Ast_helper.Val.mk ~attrs:[] ~prim:[ "%identity" ]
            { txt = "graphql_allow_string"; loc = Location.none }
-           (Ast_helper.Typ.arrow Nolabel [%type: string]
-              (base_type_name return_type)));
+           (wrap_external_type ~arity:1 identity_arrow_type));
     ]
   | _ -> []
 
@@ -796,11 +811,10 @@ let generate_operation_implementation config variable_defs _has_error operation
           ]
         | false ->
           [
-            [%stri external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-            [%stri external toJson : Raw.t -> Js.Json.t = "%identity"];
+            [%stri external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+            [%stri external toJson : Raw.t -> JSON.t = "%identity"];
             [%stri
-              external variablesToJson : Raw.t_variables -> Js.Json.t
-                = "%identity"];
+              external variablesToJson : Raw.t_variables -> JSON.t = "%identity"];
           ]);
       ]
   in
@@ -916,7 +930,8 @@ let generate_fragment_signature config name variable_definitions _has_error
                parse\n\
                function back to the original JSON-compatible data "]];
         [%sigi: val verifyArgsAndParse : [%t verify_parse]];
-        [%sigi: val verifyName : [%t verify_name]];
+        wrap_sig_uncurried_fn ~arity:1
+          [%sigi: val verifyName : [%t verify_name]];
       ];
       (match config.native with
       | true ->
@@ -929,8 +944,8 @@ let generate_fragment_signature config name variable_definitions _has_error
         ]
       | false ->
         [
-          [%sigi: external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-          [%sigi: external toJson : Raw.t -> Js.Json.t = "%identity"];
+          [%sigi: external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+          [%sigi: external toJson : Raw.t -> JSON.t = "%identity"];
         ]);
     ]
 
@@ -987,6 +1002,11 @@ let generate_fragment_implementation config name
   let printed_query =
     make_printed_query config (Graphql_ast.Fragment fragment)
   in
+  let variable_definition_items =
+    match variable_definitions with
+    | Some { Source_pos.item = variable_definitions } -> variable_definitions
+    | None -> []
+  in
   let verify_parse =
     make_labeled_fun
       (Ast_helper.Exp.fun_ (Labelled "fragmentName") None
@@ -1003,19 +1023,26 @@ let generate_fragment_implementation config name
                ]
                Closed None))
          [%expr fun (value : Raw.t) -> parse value])
-      (match variable_definitions with
-      | Some { Source_pos.item = variable_definitions } -> variable_definitions
-      | None -> [])
+      variable_definition_items
   in
   let verifyName =
-    Ast_helper.Exp.function_
-      [
-        Ast_helper.Exp.case
-          (Ast_helper.Pat.variant name None)
-          (Ast_helper.Exp.construct
-             { txt = Longident.Lident "()"; loc = Location.none }
-             None);
-      ]
+    let fragment_name_pattern =
+      Ast_helper.Pat.constraint_
+        (Ast_helper.Pat.var { txt = "_fragmentName"; loc = Location.none })
+        (Ast_helper.Typ.variant
+           [
+             {
+               prf_desc = Rtag ({ txt = name; loc = Location.none }, true, []);
+               prf_loc = Location.none;
+               prf_attributes = [];
+             };
+           ]
+           Closed None)
+    in
+    Ast_helper.Exp.fun_ Nolabel None fragment_name_pattern
+      (Ast_helper.Exp.construct
+         { txt = Longident.Lident "()"; loc = Location.none }
+         None)
   in
   let contents =
     [
@@ -1030,7 +1057,7 @@ let generate_fragment_implementation config name
       ];
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]];
-        [%stri let verifyName = [%e verifyName]];
+        wrap_as_uncurried_fn ~arity:1 [%stri let verifyName = [%e verifyName]];
       ];
       (match config.native with
       | true ->
@@ -1043,8 +1070,8 @@ let generate_fragment_implementation config name
         ]
       | false ->
         [
-          [%stri external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-          [%stri external toJson : Raw.t -> Js.Json.t = "%identity"];
+          [%stri external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+          [%stri external toJson : Raw.t -> JSON.t = "%identity"];
         ]);
     ]
     |> List.concat
@@ -1112,22 +1139,22 @@ let generate_modules module_name module_type operations =
     let contents =
       operations
       |> List.map (fun (operation, config) ->
-           (generate_definition config operation, config))
+             (generate_definition config operation, config))
       |> List.mapi
            (fun i (((definition, name, contents, loc), signature), config) ->
-           let module_type =
-             match module_type with
-             | Some module_type -> module_type
-             | None -> Ast_helper.Mty.mk (Pmty_signature signature)
-           in
-           match name with
-           | Some name ->
-             wrap_query_module ~loc ~module_type definition (Some name) contents
-               config
-           | None ->
-             wrap_query_module ~loc ~module_type definition
-               (Some ("Untitled" ^ string_of_int i))
-               contents config)
+             let module_type =
+               match module_type with
+               | Some module_type -> module_type
+               | None -> Ast_helper.Mty.mk (Pmty_signature signature)
+             in
+             match name with
+             | Some name ->
+               wrap_query_module ~loc ~module_type definition (Some name)
+                 contents config
+             | None ->
+               wrap_query_module ~loc ~module_type definition
+                 (Some ("Untitled" ^ string_of_int i))
+                 contents config)
       |> List.concat
     in
     match module_name with
@@ -1153,16 +1180,16 @@ let generate_module_interfaces module_name operations =
     let contents =
       operations
       |> List.map (fun (operation, config) ->
-           (generate_definition config operation, config))
+             (generate_definition config operation, config))
       |> List.mapi (fun i (((definition, name, _, _), signature), config) ->
-           match name with
-           | Some name ->
-             wrap_query_module_signature ~signature definition (Some name)
-               config
-           | None ->
-             wrap_query_module_signature ~signature definition
-               (Some ("Untitled" ^ string_of_int i))
-               config)
+             match name with
+             | Some name ->
+               wrap_query_module_signature ~signature definition (Some name)
+                 config
+             | None ->
+               wrap_query_module_signature ~signature definition
+                 (Some ("Untitled" ^ string_of_int i))
+                 config)
       |> List.concat
     in
     match module_name with

@@ -74,7 +74,7 @@ let defaultConfig =
     extend_fragment = None;
     fragment_in_query = Include;
     native = true;
-    uncurried = false;
+    uncurried = true;
   }
 
 module JsonHelper = struct
@@ -106,16 +106,16 @@ let read_custom_fields json =
   in
   List.append custom_fields_result_depr custom_fields_result
   |> List.map (fun (key, value) ->
-       let value =
-         try Some (value |> to_string) with
-         | Json.Util.Type_error _ -> None
-         | other -> raise other
-       in
-       (key, value))
+         let value =
+           try Some (value |> to_string) with
+           | Json.Util.Type_error _ -> None
+           | other -> raise other
+         in
+         (key, value))
   |> List.iter (fun (key, value) ->
-       match value with
-       | Some value -> Hashtbl.add custom_fields key value
-       | None -> ());
+         match value with
+         | Some value -> Hashtbl.add custom_fields key value
+         | None -> ());
   Ppx_config.update_config (fun current -> { current with custom_fields });
   ()
 
@@ -130,11 +130,11 @@ let read_config () =
     in
     let handleFutureAddedValue future_added_value =
       Ppx_config.update_config (fun current ->
-        { current with future_added_value })
+          { current with future_added_value })
     in
     let handleOmitFutureAddedValue omit_future_added_value =
       Ppx_config.update_config (fun current ->
-        { current with future_added_value = not omit_future_added_value })
+          { current with future_added_value = not omit_future_added_value })
     in
     let handleApolloMode apollo_mode =
       Ppx_config.update_config (fun current -> { current with apollo_mode })
@@ -147,27 +147,27 @@ let read_config () =
     in
     let handleAstOut ast_out =
       Ppx_config.update_config (fun current ->
-        {
-          current with
-          output_mode =
-            (match ast_out with
-            | "apollo" -> Ppx_config.Apollo_AST
-            | "string" -> Ppx_config.String
-            | other ->
-              raise
-                (Config_error
-                   ("Error in graphql configuration: ast-out \"" ^ other
-                  ^ "\" is not supported. Choose either apollo or string.")));
-        })
+          {
+            current with
+            output_mode =
+              (match ast_out with
+              | "apollo" -> Ppx_config.Apollo_AST
+              | "string" -> Ppx_config.String
+              | other ->
+                raise
+                  (Config_error
+                     ("Error in graphql configuration: ast-out \"" ^ other
+                    ^ "\" is not supported. Choose either apollo or string.")));
+          })
     in
     let handleFragmentInQuery mode =
       match mode with
       | "include" ->
         Ppx_config.update_config (fun current ->
-          { current with fragment_in_query = Include })
+            { current with fragment_in_query = Include })
       | "exclude" ->
         Ppx_config.update_config (fun current ->
-          { current with fragment_in_query = Exclude })
+            { current with fragment_in_query = Exclude })
       | other ->
         raise
           (Config_error
@@ -176,63 +176,66 @@ let read_config () =
     in
     let handleExtendQuery extend_query =
       Ppx_config.update_config (fun current ->
-        { current with extend_query = Some extend_query })
+          { current with extend_query = Some extend_query })
     in
     let handleExtendQueryNoRequiredVariables extend_query =
       Ppx_config.update_config (fun current ->
-        { current with extend_query_no_required_variables = Some extend_query })
+          {
+            current with
+            extend_query_no_required_variables = Some extend_query;
+          })
     in
     let handleExtendMutation extend_mutation =
       Ppx_config.update_config (fun current ->
-        { current with extend_mutation = Some extend_mutation })
+          { current with extend_mutation = Some extend_mutation })
     in
     let handleExtendMutationNoRequiredVariables extend_mutation =
       Ppx_config.update_config (fun current ->
-        {
-          current with
-          extend_mutation_no_required_variables = Some extend_mutation;
-        })
+          {
+            current with
+            extend_mutation_no_required_variables = Some extend_mutation;
+          })
     in
     let handleExtendSubscription extend_subscription =
       Ppx_config.update_config (fun current ->
-        { current with extend_subscription = Some extend_subscription })
+          { current with extend_subscription = Some extend_subscription })
     in
     let handleExtendSubscriptionNoRequiredVariables extend_subscription =
       Ppx_config.update_config (fun current ->
-        {
-          current with
-          extend_subscription_no_required_variables = Some extend_subscription;
-        })
+          {
+            current with
+            extend_subscription_no_required_variables = Some extend_subscription;
+          })
     in
     let handleExtendFragment extend_fragment =
       Ppx_config.update_config (fun current ->
-        { current with extend_fragment = Some extend_fragment })
+          { current with extend_fragment = Some extend_fragment })
     in
     let handleTemplateTag template_tag =
       Ppx_config.update_config (fun current ->
-        { current with template_tag = Some template_tag })
+          { current with template_tag = Some template_tag })
     in
     let handleTemplateTagImport template_tag_import =
       Ppx_config.update_config (fun current ->
-        { current with template_tag_import = Some template_tag_import })
+          { current with template_tag_import = Some template_tag_import })
     in
     let handleTemplateTagLocation template_tag_location =
       Ppx_config.update_config (fun current ->
-        { current with template_tag_location = Some template_tag_location })
+          { current with template_tag_location = Some template_tag_location })
     in
     let handleTemplateTagReturnType template_tag_return_type =
       Ppx_config.update_config (fun current ->
-        {
-          current with
-          template_tag_return_type = Some template_tag_return_type;
-        })
+          {
+            current with
+            template_tag_return_type = Some template_tag_return_type;
+          })
     in
     let handleTemplateTagIsFunction template_tag_is_function =
       Ppx_config.update_config (fun current ->
-        {
-          current with
-          template_tag_is_function = Some template_tag_is_function;
-        })
+          {
+            current with
+            template_tag_is_function = Some template_tag_is_function;
+          })
     in
     let configBool key value = ppxConfig |> JsonHelper.mapBool key value in
     let configString key value = ppxConfig |> JsonHelper.mapString key value in

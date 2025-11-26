@@ -3,6 +3,10 @@ open Parsetree
 open Graphql_compiler
 open Output_utils
 
+(* Check if we should use uncurried mode - only for ReScript (not native OCaml) *)
+let should_use_uncurried () = 
+  Ppx_config.uncurried () && not (Ppx_config.native ())
+
 let function_expression_uncurried ?(loc = Location.none) ~arity funExpr =
   let arity_to_attributes ~loc arity : Parsetree.attribute list =
     [
@@ -25,7 +29,7 @@ let function_expression_uncurried ?(loc = Location.none) ~arity funExpr =
     (Some funExpr)
 
 let wrap_function_exp_uncurried ?(arity = 1) expr =
-  if Ppx_config.uncurried () then function_expression_uncurried ~arity expr
+  if should_use_uncurried () then function_expression_uncurried ~arity expr
   else expr
 
 let ctyp_arrow ?(loc = Location.none) ~arity tArg =
@@ -45,9 +49,8 @@ let ctyp_arrow ?(loc = Location.none) ~arity tArg =
   Ast_helper.Typ.constr ~loc { txt = Lident "function$"; loc } [ tArg; tArity ]
 
 let wrap_core_type_uncurried ?(arity = 1) typ =
-  match Ppx_config.uncurried () with
-  | false -> typ
-  | true -> ctyp_arrow ~loc:typ.ptyp_loc ~arity typ
+  if should_use_uncurried () then ctyp_arrow ~loc:typ.ptyp_loc ~arity typ
+  else typ
 
 let rec determineArity ~arity expr =
   match expr.pexp_desc with
@@ -55,7 +58,7 @@ let rec determineArity ~arity expr =
   | _ -> arity
 
 let wrap_as_uncurried_vb ?(arity = 1) item =
-  match (Ppx_config.uncurried (), item) with
+  match (should_use_uncurried (), item) with
   | false, _ -> item
   | _, ({ pvb_expr = { pexp_desc = Pexp_fun _ } as fn } as outerV) ->
     {
@@ -65,7 +68,7 @@ let wrap_as_uncurried_vb ?(arity = 1) item =
   | _ -> item
 
 let wrap_as_uncurried_fn ?(arity = 1) item =
-  match (Ppx_config.uncurried (), item.pstr_desc) with
+  match (should_use_uncurried (), item.pstr_desc) with
   | false, _ -> item
   | _, Pstr_value (a1, [ value_binding ]) ->
     {
@@ -75,7 +78,7 @@ let wrap_as_uncurried_fn ?(arity = 1) item =
   | _ -> item
 
 let wrap_as_uncurried_fn_multi ?(arity = 1) item =
-  match (Ppx_config.uncurried (), item.pstr_desc) with
+  match (should_use_uncurried (), item.pstr_desc) with
   | false, _ -> item
   | _, Pstr_value (a1, value_bindings) ->
     let new_value_bindings =
@@ -103,7 +106,7 @@ let handle_typ ~arity typ =
   | _ -> typ
 
 let wrap_sig_uncurried_fn ?(arity = 1) item =
-  match (Ppx_config.uncurried (), item.psig_desc) with
+  match (should_use_uncurried (), item.psig_desc) with
   | false, _ -> item
   | ( _,
       Psig_value
@@ -148,6 +151,6 @@ let add_attrs attrs e = { e with pexp_attributes = attrs }
 
 let add_uapp e =
   add_attrs
-    (if Ppx_config.uncurried () then attr_uapp :: e.pexp_attributes
+    (if should_use_uncurried () then attr_uapp :: e.pexp_attributes
     else e.pexp_attributes)
     e

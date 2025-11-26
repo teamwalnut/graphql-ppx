@@ -30,27 +30,44 @@ let rec list_literal = function
       { txt = Longident.Lident "::"; loc = Location.none }
       (Some (Ast_helper.Exp.tuple [ value; list_literal values ]))
 
+(* Helper to apply a serializer function with proper uncurried wrapping *)
+let apply_serializer serializer_fn arg =
+  Uncurried_utils.add_uapp
+    (Ast_helper.Exp.apply serializer_fn [ (Nolabel, arg) ])
+
+(* Wrap a function expression for uncurried mode *)
+let wrap_fn fn = 
+  Uncurried_utils.wrap_function_exp_uncurried fn
+
 let rec serialize_type = function
   | Type (Scalar { sm_name = "ID" }) | Type (Scalar { sm_name = "String" }) -> (
     match Ppx_config.native () with
     | true -> [%expr fun a -> `String a]
-    | false -> [%expr fun a -> a])
+    | false -> wrap_fn [%expr fun a -> a])
   | Type (Scalar { sm_name = "Int" }) -> (
     match Ppx_config.native () with
     | true -> [%expr fun a -> `Int a]
-    | false -> [%expr fun a -> a])
+    | false -> wrap_fn [%expr fun a -> a])
   | Type (Scalar { sm_name = "Float" }) -> (
     match Ppx_config.native () with
     | true -> [%expr fun a -> `Float a]
-    | false -> [%expr fun a -> a])
+    | false -> wrap_fn [%expr fun a -> a])
   | Type (Scalar { sm_name = "Boolean" }) -> (
     match Ppx_config.native () with
     | true -> [%expr fun a -> `Bool a]
-    | false -> [%expr fun a -> a])
-  | Type (Scalar { sm_name = _ }) -> [%expr fun a -> a]
+    | false -> wrap_fn [%expr fun a -> a])
+  | Type (Scalar { sm_name = _ }) -> 
+    if Ppx_config.native () then [%expr fun a -> a]
+    else wrap_fn [%expr fun a -> a]
   | Type (InputObject { iom_name }) ->
-    [%expr
-      fun a -> [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
+    let inner_call = 
+      Uncurried_utils.add_uapp 
+        [%expr [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
+    in
+    if Ppx_config.native () then
+      [%expr fun a -> [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
+    else
+      wrap_fn [%expr fun a -> [%e inner_call]]
   | Type (Enum { em_values }) ->
     let case_exp =
       Ast_helper.Exp.match_ (ident_from_string "a")
@@ -71,7 +88,8 @@ let rec serialize_type = function
                      (Parsetree.Pconst_string
                         (value.evm_name, Location.none, None)))))
     in
-    [%expr fun a -> [%e case_exp]]
+    if Ppx_config.native () then [%expr fun a -> [%e case_exp]]
+    else wrap_fn [%expr fun a -> [%e case_exp]]
   | Nullable inner -> (
     match Ppx_config.native () with
     | true ->
@@ -79,11 +97,12 @@ let rec serialize_type = function
         fun a ->
           match a with None -> `Null | Some b -> [%e serialize_type inner] b]
     | false ->
-      [%expr
+      let inner_call = apply_serializer (serialize_type inner) [%expr b] in
+      wrap_fn [%expr
         fun a ->
           match a with
           | None -> Nullable.undefined
-          | Some b -> Nullable.make ([%e serialize_type inner] b)])
+          | Some b -> Nullable.make [%e inner_call]])
   | List inner -> (
     match Ppx_config.native () with
     | true ->
@@ -92,11 +111,21 @@ let rec serialize_type = function
           `List
             (Array.map (fun b -> [%e serialize_type inner] b) a |> Array.to_list)]
     | false ->
-      [%expr fun a -> Js.Array2.map a (fun b -> [%e serialize_type inner] b)])
-  | Type (Object _) -> [%expr fun v -> None]
-  | Type (Union _) -> [%expr fun v -> None]
-  | Type (Interface _) -> [%expr fun v -> None]
-  | TypeNotFound _ -> [%expr fun v -> None]
+      let inner_call = apply_serializer (serialize_type inner) [%expr b] in
+      let callback = wrap_fn [%expr fun b -> [%e inner_call]] in
+      wrap_fn (Uncurried_utils.add_uapp [%expr fun a -> Array.map a [%e callback]]))
+  | Type (Object _) -> 
+    if Ppx_config.native () then [%expr fun v -> None]
+    else wrap_fn [%expr fun v -> None]
+  | Type (Union _) -> 
+    if Ppx_config.native () then [%expr fun v -> None]
+    else wrap_fn [%expr fun v -> None]
+  | Type (Interface _) -> 
+    if Ppx_config.native () then [%expr fun v -> None]
+    else wrap_fn [%expr fun v -> None]
+  | TypeNotFound _ -> 
+    if Ppx_config.native () then [%expr fun v -> None]
+    else wrap_fn [%expr fun v -> None]
 
 let record_to_object loc record =
   Ast_helper.Exp.extension
@@ -110,17 +139,18 @@ let serialize_fun fields type_name =
       let assoc_fields =
         List.map
           (fun (InputField { name; type_ }) ->
+            let field_access = 
+              Ast_helper.Exp.field
+                (Ast_helper.Exp.constraint_ (ident_from_string arg)
+                   (base_type_name type_name))
+                {
+                  loc = Location.none;
+                  Location.txt = Longident.parse (to_valid_ident name);
+                }
+            in
             [%expr
               [%e const_str_expr name],
-                [%e serialize_type type_]
-                  [%e
-                    Ast_helper.Exp.field
-                      (Ast_helper.Exp.constraint_ (ident_from_string arg)
-                         (base_type_name type_name))
-                      {
-                        loc = Location.none;
-                        Location.txt = Longident.parse (to_valid_ident name);
-                      }]])
+                [%e serialize_type type_] [%e field_access]])
           fields
       in
       [%expr `Assoc [%e list_literal assoc_fields]]
@@ -129,17 +159,17 @@ let serialize_fun fields type_name =
         (fields
         |> List.map (fun (InputField { name; type_; loc }) ->
                let loc = conv_loc loc in
+               let field_access = 
+                 Ast_helper.Exp.field
+                   (Ast_helper.Exp.constraint_ (ident_from_string arg)
+                      (base_type_name type_name))
+                   {
+                     loc = Location.none;
+                     Location.txt = Longident.parse (to_valid_ident name);
+                   }
+               in
                ( { txt = Longident.parse (to_valid_ident name); loc },
-                 [%expr
-                   [%e serialize_type type_]
-                     [%e
-                       Ast_helper.Exp.field
-                         (Ast_helper.Exp.constraint_ (ident_from_string arg)
-                            (base_type_name type_name))
-                         {
-                           loc = Location.none;
-                           Location.txt = Longident.parse (to_valid_ident name);
-                         }]] )))
+                 apply_serializer (serialize_type type_) field_access )))
         None
   in
   Ast_helper.Exp.fun_ Nolabel None
@@ -364,7 +394,7 @@ let rec generate_nullable_encoder config loc inner path definition =
       match value with
       | Some value ->
         Nullable.make [%e generate_serializer config path definition None inner]
-      | None -> Nullable.make]
+      | None -> Nullable.null]
     [@metaloc loc]
 
 and generate_array_encoder config loc inner path definition =
@@ -378,9 +408,12 @@ and generate_array_encoder config loc inner path definition =
         |> Array.to_list)]
     [@metaloc loc]
   | false ->
-    [%expr
-      Js.Array2.map value (fun value ->
-          [%e generate_serializer config path definition None inner])]
+    let callback = 
+      Uncurried_utils.wrap_function_exp_uncurried
+        [%expr fun value -> [%e generate_serializer config path definition None inner]]
+    in
+    Uncurried_utils.add_uapp
+      [%expr Array.map value [%e callback]]
     [@metaloc loc]
 
 and generate_poly_enum_encoder loc enum_meta omit_future_value =
@@ -432,7 +465,7 @@ and generate_object_encoder config loc _name fields path definition
     | [] -> (
       match Ppx_config.native () with
       | true -> [%expr `Assoc []]
-      | false -> [%expr Js.Dict.empty])
+      | false -> [%expr Dict.empty])
     | fields ->
       let record =
         Ast_helper.Exp.record
@@ -549,7 +582,7 @@ and generate_object_encoder config loc _name fields path definition
                    (Obj.magic
                       ([%e ident_from_string (name ^ ".serialize")]
                          [%e get_field key existing_record path])
-                     : Js.Json.t)])
+                     : JSON.t)])
                :: acc)
            []
       |> List.rev
@@ -572,7 +605,7 @@ and generate_object_encoder config loc _name fields path definition
                [%e
                  generate_poly_variant_interface_encoder config loc
                    interface_name fragments path definition]
-              : Js.Json.t)])
+              : JSON.t)])
         :: fields
     in
     match Ppx_config.native () with
@@ -583,10 +616,10 @@ and generate_object_encoder config loc _name fields path definition
     | false ->
       [%expr
         (Obj.magic
-           (Js.Array2.reduce
+           (Array.reduce
               [%e fields |> Ast_helper.Exp.array]
               Graphql_ppx_runtime.deepMerge
-              (Obj.magic [%e do_obj_constructor ()] : Js.Json.t))
+              (Obj.magic [%e do_obj_constructor ()] : JSON.t))
           : [%t base_type_name ("Raw." ^ generate_type_name path)])]
   in
   match is_opaque with
@@ -629,7 +662,7 @@ and generate_poly_variant_union_encoder config _loc _name fragments _exhaustive
                  [%expr
                    (Obj.magic
                       (Graphql_ppx_runtime.assign_typename
-                         (Obj.magic [%e expr] : Js.Json.t)
+                         (Obj.magic [%e expr] : JSON.t)
                          [%e const_str_expr type_name])
                      : [%t raw_type_name])]
                | _ -> [%expr (Obj.magic [%e expr] : [%t raw_type_name])])))
@@ -662,7 +695,7 @@ and generate_poly_variant_selection_set_encoder _config _loc _name _fields _path
   let e =
     match Ppx_config.native () with
     | true -> [%expr `Null]
-    | false -> [%expr Obj.magic Js.Json.null]
+    | false -> [%expr Obj.magic JSON.Null]
   in
   [%expr
     let _temp = value in
@@ -701,7 +734,7 @@ and generate_poly_variant_interface_encoder config _loc name fragments path
       | true -> [%expr `Assoc []]
       | false ->
         [%expr
-          (Obj.magic (Js.Dict.empty ())
+          (Obj.magic (Dict.empty ())
             : [%t base_type_name ("Raw." ^ generate_type_name (name :: path))])])
   in
   let typename_matcher =
