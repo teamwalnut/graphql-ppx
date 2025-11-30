@@ -2,34 +2,34 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          optionalInputArgs: value.optionalInputArgs
-        };
+    optionalInputArgs: value.optionalInputArgs
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.optionalInputArgs;
+  let value$1 = value.optionalInputArgs;
   return {
-          optionalInputArgs: value$1
-        };
+    optionalInputArgs: value$1
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          required: inp.required
-        };
+    required: inp.required
+  };
 }
 
 function makeVariables(required, param) {
   return {
-          required: required
-        };
+    required: required
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "mutation MyMutation($required: String!)  {\noptionalInputArgs(required: $required, anotherRequired: \"val\")  \n}\n",
   parse: parse,

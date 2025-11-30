@@ -4,7 +4,7 @@ module Color = {
     | Green
     | Blue
   let parse = json =>
-    switch json |> Js.Json.decodeString {
+    switch json->JSON.Decode.string {
     | Some("green") => Green
     | Some("blue") => Blue
     | Some("red")
@@ -17,7 +17,7 @@ module Color = {
     | Red => "red"
     | Green => "green"
     | Blue => "blue"
-    } |> Js.Json.string
+    }->JSON.Encode.string
 }
 
 module NullableString = {
@@ -43,13 +43,13 @@ module NullableString = {
 }
 
 module DateTime = {
-  type t = Js.Date.t
+  type t = Date.t
   let parse = json =>
-    switch json |> Js.Json.decodeString {
-    | Some(str) => str |> Js.Date.fromString
-    | None => Js.Date.make()
+    switch json->JSON.Decode.string {
+    | Some(str) => str->Date.fromString
+    | None => Date.make()
     }
-  let serialize = date => date |> Js.Date.toISOString |> Js.Json.string
+  let serialize = date => date->Date.toISOString->JSON.Encode.string
 }
 
 module MyQuery = %graphql(`

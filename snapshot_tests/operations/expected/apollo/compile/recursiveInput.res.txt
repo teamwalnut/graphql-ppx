@@ -2,57 +2,57 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          recursiveInput: value.recursiveInput
-        };
+    recursiveInput: value.recursiveInput
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.recursiveInput;
+  let value$1 = value.recursiveInput;
   return {
-          recursiveInput: value$1
-        };
+    recursiveInput: value$1
+  };
 }
 
 function serializeInputObjectRecursiveInput(inp) {
-  var a = inp.otherField;
-  var a$1 = inp.inner;
-  var a$2 = inp.enum;
+  let a = inp.otherField;
+  let a$1 = inp.inner;
+  let a$2 = inp.enum;
   return {
-          otherField: a !== undefined ? a : undefined,
-          inner: a$1 !== undefined ? serializeInputObjectRecursiveInput(a$1) : undefined,
-          enum: a$2 !== undefined ? (
-              a$2 === "THIRD" ? "THIRD" : (
-                  a$2 === "SECOND" ? "SECOND" : "FIRST"
-                )
-            ) : undefined
-        };
+    otherField: a !== undefined ? a : undefined,
+    inner: a$1 !== undefined ? serializeInputObjectRecursiveInput(a$1) : undefined,
+    enum: a$2 !== undefined ? (
+        a$2 === "THIRD" ? "THIRD" : (
+            a$2 === "SECOND" ? "SECOND" : "FIRST"
+          )
+      ) : undefined
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          arg: serializeInputObjectRecursiveInput(inp.arg)
-        };
+    arg: serializeInputObjectRecursiveInput(inp.arg)
+  };
 }
 
 function makeVariables(arg, param) {
   return {
-          arg: arg
-        };
+    arg: arg
+  };
 }
 
 function makeInputObjectRecursiveInput(otherField, inner, $$enum, param) {
   return {
-          otherField: otherField,
-          inner: inner,
-          enum: $$enum
-        };
+    otherField: otherField,
+    inner: inner,
+    enum: $$enum
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($arg: RecursiveInput!)  {\nrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
@@ -63,79 +63,79 @@ var MyQuery = {
   makeInputObjectRecursiveInput: makeInputObjectRecursiveInput
 };
 
-var Raw$1 = {};
+let Raw$1 = {};
 
 function parse$1(value) {
   return {
-          recursiveRepro: value.recursiveRepro
-        };
+    recursiveRepro: value.recursiveRepro
+  };
 }
 
 function serialize$1(value) {
-  var value$1 = value.recursiveRepro;
+  let value$1 = value.recursiveRepro;
   return {
-          recursiveRepro: value$1
-        };
+    recursiveRepro: value$1
+  };
 }
 
 function serializeInputObjectnested_type(inp) {
-  var a = inp.the_problem;
+  let a = inp.the_problem;
   return {
-          the_problem: a !== undefined ? ({
-                id: a.id
-              }) : undefined
-        };
+    the_problem: a !== undefined ? ({
+        id: a.id
+      }) : undefined
+  };
 }
 
 function serializeInputObjectproblem_input(inp) {
-  var a = inp.the_problem;
-  var a$1 = inp.b;
+  let a = inp.the_problem;
+  let a$1 = inp.b;
   return {
-          the_problem: a !== undefined ? ({
-                id: a.id
-              }) : undefined,
-          b: a$1 !== undefined ? serializeInputObjectnested_type(a$1) : undefined
-        };
+    the_problem: a !== undefined ? ({
+        id: a.id
+      }) : undefined,
+    b: a$1 !== undefined ? serializeInputObjectnested_type(a$1) : undefined
+  };
 }
 
 function serializeInputObjectthis_will_be_duplicated(inp) {
   return {
-          id: inp.id
-        };
+    id: inp.id
+  };
 }
 
 function serializeVariables$1(inp) {
   return {
-          input: serializeInputObjectproblem_input(inp.input)
-        };
+    input: serializeInputObjectproblem_input(inp.input)
+  };
 }
 
 function makeVariables$1(input, param) {
   return {
-          input: input
-        };
+    input: input
+  };
 }
 
 function makeInputObjectproblem_input(the_problem, b, param) {
   return {
-          the_problem: the_problem,
-          b: b
-        };
+    the_problem: the_problem,
+    b: b
+  };
 }
 
 function makeInputObjectthis_will_be_duplicated(id, param) {
   return {
-          id: id
-        };
+    id: id
+  };
 }
 
 function makeInputObjectnested_type(the_problem, param) {
   return {
-          the_problem: the_problem
-        };
+    the_problem: the_problem
+  };
 }
 
-var Test = {
+let Test = {
   Raw: Raw$1,
   query: "query Test($input: problem_input!)  {\nrecursiveRepro(input: $input)  \n}\n",
   parse: parse$1,

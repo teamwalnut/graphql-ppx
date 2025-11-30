@@ -29,7 +29,7 @@ module MyQuery: {
   type rec t_mutationForVariant_dogOrHuman_Dog = {name: string, barkVolume: float}
   type rec t_mutationForVariant_dogOrHuman_Human = {name: string}
   type rec t_mutationForVariant_dogOrHuman = [
-    | #FutureAddedValue(Js.Json.t)
+    | #FutureAddedValue(JSON.t)
     | #Dog(t_mutationForVariant_dogOrHuman_Dog)
     | #Human(t_mutationForVariant_dogOrHuman_Human)
   ]
@@ -51,9 +51,9 @@ function back to the original JSON compatible data ")
   let serializeVariables: unit => Raw.t_variables
   let makeVariables: unit => t_variables
   let makeDefaultVariables: unit => t_variables
-  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-  external toJson: Raw.t => Js.Json.t = "%identity"
-  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
 } = {
   @@ocaml.warning("-32-30")
   module Raw = {
@@ -91,7 +91,7 @@ function back to the original JSON compatible data ")
   }
   type rec t_mutationForVariant_dogOrHuman_Human = {name: string}
   type rec t_mutationForVariant_dogOrHuman = [
-    | #FutureAddedValue(Js.Json.t)
+    | #FutureAddedValue(JSON.t)
     | #Dog(t_mutationForVariant_dogOrHuman_Dog)
     | #Human(t_mutationForVariant_dogOrHuman_Human)
   ]
@@ -137,29 +137,29 @@ name
   let parse = (value): t => {
     mutationForVariant: {
       let value = (value: Raw.t).mutationForVariant
-      switch Js.Json.decodeObject((Obj.magic(value): Js.Json.t)) {
+      switch Js.Json.decodeObject((Obj.magic(value): JSON.t)) {
       | None =>
         Js.Exn.raiseError(
-          \"^"(
+          \"++"(
             "graphql-ppx: ",
-            \"^"("Expected type ", \"^"("VariantTestResult", " to be an object")),
+            \"++"("Expected type ", \"++"("VariantTestResult", " to be an object")),
           ),
         )
       | Some(value) =>
-        let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseType")
-        switch Js.Json.decodeNull(temp) {
+        let temp = Dict.getUnsafe(Obj.magic(value), "baseType")
+        switch JSON.Decode.null(temp) {
         | None =>
           let value = temp
           #BaseType(value)
         | Some(_) =>
-          let temp = Js.Dict.unsafeGet(Obj.magic(value), "baseTypeList")
-          switch Js.Json.decodeNull(temp) {
+          let temp = Dict.getUnsafe(Obj.magic(value), "baseTypeList")
+          switch JSON.Decode.null(temp) {
           | None =>
             let value = temp
-            #BaseTypeList(Js.Array2.map(value, value => value))
+            #BaseTypeList(@res.uapp Array.map(value, value => value))
           | Some(_) =>
-            let temp = Js.Dict.unsafeGet(Obj.magic(value), "dog")
-            switch Js.Json.decodeNull(temp) {
+            let temp = Dict.getUnsafe(Obj.magic(value), "dog")
+            switch JSON.Decode.null(temp) {
             | None =>
               let value = temp
               #Dog(
@@ -177,8 +177,8 @@ name
                 ),
               )
             | Some(_) =>
-              let temp = Js.Dict.unsafeGet(Obj.magic(value), "human")
-              switch Js.Json.decodeNull(temp) {
+              let temp = Dict.getUnsafe(Obj.magic(value), "human")
+              switch JSON.Decode.null(temp) {
               | None =>
                 let value = temp
                 #Human(
@@ -192,13 +192,13 @@ name
                   ),
                 )
               | Some(_) =>
-                let temp = Js.Dict.unsafeGet(Obj.magic(value), "dogOrHuman")
-                switch Js.Json.decodeNull(temp) {
+                let temp = Dict.getUnsafe(Obj.magic(value), "dogOrHuman")
+                switch JSON.Decode.null(temp) {
                 | None =>
                   let value = temp
                   #DogOrHuman({
                     let typename = (
-                      Obj.magic(Js.Dict.unsafeGet(Obj.magic(value), "__typename")): string
+                      Obj.magic(Dict.getUnsafe(Obj.magic(value), "__typename")): string
                     )
                     (
                       switch typename {
@@ -232,17 +232,17 @@ name
                             }: t_mutationForVariant_dogOrHuman_Human
                           )
                         })
-                      | _ => #FutureAddedValue((Obj.magic(value): Js.Json.t))
+                      | _ => #FutureAddedValue((Obj.magic(value): JSON.t))
                       }: t_mutationForVariant_dogOrHuman
                     )
                   })
                 | Some(_) =>
                   Js.Exn.raiseError(
-                    \"^"(
+                    \"++"(
                       "graphql-ppx: ",
-                      \"^"(
+                      \"++"(
                         "All fields on variant selection set on type ",
-                        \"^"("VariantTestResult", " were null"),
+                        \"++"("VariantTestResult", " were null"),
                       ),
                     ),
                   )
@@ -258,15 +258,15 @@ name
     let mutationForVariant = {
       let value = (value: t).mutationForVariant
       let _temp = value
-      Obj.magic(Js.Json.null)
+      Obj.magic(JSON.Null)
     }
     {mutationForVariant: mutationForVariant}
   }
   let serializeVariables = () => ()
   let makeVariables = () => ()
   let makeDefaultVariables = () => makeVariables()
-  external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"
-  external toJson: Raw.t => Js.Json.t = "%identity"
-  external variablesToJson: Raw.t_variables => Js.Json.t = "%identity"
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
 }
 

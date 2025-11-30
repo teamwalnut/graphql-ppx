@@ -2,34 +2,34 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          defaultObjectValueOnScalar: value.defaultObjectValueOnScalar
-        };
+    defaultObjectValueOnScalar: value.defaultObjectValueOnScalar
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.defaultObjectValueOnScalar;
+  let value$1 = value.defaultObjectValueOnScalar;
   return {
-          defaultObjectValueOnScalar: value$1
-        };
+    defaultObjectValueOnScalar: value$1
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query   {\ndefaultObjectValueOnScalar(filter: {some: {json: \"value\"}}, arg: {field: \"otherValue\"})  \n}\n",
   parse: parse,

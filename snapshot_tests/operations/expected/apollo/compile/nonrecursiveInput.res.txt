@@ -2,88 +2,86 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          nonrecursiveInput: value.nonrecursiveInput
-        };
+    nonrecursiveInput: value.nonrecursiveInput
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.nonrecursiveInput;
+  let value$1 = value.nonrecursiveInput;
   return {
-          nonrecursiveInput: value$1
-        };
+    nonrecursiveInput: value$1
+  };
 }
 
 function serializeInputObjectEmbeddedInput(inp) {
-  var a = inp.field;
+  let a = inp.field;
   return {
-          field: a !== undefined ? a : undefined
-        };
+    field: a !== undefined ? a : undefined
+  };
 }
 
 function serializeInputObjectNonrecursiveInput(inp) {
-  var a = inp.nullableArray;
-  var a$1 = inp.field;
-  var a$2 = inp.enum;
-  var a$3 = inp.embeddedInput;
-  var a$4 = inp.custom;
+  let a = inp.nullableArray;
+  let a$1 = inp.field;
+  let a$2 = inp.enum;
+  let a$3 = inp.embeddedInput;
+  let a$4 = inp.custom;
   return {
-          nonNullableField: inp.nonNullableField,
-          nullableArray: a !== undefined ? a.map(function (b) {
-                  if (b !== undefined) {
-                    return b;
-                  }
-                  
-                }) : undefined,
-          field: a$1 !== undefined ? a$1 : undefined,
-          enum: a$2 !== undefined ? (
-              a$2 === "THIRD" ? "THIRD" : (
-                  a$2 === "SECOND" ? "SECOND" : "FIRST"
-                )
-            ) : undefined,
-          embeddedInput: a$3 !== undefined ? a$3.map(function (b) {
-                  if (b !== undefined) {
-                    return serializeInputObjectEmbeddedInput(b);
-                  }
-                  
-                }) : undefined,
-          custom: a$4 !== undefined ? a$4 : undefined
-        };
+    nonNullableField: inp.nonNullableField,
+    nullableArray: a !== undefined ? a.map(b => {
+        if (b !== undefined) {
+          return b;
+        }
+      }) : undefined,
+    field: a$1 !== undefined ? a$1 : undefined,
+    enum: a$2 !== undefined ? (
+        a$2 === "THIRD" ? "THIRD" : (
+            a$2 === "SECOND" ? "SECOND" : "FIRST"
+          )
+      ) : undefined,
+    embeddedInput: a$3 !== undefined ? a$3.map(b => {
+        if (b !== undefined) {
+          return serializeInputObjectEmbeddedInput(b);
+        }
+      }) : undefined,
+    custom: a$4 !== undefined ? a$4 : undefined
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          arg: serializeInputObjectNonrecursiveInput(inp.arg)
-        };
+    arg: serializeInputObjectNonrecursiveInput(inp.arg)
+  };
 }
 
 function makeVariables(arg, param) {
   return {
-          arg: arg
-        };
+    arg: arg
+  };
 }
 
 function makeInputObjectNonrecursiveInput(nonNullableField, nullableArray, field, $$enum, embeddedInput, custom, param) {
   return {
-          nonNullableField: nonNullableField,
-          nullableArray: nullableArray,
-          field: field,
-          enum: $$enum,
-          embeddedInput: embeddedInput,
-          custom: custom
-        };
+    nonNullableField: nonNullableField,
+    nullableArray: nullableArray,
+    field: field,
+    enum: $$enum,
+    embeddedInput: embeddedInput,
+    custom: custom
+  };
 }
 
 function makeInputObjectEmbeddedInput(field, param) {
   return {
-          field: field
-        };
+    field: field
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($arg: NonrecursiveInput!)  {\nnonrecursiveInput(arg: $arg)  \n}\n",
   parse: parse,
@@ -96,93 +94,91 @@ var MyQuery = {
   makeInputObjectEmbeddedInput: makeInputObjectEmbeddedInput
 };
 
-var Raw$1 = {};
+let Raw$1 = {};
 
 function parse$1(value) {
   return {
-          scalarsInput: value.scalarsInput,
-          more: value.more
-        };
+    scalarsInput: value.scalarsInput,
+    more: value.more
+  };
 }
 
 function serialize$1(value) {
-  var value$1 = value.more;
-  var value$2 = value.scalarsInput;
+  let value$1 = value.more;
+  let value$2 = value.scalarsInput;
   return {
-          scalarsInput: value$2,
-          more: value$1
-        };
+    scalarsInput: value$2,
+    more: value$1
+  };
 }
 
 function serializeInputObjectEmbeddedInput$1(inp) {
-  var a = inp.field;
+  let a = inp.field;
   return {
-          field: a !== undefined ? a : undefined
-        };
+    field: a !== undefined ? a : undefined
+  };
 }
 
 function serializeInputObjectNonrecursiveInput$1(inp) {
-  var a = inp.nullableArray;
-  var a$1 = inp.field;
-  var a$2 = inp.enum;
-  var a$3 = inp.embeddedInput;
-  var a$4 = inp.custom;
+  let a = inp.nullableArray;
+  let a$1 = inp.field;
+  let a$2 = inp.enum;
+  let a$3 = inp.embeddedInput;
+  let a$4 = inp.custom;
   return {
-          nonNullableField: inp.nonNullableField,
-          nullableArray: a !== undefined ? a.map(function (b) {
-                  if (b !== undefined) {
-                    return b;
-                  }
-                  
-                }) : undefined,
-          field: a$1 !== undefined ? a$1 : undefined,
-          enum: a$2 !== undefined ? (
-              a$2 === "THIRD" ? "THIRD" : (
-                  a$2 === "SECOND" ? "SECOND" : "FIRST"
-                )
-            ) : undefined,
-          embeddedInput: a$3 !== undefined ? a$3.map(function (b) {
-                  if (b !== undefined) {
-                    return serializeInputObjectEmbeddedInput$1(b);
-                  }
-                  
-                }) : undefined,
-          custom: a$4 !== undefined ? a$4 : undefined
-        };
+    nonNullableField: inp.nonNullableField,
+    nullableArray: a !== undefined ? a.map(b => {
+        if (b !== undefined) {
+          return b;
+        }
+      }) : undefined,
+    field: a$1 !== undefined ? a$1 : undefined,
+    enum: a$2 !== undefined ? (
+        a$2 === "THIRD" ? "THIRD" : (
+            a$2 === "SECOND" ? "SECOND" : "FIRST"
+          )
+      ) : undefined,
+    embeddedInput: a$3 !== undefined ? a$3.map(b => {
+        if (b !== undefined) {
+          return serializeInputObjectEmbeddedInput$1(b);
+        }
+      }) : undefined,
+    custom: a$4 !== undefined ? a$4 : undefined
+  };
 }
 
 function serializeVariables$1(inp) {
   return {
-          arg: serializeInputObjectNonrecursiveInput$1(inp.arg),
-          arg2: serializeInputObjectNonrecursiveInput$1(inp.arg2)
-        };
+    arg: serializeInputObjectNonrecursiveInput$1(inp.arg),
+    arg2: serializeInputObjectNonrecursiveInput$1(inp.arg2)
+  };
 }
 
 function makeVariables$1(arg, arg2, param) {
   return {
-          arg: arg,
-          arg2: arg2
-        };
+    arg: arg,
+    arg2: arg2
+  };
 }
 
 function makeInputObjectNonrecursiveInput$1(nonNullableField, nullableArray, field, $$enum, embeddedInput, custom, param) {
   return {
-          nonNullableField: nonNullableField,
-          nullableArray: nullableArray,
-          field: field,
-          enum: $$enum,
-          embeddedInput: embeddedInput,
-          custom: custom
-        };
+    nonNullableField: nonNullableField,
+    nullableArray: nullableArray,
+    field: field,
+    enum: $$enum,
+    embeddedInput: embeddedInput,
+    custom: custom
+  };
 }
 
 function makeInputObjectEmbeddedInput$1(field, param) {
   return {
-          field: field
-        };
+    field: field
+  };
 }
 
-var MyQuery2 = {
+let MyQuery2 = {
   Raw: Raw$1,
   query: "query ($arg: NonrecursiveInput!, $arg2: NonrecursiveInput!)  {\nscalarsInput(arg: $arg)  \nmore: scalarsInput(arg: $arg2)  \n}\n",
   parse: parse$1,

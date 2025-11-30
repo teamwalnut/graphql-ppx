@@ -2,67 +2,57 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.lists;
-  var value$2 = value$1.nullableOfNullable;
-  var value$3 = value$1.nullableOfNonNullable;
-  var value$4 = value$1.nonNullableOfNullable;
-  var value$5 = value$1.nonNullableOfNonNullable;
+  let value$1 = value.lists;
+  let value$2 = value$1.nullableOfNullable;
+  let value$3 = value$1.nullableOfNonNullable;
+  let value$4 = value$1.nonNullableOfNullable;
+  let value$5 = value$1.nonNullableOfNonNullable;
   return {
-          lists: {
-            __typename: value$1.__typename,
-            nullableOfNullable: !(value$2 == null) ? value$2.map(function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  }) : undefined,
-            nullableOfNonNullable: !(value$3 == null) ? value$3.map(function (value) {
-                    return value;
-                  }) : undefined,
-            nonNullableOfNullable: value$4.map(function (value) {
-                  if (!(value == null)) {
-                    return value;
-                  }
-                  
-                }),
-            nonNullableOfNonNullable: value$5.map(function (value) {
-                  return value;
-                })
+    lists: {
+      __typename: value$1.__typename,
+      nullableOfNullable: !(value$2 == null) ? value$2.map(value => {
+          if (!(value == null)) {
+            return value;
           }
-        };
+        }) : undefined,
+      nullableOfNonNullable: !(value$3 == null) ? value$3.map(value => value) : undefined,
+      nonNullableOfNullable: value$4.map(value => {
+        if (!(value == null)) {
+          return value;
+        }
+      }),
+      nonNullableOfNonNullable: value$5.map(value => value)
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.lists;
-  var value$2 = value$1.nonNullableOfNonNullable;
-  var nonNullableOfNonNullable = value$2.map(function (value) {
+  let value$1 = value.lists;
+  let value$2 = value$1.nonNullableOfNonNullable;
+  let nonNullableOfNonNullable = value$2.map(value => value);
+  let value$3 = value$1.nonNullableOfNullable;
+  let nonNullableOfNullable = value$3.map(value => {
+    if (value !== undefined) {
+      return value;
+    } else {
+      return null;
+    }
+  });
+  let value$4 = value$1.nullableOfNonNullable;
+  let nullableOfNonNullable = value$4 !== undefined ? value$4.map(value => value) : null;
+  let value$5 = value$1.nullableOfNullable;
+  let nullableOfNullable = value$5 !== undefined ? value$5.map(value => {
+      if (value !== undefined) {
         return value;
-      });
-  var value$3 = value$1.nonNullableOfNullable;
-  var nonNullableOfNullable = value$3.map(function (value) {
-        if (value !== undefined) {
-          return value;
-        } else {
-          return null;
-        }
-      });
-  var value$4 = value$1.nullableOfNonNullable;
-  var nullableOfNonNullable = value$4 !== undefined ? value$4.map(function (value) {
-          return value;
-        }) : null;
-  var value$5 = value$1.nullableOfNullable;
-  var nullableOfNullable = value$5 !== undefined ? value$5.map(function (value) {
-          if (value !== undefined) {
-            return value;
-          } else {
-            return null;
-          }
-        }) : null;
-  var value$6 = value$1.__typename;
-  var lists = {
+      } else {
+        return null;
+      }
+    }) : null;
+  let value$6 = value$1.__typename;
+  let lists = {
     __typename: value$6,
     nullableOfNullable: nullableOfNullable,
     nullableOfNonNullable: nullableOfNonNullable,
@@ -70,23 +60,23 @@ function serialize(value) {
     nonNullableOfNonNullable: nonNullableOfNonNullable
   };
   return {
-          lists: lists
-        };
+    lists: lists
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var RecordsQuery = {
+let RecordsQuery = {
   Raw: Raw,
   query: "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse,
@@ -96,67 +86,57 @@ var RecordsQuery = {
   makeDefaultVariables: makeDefaultVariables
 };
 
-var Raw$1 = {};
+let Raw$1 = {};
 
 function parse$1(value) {
-  var value$1 = value.lists;
-  var value$2 = value$1.nullableOfNullable;
-  var value$3 = value$1.nullableOfNonNullable;
-  var value$4 = value$1.nonNullableOfNullable;
-  var value$5 = value$1.nonNullableOfNonNullable;
+  let value$1 = value.lists;
+  let value$2 = value$1.nullableOfNullable;
+  let value$3 = value$1.nullableOfNonNullable;
+  let value$4 = value$1.nonNullableOfNullable;
+  let value$5 = value$1.nonNullableOfNonNullable;
   return {
-          lists: {
-            __typename: value$1.__typename,
-            nullableOfNullable: !(value$2 == null) ? value$2.map(function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  }) : undefined,
-            nullableOfNonNullable: !(value$3 == null) ? value$3.map(function (value) {
-                    return value;
-                  }) : undefined,
-            nonNullableOfNullable: value$4.map(function (value) {
-                  if (!(value == null)) {
-                    return value;
-                  }
-                  
-                }),
-            nonNullableOfNonNullable: value$5.map(function (value) {
-                  return value;
-                })
+    lists: {
+      __typename: value$1.__typename,
+      nullableOfNullable: !(value$2 == null) ? value$2.map(value => {
+          if (!(value == null)) {
+            return value;
           }
-        };
+        }) : undefined,
+      nullableOfNonNullable: !(value$3 == null) ? value$3.map(value => value) : undefined,
+      nonNullableOfNullable: value$4.map(value => {
+        if (!(value == null)) {
+          return value;
+        }
+      }),
+      nonNullableOfNonNullable: value$5.map(value => value)
+    }
+  };
 }
 
 function serialize$1(value) {
-  var value$1 = value.lists;
-  var value$2 = value$1.nonNullableOfNonNullable;
-  var nonNullableOfNonNullable = value$2.map(function (value) {
+  let value$1 = value.lists;
+  let value$2 = value$1.nonNullableOfNonNullable;
+  let nonNullableOfNonNullable = value$2.map(value => value);
+  let value$3 = value$1.nonNullableOfNullable;
+  let nonNullableOfNullable = value$3.map(value => {
+    if (value !== undefined) {
+      return value;
+    } else {
+      return null;
+    }
+  });
+  let value$4 = value$1.nullableOfNonNullable;
+  let nullableOfNonNullable = value$4 !== undefined ? value$4.map(value => value) : null;
+  let value$5 = value$1.nullableOfNullable;
+  let nullableOfNullable = value$5 !== undefined ? value$5.map(value => {
+      if (value !== undefined) {
         return value;
-      });
-  var value$3 = value$1.nonNullableOfNullable;
-  var nonNullableOfNullable = value$3.map(function (value) {
-        if (value !== undefined) {
-          return value;
-        } else {
-          return null;
-        }
-      });
-  var value$4 = value$1.nullableOfNonNullable;
-  var nullableOfNonNullable = value$4 !== undefined ? value$4.map(function (value) {
-          return value;
-        }) : null;
-  var value$5 = value$1.nullableOfNullable;
-  var nullableOfNullable = value$5 !== undefined ? value$5.map(function (value) {
-          if (value !== undefined) {
-            return value;
-          } else {
-            return null;
-          }
-        }) : null;
-  var value$6 = value$1.__typename;
-  var lists = {
+      } else {
+        return null;
+      }
+    }) : null;
+  let value$6 = value$1.__typename;
+  let lists = {
     __typename: value$6,
     nullableOfNullable: nullableOfNullable,
     nullableOfNonNullable: nullableOfNonNullable,
@@ -164,23 +144,23 @@ function serialize$1(value) {
     nonNullableOfNonNullable: nonNullableOfNonNullable
   };
   return {
-          lists: lists
-        };
+    lists: lists
+  };
 }
 
-function serializeVariables$1(param) {
+function serializeVariables$1() {
   
 }
 
-function makeVariables$1(param) {
+function makeVariables$1() {
   
 }
 
-function makeDefaultVariables$1(param) {
+function makeDefaultVariables$1() {
   
 }
 
-var ObjectsQuery = {
+let ObjectsQuery = {
   Raw: Raw$1,
   query: "query   {\nlists  {\n__typename  \nnullableOfNullable  \nnullableOfNonNullable  \nnonNullableOfNullable  \nnonNullableOfNonNullable  \n}\n\n}\n",
   parse: parse$1,

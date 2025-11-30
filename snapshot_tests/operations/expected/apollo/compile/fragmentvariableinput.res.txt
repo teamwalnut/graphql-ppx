@@ -2,53 +2,52 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.reposts;
+  let value$1 = value.reposts;
   return {
+    __typename: value.__typename,
+    reposts: value$1.map(value => {
+      if (!(value == null)) {
+        return {
           __typename: value.__typename,
-          reposts: value$1.map(function (value) {
-                if (!(value == null)) {
-                  return {
-                          __typename: value.__typename,
-                          id: value.id
-                        };
-                }
-                
-              })
+          id: value.id
         };
+      }
+    })
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.reposts;
-  var reposts = value$1.map(function (value) {
-        if (value === undefined) {
-          return null;
-        }
-        var value$1 = value.id;
-        var value$2 = value.__typename;
-        return {
-                __typename: value$2,
-                id: value$1
-              };
-      });
-  var value$2 = value.__typename;
+  let value$1 = value.reposts;
+  let reposts = value$1.map(value => {
+    if (value === undefined) {
+      return null;
+    }
+    let value$1 = value.id;
+    let value$2 = value.__typename;
+    return {
+      __typename: value$2,
+      id: value$1
+    };
+  });
+  let value$2 = value.__typename;
   return {
-          __typename: value$2,
-          reposts: reposts
-        };
+    __typename: value$2,
+    reposts: reposts
+  };
 }
 
 function verifyArgsAndParse(_name, _test, value) {
   return parse(value);
 }
 
-function verifyName(param) {
+function verifyName(_fragmentName) {
   
 }
 
-var Test = {
+let Test = {
   Raw: Raw,
   query: "fragment test on Post   {\n__typename  \nreposts(arg: {name: $name})  {\n__typename  \nid  \n}\n\n}\n",
   parse: parse,

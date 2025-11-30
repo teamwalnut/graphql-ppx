@@ -2,70 +2,64 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          listsInput: value.listsInput
-        };
+    listsInput: value.listsInput
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.listsInput;
+  let value$1 = value.listsInput;
   return {
-          listsInput: value$1
-        };
+    listsInput: value$1
+  };
 }
 
 function serializeInputObjectListsInput(inp) {
-  var a = inp.nullableOfNullable;
-  var a$1 = inp.nullableOfNonNullable;
-  var a$2 = inp.nonNullableOfNullable;
-  var a$3 = inp.nonNullableOfNonNullable;
+  let a = inp.nullableOfNullable;
+  let a$1 = inp.nullableOfNonNullable;
+  let a$2 = inp.nonNullableOfNullable;
+  let a$3 = inp.nonNullableOfNonNullable;
   return {
-          nullableOfNullable: a !== undefined ? a.map(function (b) {
-                  if (b !== undefined) {
-                    return b;
-                  }
-                  
-                }) : undefined,
-          nullableOfNonNullable: a$1 !== undefined ? a$1.map(function (b) {
-                  return b;
-                }) : undefined,
-          nonNullableOfNullable: a$2.map(function (b) {
-                if (b !== undefined) {
-                  return b;
-                }
-                
-              }),
-          nonNullableOfNonNullable: a$3.map(function (b) {
-                return b;
-              })
-        };
+    nullableOfNullable: a !== undefined ? a.map(b => {
+        if (b !== undefined) {
+          return b;
+        }
+      }) : undefined,
+    nullableOfNonNullable: a$1 !== undefined ? a$1.map(b => b) : undefined,
+    nonNullableOfNullable: a$2.map(b => {
+      if (b !== undefined) {
+        return b;
+      }
+    }),
+    nonNullableOfNonNullable: a$3.map(b => b)
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          arg: serializeInputObjectListsInput(inp.arg)
-        };
+    arg: serializeInputObjectListsInput(inp.arg)
+  };
 }
 
 function makeVariables(arg, param) {
   return {
-          arg: arg
-        };
+    arg: arg
+  };
 }
 
 function makeInputObjectListsInput(nullableOfNullable, nullableOfNonNullable, nonNullableOfNullable, nonNullableOfNonNullable, param) {
   return {
-          nullableOfNullable: nullableOfNullable,
-          nullableOfNonNullable: nullableOfNonNullable,
-          nonNullableOfNullable: nonNullableOfNullable,
-          nonNullableOfNonNullable: nonNullableOfNonNullable
-        };
+    nullableOfNullable: nullableOfNullable,
+    nullableOfNonNullable: nullableOfNonNullable,
+    nonNullableOfNullable: nonNullableOfNullable,
+    nonNullableOfNonNullable: nonNullableOfNonNullable
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($arg: ListsInput!)  {\nlistsInput(arg: $arg)  \n}\n",
   parse: parse,

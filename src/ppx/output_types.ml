@@ -13,8 +13,8 @@ let make_error_raiser message =
       [%expr raise (Failure ("graphql-ppx: " ^ [%e message]))]
     else [%expr raise (Failure "Unexpected GraphQL query response")]
   else if Ppx_config.verbose_error_handling () then
-    [%expr Js.Exn.raiseError ("graphql-ppx: " ^ [%e message])]
-  else [%expr Js.Exn.raiseError "Unexpected GraphQL query response"]
+    [%expr JsError.throwWithMessage ("graphql-ppx: " ^ [%e message])]
+  else [%expr JsError.throwWithMessage "Unexpected GraphQL query response"]
 
 let const_str_expr s = Ast_helper.Exp.constant (Pconst_string (s, loc, None))
 

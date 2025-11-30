@@ -2,71 +2,71 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.mutationWithError;
-  var value$2 = value$1.value;
-  var value$3 = value$1.errors;
+  let value$1 = value.mutationWithError;
+  let value$2 = value$1.value;
+  let value$3 = value$1.errors;
   return {
-          mutationWithError: {
-            __typename: value$1.__typename,
-            value: !(value$2 == null) ? ({
-                  __typename: value$2.__typename,
-                  stringField: value$2.stringField
-                }) : undefined,
-            errors: !(value$3 == null) ? value$3.map(function (value) {
-                    var value$1 = value.field;
-                    var tmp;
-                    switch (value$1) {
-                      case "FIRST" :
-                          tmp = "FIRST";
-                          break;
-                      case "SECOND" :
-                          tmp = "SECOND";
-                          break;
-                      case "THIRD" :
-                          tmp = "THIRD";
-                          break;
-                      default:
-                        tmp = {
-                          NAME: "FutureAddedValue",
-                          VAL: value$1
-                        };
-                    }
-                    return {
-                            __typename: value.__typename,
-                            field: tmp,
-                            message: value.message
-                          };
-                  }) : undefined
+    mutationWithError: {
+      __typename: value$1.__typename,
+      value: !(value$2 == null) ? ({
+          __typename: value$2.__typename,
+          stringField: value$2.stringField
+        }) : undefined,
+      errors: !(value$3 == null) ? value$3.map(value => {
+          let value$1 = value.field;
+          let tmp;
+          switch (value$1) {
+            case "FIRST" :
+              tmp = "FIRST";
+              break;
+            case "SECOND" :
+              tmp = "SECOND";
+              break;
+            case "THIRD" :
+              tmp = "THIRD";
+              break;
+            default:
+              tmp = {
+                NAME: "FutureAddedValue",
+                VAL: value$1
+              };
           }
-        };
+          return {
+            __typename: value.__typename,
+            field: tmp,
+            message: value.message
+          };
+        }) : undefined
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.mutationWithError;
-  var value$2 = value$1.errors;
-  var errors = value$2 !== undefined ? value$2.map(function (value) {
-          var value$1 = value.message;
-          var value$2 = value.field;
-          var field = typeof value$2 === "object" ? value$2.VAL : (
-              value$2 === "THIRD" ? "THIRD" : (
-                  value$2 === "SECOND" ? "SECOND" : "FIRST"
-                )
-            );
-          var value$3 = value.__typename;
-          return {
-                  __typename: value$3,
-                  field: field,
-                  message: value$1
-                };
-        }) : null;
-  var value$3 = value$1.value;
-  var value$4;
+  let value$1 = value.mutationWithError;
+  let value$2 = value$1.errors;
+  let errors = value$2 !== undefined ? value$2.map(value => {
+      let value$1 = value.message;
+      let value$2 = value.field;
+      let field = typeof value$2 === "object" ? value$2.VAL : (
+          value$2 === "THIRD" ? "THIRD" : (
+              value$2 === "SECOND" ? "SECOND" : "FIRST"
+            )
+        );
+      let value$3 = value.__typename;
+      return {
+        __typename: value$3,
+        field: field,
+        message: value$1
+      };
+    }) : null;
+  let value$3 = value$1.value;
+  let value$4;
   if (value$3 !== undefined) {
-    var value$5 = value$3.stringField;
-    var value$6 = value$3.__typename;
+    let value$5 = value$3.stringField;
+    let value$6 = value$3.__typename;
     value$4 = {
       __typename: value$6,
       stringField: value$5
@@ -74,30 +74,30 @@ function serialize(value) {
   } else {
     value$4 = null;
   }
-  var value$7 = value$1.__typename;
-  var mutationWithError = {
+  let value$7 = value$1.__typename;
+  let mutationWithError = {
     __typename: value$7,
     value: value$4,
     errors: errors
   };
   return {
-          mutationWithError: mutationWithError
-        };
+    mutationWithError: mutationWithError
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "mutation   {\nmutationWithError  {\n__typename  \nvalue  {\n__typename  \nstringField  \n}\n\nerrors  {\n__typename  \nfield  \nmessage  \n}\n\n}\n\n}\n",
   parse: parse,

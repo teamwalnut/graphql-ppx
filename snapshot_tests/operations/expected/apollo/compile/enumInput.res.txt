@@ -2,37 +2,37 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          enumInput: value.enumInput
-        };
+    enumInput: value.enumInput
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.enumInput;
+  let value$1 = value.enumInput;
   return {
-          enumInput: value$1
-        };
+    enumInput: value$1
+  };
 }
 
 function serializeVariables(inp) {
-  var a = inp.arg;
+  let a = inp.arg;
   return {
-          arg: a === "THIRD" ? "THIRD" : (
-              a === "SECOND" ? "SECOND" : "FIRST"
-            )
-        };
+    arg: a === "THIRD" ? "THIRD" : (
+        a === "SECOND" ? "SECOND" : "FIRST"
+      )
+  };
 }
 
 function makeVariables(arg, param) {
   return {
-          arg: arg
-        };
+    arg: arg
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($arg: SampleField!)  {\nenumInput(arg: $arg)  \n}\n",
   parse: parse,

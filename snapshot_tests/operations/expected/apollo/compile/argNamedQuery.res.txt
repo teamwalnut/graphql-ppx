@@ -2,34 +2,34 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          argNamedQuery: value.argNamedQuery
-        };
+    argNamedQuery: value.argNamedQuery
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.argNamedQuery;
+  let value$1 = value.argNamedQuery;
   return {
-          argNamedQuery: value$1
-        };
+    argNamedQuery: value$1
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          query: inp.query
-        };
+    query: inp.query
+  };
 }
 
 function makeVariables(query, param) {
   return {
-          query: query
-        };
+    query: query
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n",
   parse: parse,
@@ -38,34 +38,34 @@ var MyQuery = {
   makeVariables: makeVariables
 };
 
-var Raw$1 = {};
+let Raw$1 = {};
 
 function parse$1(value) {
   return {
-          argNamedQuery: value.argNamedQuery
-        };
+    argNamedQuery: value.argNamedQuery
+  };
 }
 
 function serialize$1(value) {
-  var value$1 = value.argNamedQuery;
+  let value$1 = value.argNamedQuery;
   return {
-          argNamedQuery: value$1
-        };
+    argNamedQuery: value$1
+  };
 }
 
 function serializeVariables$1(inp) {
   return {
-          query: inp.query
-        };
+    query: inp.query
+  };
 }
 
 function makeVariables$1(query, param) {
   return {
-          query: query
-        };
+    query: query
+  };
 }
 
-var Query1 = {
+let Query1 = {
   Raw: Raw$1,
   query: "query Query1($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n",
   parse: parse$1,
@@ -74,34 +74,34 @@ var Query1 = {
   makeVariables: makeVariables$1
 };
 
-var Raw$2 = {};
+let Raw$2 = {};
 
 function parse$2(value) {
   return {
-          argNamedQuery: value.argNamedQuery
-        };
+    argNamedQuery: value.argNamedQuery
+  };
 }
 
 function serialize$2(value) {
-  var value$1 = value.argNamedQuery;
+  let value$1 = value.argNamedQuery;
   return {
-          argNamedQuery: value$1
-        };
+    argNamedQuery: value$1
+  };
 }
 
 function serializeVariables$2(inp) {
   return {
-          query: inp.query
-        };
+    query: inp.query
+  };
 }
 
 function makeVariables$2(query, param) {
   return {
-          query: query
-        };
+    query: query
+  };
 }
 
-var Query2 = {
+let Query2 = {
   Raw: Raw$2,
   query: "query Query2($query: Int!)  {\nargNamedQuery(query: $query)  \n}\n",
   parse: parse$2,
@@ -110,7 +110,7 @@ var Query2 = {
   makeVariables: makeVariables$2
 };
 
-var MultipleQueryWithSameVarName = {
+let MultipleQueryWithSameVarName = {
   Query1: Query1,
   Query2: Query2
 };

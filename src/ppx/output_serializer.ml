@@ -36,8 +36,7 @@ let apply_serializer serializer_fn arg =
     (Ast_helper.Exp.apply serializer_fn [ (Nolabel, arg) ])
 
 (* Wrap a function expression for uncurried mode *)
-let wrap_fn fn = 
-  Uncurried_utils.wrap_function_exp_uncurried fn
+let wrap_fn fn = Uncurried_utils.wrap_function_exp_uncurried fn
 
 let rec serialize_type = function
   | Type (Scalar { sm_name = "ID" }) | Type (Scalar { sm_name = "String" }) -> (
@@ -56,18 +55,18 @@ let rec serialize_type = function
     match Ppx_config.native () with
     | true -> [%expr fun a -> `Bool a]
     | false -> wrap_fn [%expr fun a -> a])
-  | Type (Scalar { sm_name = _ }) -> 
+  | Type (Scalar { sm_name = _ }) ->
     if Ppx_config.native () then [%expr fun a -> a]
     else wrap_fn [%expr fun a -> a]
   | Type (InputObject { iom_name }) ->
-    let inner_call = 
-      Uncurried_utils.add_uapp 
+    let inner_call =
+      Uncurried_utils.add_uapp
         [%expr [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
     in
     if Ppx_config.native () then
-      [%expr fun a -> [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
-    else
-      wrap_fn [%expr fun a -> [%e inner_call]]
+      [%expr
+        fun a -> [%e ident_from_string ("serializeInputObject" ^ iom_name)] a]
+    else wrap_fn [%expr fun a -> [%e inner_call]]
   | Type (Enum { em_values }) ->
     let case_exp =
       Ast_helper.Exp.match_ (ident_from_string "a")
@@ -98,11 +97,12 @@ let rec serialize_type = function
           match a with None -> `Null | Some b -> [%e serialize_type inner] b]
     | false ->
       let inner_call = apply_serializer (serialize_type inner) [%expr b] in
-      wrap_fn [%expr
-        fun a ->
-          match a with
-          | None -> Nullable.undefined
-          | Some b -> Nullable.make [%e inner_call]])
+      wrap_fn
+        [%expr
+          fun a ->
+            match a with
+            | None -> Nullable.undefined
+            | Some b -> Nullable.make [%e inner_call]])
   | List inner -> (
     match Ppx_config.native () with
     | true ->
@@ -113,17 +113,18 @@ let rec serialize_type = function
     | false ->
       let inner_call = apply_serializer (serialize_type inner) [%expr b] in
       let callback = wrap_fn [%expr fun b -> [%e inner_call]] in
-      wrap_fn (Uncurried_utils.add_uapp [%expr fun a -> Array.map a [%e callback]]))
-  | Type (Object _) -> 
+      wrap_fn
+        (Uncurried_utils.add_uapp [%expr fun a -> Array.map a [%e callback]]))
+  | Type (Object _) ->
     if Ppx_config.native () then [%expr fun v -> None]
     else wrap_fn [%expr fun v -> None]
-  | Type (Union _) -> 
+  | Type (Union _) ->
     if Ppx_config.native () then [%expr fun v -> None]
     else wrap_fn [%expr fun v -> None]
-  | Type (Interface _) -> 
+  | Type (Interface _) ->
     if Ppx_config.native () then [%expr fun v -> None]
     else wrap_fn [%expr fun v -> None]
-  | TypeNotFound _ -> 
+  | TypeNotFound _ ->
     if Ppx_config.native () then [%expr fun v -> None]
     else wrap_fn [%expr fun v -> None]
 
@@ -139,7 +140,7 @@ let serialize_fun fields type_name =
       let assoc_fields =
         List.map
           (fun (InputField { name; type_ }) ->
-            let field_access = 
+            let field_access =
               Ast_helper.Exp.field
                 (Ast_helper.Exp.constraint_ (ident_from_string arg)
                    (base_type_name type_name))
@@ -159,7 +160,7 @@ let serialize_fun fields type_name =
         (fields
         |> List.map (fun (InputField { name; type_; loc }) ->
                let loc = conv_loc loc in
-               let field_access = 
+               let field_access =
                  Ast_helper.Exp.field
                    (Ast_helper.Exp.constraint_ (ident_from_string arg)
                       (base_type_name type_name))
@@ -408,13 +409,14 @@ and generate_array_encoder config loc inner path definition =
         |> Array.to_list)]
     [@metaloc loc]
   | false ->
-    let callback = 
+    let callback =
       Uncurried_utils.wrap_function_exp_uncurried
-        [%expr fun value -> [%e generate_serializer config path definition None inner]]
+        [%expr
+          fun value ->
+            [%e generate_serializer config path definition None inner]]
     in
-    Uncurried_utils.add_uapp
-      [%expr Array.map value [%e callback]]
-    [@metaloc loc]
+    (Uncurried_utils.add_uapp
+       [%expr Array.map value [%e callback]] [@metaloc loc])
 
 and generate_poly_enum_encoder loc enum_meta omit_future_value =
   let enum_match_arms =

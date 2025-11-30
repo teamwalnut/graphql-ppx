@@ -2,51 +2,51 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.user;
-  var value$2 = value$1.firstname;
+  let value$1 = value.user;
+  let value$2 = value$1.firstname;
   return {
-          __typename: value.__typename,
-          user: {
-            __typename: value$1.__typename,
-            id: value$1.id,
-            firstname: !(value$2 == null) ? value$2 : undefined,
-            lastname: value$1.lastname
-          }
-        };
+    __typename: value.__typename,
+    user: {
+      __typename: value$1.__typename,
+      id: value$1.id,
+      firstname: !(value$2 == null) ? value$2 : undefined,
+      lastname: value$1.lastname
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.user;
-  var value$2 = value$1.lastname;
-  var value$3 = value$1.firstname;
-  var firstname = value$3 !== undefined ? value$3 : null;
-  var value$4 = value$1.id;
-  var value$5 = value$1.__typename;
-  var user = {
+  let value$1 = value.user;
+  let value$2 = value$1.lastname;
+  let value$3 = value$1.firstname;
+  let firstname = value$3 !== undefined ? value$3 : null;
+  let value$4 = value$1.id;
+  let value$5 = value$1.__typename;
+  let user = {
     __typename: value$5,
     id: value$4,
     firstname: firstname,
     lastname: value$2
   };
-  var value$6 = value.__typename;
+  let value$6 = value.__typename;
   return {
-          __typename: value$6,
-          user: user
-        };
+    __typename: value$6,
+    user: user
+  };
 }
 
 function verifyArgsAndParse(_userId, _UserData, value) {
   return parse(value);
 }
 
-function verifyName(param) {
+function verifyName(_fragmentName) {
   
 }
 
-var UserData = {
+let UserData = {
   Raw: Raw,
   query: "fragment UserData on Workspace   {\n__typename  \nuser(id: $userId)  {\n__typename  \nid  \nfirstname  \nlastname  \n}\n\n}\n",
   parse: parse,

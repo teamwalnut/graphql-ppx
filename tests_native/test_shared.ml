@@ -64,19 +64,19 @@ let pp_record fmt (fields : (string * (Format.formatter -> unit)) list) =
   let len = List.length fields in
   fields
   |> List.iteri (fun i (field, value) ->
-       Format.pp_open_hvbox fmt 0;
-       pp_colored_str fmt field Cli_colors.purple;
-       pp_colored_str fmt " = " Cli_colors.Dimmed.purple;
-       value fmt;
-       Format.pp_close_box fmt ();
-       if i < len - 1 then (
-         pp_colored_str fmt ";" Cli_colors.blue;
-         Format.pp_print_break fmt 1 0)
-       else (
-         pp_color fmt Cli_colors.blue;
-         Format.pp_print_if_newline fmt ();
-         Format.pp_print_string fmt ";";
-         pp_color fmt Cli_colors.reset));
+         Format.pp_open_hvbox fmt 0;
+         pp_colored_str fmt field Cli_colors.purple;
+         pp_colored_str fmt " = " Cli_colors.Dimmed.purple;
+         value fmt;
+         Format.pp_close_box fmt ();
+         if i < len - 1 then (
+           pp_colored_str fmt ";" Cli_colors.blue;
+           Format.pp_print_break fmt 1 0)
+         else (
+           pp_color fmt Cli_colors.blue;
+           Format.pp_print_if_newline fmt ();
+           Format.pp_print_string fmt ";";
+           pp_color fmt Cli_colors.reset));
   Format.pp_close_box fmt ();
   Format.pp_print_break fmt 1 0;
   pp_colored_str fmt "}" Cli_colors.blue

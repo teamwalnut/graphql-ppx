@@ -2,81 +2,81 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.first;
-  var value$2 = value$1.inner;
-  var tmp;
+  let value$1 = value.first;
+  let value$2 = value$1.inner;
+  let tmp;
   if (value$2 == null) {
     tmp = undefined;
   } else {
-    var value$3 = value$2.inner;
+    let value$3 = value$2.inner;
     tmp = {
       __typename: value$2.__typename,
       inner: !(value$3 == null) ? ({
-            __typename: value$3.__typename,
-            field: value$3.field
-          }) : undefined
+          __typename: value$3.__typename,
+          field: value$3.field
+        }) : undefined
     };
   }
-  var value$4 = value.second;
-  var value$5 = value$4.inner;
-  var tmp$1;
+  let value$4 = value.second;
+  let value$5 = value$4.inner;
+  let tmp$1;
   if (value$5 == null) {
     tmp$1 = undefined;
   } else {
-    var value$6 = value$5.inner;
+    let value$6 = value$5.inner;
     tmp$1 = {
       __typename: value$5.__typename,
       inner: !(value$6 == null) ? ({
-            __typename: value$6.__typename,
-            f1: value$6.f1,
-            f2: value$6.f2
-          }) : undefined
+          __typename: value$6.__typename,
+          f1: value$6.f1,
+          f2: value$6.f2
+        }) : undefined
     };
   }
-  var value$7 = value.let;
-  var value$8 = value$7.inner;
-  var tmp$2;
+  let value$7 = value.let;
+  let value$8 = value$7.inner;
+  let tmp$2;
   if (value$8 == null) {
     tmp$2 = undefined;
   } else {
-    var value$9 = value$8.inner;
+    let value$9 = value$8.inner;
     tmp$2 = {
       __typename: value$8.__typename,
       inner: !(value$9 == null) ? ({
-            __typename: value$9.__typename,
-            field: value$9.field
-          }) : undefined
+          __typename: value$9.__typename,
+          field: value$9.field
+        }) : undefined
     };
   }
   return {
-          first: {
-            __typename: value$1.__typename,
-            inner: tmp
-          },
-          second: {
-            __typename: value$4.__typename,
-            inner: tmp$1
-          },
-          let: {
-            __typename: value$7.__typename,
-            inner: tmp$2
-          }
-        };
+    first: {
+      __typename: value$1.__typename,
+      inner: tmp
+    },
+    second: {
+      __typename: value$4.__typename,
+      inner: tmp$1
+    },
+    let: {
+      __typename: value$7.__typename,
+      inner: tmp$2
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.let;
-  var value$2 = value$1.inner;
-  var inner;
+  let value$1 = value.let;
+  let value$2 = value$1.inner;
+  let inner;
   if (value$2 !== undefined) {
-    var value$3 = value$2.inner;
-    var inner$1;
+    let value$3 = value$2.inner;
+    let inner$1;
     if (value$3 !== undefined) {
-      var value$4 = value$3.field;
-      var value$5 = value$3.__typename;
+      let value$4 = value$3.field;
+      let value$5 = value$3.__typename;
       inner$1 = {
         __typename: value$5,
         field: value$4
@@ -84,7 +84,7 @@ function serialize(value) {
     } else {
       inner$1 = null;
     }
-    var value$6 = value$2.__typename;
+    let value$6 = value$2.__typename;
     inner = {
       __typename: value$6,
       inner: inner$1
@@ -92,21 +92,21 @@ function serialize(value) {
   } else {
     inner = null;
   }
-  var value$7 = value$1.__typename;
-  var let_ = {
+  let value$7 = value$1.__typename;
+  let let_ = {
     __typename: value$7,
     inner: inner
   };
-  var value$8 = value.second;
-  var value$9 = value$8.inner;
-  var inner$2;
+  let value$8 = value.second;
+  let value$9 = value$8.inner;
+  let inner$2;
   if (value$9 !== undefined) {
-    var value$10 = value$9.inner;
-    var inner$3;
+    let value$10 = value$9.inner;
+    let inner$3;
     if (value$10 !== undefined) {
-      var value$11 = value$10.f2;
-      var value$12 = value$10.f1;
-      var value$13 = value$10.__typename;
+      let value$11 = value$10.f2;
+      let value$12 = value$10.f1;
+      let value$13 = value$10.__typename;
       inner$3 = {
         __typename: value$13,
         f1: value$12,
@@ -115,7 +115,7 @@ function serialize(value) {
     } else {
       inner$3 = null;
     }
-    var value$14 = value$9.__typename;
+    let value$14 = value$9.__typename;
     inner$2 = {
       __typename: value$14,
       inner: inner$3
@@ -123,20 +123,20 @@ function serialize(value) {
   } else {
     inner$2 = null;
   }
-  var value$15 = value$8.__typename;
-  var second = {
+  let value$15 = value$8.__typename;
+  let second = {
     __typename: value$15,
     inner: inner$2
   };
-  var value$16 = value.first;
-  var value$17 = value$16.inner;
-  var inner$4;
+  let value$16 = value.first;
+  let value$17 = value$16.inner;
+  let inner$4;
   if (value$17 !== undefined) {
-    var value$18 = value$17.inner;
-    var inner$5;
+    let value$18 = value$17.inner;
+    let inner$5;
     if (value$18 !== undefined) {
-      var value$19 = value$18.field;
-      var value$20 = value$18.__typename;
+      let value$19 = value$18.field;
+      let value$20 = value$18.__typename;
       inner$5 = {
         __typename: value$20,
         field: value$19
@@ -144,7 +144,7 @@ function serialize(value) {
     } else {
       inner$5 = null;
     }
-    var value$21 = value$17.__typename;
+    let value$21 = value$17.__typename;
     inner$4 = {
       __typename: value$21,
       inner: inner$5
@@ -152,31 +152,31 @@ function serialize(value) {
   } else {
     inner$4 = null;
   }
-  var value$22 = value$16.__typename;
-  var first = {
+  let value$22 = value$16.__typename;
+  let first = {
     __typename: value$22,
     inner: inner$4
   };
   return {
-          first: first,
-          second: second,
-          let: let_
-        };
+    first: first,
+    second: second,
+    let: let_
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\nsecond: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nf1: field  \nf2: field  \n}\n\n}\n\n}\n\nlet: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
@@ -186,42 +186,42 @@ var MyQuery = {
   makeDefaultVariables: makeDefaultVariables
 };
 
-var Raw$1 = {};
+let Raw$1 = {};
 
 function parse$1(value) {
-  var value$1 = value.nestedObject;
-  var value$2 = value$1.inner;
-  var tmp;
+  let value$1 = value.nestedObject;
+  let value$2 = value$1.inner;
+  let tmp;
   if (value$2 == null) {
     tmp = undefined;
   } else {
-    var value$3 = value$2.inner;
+    let value$3 = value$2.inner;
     tmp = {
       __typename: value$2.__typename,
       inner: !(value$3 == null) ? ({
-            __typename: value$3.__typename,
-            field: value$3.field
-          }) : undefined
+          __typename: value$3.__typename,
+          field: value$3.field
+        }) : undefined
     };
   }
   return {
-          nestedObject: {
-            __typename: value$1.__typename,
-            inner: tmp
-          }
-        };
+    nestedObject: {
+      __typename: value$1.__typename,
+      inner: tmp
+    }
+  };
 }
 
 function serialize$1(value) {
-  var value$1 = value.nestedObject;
-  var value$2 = value$1.inner;
-  var inner;
+  let value$1 = value.nestedObject;
+  let value$2 = value$1.inner;
+  let inner;
   if (value$2 !== undefined) {
-    var value$3 = value$2.inner;
-    var inner$1;
+    let value$3 = value$2.inner;
+    let inner$1;
     if (value$3 !== undefined) {
-      var value$4 = value$3.field;
-      var value$5 = value$3.__typename;
+      let value$4 = value$3.field;
+      let value$5 = value$3.__typename;
       inner$1 = {
         __typename: value$5,
         field: value$4
@@ -229,7 +229,7 @@ function serialize$1(value) {
     } else {
       inner$1 = null;
     }
-    var value$6 = value$2.__typename;
+    let value$6 = value$2.__typename;
     inner = {
       __typename: value$6,
       inner: inner$1
@@ -237,29 +237,29 @@ function serialize$1(value) {
   } else {
     inner = null;
   }
-  var value$7 = value$1.__typename;
-  var nestedObject = {
+  let value$7 = value$1.__typename;
+  let nestedObject = {
     __typename: value$7,
     inner: inner
   };
   return {
-          nestedObject: nestedObject
-        };
+    nestedObject: nestedObject
+  };
 }
 
-function serializeVariables$1(param) {
+function serializeVariables$1() {
   
 }
 
-function makeVariables$1(param) {
+function makeVariables$1() {
   
 }
 
-function makeDefaultVariables$1(param) {
+function makeDefaultVariables$1() {
   
 }
 
-var MyQueryWithSig = {
+let MyQueryWithSig = {
   Raw: Raw$1,
   query: "query   {\nnestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse$1,
@@ -269,46 +269,46 @@ var MyQueryWithSig = {
   makeDefaultVariables: makeDefaultVariables$1
 };
 
-var Test = {
+let Test = {
   MyQueryWithSig: MyQueryWithSig
 };
 
-var Raw$2 = {};
+let Raw$2 = {};
 
 function parse$2(value) {
-  var value$1 = value.nestedObject;
-  var value$2 = value$1.inner;
-  var tmp;
+  let value$1 = value.nestedObject;
+  let value$2 = value$1.inner;
+  let tmp;
   if (value$2 == null) {
     tmp = undefined;
   } else {
-    var value$3 = value$2.inner;
+    let value$3 = value$2.inner;
     tmp = {
       __typename: value$2.__typename,
       inner: !(value$3 == null) ? ({
-            __typename: value$3.__typename,
-            field: value$3.field
-          }) : undefined
+          __typename: value$3.__typename,
+          field: value$3.field
+        }) : undefined
     };
   }
   return {
-          nestedObject: {
-            __typename: value$1.__typename,
-            inner: tmp
-          }
-        };
+    nestedObject: {
+      __typename: value$1.__typename,
+      inner: tmp
+    }
+  };
 }
 
 function serialize$2(value) {
-  var value$1 = value.nestedObject;
-  var value$2 = value$1.inner;
-  var inner;
+  let value$1 = value.nestedObject;
+  let value$2 = value$1.inner;
+  let inner;
   if (value$2 !== undefined) {
-    var value$3 = value$2.inner;
-    var inner$1;
+    let value$3 = value$2.inner;
+    let inner$1;
     if (value$3 !== undefined) {
-      var value$4 = value$3.field;
-      var value$5 = value$3.__typename;
+      let value$4 = value$3.field;
+      let value$5 = value$3.__typename;
       inner$1 = {
         __typename: value$5,
         field: value$4
@@ -316,7 +316,7 @@ function serialize$2(value) {
     } else {
       inner$1 = null;
     }
-    var value$6 = value$2.__typename;
+    let value$6 = value$2.__typename;
     inner = {
       __typename: value$6,
       inner: inner$1
@@ -324,29 +324,29 @@ function serialize$2(value) {
   } else {
     inner = null;
   }
-  var value$7 = value$1.__typename;
-  var nestedObject = {
+  let value$7 = value$1.__typename;
+  let nestedObject = {
     __typename: value$7,
     inner: inner
   };
   return {
-          nestedObject: nestedObject
-        };
+    nestedObject: nestedObject
+  };
 }
 
-function serializeVariables$2(param) {
+function serializeVariables$2() {
   
 }
 
-function makeVariables$2(param) {
+function makeVariables$2() {
   
 }
 
-function makeDefaultVariables$2(param) {
+function makeDefaultVariables$2() {
   
 }
 
-var MyQueryWithSigDirect = {
+let MyQueryWithSigDirect = {
   Raw: Raw$2,
   query: "query   {\nnestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse$2,

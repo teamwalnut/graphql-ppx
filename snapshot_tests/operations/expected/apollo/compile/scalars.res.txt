@@ -2,51 +2,51 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.variousScalars;
-  var value$2 = value$1.nullableString;
-  var value$3 = value$1.nullableInt;
-  var value$4 = value$1.nullableFloat;
-  var value$5 = value$1.nullableBoolean;
-  var value$6 = value$1.nullableID;
+  let value$1 = value.variousScalars;
+  let value$2 = value$1.nullableString;
+  let value$3 = value$1.nullableInt;
+  let value$4 = value$1.nullableFloat;
+  let value$5 = value$1.nullableBoolean;
+  let value$6 = value$1.nullableID;
   return {
-          variousScalars: {
-            __typename: value$1.__typename,
-            nullableString: !(value$2 == null) ? value$2 : undefined,
-            string: value$1.string,
-            nullableInt: !(value$3 == null) ? value$3 : undefined,
-            int: value$1.int,
-            nullableFloat: !(value$4 == null) ? value$4 : undefined,
-            float: value$1.float,
-            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
-            boolean: value$1.boolean,
-            nullableID: !(value$6 == null) ? value$6 : undefined,
-            id: value$1.id
-          }
-        };
+    variousScalars: {
+      __typename: value$1.__typename,
+      nullableString: !(value$2 == null) ? value$2 : undefined,
+      string: value$1.string,
+      nullableInt: !(value$3 == null) ? value$3 : undefined,
+      int: value$1.int,
+      nullableFloat: !(value$4 == null) ? value$4 : undefined,
+      float: value$1.float,
+      nullableBoolean: !(value$5 == null) ? value$5 : undefined,
+      boolean: value$1.boolean,
+      nullableID: !(value$6 == null) ? value$6 : undefined,
+      id: value$1.id
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.variousScalars;
-  var value$2 = value$1.id;
-  var value$3 = value$1.nullableID;
-  var nullableID = value$3 !== undefined ? value$3 : null;
-  var value$4 = value$1.boolean;
-  var value$5 = value$1.nullableBoolean;
-  var nullableBoolean = value$5 !== undefined ? value$5 : null;
-  var value$6 = value$1.float;
-  var value$7 = value$1.nullableFloat;
-  var nullableFloat = value$7 !== undefined ? value$7 : null;
-  var value$8 = value$1.int;
-  var value$9 = value$1.nullableInt;
-  var nullableInt = value$9 !== undefined ? value$9 : null;
-  var value$10 = value$1.string;
-  var value$11 = value$1.nullableString;
-  var nullableString = value$11 !== undefined ? value$11 : null;
-  var value$12 = value$1.__typename;
-  var variousScalars = {
+  let value$1 = value.variousScalars;
+  let value$2 = value$1.id;
+  let value$3 = value$1.nullableID;
+  let nullableID = value$3 !== undefined ? value$3 : null;
+  let value$4 = value$1.boolean;
+  let value$5 = value$1.nullableBoolean;
+  let nullableBoolean = value$5 !== undefined ? value$5 : null;
+  let value$6 = value$1.float;
+  let value$7 = value$1.nullableFloat;
+  let nullableFloat = value$7 !== undefined ? value$7 : null;
+  let value$8 = value$1.int;
+  let value$9 = value$1.nullableInt;
+  let nullableInt = value$9 !== undefined ? value$9 : null;
+  let value$10 = value$1.string;
+  let value$11 = value$1.nullableString;
+  let nullableString = value$11 !== undefined ? value$11 : null;
+  let value$12 = value$1.__typename;
+  let variousScalars = {
     __typename: value$12,
     nullableString: nullableString,
     string: value$10,
@@ -60,23 +60,23 @@ function serialize(value) {
     id: value$2
   };
   return {
-          variousScalars: variousScalars
-        };
+    variousScalars: variousScalars
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query   {\nvariousScalars  {\n__typename  \nnullableString  \nstring  \nnullableInt  \nint  \nnullableFloat  \nfloat  \nnullableBoolean  \nboolean  \nnullableID  \nid  \n}\n\n}\n",
   parse: parse,

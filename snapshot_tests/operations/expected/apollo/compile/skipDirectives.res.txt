@@ -2,71 +2,71 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.v1;
-  var value$2 = value$1.nullableString;
-  var value$3 = value$1.string;
-  var value$4 = value.v2;
-  var value$5 = value$4.nullableString;
-  var value$6 = value$4.string;
+  let value$1 = value.v1;
+  let value$2 = value$1.nullableString;
+  let value$3 = value$1.string;
+  let value$4 = value.v2;
+  let value$5 = value$4.nullableString;
+  let value$6 = value$4.string;
   return {
-          v1: {
-            __typename: value$1.__typename,
-            nullableString: !(value$2 == null) ? value$2 : undefined,
-            string: !(value$3 == null) ? value$3 : undefined
-          },
-          v2: {
-            __typename: value$4.__typename,
-            nullableString: !(value$5 == null) ? value$5 : undefined,
-            string: !(value$6 == null) ? value$6 : undefined
-          }
-        };
+    v1: {
+      __typename: value$1.__typename,
+      nullableString: !(value$2 == null) ? value$2 : undefined,
+      string: !(value$3 == null) ? value$3 : undefined
+    },
+    v2: {
+      __typename: value$4.__typename,
+      nullableString: !(value$5 == null) ? value$5 : undefined,
+      string: !(value$6 == null) ? value$6 : undefined
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.v2;
-  var value$2 = value$1.string;
-  var string = value$2 !== undefined ? value$2 : null;
-  var value$3 = value$1.nullableString;
-  var nullableString = value$3 !== undefined ? value$3 : null;
-  var value$4 = value$1.__typename;
-  var v2 = {
+  let value$1 = value.v2;
+  let value$2 = value$1.string;
+  let string = value$2 !== undefined ? value$2 : null;
+  let value$3 = value$1.nullableString;
+  let nullableString = value$3 !== undefined ? value$3 : null;
+  let value$4 = value$1.__typename;
+  let v2 = {
     __typename: value$4,
     nullableString: nullableString,
     string: string
   };
-  var value$5 = value.v1;
-  var value$6 = value$5.string;
-  var string$1 = value$6 !== undefined ? value$6 : null;
-  var value$7 = value$5.nullableString;
-  var nullableString$1 = value$7 !== undefined ? value$7 : null;
-  var value$8 = value$5.__typename;
-  var v1 = {
+  let value$5 = value.v1;
+  let value$6 = value$5.string;
+  let string$1 = value$6 !== undefined ? value$6 : null;
+  let value$7 = value$5.nullableString;
+  let nullableString$1 = value$7 !== undefined ? value$7 : null;
+  let value$8 = value$5.__typename;
+  let v1 = {
     __typename: value$8,
     nullableString: nullableString$1,
     string: string$1
   };
   return {
-          v1: v1,
-          v2: v2
-        };
+    v1: v1,
+    v2: v2
+  };
 }
 
 function serializeVariables(inp) {
   return {
-          var: inp.var
-        };
+    var: inp.var
+  };
 }
 
 function makeVariables($$var, param) {
   return {
-          var: $$var
-        };
+    var: $$var
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($var: Boolean!)  {\nv1: variousScalars  {\n__typename  \nnullableString @skip(if: $var) \nstring @skip(if: $var) \n}\n\nv2: variousScalars  {\n__typename  \nnullableString @include(if: $var) \nstring @include(if: $var) \n}\n\n}\n",
   parse: parse,

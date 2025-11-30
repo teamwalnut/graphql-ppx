@@ -620,9 +620,7 @@ let rec create_arity_fn arity typ =
 
 (* Helper to wrap arrow type for uncurried externals *)
 let wrap_external_type ~arity typ =
-  if should_use_uncurried () then
-    ctyp_arrow ~arity typ
-  else typ
+  if should_use_uncurried () then ctyp_arrow ~arity typ else typ
 
 let graphql_external (config : output_config) _ =
   match config with
@@ -640,7 +638,7 @@ let graphql_external (config : output_config) _ =
     let import =
       match import with None -> "default" | Some import -> import
     in
-    let arrow_type = 
+    let arrow_type =
       Ast_helper.Typ.arrow Nolabel [%type: string array]
         (Ast_helper.Typ.arrow Nolabel
            (base_type ~inner:[ base_type_name return_type ] "array")
@@ -682,15 +680,14 @@ let graphql_external (config : output_config) _ =
       | _, None, Some template_tag -> template_tag
       | _, None, None -> assert false
     in
-    let arrow_type = 
+    let arrow_type =
       Ast_helper.Typ.arrow Nolabel [%type: string array]
         (Ast_helper.Typ.arrow Nolabel
            (base_type ~inner:[ base_type_name return_type ] "array")
            (base_type_name return_type))
     in
-    let identity_arrow_type = 
-      Ast_helper.Typ.arrow Nolabel [%type: string]
-        (base_type_name return_type)
+    let identity_arrow_type =
+      Ast_helper.Typ.arrow Nolabel [%type: string] (base_type_name return_type)
     in
     [
       Ast_helper.Str.primitive
@@ -866,6 +863,12 @@ let generate_fragment_signature config name variable_definitions _has_error
            Closed None)
         (make_labeled_fun_sig final_type tl)
   in
+  let variable_definition_items_sig =
+    match variable_definitions with
+    | Some { Source_pos.item = variable_definitions } -> variable_definitions
+    | None -> []
+  in
+  let verify_parse_arity = 2 + List.length variable_definition_items_sig in
   let verify_parse =
     make_labeled_fun_sig
       (Ast_helper.Typ.arrow (Labelled "fragmentName")
@@ -880,9 +883,7 @@ let generate_fragment_signature config name variable_definitions _has_error
             Closed None)
          (Ast_helper.Typ.arrow Nolabel (base_type_name "Raw.t")
             (base_type_name "t")))
-      (match variable_definitions with
-      | Some { Source_pos.item = variable_definitions } -> variable_definitions
-      | None -> [])
+      variable_definition_items_sig
   in
   let verify_name =
     Ast_helper.Typ.arrow Nolabel
@@ -929,7 +930,8 @@ let generate_fragment_signature config name variable_definitions _has_error
               " Serialize the ReasonML GraphQL data that was parsed using the \
                parse\n\
                function back to the original JSON-compatible data "]];
-        [%sigi: val verifyArgsAndParse : [%t verify_parse]];
+        wrap_sig_uncurried_fn ~arity:verify_parse_arity
+          [%sigi: val verifyArgsAndParse : [%t verify_parse]];
         wrap_sig_uncurried_fn ~arity:1
           [%sigi: val verifyName : [%t verify_name]];
       ];
@@ -1007,6 +1009,7 @@ let generate_fragment_implementation config name
     | Some { Source_pos.item = variable_definitions } -> variable_definitions
     | None -> []
   in
+  let verify_parse_arity = 2 + List.length variable_definition_items in
   let verify_parse =
     make_labeled_fun
       (Ast_helper.Exp.fun_ (Labelled "fragmentName") None
@@ -1056,7 +1059,8 @@ let generate_fragment_implementation config name
         wrap_as_uncurried_fn [%stri let serialize value = [%e serialize_fn]];
       ];
       [
-        [%stri let verifyArgsAndParse = [%e verify_parse]];
+        wrap_as_uncurried_fn ~arity:verify_parse_arity
+          [%stri let verifyArgsAndParse = [%e verify_parse]];
         wrap_as_uncurried_fn ~arity:1 [%stri let verifyName = [%e verifyName]];
       ];
       (match config.native with

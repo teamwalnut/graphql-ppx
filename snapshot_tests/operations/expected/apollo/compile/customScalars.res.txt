@@ -2,52 +2,52 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.customScalarField;
-  var value$2 = value$1.nullable;
+  let value$1 = value.customScalarField;
+  let value$2 = value$1.nullable;
   return {
-          customScalarField: {
-            __typename: value$1.__typename,
-            nullable: !(value$2 == null) ? value$2 : undefined,
-            nonNullable: value$1.nonNullable
-          }
-        };
+    customScalarField: {
+      __typename: value$1.__typename,
+      nullable: !(value$2 == null) ? value$2 : undefined,
+      nonNullable: value$1.nonNullable
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.customScalarField;
-  var value$2 = value$1.nonNullable;
-  var value$3 = value$1.nullable;
-  var nullable = value$3 !== undefined ? value$3 : null;
-  var value$4 = value$1.__typename;
-  var customScalarField = {
+  let value$1 = value.customScalarField;
+  let value$2 = value$1.nonNullable;
+  let value$3 = value$1.nullable;
+  let nullable = value$3 !== undefined ? value$3 : null;
+  let value$4 = value$1.__typename;
+  let customScalarField = {
     __typename: value$4,
     nullable: nullable,
     nonNullable: value$2
   };
   return {
-          customScalarField: customScalarField
-        };
+    customScalarField: customScalarField
+  };
 }
 
 function serializeVariables(inp) {
-  var a = inp.opt;
+  let a = inp.opt;
   return {
-          opt: a !== undefined ? a : undefined,
-          req: inp.req
-        };
+    opt: a !== undefined ? a : undefined,
+    req: inp.req
+  };
 }
 
 function makeVariables(opt, req, param) {
   return {
-          opt: opt,
-          req: req
-        };
+    opt: opt,
+    req: req
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($opt: CustomScalar, $req: CustomScalar!)  {\ncustomScalarField(argOptional: $opt, argRequired: $req)  {\n__typename  \nnullable  \nnonNullable  \n}\n\n}\n",
   parse: parse,

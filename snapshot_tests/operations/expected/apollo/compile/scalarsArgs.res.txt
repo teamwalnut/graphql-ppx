@@ -2,57 +2,57 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
   return {
-          scalarsInput: value.scalarsInput
-        };
+    scalarsInput: value.scalarsInput
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.scalarsInput;
+  let value$1 = value.scalarsInput;
   return {
-          scalarsInput: value$1
-        };
+    scalarsInput: value$1
+  };
 }
 
 function serializeVariables(inp) {
-  var a = inp.nullableString;
-  var a$1 = inp.nullableInt;
-  var a$2 = inp.nullableFloat;
-  var a$3 = inp.nullableBoolean;
-  var a$4 = inp.nullableID;
+  let a = inp.nullableString;
+  let a$1 = inp.nullableInt;
+  let a$2 = inp.nullableFloat;
+  let a$3 = inp.nullableBoolean;
+  let a$4 = inp.nullableID;
   return {
-          nullableString: a !== undefined ? a : undefined,
-          string: inp.string,
-          nullableInt: a$1 !== undefined ? a$1 : undefined,
-          int: inp.int,
-          nullableFloat: a$2 !== undefined ? a$2 : undefined,
-          float: inp.float,
-          nullableBoolean: a$3 !== undefined ? a$3 : undefined,
-          boolean: inp.boolean,
-          nullableID: a$4 !== undefined ? a$4 : undefined,
-          id: inp.id
-        };
+    nullableString: a !== undefined ? a : undefined,
+    string: inp.string,
+    nullableInt: a$1 !== undefined ? a$1 : undefined,
+    int: inp.int,
+    nullableFloat: a$2 !== undefined ? a$2 : undefined,
+    float: inp.float,
+    nullableBoolean: a$3 !== undefined ? a$3 : undefined,
+    boolean: inp.boolean,
+    nullableID: a$4 !== undefined ? a$4 : undefined,
+    id: inp.id
+  };
 }
 
-function makeVariables(nullableString, string, nullableInt, $$int, nullableFloat, $$float, nullableBoolean, $$boolean, nullableID, id, param) {
+function makeVariables(nullableString, string, nullableInt, int, nullableFloat, float, nullableBoolean, boolean, nullableID, id, param) {
   return {
-          nullableString: nullableString,
-          string: string,
-          nullableInt: nullableInt,
-          int: $$int,
-          nullableFloat: nullableFloat,
-          float: $$float,
-          nullableBoolean: nullableBoolean,
-          boolean: $$boolean,
-          nullableID: nullableID,
-          id: id
-        };
+    nullableString: nullableString,
+    string: string,
+    nullableInt: nullableInt,
+    int: int,
+    nullableFloat: nullableFloat,
+    float: float,
+    nullableBoolean: nullableBoolean,
+    boolean: boolean,
+    nullableID: nullableID,
+    id: id
+  };
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query ($nullableString: String, $string: String!, $nullableInt: Int, $int: Int!, $nullableFloat: Float, $float: Float!, $nullableBoolean: Boolean, $boolean: Boolean!, $nullableID: ID, $id: ID!)  {\nscalarsInput(arg: {nullableString: $nullableString, string: $string, nullableInt: $nullableInt, int: $int, nullableFloat: $nullableFloat, float: $float, nullableBoolean: $nullableBoolean, boolean: $boolean, nullableID: $nullableID, id: $id})  \n}\n",
   parse: parse,

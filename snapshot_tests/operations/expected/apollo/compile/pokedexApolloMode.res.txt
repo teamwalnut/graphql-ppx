@@ -2,15 +2,15 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.pokemon;
-  var tmp;
+  let value$1 = value.pokemon;
+  let tmp;
   if (value$1 == null) {
     tmp = undefined;
   } else {
-    var value$2 = value$1.name;
+    let value$2 = value$1.name;
     tmp = {
       __typename: value$1.__typename,
       id: value$1.id,
@@ -18,18 +18,18 @@ function parse(value) {
     };
   }
   return {
-          pokemon: tmp
-        };
+    pokemon: tmp
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.pokemon;
-  var pokemon;
+  let value$1 = value.pokemon;
+  let pokemon;
   if (value$1 !== undefined) {
-    var value$2 = value$1.name;
-    var name = value$2 !== undefined ? value$2 : null;
-    var value$3 = value$1.id;
-    var value$4 = value$1.__typename;
+    let value$2 = value$1.name;
+    let name = value$2 !== undefined ? value$2 : null;
+    let value$3 = value$1.id;
+    let value$4 = value$1.__typename;
     pokemon = {
       __typename: value$4,
       id: value$3,
@@ -39,23 +39,23 @@ function serialize(value) {
     pokemon = null;
   }
   return {
-          pokemon: pokemon
-        };
+    pokemon: pokemon
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query   {\npokemon(name: \"Pikachu\")  {\n__typename  \nid  \nname  \n}\n\n}\n",
   parse: parse,

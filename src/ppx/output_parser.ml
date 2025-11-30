@@ -50,8 +50,8 @@ let make_error_raiser message =
       [%expr raise (Failure ("graphql-ppx: " ^ [%e message]))]
     else [%expr raise (Failure "Unexpected GraphQL query response")]
   else if Ppx_config.verbose_error_handling () then
-    [%expr Js.Exn.raiseError ("graphql-ppx: " ^ [%e message])]
-  else [%expr Js.Exn.raiseError "Unexpected GraphQL query response"]
+    [%expr JsError.throwWithError ("graphql-ppx: " ^ [%e message])]
+  else [%expr JsError.throwWithError "Unexpected GraphQL query response"]
 
 let raw_value loc = ([%expr value] [@metaloc loc])
 
@@ -112,26 +112,29 @@ let generate_fragment_parse_fun config loc name arguments definition =
                ~loc:(config.map_loc type_span |> Output_utils.conv_loc)
                type_ None ))
   in
-  Ast_helper.Exp.apply
-    ~loc:(loc |> Output_utils.conv_loc)
-    ident
-    (List.append labeled_args
-       [
-         ( Labelled "fragmentName",
-           Ast_helper.Exp.variant ~loc:(loc |> Output_utils.conv_loc) name None
-         );
-         ( Nolabel,
-           match config.native with
-           | true ->
-             Ast_helper.Exp.apply
-               (Ast_helper.Exp.ident
-                  {
-                    loc = Location.none;
-                    txt = Longident.parse (name ^ ".unsafe_fromJson");
-                  })
-               [ (Nolabel, ident_from_string "value") ]
-           | false -> ident_from_string ~loc:(conv_loc loc) "value" );
-       ])
+  Uncurried_utils.add_uapp
+    (Ast_helper.Exp.apply
+       ~loc:(loc |> Output_utils.conv_loc)
+       ident
+       (List.append labeled_args
+          [
+            ( Labelled "fragmentName",
+              Ast_helper.Exp.variant
+                ~loc:(loc |> Output_utils.conv_loc)
+                name None );
+            ( Nolabel,
+              match config.native with
+              | true ->
+                Uncurried_utils.add_uapp
+                  (Ast_helper.Exp.apply
+                     (Ast_helper.Exp.ident
+                        {
+                          loc = Location.none;
+                          txt = Longident.parse (name ^ ".unsafe_fromJson");
+                        })
+                     [ (Nolabel, ident_from_string "value") ])
+              | false -> ident_from_string ~loc:(conv_loc loc) "value" );
+          ]))
 
 let generate_solo_fragment_spread_decoder config loc name arguments definition =
   generate_fragment_parse_fun config loc name arguments definition
@@ -155,7 +158,7 @@ let rec generate_nullable_decoder config loc inner path definition =
     [@metaloc loc]
   | false ->
     [%expr
-      match Js.toOption value with
+      match Nullable.toOption value with
       | Some value -> Some [%e generate_parser config path definition inner]
       | None -> None]
     [@metaloc loc]
@@ -173,13 +176,12 @@ and generate_array_decoder config loc inner path definition =
       | _ -> [||]]
     [@metaloc loc]
   | false ->
-    let callback = 
+    let callback =
       Uncurried_utils.wrap_function_exp_uncurried
         [%expr fun value -> [%e generate_parser config path definition inner]]
     in
-    Uncurried_utils.add_uapp
-      [%expr Array.map value [%e callback]]
-    [@metaloc loc]
+    (Uncurried_utils.add_uapp
+       [%expr Array.map value [%e callback]] [@metaloc loc])
 
 and generate_custom_decoder config loc ident inner path definition =
   ([%expr

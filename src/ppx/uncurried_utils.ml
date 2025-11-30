@@ -4,7 +4,7 @@ open Graphql_compiler
 open Output_utils
 
 (* Check if we should use uncurried mode - only for ReScript (not native OCaml) *)
-let should_use_uncurried () = 
+let should_use_uncurried () =
   Ppx_config.uncurried () && not (Ppx_config.native ())
 
 let function_expression_uncurried ?(loc = Location.none) ~arity funExpr =
@@ -152,5 +152,5 @@ let add_attrs attrs e = { e with pexp_attributes = attrs }
 let add_uapp e =
   add_attrs
     (if should_use_uncurried () then attr_uapp :: e.pexp_attributes
-    else e.pexp_attributes)
+     else e.pexp_attributes)
     e

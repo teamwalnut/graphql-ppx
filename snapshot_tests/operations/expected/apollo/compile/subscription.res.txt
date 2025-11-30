@@ -2,31 +2,31 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.simpleSubscription;
-  var typename = value$1["__typename"];
-  var tmp;
+  let value$1 = value.simpleSubscription;
+  let typename = value$1["__typename"];
+  let tmp;
   switch (typename) {
     case "Dog" :
-        tmp = {
-          NAME: "Dog",
-          VAL: {
-            __typename: value$1.__typename,
-            name: value$1.name
-          }
-        };
-        break;
+      tmp = {
+        NAME: "Dog",
+        VAL: {
+          __typename: value$1.__typename,
+          name: value$1.name
+        }
+      };
+      break;
     case "Human" :
-        tmp = {
-          NAME: "Human",
-          VAL: {
-            __typename: value$1.__typename,
-            name: value$1.name
-          }
-        };
-        break;
+      tmp = {
+        NAME: "Human",
+        VAL: {
+          __typename: value$1.__typename,
+          name: value$1.name
+        }
+      };
+      break;
     default:
       tmp = {
         NAME: "FutureAddedValue",
@@ -34,47 +34,47 @@ function parse(value) {
       };
   }
   return {
-          simpleSubscription: tmp
-        };
+    simpleSubscription: tmp
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.simpleSubscription;
-  var variant = value$1.NAME;
-  var simpleSubscription;
+  let value$1 = value.simpleSubscription;
+  let variant = value$1.NAME;
+  let simpleSubscription;
   if (variant === "FutureAddedValue") {
     simpleSubscription = value$1.VAL;
   } else if (variant === "Dog") {
-    var value$2 = value$1.VAL.name;
+    let value$2 = value$1.VAL.name;
     simpleSubscription = {
       __typename: "Dog",
       name: value$2
     };
   } else {
-    var value$3 = value$1.VAL.name;
+    let value$3 = value$1.VAL.name;
     simpleSubscription = {
       __typename: "Human",
       name: value$3
     };
   }
   return {
-          simpleSubscription: simpleSubscription
-        };
+    simpleSubscription: simpleSubscription
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "subscription   {\nsimpleSubscription  {\n__typename\n...on Dog   {\n__typename  \nname  \n}\n\n...on Human   {\n__typename  \nname  \n}\n\n}\n\n}\n",
   parse: parse,

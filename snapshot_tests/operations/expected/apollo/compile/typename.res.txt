@@ -2,42 +2,42 @@
 'use strict';
 
 
-var Raw = {};
+let Raw = {};
 
 function parse(value) {
-  var value$1 = value.first;
-  var value$2 = value$1.inner;
-  var tmp;
+  let value$1 = value.first;
+  let value$2 = value$1.inner;
+  let tmp;
   if (value$2 == null) {
     tmp = undefined;
   } else {
-    var value$3 = value$2.inner;
+    let value$3 = value$2.inner;
     tmp = {
       __typename: value$2.__typename,
       inner: !(value$3 == null) ? ({
-            __typename: value$3.__typename,
-            field: value$3.field
-          }) : undefined
+          __typename: value$3.__typename,
+          field: value$3.field
+        }) : undefined
     };
   }
   return {
-          first: {
-            __typename: value$1.__typename,
-            inner: tmp
-          }
-        };
+    first: {
+      __typename: value$1.__typename,
+      inner: tmp
+    }
+  };
 }
 
 function serialize(value) {
-  var value$1 = value.first;
-  var value$2 = value$1.inner;
-  var inner;
+  let value$1 = value.first;
+  let value$2 = value$1.inner;
+  let inner;
   if (value$2 !== undefined) {
-    var value$3 = value$2.inner;
-    var inner$1;
+    let value$3 = value$2.inner;
+    let inner$1;
     if (value$3 !== undefined) {
-      var value$4 = value$3.field;
-      var value$5 = value$3.__typename;
+      let value$4 = value$3.field;
+      let value$5 = value$3.__typename;
       inner$1 = {
         __typename: value$5,
         field: value$4
@@ -45,7 +45,7 @@ function serialize(value) {
     } else {
       inner$1 = null;
     }
-    var value$6 = value$2.__typename;
+    let value$6 = value$2.__typename;
     inner = {
       __typename: value$6,
       inner: inner$1
@@ -53,29 +53,29 @@ function serialize(value) {
   } else {
     inner = null;
   }
-  var value$7 = value$1.__typename;
-  var first = {
+  let value$7 = value$1.__typename;
+  let first = {
     __typename: value$7,
     inner: inner
   };
   return {
-          first: first
-        };
+    first: first
+  };
 }
 
-function serializeVariables(param) {
+function serializeVariables() {
   
 }
 
-function makeVariables(param) {
+function makeVariables() {
   
 }
 
-function makeDefaultVariables(param) {
+function makeDefaultVariables() {
   
 }
 
-var MyQuery = {
+let MyQuery = {
   Raw: Raw,
   query: "query   {\nfirst: nestedObject  {\n__typename  \ninner  {\n__typename  \ninner  {\n__typename  \nfield  \n}\n\n}\n\n}\n\n}\n",
   parse: parse,
