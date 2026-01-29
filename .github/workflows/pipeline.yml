@@ -9,8 +9,12 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        os: [ubuntu-22.04, macOS-14]
+        os: [ubuntu-22.04, macOS-14, windows-latest]
         arch: [x64, arm64]
+        exclude:
+          # Windows doesn't have standard arm64 runners
+          - os: windows-latest
+            arch: arm64
 
     steps:
       - name: Checkout repository
@@ -143,12 +147,12 @@ jobs:
           name: macOS-14-x64
           path: binaries/darwin-x64
 
-      # - name: Download windows artifacts
-      #   if: success()
-      #   uses: actions/download-artifact@master
-      #   with:
-      #     name: windows-latest
-      #     path: binaries/windows
+      - name: Download windows artifacts (x64)
+        if: success()
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-x64
+          path: binaries/win-x64
 
       - name: Move artifacts
         if: success()
@@ -156,7 +160,7 @@ jobs:
           mkdir -p bin
           mv binaries/darwin-x64/bin.exe bin/graphql-ppx-darwin-x64.exe
           mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
-          # mv binaries/windows/bin.exe bin/graphql-ppx-win-x64.exe
+          mv binaries/win-x64/bin.exe bin/graphql-ppx-win-x64.exe
           mv binaries/linux-x64/bin.exe bin/graphql-ppx-linux-x64.exe
           mv binaries/linux-arm64/bin.exe bin/graphql-ppx-linux-arm64.exe
 
