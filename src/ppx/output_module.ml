@@ -1005,15 +1005,20 @@ let generate_fragment_implementation config name
       | Some { Source_pos.item = variable_definitions } -> variable_definitions
       | None -> [])
   in
+  let param_var = { txt = "__param"; loc = Location.none } in
+  let param_ident = { txt = Longident.Lident "__param"; loc = Location.none } in
   let verifyName =
-    Ast_helper.Exp.function_
-      [
-        Ast_helper.Exp.case
-          (Ast_helper.Pat.variant name None)
-          (Ast_helper.Exp.construct
-             { txt = Longident.Lident "()"; loc = Location.none }
-             None);
-      ]
+    Ast_helper.Exp.fun_ Nolabel None
+      (Ast_helper.Pat.var param_var)
+      (Ast_helper.Exp.match_
+         (Ast_helper.Exp.ident param_ident)
+         [
+           Ast_helper.Exp.case
+             (Ast_helper.Pat.variant name None)
+             (Ast_helper.Exp.construct
+                { txt = Longident.Lident "()"; loc = Location.none }
+                None);
+         ])
   in
   let type_name = base_type_name (Option.get_or_else "t" type_name) in
   let contents =
