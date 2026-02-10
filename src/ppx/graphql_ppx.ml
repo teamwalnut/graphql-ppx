@@ -1110,5 +1110,5 @@ let args =
 
 let () =
   List.iter (fun (k, spec, doc) -> Ppxlib.Driver.add_arg k spec ~doc) args;
-  Ppxlib.Driver.register_transformation ~preprocess_impl:structure_mapper
-    ~preprocess_intf:signature_mapper "graphql"
+  Ppxlib.Driver.register_transformation ~impl:structure_mapper
+    ~intf:signature_mapper "graphql"
