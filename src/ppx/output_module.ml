@@ -177,25 +177,34 @@ let rec emit_json config = function
                  emit_json config value;
                ]))
     in
-    add_uapp [%expr Js.Json.object_ (Js.Dict.fromArray [%e pairs])]
+    add_uapp
+      (Ast_helper.Exp.apply
+         (Ast_helper.Exp.ident
+            {
+              txt =
+                Longident.Ldot
+                  (Longident.Ldot (Longident.Lident "JSON", "Encode"), "object");
+              loc = Location.none;
+            })
+         [ (Nolabel, [%expr Dict.fromArray [%e pairs]]) ])
   | `List ls ->
     let values = Ast_helper.Exp.array (List.map (emit_json config) ls) in
-    add_uapp [%expr Js.Json.array [%e values]]
-  | `Bool true -> [%expr Js.Json.boolean true]
-  | `Bool false -> [%expr Js.Json.boolean false]
-  | `Null -> [%expr Obj.magic Js.Undefined.empty]
+    add_uapp [%expr JSON.Encode.array [%e values]]
+  | `Bool true -> [%expr JSON.Encode.bool true]
+  | `Bool false -> [%expr JSON.Encode.bool false]
+  | `Null -> [%expr JSON.Encode.null]
   | `String s ->
     add_uapp
       [%expr
-        Js.Json.string
+        JSON.Encode.string
           [%e Ast_helper.Exp.constant (Pconst_string (s, Location.none, None))]]
   | `Int i ->
     add_uapp
       [%expr
-        Js.Json.number
+        JSON.Encode.float
           [%e Ast_helper.Exp.constant (Pconst_float (string_of_int i, None))]]
   | `StringExpr parts ->
-    add_uapp [%expr Js.Json.string [%e emit_printed_query ~config parts]]
+    add_uapp [%expr JSON.Encode.string [%e emit_printed_query ~config parts]]
 
 let wrap_template_tag ?import ?location ?template_tag source =
   match (import, location, template_tag) with
@@ -605,10 +614,10 @@ let generate_operation_signature config variable_defs res_structure =
       ]
     | false ->
       [
-        [%sigi: external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-        [%sigi: external toJson : Raw.t -> Js.Json.t = "%identity"];
+        [%sigi: external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+        [%sigi: external toJson : Raw.t -> JSON.t = "%identity"];
         [%sigi:
-          external variablesToJson : Raw.t_variables -> Js.Json.t = "%identity"];
+          external variablesToJson : Raw.t_variables -> JSON.t = "%identity"];
       ]);
   ]
   |> List.concat
@@ -796,10 +805,10 @@ let generate_operation_implementation config variable_defs _has_error operation
           ]
         | false ->
           [
-            [%stri external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-            [%stri external toJson : Raw.t -> Js.Json.t = "%identity"];
+            [%stri external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+            [%stri external toJson : Raw.t -> JSON.t = "%identity"];
             [%stri
-              external variablesToJson : Raw.t_variables -> Js.Json.t
+              external variablesToJson : Raw.t_variables -> JSON.t
                 = "%identity"];
           ]);
       ]
@@ -927,8 +936,8 @@ let generate_fragment_signature config name variable_definitions _has_error
         ]
       | false ->
         [
-          [%sigi: external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-          [%sigi: external toJson : Raw.t -> Js.Json.t = "%identity"];
+          [%sigi: external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+          [%sigi: external toJson : Raw.t -> JSON.t = "%identity"];
         ]);
     ]
 
@@ -1052,8 +1061,8 @@ let generate_fragment_implementation config name
         ]
       | false ->
         [
-          [%stri external unsafe_fromJson : Js.Json.t -> Raw.t = "%identity"];
-          [%stri external toJson : Raw.t -> Js.Json.t = "%identity"];
+          [%stri external unsafe_fromJson : JSON.t -> Raw.t = "%identity"];
+          [%stri external toJson : Raw.t -> JSON.t = "%identity"];
         ]);
     ]
     |> List.concat

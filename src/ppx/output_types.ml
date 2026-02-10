@@ -13,8 +13,8 @@ let make_error_raiser message =
       [%expr raise (Failure ("graphql-ppx: " ^ [%e message]))]
     else [%expr raise (Failure "Unexpected GraphQL query response")]
   else if Ppx_config.verbose_error_handling () then
-    [%expr Js.Exn.raiseError ("graphql-ppx: " ^ [%e message])]
-  else [%expr Js.Exn.raiseError "Unexpected GraphQL query response"]
+    [%expr throw (Exn.Error ("graphql-ppx: " ^ [%e message]))]
+  else [%expr throw (Exn.Error "Unexpected GraphQL query response")]
 
 let const_str_expr s = Ast_helper.Exp.constant (Pconst_string (s, loc, None))
 
@@ -24,7 +24,7 @@ let rec generate_type ?atLoc ~config ~path ~raw = function
     if raw then
       base_type
         ~inner:[ generate_type ~config ~path ~raw inner ]
-        "Js.Nullable.t"
+        "Nullable.t"
     else
       base_type ?loc:atLoc
         ~inner:[ generate_type ~config ~path ~raw inner ]
@@ -44,7 +44,7 @@ let rec generate_type ?atLoc ~config ~path ~raw = function
     base_type ?loc:atLoc
       (match Ppx_config.native () with
       | true -> "Graphql_ppx_runtime.Json.t"
-      | false -> "Js.Json.t")
+      | false -> "JSON.t")
   | Res_object { type_name } | Res_record { type_name } -> (
     match (type_name, raw) with
     | Some type_name, false -> base_type ?loc:atLoc type_name
@@ -292,7 +292,7 @@ let generate_variant_union ~emit_locations config
                     base_type
                       (match Ppx_config.native () with
                       | true -> "Graphql_ppx_runtime.Json.t"
-                      | false -> "Js.Json.t");
+                      | false -> "JSON.t");
                   ] );
             prf_loc =
               (match emit_locations with
@@ -631,7 +631,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
     base_type ?loc
       (match Ppx_config.native () with
       | true -> "Graphql_ppx_runtime.Json.t"
-      | false -> "Js.Json.t")
+      | false -> "JSON.t")
   | Type (Enum enum_meta) ->
     if raw then base_type "string"
     else
@@ -662,7 +662,7 @@ let rec generate_arg_type ?(nulls = true) raw originalLoc =
     | true ->
       base_type ?loc
         ~inner:[ generate_arg_type raw (conv_loc_from_ast Location.none) inner ]
-        (match raw with true -> "Js.Nullable.t" | false -> "option")
+        (match raw with true -> "Nullable.t" | false -> "option")
     | false -> generate_arg_type raw (conv_loc_from_ast Location.none) inner)
   | List inner ->
     base_type ?loc

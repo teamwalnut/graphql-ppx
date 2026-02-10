@@ -82,8 +82,8 @@ let rec serialize_type = function
       [%expr
         fun a ->
           match a with
-          | None -> Js.Nullable.undefined
-          | Some b -> Js.Nullable.return ([%e serialize_type inner] b)])
+          | None -> Nullable.undefined
+          | Some b -> Nullable.make ([%e serialize_type inner] b)])
   | List inner -> (
     match Ppx_config.native () with
     | true ->
@@ -92,7 +92,7 @@ let rec serialize_type = function
           `List
             (Array.map (fun b -> [%e serialize_type inner] b) a |> Array.to_list)]
     | false ->
-      [%expr fun a -> Js.Array2.map a (fun b -> [%e serialize_type inner] b)])
+      [%expr fun a -> Array.map a (fun b -> [%e serialize_type inner] b)])
   | Type (Object _) -> [%expr fun v -> None]
   | Type (Union _) -> [%expr fun v -> None]
   | Type (Interface _) -> [%expr fun v -> None]
@@ -361,9 +361,9 @@ let rec generate_nullable_encoder config loc inner path definition =
     [%expr
       match value with
       | Some value ->
-        Js.Nullable.return
+        Nullable.make
           [%e generate_serializer config path definition None inner]
-      | None -> Js.Nullable.null]
+      | None -> Nullable.null]
     [@metaloc loc]
 
 and generate_array_encoder config loc inner path definition =
@@ -378,7 +378,7 @@ and generate_array_encoder config loc inner path definition =
     [@metaloc loc]
   | false ->
     [%expr
-      Js.Array2.map value (fun value ->
+      Array.map value (fun value ->
         [%e generate_serializer config path definition None inner])]
     [@metaloc loc]
 
@@ -431,7 +431,7 @@ and generate_object_encoder config loc _name fields path definition
     | [] -> (
       match Ppx_config.native () with
       | true -> [%expr `Assoc []]
-      | false -> [%expr Js.Dict.empty])
+      | false -> [%expr Dict.fromArray [||]])
     | fields ->
       let record =
         Ast_helper.Exp.record
@@ -548,7 +548,7 @@ and generate_object_encoder config loc _name fields path definition
                    (Obj.magic
                       ([%e ident_from_string (name ^ ".serialize")]
                          [%e get_field key existing_record path])
-                     : Js.Json.t)])
+                     : JSON.t)])
                :: acc)
            []
       |> List.rev
@@ -571,7 +571,7 @@ and generate_object_encoder config loc _name fields path definition
                [%e
                  generate_poly_variant_interface_encoder config loc
                    interface_name fragments path definition]
-              : Js.Json.t)])
+              : JSON.t)])
         :: fields
     in
     match Ppx_config.native () with
@@ -582,10 +582,10 @@ and generate_object_encoder config loc _name fields path definition
     | false ->
       [%expr
         (Obj.magic
-           (Js.Array2.reduce
+           (Array.reduce
               [%e fields |> Ast_helper.Exp.array]
-              Graphql_ppx_runtime.deepMerge
-              (Obj.magic [%e do_obj_constructor ()] : Js.Json.t))
+              (Obj.magic [%e do_obj_constructor ()] : JSON.t)
+              Graphql_ppx_runtime.deepMerge)
           : [%t base_type_name ("Raw." ^ generate_type_name path)])]
   in
   match is_opaque with
@@ -627,7 +627,7 @@ and generate_poly_variant_union_encoder config _loc _name fragments _exhaustive
                [%expr
                  (Obj.magic
                     (Graphql_ppx_runtime.assign_typename
-                       (Obj.magic [%e expr] : Js.Json.t)
+                       (Obj.magic [%e expr] : JSON.t)
                        [%e const_str_expr type_name])
                    : [%t raw_type_name])]
              | _ -> [%expr (Obj.magic [%e expr] : [%t raw_type_name])])))
@@ -660,7 +660,7 @@ and generate_poly_variant_selection_set_encoder _config _loc _name _fields _path
   let e =
     match Ppx_config.native () with
     | true -> [%expr `Null]
-    | false -> [%expr Obj.magic Js.Json.null]
+    | false -> [%expr Obj.magic JSON.Encode.null]
   in
   [%expr
     let _temp = value in
@@ -697,7 +697,7 @@ and generate_poly_variant_interface_encoder config _loc name fragments path
       | true -> [%expr `Assoc []]
       | false ->
         [%expr
-          (Obj.magic (Js.Dict.empty ())
+          (Obj.magic (Dict.fromArray [||])
             : [%t base_type_name ("Raw." ^ generate_type_name (name :: path))])])
   in
   let typename_matcher =

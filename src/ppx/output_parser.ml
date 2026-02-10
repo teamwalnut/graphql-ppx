@@ -50,8 +50,8 @@ let make_error_raiser message =
       [%expr raise (Failure ("graphql-ppx: " ^ [%e message]))]
     else [%expr raise (Failure "Unexpected GraphQL query response")]
   else if Ppx_config.verbose_error_handling () then
-    [%expr Js.Exn.raiseError ("graphql-ppx: " ^ [%e message])]
-  else [%expr Js.Exn.raiseError "Unexpected GraphQL query response"]
+    [%expr throw (Exn.Error ("graphql-ppx: " ^ [%e message]))]
+  else [%expr throw (Exn.Error "Unexpected GraphQL query response")]
 
 let raw_value loc = ([%expr value] [@metaloc loc])
 
@@ -174,7 +174,7 @@ and generate_array_decoder config loc inner path definition =
     [@metaloc loc]
   | false ->
     [%expr
-      Js.Array2.map value (fun value ->
+      Array.map value (fun value ->
         [%e generate_parser config path definition inner])]
     [@metaloc loc]
 
@@ -207,7 +207,7 @@ and generate_object_decoder ~config ~loc ~name:_name ~path ~definition
                 | true ->
                   [%expr
                     Obj.magic
-                      (Js.Dict.unsafeGet (Obj.magic value)
+                      (Dict.getUnsafe (Obj.magic value)
                          [%e const_str_expr key])]
                 | false ->
                   Ast_helper.Exp.field
@@ -286,13 +286,13 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
       | false ->
         [%expr
           let temp =
-            Js.Dict.unsafeGet (Obj.magic value) [%e const_str_expr field]
+            Dict.getUnsafe (Obj.magic value) [%e const_str_expr field]
           in
-          match Js.Json.decodeNull temp with
+          match JSON.Decode.null temp with
+          | Some _ -> [%e generator_loop next]
           | None ->
             let value = temp in
-            [%e variant_decoder]
-          | Some _ -> [%e generator_loop next]]
+            [%e variant_decoder]]
         [@metaloc loc])
     | [] ->
       make_error_raiser
@@ -313,7 +313,19 @@ and generate_poly_variant_selection_set_decoder config loc name fields path
     [@metaloc loc]
   | false ->
     [%expr
-      match Js.Json.decodeObject (Obj.magic value : Js.Json.t) with
+      match
+          (Ast_helper.Exp.apply
+             (Ast_helper.Exp.ident
+                {
+                  txt =
+                    Longident.Ldot
+                      ( Longident.Ldot
+                          (Longident.Lident "JSON", "Decode"),
+                        "object" );
+                  loc = Location.none;
+                })
+             [ (Nolabel, [%expr (Obj.magic value : JSON.t)]) ])
+          with
       | None ->
         [%e
           make_error_raiser
@@ -370,7 +382,7 @@ and generate_poly_variant_interface_decoder config loc _name fragments path
   | false ->
     [%expr
       let typename =
-        (Obj.magic (Js.Dict.unsafeGet (Obj.magic value) "__typename") : string)
+        (Obj.magic (Dict.getUnsafe (Obj.magic value) "__typename") : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
     [@metaloc loc]
@@ -437,7 +449,7 @@ and generate_poly_variant_union_decoder config loc _name fragments
                          Location.txt = Longident.parse "value";
                          loc = Location.none;
                        }]
-                  : Js.Json.t)]))
+                  : JSON.t)]))
   in
   let typename_matcher =
     Ast_helper.Exp.match_ [%expr typename]
@@ -456,7 +468,7 @@ and generate_poly_variant_union_decoder config loc _name fragments
   else
     [%expr
       let typename =
-        (Obj.magic (Js.Dict.unsafeGet (Obj.magic value) "__typename") : string)
+        (Obj.magic (Dict.getUnsafe (Obj.magic value) "__typename") : string)
       in
       ([%e typename_matcher] : [%t base_type_name (generate_type_name path)])]
     [@metaloc loc]
