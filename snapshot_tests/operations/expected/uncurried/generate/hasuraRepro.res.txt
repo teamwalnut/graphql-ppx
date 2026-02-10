@@ -28,23 +28,19 @@ function back to the original JSON-compatible data ")
 name  
 }
 "
-  let parse = (
-    (value): t => {
-      name: {
-        let value = (value: Raw.t).name
-        value
-      },
-    }: Raw.t => t
-  )
-  let serialize = (
-    (value): Raw.t => {
-      let name = {
-        let value = (value: t).name
-        value
-      }
-      {name: name}
-    }: t => Raw.t
-  )
+  let parse = (value): t => {
+    name: {
+      let value = (value: Raw.t).name
+      value
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let name = {
+      let value = (value: t).name
+      value
+    }
+    {name: name}
+  }
   let verifyArgsAndParse = (~fragmentName as _Dog: [#Dog], value: Raw.t) => parse(value)
   let verifyName = x => switch x {
   | #Dog => ()
@@ -118,22 +114,24 @@ hasuraRepro(orderBy: [{id: desc}], block: {number: $blockNumber, type: $type})  
     }
     {hasuraRepro: hasuraRepro}
   }
-  let serializeVariables: t_variables => Raw.t_variables = inp => {
-    blockNumber: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).blockNumber),
-    type_: (
-      a =>
-        switch a {
-        | None => Js.Nullable.undefined
-        | Some(b) => Js.Nullable.return((a => a)(b))
-        }
-    )((inp: t_variables).type_),
-  }
+  let serializeVariables: t_variables => Raw.t_variables = (
+    inp => {
+      blockNumber: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).blockNumber),
+      type_: (
+        a =>
+          switch a {
+          | None => Js.Nullable.undefined
+          | Some(b) => Js.Nullable.return((a => a)(b))
+          }
+      )((inp: t_variables).type_),
+    }: t_variables => Raw.t_variables
+  )
   let makeVariables = (~blockNumber=?, ~type_=?, ()): t_variables => {blockNumber, type_}
   let makeDefaultVariables = () => makeVariables()
   external unsafe_fromJson: Js.Json.t => Raw.t = "%identity"

@@ -541,31 +541,27 @@ name
 __typename  
 }
 "
-    let parse = (
-      (value): named => {
-        name: {
-          let value = (value: Raw.t).name
-          value
-        },
-        __typename: {
-          let value = (value: Raw.t).__typename
-          value
-        },
-      }: Raw.t => named
-    )
-    let serialize = (
-      (value): Raw.t => {
-        let __typename = {
-          let value = (value: named).__typename
-          value
-        }
-        and name = {
-          let value = (value: named).name
-          value
-        }
-        {name, __typename}
-      }: named => Raw.t
-    )
+    let parse = (value): named => {
+      name: {
+        let value = (value: Raw.t).name
+        value
+      },
+      __typename: {
+        let value = (value: Raw.t).__typename
+        value
+      },
+    }
+    let serialize = (value): Raw.t => {
+      let __typename = {
+        let value = (value: named).__typename
+        value
+      }
+      and name = {
+        let value = (value: named).name
+        value
+      }
+      {name, __typename}
+    }
     let verifyArgsAndParse = (~fragmentName as _DogFields: [#DogFields], value: Raw.t) =>
       parse(value)
     let verifyName = x => switch x {

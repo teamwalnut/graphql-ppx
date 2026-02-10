@@ -266,37 +266,39 @@ var Raw$5 = {};
 var query$3 = "query MyQuery($arg1: String)  {\nl1: lists  {\n...ListFragment   \n}\n\nl2: lists  {\n...ListFragment   \n...ListFragment   \n}\n\nl3: lists  {\nnullableOfNullable  \n...ListFragment   \n...ListFragment   \n}\n\nl4: lists  {\nnullableOfNullable  \n...InlineListFragment   \n}\n\nl5: lists  {\n...FragmentWithArgs   \n}\n\n}\nfragment FragmentWithArgs on Lists   {\nlistWithArg(arg1: $arg1)  \n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\nfragment InlineListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$5(value) {
-  var value$1 = value.l2;
-  var value$2 = value.l3;
-  var value$3 = value$2["nullableOfNullable"];
-  var value$4 = value.l4;
-  var value$5 = value$4["nullableOfNullable"];
+  var value$1 = value.l1;
+  var value$2 = value.l2;
+  var value$3 = value.l3;
+  var value$4 = value$3["nullableOfNullable"];
+  var value$5 = value.l4;
+  var value$6 = value$5["nullableOfNullable"];
+  var value$7 = value.l5;
   return {
-          l1: parse(value.l1),
+          l1: parse(value$1),
           l2: {
-            frag1: parse(value$1),
-            frag2: parse(value$1)
-          },
-          l3: {
-            nullableOfNullable: !(value$3 == null) ? value$3.map(function (value) {
-                    if (!(value == null)) {
-                      return value;
-                    }
-                    
-                  }) : undefined,
             frag1: parse(value$2),
             frag2: parse(value$2)
           },
-          l4: {
-            nullableOfNullable: !(value$5 == null) ? value$5.map(function (value) {
+          l3: {
+            nullableOfNullable: !(value$4 == null) ? value$4.map(function (value) {
                     if (!(value == null)) {
                       return value;
                     }
                     
                   }) : undefined,
-            inlineListFragment: parse$3(value$4)
+            frag1: parse(value$3),
+            frag2: parse(value$3)
           },
-          l5: parse$2(value.l5)
+          l4: {
+            nullableOfNullable: !(value$6 == null) ? value$6.map(function (value) {
+                    if (!(value == null)) {
+                      return value;
+                    }
+                    
+                  }) : undefined,
+            inlineListFragment: parse$3(value$5)
+          },
+          l5: parse$2(value$7)
         };
 }
 
@@ -380,8 +382,9 @@ var Raw$6 = {};
 var query$4 = "query   {\nlists  {\n...ListFragment   \n}\n\n}\nfragment ListFragment on Lists   {\nnullableOfNullable  \nnullableOfNonNullable  \n}\n";
 
 function parse$6(value) {
+  var value$1 = value.lists;
   return {
-          lists: parse(value.lists)
+          lists: parse(value$1)
         };
 }
 

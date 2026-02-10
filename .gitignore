@@ -2,6 +2,7 @@ _esy
 .merlin
 node_modules
 _build
+_opam
 _release
 *.byte
 *.native

@@ -910,14 +910,16 @@ let generate_fragment_signature config name variable_definitions _has_error
                 | (_, Some _, _), Some return_type ->
                   return_type
                 | _ -> "string")]
-            [@@ocaml.doc " the GraphQL fragment "]];
-        [%sigi:
-          val parse : Raw.t -> [%t type_name]
+          [@@ocaml.doc " the GraphQL fragment "]];
+        wrap_sig_uncurried_fn
+          [%sigi:
+            val parse : Raw.t -> [%t type_name]
             [@@ocaml.doc
               " Parse the raw JSON-compatible GraphQL data into ReasonML data \
                types "]];
-        [%sigi:
-          val serialize : [%t type_name] -> Raw.t
+        wrap_sig_uncurried_fn
+          [%sigi:
+            val serialize : [%t type_name] -> Raw.t
             [@@ocaml.doc
               " Serialize the ReasonML GraphQL data that was parsed using the \
                parse\n\
@@ -1029,7 +1031,6 @@ let generate_fragment_implementation config name
                 None);
          ])
   in
-  let type_name = base_type_name (Option.get_or_else "t" type_name) in
   let contents =
     [
       [ [%stri [@@@ocaml.warning "-32-30"]] ];
@@ -1038,13 +1039,8 @@ let generate_fragment_implementation config name
       graphql_external config (Graphql_ast.Fragment fragment);
       [
         [%stri let query = [%e printed_query]];
-        wrap_as_uncurried_fn
-          [%stri
-            let parse = (fun value -> [%e parse_fn] : Raw.t -> [%t type_name])];
-        wrap_as_uncurried_fn
-          [%stri
-            let serialize =
-              (fun value -> [%e serialize_fn] : [%t type_name] -> Raw.t)];
+        wrap_as_uncurried_fn [%stri let parse value = [%e parse_fn]];
+        wrap_as_uncurried_fn [%stri let serialize value = [%e serialize_fn]];
       ];
       [
         [%stri let verifyArgsAndParse = [%e verify_parse]];

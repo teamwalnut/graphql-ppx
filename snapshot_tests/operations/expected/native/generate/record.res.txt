@@ -333,31 +333,27 @@ string
 int  
 }
 "
-    let parse = (
-      (value): t => {
-        string: {
-          let value = (value: Raw.t).string
-          value
-        },
-        int: {
-          let value = (value: Raw.t).int
-          value
-        },
-      }: Raw.t => t
-    )
-    let serialize = (
-      (value): Raw.t => {
-        let int = {
-          let value = (value: t).int
-          value
-        }
-        and string = {
-          let value = (value: t).string
-          value
-        }
-        {string, int}
-      }: t => Raw.t
-    )
+    let parse = (value): t => {
+      string: {
+        let value = (value: Raw.t).string
+        value
+      },
+      int: {
+        let value = (value: Raw.t).int
+        value
+      },
+    }
+    let serialize = (value): Raw.t => {
+      let int = {
+        let value = (value: t).int
+        value
+      }
+      and string = {
+        let value = (value: t).string
+        value
+      }
+      {string, int}
+    }
     let verifyArgsAndParse = (~fragmentName as _Fragment: [#Fragment], value: Raw.t) => parse(value)
     let verifyName = x => switch x {
     | #Fragment => ()
@@ -600,39 +596,35 @@ name
 barkVolume  
 }
 "
-    let parse = (
-      (value): t => {
-        __typename: {
-          let value = (value: Raw.t).__typename
-          value
-        },
-        name: {
-          let value = (value: Raw.t).name
-          value
-        },
-        barkVolume: {
-          let value = (value: Raw.t).barkVolume
-          value
-        },
-      }: Raw.t => t
-    )
-    let serialize = (
-      (value): Raw.t => {
-        let barkVolume = {
-          let value = (value: t).barkVolume
-          value
-        }
-        and name = {
-          let value = (value: t).name
-          value
-        }
-        and __typename = {
-          let value = (value: t).__typename
-          value
-        }
-        {__typename, name, barkVolume}
-      }: t => Raw.t
-    )
+    let parse = (value): t => {
+      __typename: {
+        let value = (value: Raw.t).__typename
+        value
+      },
+      name: {
+        let value = (value: Raw.t).name
+        value
+      },
+      barkVolume: {
+        let value = (value: Raw.t).barkVolume
+        value
+      },
+    }
+    let serialize = (value): Raw.t => {
+      let barkVolume = {
+        let value = (value: t).barkVolume
+        value
+      }
+      and name = {
+        let value = (value: t).name
+        value
+      }
+      and __typename = {
+        let value = (value: t).__typename
+        value
+      }
+      {__typename, name, barkVolume}
+    }
     let verifyArgsAndParse = (~fragmentName as _DogFragment: [#DogFragment], value: Raw.t) =>
       parse(value)
     let verifyName = x => switch x {

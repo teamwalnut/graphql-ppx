@@ -673,8 +673,9 @@ lists  {
 ${query$6}`;
 
 function parse$7(value) {
+  var value$1 = value.lists;
   return {
-          lists: parse$6(value.lists)
+          lists: parse$6(value$1)
         };
 }
 
@@ -719,8 +720,9 @@ lists  {
 ${query$6}`;
 
 function parse$8(value) {
+  var value$1 = value.lists;
   return {
-          lists: parse$6(value.lists)
+          lists: parse$6(value$1)
         };
 }
 
@@ -765,8 +767,9 @@ lists  {
 ${query$6}`;
 
 function parse$9(value) {
+  var value$1 = value.lists;
   return {
-          lists: parse$6(value.lists)
+          lists: parse$6(value$1)
         };
 }
 
@@ -864,25 +867,26 @@ var query$11 = ApolloClient.gql([
     ], query$10);
 
 function parse$11(value) {
-  var value$1 = value.variousScalars;
-  var value$2 = value$1.nullableString;
-  var value$3 = value$1.nullableInt;
-  var value$4 = value$1.nullableFloat;
-  var value$5 = value$1.nullableBoolean;
-  var value$6 = value$1.nullableID;
+  var value$1 = value.lists;
+  var value$2 = value.variousScalars;
+  var value$3 = value$2.nullableString;
+  var value$4 = value$2.nullableInt;
+  var value$5 = value$2.nullableFloat;
+  var value$6 = value$2.nullableBoolean;
+  var value$7 = value$2.nullableID;
   return {
-          lists: parse$10(value.lists),
+          lists: parse$10(value$1),
           variousScalars: {
-            nullableString: !(value$2 == null) ? value$2 : undefined,
-            string: value$1.string,
-            nullableInt: !(value$3 == null) ? value$3 : undefined,
-            int: value$1.int,
-            nullableFloat: !(value$4 == null) ? value$4 : undefined,
-            float: value$1.float,
-            nullableBoolean: !(value$5 == null) ? value$5 : undefined,
-            boolean: value$1.boolean,
-            nullableID: !(value$6 == null) ? value$6 : undefined,
-            id: value$1.id
+            nullableString: !(value$3 == null) ? value$3 : undefined,
+            string: value$2.string,
+            nullableInt: !(value$4 == null) ? value$4 : undefined,
+            int: value$2.int,
+            nullableFloat: !(value$5 == null) ? value$5 : undefined,
+            float: value$2.float,
+            nullableBoolean: !(value$6 == null) ? value$6 : undefined,
+            boolean: value$2.boolean,
+            nullableID: !(value$7 == null) ? value$7 : undefined,
+            id: value$2.id
           }
         };
 }
