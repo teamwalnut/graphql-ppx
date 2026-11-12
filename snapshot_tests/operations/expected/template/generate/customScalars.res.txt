@@ -1,0 +1,118 @@
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_customScalarField = {
+      nullable: Nullable.t<JSON.t>,
+      nonNullable: JSON.t,
+    }
+    type rec t = {
+      customScalarField: t_customScalarField,
+    }
+    type rec t_variables = {opt: Nullable.t<JSON.t>, req: JSON.t}
+  }
+  type rec t_customScalarField = {nullable: option<JSON.t>, nonNullable: JSON.t}
+  type rec t = {customScalarField: t_customScalarField}
+  type rec t_variables = {opt: option<JSON.t>, req: JSON.t}
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: t_variables => Raw.t_variables
+  let makeVariables: (~opt: JSON.t=?, ~req: JSON.t, unit) => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_customScalarField = {
+      nullable: Nullable.t<JSON.t>,
+      nonNullable: JSON.t,
+    }
+    type rec t = {
+      customScalarField: t_customScalarField,
+    }
+    type rec t_variables = {opt: Nullable.t<JSON.t>, req: JSON.t}
+  }
+  type rec t_customScalarField = {
+    nullable: option<JSON.t>,
+    nonNullable: JSON.t,
+  }
+  type rec t = {
+    customScalarField: t_customScalarField,
+  }
+  type rec t_variables = {opt: option<JSON.t>, req: JSON.t}
+  let query = "query ($opt: CustomScalar, $req: CustomScalar!)  {
+customScalarField(argOptional: $opt, argRequired: $req)  {
+nullable  
+nonNullable  
+}
+
+}
+"
+  let parse = (value): t => {
+    customScalarField: {
+      let value = (value: Raw.t).customScalarField
+      (
+        {
+          nullable: {
+            let value = (value: Raw.t_customScalarField).nullable
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          nonNullable: {
+            let value = (value: Raw.t_customScalarField).nonNullable
+            value
+          },
+        }: t_customScalarField
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let customScalarField = {
+      let value = (value: t).customScalarField
+      (
+        {
+          let nonNullable = {
+            let value = (value: t_customScalarField).nonNullable
+            value
+          }
+          and nullable = {
+            let value = (value: t_customScalarField).nullable
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullable,
+            nonNullable,
+          }
+        }: Raw.t_customScalarField
+      )
+    }
+    {
+      customScalarField: customScalarField,
+    }
+  }
+  let serializeVariables: t_variables => Raw.t_variables = inp => {
+    opt: @res.uapp
+    (
+      a =>
+        switch a {
+        | None => Nullable.undefined
+        | Some(b) => Nullable.make(@res.uapp (a => a)(b))
+        }
+    )((inp: t_variables).opt),
+    req: @res.uapp (a => a)((inp: t_variables).req),
+  }
+  let makeVariables = (~opt=?, ~req, ()): t_variables => {opt, req}
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+

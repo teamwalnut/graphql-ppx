@@ -1,0 +1,21 @@
+{
+  "name": "@illusionalsagacity/graphql-ppx",
+  "refmt": 3,
+  "package-specs": {
+    "module": "esmodule",
+    "in-source": true
+  },
+  "suffix": ".res.js",
+  "sources": [
+    {
+      "dir": "rescript-runtime",
+      "subdirs": true
+    }
+  ],
+  "graphql": {
+    "customFields": {
+      "DateTime": "DateTime",
+      "Color": "Color"
+    }
+  }
+}

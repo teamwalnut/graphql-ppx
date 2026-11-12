@@ -1,0 +1,289 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+interface User {
+  id: ID!
+}
+
+interface Name {
+  name: String!
+}
+
+interface Anonymous {
+  anonymousId: Int!
+}
+
+type AdminUser implements User & Name {
+  id: ID!
+  name: String!
+}
+
+type WorkspaceUser {
+  id: String!
+  firstname: String
+  lastname: String!
+}
+
+type Workspace {
+  id: String!
+  title: String!
+  image: String
+  description: String
+  user(id: String!): WorkspaceUser!
+}
+
+type AnonymousUser implements User & Anonymous {
+  id: ID!
+  anonymousId: Int!
+}
+
+type OtherUser implements User {
+  id: ID!
+}
+type Repost {
+  id: Int!
+}
+type Post {
+  reposts(arg: JsonInput): [Repost]!
+}
+type Query {
+  stringField: String!
+  variousScalars: VariousScalars!
+  lists: Lists!
+  users: [User!]!
+  post: Post!
+  recursiveRepro(input: problem_input!): Boolean!
+  hasuraRepro(orderBy: [hasuraObj], block: blockObj): Dog!
+  scalarsInput(arg: VariousScalarsInput!): String!
+  listsInput(arg: ListsInput!): String!
+  recursiveInput(arg: RecursiveInput!): String!
+  nonrecursiveInput(arg: NonrecursiveInput!): String!
+  enumInput(arg: SampleField!): String!
+  argNamedQuery(query: Int!): Int!
+  customScalarField(
+    argOptional: CustomScalar
+    argRequired: CustomScalar!
+  ): CustomScalarObject!
+  customFields: customFieldsResult!
+  deprecatedFields: deprecatedFieldsResult!
+  defaultObjectValueOnScalar(filter: JsonScalar!, arg: EmbeddedInput!): String!
+  invalidDefaultValues(
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    string: String
+    int: Int
+    float: Float
+    bool: Boolean
+  ): String!
+  invalidArgValues(
+    stringRequired: String!
+    string: String
+    custom: CustomScalar
+    obj: EmbeddedInput
+    id: ID
+    list: [String]
+  ): String!
+  invalidObjectValues(nonRec: NonrecursiveInput!, rec: RecursiveInput!): String!
+  invalidObjectValuesLst(embeddedList: [EmbeddedInputReq]!): String!
+
+  dogOrHuman: DogOrHuman!
+
+  nestedObject: NestedObject!
+}
+
+type Mutation {
+  mutationWithError: MutationWithErrorResult!
+  mutationForVariant: VariantTestResult!
+  optionalInputArgs(
+    required: String!
+    optional: String
+    anotherRequired: String!
+  ): String!
+}
+
+type Subscription {
+  simpleSubscription: DogOrHuman!
+}
+
+type MutationWithErrorResult {
+  value: SampleResult
+  errors: [SampleError!]
+}
+
+type SampleResult {
+  stringField: String!
+}
+
+type SampleError {
+  field: SampleField!
+  message: String!
+}
+
+enum SampleField {
+  FIRST
+  SECOND
+  THIRD
+}
+enum OrderBy {
+  asc
+  desc
+}
+
+input hasuraObj {
+  id: OrderBy
+}
+
+input blockObj {
+  number: Int
+  type: String
+}
+
+input this_will_be_duplicated {
+  id: String!
+}
+
+input nested_type {
+  the_problem: this_will_be_duplicated
+}
+
+input problem_input {
+  the_problem: this_will_be_duplicated
+  b: nested_type
+}
+
+type VariousScalars {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+
+type Lists {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+  listWithArg(arg1: String): [String]
+}
+
+input VariousScalarsInput {
+  nullableString: String
+  string: String!
+  nullableInt: Int
+  int: Int!
+  nullableFloat: Float
+  float: Float!
+  nullableBoolean: Boolean
+  boolean: Boolean!
+  nullableID: ID
+  id: ID!
+}
+
+input ListsInput {
+  nullableOfNullable: [String]
+  nullableOfNonNullable: [String!]
+  nonNullableOfNullable: [String]!
+  nonNullableOfNonNullable: [String!]!
+}
+
+input EmbeddedInput {
+  field: String
+}
+
+input EmbeddedInputReq {
+  field: String!
+}
+
+input NonrecursiveInput {
+  nonNullableField: String!
+  nullableArray: [String]
+  field: String
+  enum: SampleField
+  embeddedInput: [EmbeddedInput]
+  custom: CustomScalar
+}
+
+input RecursiveInput {
+  otherField: String
+  inner: RecursiveInput
+  enum: SampleField
+}
+
+type Dog {
+  name: String!
+  barkVolume: Float!
+}
+
+type Human {
+  name: String!
+}
+
+union DogOrHuman = Dog | Human
+
+type NestedObject {
+  inner: NestedObject
+
+  field: String!
+}
+
+type WithArgField {
+  argField(arg1: String, arg2: Int): NestedObject
+}
+
+scalar CustomScalar
+
+type CustomScalarObject {
+  nullable: CustomScalar
+  nonNullable: CustomScalar!
+}
+
+type VariantTestResult {
+  baseType: String
+  baseTypeList: [String!]
+  dog: Dog
+  human: Human
+  dogOrHuman: DogOrHuman
+}
+
+scalar DateTime
+scalar Color
+scalar JsonScalar
+input JsonInput {
+  name: String!
+}
+type customFieldsResult {
+  currentTime: DateTime!
+  favoriteColor: Color!
+  futureTime: DateTime
+  nullableColor: Color
+  nullableString: String
+}
+
+type deprecatedFieldsResult {
+  field1: String
+  field2: Int!
+  deprecatedField: String! @deprecated(reason: "Use something else instead")
+}
+
+type Screen {
+  id: ID!
+}
+
+type DemoScreen {
+  id: ID!
+}
+
+type DemoVersion {
+  id: ID!
+  screens: [DemoScreen!]
+}

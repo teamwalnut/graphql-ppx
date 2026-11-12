@@ -1,0 +1,22 @@
+opam-version: "2.0"
+maintainer: "Jaap Frolich <jfrolich@gmail.com>"
+authors: [
+  "Jaap Frolich <jfrolich@gmail.com>"
+  "Tomasz Cichocinski <tomaszcichocinski@gmail.com>"
+]
+synopsis: "GraphQL PPX rewriter for ReScript/ReasonML"
+description: "GraphQL language primitives for ReScript/ReasonML written in ReasonML"
+license: "MIT"
+homepage: "https://github.com/reasonml-community/graphql-ppx"
+bug-reports: "https://github.com/reasonml-community/graphql-ppx/issues"
+dev-repo: "git+https://github.com/reasonml-community/graphql-ppx.git"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+depends: [
+  "dune" {>= "2.5"}
+  "ocaml" {>= "4.13.1"}
+  "ppxlib" {>= "0.21.0" & < "0.33.0"}
+  "reason" {>= "3.8.2"}
+]

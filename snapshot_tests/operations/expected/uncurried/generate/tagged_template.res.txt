@@ -1,0 +1,2257 @@
+module Graphql_ppx_runtime = {
+  // mock
+  let deepMerge = (json1, _) => json1
+}
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
+module MyQuery: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+
+module MyTypes = {
+  type query
+}
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<MyTypes.query>) => MyTypes.query = "graphql"
+module MyQuery1a: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: MyTypes.query
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+
+@variadic @taggedTemplate
+external graphql: (array<string>, array<string>) => string = "graphql"
+module MyQuery1b: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module MyQuery2: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module MyQuery3: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module MyQuery4: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query   {
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module ListFragment: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {
+      nullableOfNullable: Nullable.t<array<Nullable.t<string>>>,
+      nullableOfNonNullable: Nullable.t<array<string>>,
+    }
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+  }
+  type t_Lists = t
+  @ocaml.doc(" the GraphQL fragment ") let query: string
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#ListFragment], Raw.t) => t
+  let verifyName: [#ListFragment] => unit
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {
+      nullableOfNullable: Nullable.t<array<Nullable.t<string>>>,
+      nullableOfNonNullable: Nullable.t<array<string>>,
+    }
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+  }
+  type t_Lists = t
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "fragment ListFragment on Lists   {
+nullableOfNullable  
+nullableOfNonNullable  
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    nullableOfNullable: {
+      let value = (value: Raw.t).nullableOfNullable
+      switch Nullable.toOption(value) {
+      | Some(value) =>
+        Some(
+          @res.uapp
+          Array.map(value, value =>
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
+      }
+    },
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Nullable.toOption(value) {
+      | Some(value) => Some(@res.uapp Array.map(value, value => value))
+      | None => None
+      }
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Nullable.make(@res.uapp Array.map(value, value => value))
+      | None => Nullable.null
+      }
+    }
+    and nullableOfNullable = {
+      let value = (value: t).nullableOfNullable
+      switch value {
+      | Some(value) =>
+        Nullable.make(
+          @res.uapp
+          Array.map(value, value =>
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          ),
+        )
+      | None => Nullable.null
+      }
+    }
+    {
+      nullableOfNullable,
+      nullableOfNonNullable,
+    }
+  }
+  let verifyArgsAndParse = (~fragmentName as _ListFragment: [#ListFragment], value: Raw.t) =>
+    parse(value)
+  let verifyName = (_fragmentName: [#ListFragment]) => ()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+}
+module MyQuery5: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {lists: ListFragment.t_Lists}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {
+    lists: ListFragment.t_Lists,
+  }
+  type rec t_variables = unit
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query MyQuery5  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
+  )
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
+
+      @res.uapp
+      ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let lists = {
+      let value = (value: t).lists
+      ListFragment.serialize(value)
+    }
+    {
+      lists: lists,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module MyQuery6: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {lists: ListFragment.t_Lists}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {
+    lists: ListFragment.t_Lists,
+  }
+  type rec t_variables = unit
+  @module("gatsby") @taggedTemplate
+  external graphql: (array<string>, array<string>) => string = "graphql"
+  external graphql_allow_string: string => string = "%identity"
+  let query = graphql(
+    [
+      "query MyQuery6  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
+  )
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
+
+      @res.uapp
+      ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let lists = {
+      let value = (value: t).lists
+      ListFragment.serialize(value)
+    }
+    {
+      lists: lists,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module MyQuery7: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {lists: ListFragment.t_Lists}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {
+      lists: ListFragment.Raw.t_Lists,
+    }
+    type rec t_variables = unit
+  }
+  type rec t = {
+    lists: ListFragment.t_Lists,
+  }
+  type rec t_variables = unit
+  let query = graphql(
+    [
+      "query MyQuery7  {
+lists  {
+...ListFragment   
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment.query],
+  )
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
+
+      @res.uapp
+      ListFragment.verifyArgsAndParse(~fragmentName=#ListFragment, value)
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let lists = {
+      let value = (value: t).lists
+      ListFragment.serialize(value)
+    }
+    {
+      lists: lists,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+module ListFragment8: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t = {
+      nullableOfNullable: Nullable.t<array<Nullable.t<string>>>,
+      nullableOfNonNullable: Nullable.t<array<string>>,
+    }
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+  }
+  type t_Lists = t
+  @ocaml.doc(" the GraphQL fragment ") let query: int
+  @ocaml.doc(" Parse the raw JSON-compatible GraphQL data into ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON-compatible data ")
+  let serialize: t => Raw.t
+  let verifyArgsAndParse: (~fragmentName: [#ListFragment8], Raw.t) => t
+  let verifyName: [#ListFragment8] => unit
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t = {
+      nullableOfNullable: Nullable.t<array<Nullable.t<string>>>,
+      nullableOfNonNullable: Nullable.t<array<string>>,
+    }
+    type t_Lists = t
+  }
+  type rec t = {
+    nullableOfNullable: option<array<option<string>>>,
+    nullableOfNonNullable: option<array<string>>,
+  }
+  type t_Lists = t
+  @module("apollo-client") @variadic external gql: (array<string>, array<int>) => int = "gql"
+  let query = gql(
+    [
+      "fragment ListFragment8 on Lists   {
+nullableOfNullable  
+nullableOfNonNullable  
+}
+",
+    ],
+    [],
+  )
+  let parse = (value): t => {
+    nullableOfNullable: {
+      let value = (value: Raw.t).nullableOfNullable
+      switch Nullable.toOption(value) {
+      | Some(value) =>
+        Some(
+          @res.uapp
+          Array.map(value, value =>
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          ),
+        )
+      | None => None
+      }
+    },
+    nullableOfNonNullable: {
+      let value = (value: Raw.t).nullableOfNonNullable
+      switch Nullable.toOption(value) {
+      | Some(value) => Some(@res.uapp Array.map(value, value => value))
+      | None => None
+      }
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let nullableOfNonNullable = {
+      let value = (value: t).nullableOfNonNullable
+      switch value {
+      | Some(value) => Nullable.make(@res.uapp Array.map(value, value => value))
+      | None => Nullable.null
+      }
+    }
+    and nullableOfNullable = {
+      let value = (value: t).nullableOfNullable
+      switch value {
+      | Some(value) =>
+        Nullable.make(
+          @res.uapp
+          Array.map(value, value =>
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          ),
+        )
+      | None => Nullable.null
+      }
+    }
+    {
+      nullableOfNullable,
+      nullableOfNonNullable,
+    }
+  }
+  let verifyArgsAndParse = (~fragmentName as _ListFragment8: [#ListFragment8], value: Raw.t) =>
+    parse(value)
+  let verifyName = (_fragmentName: [#ListFragment8]) => ()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+}
+module MyQuery8: {
+  @@ocaml.warning("-32-30")
+  module Raw: {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      lists: ListFragment8.Raw.t_Lists,
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {lists: ListFragment8.t_Lists, variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: int
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      nullableString: Nullable.t<string>,
+      string: string,
+      nullableInt: Nullable.t<int>,
+      int: int,
+      nullableFloat: Nullable.t<float>,
+      float: float,
+      nullableBoolean: Nullable.t<bool>,
+      boolean: bool,
+      nullableID: Nullable.t<string>,
+      id: string,
+    }
+    type rec t = {
+      lists: ListFragment8.Raw.t_Lists,
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    nullableString: option<string>,
+    string: string,
+    nullableInt: option<int>,
+    int: int,
+    nullableFloat: option<float>,
+    float: float,
+    nullableBoolean: option<bool>,
+    boolean: bool,
+    nullableID: option<string>,
+    id: string,
+  }
+  type rec t = {
+    lists: ListFragment8.t_Lists,
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  @module("apollo-client") @variadic external gql: (array<string>, array<int>) => int = "gql"
+  let query = gql(
+    [
+      "query MyQuery8  {
+lists  {
+...ListFragment8   
+}
+
+variousScalars  {
+nullableString  
+string  
+nullableInt  
+int  
+nullableFloat  
+float  
+nullableBoolean  
+boolean  
+nullableID  
+id  
+}
+
+}
+",
+      "",
+    ],
+    [ListFragment8.query],
+  )
+  let parse = (value): t => {
+    lists: {
+      let value = (value: Raw.t).lists
+
+      @res.uapp
+      ListFragment8.verifyArgsAndParse(~fragmentName=#ListFragment8, value)
+    },
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          nullableString: {
+            let value = (value: Raw.t_variousScalars).nullableString
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          string: {
+            let value = (value: Raw.t_variousScalars).string
+            value
+          },
+          nullableInt: {
+            let value = (value: Raw.t_variousScalars).nullableInt
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          int: {
+            let value = (value: Raw.t_variousScalars).int
+            value
+          },
+          nullableFloat: {
+            let value = (value: Raw.t_variousScalars).nullableFloat
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          float: {
+            let value = (value: Raw.t_variousScalars).float
+            value
+          },
+          nullableBoolean: {
+            let value = (value: Raw.t_variousScalars).nullableBoolean
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          boolean: {
+            let value = (value: Raw.t_variousScalars).boolean
+            value
+          },
+          nullableID: {
+            let value = (value: Raw.t_variousScalars).nullableID
+            switch Nullable.toOption(value) {
+            | Some(value) => Some(value)
+            | None => None
+            }
+          },
+          id: {
+            let value = (value: Raw.t_variousScalars).id
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let id = {
+            let value = (value: t_variousScalars).id
+            value
+          }
+          and nullableID = {
+            let value = (value: t_variousScalars).nullableID
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and boolean = {
+            let value = (value: t_variousScalars).boolean
+            value
+          }
+          and nullableBoolean = {
+            let value = (value: t_variousScalars).nullableBoolean
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and float = {
+            let value = (value: t_variousScalars).float
+            value
+          }
+          and nullableFloat = {
+            let value = (value: t_variousScalars).nullableFloat
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and int = {
+            let value = (value: t_variousScalars).int
+            value
+          }
+          and nullableInt = {
+            let value = (value: t_variousScalars).nullableInt
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          and string = {
+            let value = (value: t_variousScalars).string
+            value
+          }
+          and nullableString = {
+            let value = (value: t_variousScalars).nullableString
+            switch value {
+            | Some(value) => Nullable.make(value)
+            | None => Nullable.null
+            }
+          }
+          {
+            nullableString,
+            string,
+            nullableInt,
+            int,
+            nullableFloat,
+            float,
+            nullableBoolean,
+            boolean,
+            nullableID,
+            id,
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    and lists = {
+      let value = (value: t).lists
+      ListFragment8.serialize(value)
+    }
+    {
+      lists,
+      variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+

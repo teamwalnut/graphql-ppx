@@ -1,0 +1,145 @@
+name: graphql-ppx-pipeline
+
+on:
+  pull_request: {}
+  push:
+    tags:
+      - "v*.*.*"
+    branches:
+      - rescript12
+      - master
+  workflow_dispatch: {}
+
+jobs:
+  test_and_build:
+    name: ${{ matrix.os }}-${{ matrix.arch }}/node-${{ matrix.node-version }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        node-version: [24.x]
+        os: [ubuntu-22.04, macOS-15, windows-latest]
+        arch: [x64, arm64]
+        exclude:
+          # Windows doesn't have standard arm64 runners
+          - os: windows-latest
+            arch: arm64
+        # There's no cross-compilation, so each os/arch pair must build on a
+        # runner of that native architecture.
+        include:
+          - os: ubuntu-22.04
+            arch: x64
+            runner: ubuntu-22.04
+          - os: ubuntu-22.04
+            arch: arm64
+            runner: ubuntu-22.04-arm
+          - os: macOS-15
+            arch: x64
+            runner: macos-15-intel
+          - os: macOS-15
+            arch: arm64
+            runner: macos-15
+          - os: windows-latest
+            arch: x64
+            runner: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Use OCaml
+        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7 # v3.9.0
+        with:
+          ocaml-compiler: 4.14.2
+
+      - run: opam install . --deps-only
+      - run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
+
+      # - name: snapshot tests
+      #   env:
+      #     GRAPHQL_CI: true
+      #   run: |
+      #     npm ci --omit=optional --ignore-scripts
+      #     esy test
+      #     esy release-static
+
+      - name: (only on release) Upload artifacts ${{ matrix.os }}-${{ matrix.arch }}
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}
+          path: _build/default/src/bin/bin.exe
+
+  publish:
+    needs: [test_and_build]
+    name: (only on release) Publish
+    runs-on: ubuntu-slim
+    if: startsWith(github.ref, 'refs/tags/')
+    environment: npm
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download linux artifacts (arm64)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ubuntu-22.04-arm64
+          path: binaries/linux-arm64
+
+      - name: Download linux artifacts (x64)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ubuntu-22.04-x64
+          path: binaries/linux-x64
+
+      - name: Download macOS artifacts (arm64)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: macOS-15-arm64
+          path: binaries/darwin-arm64
+
+      - name: Download macOS artifacts (x64)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: macOS-15-x64
+          path: binaries/darwin-x64
+
+      - name: Download windows artifacts (x64)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: windows-latest-x64
+          path: binaries/win-x64
+
+      - name: Move artifacts
+        run: |
+          mkdir -p bin
+          mv binaries/darwin-x64/bin.exe bin/graphql-ppx-darwin-x64.exe
+          mv binaries/darwin-arm64/bin.exe bin/graphql-ppx-darwin-arm64.exe
+          mv binaries/win-x64/bin.exe bin/graphql-ppx-win-x64.exe
+          mv binaries/linux-x64/bin.exe bin/graphql-ppx-linux-x64.exe
+          mv binaries/linux-arm64/bin.exe bin/graphql-ppx-linux-arm64.exe
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ""
+        run: |
+          # Prerelease tags contain a hyphen after the version (e.g., v1.0.0-alpha.1)
+          if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-.+ ]]; then
+            echo "Publishing prerelease to 'next' tag"
+            npm publish --access public --tag next --provenance
+          else
+            echo "Publishing release to 'latest' tag"
+            # TODO: Uncomment when ready to publish to latest
+            # npm publish --access public --provenance
+            echo "Skipping publish to latest (commented out)"
+          fi

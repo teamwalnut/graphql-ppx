@@ -1,0 +1,12 @@
+
+  [1;31mWe've found a bug for you![0m
+  [36msnapshot_tests/operations/errors/missingFragment.res[0m:[2m2:28-42[0m
+
+  1 [2m│[0m module Fragment = %graphql(`
+  [1;31m2[0m [2m│[0m   fragment ListFragment on [1;31mUnknownFragment[0m {
+  3 [2m│[0m     nullableOfNullable
+  4 [2m│[0m     nullableOfNonNullable
+  5 [2m│[0m   }
+
+  Can't find fragment type: UnknownFragment
+

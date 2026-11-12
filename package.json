@@ -1,0 +1,33 @@
+{
+  "name": "@illusionalsagacity/graphql-ppx",
+  "version": "2.0.0-rescript12.8",
+  "description": "graphql-ppx rewriter for ReScript/ReasonML",
+  "repository": "https://github.com/illusionalsagacity/graphql-ppx",
+  "author": "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
+  "contributors": [
+    "Tomasz Cichocinski <tomaszcichocinski@gmail.com>",
+    "Jaap Frölich <jfrolich@gmail.com>"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "generate-schema": "node ./dslToJson.js > graphql_schema.json",
+    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+  },
+  "devDependencies": {
+    "graphql": "^15.5.0",
+    "rescript": "12.3.1"
+  },
+  "peerDependencies": {
+    "rescript": "^11.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "copyPlatformBinaryInPlace.js",
+    "rescript.json",
+    "rescript-runtime",
+    "bin",
+    "LICENSE"
+  ]
+}

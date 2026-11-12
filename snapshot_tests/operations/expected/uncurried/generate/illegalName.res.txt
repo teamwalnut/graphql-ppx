@@ -1,0 +1,96 @@
+module IllegalNameQuery: {
+  @@ocaml.warning("-32-30") // Test for GraphQL fields with illegal ReScript names (starting with uppercase)
+  module Raw: {
+    type rec t_variousScalars = {
+      \"SSN": string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {\"SSN": string}
+  type rec t = {variousScalars: t_variousScalars}
+  type rec t_variables = unit
+  @ocaml.doc(" The GraphQL query ") let query: string
+  @ocaml.doc(" Parse the JSON-compatible GraphQL data to ReasonML data types ")
+  let parse: Raw.t => t
+  @ocaml.doc(" Serialize the ReasonML GraphQL data that was parsed using the parse
+function back to the original JSON compatible data ")
+  let serialize: t => Raw.t
+  let serializeVariables: unit => Raw.t_variables
+  let makeVariables: unit => t_variables
+  let makeDefaultVariables: unit => t_variables
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+} = {
+  @@ocaml.warning("-32-30")
+  module Raw = {
+    type rec t_variousScalars = {
+      \"SSN": string,
+    }
+    type rec t = {
+      variousScalars: t_variousScalars,
+    }
+    type rec t_variables = unit
+  }
+  type rec t_variousScalars = {
+    \"SSN": string,
+  }
+  type rec t = {
+    variousScalars: t_variousScalars,
+  }
+  type rec t_variables = unit
+  let query = "query IllegalNameQuery  {
+variousScalars  {
+SSN  
+}
+
+}
+"
+  let parse = (value): t => {
+    variousScalars: {
+      let value = (value: Raw.t).variousScalars
+      (
+        {
+          \"SSN": {
+            let value = (value: Raw.t_variousScalars).\"SSN"
+            value
+          },
+        }: t_variousScalars
+      )
+    },
+  }
+  let serialize = (value): Raw.t => {
+    let variousScalars = {
+      let value = (value: t).variousScalars
+      (
+        {
+          let \"SSN" = {
+            let value = (value: t_variousScalars).\"SSN"
+            value
+          }
+          {
+            \"SSN": \"SSN",
+          }
+        }: Raw.t_variousScalars
+      )
+    }
+    {
+      variousScalars: variousScalars,
+    }
+  }
+  let serializeVariables = () => ()
+  let makeVariables = () => ()
+  let makeDefaultVariables = () => makeVariables()
+  external unsafe_fromJson: JSON.t => Raw.t = "%identity"
+  external toJson: Raw.t => JSON.t = "%identity"
+  external variablesToJson: Raw.t_variables => JSON.t = "%identity"
+}
+// The field "SSN" should be escaped as \"SSN" in the generated ReScript code
+
+let getSsn = (data: IllegalNameQuery.t) => {
+  data.variousScalars.\"SSN"
+}
+

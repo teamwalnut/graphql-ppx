@@ -1,0 +1,15 @@
+/_build
+/_esy
+/_opam
+/.github
+/.vscode
+/node_modules
+/ppx
+/snapshot_tests
+/tests_native
+/.claude
+/tests
+/esy.lock
+/402.esy.lock
+/binaries
+esy.json
