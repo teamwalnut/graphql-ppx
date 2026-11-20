@@ -52,12 +52,26 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Use OCaml
+        if: matrix.os != 'ubuntu-22.04'
         uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7 # v3.9.0
         with:
           ocaml-compiler: 4.14.2
 
-      - run: opam install . --deps-only
-      - run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
+      - if: matrix.os != 'ubuntu-22.04'
+        run: opam install . --deps-only
+      - if: matrix.os != 'ubuntu-22.04'
+        run: opam exec -- dune build --verbose; ls -l _build/install/default/bin
+
+      # Linux binaries link statically against musl, so they also run on
+      # Alpine. docker run rather than a job container: JavaScript actions
+      # don't run in Alpine containers on arm64 runners.
+      - if: matrix.os == 'ubuntu-22.04'
+        run: |
+          docker run --rm --user root -e OPAMROOT=/home/opam/.opam -e OPAMROOTISOK=1 \
+            -v "$PWD:/src" -w /src ocaml/opam:alpine-3.20-ocaml-4.14 \
+            sh -c 'opam install . --deps-only -y && opam exec -- dune build --profile static'
+          file _build/default/src/bin/bin.exe
+          file _build/default/src/bin/bin.exe | grep -q 'statically linked'
 
       # - name: snapshot tests
       #   env:

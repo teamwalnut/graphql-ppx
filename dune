@@ -1,1 +1,5 @@
 (dirs src tests_native snapshot_tests)
+
+(env
+ (static
+  (link_flags (-ccopt -static))))
