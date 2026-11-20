@@ -69,7 +69,7 @@ jobs:
         run: |
           docker run --rm --user root -e OPAMROOT=/home/opam/.opam -e OPAMROOTISOK=1 \
             -v "$PWD:/src" -w /src ocaml/opam:alpine-3.20-ocaml-4.14 \
-            sh -c 'opam install . --deps-only -y && opam exec -- dune build --profile static'
+            sh -c 'opam update -y && opam install . --deps-only -y && opam exec -- dune build --profile static'
           file _build/default/src/bin/bin.exe
           file _build/default/src/bin/bin.exe | grep -q 'statically linked'
 
